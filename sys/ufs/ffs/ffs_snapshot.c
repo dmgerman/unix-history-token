@@ -10524,6 +10524,8 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+init|=
+literal|0
 decl_stmt|;
 name|ufs2_daddr_t
 name|lbn
@@ -10538,6 +10540,10 @@ decl_stmt|,
 name|mid
 decl_stmt|,
 name|indiroff
+decl_stmt|,
+name|snapshot_locked
+init|=
+literal|0
 decl_stmt|,
 name|error
 init|=
@@ -10596,24 +10602,6 @@ name|b_blkno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|vp
-operator|=
-name|ITOV
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-name|vn_lock
-argument_list|(
-name|vp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ip
@@ -10640,6 +10628,8 @@ operator|==
 name|vp
 condition|)
 continue|continue;
+name|retry
+label|:
 comment|/* 		 * First check to see if it is in the preallocated list. 		 * By doing this check we avoid several potential deadlocks. 		 */
 name|lower
 operator|=
@@ -10714,7 +10704,7 @@ operator|<=
 name|upper
 condition|)
 continue|continue;
-comment|/* 		 * Check to see if block needs to be copied. Because 		 * all snapshots on a filesystem share a single lock, 		 * we ensure that we will never be in competition with 		 * another process to allocate a block. 		 */
+comment|/* 		 * Check to see if block needs to be copied. We do not have 		 * to hold the snapshot lock while doing this lookup as it 		 * will never require any additional allocations for the 		 * snapshot inode. 		 */
 if|if
 condition|(
 name|lbn
@@ -10880,7 +10870,33 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-comment|/* 		 * Allocate the block into which to do the copy. Note that this 		 * allocation will never require any additional allocations for 		 * the snapshot inode. 		 */
+comment|/* 		 * Allocate the block into which to do the copy. Since 		 * multiple processes may all try to copy the same block, 		 * we have to recheck our need to do a copy if we sleep 		 * waiting for the lock. 		 * 		 * Because all snapshots on a filesystem share a single 		 * lock, we ensure that we will never be in competition 		 * with another process to allocate a block. 		 */
+if|if
+condition|(
+name|snapshot_locked
+operator|==
+literal|0
+operator|&&
+name|vn_lock
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_SLEEPFAIL
+argument_list|,
+name|td
+argument_list|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|retry
+goto|;
+name|snapshot_locked
+operator|=
+literal|1
+expr_stmt|;
 name|td
 operator|->
 name|td_proc
@@ -11166,6 +11182,10 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|snapshot_locked
+condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|vp
