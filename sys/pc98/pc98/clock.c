@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.27 1997/07/13 12:14:18 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.28 1997/07/20 11:55:52 kato Exp $  */
 end_comment
 
 begin_comment
@@ -168,12 +168,6 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/isa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/intr_machdep.h>
 end_include
 
 begin_include
@@ -4688,6 +4682,12 @@ begin_comment
 comment|/* XXX FIXME: from icu.s: */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_STRATEGY
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -4731,20 +4731,56 @@ name|mask8254
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DO_RTC_VEC
-end_ifdef
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
-comment|/** XXX FIXME: remove vevRTS stuff after several weeks of no problems */
+comment|/** NEW_STRATEGY */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|APIC_PIN0_TIMER
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|ivectors
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|vec
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|APIC_PIN0_TIMER
+end_ifndef
 
 begin_decl_stmt
 specifier|extern
 name|void
-name|vecRTC
+name|vec8254
 name|__P
 argument_list|(
 operator|(
@@ -4757,14 +4793,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|XintrRTC
+name|Xintr8254
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|maskRTC
+name|mask8254
 decl_stmt|;
 end_decl_stmt
 
@@ -4774,7 +4810,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DO_RTC_VEC */
+comment|/* APIC_PIN0_TIMER */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/** NEW_STRATEGY */
 end_comment
 
 begin_endif
@@ -4845,6 +4890,190 @@ comment|/* Finish initializing 8253 timer 0. */
 ifdef|#
 directive|ifdef
 name|APIC_IO
+ifdef|#
+directive|ifdef
+name|NEW_STRATEGY
+comment|/* 1st look for ExtInt on pin 0 */
+if|if
+condition|(
+name|apic_int_type
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|3
+condition|)
+block|{
+comment|/* 		 * Allow 8254 timer to INTerrupt 8259: 		 *  re-initialize master 8259: 		 *   reset; prog 4 bytes, single ICU, edge triggered 		 */
+name|outb
+argument_list|(
+name|IO_ICU1
+argument_list|,
+literal|0x13
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|,
+name|NRSVIDT
+argument_list|)
+expr_stmt|;
+comment|/* start vector */
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+comment|/* ignore slave */
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|,
+literal|0x03
+argument_list|)
+expr_stmt|;
+comment|/* auto EOI, 8086 */
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|,
+literal|0xfe
+argument_list|)
+expr_stmt|;
+comment|/* unmask INT0 */
+comment|/* program IO APIC for type 3 INT on INT0 */
+if|if
+condition|(
+name|ext_int_setup
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"8254 redirect via APIC pin0 impossible!"
+argument_list|)
+expr_stmt|;
+name|x
+operator|=
+literal|0
+expr_stmt|;
+comment|/** if (bootverbose */
+name|printf
+argument_list|(
+literal|"APIC_IO: routing 8254 via 8259 on pin 0\n"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* failing that, look for 8254 on pin 2 */
+elseif|else
+if|if
+condition|(
+name|isa_apic_pin
+argument_list|(
+literal|0
+argument_list|)
+operator|==
+literal|2
+condition|)
+block|{
+name|x
+operator|=
+literal|2
+expr_stmt|;
+comment|/** if (bootverbose */
+name|printf
+argument_list|(
+literal|"APIC_IO: routing 8254 via pin 2\n"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* better write that 8254 INT discover code... */
+else|else
+name|panic
+argument_list|(
+literal|"neither pin 0 or pin 2 works for 8254"
+argument_list|)
+expr_stmt|;
+comment|/* setup the vectors for the chosen method */
+name|vec
+index|[
+name|x
+index|]
+operator|=
+operator|(
+name|u_int
+operator|)
+name|vec8254
+expr_stmt|;
+name|Xintr8254
+operator|=
+operator|(
+name|u_int
+operator|)
+name|ivectors
+index|[
+name|x
+index|]
+expr_stmt|;
+name|mask8254
+operator|=
+operator|(
+literal|1
+operator|<<
+name|x
+operator|)
+expr_stmt|;
+name|register_intr
+argument_list|(
+comment|/* irq */
+name|x
+argument_list|,
+comment|/* XXX id */
+literal|0
+argument_list|,
+comment|/* flags */
+literal|0
+argument_list|,
+comment|/* XXX */
+operator|(
+name|inthand2_t
+operator|*
+operator|)
+name|clkintr
+argument_list|,
+operator|&
+name|clk_imask
+argument_list|,
+comment|/* unit */
+literal|0
+argument_list|)
+expr_stmt|;
+name|INTREN
+argument_list|(
+name|mask8254
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/** NEW_STRATEGY */
 ifdef|#
 directive|ifdef
 name|APIC_PIN0_TIMER
@@ -5139,6 +5368,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* APIC_PIN0_TIMER */
+endif|#
+directive|endif
+comment|/** NEW_STRATEGY */
 else|#
 directive|else
 comment|/* APIC_IO */
@@ -5257,88 +5489,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|APIC_IO
-ifdef|#
-directive|ifdef
-name|DO_RTC_VEC
-if|if
-condition|(
-operator|(
-name|x
-operator|=
-name|isa_apic_pin
-argument_list|(
-literal|8
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"APIC missing RTC connection"
-argument_list|)
-expr_stmt|;
-name|vec
-index|[
-name|x
-index|]
-operator|=
-operator|(
-name|u_int
-operator|)
-name|vecRTC
-expr_stmt|;
-name|XintrRTC
-operator|=
-operator|(
-name|u_int
-operator|)
-name|ivectors
-index|[
-name|x
-index|]
-expr_stmt|;
-comment|/* XXX might need Xfastintr# */
-name|maskRTC
-operator|=
-operator|(
-literal|1
-operator|<<
-name|x
-operator|)
-expr_stmt|;
-name|register_intr
-argument_list|(
-comment|/* irq */
-name|x
-argument_list|,
-comment|/* XXX id */
-literal|1
-argument_list|,
-comment|/* flags */
-literal|0
-argument_list|,
-comment|/* XXX */
-operator|(
-name|inthand2_t
-operator|*
-operator|)
-name|rtcintr
-argument_list|,
-operator|&
-name|stat_imask
-argument_list|,
-comment|/* unit */
-literal|0
-argument_list|)
-expr_stmt|;
-name|INTREN
-argument_list|(
-name|maskRTC
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|isa_apic_pin
@@ -5353,41 +5503,8 @@ argument_list|(
 literal|"APIC RTC != 8"
 argument_list|)
 expr_stmt|;
-name|register_intr
-argument_list|(
-comment|/* irq */
-literal|8
-argument_list|,
-comment|/* XXX id */
-literal|1
-argument_list|,
-comment|/* flags */
-literal|0
-argument_list|,
-comment|/* XXX */
-operator|(
-name|inthand2_t
-operator|*
-operator|)
-name|rtcintr
-argument_list|,
-operator|&
-name|stat_imask
-argument_list|,
-comment|/* unit */
-literal|0
-argument_list|)
-expr_stmt|;
-name|INTREN
-argument_list|(
-name|IRQ8
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
-comment|/* DO_RTC_VEC */
-else|#
-directive|else
 comment|/* APIC_IO */
 name|register_intr
 argument_list|(
@@ -5419,9 +5536,6 @@ argument_list|(
 name|IRQ8
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* APIC_IO */
 name|writertc
 argument_list|(
 name|RTC_STATUSB
@@ -5431,64 +5545,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|APIC_IO
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"SMP: enabled INTs: "
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|x
-operator|=
-literal|0
-init|;
-name|x
-operator|<
-literal|24
-condition|;
-operator|++
-name|x
-control|)
-if|if
-condition|(
-operator|(
-name|imen
-operator|&
-operator|(
-literal|1
-operator|<<
-name|x
-operator|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"%d, "
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"imen: 0x%08x\n"
-argument_list|,
-name|imen
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* APIC_IO */
+comment|/* !PC98 */
 block|}
 end_function
 
