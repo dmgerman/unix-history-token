@@ -1626,6 +1626,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Mark the appropriate bit in the PCI command register so that 	 * device drivers will know which BARs can be used. 	 */
+name|pci_enable_io
+argument_list|(
+name|child
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
