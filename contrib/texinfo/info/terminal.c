@@ -589,30 +589,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The string to turn on keypad transmit mode, if this term has one. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|term_ks
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The string to turn off keypad transmit mode, if this term has one. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|term_ke
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Although I can't find any documentation that says this is supposed to    return its argument, all the code I've looked at (termutils, less)    does so, so fine.  */
 end_comment
 
@@ -2451,7 +2427,7 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Attempt to find the arrow keys. */
+comment|/* Attempt to find the arrow keys.  */
 name|term_ku
 operator|=
 name|tgetstr
