@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.40 1999/05/30 16:52:35 phk Exp $ */
+comment|/* $Id: matcd.c,v 1.41 1999/05/31 11:26:55 phk Exp $ */
 end_comment
 
 begin_comment
@@ -936,18 +936,6 @@ end_decl_stmt
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	Internal function declarations ---------------------------------------------------------------------------*/
 end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|matcd_drvinit
-parameter_list|(
-name|void
-modifier|*
-name|unused
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
