@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.19	81/12/09	*/
+comment|/*	if_en.c	4.20	81/12/11	*/
 end_comment
 
 begin_include
@@ -1588,13 +1588,20 @@ name|len
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|endataaddr
 argument_list|(
 name|en
 argument_list|,
 name|off
+condition|?
+name|off
 operator|+
 literal|2
+else|:
+literal|0
 argument_list|,
 expr|struct
 name|ip
@@ -1603,8 +1610,21 @@ argument_list|)
 operator|->
 name|ip_len
 argument_list|)
-operator|+
+expr_stmt|;
+if|if
+condition|(
+name|off
+condition|)
+name|len
+operator|+=
 literal|2
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"enet rcvd len %d\n"
+argument_list|,
+name|len
+argument_list|)
 expr_stmt|;
 name|setipintr
 argument_list|()
@@ -1845,6 +1865,9 @@ name|off
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|ip_len
