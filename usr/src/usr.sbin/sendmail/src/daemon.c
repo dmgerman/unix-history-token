@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.11 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.12 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.11 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.12 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -614,6 +614,35 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hid
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* try it as a host name (avoid MX lookup) */
+name|hp
+operator|=
+name|gethostbyname
+argument_list|(
+operator|&
+name|host
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|']'
+expr_stmt|;
+goto|goto
+name|gothostent
+goto|;
+block|}
 operator|*
 name|p
 operator|=
@@ -625,11 +654,6 @@ condition|(
 name|p
 operator|==
 name|NULL
-operator|||
-name|hid
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 name|usrerr
@@ -663,6 +687,8 @@ argument_list|(
 name|host
 argument_list|)
 expr_stmt|;
+name|gothostent
+label|:
 if|if
 condition|(
 name|hp
