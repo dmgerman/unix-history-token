@@ -36,91 +36,46 @@ name|pthread
 parameter_list|)
 block|{
 name|int
-name|rval
-init|=
-literal|0
+name|ret
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
-name|pthread_t
-name|pthread_p
-decl_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
-comment|/* Point to the first thread in the list: */
-name|pthread_p
-operator|=
-name|_thread_link_list
-expr_stmt|;
-comment|/* Enter a loop to search for the thread: */
-while|while
-condition|(
-name|pthread_p
-operator|!=
-name|NULL
-operator|&&
-name|pthread_p
-operator|!=
-name|pthread
-condition|)
-block|{
-comment|/* Point to the next thread: */
-name|pthread_p
-operator|=
-name|pthread_p
-operator|->
-name|nxt
-expr_stmt|;
-block|}
-comment|/* Check if the thread pointer is NULL: */
+comment|/* Find the thread in the list of active threads: */
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
+name|_find_thread
+argument_list|(
 name|pthread
+argument_list|)
+operator|)
 operator|==
-name|NULL
-operator|||
-name|pthread_p
-operator|==
-name|NULL
+literal|0
 condition|)
-block|{
-comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-name|rval
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* Get the thread priority: */
-name|rval
+name|ret
 operator|=
 name|pthread
 operator|->
 name|pthread_priority
 expr_stmt|;
-block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
-argument_list|)
+else|else
+block|{
+comment|/* Invalid thread: */
+name|errno
+operator|=
+name|ret
 expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 comment|/* Return the thread priority or an error status: */
 return|return
 operator|(
-name|rval
+name|ret
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_read.c,v 1.3 1997/04/01 22:44:15 jb Exp $  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_read.c,v 1.1.2.1 1997/06/24 00:28:06 julian Exp $  *  */
 end_comment
 
 begin_include
@@ -70,31 +70,82 @@ name|int
 name|ret
 decl_stmt|;
 name|int
-name|status
+name|type
 decl_stmt|;
+comment|/* POSIX says to do just this: */
+if|if
+condition|(
+name|nbytes
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Lock the file descriptor for read: */
 if|if
 condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_fd_lock
+name|_FD_LOCK
 argument_list|(
 name|fd
 argument_list|,
 name|FD_READ
 argument_list|,
 name|NULL
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
 argument_list|)
 operator|)
 operator|==
 literal|0
 condition|)
 block|{
+comment|/* Get the read/write mode type: */
+name|type
+operator|=
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|flags
+operator|&
+name|O_ACCMODE
+expr_stmt|;
+comment|/* Check if the file is not open for read: */
+if|if
+condition|(
+name|type
+operator|!=
+name|O_RDONLY
+operator|&&
+name|type
+operator|!=
+name|O_RDWR
+condition|)
+block|{
+comment|/* File is not open for read: */
+name|errno
+operator|=
+name|EBADF
+expr_stmt|;
+name|_FD_UNLOCK
+argument_list|(
+name|fd
+argument_list|,
+name|FD_READ
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* Perform a non-blocking read syscall: */
 while|while
 condition|(
@@ -140,12 +191,6 @@ name|EAGAIN
 operator|)
 condition|)
 block|{
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
 name|_thread_run
 operator|->
 name|data
@@ -185,6 +230,10 @@ operator|->
 name|interrupted
 condition|)
 block|{
+name|errno
+operator|=
+name|EINTR
+expr_stmt|;
 name|ret
 operator|=
 operator|-
@@ -198,7 +247,7 @@ block|{
 break|break;
 block|}
 block|}
-name|_thread_fd_unlock
+name|_FD_UNLOCK
 argument_list|(
 name|fd
 argument_list|,

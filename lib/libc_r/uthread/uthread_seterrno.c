@@ -68,15 +68,12 @@ name|thread
 operator|==
 name|_thread_initial
 condition|)
-block|{
 comment|/* The initial thread always uses the global error variable: */
 name|errno
 operator|=
 name|error
 expr_stmt|;
-block|}
 else|else
-block|{
 comment|/* 		 * Threads other than the initial thread always use the error 		 * field in the thread structureL  		 */
 name|thread
 operator|->
@@ -84,7 +81,6 @@ name|error
 operator|=
 name|error
 expr_stmt|;
-block|}
 block|}
 end_function
 

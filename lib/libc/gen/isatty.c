@@ -94,17 +94,13 @@ directive|ifdef
 name|_THREAD_SAFE
 if|if
 condition|(
-name|_thread_fd_lock
+name|_FD_LOCK
 argument_list|(
 name|fd
 argument_list|,
 name|FD_READ
 argument_list|,
 name|NULL
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
 argument_list|)
 operator|==
 literal|0
@@ -130,7 +126,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_THREAD_SAFE
-name|_thread_fd_unlock
+name|_FD_UNLOCK
 argument_list|(
 name|fd
 argument_list|,

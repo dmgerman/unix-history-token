@@ -252,6 +252,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|sigwait
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|sigset_t
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef

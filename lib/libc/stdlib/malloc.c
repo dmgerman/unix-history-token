@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.18.2.4 1998/04/23 08:21:49 tg Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.18.2.5 1998/04/30 07:53:36 tg Exp $  *  */
 end_comment
 
 begin_comment
@@ -80,46 +80,86 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|malloc_pageshift
+value|13U
+end_define
+
+begin_define
+define|#
+directive|define
+name|malloc_minsize
+value|16U
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__NETBSD_SYSCALLS
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAS_UTRACE
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_THREAD_SAFE
-argument_list|)
-end_if
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*      * Make malloc/free/realloc thread-safe in libc for use with      * kernel threads.      */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|"libc_private.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pthread_private.h"
+file|"spinlock.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|THREAD_STATUS
-value|int thread_lock_status;
-end_define
+begin_decl_stmt
+specifier|static
+name|spinlock_t
+name|thread_lock
+init|=
+name|_SPINLOCK_INITIALIZER
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
 name|THREAD_LOCK
 parameter_list|()
-value|_thread_kern_sig_block(&thread_lock_status);
+value|if (__isthreaded) _SPINLOCK(&thread_lock);
 end_define
 
 begin_define
@@ -127,33 +167,8 @@ define|#
 directive|define
 name|THREAD_UNLOCK
 parameter_list|()
-value|_thread_kern_sig_unblock(thread_lock_status);
+value|if (__isthreaded) _SPINUNLOCK(&thread_lock);
 end_define
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|pthread_mutex
-name|_malloc_lock
-init|=
-name|PTHREAD_MUTEX_STATIC_INITIALIZER
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|pthread_mutex_t
-name|malloc_lock
-init|=
-operator|&
-name|_malloc_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -181,7 +196,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|malloc_pageshirt
+name|malloc_pageshift
 value|12U
 end_define
 
@@ -596,23 +611,6 @@ name|foo
 parameter_list|)
 value|(((u_long)(foo)>> malloc_pageshift)-malloc_origo)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|THREAD_STATUS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|THREAD_STATUS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -1510,6 +1508,9 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|int
+name|errnosave
+decl_stmt|;
 name|INIT_MMAP
 argument_list|()
 expr_stmt|;
@@ -1544,6 +1545,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|errnosave
+operator|=
+name|errno
+expr_stmt|;
 name|j
 operator|=
 name|readlink
@@ -1557,6 +1562,10 @@ name|b
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|errnosave
 expr_stmt|;
 if|if
 condition|(
@@ -4390,13 +4399,12 @@ name|void
 modifier|*
 name|r
 decl_stmt|;
-name|THREAD_STATUS
-name|malloc_func
-init|=
-literal|" in malloc():"
-decl_stmt|;
 name|THREAD_LOCK
 argument_list|()
+expr_stmt|;
+name|malloc_func
+operator|=
+literal|" in malloc():"
 expr_stmt|;
 if|if
 condition|(
@@ -4489,13 +4497,12 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-name|THREAD_STATUS
-name|malloc_func
-init|=
-literal|" in free():"
-decl_stmt|;
 name|THREAD_LOCK
 argument_list|()
+expr_stmt|;
+name|malloc_func
+operator|=
+literal|" in free():"
 expr_stmt|;
 if|if
 condition|(
@@ -4513,6 +4520,8 @@ operator|--
 expr_stmt|;
 return|return;
 block|}
+else|else
+block|{
 name|ifree
 argument_list|(
 name|ptr
@@ -4527,6 +4536,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|malloc_active
 operator|--
 expr_stmt|;
@@ -4550,18 +4560,17 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|THREAD_STATUS
 specifier|register
 name|void
 modifier|*
 name|r
 decl_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|malloc_func
 operator|=
 literal|" in realloc():"
-expr_stmt|;
-name|THREAD_LOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(

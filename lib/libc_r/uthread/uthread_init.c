@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -47,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ttycom.h>
 end_include
 
 begin_ifdef
@@ -72,13 +84,6 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|_thread_autoinit_dummy_decl
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -243,6 +248,9 @@ name|void
 parameter_list|)
 block|{
 name|int
+name|fd
+decl_stmt|;
+name|int
 name|flags
 decl_stmt|;
 name|int
@@ -252,11 +260,6 @@ name|struct
 name|sigaction
 name|act
 decl_stmt|;
-comment|/* Ensure that the auto-initialization routine is linked in: */
-name|_thread_autoinit_dummy_decl
-operator|=
-literal|1
-expr_stmt|;
 comment|/* Check if this function has already been called: */
 if|if
 condition|(
@@ -264,6 +267,139 @@ name|_thread_initial
 condition|)
 comment|/* Only initialise the threaded application once. */
 return|return;
+comment|/* 	 * Check for the special case of this process running as 	 * or in place of init as pid = 1: 	 */
+if|if
+condition|(
+name|getpid
+argument_list|()
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* 		 * Setup a new session for this process which is 		 * assumed to be running as root. 		 */
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|==
+operator|-
+literal|1
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't set session ID"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|revoke
+argument_list|(
+name|_PATH_CONSOLE
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't revoke console"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|_thread_sys_open
+argument_list|(
+name|_PATH_CONSOLE
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't open console"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setlogin
+argument_list|(
+literal|"root"
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't set login to root"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|_thread_sys_ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't set controlling terminal"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|_thread_sys_dup2
+argument_list|(
+name|fd
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
+name|_thread_sys_dup2
+argument_list|(
+name|fd
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
+name|_thread_sys_dup2
+argument_list|(
+name|fd
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|PANIC
+argument_list|(
+literal|"Can't dup2"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Get the standard I/O flags before messing with them : */
 for|for
 control|(
@@ -304,7 +440,7 @@ argument_list|(
 literal|"Cannot get stdio flags"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create a pipe that is written to by the signal handler to prevent 	 * signals being missed in calls to _thread_sys_select:  	 */
+comment|/* 	 * Create a pipe that is written to by the signal handler to prevent 	 * signals being missed in calls to _select:  	 */
 if|if
 condition|(
 name|_thread_sys_pipe
@@ -530,12 +666,6 @@ expr_stmt|;
 comment|/* Initialise the rest of the fields: */
 name|_thread_initial
 operator|->
-name|parent_thread
-operator|=
-name|NULL
-expr_stmt|;
-name|_thread_initial
-operator|->
 name|specific_data
 operator|=
 name|NULL
@@ -584,6 +714,34 @@ name|_thread_run
 operator|=
 name|_thread_initial
 expr_stmt|;
+comment|/* Initialise the global signal action structure: */
+name|sigfillset
+argument_list|(
+operator|&
+name|act
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|act
+operator|.
+name|sa_handler
+operator|=
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+name|_thread_sig_handler
+expr_stmt|;
+name|act
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Enter a loop to get the existing signal status: */
 for|for
 control|(
@@ -622,7 +780,12 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|act
+name|_thread_sigact
+index|[
+name|i
+operator|-
+literal|1
+index|]
 argument_list|)
 operator|!=
 literal|0
@@ -635,93 +798,37 @@ literal|"Cannot read signal handler info"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Set the signal handler for the initial thread: */
-elseif|else
-if|if
-condition|(
-name|sigaction
-argument_list|(
-name|i
-argument_list|,
-operator|&
-name|act
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 				 * Abort this process if signal 				 * initialisation fails:  				 */
-name|PANIC
-argument_list|(
-literal|"Cannot initialise signal handler for initial thread"
-argument_list|)
-expr_stmt|;
 block|}
-block|}
-comment|/* Initialise the global signal action structure: */
-name|sigfillset
-argument_list|(
-operator|&
-name|act
-operator|.
-name|sa_mask
-argument_list|)
-expr_stmt|;
-name|act
-operator|.
-name|sa_handler
-operator|=
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|_thread_sig_handler
-expr_stmt|;
-name|act
-operator|.
-name|sa_flags
-operator|=
-name|SA_RESTART
-expr_stmt|;
-comment|/* Enter a loop to initialise the rest of the signals: */
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-name|NSIG
-condition|;
-name|i
-operator|++
-control|)
-block|{
-comment|/* Check for signals which cannot be trapped: */
-if|if
-condition|(
-name|i
-operator|==
-name|SIGKILL
-operator|||
-name|i
-operator|==
-name|SIGSTOP
-condition|)
-block|{ 			}
-comment|/* Initialise the signal for default handling: */
-elseif|else
+comment|/* 		 * Install the signal handler for the most important 		 * signals that the user-thread kernel needs. Actually 		 * SIGINFO isn't really needed, but it is nice to have. 		 */
 if|if
 condition|(
 name|_thread_sys_sigaction
 argument_list|(
-name|i
+name|SIGVTALRM
+argument_list|,
+operator|&
+name|act
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|_thread_sys_sigaction
+argument_list|(
+name|SIGINFO
+argument_list|,
+operator|&
+name|act
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|_thread_sys_sigaction
+argument_list|(
+name|SIGCHLD
 argument_list|,
 operator|&
 name|act
@@ -732,13 +839,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * Abort this process if signal 				 * initialisation fails:  				 */
+comment|/* 			 * Abort this process if signal initialisation fails:  			 */
 name|PANIC
 argument_list|(
 literal|"Cannot initialise signal handler"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* Get the table size: */
 if|if
@@ -853,6 +959,34 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* GCC_2_8_MADE_THREAD_AWARE */
+comment|/* Initialise the garbage collector mutex and condition variable. */
+if|if
+condition|(
+name|pthread_mutex_init
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|pthread_cond_init
+argument_list|(
+operator|&
+name|_gc_cond
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Failed to initialise garbage collector mutex or condvar"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function

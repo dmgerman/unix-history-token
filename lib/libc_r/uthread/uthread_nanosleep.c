@@ -180,6 +180,12 @@ operator|-=
 literal|1000000000
 expr_stmt|;
 block|}
+name|_thread_run
+operator|->
+name|interrupted
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Reschedule the current thread to sleep: */
 name|_thread_kern_sched_state
 argument_list|(
@@ -339,20 +345,12 @@ operator|.
 name|tv_nsec
 expr_stmt|;
 block|}
-comment|/* Check if the entire sleep was not completed: */
+comment|/* Check if the sleep was interrupted: */
 if|if
 condition|(
-name|remaining_time
-operator|.
-name|tv_nsec
-operator|!=
-literal|0
-operator|||
-name|remaining_time
-operator|.
-name|tv_sec
-operator|!=
-literal|0
+name|_thread_run
+operator|->
+name|interrupted
 condition|)
 block|{
 comment|/* Return an EINTR error : */

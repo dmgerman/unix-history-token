@@ -15,6 +15,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -65,12 +71,10 @@ name|cond
 operator|==
 name|NULL
 condition|)
-block|{
 name|rval
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* 		 * Check if a pointer to a condition variable attribute 		 * structure was passed by the caller:  		 */
@@ -183,6 +187,23 @@ name|c_type
 operator|=
 name|type
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|pcond
+operator|->
+name|lock
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pcond
+operator|->
+name|lock
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|cond
 operator|=
@@ -225,50 +246,14 @@ name|cond
 operator|==
 name|NULL
 condition|)
-block|{
 name|rval
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 else|else
 block|{
-comment|/* Process according to condition variable type: */
-switch|switch
-condition|(
-operator|(
-operator|*
-name|cond
-operator|)
-operator|->
-name|c_type
-condition|)
-block|{
-comment|/* Fast condition variable: */
-case|case
-name|COND_TYPE_FAST
-case|:
-comment|/* Nothing to do here. */
-break|break;
-comment|/* Trap invalid condition variable types: */
-default|default:
-comment|/* Return an invalid argument error: */
-name|rval
-operator|=
-name|EINVAL
-expr_stmt|;
-break|break;
-block|}
-comment|/* Check for errors: */
-if|if
-condition|(
-name|rval
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Destroy the contents of the condition structure: */
-name|_thread_queue_init
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -276,30 +261,22 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|c_queue
+name|lock
 argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|cond
-operator|)
-operator|->
-name|c_flags
-operator|=
-literal|0
-expr_stmt|;
+comment|/* 		 * Free the memory allocated for the condition 		 * variable structure: 		 */
 name|free
 argument_list|(
 operator|*
 name|cond
 argument_list|)
 expr_stmt|;
+comment|/* 		 * NULL the caller's pointer now that the condition 		 * variable has been destroyed: 		 */
 operator|*
 name|cond
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 comment|/* Return the completion status: */
 return|return
@@ -364,11 +341,16 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
 argument_list|(
 operator|&
-name|status
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to condition variable type: */
@@ -416,6 +398,18 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thread_kern_sched_state
 argument_list|(
@@ -426,10 +420,16 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
 argument_list|(
-name|NULL
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Lock the mutex: */
@@ -450,10 +450,16 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
 argument_list|(
-name|status
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -526,11 +532,16 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
 argument_list|(
 operator|&
-name|status
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to condition variable type: */
@@ -620,6 +631,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thread_kern_sched_state
 argument_list|(
@@ -630,10 +653,16 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
 argument_list|(
-name|NULL
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Lock the mutex: */
@@ -677,10 +706,16 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
 argument_list|(
-name|status
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -724,19 +759,22 @@ name|cond
 operator|==
 name|NULL
 condition|)
-block|{
 name|rval
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 else|else
 block|{
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
 argument_list|(
 operator|&
-name|status
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to condition variable type: */
@@ -794,10 +832,16 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
 argument_list|(
-name|status
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -830,11 +874,33 @@ decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+if|if
+condition|(
+name|cond
+operator|==
+name|NULL
+operator|||
+operator|*
+name|cond
+operator|==
+name|NULL
+condition|)
+name|rval
+operator|=
+name|EINVAL
+expr_stmt|;
+else|else
+block|{
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
 argument_list|(
 operator|&
-name|status
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to condition variable type: */
@@ -852,7 +918,7 @@ comment|/* Fast condition variable: */
 case|case
 name|COND_TYPE_FAST
 case|:
-comment|/* 		 * Enter a loop to bring all threads off the 		 * condition queue: 		 */
+comment|/* 			 * Enter a loop to bring all threads off the 			 * condition queue: 			 */
 while|while
 condition|(
 operator|(
@@ -892,12 +958,19 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
 argument_list|(
-name|status
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(

@@ -15,6 +15,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -32,6 +38,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|spinlock_t
+name|static_init_lock
+init|=
+name|_SPINLOCK_INITIALIZER
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -59,9 +74,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 if|if
 condition|(
 name|mutex
@@ -88,13 +100,11 @@ name|mutex_attr
 operator|==
 name|NULL
 condition|)
-block|{
 comment|/* Default to a fast mutex: */
 name|type
 operator|=
 name|MUTEX_TYPE_FAST
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -107,15 +117,12 @@ name|m_type
 operator|>=
 name|MUTEX_TYPE_MAX
 condition|)
-block|{
 comment|/* Return an invalid argument error: */
 name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 else|else
-block|{
 comment|/* Use the requested mutex type: */
 name|type
 operator|=
@@ -126,7 +133,6 @@ operator|)
 operator|->
 name|m_type
 expr_stmt|;
-block|}
 comment|/* Check no errors so far: */
 if|if
 condition|(
@@ -155,12 +161,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|ret
 operator|=
 name|ENOMEM
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* Reset the mutex flags: */
@@ -169,13 +173,6 @@ operator|->
 name|m_flags
 operator|=
 literal|0
-expr_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
 expr_stmt|;
 comment|/* Process according to mutex type: */
 switch|switch
@@ -246,6 +243,23 @@ name|m_type
 operator|=
 name|type
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|pmutex
+operator|->
+name|lock
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pmutex
+operator|->
+name|lock
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|mutex
 operator|=
@@ -265,12 +279,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -297,9 +305,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 if|if
 condition|(
 name|mutex
@@ -311,66 +316,14 @@ name|mutex
 operator|==
 name|NULL
 condition|)
-block|{
 name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 else|else
 block|{
-comment|/* Block signals: */
-name|_thread_kern_sig_block
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
-comment|/* Process according to mutex type: */
-switch|switch
-condition|(
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_type
-condition|)
-block|{
-comment|/* Fast mutex: */
-case|case
-name|MUTEX_TYPE_FAST
-case|:
-comment|/* Nothing to do here. */
-break|break;
-comment|/* Counting mutex: */
-case|case
-name|MUTEX_TYPE_COUNTING_FAST
-case|:
-comment|/* Reset the mutex count: */
-operator|(
-operator|*
-name|mutex
-operator|)
-operator|->
-name|m_data
-operator|.
-name|m_count
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-comment|/* Trap undefined mutex types: */
-default|default:
-comment|/* Return an invalid argument error: */
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
-break|break;
-block|}
-comment|/* Clean up the mutex in case that others want to use it: */
-name|_thread_queue_init
+comment|/* Lock the mutex structure: */
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -378,35 +331,78 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|m_queue
+name|lock
 argument_list|)
 expr_stmt|;
-operator|(
+comment|/* 		 * Free the memory allocated for the mutex 		 * structure: 		 */
+name|free
+argument_list|(
 operator|*
 name|mutex
-operator|)
-operator|->
-name|m_owner
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Leave the caller's pointer NULL now that 		 * the mutex has been destroyed: 		 */
+operator|*
+name|mutex
 operator|=
 name|NULL
 expr_stmt|;
+block|}
+comment|/* Return the completion status: */
+return|return
 operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|init_static
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|static_init_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|*
 name|mutex
-operator|)
-operator|->
-name|m_flags
+operator|==
+name|NULL
+condition|)
+name|ret
+operator|=
+name|pthread_mutex_init
+argument_list|(
+name|mutex
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+name|ret
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
+name|_SPINUNLOCK
 argument_list|(
-name|status
+operator|&
+name|static_init_lock
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Return the completion status: */
 return|return
 operator|(
 name|ret
@@ -428,9 +424,6 @@ name|int
 name|ret
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|status
 decl_stmt|;
 if|if
 condition|(
@@ -454,22 +447,25 @@ operator|||
 operator|(
 name|ret
 operator|=
-name|pthread_mutex_init
+name|init_static
 argument_list|(
 name|mutex
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the mutex structure: */
+name|_SPINLOCK
 argument_list|(
 operator|&
-name|status
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to mutex type: */
@@ -594,10 +590,16 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
+comment|/* Unlock the mutex structure: */
+name|_SPINUNLOCK
 argument_list|(
-name|status
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -624,9 +626,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 if|if
 condition|(
 name|mutex
@@ -649,22 +648,25 @@ operator|||
 operator|(
 name|ret
 operator|=
-name|pthread_mutex_init
+name|init_static
 argument_list|(
 name|mutex
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the mutex structure: */
+name|_SPINLOCK
 argument_list|(
 operator|&
-name|status
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to mutex type: */
@@ -735,6 +737,18 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
+comment|/* Unlock the mutex structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* Block signals: */
 name|_thread_kern_sched_state
 argument_list|(
@@ -745,10 +759,16 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the mutex again: */
+name|_SPINLOCK
 argument_list|(
-name|NULL
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -823,6 +843,18 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
+comment|/* Unlock the mutex structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* Block signals: */
 name|_thread_kern_sched_state
 argument_list|(
@@ -833,10 +865,16 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the mutex again: */
+name|_SPINLOCK
 argument_list|(
-name|NULL
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -862,10 +900,16 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
+comment|/* Unlock the mutex structure: */
+name|_SPINUNLOCK
 argument_list|(
-name|status
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -892,9 +936,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 if|if
 condition|(
 name|mutex
@@ -914,11 +955,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Block signals: */
-name|_thread_kern_sig_block
+comment|/* Lock the mutex structure: */
+name|_SPINLOCK
 argument_list|(
 operator|&
-name|status
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to mutex type: */
@@ -1097,10 +1143,16 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* Unblock signals: */
-name|_thread_kern_sig_unblock
+comment|/* Unlock the mutex structure: */
+name|_SPINUNLOCK
 argument_list|(
-name|status
+operator|&
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
