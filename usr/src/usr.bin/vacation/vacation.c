@@ -20,6 +20,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"useful.h"
 end_include
 
@@ -35,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)vacation.c	3.2	%G%"
+literal|"@(#)vacation.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +69,25 @@ end_define
 
 begin_comment
 comment|/* max size of one name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ONEWEEK
+value|(60L*60L*24L*7L)
+end_define
+
+begin_decl_stmt
+name|long
+name|Timeout
+init|=
+name|ONEWEEK
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* timeout between notices per user */
 end_comment
 
 begin_struct
@@ -136,6 +161,11 @@ function_decl|;
 specifier|extern
 name|bool
 name|knows
+parameter_list|()
+function_decl|;
+specifier|extern
+name|long
+name|convtime
 parameter_list|()
 function_decl|;
 comment|/* process arguments */
@@ -266,6 +296,19 @@ argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
+case|case
+literal|'t'
+case|:
+comment|/* set timeout */
+name|Timeout
+operator|=
+name|convtime
+argument_list|(
+operator|++
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|usrerr
 argument_list|(
@@ -527,13 +570,6 @@ begin_comment
 comment|/* **  KNOWS -- predicate telling if user has already been informed. ** **	Parameters: **		user -- the user who sent this message. ** **	Returns: **		TRUE if 'user' has already been informed that the **			recipient is on vacation. **		FALSE otherwise. ** **	Side Effects: **		none. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ONEWEEK
-value|(60L*60L*24L*7L)
-end_define
-
 begin_function
 name|bool
 name|knows
@@ -604,7 +640,7 @@ operator|)
 operator|->
 name|sentdate
 operator|+
-name|ONEWEEK
+name|Timeout
 operator|<
 name|now
 condition|)
@@ -931,6 +967,110 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  CONVTIME -- convert time ** **	Parameters: **		p -- pointer to ascii time. ** **	Returns: **		time in seconds. ** **	Side Effects: **		none. */
+end_comment
+
+begin_function
+name|long
+name|convtime
+parameter_list|(
+name|p
+parameter_list|)
+name|char
+modifier|*
+name|p
+decl_stmt|;
+block|{
+specifier|register
+name|long
+name|t
+decl_stmt|;
+name|t
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|isdigit
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|t
+operator|=
+name|t
+operator|*
+literal|10
+operator|+
+operator|(
+operator|*
+name|p
+operator|++
+operator|-
+literal|'0'
+operator|)
+expr_stmt|;
+switch|switch
+condition|(
+operator|*
+name|p
+condition|)
+block|{
+case|case
+literal|'w'
+case|:
+comment|/* weeks */
+name|t
+operator|*=
+literal|7
+expr_stmt|;
+case|case
+literal|'d'
+case|:
+comment|/* days */
+case|case
+literal|'\0'
+case|:
+default|default:
+name|t
+operator|*=
+literal|24
+expr_stmt|;
+case|case
+literal|'h'
+case|:
+comment|/* hours */
+name|t
+operator|*=
+literal|60
+expr_stmt|;
+case|case
+literal|'m'
+case|:
+comment|/* minutes */
+name|t
+operator|*=
+literal|60
+expr_stmt|;
+case|case
+literal|'s'
+case|:
+comment|/* seconds */
+break|break;
+block|}
+return|return
+operator|(
+name|t
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
