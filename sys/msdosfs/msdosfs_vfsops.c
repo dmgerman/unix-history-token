@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.4 1994/09/27 20:42:54 phk Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.5 1994/10/02 17:48:21 phk Exp $ */
 end_comment
 
 begin_comment
@@ -2641,7 +2641,11 @@ name|dep
 operator|->
 name|de_flag
 operator|&
+operator|(
+name|DE_MODIFIED
+operator||
 name|DE_UPDATE
+operator|)
 operator|)
 operator|==
 literal|0

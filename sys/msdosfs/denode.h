@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: denode.h,v 1.1 1994/09/19 15:41:38 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -281,7 +281,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* file has been modified */
+comment|/* modification time update request */
 end_comment
 
 begin_define
@@ -292,7 +292,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* denode wants to be written back to disk */
+comment|/* denode has been modified, but DE_UPDATE 				 * isn't set */
 end_comment
 
 begin_comment
@@ -377,7 +377,7 @@ parameter_list|,
 name|waitfor
 parameter_list|)
 define|\
-value|if (dep->de_flag& DE_UPDATE) \ 		(void) deupdat(dep, t, waitfor);
+value|if ((dep)->de_flag& (DE_MODIFIED | DE_UPDATE)) \ 		(void) deupdat((dep), (t), (waitfor));
 end_define
 
 begin_define
@@ -390,11 +390,11 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|if (dep->de_flag& DE_UPDATE) { \ 		(dep)->de_flag |= DE_MODIFIED; \ 		unix2dostime(t,&dep->de_Date,&dep->de_Time); \ 		(dep)->de_flag&= ~DE_UPDATE; \ 	}
+value|if ((dep)->de_flag& DE_UPDATE) { \ 		struct timespec DE_TIMES_ts; \ 		(dep)->de_flag |= DE_MODIFIED; \ 		TIMEVAL_TO_TIMESPEC((t),&DE_TIMES_ts); \ 		unix2dostime(&DE_TIMES_ts,&(dep)->de_Date,&(dep)->de_Time); \ 		(dep)->de_flag&= ~DE_UPDATE; \ 	}
 end_define
 
 begin_comment
-comment|/*  * This overlays the fid sturcture (see mount.h)  */
+comment|/*  * This overlays the fid structure (see mount.h)  */
 end_comment
 
 begin_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.3 1994/10/06 21:06:51 davidg Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.4 1994/10/10 07:57:32 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1082,10 +1082,6 @@ modifier|*
 name|dirp
 decl_stmt|;
 name|struct
-name|timespec
-name|ts
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|vp
@@ -1107,7 +1103,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If the update bit is off, or this denode is from a readonly 	 * filesystem, or this denode is for a directory, or the denode 	 * represents an open but unlinked file then don't do anything. DOS 	 * directory entries that describe a directory do not ever get 	 * updated.  This is the way dos treats them. 	 */
+comment|/* 	 * If the denode-modified and update-mtime bits are off, 	 * or this denode is from a readonly filesystem, 	 * or this denode is for a directory, 	 * or the denode represents an open but unlinked file, 	 * then don't do anything.  DOS directory 	 * entries that describe a directory do not ever get 	 * updated.  This is the way DOS treats them. 	 */
 if|if
 condition|(
 operator|(
@@ -1115,7 +1111,11 @@ name|dep
 operator|->
 name|de_flag
 operator|&
+operator|(
+name|DE_MODIFIED
+operator||
 name|DE_UPDATE
+operator|)
 operator|)
 operator|==
 literal|0
@@ -1164,20 +1164,18 @@ condition|)
 return|return
 name|error
 return|;
-comment|/* 	 * Put the passed in time into the directory entry. 	 */
-name|TIMEVAL_TO_TIMESPEC
-argument_list|(
+comment|/* 	 * If the mtime is to be updated, put the passed in time into the 	 * directory entry. 	 */
+if|if
+condition|(
+name|dep
+operator|->
+name|de_flag
 operator|&
-name|time
-argument_list|,
-operator|&
-name|ts
-argument_list|)
-expr_stmt|;
+name|DE_UPDATE
+condition|)
 name|unix2dostime
 argument_list|(
-operator|&
-name|ts
+name|tp
 argument_list|,
 operator|&
 name|dep
@@ -1190,12 +1188,17 @@ operator|->
 name|de_Time
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The mtime is now up to date.  The denode will be unmodifed soon. 	 */
 name|dep
 operator|->
 name|de_flag
 operator|&=
 operator|~
+operator|(
+name|DE_MODIFIED
+operator||
 name|DE_UPDATE
+operator|)
 expr_stmt|;
 comment|/* 	 * Copy the directory entry out of the denode into the cluster it 	 * came from. 	 */
 name|DE_EXTERNALIZE

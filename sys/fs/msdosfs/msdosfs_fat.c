@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.2 1994/09/27 20:42:46 phk Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.3 1994/10/10 07:57:33 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1153,8 +1153,8 @@ comment|/*  * Updating entries in 12 bit fats is a pain in the butt.  *   * The 
 end_comment
 
 begin_function
-specifier|extern
-name|__inline
+specifier|static
+specifier|inline
 name|void
 name|usemap_alloc
 parameter_list|(
@@ -1197,8 +1197,8 @@ block|}
 end_function
 
 begin_function
-specifier|extern
-name|__inline
+specifier|static
+specifier|inline
 name|void
 name|usemap_free
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.1 1994/09/19 15:41:40 dfr Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.2 1994/09/27 20:42:42 phk Exp $ */
 end_comment
 
 begin_comment
@@ -503,12 +503,16 @@ name|seconds
 operator|=
 operator|(
 operator|(
+operator|(
 name|dt
 operator|&
 name|DT_2SECONDS_MASK
 operator|)
 operator|>>
 name|DT_2SECONDS_SHIFT
+operator|)
+operator|<<
+literal|1
 operator|)
 operator|+
 operator|(
