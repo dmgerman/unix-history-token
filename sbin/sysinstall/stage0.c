@@ -117,6 +117,10 @@ argument_list|,
 name|welcome
 argument_list|,
 name|selection
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 name|ExitSysinstall

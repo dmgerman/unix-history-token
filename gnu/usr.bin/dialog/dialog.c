@@ -961,6 +961,10 @@ operator|+
 literal|6
 argument_list|,
 name|result
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|dialog_update
