@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Sat Mar 18 22:15:47 1995 ylo  * Code to connect to a remote host, and to perform the client side of the  * login (authentication) dialog.  *   * $FreeBSD$  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Code to connect to a remote host, and to perform the client side of the  * login (authentication) dialog.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_include
@@ -12,7 +12,15 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect.c,v 1.74 2000/05/17 16:57:02 markus Exp $"
+literal|"$OpenBSD: sshconnect.c,v 1.78 2000/09/07 20:27:54 deraadt Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -803,16 +811,16 @@ name|linger
 decl_stmt|;
 name|debug
 argument_list|(
-literal|"ssh_connect: getuid %d geteuid %d anon %d"
+literal|"ssh_connect: getuid %u geteuid %u anon %d"
 argument_list|,
 operator|(
-name|int
+name|u_int
 operator|)
 name|getuid
 argument_list|()
 argument_list|,
 operator|(
-name|int
+name|u_int
 operator|)
 name|geteuid
 argument_list|()
@@ -1288,6 +1296,12 @@ decl_stmt|;
 comment|/* Read other side\'s version identification. */
 for|for
 control|(
+init|;
+condition|;
+control|)
+block|{
+for|for
+control|(
 name|i
 operator|=
 literal|0
@@ -1308,8 +1322,10 @@ block|{
 name|int
 name|len
 init|=
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|connection_in
 argument_list|,
 operator|&
@@ -1411,6 +1427,28 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"SSH-"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+name|debug
+argument_list|(
+literal|"ssh_exchange_identification: %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
 name|server_version_string
 operator|=
 name|xstrdup
@@ -3780,7 +3818,7 @@ name|pw
 condition|)
 name|fatal
 argument_list|(
-literal|"User id %d not found from user database."
+literal|"User id %u not found from user database."
 argument_list|,
 name|original_real_uid
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_include
@@ -12,7 +12,15 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth1.c,v 1.2 2000/04/29 18:11:52 markus Exp $"
+literal|"$OpenBSD: auth1.c,v 1.4 2000/09/07 20:27:49 deraadt Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -551,19 +559,19 @@ name|verbose
 function_decl|;
 ifdef|#
 directive|ifdef
-name|LOGIN_CAP
+name|HAVE_LOGIN_CAP
 name|login_cap_t
 modifier|*
 name|lc
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* LOGIN_CAP */
+comment|/* HAVE_LOGIN_CAP */
 if|#
 directive|if
 name|defined
 argument_list|(
-name|LOGIN_CAP
+name|HAVE_LOGIN_CAP
 argument_list|)
 operator|||
 name|defined
@@ -590,7 +598,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* LOGIN_CAP || LOGIN_ACCESS */
+comment|/* HAVE_LOGIN_CAP || LOGIN_ACCESS */
 ifdef|#
 directive|ifdef
 name|HAVE_LIBPAM
@@ -1742,7 +1750,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|LOGIN_CAP
+name|HAVE_LOGIN_CAP
 name|lc
 operator|=
 name|login_getpwclass
@@ -1835,7 +1843,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* LOGIN_CAP */
+comment|/* HAVE_LOGIN_CAP */
 ifdef|#
 directive|ifdef
 name|LOGIN_ACCESS
@@ -2148,6 +2156,17 @@ operator|=
 name|pw
 operator|->
 name|pw_gid
+expr_stmt|;
+name|pwcopy
+operator|.
+name|pw_class
+operator|=
+name|xstrdup
+argument_list|(
+name|pw
+operator|->
+name|pw_class
+argument_list|)
 expr_stmt|;
 name|pwcopy
 operator|.

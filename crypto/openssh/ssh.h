@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ssh.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Fri Mar 17 17:09:37 1995 ylo  *  * Generic header file for ssh.  *  * $FreeBSD$  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Generic header file for ssh.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: ssh.h,v 1.46 2000/05/17 08:20:15 markus Exp $"); */
+comment|/* RCSID("$OpenBSD: ssh.h,v 1.50 2000/09/07 20:27:54 deraadt Exp $"); */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -1821,6 +1825,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* return next token in configuration line */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|strdelim
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* set filedescriptor to non-blocking */
 end_comment
 
@@ -1879,6 +1900,9 @@ name|have_pty
 parameter_list|,
 name|int
 name|escape_char
+parameter_list|,
+name|int
+name|id
 parameter_list|)
 function_decl|;
 end_function_decl

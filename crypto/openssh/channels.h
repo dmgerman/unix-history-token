@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RCSID("$Id: channels.h,v 1.13 2000/05/30 17:23:37 markus Exp $"); */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/* RCSID("$OpenBSD: channels.h,v 1.19 2000/09/07 21:13:37 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -151,6 +159,20 @@ begin_comment
 comment|/*  * Data structure for channel data.  This is iniailized in channel_allocate  * and cleared in channel_free.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|Channel
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|Channel
+name|Channel
+typedef|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 name|void
@@ -168,6 +190,25 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|int
+name|channel_filter_fn
+parameter_list|(
+name|struct
+name|Channel
+modifier|*
+name|c
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_struct
 struct|struct
 name|Channel
 block|{
@@ -285,10 +326,14 @@ name|channel_callback_fn
 modifier|*
 name|dettach_user
 decl_stmt|;
+comment|/* filter */
+name|channel_filter_fn
+modifier|*
+name|input_filter
+decl_stmt|;
 block|}
-name|Channel
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -309,6 +354,52 @@ define|#
 directive|define
 name|CHAN_EXTENDED_WRITE
 value|2
+end_define
+
+begin_comment
+comment|/* default window/packet sizes for tcp/x11-fwd-channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHAN_SES_WINDOW_DEFAULT
+value|(32*1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_SES_PACKET_DEFAULT
+value|(CHAN_SES_WINDOW_DEFAULT/2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_TCP_WINDOW_DEFAULT
+value|(32*1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_TCP_PACKET_DEFAULT
+value|(CHAN_TCP_WINDOW_DEFAULT/2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_X11_WINDOW_DEFAULT
+value|(4*1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_X11_PACKET_DEFAULT
+value|(CHAN_X11_WINDOW_DEFAULT/2)
 end_define
 
 begin_function_decl
@@ -406,6 +497,20 @@ name|int
 name|id
 parameter_list|,
 name|channel_callback_fn
+modifier|*
+name|fn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|channel_register_filter
+parameter_list|(
+name|int
+name|id
+parameter_list|,
+name|channel_filter_fn
 modifier|*
 name|fn
 parameter_list|)

@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * servconf.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Mon Aug 21 15:35:03 1995 ylo  *  * Definitions for server configuration data and for the functions reading it.  *  * $FreeBSD$  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Definitions for server configuration data and for the functions reading it.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: servconf.h,v 1.22 2000/05/06 17:45:37 markus Exp $"); */
+comment|/* RCSID("$OpenBSD: servconf.h,v 1.28 2000/09/07 20:27:53 deraadt Exp $"); */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -72,6 +76,17 @@ end_define
 
 begin_comment
 comment|/* Max # groups on deny list. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_SUBSYSTEMS
+value|256
+end_define
+
+begin_comment
+comment|/* Max # subsystems. */
 end_comment
 
 begin_typedef
@@ -159,6 +174,11 @@ name|int
 name|x11_display_offset
 decl_stmt|;
 comment|/* What DISPLAY number to start 					 * searching at */
+name|char
+modifier|*
+name|xauth_location
+decl_stmt|;
+comment|/* Location of xauth program */
 name|int
 name|strict_modes
 decl_stmt|;
@@ -319,6 +339,33 @@ comment|/* 						 * If not 0, number of sshd 						 * connections accepted per 	
 name|unsigned
 name|int
 name|connections_period
+decl_stmt|;
+name|unsigned
+name|int
+name|num_subsystems
+decl_stmt|;
+name|char
+modifier|*
+name|subsystem_name
+index|[
+name|MAX_SUBSYSTEMS
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|subsystem_command
+index|[
+name|MAX_SUBSYSTEMS
+index|]
+decl_stmt|;
+name|int
+name|max_startups_begin
+decl_stmt|;
+name|int
+name|max_startups_rate
+decl_stmt|;
+name|int
+name|max_startups
 decl_stmt|;
 block|}
 name|ServerOptions
