@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_output.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_output.c	7.7 (Berkeley) %G% */
+comment|/*	@(#)clnp_output.c	7.8 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1793,9 +1793,6 @@ block|}
 block|}
 block|}
 comment|/* 	 *	If small enough for interface, send directly 	 *	Fill in segmentation part of hdr if using the full protocol 	 */
-if|if
-condition|(
-operator|(
 name|total_len
 operator|=
 name|clnp
@@ -1803,18 +1800,7 @@ operator|->
 name|cnf_hdr_len
 operator|+
 name|datalen
-operator|)
-operator|<=
-name|SN_MTU
-argument_list|(
-name|clcp
-operator|->
-name|clc_ifa
-operator|->
-name|ia_ifp
-argument_list|)
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 name|clnp
@@ -1884,6 +1870,20 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|total_len
+operator|<=
+name|SN_MTU
+argument_list|(
+name|clcp
+operator|->
+name|clc_ifa
+operator|->
+name|ia_ifp
+argument_list|)
+condition|)
+block|{
 name|HTOC
 argument_list|(
 name|clnp
