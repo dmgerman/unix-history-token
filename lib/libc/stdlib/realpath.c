@@ -448,7 +448,11 @@ argument_list|(
 name|wbuf
 argument_list|)
 operator|+
+operator|(
+literal|1
+operator|-
 name|rootd
+operator|)
 operator|+
 literal|1
 operator|>
