@@ -77,6 +77,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have a working `mmap' system call.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MMAP */
+end_comment
+
+begin_comment
 comment|/* Define if your struct stat has st_blksize.  */
 end_comment
 
@@ -142,6 +150,14 @@ end_comment
 
 begin_comment
 comment|/* #undef mode_t */
+end_comment
+
+begin_comment
+comment|/* Define if your C compiler doesn't accept -c and -o together.  */
+end_comment
+
+begin_comment
+comment|/* #undef NO_MINUS_C_MINUS_O */
 end_comment
 
 begin_comment
@@ -906,6 +922,17 @@ comment|/* #undef HAVE_NDIR_H */
 end_comment
 
 begin_comment
+comment|/* Define if you have the<stdlib.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDLIB_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<string.h> header file.  */
 end_comment
 
@@ -985,6 +1012,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<sys/stat.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<sys/time.h> header file.  */
 end_comment
 
@@ -1003,6 +1041,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_TIMEB_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/types.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TYPES_H
 value|1
 end_define
 
@@ -1058,7 +1107,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.11.1p1"
+value|"1.11.2"
 end_define
 
 begin_comment
