@@ -985,6 +985,20 @@ operator|*
 operator|)
 name|USRSTACK
 expr_stmt|;
+name|_next_stack
+operator|=
+name|_usrstack
+operator|-
+name|PTHREAD_STACK_INITIAL
+operator|-
+name|PTHREAD_STACK_DEFAULT
+operator|-
+operator|(
+literal|2
+operator|*
+name|PTHREAD_STACK_GUARD
+operator|)
+expr_stmt|;
 comment|/* 		 * Create a red zone below the main stack.  All other stacks are 		 * constrained to a maximum size by the paramters passed to 		 * mmap(), but this stack is only limited by resource limits, so 		 * this stack needs an explicitly mapped red zone to protect the 		 * thread stack that is just beyond. 		 */
 if|if
 condition|(
