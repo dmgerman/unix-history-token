@@ -375,6 +375,12 @@ name|int
 name|fastslow
 parameter_list|)
 block|{
+comment|/* 	 * Allocate the huge variables statically.  They _will_ run you 	 * out of interrupt-context stack otherwise! 	 */
+specifier|static
+name|BF_KEY
+name|hashkey
+decl_stmt|;
+specifier|static
 name|unsigned
 name|char
 name|v
@@ -394,9 +400,6 @@ name|KEYSIZE
 index|]
 decl_stmt|;
 comment|/* h' */
-name|BF_KEY
-name|hashkey
-decl_stmt|;
 name|unsigned
 name|char
 name|ivec
