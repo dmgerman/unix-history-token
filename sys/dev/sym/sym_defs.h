@@ -157,6 +157,9 @@ decl_stmt|;
 name|u_char
 name|nr_divisor
 decl_stmt|;
+name|u_char
+name|lp_probe_bit
+decl_stmt|;
 name|u_int
 name|features
 decl_stmt|;
