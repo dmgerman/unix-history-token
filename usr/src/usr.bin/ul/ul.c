@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ul.c	4.6 (Berkeley) %G%"
+literal|"@(#)ul.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1509,42 +1509,17 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|i
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MAXBUF
-condition|;
-name|i
-operator|++
-control|)
-block|{
+name|bzero
+argument_list|(
 name|obuf
-index|[
-name|i
-index|]
-operator|.
-name|c_char
-operator|=
-literal|'\0'
-expr_stmt|;
+argument_list|,
+sizeof|sizeof
+argument_list|(
 name|obuf
-index|[
-name|i
-index|]
-operator|.
-name|c_mode
-operator|=
-name|NORMAL
+argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
+comment|/* depends on NORMAL == 0 */
 name|col
 operator|=
 literal|0
@@ -1887,26 +1862,6 @@ operator|=
 name|EXIT_STANDOUT
 expr_stmt|;
 comment|/* 	 * Note that we use REVERSE for the alternate character set, 	 * not the as/ae capabilities.  This is because we are modelling 	 * the model 37 teletype (since that's what nroff outputs) and 	 * the typical as/ae is more of a graphics set, not the greek 	 * letters the 37 has. 	 */
-ifdef|#
-directive|ifdef
-name|notdef
-name|printf
-argument_list|(
-literal|"so %s se %s us %s ue %s me %s\n"
-argument_list|,
-name|ENTER_STANDOUT
-argument_list|,
-name|EXIT_STANDOUT
-argument_list|,
-name|ENTER_UNDERLINE
-argument_list|,
-name|EXIT_UNDERLINE
-argument_list|,
-name|EXIT_ATTRIBUTES
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|UNDER_CHAR
 operator|=
 name|tgetstr
