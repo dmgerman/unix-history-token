@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	3.1	%G% */
+comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	3.2	%G% */
 end_comment
 
 begin_include
@@ -327,7 +327,7 @@ begin_typedef
 typedef|typedef
 name|struct
 name|address
-name|addrq
+name|ADDRESS
 typedef|;
 end_typedef
 
@@ -357,7 +357,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|addrq
+name|ADDRESS
 name|SendQ
 decl_stmt|;
 end_decl_stmt
@@ -368,7 +368,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|addrq
+name|ADDRESS
 name|AliasQ
 decl_stmt|;
 end_decl_stmt
@@ -810,7 +810,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|addrq
+name|ADDRESS
 name|From
 decl_stmt|;
 end_decl_stmt
@@ -847,18 +847,6 @@ include|#
 directive|include
 file|<sysexits.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|flagset
-parameter_list|(
-name|bits
-parameter_list|,
-name|word
-parameter_list|)
-value|((bits)& (word))
-end_define
 
 begin_define
 define|#
