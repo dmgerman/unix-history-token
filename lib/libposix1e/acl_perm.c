@@ -78,12 +78,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * acl_clear_perm() clears all permisions from the permission  * set permset_d  */
+comment|/*  * acl_clear_perms() clears all permisions from the permission  * set permset_d  */
 end_comment
 
 begin_function
 name|int
-name|acl_clear_perm
+name|acl_clear_perms
 parameter_list|(
 name|acl_permset_t
 name|permset_d
