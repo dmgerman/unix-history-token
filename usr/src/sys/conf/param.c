@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)param.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)param.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -108,6 +108,29 @@ directive|include
 file|"../sys/kernel.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVSHM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"machine/vmparam.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../sys/shm.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * System parameter formulae.  *  * This file is copied into each directory where we compile  * the kernel; it should be modified there to suit local taste  * if necessary.  *  * Compiled with -DHZ=xx -DTIMEZONE=x -DDST=x -DMAXUSERS=xx  */
 end_comment
@@ -194,13 +217,18 @@ name|NPROC
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|NTEXT
+value|(36 + MAXUSERS)
+end_define
+
 begin_decl_stmt
 name|int
 name|ntext
 init|=
-literal|36
-operator|+
-name|MAXUSERS
+name|NTEXT
 decl_stmt|;
 end_decl_stmt
 
@@ -208,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|NVNODE
-value|((NPROC + 16 + MAXUSERS) + 32)
+value|(NPROC + NTEXT + 300)
 end_define
 
 begin_decl_stmt
@@ -280,6 +308,79 @@ end_decl_stmt
 begin_comment
 comment|/* kernel uses `FSCALE', user uses `fscale' */
 end_comment
+
+begin_comment
+comment|/*  * Values in support of System V compatible shared memory.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVSHM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SHMMAX
+value|(SHMMAXPGS*NBPG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHMMIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHMMNI
+value|32
+end_define
+
+begin_comment
+comment|/*<= SHMMMNI in shm.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHMSEG
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHMALL
+value|(SHMMAXPGS/CLSIZE)
+end_define
+
+begin_decl_stmt
+name|struct
+name|shminfo
+name|shminfo
+init|=
+block|{
+name|SHMMAX
+block|,
+name|SHMMIN
+block|,
+name|SHMMNI
+block|,
+name|SHMSEG
+block|,
+name|SHMALL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * These are initialized at bootstrap time  * to values dependent on memory size  */
