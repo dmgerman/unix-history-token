@@ -8423,6 +8423,19 @@ name|n
 operator|<
 literal|0
 operator|||
+name|n
+operator|>
+name|anslen
+condition|)
+name|hp
+operator|->
+name|rcode
+operator|=
+name|FORMERR
+expr_stmt|;
+comment|/* XXX not very informative */
+if|if
+condition|(
 name|hp
 operator|->
 name|rcode

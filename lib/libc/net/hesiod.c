@@ -1730,12 +1730,17 @@ condition|(
 name|n
 operator|<
 literal|0
+operator|||
+name|n
+operator|>
+name|MAX_HESRESP
 condition|)
 block|{
 name|errno
 operator|=
 name|ECONNREFUSED
 expr_stmt|;
+comment|/* XXX */
 return|return
 name|NULL
 return|;

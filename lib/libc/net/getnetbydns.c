@@ -1190,7 +1190,40 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"res_query failed\n"
+literal|"res_search failed\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+name|NS_UNAVAIL
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|anslen
+operator|>
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"res_search static buffer too small"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1419,7 +1452,40 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"res_query failed\n"
+literal|"res_search failed\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+name|NS_UNAVAIL
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|anslen
+operator|>
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"res_search static buffer too small"
 argument_list|)
 expr_stmt|;
 endif|#
