@@ -4079,7 +4079,7 @@ operator||=
 name|WCOREFLAG
 expr_stmt|;
 block|}
-name|exit
+name|kexit
 argument_list|(
 name|p
 argument_list|,

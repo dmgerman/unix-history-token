@@ -2208,7 +2208,7 @@ argument_list|,
 name|M_NAMEI
 argument_list|)
 expr_stmt|;
-name|exit
+name|kexit
 argument_list|(
 name|p
 argument_list|,

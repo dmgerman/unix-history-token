@@ -1925,7 +1925,7 @@ name|rv
 operator|==
 literal|2
 condition|)
-name|exit
+name|kexit
 argument_list|(
 name|p
 argument_list|,

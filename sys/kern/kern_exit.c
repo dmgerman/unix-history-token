@@ -179,7 +179,7 @@ modifier|*
 name|retval
 decl_stmt|;
 block|{
-name|exit
+name|kexit
 argument_list|(
 name|p
 argument_list|,
@@ -201,28 +201,24 @@ begin_comment
 comment|/*  * Exit: deallocate address space and other resources,  * change proc state to zombie, and unlink proc from allproc  * and parent's lists.  Save exit status and rusage for wait().  * Check for child processes and orphan them.  */
 end_comment
 
-begin_expr_stmt
-name|exit
-argument_list|(
+begin_function
+specifier|volatile
+name|void
+name|kexit
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|rv
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -896,7 +892,7 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
