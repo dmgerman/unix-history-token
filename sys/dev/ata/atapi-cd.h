@@ -1224,9 +1224,7 @@ name|stats
 decl_stmt|;
 comment|/* devstat entry */
 name|dev_t
-name|dev1
-decl_stmt|,
-name|dev2
+name|dev
 decl_stmt|;
 comment|/* device place holders */
 block|}
