@@ -920,6 +920,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function_decl
 specifier|extern
 name|int
@@ -1068,6 +1074,15 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * These are defined as macros for speedup. #define ppb_get_base_addr(dev) ((dev)->ppb->ppb_link->base) #define ppb_get_epp_protocol(dev) ((dev)->ppb->ppb_link->epp_protocol) #define ppb_get_irq(dev) ((dev)->ppb->ppb_link->id_irq)  */
