@@ -692,6 +692,8 @@ name|dd
 decl_stmt|;
 name|int
 name|err
+decl_stmt|,
+name|size
 decl_stmt|;
 if|if
 condition|(
@@ -793,6 +795,9 @@ literal|0
 argument_list|,
 operator|&
 name|us
+argument_list|,
+operator|&
+name|size
 argument_list|)
 expr_stmt|;
 if|if
