@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.c	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -349,21 +349,16 @@ begin_comment
 comment|/*  * Return the network number from an internet address.  */
 end_comment
 
-begin_macro
+begin_function
+name|u_long
 name|in_netof
-argument_list|(
-argument|in
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|in
+parameter_list|)
 name|struct
 name|in_addr
 name|in
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_long
@@ -437,13 +432,7 @@ name|ia_next
 control|)
 if|if
 condition|(
-operator|(
-name|ia
-operator|->
-name|ia_netmask
-operator|&
 name|net
-operator|)
 operator|==
 name|ia
 operator|->
@@ -464,7 +453,7 @@ name|net
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return the host portion of an internet address.  */
@@ -584,13 +573,7 @@ name|ia_next
 control|)
 if|if
 condition|(
-operator|(
-name|ia
-operator|->
-name|ia_netmask
-operator|&
 name|net
-operator|)
 operator|==
 name|ia
 operator|->
@@ -615,7 +598,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Return 1 if an internet address is for a ``local'' host  * (one to which we have a connection).  */
+comment|/*  * Return 1 if an internet address is for a ``local'' host  * (one to which we have a connection through a local logical net).  */
 end_comment
 
 begin_macro
@@ -705,13 +688,7 @@ name|ia_next
 control|)
 if|if
 condition|(
-operator|(
-name|ia
-operator|->
-name|ia_netmask
-operator|&
 name|net
-operator|)
 operator|==
 name|ia
 operator|->
@@ -730,8 +707,30 @@ return|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|in_interfaces
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of external internet interfaces */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ifnet
+name|loif
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Generic internet control operations (ioctl's).  * Ifp is 0 if not an interface-specific ioctl.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
@@ -1067,6 +1066,16 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|!=
+operator|&
+name|loif
+condition|)
+name|in_interfaces
+operator|++
+expr_stmt|;
 block|}
 break|break;
 block|}
@@ -1225,7 +1234,7 @@ call|)
 argument_list|(
 name|ifp
 argument_list|,
-name|SIOCSIFADDR
+name|SIOCSIFDSTADDR
 argument_list|,
 name|ia
 argument_list|)
@@ -1292,7 +1301,6 @@ name|ifr_addr
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|SIOCSIFNETMASK
 case|:
