@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.42	81/12/20	*/
+comment|/*	tcp_input.c	1.43	81/12/21	*/
 end_comment
 
 begin_include
@@ -575,9 +575,16 @@ name|inp
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cant find inp\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropwithreset
 goto|;
+block|}
 name|tp
 operator|=
 name|intotcpcb
@@ -591,9 +598,16 @@ name|tp
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"tp is 0\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropwithreset
 goto|;
+block|}
 name|so
 operator|=
 name|inp
@@ -690,9 +704,16 @@ name|tiflags
 operator|&
 name|TH_ACK
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"contains ACK\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropwithreset
 goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -703,9 +724,16 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"no syn\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|drop
 goto|;
+block|}
 name|tcp_in
 operator|.
 name|sin_addr
@@ -737,9 +765,16 @@ operator|&
 name|tcp_in
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pcb cant connect\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|drop
 goto|;
+block|}
 name|tp
 operator|->
 name|t_template
@@ -758,6 +793,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"can't get template\n"
+argument_list|)
+expr_stmt|;
 name|in_pcbdisconnect
 argument_list|(
 name|inp
@@ -1072,9 +1112,16 @@ name|ti
 operator|->
 name|ti_seq
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"wnd closed, not at edge\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropafterack
 goto|;
+block|}
 if|if
 condition|(
 name|ti
@@ -1173,9 +1220,16 @@ name|ti
 operator|->
 name|ti_len
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"window open but outside\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropafterack
 goto|;
+block|}
 name|m_adj
 argument_list|(
 name|m
@@ -1273,9 +1327,16 @@ name|ti
 operator|->
 name|ti_len
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"segment outside window\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropafterack
 goto|;
+block|}
 name|m_adj
 argument_list|(
 name|m
@@ -1612,9 +1673,16 @@ operator|->
 name|snd_max
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ack> snd_max\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|dropafterack
 goto|;
+block|}
 name|acked
 operator|=
 name|ti
@@ -1644,15 +1712,17 @@ name|so_snd
 operator|.
 name|sb_cc
 expr_stmt|;
-comment|/* if acked> 0 our FIN is acked */
-if|if
-condition|(
+name|tp
+operator|->
+name|snd_wnd
+operator|-=
 name|so
 operator|->
 name|so_snd
 operator|.
 name|sb_cc
-condition|)
+expr_stmt|;
+comment|/* if acked> 0 our FIN is acked */
 name|sbdrop
 argument_list|(
 operator|&
@@ -1683,6 +1753,7 @@ if|if
 condition|(
 name|acked
 condition|)
+block|{
 name|sbdrop
 argument_list|(
 operator|&
@@ -1693,10 +1764,17 @@ argument_list|,
 name|acked
 argument_list|)
 expr_stmt|;
+name|tp
+operator|->
+name|snd_wnd
+operator|-=
+name|acked
+expr_stmt|;
 name|acked
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|TCPT_RANGESET
 argument_list|(
 name|tp
@@ -1920,7 +1998,7 @@ name|snd_wl2
 argument_list|,
 name|ti
 operator|->
-name|ti_seq
+name|ti_ack
 argument_list|)
 condition|)
 block|{
@@ -2071,6 +2149,19 @@ argument_list|,
 name|ti
 argument_list|)
 expr_stmt|;
+block|{
+extern|extern tcpdelack;
+if|if
+condition|(
+name|tcpdelack
+condition|)
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_DELACK
+expr_stmt|;
+else|else
 name|tp
 operator|->
 name|t_flags
@@ -2078,6 +2169,7 @@ operator||=
 name|TF_ACKNOW
 expr_stmt|;
 comment|/* XXX TF_DELACK */
+block|}
 block|}
 else|else
 block|{
@@ -2341,6 +2433,11 @@ block|}
 return|return;
 name|drop
 label|:
+name|printf
+argument_list|(
+literal|"drop\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Drop space held by incoming segment and return. 	 */
 name|m_freem
 argument_list|(
