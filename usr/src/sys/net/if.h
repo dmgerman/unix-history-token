@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -230,6 +230,32 @@ end_define
 
 begin_comment
 comment|/* no address resolution protocol */
+end_comment
+
+begin_comment
+comment|/* next two not supported now, but reserved: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_PROMISC
+value|0x100
+end_define
+
+begin_comment
+comment|/* receive all packets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_ALLMULTI
+value|0x200
+end_define
+
+begin_comment
+comment|/* receive all multicast packets */
 end_comment
 
 begin_comment
