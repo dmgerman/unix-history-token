@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.26 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8097,19 +8097,6 @@ return|return
 name|host
 return|;
 block|}
-comment|/* 	**  If it is a numeric address, just return it. 	*/
-if|if
-condition|(
-name|host
-index|[
-literal|0
-index|]
-operator|==
-literal|'['
-condition|)
-return|return
-name|host
-return|;
 comment|/* 	**  Look it up in the symbol table. 	*/
 name|s
 operator|=

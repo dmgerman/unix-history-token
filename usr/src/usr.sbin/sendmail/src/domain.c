@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.6 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.7 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.6 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.7 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -446,6 +446,19 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+comment|/* efficiency hack -- numeric or non-MX lookups */
+if|if
+condition|(
+name|host
+index|[
+literal|0
+index|]
+operator|==
+literal|'['
+condition|)
+goto|goto
+name|punt
+goto|;
 name|errno
 operator|=
 literal|0
@@ -1140,11 +1153,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|mxhosts
-index|[
-literal|0
-index|]
-operator|=
 name|strcpy
 argument_list|(
 name|MXHostBuf
@@ -1152,6 +1160,78 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
+name|mxhosts
+index|[
+literal|0
+index|]
+operator|=
+name|MXHostBuf
+expr_stmt|;
+if|if
+condition|(
+name|host
+index|[
+literal|0
+index|]
+operator|==
+literal|'['
+condition|)
+block|{
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+comment|/* this may be an MX suppression-style address */
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|MXHostBuf
+argument_list|,
+literal|']'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|inet_addr
+argument_list|(
+operator|&
+name|MXHostBuf
+index|[
+literal|1
+index|]
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+operator|*
+name|p
+operator|=
+literal|']'
+expr_stmt|;
+else|else
+name|mxhosts
+index|[
+literal|0
+index|]
+operator|++
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|trycanon
