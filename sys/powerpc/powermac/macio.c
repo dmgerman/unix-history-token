@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * Driver for KeyLargo/Pangea, the MacPPC south bridge ASIC.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include

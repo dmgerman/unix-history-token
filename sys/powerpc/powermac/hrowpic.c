@@ -7,12 +7,6 @@ begin_comment
 comment|/*  *  A driver for the PIC found in the Heathrow/Paddington MacIO chips.  * This was superseded by an OpenPIC in the Keylargo and beyond   * MacIO versions.  *  *  The device is initially located in the OpenFirmware device tree  * in the earliest stage of the nexus probe. However, no device registers  * are touched until the actual h/w is probed later on during the  * MacIO probe. At that point, any interrupt sources that were allocated   * prior to this are activated.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -878,6 +872,9 @@ name|hrowpic_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|u_long
+name|start
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -888,12 +885,20 @@ argument_list|(
 name|picdev
 argument_list|)
 expr_stmt|;
+name|start
+operator|=
+name|rman_get_start
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
+name|rman_get_flags
+argument_list|(
 name|res
-operator|->
-name|r_flags
+argument_list|)
 operator|&
 name|RF_SHAREABLE
 operator|)
@@ -930,9 +935,7 @@ argument_list|(
 name|child
 argument_list|)
 argument_list|,
-name|res
-operator|->
-name|r_start
+name|start
 argument_list|,
 name|intr
 argument_list|,
@@ -954,9 +957,7 @@ name|sc
 operator|->
 name|sc_irq
 index|[
-name|res
-operator|->
-name|r_start
+name|start
 index|]
 operator|=
 literal|1
@@ -972,9 +973,7 @@ name|hrowpic_toggle_irq
 argument_list|(
 name|sc
 argument_list|,
-name|res
-operator|->
-name|r_start
+name|start
 argument_list|,
 literal|1
 argument_list|)
@@ -1033,9 +1032,10 @@ name|error
 operator|=
 name|inthand_remove
 argument_list|(
+name|rman_get_start
+argument_list|(
 name|res
-operator|->
-name|r_start
+argument_list|)
 argument_list|,
 name|ih
 argument_list|)

@@ -3,12 +3,6 @@ begin_comment
 comment|/*  * Copyright (C) 2002 Benno Rice.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Benno Rice ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1000,6 +994,9 @@ name|openpic_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|u_long
+name|start
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1008,6 +1005,13 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|start
+operator|=
+name|rman_get_start
+argument_list|(
+name|res
 argument_list|)
 expr_stmt|;
 if|if
@@ -1038,9 +1042,10 @@ block|}
 if|if
 condition|(
 operator|(
+name|rman_get_flags
+argument_list|(
 name|res
-operator|->
-name|r_flags
+argument_list|)
 operator|&
 name|RF_SHAREABLE
 operator|)
@@ -1077,9 +1082,7 @@ argument_list|(
 name|child
 argument_list|)
 argument_list|,
-name|res
-operator|->
-name|r_start
+name|start
 argument_list|,
 name|intr
 argument_list|,
@@ -1100,9 +1103,7 @@ name|openpic_enable_irq
 argument_list|(
 name|sc
 argument_list|,
-name|res
-operator|->
-name|r_start
+name|start
 argument_list|,
 name|IST_LEVEL
 argument_list|)
@@ -1112,9 +1113,7 @@ name|sc
 operator|->
 name|sc_irqrsv
 index|[
-name|res
-operator|->
-name|r_start
+name|start
 index|]
 operator|=
 literal|1
@@ -1170,9 +1169,10 @@ name|error
 operator|=
 name|inthand_remove
 argument_list|(
+name|rman_get_start
+argument_list|(
 name|res
-operator|->
-name|r_start
+argument_list|)
 argument_list|,
 name|ih
 argument_list|)

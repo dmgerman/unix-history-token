@@ -7,12 +7,6 @@ begin_comment
 comment|/*  *  PSIM 'iobus' local bus. Should be set up in the device tree like:  *  *     /iobus@0x80000000/name psim-iobus  *  *  Code borrowed from various nexus.c and uninorth.c :-)  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
