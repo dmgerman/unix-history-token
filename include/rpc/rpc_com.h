@@ -23,12 +23,9 @@ directive|define
 name|_RPC_RPCCOM_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"@(#)rpc_com.h	1.11	93/07/05 SMI"
-end_pragma
+begin_comment
+comment|/* From: #pragma ident	"@(#)rpc_com.h	1.11	93/07/05 SMI" */
+end_comment
 
 begin_ifdef
 ifdef|#
