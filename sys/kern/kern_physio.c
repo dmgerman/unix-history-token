@@ -391,6 +391,8 @@ goto|;
 block|}
 name|dev_strategy
 argument_list|(
+name|dev
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;

@@ -1580,8 +1580,16 @@ name|bio_resid
 operator|=
 name|bp
 operator|->
-name|bio_bcount
+name|bio_length
 operator|-
+name|bp2
+operator|->
+name|bio_completed
+expr_stmt|;
+name|bp
+operator|->
+name|bio_completed
+operator|=
 name|bp2
 operator|->
 name|bio_completed
@@ -1771,17 +1779,6 @@ operator|(
 literal|"XXX: ENOMEM in a bad place"
 operator|)
 argument_list|)
-expr_stmt|;
-name|bp2
-operator|->
-name|bio_length
-operator|=
-operator|(
-name|off_t
-operator|)
-name|bp
-operator|->
-name|bio_bcount
 expr_stmt|;
 name|bp2
 operator|->

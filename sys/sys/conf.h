@@ -1167,6 +1167,11 @@ name|void
 name|dev_strategy
 parameter_list|(
 name|struct
+name|cdev
+modifier|*
+name|dev
+parameter_list|,
+name|struct
 name|buf
 modifier|*
 name|bp

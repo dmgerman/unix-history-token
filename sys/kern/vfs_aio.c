@@ -5382,6 +5382,10 @@ expr_stmt|;
 comment|/* Perform transfer. */
 name|dev_strategy
 argument_list|(
+name|vp
+operator|->
+name|v_rdev
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
