@@ -187,6 +187,7 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* tree glue, and other values */
+comment|/* 	 * XXX struct rtentry must begin with a struct radix_node (or two!) 	 * because the code does some casts of a 'struct radix_node *' 	 * to a 'struct rtentry *' 	 */
 define|#
 directive|define
 name|rt_key
