@@ -489,7 +489,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mac_status
+name|maclabel_status
 parameter_list|(
 name|int
 name|s
@@ -504,7 +504,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|setifmac
+name|setifmaclabel
 parameter_list|(
 specifier|const
 name|char

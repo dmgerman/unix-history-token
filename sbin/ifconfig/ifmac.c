@@ -71,7 +71,7 @@ end_include
 
 begin_function
 name|void
-name|mac_status
+name|maclabel_status
 parameter_list|(
 name|int
 name|s
@@ -191,7 +191,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\tmac %s\n"
+literal|"\tmaclabel %s\n"
 argument_list|,
 name|label_text
 argument_list|)
@@ -213,7 +213,7 @@ end_function
 
 begin_function
 name|void
-name|setifmac
+name|setifmaclabel
 parameter_list|(
 specifier|const
 name|char

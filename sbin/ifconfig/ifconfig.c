@@ -1634,11 +1634,11 @@ ifdef|#
 directive|ifdef
 name|USE_MAC
 block|{
-literal|"mac"
+literal|"maclabel"
 block|,
 name|NEXTARG
 block|,
-name|setifmac
+name|setifmaclabel
 block|}
 block|,
 endif|#
@@ -2187,7 +2187,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|USE_MAC
-block|{ "mac", AF_UNSPEC, mac_status, NULL, NULL, },
+block|{ "maclabel", AF_UNSPEC, maclabel_status, NULL, NULL, },
 endif|#
 directive|endif
 endif|#
@@ -6491,9 +6491,9 @@ name|afp
 operator|->
 name|af_status
 operator|==
-name|mac_status
+name|maclabel_status
 condition|)
-name|mac_status
+name|maclabel_status
 argument_list|(
 name|s
 argument_list|,
