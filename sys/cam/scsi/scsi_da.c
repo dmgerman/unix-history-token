@@ -3988,6 +3988,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4009,17 +4011,6 @@ name|CAM_REQ_CMP_ERR
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|softc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
