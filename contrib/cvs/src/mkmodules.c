@@ -543,23 +543,23 @@ name|cvswrappers_contents
 index|[]
 init|=
 block|{
-literal|"# This file describes wrappers and other binary files to CVS.\n"
+literal|"# This file affects handling of files based on their names.\n"
 block|,
 literal|"#\n"
 block|,
-literal|"# Wrappers are the concept where directories of files are to be\n"
+literal|"# The -t/-f options allow one to treat directories of files\n"
 block|,
-literal|"# treated as a single file.  The intended use is to wrap up a wrapper\n"
+literal|"# as a single file, or to transform a file in other ways on\n"
 block|,
-literal|"# into a single tar such that the tar archive can be treated as a\n"
-block|,
-literal|"# single binary file in CVS.\n"
+literal|"# its way in and out of CVS.\n"
 block|,
 literal|"#\n"
 block|,
-literal|"# To solve the problem effectively, it was also necessary to be able to\n"
+literal|"# The -m option specifies whether CVS attempts to merge files.\n"
 block|,
-literal|"# prevent rcsmerge from merging these files.\n"
+literal|"#\n"
+block|,
+literal|"# The -k option specifies keyword expansion (e.g. -kb for binary).\n"
 block|,
 literal|"#\n"
 block|,
@@ -579,13 +579,15 @@ literal|"#  -t		to cvs filter		value: path to filter\n"
 block|,
 literal|"#  -m		update methodology	value: MERGE or COPY\n"
 block|,
+literal|"#  -k		expansion mode		value: b, o, kkv,&c\n"
+block|,
 literal|"#\n"
 block|,
 literal|"#  and value is a single-quote delimited value.\n"
 block|,
-literal|"#\n"
-block|,
 literal|"# For example:\n"
+block|,
+literal|"#*.gif -k 'b'\n"
 block|,
 name|NULL
 block|}

@@ -5036,6 +5036,45 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SERVER_SUPPORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CLIENT_SUPPORT
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|void
+name|wrap_unparse_rcs_options
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SERVER_SUPPORT || CLIENT_SUPPORT */
+end_comment
+
 begin_escape
 end_escape
 
