@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.26 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2493,8 +2493,8 @@ break|break;
 case|case
 literal|'C'
 case|:
-comment|/* checkpoint after N connections */
-name|CheckPointLimit
+comment|/* checkpoint every N addresses */
+name|CheckpointInterval
 operator|=
 name|atoi
 argument_list|(
@@ -2686,6 +2686,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'h'
+case|:
+comment|/* maximum hop count */
+name|MaxHopCount
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'I'
 case|:
 comment|/* use internet domain name server */
@@ -2704,18 +2716,6 @@ comment|/* ignore dot lines in message */
 name|IgnrDot
 operator|=
 name|atobool
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'k'
-case|:
-comment|/* checkpoint every N addresses */
-name|CheckpointInterval
-operator|=
-name|atoi
 argument_list|(
 name|val
 argument_list|)

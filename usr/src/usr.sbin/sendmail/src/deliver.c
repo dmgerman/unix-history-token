@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.42 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5075,7 +5075,7 @@ name|e
 operator|->
 name|e_hopcount
 operator|>
-name|MAXHOP
+name|MaxHopCount
 condition|)
 block|{
 name|errno
@@ -5090,7 +5090,7 @@ name|e
 operator|->
 name|e_hopcount
 argument_list|,
-name|MAXHOP
+name|MaxHopCount
 argument_list|,
 name|e
 operator|->

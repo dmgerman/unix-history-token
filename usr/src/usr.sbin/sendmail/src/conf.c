@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.28 (Berkeley) %G%"
+literal|"@(#)conf.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -376,6 +376,10 @@ expr_stmt|;
 name|CheckpointInterval
 operator|=
 literal|10
+expr_stmt|;
+name|MaxHopCount
+operator|=
+name|MAXHOP
 expr_stmt|;
 name|setdefuser
 argument_list|()
