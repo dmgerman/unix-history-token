@@ -138,6 +138,13 @@ name|MOPT_SNAPSHOT
 value|{ "snapshot",	0, MNT_SNAPSHOT, 0 }
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOPT_MULTILABEL
+value|{ "multilabel",	0, MNT_MULTILABEL, 0 }
+end_define
+
 begin_comment
 comment|/* Control flags. */
 end_comment
@@ -200,7 +207,7 @@ name|MOPT_STDOPTS
 define|\
 value|MOPT_USERQUOTA,							\ 	MOPT_GROUPQUOTA,						\ 	MOPT_FSTAB_COMPAT,						\ 	MOPT_NOATIME,							\ 	MOPT_NODEV,							\ 	MOPT_NOEXEC,							\ 	MOPT_SUIDDIR,
 comment|/* must be before MOPT_NOSUID */
-value|\ 	MOPT_NOSUID,							\ 	MOPT_NOSYMFOLLOW,						\ 	MOPT_RDONLY,							\ 	MOPT_UNION,							\ 	MOPT_NOCLUSTERR,						\ 	MOPT_NOCLUSTERW
+value|\ 	MOPT_NOSUID,							\ 	MOPT_NOSYMFOLLOW,						\ 	MOPT_RDONLY,							\ 	MOPT_UNION,							\ 	MOPT_NOCLUSTERR,						\ 	MOPT_NOCLUSTERW,						\ 	MOPT_MULTILABEL
 end_define
 
 begin_function_decl
