@@ -2336,6 +2336,9 @@ operator|(
 name|unsigned
 name|int
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|args
 operator|->
 name|flags
@@ -2343,6 +2346,9 @@ argument_list|,
 operator|(
 name|unsigned
 name|int
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|args
 operator|->
@@ -2699,6 +2705,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|args
 operator|->
 name|addr
@@ -2863,6 +2872,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|linux_args
 operator|.
@@ -3234,6 +3246,9 @@ name|bsd_args
 operator|.
 name|addr
 argument_list|,
+operator|(
+name|int
+operator|)
 name|bsd_args
 operator|.
 name|len
