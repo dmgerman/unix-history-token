@@ -1274,18 +1274,6 @@ name|provider
 operator|->
 name|sectorsize
 expr_stmt|;
-name|disk
-operator|->
-name|d_length
-operator|=
-name|disk
-operator|->
-name|d_end
-operator|-
-name|disk
-operator|->
-name|d_start
-expr_stmt|;
 name|start
 operator|=
 name|disk
@@ -1763,13 +1751,6 @@ comment|/* not yet */
 name|disk
 operator|->
 name|d_end
-operator|=
-literal|0
-expr_stmt|;
-comment|/* not yet */
-name|disk
-operator|->
-name|d_length
 operator|=
 literal|0
 expr_stmt|;
