@@ -180,11 +180,9 @@ parameter_list|)
 value|((u)& 0xffff)
 end_define
 
-begin_comment
-comment|/* Obtaining a report descriptor, descr.c: */
-end_comment
-
 begin_function_decl
+name|__BEGIN_DECLS
+comment|/* Obtaining a report descriptor, descr.c: */
 name|report_desc_t
 name|hid_get_report_desc
 parameter_list|(
@@ -409,6 +407,10 @@ name|data
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 end_unit
 
