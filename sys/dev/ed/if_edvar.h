@@ -42,9 +42,25 @@ name|type
 decl_stmt|;
 comment|/* interface type code */
 name|u_char
+name|chip_type
+decl_stmt|;
+comment|/* the type of chip (one of ED_CHIP_TYPE_*) */
+name|u_char
 name|gone
 decl_stmt|;
 comment|/* HW missing, presumed having a good time */
+name|u_char
+name|isa16bit
+decl_stmt|;
+comment|/* width of access to card 0=8 or 1=16 */
+name|u_char
+name|mem_shared
+decl_stmt|;
+comment|/* NIC memory is shared with host */
+name|u_char
+name|xmit_busy
+decl_stmt|;
+comment|/* transmitter is busy */
 name|int
 name|port_rid
 decl_stmt|;
@@ -140,14 +156,6 @@ decl_stmt|;
 name|u_char
 name|cr_proto
 decl_stmt|;
-name|u_char
-name|isa16bit
-decl_stmt|;
-comment|/* width of access to card 0=8 or 1=16 */
-name|int
-name|chip_type
-decl_stmt|;
-comment|/* the type of chip (one of ED_CHIP_TYPE_*) */
 comment|/*  * HP PC LAN PLUS card support.  */
 name|u_short
 name|hpp_options
@@ -177,14 +185,6 @@ name|caddr_t
 name|mem_ring
 decl_stmt|;
 comment|/* start of RX ring-buffer (in NIC mem) */
-name|u_char
-name|mem_shared
-decl_stmt|;
-comment|/* NIC memory is shared with host */
-name|u_char
-name|xmit_busy
-decl_stmt|;
-comment|/* transmitter is busy */
 name|u_char
 name|txb_cnt
 decl_stmt|;
