@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.34.2.13 1998/02/13 01:58:10 alex Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.34.2.14 1998/02/15 16:32:01 alex Exp $  *  */
 end_comment
 
 begin_include
@@ -91,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
 end_include
 
 begin_include
@@ -1024,7 +1018,7 @@ break|break;
 default|default:
 name|errx
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"impossible"
 argument_list|)
@@ -2357,7 +2351,7 @@ comment|/* display specific rules requested on command line */
 name|int
 name|exitval
 init|=
-name|EX_OK
+literal|0
 decl_stmt|;
 while|while
 condition|(
@@ -2395,7 +2389,7 @@ condition|)
 block|{
 name|exitval
 operator|=
-name|EX_USAGE
+literal|1
 expr_stmt|;
 name|warn
 argument_list|(
@@ -2472,16 +2466,9 @@ operator|!
 name|seen
 condition|)
 block|{
-comment|/* give precedence to other error(s) */
-if|if
-condition|(
-name|exitval
-operator|==
-name|EX_OK
-condition|)
 name|exitval
 operator|=
-name|EX_UNAVAILABLE
+literal|1
 expr_stmt|;
 name|warnx
 argument_list|(
@@ -2496,7 +2483,7 @@ if|if
 condition|(
 name|exitval
 operator|!=
-name|EX_OK
+literal|0
 condition|)
 name|exit
 argument_list|(
@@ -2599,7 +2586,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3108,7 +3095,7 @@ name|IP_FW_MAX_PORTS
 condition|)
 name|errx
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|,
 literal|"too many ports (max is %d)"
 argument_list|,
@@ -3262,7 +3249,7 @@ condition|)
 block|{
 name|errx
 argument_list|(
-name|EX_DATAERR
+literal|1
 argument_list|,
 literal|"unknown port ``%s''"
 argument_list|,
@@ -3298,7 +3285,7 @@ condition|)
 block|{
 name|errx
 argument_list|(
-name|EX_DATAERR
+literal|1
 argument_list|,
 literal|"port ``%s'' out of range"
 argument_list|,
@@ -3399,7 +3386,7 @@ argument_list|)
 condition|)
 name|errx
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|,
 literal|"port range must be first in list"
 argument_list|)
@@ -4108,7 +4095,7 @@ decl_stmt|;
 name|int
 name|exitval
 init|=
-name|EX_OK
+literal|0
 decl_stmt|;
 name|memset
 argument_list|(
@@ -4180,7 +4167,7 @@ condition|)
 block|{
 name|exitval
 operator|=
-name|EX_UNAVAILABLE
+literal|1
 expr_stmt|;
 name|warn
 argument_list|(
@@ -4199,7 +4186,7 @@ if|if
 condition|(
 name|exitval
 operator|!=
-name|EX_OK
+literal|0
 condition|)
 name|exit
 argument_list|(
@@ -6561,7 +6548,7 @@ name|i
 condition|)
 name|err
 argument_list|(
-name|EX_UNAVAILABLE
+literal|1
 argument_list|,
 literal|"setsockopt(%s)"
 argument_list|,
@@ -6621,7 +6608,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-name|EX_UNAVAILABLE
+literal|1
 argument_list|,
 literal|"setsockopt(%s)"
 argument_list|,
@@ -6648,7 +6635,7 @@ decl_stmt|;
 name|int
 name|failed
 init|=
-name|EX_OK
+literal|0
 decl_stmt|;
 name|memset
 argument_list|(
@@ -6724,7 +6711,7 @@ argument_list|)
 expr_stmt|;
 name|failed
 operator|=
-name|EX_UNAVAILABLE
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -6752,7 +6739,7 @@ if|if
 condition|(
 name|failed
 operator|!=
-name|EX_OK
+literal|0
 condition|)
 name|exit
 argument_list|(
@@ -7093,7 +7080,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-name|EX_UNAVAILABLE
+literal|1
 argument_list|,
 literal|"setsockopt(%s)"
 argument_list|,
@@ -7316,7 +7303,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-name|EX_UNAVAILABLE
+literal|1
 argument_list|,
 literal|"socket"
 argument_list|)
@@ -7371,7 +7358,7 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_UNAVAILABLE
+literal|1
 argument_list|,
 literal|"fopen: %s"
 argument_list|,
@@ -7475,7 +7462,7 @@ name|MAX_ARGS
 condition|)
 name|errx
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|,
 literal|"%s: too many arguments"
 argument_list|,
@@ -7512,7 +7499,7 @@ name|av
 argument_list|)
 expr_stmt|;
 return|return
-name|EX_OK
+literal|0
 return|;
 block|}
 end_function
