@@ -4524,6 +4524,14 @@ modifier|*
 name|cr
 decl_stmt|;
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|cr
@@ -4576,6 +4584,11 @@ name|M_CRED
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
