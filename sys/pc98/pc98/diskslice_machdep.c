@@ -138,7 +138,7 @@ modifier|*
 name|sname
 parameter_list|,
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dp
 parameter_list|,
@@ -177,7 +177,7 @@ modifier|*
 name|sp
 parameter_list|,
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dp
 parameter_list|,
@@ -257,7 +257,7 @@ modifier|*
 name|sname
 decl_stmt|;
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dp
 decl_stmt|;
@@ -750,12 +750,12 @@ name|int
 name|dospart
 decl_stmt|;
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dp
 decl_stmt|;
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dp0
 decl_stmt|;
@@ -1437,7 +1437,7 @@ name|dp0
 operator|=
 operator|(
 expr|struct
-name|dos_partition
+name|pc98_partition
 operator|*
 operator|)
 operator|(
@@ -1845,7 +1845,7 @@ modifier|*
 name|sp
 decl_stmt|;
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dp
 decl_stmt|;

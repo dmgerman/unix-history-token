@@ -352,7 +352,7 @@ modifier|*
 name|mbr
 decl_stmt|;
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dp
 decl_stmt|,
@@ -493,7 +493,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|dos_partition
+name|pc98_partition
 operator|*
 operator|)
 operator|(

@@ -239,7 +239,7 @@ name|od_nslices
 decl_stmt|;
 comment|/* slice count */
 name|struct
-name|dos_partition
+name|pc98_partition
 name|od_slicetab
 index|[
 name|MAX_SLICES
@@ -376,7 +376,7 @@ modifier|*
 name|od
 parameter_list|,
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dp
 parameter_list|,
@@ -1473,7 +1473,7 @@ modifier|*
 name|od
 decl_stmt|;
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dptr
 decl_stmt|;
@@ -2680,7 +2680,7 @@ name|dev
 parameter_list|)
 block|{
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dptr
 decl_stmt|;
@@ -3042,7 +3042,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dos_partition
+name|pc98_partition
 argument_list|)
 operator|*
 name|NDOSPART
@@ -4084,7 +4084,7 @@ name|od
 parameter_list|)
 block|{
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dp
 decl_stmt|;

@@ -59,7 +59,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|dos_partition
+name|pc98_partition
 block|{
 name|unsigned
 name|char
@@ -152,7 +152,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dos_partition
+name|pc98_partition
 argument_list|)
 operator|==
 literal|32

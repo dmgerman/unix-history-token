@@ -187,7 +187,7 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dptr
 decl_stmt|;
@@ -298,7 +298,7 @@ name|dptr
 operator|=
 operator|(
 expr|struct
-name|dos_partition
+name|pc98_partition
 operator|*
 operator|)
 name|p

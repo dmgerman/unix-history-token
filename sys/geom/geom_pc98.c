@@ -119,14 +119,14 @@ end_define
 begin_function
 specifier|static
 name|void
-name|g_dec_dos_partition
+name|g_dec_pc98_partition
 parameter_list|(
 name|u_char
 modifier|*
 name|ptr
 parameter_list|,
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|d
 parameter_list|)
@@ -328,7 +328,7 @@ name|int
 name|i
 parameter_list|,
 name|struct
-name|dos_partition
+name|pc98_partition
 modifier|*
 name|dp
 parameter_list|)
@@ -474,7 +474,7 @@ name|NDOSPART
 index|]
 decl_stmt|;
 name|struct
-name|dos_partition
+name|pc98_partition
 name|dp
 index|[
 name|NDOSPART
@@ -524,7 +524,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|g_dec_dos_partition
+name|g_dec_pc98_partition
 argument_list|(
 name|sec
 operator|+
@@ -535,7 +535,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dos_partition
+name|pc98_partition
 argument_list|)
 argument_list|,
 operator|&
@@ -1322,7 +1322,7 @@ modifier|*
 name|gsp
 decl_stmt|;
 name|struct
-name|dos_partition
+name|pc98_partition
 name|dp
 decl_stmt|;
 name|char
@@ -1363,7 +1363,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|g_dec_dos_partition
+name|g_dec_pc98_partition
 argument_list|(
 name|mp
 operator|->
@@ -1378,7 +1378,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dos_partition
+name|pc98_partition
 argument_list|)
 argument_list|,
 operator|&
