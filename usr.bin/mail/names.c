@@ -1056,6 +1056,10 @@ name|GSUBJECT
 operator||
 name|GCC
 operator||
+name|GREPLYTO
+operator||
+name|GINREPLYTO
+operator||
 name|GNL
 argument_list|)
 expr_stmt|;

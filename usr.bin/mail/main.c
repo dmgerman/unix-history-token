@@ -125,10 +125,16 @@ decl_stmt|;
 name|char
 modifier|*
 name|subject
+decl_stmt|,
+modifier|*
+name|replyto
 decl_stmt|;
 name|char
 modifier|*
 name|ef
+decl_stmt|,
+modifier|*
+name|cp
 decl_stmt|;
 name|char
 name|nosrc
@@ -198,6 +204,10 @@ operator|=
 name|NIL
 expr_stmt|;
 name|subject
+operator|=
+name|NOSTR
+expr_stmt|;
+name|replyto
 operator|=
 name|NOSTR
 expr_stmt|;
@@ -661,6 +671,23 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|getenv
+argument_list|(
+literal|"REPLYTO"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|replyto
+operator|=
+name|cp
+expr_stmt|;
 comment|/* 	 * Expand returns a savestr, but load only uses the file name 	 * for fopen, so it's safe to do this. 	 */
 name|load
 argument_list|(
@@ -687,6 +714,8 @@ argument_list|,
 name|smopts
 argument_list|,
 name|subject
+argument_list|,
+name|replyto
 argument_list|)
 expr_stmt|;
 comment|/* 		 * why wait? 		 */

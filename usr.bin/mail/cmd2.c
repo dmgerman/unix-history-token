@@ -92,7 +92,7 @@ condition|(
 operator|*
 name|msgvec
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 comment|/* 		 * If some messages were supplied, find the 		 * first applicable one following dot using 		 * wrap around. 		 */
@@ -118,7 +118,7 @@ init|;
 operator|*
 name|ip
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|ip
 operator|++
@@ -136,7 +136,7 @@ condition|(
 operator|*
 name|ip
 operator|==
-name|NULL
+literal|0
 condition|)
 name|ip
 operator|=
@@ -185,7 +185,7 @@ condition|(
 operator|*
 name|ip2
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|ip2
 operator|++
@@ -195,7 +195,7 @@ condition|(
 operator|*
 name|ip2
 operator|==
-name|NULL
+literal|0
 condition|)
 name|ip2
 operator|=
@@ -315,7 +315,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -510,7 +510,7 @@ condition|(
 operator|*
 name|msgvec
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|printf
@@ -531,7 +531,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -1012,7 +1012,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -1073,7 +1073,7 @@ name|last
 decl_stmt|;
 name|last
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -1084,7 +1084,7 @@ init|;
 operator|*
 name|ip
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|ip
 operator|++
@@ -1137,7 +1137,7 @@ if|if
 condition|(
 name|last
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|dot
@@ -1163,7 +1163,7 @@ if|if
 condition|(
 name|last
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|dot
