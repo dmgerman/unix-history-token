@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_usrreq.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_usrreq.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -674,10 +674,7 @@ name|s_addr
 operator|=
 name|tuba_lookup
 argument_list|(
-operator|&
 name|siso
-operator|->
-name|siso_addr
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -825,10 +822,7 @@ name|s_addr
 operator|=
 name|tuba_lookup
 argument_list|(
-operator|&
 name|siso
-operator|->
-name|siso_addr
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -884,12 +878,9 @@ name|s_addr
 operator|=
 name|tuba_lookup
 argument_list|(
-operator|&
 name|isop
 operator|->
 name|isop_laddr
-operator|->
-name|siso_addr
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -1295,18 +1286,15 @@ else|:
 name|tcp_ctloutput
 operator|)
 operator|(
-name|clnp_ctloutput
-argument_list|(
 name|op
-argument_list|,
+operator|,
 name|so
-argument_list|,
+operator|,
 name|level
-argument_list|,
+operator|,
 name|optname
-argument_list|,
+operator|,
 name|mp
-argument_list|)
 operator|)
 operator|)
 return|;
