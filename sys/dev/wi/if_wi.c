@@ -916,15 +916,9 @@ name|PCCARD_PRODUCT_LUCENT_WAVELAN_IEEE
 block|,
 literal|0
 block|,
-name|NULL
-block|,
-name|NULL
+name|PCCARD_CIS_LUCENT_WAVELAN_IEEE
 block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
