@@ -77,11 +77,22 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NPX_DEBUG
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1687,6 +1698,9 @@ operator|->
 name|pcb_savefpu
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NPX_DEBUG
 if|if
 condition|(
 name|npx_exists
@@ -1715,7 +1729,7 @@ name|en_sw
 operator|&
 literal|0x7f
 expr_stmt|;
-comment|/* 		 * Overflow, divde by 0, and invalid operand would have 		 * caused a trap in 1.1.5. 		 */
+comment|/* 		 * Log exceptions that would have trapped with the old 		 * control word (overflow, divide by 0, and invalid operand). 		 */
 if|if
 condition|(
 name|masked_exceptions
@@ -1740,6 +1754,8 @@ name|masked_exceptions
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
