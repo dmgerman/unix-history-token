@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tar.c	4.16 (Berkeley) %G%"
+literal|"@(#)tar.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,10 +208,8 @@ end_decl_stmt
 begin_decl_stmt
 name|union
 name|hblock
+modifier|*
 name|tbuf
-index|[
-name|NBLOCK
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -743,21 +741,35 @@ break|break;
 case|case
 literal|'b'
 case|:
+if|if
+condition|(
+operator|*
+name|argv
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"tar: blocksize must be specified with 'b' option\n"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
 name|nblock
 operator|=
 name|atoi
 argument_list|(
 operator|*
 name|argv
-operator|++
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nblock
-operator|>
-name|NBLOCK
-operator|||
 name|nblock
 operator|<=
 literal|0
@@ -767,9 +779,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Invalid blocksize. (Max %d)\n"
+literal|"tar: invalid blocksize \"%s\"\n"
 argument_list|,
-name|NBLOCK
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
 name|done
@@ -778,6 +791,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|argv
+operator|++
+expr_stmt|;
 break|break;
 case|case
 literal|'l'
@@ -843,6 +859,42 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+name|tbuf
+operator|=
+operator|(
+expr|union
+name|hblock
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|nblock
+operator|*
+name|TBLOCK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tbuf
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"tar: blocksize %d too big, can't get memory\n"
+argument_list|,
+name|nblock
+argument_list|)
+expr_stmt|;
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|rflag
@@ -959,7 +1011,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can only create standard output archives\n"
+literal|"tar: can only create standard output archives\n"
 argument_list|)
 expr_stmt|;
 name|done
@@ -1132,7 +1184,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: usage  tar -{txruB}[cvfblmh] [tapefile] [blocksize] file1 file2...\n"
+literal|"tar: usage: tar -{txru}[cvfblmhopwBi] [tapefile] [blocksize] file1 file2...\n"
 argument_list|)
 expr_stmt|;
 name|done
@@ -1216,6 +1268,9 @@ name|endtape
 argument_list|()
 condition|)
 do|;
+name|backtape
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|tfile
@@ -1493,7 +1548,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Missing links to %s\n"
+literal|"tar: missing links to %s\n"
 argument_list|,
 name|ihead
 operator|->
@@ -1511,8 +1566,8 @@ end_macro
 
 begin_block
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|dblock
 operator|.
 name|dbuf
@@ -1521,20 +1576,8 @@ name|name
 index|[
 literal|0
 index|]
-operator|!=
+operator|==
 literal|'\0'
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|backtape
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|1
 operator|)
 return|;
 block|}
@@ -1709,7 +1752,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"directory checksum error (%d != %d)\n"
+literal|"tar: directory checksum error (%d != %d)\n"
 argument_list|,
 name|chksum
 argument_list|,
@@ -2086,7 +2129,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: file name too long\n"
+literal|"tar: %s: file name too long\n"
 argument_list|,
 name|longname
 argument_list|)
@@ -2175,7 +2218,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: directory read error\n"
+literal|"tar: %s: directory read error\n"
 argument_list|,
 name|longname
 argument_list|)
@@ -2315,7 +2358,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: file name too long\n"
+literal|"tar: %s: file name too long\n"
 argument_list|,
 name|longname
 argument_list|)
@@ -2348,7 +2391,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: symbolic link too long\n"
+literal|"tar: %s: symbolic link too long\n"
 argument_list|,
 name|longname
 argument_list|)
@@ -2521,7 +2564,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: file name too long\n"
+literal|"tar: %s: file name too long\n"
 argument_list|,
 name|longname
 argument_list|)
@@ -2718,7 +2761,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Out of memory. Link information lost\n"
+literal|"tar: out of memory, link information lost\n"
 argument_list|)
 expr_stmt|;
 name|freemem
@@ -2890,7 +2933,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: file changed size\n"
+literal|"tar: %s: file changed size\n"
 argument_list|,
 name|longname
 argument_list|)
@@ -3156,7 +3199,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: symbolic link failed\n"
+literal|"tar: %s: symbolic link failed\n"
 argument_list|,
 name|dblock
 operator|.
@@ -3345,7 +3388,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: cannot link\n"
+literal|"tar: %s: cannot link\n"
 argument_list|,
 name|dblock
 operator|.
@@ -3781,30 +3824,15 @@ index|[
 name|TBLOCK
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-for|for
-control|(
-name|cp
-operator|=
+name|bzero
+argument_list|(
 name|buf
-init|;
-name|cp
-operator|<
-operator|&
+argument_list|,
+sizeof|sizeof
+argument_list|(
 name|buf
-index|[
-name|TBLOCK
-index|]
-condition|;
-control|)
-operator|*
-name|cp
-operator|++
-operator|=
-literal|'\0'
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|writetape
 argument_list|(
@@ -5693,7 +5721,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Tar: tape read error\n"
+literal|"tar: tape read error\n"
 argument_list|)
 expr_stmt|;
 name|done
@@ -5724,7 +5752,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Tar: tape blocksize error\n"
+literal|"tar: tape blocksize error\n"
 argument_list|)
 expr_stmt|;
 name|done
@@ -5748,7 +5776,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Tar: blocksize = %d\n"
+literal|"tar: blocksize = %d\n"
 argument_list|,
 name|i
 argument_list|)
@@ -5768,16 +5796,22 @@ name|first
 operator|=
 literal|1
 expr_stmt|;
-name|copy
+name|bcopy
 argument_list|(
-name|buffer
-argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tbuf
 index|[
 name|recno
 operator|++
 index|]
+argument_list|,
+name|buffer
+argument_list|,
+name|TBLOCK
 argument_list|)
 expr_stmt|;
 return|return
@@ -5835,7 +5869,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Tar: tape write error\n"
+literal|"tar: tape write error\n"
 argument_list|)
 expr_stmt|;
 name|done
@@ -5849,8 +5883,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|copy
+name|bcopy
 argument_list|(
+name|buffer
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tbuf
 index|[
@@ -5858,7 +5898,7 @@ name|recno
 operator|++
 index|]
 argument_list|,
-name|buffer
+name|TBLOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -5888,7 +5928,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Tar: tape write error\n"
+literal|"tar: tape write error\n"
 argument_list|)
 expr_stmt|;
 name|done
@@ -5982,7 +6022,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Tar: tape backspace error\n"
+literal|"tar: tape backspace error\n"
 argument_list|)
 expr_stmt|;
 name|done
@@ -6032,52 +6072,6 @@ operator|*
 name|nblock
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_expr_stmt
-name|copy
-argument_list|(
-name|to
-argument_list|,
-name|from
-argument_list|)
-specifier|register
-name|char
-operator|*
-name|to
-operator|,
-operator|*
-name|from
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-specifier|register
-name|i
-expr_stmt|;
-name|i
-operator|=
-name|TBLOCK
-expr_stmt|;
-do|do
-block|{
-operator|*
-name|to
-operator|++
-operator|=
-operator|*
-name|from
-operator|++
-expr_stmt|;
-block|}
-do|while
-condition|(
-operator|--
-name|i
-condition|)
-do|;
 block|}
 end_block
 
