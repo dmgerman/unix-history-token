@@ -100,7 +100,7 @@ file|"primes.h"
 end_include
 
 begin_comment
-comment|/*  * prime[i] is the (i-1)th prime.  *  * We are able to sieve 2^32-1 because this byte table yields all primes   * up to 65537 and 65537^2> 2^32-1.  */
+comment|/*  * prime[i] is the (i-1)th prime.  *  * We are able to sieve 2^32-1 because this byte table yields all primes  * up to 65537 and 65537^2> 2^32-1.  */
 end_comment
 
 begin_decl_stmt

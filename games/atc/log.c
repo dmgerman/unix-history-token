@@ -425,7 +425,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * This is done to take advantage of stdio, while still  	 * allowing a O_CREAT during the open(2) of the log file. 	 */
+comment|/* 	 * This is done to take advantage of stdio, while still 	 * allowing a O_CREAT during the open(2) of the log file. 	 */
 name|fp
 operator|=
 name|fdopen

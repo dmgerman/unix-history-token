@@ -851,7 +851,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* home,rlf quicker than lf 		 * (LINES+1 - sp->line + f< sp->line - cursor.line)  		 */
+comment|/* home,rlf quicker than lf 		 * (LINES+1 - sp->line + f< sp->line - cursor.line) 		 */
 if|if
 condition|(
 name|cursor

@@ -1066,7 +1066,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	if (Chit> 1&& on->file->readyL&R_INITIAL&& on->file->readyR&R_INITIAL) { 		on->specs->qual--; 		if (on->specs->qual<= 0) { 			makesignal(on, "crew mutinying!", (struct ship *)0); 			on->specs->qual = 5; 			Write(W_CAPTURED, on, 0, on->file->index, 0, 0, 0); 		} else  			makesignal(on, "crew demoralized", (struct ship *)0); 		Write(W_QUAL, on, 0, on->specs->qual, 0, 0, 0); 	} 	*/
+comment|/* 	if (Chit> 1&& on->file->readyL&R_INITIAL&& on->file->readyR&R_INITIAL) { 		on->specs->qual--; 		if (on->specs->qual<= 0) { 			makesignal(on, "crew mutinying!", (struct ship *)0); 			on->specs->qual = 5; 			Write(W_CAPTURED, on, 0, on->file->index, 0, 0, 0); 		} else 			makesignal(on, "crew demoralized", (struct ship *)0); 		Write(W_QUAL, on, 0, on->specs->qual, 0, 0, 0); 	} 	*/
 if|if
 condition|(
 operator|!

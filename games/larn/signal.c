@@ -75,7 +75,7 @@ argument_list|)
 block|;
 name|lflush
 argument_list|()
-block|;  	}
+block|; 	}
 specifier|static
 name|void
 name|cntlc

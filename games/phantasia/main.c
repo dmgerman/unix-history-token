@@ -32,7 +32,7 @@ comment|/*  * The scoreboard file is updated when someone dies, and keeps track 
 end_comment
 
 begin_comment
-comment|/*  * All source files are set up for 'vi' with shiftwidth=4, tabstop=8.   */
+comment|/*  * All source files are set up for 'vi' with shiftwidth=4, tabstop=8.  */
 end_comment
 
 begin_comment
@@ -51,7 +51,7 @@ file|"include.h"
 end_include
 
 begin_comment
-comment|/*************************************************************************** / FUNCTION NAME: main() / / FUNCTION: initialize state, and call main process / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	int	argc - argument count /	char	**argv - argument vector / / RETURN VALUE: none / / MODULES CALLED: monstlist(), checkenemy(), activelist(),  /	throneroom(), checkbattle(), readmessage(), changestats(), writerecord(),  /	tradingpost(), adjuststats(), recallplayer(), displaystats(), checktampered(),  /	fabs(), rollnewplayer(), time(), exit(), sqrt(), floor(), wmove(),  /	signal(), strcat(), purgeoldplayers(), getuid(), isatty(), wclear(),  /	strcpy(), system(), altercoordinates(), cleanup(), waddstr(), procmain(),  /	playinit(), leavegame(), localtime(), getanswer(), neatstuff(), initialstate(),  /	scorelist(), titlelist() / / GLOBAL INPUTS: *Login, Throne, Wizard, Player, *stdscr, Changed, Databuf[],  /	Fileloc, Stattable[] / / GLOBAL OUTPUTS: Wizard, Player, Changed, Fileloc, Timeout, *Statptr / / DESCRIPTION: /	Process arguments, initialize program, and loop forever processing /	player input. / ****************************************************************************/
+comment|/*************************************************************************** / FUNCTION NAME: main() / / FUNCTION: initialize state, and call main process / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	int	argc - argument count /	char	**argv - argument vector / / RETURN VALUE: none / / MODULES CALLED: monstlist(), checkenemy(), activelist(), /	throneroom(), checkbattle(), readmessage(), changestats(), writerecord(), /	tradingpost(), adjuststats(), recallplayer(), displaystats(), checktampered(), /	fabs(), rollnewplayer(), time(), exit(), sqrt(), floor(), wmove(), /	signal(), strcat(), purgeoldplayers(), getuid(), isatty(), wclear(), /	strcpy(), system(), altercoordinates(), cleanup(), waddstr(), procmain(), /	playinit(), leavegame(), localtime(), getanswer(), neatstuff(), initialstate(), /	scorelist(), titlelist() / / GLOBAL INPUTS: *Login, Throne, Wizard, Player, *stdscr, Changed, Databuf[], /	Fileloc, Stattable[] / / GLOBAL OUTPUTS: Wizard, Player, Changed, Fileloc, Timeout, *Statptr / / DESCRIPTION: /	Process arguments, initialize program, and loop forever processing /	player input. / ****************************************************************************/
 end_comment
 
 begin_function
@@ -776,7 +776,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: initialstate() / / FUNCTION: initialize some important global variable / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: time(), fopen(), srandom(), error(), getuid(), getlogin(),  /	getpwuid() / / GLOBAL INPUTS:  / / GLOBAL OUTPUTS: *Energyvoidfp, Echo, Marsh, *Login, Users, Beyond,  /	Throne, Wizard, Changed, Okcount, Timeout, Windows, *Monstfp, *Messagefp,  /	*Playersfp / / DESCRIPTION: /	Set global flags, and open files which remain open. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: initialstate() / / FUNCTION: initialize some important global variable / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: time(), fopen(), srandom(), error(), getuid(), getlogin(), /	getpwuid() / / GLOBAL INPUTS: / / GLOBAL OUTPUTS: *Energyvoidfp, Echo, Marsh, *Login, Users, Beyond, /	Throne, Wizard, Changed, Okcount, Timeout, Windows, *Monstfp, *Messagefp, /	*Playersfp / / DESCRIPTION: /	Set global flags, and open files which remain open. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -954,7 +954,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: rollnewplayer() / / FUNCTION: roll up a new character / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: initplayer(), allocrecord(), truncstring(), fabs(), wmove(),  /	wclear(), sscanf(), strcmp(), genchar(), waddstr(), findname(), mvprintw(),  /	getanswer(), getstring() / / GLOBAL INPUTS: Other, Wizard, Player, *stdscr, Databuf[] / / GLOBAL OUTPUTS: Echo / / DESCRIPTION: /	Prompt player, and roll up new character. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: rollnewplayer() / / FUNCTION: roll up a new character / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: initplayer(), allocrecord(), truncstring(), fabs(), wmove(), /	wclear(), sscanf(), strcmp(), genchar(), waddstr(), findname(), mvprintw(), /	getanswer(), getstring() / / GLOBAL INPUTS: Other, Wizard, Player, *stdscr, Databuf[] / / GLOBAL OUTPUTS: Echo / / DESCRIPTION: /	Prompt player, and roll up new character. / *************************************************************************/
 end_comment
 
 begin_function
@@ -1380,7 +1380,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: procmain() / / FUNCTION: process input from player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: dotampered(), changestats(), inputoption(), allstatslist(),  /	fopen(), wmove(), drandom(), sscanf(), fclose(), altercoordinates(),  /	waddstr(), fprintf(), distance(), userlist(), leavegame(), encounter(),  /	getstring(), wclrtobot() / / GLOBAL INPUTS: Circle, Illcmd[], Throne, Wizard, Player, *stdscr,  /	Databuf[], Illmove[] / / GLOBAL OUTPUTS: Player, Changed / / DESCRIPTION: /	Process main menu options. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: procmain() / / FUNCTION: process input from player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: dotampered(), changestats(), inputoption(), allstatslist(), /	fopen(), wmove(), drandom(), sscanf(), fclose(), altercoordinates(), /	waddstr(), fprintf(), distance(), userlist(), leavegame(), encounter(), /	getstring(), wclrtobot() / / GLOBAL INPUTS: Circle, Illcmd[], Throne, Wizard, Player, *stdscr, /	Databuf[], Illmove[] / / GLOBAL OUTPUTS: Player, Changed / / DESCRIPTION: /	Process main menu options. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2254,7 +2254,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: titlelist() / / FUNCTION: print title page / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), fgets(), wmove(), strcpy(),  /	fclose(), strlen(), waddstr(), sprintf(), wrefresh() / / GLOBAL INPUTS: Lines, Other, *stdscr, Databuf[], *Playersfp / / GLOBAL OUTPUTS: Lines / / DESCRIPTION: /	Print important information about game, players, etc. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: titlelist() / / FUNCTION: print title page / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), fgets(), wmove(), strcpy(), /	fclose(), strlen(), waddstr(), sprintf(), wrefresh() / / GLOBAL INPUTS: Lines, Other, *stdscr, Databuf[], *Playersfp / / GLOBAL OUTPUTS: Lines / / DESCRIPTION: /	Print important information about game, players, etc. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2912,7 +2912,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: recallplayer() / / FUNCTION: find a character on file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), truncstring(), more(), death(), wmove(),  /	wclear(), strcmp(), printw(), cleanup(), waddstr(), findname(), mvprintw(),  /	getanswer(), getstring() / / GLOBAL INPUTS: Player, *stdscr, Databuf[] / / GLOBAL OUTPUTS: Echo, Player / / DESCRIPTION: /	Search for a character of a certain name, and check password. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: recallplayer() / / FUNCTION: find a character on file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), truncstring(), more(), death(), wmove(), /	wclear(), strcmp(), printw(), cleanup(), waddstr(), findname(), mvprintw(), /	getanswer(), getstring() / / GLOBAL INPUTS: Player, *stdscr, Databuf[] / / GLOBAL OUTPUTS: Echo, Player / / DESCRIPTION: /	Search for a character of a certain name, and check password. / *************************************************************************/
 end_comment
 
 begin_function
@@ -3165,7 +3165,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: neatstuff() / / FUNCTION: do random stuff / / AUTHOR: E. A. Estes, 3/3/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: collecttaxes(), floor(), wmove(), drandom(), infloat(),  /	waddstr(), mvprintw(), getanswer() / / GLOBAL INPUTS: Player, *stdscr, *Statptr / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Handle gurus, medics, etc. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: neatstuff() / / FUNCTION: do random stuff / / AUTHOR: E. A. Estes, 3/3/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: collecttaxes(), floor(), wmove(), drandom(), infloat(), /	waddstr(), mvprintw(), getanswer() / / GLOBAL INPUTS: Player, *stdscr, *Statptr / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Handle gurus, medics, etc. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -3875,7 +3875,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: playinit() / / FUNCTION: initialize for playing game / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: signal(), wclear(), noecho(), crmode(), initscr(),  /	wrefresh() / / GLOBAL INPUTS: *stdscr, ill_sig() / / GLOBAL OUTPUTS: Windows / / DESCRIPTION: /	Catch a bunch of signals, and turn on curses stuff. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: playinit() / / FUNCTION: initialize for playing game / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: signal(), wclear(), noecho(), crmode(), initscr(), /	wrefresh() / / GLOBAL INPUTS: *stdscr, ill_sig() / / GLOBAL OUTPUTS: Windows / / DESCRIPTION: /	Catch a bunch of signals, and turn on curses stuff. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -4330,7 +4330,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: cleanup() / / FUNCTION: close some files, and maybe exit / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	bool doexit - exit flag / / RETURN VALUE: none / / MODULES CALLED: exit(), wmove(), fclose(), endwin(), nocrmode(), wrefresh() / / GLOBAL INPUTS: *Energyvoidfp, LINES, *stdscr, Windows, *Monstfp,  /	*Messagefp, *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Close all open files.  If we are "in curses" terminate curses. /	If 'doexit' is set, exit, otherwise return. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: cleanup() / / FUNCTION: close some files, and maybe exit / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	bool doexit - exit flag / / RETURN VALUE: none / / MODULES CALLED: exit(), wmove(), fclose(), endwin(), nocrmode(), wrefresh() / / GLOBAL INPUTS: *Energyvoidfp, LINES, *stdscr, Windows, *Monstfp, /	*Messagefp, *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Close all open files.  If we are "in curses" terminate curses. /	If 'doexit' is set, exit, otherwise return. / *************************************************************************/
 end_comment
 
 begin_macro

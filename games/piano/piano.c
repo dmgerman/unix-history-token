@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: piano.c,v 1.1.1.1 1995/04/28 17:38:07 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 

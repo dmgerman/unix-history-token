@@ -111,7 +111,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /afs/athena.mit.edu/user/j/jik/sipbsrc/src/xneko/RCS/xneko.c,v 1.2 90/09/01 23:40:01 jik Exp $"
+literal|"$Header: /home/ncvs/src/games/x11/xneko/xneko.c,v 1.1.1.1 1994/09/04 04:02:16 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 

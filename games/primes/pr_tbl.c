@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * prime - prime table  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * We are able to sieve 2^32-1 because this table has primes up to 65537   * and 65537^2> 2^32-1.  */
+comment|/*  * prime - prime table  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * We are able to sieve 2^32-1 because this table has primes up to 65537  * and 65537^2> 2^32-1.  */
 end_comment
 
 begin_include

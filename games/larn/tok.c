@@ -615,7 +615,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* 	function to set the desired hardness  	enter with hard= -1 for default hardness, else any desired hardness  */
+comment|/* 	function to set the desired hardness 	enter with hard= -1 for default hardness, else any desired hardness  */
 end_comment
 
 begin_macro

@@ -1858,7 +1858,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	subroutine to create a treasure room of any size at a given location   *	room is filled with objects and monsters   *	the coordinate given is that of the upper left corner of the room  */
+comment|/*  *	subroutine to create a treasure room of any size at a given location  *	room is filled with objects and monsters  *	the coordinate given is that of the upper left corner of the room  */
 end_comment
 
 begin_macro

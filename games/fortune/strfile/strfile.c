@@ -106,7 +106,7 @@ comment|/* MAXPATHLEN */
 end_comment
 
 begin_comment
-comment|/*  *	This program takes a file composed of strings seperated by  * lines starting with two consecutive delimiting character (default  * character is '%') and creates another file which consists of a table  * describing the file (structure from "strfile.h"), a table of seek  * pointers to the start of the strings, and the strings, each terminated  * by a null byte.  Usage:  *  *	% strfile [-iorsx] [ -cC ] sourcefile [ datafile ]  *  *	c - Change delimiting character from '%' to 'C'  *	s - Silent.  Give no summary of data processed at the end of  *	    the run.  *	o - order the strings in alphabetic order  *	i - if ordering, ignore case   *	r - randomize the order of the strings  *	x - set rotated bit  *  *		Ken Arnold	Sept. 7, 1978 --  *  *	Added ordering options.  */
+comment|/*  *	This program takes a file composed of strings seperated by  * lines starting with two consecutive delimiting character (default  * character is '%') and creates another file which consists of a table  * describing the file (structure from "strfile.h"), a table of seek  * pointers to the start of the strings, and the strings, each terminated  * by a null byte.  Usage:  *  *	% strfile [-iorsx] [ -cC ] sourcefile [ datafile ]  *  *	c - Change delimiting character from '%' to 'C'  *	s - Silent.  Give no summary of data processed at the end of  *	    the run.  *	o - order the strings in alphabetic order  *	i - if ordering, ignore case  *	r - randomize the order of the strings  *	x - set rotated bit  *  *		Ken Arnold	Sept. 7, 1978 --  *  *	Added ordering options.  */
 end_comment
 
 begin_define

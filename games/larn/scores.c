@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* scores.c			 Larn is copyrighted 1986 by Noah Morgan.  *  *	Functions in this file are:  *  *	readboard() 	Function to read in the scoreboard into a static buffer  *	writeboard()	Function to write the scoreboard from readboard()'s buffer  *	makeboard() 	Function to create a new scoreboard (wipe out old one)  *	hashewon()	 Function to return 1 if player has won a game before, else 0  *	long paytaxes(x)	 Function to pay taxes if any are due  *	winshou()		Subroutine to print out the winning scoreboard  *	shou(x)			Subroutine to print out the non-winners scoreboard  *	showscores()		Function to show the scoreboard on the terminal  *	showallscores()	Function to show scores and the iven lists that go with them  *	sortboard()		Function to sort the scoreboard  *	newscore(score, whoo, whyded, winner) 	Function to add entry to scoreboard  *	new1sub(score,i,whoo,taxes) 		  Subroutine to put player into a   *	new2sub(score,i,whoo,whyded)	 	  Subroutine to put player into a   *	died(x) 	Subroutine to record who played larn, and what the score was  *	diedsub(x) Subroutine to print out a line showing player when he is killed  *	diedlog() 	Subroutine to read a log file and print it out in ascii format  *	getplid(name)		Function to get players id # from id file  *  */
+comment|/* scores.c			 Larn is copyrighted 1986 by Noah Morgan.  *  *	Functions in this file are:  *  *	readboard() 	Function to read in the scoreboard into a static buffer  *	writeboard()	Function to write the scoreboard from readboard()'s buffer  *	makeboard() 	Function to create a new scoreboard (wipe out old one)  *	hashewon()	 Function to return 1 if player has won a game before, else 0  *	long paytaxes(x)	 Function to pay taxes if any are due  *	winshou()		Subroutine to print out the winning scoreboard  *	shou(x)			Subroutine to print out the non-winners scoreboard  *	showscores()		Function to show the scoreboard on the terminal  *	showallscores()	Function to show scores and the iven lists that go with them  *	sortboard()		Function to sort the scoreboard  *	newscore(score, whoo, whyded, winner) 	Function to add entry to scoreboard  *	new1sub(score,i,whoo,taxes) 		  Subroutine to put player into a  *	new2sub(score,i,whoo,whyded)	 	  Subroutine to put player into a  *	died(x) 	Subroutine to record who played larn, and what the score was  *	diedsub(x) Subroutine to print out a line showing player when he is killed  *	diedlog() 	Subroutine to read a log file and print it out in ascii format  *	getplid(name)		Function to get players id # from id file  *  */
 end_comment
 
 begin_include
@@ -837,7 +837,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	winshou()		Subroutine to print out the winning scoreboard  *  *	Returns the number of players on scoreboard that were shown   */
+comment|/*  *	winshou()		Subroutine to print out the winning scoreboard  *  *	Returns the number of players on scoreboard that were shown  */
 end_comment
 
 begin_macro
@@ -1008,7 +1008,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	shou(x)			Subroutine to print out the non-winners scoreboard  *		int x;  *  *	Enter with 0 to list the scores, enter with 1 to list inventories too  *	Returns the number of players on scoreboard that were shown   */
+comment|/*  *	shou(x)			Subroutine to print out the non-winners scoreboard  *		int x;  *  *	Enter with 0 to list the scores, enter with 1 to list inventories too  *	Returns the number of players on scoreboard that were shown  */
 end_comment
 
 begin_macro
@@ -2098,7 +2098,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	new1sub(score,i,whoo,taxes) 	  Subroutine to put player into a   *		int score,i,whyded,taxes;		  winning scoreboard entry if his score  *		char *whoo; 					  is high enough  *  *	Enter with the total score in gp in score,  players name in whoo,  *		died() reason # in whyded, and TRUE/FALSE in winner if a winner  *		slot in scoreboard in i, and the tax bill in taxes.  *	Returns nothing of value  */
+comment|/*  *	new1sub(score,i,whoo,taxes) 	  Subroutine to put player into a  *		int score,i,whyded,taxes;		  winning scoreboard entry if his score  *		char *whoo; 					  is high enough  *  *	Enter with the total score in gp in score,  players name in whoo,  *		died() reason # in whyded, and TRUE/FALSE in winner if a winner  *		slot in scoreboard in i, and the tax bill in taxes.  *	Returns nothing of value  */
 end_comment
 
 begin_macro
@@ -2222,7 +2222,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	new2sub(score,i,whoo,whyded)	 	  Subroutine to put player into a   *		int score,i,whyded,taxes;		  non-winning scoreboard entry if his  *		char *whoo; 					  score is high enough  *  *	Enter with the total score in gp in score,  players name in whoo,  *		died() reason # in whyded, and slot in scoreboard in i.  *	Returns nothing of value  */
+comment|/*  *	new2sub(score,i,whoo,whyded)	 	  Subroutine to put player into a  *		int score,i,whyded,taxes;		  non-winning scoreboard entry if his  *		char *whoo; 					  score is high enough  *  *	Enter with the total score in gp in score,  players name in whoo,  *		died() reason # in whyded, and slot in scoreboard in i.  *	Returns nothing of value  */
 end_comment
 
 begin_macro
@@ -3652,7 +3652,7 @@ name|UIDSCORE
 end_ifndef
 
 begin_comment
-comment|/*  *	getplid(name)		Function to get players id # from id file  *  *	Enter with the name of the players character in name.  *	Returns the id # of the players character, or -1 if failure.  *	This routine will try to find the name in the id file, if its not there,  *	it will try to make a new entry in the file.  Only returns -1 if can't  *	find him in the file, and can't make a new entry in the file.  *	Format of playerids file:  *			Id # in ascii     \n     character name     \n     */
+comment|/*  *	getplid(name)		Function to get players id # from id file  *  *	Enter with the name of the players character in name.  *	Returns the id # of the players character, or -1 if failure.  *	This routine will try to find the name in the id file, if its not there,  *	it will try to make a new entry in the file.  Only returns -1 if can't  *	find him in the file, and can't make a new entry in the file.  *	Format of playerids file:  *			Id # in ascii     \n     character name     \n  */
 end_comment
 
 begin_decl_stmt

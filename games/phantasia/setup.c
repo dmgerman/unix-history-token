@@ -33,7 +33,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: main() / / FUNCTION: setup files for Phantasia 3.3.2 / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: time(), exit(), stat(), Error(), creat(), close(), fopen(),  /	fgets(), floor(), srandom(), umask(), drandom(), strcpy(), getuid(),  /	unlink(), fwrite(), fclose(), sscanf(), printf(), strlen(), fprintf() / / GLOBAL INPUTS: Curmonster, _iob[], Databuf[], *Monstfp, Enrgyvoid / / GLOBAL OUTPUTS: Curmonster, Databuf[], *Monstfp, Enrgyvoid / / DESCRIPTION:  / /	This program tries to verify the parameters specified in /	the Makefile. / /	Create all necessary files.  Note that nothing needs to be /	put in these files. /	Also, the monster binary data base is created here. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: main() / / FUNCTION: setup files for Phantasia 3.3.2 / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: time(), exit(), stat(), Error(), creat(), close(), fopen(), /	fgets(), floor(), srandom(), umask(), drandom(), strcpy(), getuid(), /	unlink(), fwrite(), fclose(), sscanf(), printf(), strlen(), fprintf() / / GLOBAL INPUTS: Curmonster, _iob[], Databuf[], *Monstfp, Enrgyvoid / / GLOBAL OUTPUTS: Curmonster, Databuf[], *Monstfp, Enrgyvoid / / DESCRIPTION: / /	This program tries to verify the parameters specified in /	the Makefile. / /	Create all necessary files.  Note that nothing needs to be /	put in these files. /	Also, the monster binary data base is created here. / *************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -767,7 +767,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: drandom() / / FUNCTION: return a random number / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: random() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION:  / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: drandom() / / FUNCTION: return a random number / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: random() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: / *************************************************************************/
 end_comment
 
 begin_function

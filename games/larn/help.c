@@ -10,7 +10,7 @@ file|"header.h"
 end_include
 
 begin_comment
-comment|/*  *	help function to display the help info	  *  *	format of the .larn.help file  *  *	1st character of file:	# of pages of help available (ascii digit)  *	page (23 lines) for the introductory message (not counted in above)  *	pages of help text (23 lines per page)  */
+comment|/*  *	help function to display the help info  *  *	format of the .larn.help file  *  *	1st character of file:	# of pages of help available (ascii digit)  *	page (23 lines) for the introductory message (not counted in above)  *	pages of help text (23 lines per page)  */
 end_comment
 
 begin_decl_stmt

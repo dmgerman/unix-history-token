@@ -54,7 +54,7 @@ comment|/* new format file */
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: main() / / FUNCTION: convert old Phantasia player file to new format / / AUTHOR: C. Robertson, 9/1/85  E. A. Estes, 3/12/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: time(), exit(), fread(), fopen(), srandom(), floor(),  /	random(), strcmp(), fwrite(), strcpy(), fclose(), fprintf() / / GLOBAL INPUTS: _iob[], Oldplayer, Newplayer / / GLOBAL OUTPUTS: Oldplayer, Newplayer / / DESCRIPTION: /	Read in old player structures and write out to new file in /	new format. /	Old player file is unmodified. /	New file is "DEST/newcharacs". /	#define PHANTPLUS to convert from 3.3.1+. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: main() / / FUNCTION: convert old Phantasia player file to new format / / AUTHOR: C. Robertson, 9/1/85  E. A. Estes, 3/12/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: time(), exit(), fread(), fopen(), srandom(), floor(), /	random(), strcmp(), fwrite(), strcpy(), fclose(), fprintf() / / GLOBAL INPUTS: _iob[], Oldplayer, Newplayer / / GLOBAL OUTPUTS: Oldplayer, Newplayer / / DESCRIPTION: /	Read in old player structures and write out to new file in /	new format. /	Old player file is unmodified. /	New file is "DEST/newcharacs". /	#define PHANTPLUS to convert from 3.3.1+. / /************************************************************************/
 end_comment
 
 begin_function

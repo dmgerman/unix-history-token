@@ -10,7 +10,7 @@ file|"include.h"
 end_include
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: encounter() / / FUNCTION: monster battle routine / / AUTHOR: E. A. Estes, 2/20/86 / / ARGUMENTS: /	int particular - particular monster to fight if>= 0 / / RETURN VALUE: none / / MODULES CALLED: monsthits(), playerhits(), readmessage(), callmonster(),  /	writerecord(), pickmonster(), displaystats(), pow(), cancelmonster(),  /	awardtreasure(), more(), death(), wmove(), setjmp(), drandom(), printw(),  /	longjmp(), wrefresh(), mvprintw(), wclrtobot() / / GLOBAL INPUTS: Curmonster, Whichmonster, LINES, Lines, Circle, Shield,  /	Player, *stdscr, Fileloc, Fightenv[], *Enemyname / / GLOBAL OUTPUTS: Curmonster, Whichmonster, Lines, Shield, Player, Luckout / / DESCRIPTION: /	Choose a monster and check against some special types. /	Arbitrate between monster and player.  Watch for either /	dying. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: encounter() / / FUNCTION: monster battle routine / / AUTHOR: E. A. Estes, 2/20/86 / / ARGUMENTS: /	int particular - particular monster to fight if>= 0 / / RETURN VALUE: none / / MODULES CALLED: monsthits(), playerhits(), readmessage(), callmonster(), /	writerecord(), pickmonster(), displaystats(), pow(), cancelmonster(), /	awardtreasure(), more(), death(), wmove(), setjmp(), drandom(), printw(), /	longjmp(), wrefresh(), mvprintw(), wclrtobot() / / GLOBAL INPUTS: Curmonster, Whichmonster, LINES, Lines, Circle, Shield, /	Player, *stdscr, Fileloc, Fightenv[], *Enemyname / / GLOBAL OUTPUTS: Curmonster, Whichmonster, Lines, Shield, Player, Luckout / / DESCRIPTION: /	Choose a monster and check against some special types. /	Arbitrate between monster and player.  Watch for either /	dying. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -731,7 +731,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: playerhits() / / FUNCTION: prompt player for action in monster battle, and process / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: hitmonster(), throwspell(), inputoption(), cancelmonster(),  /	floor(), wmove(), drandom(), altercoordinates(), waddstr(), mvprintw(),  /	wclrtoeol(), wclrtobot() / / GLOBAL INPUTS: Curmonster, Lines, Player, *stdscr, Luckout, *Enemyname / / GLOBAL OUTPUTS: Curmonster, Lines, Player, Luckout / / DESCRIPTION: /	Process all monster battle options. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: playerhits() / / FUNCTION: prompt player for action in monster battle, and process / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: hitmonster(), throwspell(), inputoption(), cancelmonster(), /	floor(), wmove(), drandom(), altercoordinates(), waddstr(), mvprintw(), /	wclrtoeol(), wclrtobot() / / GLOBAL INPUTS: Curmonster, Lines, Player, *stdscr, Luckout, *Enemyname / / GLOBAL OUTPUTS: Curmonster, Lines, Player, Luckout / / DESCRIPTION: /	Process all monster battle options. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -1405,7 +1405,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: monsthits() / / FUNCTION: process a monster hitting the player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: cancelmonster(), scramblestats(), more(), floor(), wmove(),  /	drandom(), altercoordinates(), longjmp(), waddstr(), mvprintw(),  /	getanswer() / / GLOBAL INPUTS: Curmonster, Lines, Circle, Shield, Player, *stdscr,  /	Fightenv[], *Enemyname / / GLOBAL OUTPUTS: Curmonster, Whichmonster, Lines, Shield, Player,  /	*Enemyname / / DESCRIPTION: /	Handle all special monsters here.  If the monster is not a special /	one, simply roll a hit against the player. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: monsthits() / / FUNCTION: process a monster hitting the player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: cancelmonster(), scramblestats(), more(), floor(), wmove(), /	drandom(), altercoordinates(), longjmp(), waddstr(), mvprintw(), /	getanswer() / / GLOBAL INPUTS: Curmonster, Lines, Circle, Shield, Player, *stdscr, /	Fightenv[], *Enemyname / / GLOBAL OUTPUTS: Curmonster, Whichmonster, Lines, Shield, Player, /	*Enemyname / / DESCRIPTION: /	Handle all special monsters here.  If the monster is not a special /	one, simply roll a hit against the player. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2609,7 +2609,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: throwspell() / / FUNCTION: throw a magic spell / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: hitmonster(), cancelmonster(), sqrt(), floor(), wmove(),  /	drandom(), altercoordinates(), longjmp(), infloat(), waddstr(), mvprintw(),  /	getanswer() / / GLOBAL INPUTS: Curmonster, Whichmonster, Nomana[], Player, *stdscr,  /	Fightenv[], Illspell[], *Enemyname / / GLOBAL OUTPUTS: Curmonster, Whichmonster, Shield, Player / / DESCRIPTION: /	Prompt player and process magic spells. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: throwspell() / / FUNCTION: throw a magic spell / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: hitmonster(), cancelmonster(), sqrt(), floor(), wmove(), /	drandom(), altercoordinates(), longjmp(), infloat(), waddstr(), mvprintw(), /	getanswer() / / GLOBAL INPUTS: Curmonster, Whichmonster, Nomana[], Player, *stdscr, /	Fightenv[], Illspell[], *Enemyname / / GLOBAL OUTPUTS: Curmonster, Whichmonster, Shield, Player / / DESCRIPTION: /	Prompt player and process magic spells. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -3575,7 +3575,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: callmonster() / / FUNCTION: read monster from file, and fill structure / / AUTHOR: E. A. Estes, 2/25/86 / / ARGUMENTS: /	int which - which monster to call / / RETURN VALUE: none / / MODULES CALLED: truncstring(), fread(), fseek(), floor(), drandom(),  /	strcpy() / / GLOBAL INPUTS: Curmonster, Circle, Player, *Monstfp / / GLOBAL OUTPUTS: Curmonster, Player, *Enemyname / / DESCRIPTION: /	Read specified monster from monster database and fill up /	current monster structure. /	Adjust statistics based upon current size. /	Handle some special monsters. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: callmonster() / / FUNCTION: read monster from file, and fill structure / / AUTHOR: E. A. Estes, 2/25/86 / / ARGUMENTS: /	int which - which monster to call / / RETURN VALUE: none / / MODULES CALLED: truncstring(), fread(), fseek(), floor(), drandom(), /	strcpy() / / GLOBAL INPUTS: Curmonster, Circle, Player, *Monstfp / / GLOBAL OUTPUTS: Curmonster, Player, *Enemyname / / DESCRIPTION: /	Read specified monster from monster database and fill up /	current monster structure. /	Adjust statistics based upon current size. /	Handle some special monsters. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -4053,7 +4053,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: awardtreasure() / / FUNCTION: select a treasure / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: pickmonster(), collecttaxes(), more(), cursedtreasure(),  /	floor(), wmove(), drandom(), sscanf(), printw(), altercoordinates(),  /	longjmp(), infloat(), waddstr(), getanswer(), getstring(), wclrtobot() / / GLOBAL INPUTS: Somebetter[], Curmonster, Whichmonster, Circle, Player,  /	*stdscr, Databuf[], *Statptr, Fightenv[] / / GLOBAL OUTPUTS: Whichmonster, Shield, Player / / DESCRIPTION: /	Roll up a treasure based upon monster type and size, and /	certain player statistics. /	Handle cursed treasure. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: awardtreasure() / / FUNCTION: select a treasure / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: pickmonster(), collecttaxes(), more(), cursedtreasure(), /	floor(), wmove(), drandom(), sscanf(), printw(), altercoordinates(), /	longjmp(), infloat(), waddstr(), getanswer(), getstring(), wclrtobot() / / GLOBAL INPUTS: Somebetter[], Curmonster, Whichmonster, Circle, Player, /	*stdscr, Databuf[], *Statptr, Fightenv[] / / GLOBAL OUTPUTS: Whichmonster, Shield, Player / / DESCRIPTION: /	Roll up a treasure based upon monster type and size, and /	certain player statistics. /	Handle cursed treasure. / *************************************************************************/
 end_comment
 
 begin_macro

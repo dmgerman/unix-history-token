@@ -618,7 +618,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: tradingpost() / / FUNCTION: do trading post stuff / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), adjuststats(), fabs(), more(), sqrt(),  /	sleep(), floor(), wmove(), drandom(), wclear(), printw(),  /	altercoordinates(), infloat(), waddstr(), wrefresh(), mvprintw(), getanswer(),  /	wclrtoeol(), wclrtobot() / / GLOBAL INPUTS: Menu[], Circle, Player, *stdscr, Fileloc, Nobetter[] / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Different trading posts have different items. /	Merchants cannot be cheated, but they can be dishonest /	themselves. / /	Shields, swords, and quicksilver are not cumulative.  This is /	one major area of complaint, but there are two reasons for this: /		1) It becomes MUCH too easy to make very large versions /		   of these items. /		2) In the real world, one cannot simply weld two swords /		   together to make a bigger one. / /	At one time, it was possible to sell old weapons at half the purchase /	price.  This resulted in huge amounts of gold floating around, /	and the game lost much of its challenge. / /	Also, purchasing gems defeats the whole purpose of gold.  Gold /	is small change for lower level players.  They really shouldn't /	be able to accumulate more than enough gold for a small sword or /	a few books.  Higher level players shouldn't even bother to pick /	up gold, except maybe to buy mana once in a while. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: tradingpost() / / FUNCTION: do trading post stuff / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), adjuststats(), fabs(), more(), sqrt(), /	sleep(), floor(), wmove(), drandom(), wclear(), printw(), /	altercoordinates(), infloat(), waddstr(), wrefresh(), mvprintw(), getanswer(), /	wclrtoeol(), wclrtobot() / / GLOBAL INPUTS: Menu[], Circle, Player, *stdscr, Fileloc, Nobetter[] / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Different trading posts have different items. /	Merchants cannot be cheated, but they can be dishonest /	themselves. / /	Shields, swords, and quicksilver are not cumulative.  This is /	one major area of complaint, but there are two reasons for this: /		1) It becomes MUCH too easy to make very large versions /		   of these items. /		2) In the real world, one cannot simply weld two swords /		   together to make a bigger one. / /	At one time, it was possible to sell old weapons at half the purchase /	price.  This resulted in huge amounts of gold floating around, /	and the game lost much of its challenge. / /	Also, purchasing gems defeats the whole purpose of gold.  Gold /	is small change for lower level players.  They really shouldn't /	be able to accumulate more than enough gold for a small sword or /	a few books.  Higher level players shouldn't even bother to pick /	up gold, except maybe to buy mana once in a while. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2865,7 +2865,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: death() / / FUNCTION: death routine / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *how - pointer to string describing cause of death / / RETURN VALUE: none / / MODULES CALLED: freerecord(), enterscore(), more(), exit(), fread(),  /	fseek(), execl(), fopen(), floor(), wmove(), drandom(), wclear(), strcmp(),  /	fwrite(), fflush(), printw(), strcpy(), fclose(), waddstr(), cleanup(),  /	fprintf(), wrefresh(), getanswer(), descrtype() / / GLOBAL INPUTS: Curmonster, Wizard, Player, *stdscr, Fileloc, *Monstfp / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Kill off current player. /	Handle rings, and multiple lives. /	Print an appropriate message. /	Update scoreboard, lastdead, and let other players know about /	the demise of their comrade. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: death() / / FUNCTION: death routine / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *how - pointer to string describing cause of death / / RETURN VALUE: none / / MODULES CALLED: freerecord(), enterscore(), more(), exit(), fread(), /	fseek(), execl(), fopen(), floor(), wmove(), drandom(), wclear(), strcmp(), /	fwrite(), fflush(), printw(), strcpy(), fclose(), waddstr(), cleanup(), /	fprintf(), wrefresh(), getanswer(), descrtype() / / GLOBAL INPUTS: Curmonster, Wizard, Player, *stdscr, Fileloc, *Monstfp / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Kill off current player. /	Handle rings, and multiple lives. /	Print an appropriate message. /	Update scoreboard, lastdead, and let other players know about /	the demise of their comrade. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -3482,7 +3482,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: explevel() / / FUNCTION: calculate level based upon experience / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	double experience - experience to calculate experience level from / / RETURN VALUE: experience level / / MODULES CALLED: pow(), floor() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION:  /	Experience level is a geometric progression.  This has been finely /	tuned over the years, and probably should not be changed. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: explevel() / / FUNCTION: calculate level based upon experience / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	double experience - experience to calculate experience level from / / RETURN VALUE: experience level / / MODULES CALLED: pow(), floor() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Experience level is a geometric progression.  This has been finely /	tuned over the years, and probably should not be changed. / *************************************************************************/
 end_comment
 
 begin_function
@@ -3545,7 +3545,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: truncstring() / / FUNCTION: truncate trailing blanks off a string / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS:  /	char *string - pointer to null terminated string / / RETURN VALUE: none / / MODULES CALLED: strlen() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION:  /	Put nul characters in place of spaces at the end of the string. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: truncstring() / / FUNCTION: truncate trailing blanks off a string / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *string - pointer to null terminated string / / RETURN VALUE: none / / MODULES CALLED: strlen() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Put nul characters in place of spaces at the end of the string. / *************************************************************************/
 end_comment
 
 begin_expr_stmt
@@ -3600,7 +3600,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: altercoordinates() / / FUNCTION: Alter x, y coordinates and set/check location flags / / AUTHOR: E. A. Estes, 12/16/85 / / ARGUMENTS:  /	double xnew, ynew - new x, y coordinates /	int operation - operation to perform with coordinates / / RETURN VALUE: none / / MODULES CALLED: fabs(), floor(), drandom(), distance() / / GLOBAL INPUTS: Circle, Beyond, Player / / GLOBAL OUTPUTS: Marsh, Circle, Beyond, Throne, Player, Changed / / DESCRIPTION:  /	This module is called whenever the player's coordinates are altered. /	If the player is beyond the point of no return, he/she is forced /	to stay there. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: altercoordinates() / / FUNCTION: Alter x, y coordinates and set/check location flags / / AUTHOR: E. A. Estes, 12/16/85 / / ARGUMENTS: /	double xnew, ynew - new x, y coordinates /	int operation - operation to perform with coordinates / / RETURN VALUE: none / / MODULES CALLED: fabs(), floor(), drandom(), distance() / / GLOBAL INPUTS: Circle, Beyond, Player / / GLOBAL OUTPUTS: Marsh, Circle, Beyond, Throne, Player, Changed / / DESCRIPTION: /	This module is called whenever the player's coordinates are altered. /	If the player is beyond the point of no return, he/she is forced /	to stay there. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -4875,7 +4875,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: distance() / / FUNCTION: calculate distance between two points / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS:  /	double x1, y1 - x, y coordinates of first point /	double x2, y2 - x, y coordinates of second point / / RETURN VALUE: distance between the two points / / MODULES CALLED: sqrt() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	This function is provided because someone's hypot() library function /	fails if x1 == x2&& y1 == y2. / *************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: distance() / / FUNCTION: calculate distance between two points / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	double x1, y1 - x, y coordinates of first point /	double x2, y2 - x, y coordinates of second point / / RETURN VALUE: distance between the two points / / MODULES CALLED: sqrt() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	This function is provided because someone's hypot() library function /	fails if x1 == x2&& y1 == y2. / *************************************************************************/
 end_comment
 
 begin_function

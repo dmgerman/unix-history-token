@@ -9989,7 +9989,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	function to create scroll numbers with appropriate probability of   *	occurrence  *  *	0 - armor			1 - weapon		2 - enlightenment	3 - paper  *	4 - create monster	5 - create item	6 - aggravate		7 - time warp  *	8 - teleportation	9 - expanded awareness				10 - haste monst  *	11 - heal monster	12 - spirit protection		13 - undead protection  *	14 - stealth		15 - magic mapping			16 - hold monster  *	17 - gem perfection 18 - spell extension		19 - identify  *	20 - remove curse	21 - annihilation			22 - pulverization  *  23 - life protection  */
+comment|/*  *	function to create scroll numbers with appropriate probability of  *	occurrence  *  *	0 - armor			1 - weapon		2 - enlightenment	3 - paper  *	4 - create monster	5 - create item	6 - aggravate		7 - time warp  *	8 - teleportation	9 - expanded awareness				10 - haste monst  *	11 - heal monster	12 - spirit protection		13 - undead protection  *	14 - stealth		15 - magic mapping			16 - hold monster  *	17 - gem perfection 18 - spell extension		19 - identify  *	20 - remove curse	21 - annihilation			22 - pulverization  *  23 - life protection  */
 end_comment
 
 begin_decl_stmt

@@ -394,7 +394,7 @@ name|ptr
 argument_list|)
 expr_stmt|;
 comment|/* the .larnopts filename */
-comment|/*  *	now malloc the memory for the dungeon   */
+comment|/*  *	now malloc the memory for the dungeon  */
 name|cell
 operator|=
 operator|(
@@ -579,7 +579,7 @@ block|}
 endif|#
 directive|endif
 endif|VT100
-comment|/*  *	now make scoreboard if it is not there (don't clear)   */
+comment|/*  *	now make scoreboard if it is not there (don't clear)  */
 if|if
 condition|(
 name|access
@@ -596,7 +596,7 @@ comment|/* not there */
 name|makeboard
 argument_list|()
 expr_stmt|;
-comment|/*  *	now process the command line arguments   */
+comment|/*  *	now process the command line arguments  */
 for|for
 control|(
 name|i
@@ -1791,7 +1791,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* 	function to show the things player can wield only   */
+comment|/* 	function to show the things player can wield only  */
 end_comment
 
 begin_macro

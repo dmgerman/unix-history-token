@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* io.c			 Larn is copyrighted 1986 by Noah Morgan.  *  *	Below are the functions in this file:  *  *	setupvt100() 	Subroutine to set up terminal in correct mode for game  *	clearvt100()  	Subroutine to clean up terminal when the game is over  *	getchar() 		Routine to read in one character from the terminal  *	scbr()			Function to set cbreak -echo for the terminal  *	sncbr()			Function to set -cbreak echo for the terminal  *	newgame() 		Subroutine to save the initial time and seed rnd()  *  *	FILE OUTPUT ROUTINES  *  *	lprintf(format,args . . .)	printf to the output buffer  *	lprint(integer)				send binary integer to output buffer  *	lwrite(buf,len)				write a buffer to the output buffer  *	lprcat(str)					sent string to output buffer  *  *	FILE OUTPUT MACROS (in header.h)  *  *	lprc(character)				put the character into the output buffer  *  *	FILE INPUT ROUTINES  *  *	long lgetc()				read one character from input buffer  *	long lrint()				read one integer from input buffer  *	lrfill(address,number)		put input bytes into a buffer  *	char *lgetw()				get a whitespace ended word from input  *	char *lgetl()				get a \n or EOF ended line from input  *  *	FILE OPEN / CLOSE ROUTINES  *  *	lcreat(filename)			create a new file for write  *	lopen(filename)				open a file for read  *	lappend(filename)			open for append to an existing file  *	lrclose()					close the input file  *	lwclose()					close output file  *	lflush()					flush the output buffer  *  *	Other Routines  *  *	cursor(x,y)					position cursor at [x,y]  *	cursors()					position cursor at [1,24] (saves memory)  *  cl_line(x,y)         		Clear line at [1,y] and leave cursor at [x,y]  *  cl_up(x,y)    				Clear screen from [x,1] to current line.  *  cl_dn(x,y) 					Clear screen from [1,y] to end of display.   *  standout(str)	 			Print the string in standout mode.  *  set_score_output() 			Called when output should be literally printed.  ** putchar(ch)					Print one character in decoded output buffer.  ** flush_buf()					Flush buffer with decoded output.  ** init_term()					Terminal initialization -- setup termcap info  **	char *tmcapcnv(sd,ss)  		Routine to convert VT100 \33's to termcap format  *	beep()		Routine to emit a beep if enabled (see no-beep in .larnopts)  *  * Note: ** entries are available only in termcap mode.  */
+comment|/* io.c			 Larn is copyrighted 1986 by Noah Morgan.  *  *	Below are the functions in this file:  *  *	setupvt100() 	Subroutine to set up terminal in correct mode for game  *	clearvt100()  	Subroutine to clean up terminal when the game is over  *	getchar() 		Routine to read in one character from the terminal  *	scbr()			Function to set cbreak -echo for the terminal  *	sncbr()			Function to set -cbreak echo for the terminal  *	newgame() 		Subroutine to save the initial time and seed rnd()  *  *	FILE OUTPUT ROUTINES  *  *	lprintf(format,args . . .)	printf to the output buffer  *	lprint(integer)				send binary integer to output buffer  *	lwrite(buf,len)				write a buffer to the output buffer  *	lprcat(str)					sent string to output buffer  *  *	FILE OUTPUT MACROS (in header.h)  *  *	lprc(character)				put the character into the output buffer  *  *	FILE INPUT ROUTINES  *  *	long lgetc()				read one character from input buffer  *	long lrint()				read one integer from input buffer  *	lrfill(address,number)		put input bytes into a buffer  *	char *lgetw()				get a whitespace ended word from input  *	char *lgetl()				get a \n or EOF ended line from input  *  *	FILE OPEN / CLOSE ROUTINES  *  *	lcreat(filename)			create a new file for write  *	lopen(filename)				open a file for read  *	lappend(filename)			open for append to an existing file  *	lrclose()					close the input file  *	lwclose()					close output file  *	lflush()					flush the output buffer  *  *	Other Routines  *  *	cursor(x,y)					position cursor at [x,y]  *	cursors()					position cursor at [1,24] (saves memory)  *  cl_line(x,y)         		Clear line at [1,y] and leave cursor at [x,y]  *  cl_up(x,y)    				Clear screen from [x,1] to current line.  *  cl_dn(x,y) 					Clear screen from [1,y] to end of display.  *  standout(str)	 			Print the string in standout mode.  *  set_score_output() 			Called when output should be literally printed.  ** putchar(ch)					Print one character in decoded output buffer.  ** flush_buf()					Flush buffer with decoded output.  ** init_term()					Terminal initialization -- setup termcap info  **	char *tmcapcnv(sd,ss)  		Routine to convert VT100 \33's to termcap format  *	beep()		Routine to emit a beep if enabled (see no-beep in .larnopts)  *  * Note: ** entries are available only in termcap mode.  */
 end_comment
 
 begin_include
@@ -307,7 +307,7 @@ comment|/* get line (word) buffer				*/
 end_comment
 
 begin_comment
-comment|/*  *	setupvt100() 		Subroutine to set up terminal in correct mode for game  *  *	Attributes off, clear screen, set scrolling region, set tty mode   */
+comment|/*  *	setupvt100() 		Subroutine to set up terminal in correct mode for game  *  *	Attributes off, clear screen, set scrolling region, set tty mode  */
 end_comment
 
 begin_macro
@@ -331,7 +331,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	clearvt100() 	 	Subroutine to clean up terminal when the game is over  *  *	Attributes off, clear screen, unset scrolling region, restore tty mode   */
+comment|/*  *	clearvt100() 	 	Subroutine to clean up terminal when the game is over  *  *	Attributes off, clear screen, unset scrolling region, restore tty mode  */
 end_comment
 
 begin_macro
@@ -539,7 +539,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	lprintf(format,args . . .)		printf to the output buffer  *		char *format;  *		??? args . . .  *  *	Enter with the format string in "format", as per printf() usage  *		and any needed arguments following it  *	Note: lprintf() only supports %s, %c and %d, with width modifier and left  *		or right justification.  *	No correct checking for output buffer overflow is done, but flushes   *		are done beforehand if needed.  *	Returns nothing of value.  */
+comment|/*  *	lprintf(format,args . . .)		printf to the output buffer  *		char *format;  *		??? args . . .  *  *	Enter with the format string in "format", as per printf() usage  *		and any needed arguments following it  *	Note: lprintf() only supports %s, %c and %d, with width modifier and left  *		or right justification.  *	No correct checking for output buffer overflow is done, but flushes  *		are done beforehand if needed.  *	Returns nothing of value.  */
 end_comment
 
 begin_ifdef
@@ -1220,7 +1220,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	lwrite(buf,len)					write a buffer to the output buffer  *		char *buf;  *		int len;  *	  *	Enter with the address and number of bytes to write out  *	Returns nothing of value  */
+comment|/*  *	lwrite(buf,len)					write a buffer to the output buffer  *		char *buf;  *		int len;  *  *	Enter with the address and number of bytes to write out  *	Returns nothing of value  */
 end_comment
 
 begin_expr_stmt
@@ -2304,7 +2304,7 @@ name|VT100
 end_ifdef
 
 begin_comment
-comment|/*  *	cursor(x,y) 		Subroutine to set the cursor position  *  *	x and y are the cursor coordinates, and lpbuff is the output buffer where  *	escape sequence will be placed.   */
+comment|/*  *	cursor(x,y) 		Subroutine to set the cursor position  *  *	x and y are the cursor coordinates, and lpbuff is the output buffer where  *	escape sequence will be placed.  */
 end_comment
 
 begin_decl_stmt
@@ -4127,7 +4127,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	char *tmcapcnv(sd,ss)  Routine to convert VT100 escapes to termcap format  *  *	Processes only the \33[#m sequence (converts . files for termcap use   */
+comment|/*  *	char *tmcapcnv(sd,ss)  Routine to convert VT100 escapes to termcap format  *  *	Processes only the \33[#m sequence (converts . files for termcap use  */
 end_comment
 
 begin_function

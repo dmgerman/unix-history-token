@@ -899,7 +899,7 @@ name|ch
 operator|=
 name|savec
 expr_stmt|;
-comment|/* Oops!  		 * This works if we figure it out on second character. 		 */
+comment|/* Oops! 		 * This works if we figure it out on second character. 		 */
 break|break;
 block|}
 block|}

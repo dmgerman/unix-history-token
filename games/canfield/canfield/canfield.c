@@ -801,7 +801,7 @@ value|5
 end_define
 
 begin_comment
-comment|/*  * Variables associated with betting   */
+comment|/*  * Variables associated with betting  */
 end_comment
 
 begin_struct
@@ -2620,7 +2620,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * procedure to move the top card from one location to the top   * of another location. The pointers always point to the top  * of the piles.  */
+comment|/*  * procedure to move the top card from one location to the top  * of another location. The pointers always point to the top  * of the piles.  */
 end_comment
 
 begin_macro

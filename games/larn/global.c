@@ -964,7 +964,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* 	makemonst(lev) 		int lev;  	function to return monster number for a randomly selected monster 		for the given cave level	  */
+comment|/* 	makemonst(lev) 		int lev;  	function to return monster number for a randomly selected monster 		for the given cave level  */
 end_comment
 
 begin_expr_stmt
