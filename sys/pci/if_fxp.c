@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.21.2.5 1997/03/17 11:09:42 davidg Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.21.2.6 1997/03/21 08:01:50 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1825,12 +1825,8 @@ comment|/* 	 * Grab a packet to transmit. 	 */
 name|IF_DEQUEUE
 argument_list|(
 operator|&
-name|sc
+name|ifp
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
 name|if_snd
 argument_list|,
 name|mb_head
@@ -1937,10 +1933,6 @@ condition|(
 name|m
 operator|!=
 name|NULL
-operator|&&
-name|segment
-operator|==
-name|FXP_NTXSEG
 condition|)
 block|{
 name|struct
@@ -2169,8 +2161,6 @@ condition|(
 name|ifp
 operator|->
 name|if_bpf
-operator|!=
-name|NULL
 condition|)
 name|bpf_mtap
 argument_list|(
@@ -2350,6 +2340,16 @@ name|if_timer
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_head
+operator|!=
+name|NULL
+condition|)
 name|fxp_start
 argument_list|(
 name|ifp
@@ -2456,6 +2456,26 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|total_len
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_header
+argument_list|)
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+goto|goto
+name|rcvloop
+goto|;
+block|}
 name|m
 operator|->
 name|m_pkthdr
@@ -2503,8 +2523,6 @@ condition|(
 name|ifp
 operator|->
 name|if_bpf
-operator|!=
-name|NULL
 condition|)
 block|{
 name|bpf_tap
@@ -2597,15 +2615,6 @@ operator|&
 name|FXP_SCB_STATACK_RNR
 condition|)
 block|{
-name|struct
-name|fxp_csr
-modifier|*
-name|csr
-init|=
-name|sc
-operator|->
-name|csr
-decl_stmt|;
 name|fxp_scb_wait
 argument_list|(
 name|csr
