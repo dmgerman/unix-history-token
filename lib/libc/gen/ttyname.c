@@ -121,7 +121,7 @@ name|struct
 name|pthread_mutex
 name|_ttyname_lockd
 init|=
-name|PTHREAD_MUTEX_INITIALIZER
+name|PTHREAD_MUTEX_STATIC_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 

@@ -222,7 +222,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PTHREAD_MUTEX_INITIALIZER
+name|PTHREAD_MUTEX_STATIC_INITIALIZER
 define|\
 value|{ MUTEX_TYPE_FAST, PTHREAD_QUEUE_INITIALIZER, \ 	NULL, { NULL }, MUTEX_FLAGS_INITED }
 end_define
@@ -327,7 +327,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PTHREAD_COND_INITIALIZER
+name|PTHREAD_COND_STATIC_INITIALIZER
 define|\
 value|{ COND_TYPE_FAST, PTHREAD_QUEUE_INITIALIZER, NULL, COND_FLAGS_INITED }
 end_define
