@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfscanf.c,v 1.8 1997/03/03 17:53:02 bde Exp $"
+literal|"$Id: vfscanf.c,v 1.9 1997/04/04 18:28:38 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2908,12 +2908,11 @@ literal|']'
 operator|||
 operator|(
 name|__collate_load_error
-operator|&&
+condition|?
 name|n
 operator|<
 name|c
-operator|)
-operator|||
+else|:
 name|__collate_range_cmp
 argument_list|(
 name|n
@@ -2922,6 +2921,7 @@ name|c
 argument_list|)
 operator|<
 literal|0
+operator|)
 condition|)
 block|{
 name|c
