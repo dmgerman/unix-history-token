@@ -375,7 +375,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * 0  - do usual exploration  * 1  - do not use timeout exploration  *>1 - do no exploration  */
+comment|/*  * 0  - do usual exploration  * 1  - do not use timeout exploration  *>1 - do no exploration  */
 end_comment
 
 begin_decl_stmt
@@ -1111,7 +1111,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
-comment|/*  		 * Turning this code off will delay attachment of USB devices 		 * until the USB event thread is running, which means that 		 * the keyboard will not work until after cold boot. 		 */
+comment|/* 		 * Turning this code off will delay attachment of USB devices 		 * until the USB event thread is running, which means that 		 * the keyboard will not work until after cold boot. 		 */
 if|#
 directive|if
 name|defined
@@ -2646,7 +2646,7 @@ name|s
 decl_stmt|;
 endif|#
 directive|endif
-comment|/*  	 * We need mutual exclusion while traversing the device tree, 	 * but this is guaranteed since this function is only called 	 * from the event thread for the controller. 	 */
+comment|/* 	 * We need mutual exclusion while traversing the device tree, 	 * but this is guaranteed since this function is only called 	 * from the event thread for the controller. 	 */
 if|#
 directive|if
 name|defined

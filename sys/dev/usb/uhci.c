@@ -544,7 +544,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * The uhci_intr_info free list can be global since they contain  * no dma specific data.  The other free lists do.  */
+comment|/*  * The uhci_intr_info free list can be global since they contain  * no dma specific data.  The other free lists do.  */
 end_comment
 
 begin_decl_stmt
@@ -1350,20 +1350,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|Static
 name|void
 name|uhci_softintr
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|usbd_bus
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|Static
@@ -2137,7 +2134,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* set frame list*/
-comment|/*  	 * Allocate a TD, inactive, that hangs from the last QH. 	 * This is to avoid a bug in the PIIX that makes it run berserk 	 * otherwise. 	 */
+comment|/* 	 * Allocate a TD, inactive, that hangs from the last QH. 	 * This is to avoid a bug in the PIIX that makes it run berserk 	 * otherwise. 	 */
 name|std
 operator|=
 name|uhci_alloc_std
@@ -2474,7 +2471,7 @@ name|sc_lctl_end
 operator|=
 name|clsqh
 expr_stmt|;
-comment|/*  	 * Make all (virtual) frame list pointers point to the interrupt 	 * queue heads and the interrupt queue heads at the control 	 * queue head and point the physical frame list to the virtual. 	 */
+comment|/* 	 * Make all (virtual) frame list pointers point to the interrupt 	 * queue heads and the interrupt queue heads at the control 	 * queue head and point the physical frame list to the virtual. 	 */
 for|for
 control|(
 name|i
@@ -5851,13 +5848,11 @@ begin_function
 name|void
 name|uhci_softintr
 parameter_list|(
-name|bus
-parameter_list|)
 name|struct
 name|usbd_bus
 modifier|*
 name|bus
-decl_stmt|;
+parameter_list|)
 block|{
 name|uhci_softc_t
 modifier|*
@@ -6017,7 +6012,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/*  	 * If the last TD is still active we need to check whether there 	 * is a an error somewhere in the middle, or whether there was a 	 * short packet (SPD and not ACTIVE). 	 */
+comment|/* 	 * If the last TD is still active we need to check whether there 	 * is a an error somewhere in the middle, or whether there was a 	 * short packet (SPD and not ACTIVE). 	 */
 if|if
 condition|(
 name|le32toh
@@ -8409,7 +8404,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/*  	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
+comment|/* 	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
 return|return
 operator|(
 name|uhci_device_bulk_start
@@ -9251,7 +9246,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/*  	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
+comment|/* 	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
 return|return
 operator|(
 name|uhci_device_ctrl_start
@@ -9397,7 +9392,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/*  	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
+comment|/* 	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
 return|return
 operator|(
 name|uhci_device_intr_start
@@ -10061,7 +10056,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * We now have to wait for any activity on the physical 	 * descriptors to stop. 	 */
+comment|/* 	 * We now have to wait for any activity on the physical 	 * descriptors to stop. 	 */
 name|usb_delay_ms
 argument_list|(
 operator|&
@@ -13626,7 +13621,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Figure out which offset in the schedule that has most 	 * bandwidth left over. 	 */
+comment|/* 	 * Figure out which offset in the schedule that has most 	 * bandwidth left over. 	 */
 define|#
 directive|define
 name|MOD
@@ -14715,7 +14710,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/*  	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
+comment|/* 	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
 return|return
 operator|(
 name|uhci_root_ctrl_start
@@ -14947,7 +14942,7 @@ argument_list|,
 name|UT_WRITE_ENDPOINT
 argument_list|)
 case|:
-comment|/*  		 * DEVICE_REMOTE_WAKEUP and ENDPOINT_HALT are no-ops 		 * for the integrated root hub. 		 */
+comment|/* 		 * DEVICE_REMOTE_WAKEUP and ENDPOINT_HALT are no-ops 		 * for the integrated root hub. 		 */
 break|break;
 case|case
 name|C
