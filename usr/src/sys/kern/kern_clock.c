@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	6.1	83/07/29	*/
+comment|/*	kern_clock.c	6.2	83/10/01	*/
 end_comment
 
 begin_include
@@ -166,11 +166,6 @@ name|s
 decl_stmt|,
 name|cpstate
 decl_stmt|;
-name|int
-name|needsoft
-init|=
-literal|0
-decl_stmt|;
 comment|/* 	 * Update real-time timeout queue. 	 * At front of queue are some number of events which are ``due''. 	 * The time to these is<= 0 and if negative represents the 	 * number of ticks which have passed since it was supposed to happen. 	 * The rest of the q elements (times> 0) are events yet to happen, 	 * where the time for each is given as a delta from the previous. 	 * Decrementing just the first of these serves to decrement the time 	 * to all events. 	 */
 name|p1
 operator|=
@@ -193,10 +188,6 @@ operator|>
 literal|0
 condition|)
 break|break;
-name|needsoft
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|p1
@@ -222,18 +213,6 @@ name|ps
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|u
-operator|.
-name|u_prof
-operator|.
-name|pr_scale
-condition|)
-name|needsoft
-operator|=
-literal|1
-expr_stmt|;
 comment|/* 		 * CPU was in user state.  Increment 		 * user time counter, and process process-virtual time 		 * interval timer.  		 */
 name|bumptime
 argument_list|(
@@ -642,10 +621,6 @@ argument_list|,
 name|tick
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|needsoft
-condition|)
 name|setsoftclock
 argument_list|()
 expr_stmt|;
