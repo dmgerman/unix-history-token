@@ -439,6 +439,9 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1510,7 +1513,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"      funcblock += nodesize[n->type];\n"
+literal|"      funcblock = (char *)funcblock + nodesize[n->type];\n"
 argument_list|,
 name|cfile
 argument_list|)
