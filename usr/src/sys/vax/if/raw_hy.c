@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)raw_hy.c	6.5	%G%  *  * 4.3 BSD Unix kernel - NSC HYPERchannel support  *  * $Header: raw_hy.c,v 3.1 84/02/15 04:27:44 steveg Exp $  * $Locker:  $  *  * Copyright (c) 1984, Tektronix Inc.  * All Rights Reserved  *  */
+comment|/*  *	@(#)raw_hy.c	7.1	%G%  *  * 4.3 BSD Unix kernel - NSC HYPERchannel support  *  * $Header: raw_hy.c,v 3.1 84/02/15 04:27:44 steveg Exp $  * $Locker:  $  *  * Copyright (c) 1984, Tektronix Inc.  * All Rights Reserved  *  */
 end_comment
 
 begin_include
