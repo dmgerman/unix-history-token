@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.31 1996/09/29 15:00:37 bde Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.33 1996/11/21 07:18:57 julian Exp $  */
 end_comment
 
 begin_include
@@ -101,21 +101,6 @@ directive|include
 file|<miscfs/devfs/devfsdefs.h>
 end_include
 
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|devfs
-argument_list|,
-argument|SI_SUB_DEVFS
-argument_list|,
-argument|SI_ORDER_FIRST
-argument_list|,
-argument|devfs_sinit
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
-
 begin_escape
 end_escape
 
@@ -144,7 +129,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Set up the root directory node in the backing plane  * This is happenning before the vfs system has been  * set up yet, so be careful about what we reference..  * Notice that the ops are by indirection.. as they haven't  * been set up yet!  */
+comment|/*  * Set up the root directory node in the backing plane  * This is happenning before the vfs system has been  * set up yet, so be careful about what we reference..  * Notice that the ops are by indirection.. as they haven't  * been set up yet!  * DEVFS has a hiddne mountpoint that is used as the anchor point  * for the internal 'blueprint' version of the dev filesystem tree.  */
 end_comment
 
 begin_comment
@@ -174,6 +159,10 @@ argument_list|,
 name|NULL
 argument_list|,
 name|DEV_DIR
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -280,6 +269,21 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|devfs
+argument_list|,
+argument|SI_SUB_DEVFS
+argument_list|,
+argument|SI_ORDER_FIRST
+argument_list|,
+argument|devfs_sinit
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
 
 begin_escape
 end_escape
@@ -451,7 +455,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************\ * Given a starting node (0 for root) and a pathname, return the node	* * for the end item on the path. It MUST BE A DIRECTORY. If the 'CREATE'	* * option is true, then create any missing nodes in the path and create	* * and return the final node as well.					* * This is used to set up a directory, before making nodes in it..	* *									* * Warning: This function is RECURSIVE.					* *	char	*path,		 find this dir (err if not dir)		* *	dn_p	dirnode,	 starting point  (0 = root)	 	* *	int	create,		 create path if not found 		* *	dn_p	*dn_pp)		 where to return the node of the dir	* \***********************************************************************/
+comment|/***********************************************************************\ * Given a starting node (0 for root) and a pathname, return the node	* * for the end item on the path. It MUST BE A DIRECTORY. If the 'CREATE'	* * option is true, then create any missing nodes in the path and create	* * and return the final node as well.					* * This is used to set up a directory, before making nodes in it..	* *									* * Warning: This function is RECURSIVE.					* *	char	*orig_path,	 find this dir (err if not dir)		* *	dn_p	dirnode,	 starting point  (0 = root)	 	* *	int	create,		 create path if not found 		* *	dn_p	*dn_pp)		 where to return the node of the dir	* \***********************************************************************/
 end_comment
 
 begin_comment
@@ -664,11 +668,7 @@ else|else
 block|{
 name|path
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* no more to do */
 block|}
@@ -731,6 +731,10 @@ name|DEV_DIR
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|devnmp
 argument_list|)
@@ -746,10 +750,25 @@ name|devnmp
 operator|->
 name|dnp
 expr_stmt|;
+name|devfs_propogate
+argument_list|(
+name|dirnode
+operator|->
+name|by
+operator|.
+name|Dir
+operator|.
+name|myname
+argument_list|,
+name|devnmp
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
 name|path
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* decide whether to recurse more or return */
@@ -786,7 +805,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************\ * Add a new element to the devfs backing structure. 			* * If we're creating a root node, then dirname is NULL			* *									* * Creates a name node, and links it to the supplied node		* \***********************************************************************/
+comment|/***********************************************************************\ * Add a new NAME element to the devfs					* * If we're creating a root node, then dirname is NULL			* * Basically this creates a new namespace entry for the device node	* *									* * Creates a name node, and links it to the supplied node		* \***********************************************************************/
 end_comment
 
 begin_comment
@@ -818,9 +837,6 @@ block|{
 name|devnm_p
 name|devnmp
 decl_stmt|;
-name|int
-name|retval
-decl_stmt|;
 name|DBPRINT
 argument_list|(
 operator|(
@@ -831,6 +847,8 @@ expr_stmt|;
 if|if
 condition|(
 name|dirnode
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -973,6 +991,79 @@ name|links
 operator|++
 expr_stmt|;
 comment|/* implicit from our own name-node */
+comment|/*  	 * Make sure that we can find all the links that reference a node 	 * so that we can get them all if we need to zap the node. 	 */
+if|if
+condition|(
+name|dnp
+operator|->
+name|linklist
+condition|)
+block|{
+name|devnmp
+operator|->
+name|nextlink
+operator|=
+name|dnp
+operator|->
+name|linklist
+expr_stmt|;
+name|devnmp
+operator|->
+name|prevlinkp
+operator|=
+name|devnmp
+operator|->
+name|nextlink
+operator|->
+name|prevlinkp
+expr_stmt|;
+name|devnmp
+operator|->
+name|nextlink
+operator|->
+name|prevlinkp
+operator|=
+operator|&
+operator|(
+name|devnmp
+operator|->
+name|nextlink
+operator|)
+expr_stmt|;
+name|dnp
+operator|->
+name|linklist
+operator|=
+name|devnmp
+expr_stmt|;
+block|}
+else|else
+block|{
+name|devnmp
+operator|->
+name|nextlink
+operator|=
+name|devnmp
+expr_stmt|;
+name|devnmp
+operator|->
+name|prevlinkp
+operator|=
+operator|&
+operator|(
+name|devnmp
+operator|->
+name|nextlink
+operator|)
+expr_stmt|;
+name|dnp
+operator|->
+name|linklist
+operator|=
+name|devnmp
+expr_stmt|;
+block|}
+comment|/* 	 * If the node is a directory, then we need to handle the  	 * creation of the .. link. 	 * A NULL dirnode indicates a root node, so point to ourself. 	 */
 if|if
 condition|(
 name|dnp
@@ -992,7 +1083,7 @@ name|myname
 operator|=
 name|devnmp
 expr_stmt|;
-comment|/* 		 * If we are unlinking from an old dir, decrement it's links 		 * as we point our '..' elsewhere 		 */
+comment|/* 		 * If we are unlinking from an old dir, decrement it's links 		 * as we point our '..' elsewhere 		 * Note: it's up to the calling code to remove the  		 * us from teh original directory's list 		 */
 if|if
 condition|(
 name|dnp
@@ -1058,7 +1149,7 @@ operator|++
 expr_stmt|;
 comment|/* account for the new '..' */
 block|}
-comment|/* 	 * put in it's name 	 */
+comment|/* 	 * put the name into the directory entry. 	 */
 name|strcpy
 argument_list|(
 name|devnmp
@@ -1068,80 +1159,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * And set up the 'clones' list (empty if new node) 	 */
-if|if
-condition|(
-name|back
-condition|)
-block|{
-comment|/*******************************************************\ 		* Put it in the appropriate back/front list too.	* 		\*******************************************************/
-name|devnmp
-operator|->
-name|next_front
-operator|=
-operator|*
-name|back
-operator|->
-name|prev_frontp
-expr_stmt|;
-name|devnmp
-operator|->
-name|prev_frontp
-operator|=
-name|back
-operator|->
-name|prev_frontp
-expr_stmt|;
-operator|*
-name|back
-operator|->
-name|prev_frontp
-operator|=
-name|devnmp
-expr_stmt|;
-name|back
-operator|->
-name|prev_frontp
-operator|=
-operator|&
-operator|(
-name|devnmp
-operator|->
-name|next_front
-operator|)
-expr_stmt|;
-name|devnmp
-operator|->
-name|as
-operator|.
-name|front
-operator|.
-name|realthing
-operator|=
-name|back
-expr_stmt|;
-block|}
-else|else
-block|{
-name|devnmp
-operator|->
-name|prev_frontp
-operator|=
-operator|&
-operator|(
-name|devnmp
-operator|->
-name|next_front
-operator|)
-expr_stmt|;
-name|devnmp
-operator|->
-name|next_front
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-comment|/******************************************* 	 * Check if we are not making a root node.. 	 * (i.e. have parent) 	 */
+comment|/* 	 * Check if we are not making a root node.. 	 * (i.e. have parent) 	 */
 if|if
 condition|(
 name|dirnode
@@ -1226,40 +1244,6 @@ literal|8
 expr_stmt|;
 comment|/*ok, ok?*/
 block|}
-comment|/* 	 * If we have a parent, then maybe we should duplicate 	 * ourselves onto any plane that the parent is on... 	 * Though this may be better handled elsewhere as 	 * it stops this routine from being used for front nodes 	 */
-if|if
-condition|(
-name|dirnode
-operator|&&
-operator|!
-name|back
-condition|)
-block|{
-if|if
-condition|(
-name|retval
-operator|=
-name|devfs_add_fronts
-argument_list|(
-name|dirnode
-operator|->
-name|by
-operator|.
-name|Dir
-operator|.
-name|myname
-argument_list|,
-name|devnmp
-argument_list|)
-condition|)
-block|{
-comment|/*XXX*/
-comment|/* no idea what to do if it fails... */
-return|return
-name|retval
-return|;
-block|}
-block|}
 operator|*
 name|devnm_pp
 operator|=
@@ -1275,7 +1259,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************\ * Add a new element to the devfs backing structure. 			* *									* * Creates a new dev_node to go with it					* * 'by' gives us info to make our node					* * note the 'links' count is 0 (except if a dir)				* * but it is only cleared on a transition				* * so this is ok till we link it to something				* \***********************************************************************/
+comment|/***********************************************************************\ * Add a new element to the devfs backing structure. 			* *									* * Creates a new dev_node to go with it					* * 'by' gives us info to make our node					* * If 'by is null and proto exists, then the 'by' field of		* * the proto is used intead 						* * note the 'links' count is 0 (except if a dir)				* * but it is only cleared on a transition				* * so this is ok till we link it to something				* * If the node already exists on the wanted plane, just return it	* \***********************************************************************/
 end_comment
 
 begin_comment
@@ -1300,6 +1284,11 @@ parameter_list|,
 name|dn_p
 modifier|*
 name|dn_pp
+parameter_list|,
+name|struct
+name|devfsmount
+modifier|*
+name|dvm
 parameter_list|)
 block|{
 name|dn_p
@@ -1312,6 +1301,68 @@ literal|"dev_add_node\n"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we have a prototype, then check if there is already a sibling 	 * on the mount plane we are looking at, if so, just return it. 	 */
+if|if
+condition|(
+name|proto
+condition|)
+block|{
+name|dnp
+operator|=
+name|proto
+operator|->
+name|nextsibling
+expr_stmt|;
+while|while
+condition|(
+name|dnp
+operator|!=
+name|proto
+condition|)
+block|{
+if|if
+condition|(
+name|dnp
+operator|->
+name|dvm
+operator|==
+name|dvm
+condition|)
+block|{
+operator|*
+name|dn_pp
+operator|=
+name|dnp
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|dnp
+operator|=
+name|dnp
+operator|->
+name|nextsibling
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|by
+operator|==
+name|NULL
+condition|)
+name|by
+operator|=
+operator|&
+operator|(
+name|proto
+operator|->
+name|by
+operator|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1345,7 +1396,6 @@ condition|(
 name|proto
 condition|)
 block|{
-comment|/*  XXX should check that we are NOT copying a device node */
 name|bcopy
 argument_list|(
 name|proto
@@ -1358,7 +1408,6 @@ name|devnode_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* some things you DON'T copy */
 name|dnp
 operator|->
 name|links
@@ -1367,7 +1416,7 @@ literal|0
 expr_stmt|;
 name|dnp
 operator|->
-name|dvm
+name|linklist
 operator|=
 name|NULL
 expr_stmt|;
@@ -1382,6 +1431,41 @@ operator|->
 name|len
 operator|=
 literal|0
+expr_stmt|;
+comment|/* add to END of siblings list */
+name|dnp
+operator|->
+name|prevsiblingp
+operator|=
+name|proto
+operator|->
+name|prevsiblingp
+expr_stmt|;
+operator|*
+operator|(
+name|dnp
+operator|->
+name|prevsiblingp
+operator|)
+operator|=
+name|dnp
+expr_stmt|;
+name|dnp
+operator|->
+name|nextsibling
+operator|=
+name|proto
+expr_stmt|;
+name|proto
+operator|->
+name|prevsiblingp
+operator|=
+operator|&
+operator|(
+name|dnp
+operator|->
+name|nextsibling
+operator|)
 expr_stmt|;
 block|}
 else|else
@@ -1425,7 +1509,30 @@ name|dnp
 operator|->
 name|ctime
 expr_stmt|;
+name|dnp
+operator|->
+name|nextsibling
+operator|=
+name|dnp
+expr_stmt|;
+name|dnp
+operator|->
+name|prevsiblingp
+operator|=
+operator|&
+operator|(
+name|dnp
+operator|->
+name|nextsibling
+operator|)
+expr_stmt|;
 block|}
+name|dnp
+operator|->
+name|dvm
+operator|=
+name|dvm
+expr_stmt|;
 comment|/* 	 * fill out the dev node according to type 	 */
 switch|switch
 condition|(
@@ -1623,7 +1730,6 @@ literal|0555
 expr_stmt|;
 comment|/* default perms */
 break|break;
-comment|/*******************************************************\ 	* The rest of these can't happen except in the back plane* 	\*******************************************************/
 case|case
 name|DEV_BDEV
 case|:
@@ -1724,6 +1830,20 @@ name|arg
 expr_stmt|;
 name|dnp
 operator|->
+name|by
+operator|.
+name|Ddev
+operator|.
+name|ops
+operator|=
+name|by
+operator|->
+name|Ddev
+operator|.
+name|ops
+expr_stmt|;
+name|dnp
+operator|->
 name|ops
 operator|=
 name|by
@@ -1751,10 +1871,6 @@ end_function
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/***************************************************************\ * DEV_NODE reference count manipulations.. when a ref count	* * reaches 0, the node is to be deleted				* \***************************************************************/
-end_comment
 
 begin_comment
 comment|/*proto*/
@@ -1869,7 +1985,7 @@ end_comment
 
 begin_function
 name|int
-name|devfs_add_fronts
+name|devfs_propogate
 parameter_list|(
 name|devnm_p
 name|parent
@@ -1884,13 +2000,24 @@ decl_stmt|;
 name|devnm_p
 name|newnmp
 decl_stmt|;
-name|devnm_p
-name|falias
-decl_stmt|;
 name|dn_p
 name|dnp
 init|=
 name|child
+operator|->
+name|dnp
+decl_stmt|;
+name|dn_p
+name|pdnp
+init|=
+name|parent
+operator|->
+name|dnp
+decl_stmt|;
+name|dn_p
+name|adnp
+init|=
+name|parent
 operator|->
 name|dnp
 decl_stmt|;
@@ -1906,116 +2033,69 @@ decl_stmt|;
 name|DBPRINT
 argument_list|(
 operator|(
-literal|"	devfs_add_fronts\n"
+literal|"	devfs_propogate\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/***********************************************\ 	* Find the frontnodes of the parent node	* 	\***********************************************/
+comment|/***********************************************\ 	* Find the other instances of the parent node	* 	\***********************************************/
 for|for
 control|(
-name|falias
+name|adnp
 operator|=
-name|parent
+name|pdnp
 operator|->
-name|next_front
+name|nextsibling
 init|;
-name|falias
-condition|;
-name|falias
-operator|=
-name|falias
+name|adnp
+operator|!=
+name|pdnp
 operator|->
-name|next_front
+name|nextsibling
+condition|;
+name|adnp
+operator|=
+name|adnp
+operator|->
+name|nextsibling
 control|)
 block|{
-comment|/* 		 * If a Dir (XXX symlink too one day?) 		 * (...Nope, symlinks don't propogate..) 		 * Make the node, using the original as a prototype) 		 */
-if|if
-condition|(
-name|type
-operator|==
-name|DEV_DIR
-condition|)
-block|{
+comment|/* 		 * Make the node, using the original as a prototype) 		 * if the node already exists on that plane it won't be 		 * re-made.. 		 */
 if|if
 condition|(
 name|error
 operator|=
-name|dev_add_node
+name|dev_add_entry
 argument_list|(
+name|child
+operator|->
+name|name
+argument_list|,
+name|pdnp
+argument_list|,
 name|type
 argument_list|,
 name|NULL
 argument_list|,
 name|dnp
 argument_list|,
-operator|&
-name|dnp
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Device %s: node allocation failed (E=%d)\n"
-argument_list|,
-name|child
+name|adnp
 operator|->
-name|name
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-block|}
-if|if
-condition|(
-name|error
-operator|=
-name|dev_add_name
-argument_list|(
-name|child
-operator|->
-name|name
-argument_list|,
-name|falias
-operator|->
-name|dnp
-argument_list|,
-name|child
-argument_list|,
-name|dnp
+name|dvm
 argument_list|,
 operator|&
 name|newnmp
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|type
-operator|==
-name|DEV_DIR
-condition|)
-block|{
-name|devfs_dn_free
-argument_list|(
-name|dnp
-argument_list|)
-expr_stmt|;
-comment|/* 1->0 */
-block|}
 name|printf
 argument_list|(
-literal|"Device %s: allocation failed (E=%d)\n"
+literal|"duplicating %s failed\n"
 argument_list|,
 name|child
 operator|->
 name|name
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
-continue|continue;
 block|}
 block|}
 return|return
@@ -2041,6 +2121,21 @@ modifier|*
 name|devnmp
 parameter_list|)
 block|{
+name|dn_p
+name|dnp
+init|=
+operator|(
+operator|(
+name|devnm_p
+operator|)
+name|devnmp
+operator|)
+operator|->
+name|dnp
+decl_stmt|;
+name|dn_p
+name|dnp2
+decl_stmt|;
 name|DBPRINT
 argument_list|(
 operator|(
@@ -2048,31 +2143,74 @@ literal|"devfs_remove_dev\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Keep removing the next front node till no more exist 	 */
+comment|/* keep removing the next sibling till only we exist. */
 while|while
 condition|(
 operator|(
-operator|(
-name|devnm_p
-operator|)
-name|devnmp
-operator|)
+name|dnp2
+operator|=
+name|dnp
 operator|->
-name|next_front
+name|nextsibling
+operator|)
+operator|!=
+name|dnp
+condition|)
+block|{
+comment|/* 		 * Keep removing the next front node till no more exist 		 */
+name|dnp
+operator|->
+name|nextsibling
+operator|=
+name|dnp2
+operator|->
+name|nextsibling
+expr_stmt|;
+name|dnp
+operator|->
+name|nextsibling
+operator|->
+name|prevsiblingp
+operator|=
+operator|&
+operator|(
+name|dnp
+operator|->
+name|nextsibling
+operator|)
+expr_stmt|;
+name|dnp2
+operator|->
+name|nextsibling
+operator|=
+name|dnp2
+expr_stmt|;
+name|dnp2
+operator|->
+name|prevsiblingp
+operator|=
+operator|&
+operator|(
+name|dnp2
+operator|->
+name|nextsibling
+operator|)
+expr_stmt|;
+while|while
+condition|(
+name|dnp2
+operator|->
+name|linklist
 condition|)
 block|{
 name|dev_free_name
 argument_list|(
-operator|(
-operator|(
-name|devnm_p
-operator|)
-name|devnmp
-operator|)
+name|dnp2
 operator|->
-name|next_front
+name|linklist
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * then free the main node 	 */
 name|dev_free_name
@@ -2208,11 +2346,18 @@ if|if
 condition|(
 name|devnmp
 condition|)
+block|{
+name|dev_free_hier
+argument_list|(
+name|devnmp
+argument_list|)
+expr_stmt|;
 name|dev_free_name
 argument_list|(
 name|devnmp
 argument_list|)
 expr_stmt|;
+block|}
 name|devfs_mp_p
 operator|->
 name|plane_root
@@ -2291,15 +2436,16 @@ expr_stmt|;
 comment|/* 	 * go get the node made (if we need to) 	 * use the back one as a prototype 	 */
 if|if
 condition|(
-name|type
-operator|==
-name|DEV_DIR
-condition|)
-block|{
 name|error
 operator|=
-name|dev_add_node
+name|dev_add_entry
 argument_list|(
+name|back
+operator|->
+name|name
+argument_list|,
+name|parent
+argument_list|,
 name|dnp
 operator|->
 name|type
@@ -2308,65 +2454,28 @@ name|NULL
 argument_list|,
 name|dnp
 argument_list|,
-operator|&
-name|dnp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dev_dup_entry: node alloc failed\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|error
-return|;
-block|}
-block|}
-name|error
-operator|=
-name|dev_add_name
-argument_list|(
-name|back
-operator|->
-name|name
-argument_list|,
 name|parent
-argument_list|,
-name|back
-argument_list|,
-name|dnp
+condition|?
+name|parent
+operator|->
+name|dvm
+else|:
+name|dvm
 argument_list|,
 operator|&
 name|newnmp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
 condition|)
 block|{
-if|if
-condition|(
-name|type
-operator|==
-name|DEV_DIR
-condition|)
-block|{
-name|devfs_dn_free
+name|printf
 argument_list|(
-name|dnp
+literal|"duplicating %s failed\n"
+argument_list|,
+name|back
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
-comment|/* 1->0 */
-block|}
-return|return
-name|error
-return|;
 block|}
 comment|/* 	 * If we have just made the root, then insert the pointer to the 	 * mount information 	 */
 if|if
@@ -2457,7 +2566,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***************************************************************\ * Free a name node (and any below it of it's a directory node)	* * remember that if there are other names pointing to the	* * dev_node then it may not get freed yet			* * can handle if there is no dnp 				* \***************************************************************/
+comment|/***************************************************************\ * Free a name node						* * remember that if there are other names pointing to the	* * dev_node then it may not get freed yet			* * can handle if there is no dnp 				* \***************************************************************/
 end_comment
 
 begin_comment
@@ -2465,7 +2574,7 @@ comment|/*proto*/
 end_comment
 
 begin_function
-name|void
+name|int
 name|dev_free_name
 parameter_list|(
 name|devnm_p
@@ -2485,9 +2594,6 @@ init|=
 name|devnmp
 operator|->
 name|dnp
-decl_stmt|;
-name|devnm_p
-name|back
 decl_stmt|;
 name|DBPRINT
 argument_list|(
@@ -2510,7 +2616,7 @@ operator|==
 name|DEV_DIR
 condition|)
 block|{
-while|while
+if|if
 condition|(
 name|dnp
 operator|->
@@ -2520,20 +2626,11 @@ name|Dir
 operator|.
 name|dirlist
 condition|)
-block|{
-name|dev_free_name
-argument_list|(
-name|dnp
-operator|->
-name|by
-operator|.
-name|Dir
-operator|.
-name|dirlist
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 			 * drop the reference counts on our and our parent's 			 * nodes for "." and ".." (root has ".." -> "." ) 			 */
+return|return
+operator|(
+name|ENOTEMPTY
+operator|)
+return|;
 name|devfs_dn_free
 argument_list|(
 name|dnp
@@ -2552,7 +2649,63 @@ name|parent
 argument_list|)
 expr_stmt|;
 comment|/* '..' */
-comment|/* should only have one reference left 				(from name element) */
+block|}
+comment|/* 		 * unlink us from the list of links for this node 		 * If we are the only link, it's easy! 		 * if we are a DIR of course there should not be any 		 * other links. 	 	 */
+if|if
+condition|(
+name|devnmp
+operator|->
+name|nextlink
+operator|==
+name|devnmp
+condition|)
+block|{
+name|dnp
+operator|->
+name|linklist
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|dnp
+operator|->
+name|linklist
+operator|==
+name|devnmp
+condition|)
+block|{
+name|dnp
+operator|->
+name|linklist
+operator|=
+name|devnmp
+operator|->
+name|nextlink
+expr_stmt|;
+block|}
+name|devnmp
+operator|->
+name|nextlink
+operator|->
+name|prevlinkp
+operator|=
+name|devnmp
+operator|->
+name|prevlinkp
+expr_stmt|;
+operator|*
+name|devnmp
+operator|->
+name|prevlinkp
+operator|=
+name|devnmp
+operator|->
+name|nextlink
+expr_stmt|;
 block|}
 name|devfs_dn_free
 argument_list|(
@@ -2631,61 +2784,6 @@ operator|+
 literal|8
 expr_stmt|;
 block|}
-comment|/* 	 * If the node has a backing pointer we need to free ourselves 	 * from that.. 	 * Remember that we may not HAVE a backing node. 	 */
-if|if
-condition|(
-operator|(
-name|back
-operator|=
-name|devnmp
-operator|->
-name|as
-operator|.
-name|front
-operator|.
-name|realthing
-operator|)
-condition|)
-comment|/* yes an assign */
-block|{
-if|if
-condition|(
-operator|(
-operator|*
-name|devnmp
-operator|->
-name|prev_frontp
-operator|=
-name|devnmp
-operator|->
-name|next_front
-operator|)
-condition|)
-comment|/* yes, assign */
-block|{
-name|devnmp
-operator|->
-name|next_front
-operator|->
-name|prev_frontp
-operator|=
-name|devnmp
-operator|->
-name|prev_frontp
-expr_stmt|;
-block|}
-else|else
-block|{
-name|back
-operator|->
-name|prev_frontp
-operator|=
-name|devnmp
-operator|->
-name|prev_frontp
-expr_stmt|;
-block|}
-block|}
 comment|/***************************************************************\ 	* If the front node has it's own devnode structure,		* 	* then free it.							* 	\***************************************************************/
 name|free
 argument_list|(
@@ -2694,7 +2792,92 @@ argument_list|,
 name|M_DEVFSNAME
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/***************************************************************\ * Free a hierarchy starting at a directory node name 			* * remember that if there are other names pointing to the	* * dev_node then it may not get freed yet			* * can handle if there is no dnp 				* * leave the node itself allocated.				* \***************************************************************/
+end_comment
+
+begin_comment
+comment|/*proto*/
+end_comment
+
+begin_function
+name|void
+name|dev_free_hier
+parameter_list|(
+name|devnm_p
+name|devnmp
+parameter_list|)
+block|{
+name|dn_p
+name|dnp
+init|=
+name|devnmp
+operator|->
+name|dnp
+decl_stmt|;
+name|DBPRINT
+argument_list|(
+operator|(
+literal|"	dev_free_hier\n"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dnp
+condition|)
+block|{
+if|if
+condition|(
+name|dnp
+operator|->
+name|type
+operator|==
+name|DEV_DIR
+condition|)
+block|{
+while|while
+condition|(
+name|dnp
+operator|->
+name|by
+operator|.
+name|Dir
+operator|.
+name|dirlist
+condition|)
+block|{
+name|dev_free_hier
+argument_list|(
+name|dnp
+operator|->
+name|by
+operator|.
+name|Dir
+operator|.
+name|dirlist
+argument_list|)
+expr_stmt|;
+name|dev_free_name
+argument_list|(
+name|dnp
+operator|->
+name|by
+operator|.
+name|Dir
+operator|.
+name|dirlist
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
 block|}
 end_function
 
@@ -3445,7 +3628,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************\ * add a whole device, with no prototype.. make name element and node	* \***********************************************************************/
+comment|/***********************************************************************\ * add a whole device, with no prototype.. make name element and node	* * Used for adding the original device entries 				* \***********************************************************************/
 end_comment
 
 begin_comment
@@ -3470,6 +3653,14 @@ name|union
 name|typeinfo
 modifier|*
 name|by
+parameter_list|,
+name|dn_p
+name|proto
+parameter_list|,
+name|struct
+name|devfsmount
+modifier|*
+name|dvm
 parameter_list|,
 name|devnm_p
 modifier|*
@@ -3501,16 +3692,26 @@ name|type
 argument_list|,
 name|by
 argument_list|,
-name|NULL
+name|proto
 argument_list|,
 operator|&
 name|dnp
+argument_list|,
+operator|(
+name|parent
+condition|?
+name|parent
+operator|->
+name|dvm
+else|:
+name|dvm
+operator|)
 argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Device %s: base node allocation failed (E=%d)\n"
+literal|"Device %s: base node allocation failed (Errno=%d)\n"
 argument_list|,
 name|name
 argument_list|,
@@ -3547,7 +3748,7 @@ expr_stmt|;
 comment|/* 1->0 for dir, 0->(-1) for other */
 name|printf
 argument_list|(
-literal|"Device %s: name slot allocation failed (E=%d)\n"
+literal|"Device %s: name slot allocation failed (Errno=%d)\n"
 argument_list|,
 name|name
 argument_list|,
@@ -3847,6 +4048,10 @@ argument_list|,
 operator|&
 name|by
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|new_dev
 argument_list|)
@@ -3912,6 +4117,10 @@ argument_list|,
 operator|&
 name|by
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|new_dev
 argument_list|)
@@ -3948,6 +4157,19 @@ operator|->
 name|mode
 operator||=
 name|perms
+expr_stmt|;
+name|devfs_propogate
+argument_list|(
+name|dnp
+operator|->
+name|by
+operator|.
+name|Dir
+operator|.
+name|myname
+argument_list|,
+name|new_dev
+argument_list|)
 expr_stmt|;
 return|return
 name|new_dev
@@ -4104,7 +4326,7 @@ literal|"dev_add\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  The DEV_CDEV below is not used other than it must NOT be DEV_DIR 	 * the correctness of original shuold be checked.. 	 */
+comment|/* 	 *  The DEV_CDEV below is not used other than it must NOT be DEV_DIR 	 * the correctness of original should be checked.. 	 */
 if|if
 condition|(
 name|p
@@ -4204,6 +4426,19 @@ return|return
 name|NULL
 return|;
 block|}
+name|devfs_propogate
+argument_list|(
+name|dirnode
+operator|->
+name|by
+operator|.
+name|Dir
+operator|.
+name|myname
+argument_list|,
+name|new_dev
+argument_list|)
+expr_stmt|;
 return|return
 name|new_dev
 return|;

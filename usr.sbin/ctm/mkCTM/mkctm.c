@@ -1396,6 +1396,10 @@ name|F
 decl_stmt|;
 if|if
 condition|(
+name|s1
+operator|.
+name|st_size
+operator|&&
 name|p1
 index|[
 name|s1
@@ -1429,6 +1433,10 @@ goto|;
 block|}
 if|if
 condition|(
+name|s2
+operator|.
+name|st_size
+operator|&&
 name|p2
 index|[
 name|s2
