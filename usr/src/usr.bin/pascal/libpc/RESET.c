@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RESET.c 1.7 %G%"
+literal|"@(#)RESET.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|PERROR
