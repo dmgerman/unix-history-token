@@ -2599,13 +2599,12 @@ operator|||
 name|APset
 condition|)
 name|APset
-operator|++
-operator|,
+operator|=
 name|OPset
-operator|++
-operator|,
+operator|=
 name|EPset
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 name|setdefaults
 argument_list|()
