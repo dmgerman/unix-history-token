@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.4 81/10/21 */
+comment|/* tcp_usrreq.c 1.5 81/10/21 */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"../bbnnet/net.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../bbnnet/mbuf.h"
 end_include
 
 begin_include
@@ -55,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|"../bbnnet/fsm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../bbnnet/tcp_pred.h"
 end_include
 
 begin_comment
@@ -1329,7 +1329,7 @@ decl_stmt|;
 specifier|register
 name|off
 expr_stmt|;
-name|sequence
+name|seq_t
 name|last
 decl_stmt|;
 name|tp

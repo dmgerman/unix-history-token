@@ -1,15 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip.h 1.2 81/10/14 */
+comment|/* ip.h 1.3 81/10/21 */
 end_comment
 
 begin_struct
 struct|struct
 name|ip
 block|{
-comment|/* ip leader */
-name|unsigned
-name|char
+name|u_char
 name|ip_hl
 range|:
 literal|4
@@ -20,8 +18,7 @@ range|:
 literal|4
 decl_stmt|;
 comment|/* version */
-name|unsigned
-name|char
+name|u_char
 name|ip_tos
 decl_stmt|;
 comment|/* type of service */
@@ -30,18 +27,15 @@ directive|define
 name|ip_mff
 value|ip_tos
 comment|/* more fragments flag (input) */
-name|unsigned
-name|short
+name|u_short
 name|ip_len
 decl_stmt|;
 comment|/* total length */
-name|unsigned
-name|short
+name|u_short
 name|ip_id
 decl_stmt|;
 comment|/* identification */
-name|unsigned
-name|short
+name|u_short
 name|ip_off
 decl_stmt|;
 comment|/* fragment offset field */
@@ -55,18 +49,15 @@ directive|define
 name|ip_mf
 value|0x2000
 comment|/* more fragments flag (output) */
-name|unsigned
-name|char
+name|u_char
 name|ip_ttl
 decl_stmt|;
 comment|/* time to live */
-name|unsigned
-name|char
+name|u_char
 name|ip_p
 decl_stmt|;
 comment|/* protocol */
-name|unsigned
-name|short
+name|u_short
 name|ip_sum
 decl_stmt|;
 comment|/* checksum */
@@ -87,7 +78,7 @@ name|ip
 modifier|*
 name|ip_nxt
 decl_stmt|;
-comment|/* ->next fragment */
+comment|/* next fragment */
 block|}
 name|I_sun
 union|;
@@ -111,7 +102,7 @@ name|ip
 modifier|*
 name|ip_prv
 decl_stmt|;
-comment|/* ->prev fragment */
+comment|/* prev fragment */
 block|}
 name|I_dun
 union|;
@@ -127,11 +118,14 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Ip reassembly queue.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ipq
 block|{
-comment|/* ip reass.q header */
 name|struct
 name|ip
 name|iqx

@@ -1,13 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.2 81/10/18 */
+comment|/* tcp.h 1.3 81/10/21 */
+end_comment
+
+begin_comment
+comment|/*  * Tcp header (fits over ip header).  */
 end_comment
 
 begin_struct
 struct|struct
 name|th
 block|{
-comment|/* tcp header (fits over ip header) */
 name|struct
 name|th
 modifier|*
@@ -20,18 +23,15 @@ modifier|*
 name|t_prev
 decl_stmt|;
 comment|/* -> prev tcp on rcv chain */
-name|unsigned
-name|char
+name|u_char
 name|t_x1
 decl_stmt|;
 comment|/* (unused) */
-name|unsigned
-name|char
+name|u_char
 name|t_pr
 decl_stmt|;
 comment|/* protocol */
-name|unsigned
-name|short
+name|u_short
 name|t_len
 decl_stmt|;
 comment|/* seg length */
@@ -45,21 +45,19 @@ name|socket
 name|t_d
 decl_stmt|;
 comment|/* destination internet address */
-name|unsigned
-name|short
+name|u_short
 name|t_src
 decl_stmt|;
 comment|/* source port */
-name|unsigned
-name|short
+name|u_short
 name|t_dst
 decl_stmt|;
 comment|/* destination port */
-name|sequence
+name|seq_t
 name|t_seq
 decl_stmt|;
 comment|/* sequence number */
-name|sequence
+name|seq_t
 name|t_ackno
 decl_stmt|;
 comment|/* acknowledgement number */
@@ -70,8 +68,7 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(x->t_seq + x->t_len - 1)
-name|unsigned
-name|char
+name|u_char
 name|t_x2
 range|:
 literal|4
@@ -82,8 +79,7 @@ range|:
 literal|4
 decl_stmt|;
 comment|/* data offset */
-name|unsigned
-name|char
+name|u_char
 name|t_fin
 range|:
 literal|1
@@ -119,18 +115,15 @@ range|:
 literal|2
 decl_stmt|;
 comment|/* (unused) */
-name|unsigned
-name|short
+name|u_short
 name|t_win
 decl_stmt|;
 comment|/* window */
-name|unsigned
-name|short
+name|u_short
 name|t_sum
 decl_stmt|;
 comment|/* checksum */
-name|unsigned
-name|short
+name|u_short
 name|t_urp
 decl_stmt|;
 comment|/* urgent pointer */
@@ -138,124 +131,124 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Tcp control block.  */
+end_comment
+
 begin_struct
 struct|struct
 name|tcb
 block|{
-comment|/* tcp control block */
-comment|/* various pointers */
 name|struct
 name|th
 modifier|*
 name|t_rcv_next
 decl_stmt|;
-comment|/* -> first el on rcv queue */
+comment|/* first el on rcv queue */
 name|struct
 name|th
 modifier|*
 name|t_rcv_prev
 decl_stmt|;
-comment|/* -> last el on rcv queue */
+comment|/* last el on rcv queue */
 name|struct
 name|tcb
 modifier|*
 name|t_tcb_next
 decl_stmt|;
-comment|/* -> next tcb */
+comment|/* next tcb */
 name|struct
 name|tcb
 modifier|*
 name|t_tcb_prev
 decl_stmt|;
-comment|/* -> prev tcb */
+comment|/* next tcb */
 name|struct
 name|ucb
 modifier|*
 name|t_ucb
 decl_stmt|;
-comment|/* -> ucb */
+comment|/* ucb */
 name|struct
 name|mbuf
 modifier|*
 name|t_rcv_unack
 decl_stmt|;
-comment|/* -> unacked message queue */
-comment|/* sequence number variables */
-name|sequence
+comment|/* unacked message queue */
+name|seq_t
 name|iss
 decl_stmt|;
 comment|/* initial send seq # */
-name|sequence
+name|seq_t
 name|irs
 decl_stmt|;
 comment|/* initial recv seq # */
-name|sequence
+name|seq_t
 name|rcv_urp
 decl_stmt|;
 comment|/* rcv urgent pointer */
-name|sequence
+name|seq_t
 name|rcv_nxt
 decl_stmt|;
 comment|/* next seq # to rcv */
-name|sequence
+name|seq_t
 name|rcv_end
 decl_stmt|;
 comment|/* rcv eol pointer */
-name|sequence
+name|seq_t
 name|snd_off
 decl_stmt|;
 comment|/* seq # of first datum in send buf */
-name|sequence
+name|seq_t
 name|seq_fin
 decl_stmt|;
 comment|/* seq # of FIN sent */
-name|sequence
+name|seq_t
 name|snd_end
 decl_stmt|;
 comment|/* send eol pointer */
-name|sequence
+name|seq_t
 name|snd_urp
 decl_stmt|;
 comment|/* snd urgent pointer */
-name|sequence
+name|seq_t
 name|snd_lst
 decl_stmt|;
 comment|/* seq # of last sent datum */
-name|sequence
+name|seq_t
 name|snd_nxt
 decl_stmt|;
 comment|/* seq # of next datum to send */
-name|sequence
+name|seq_t
 name|snd_una
 decl_stmt|;
 comment|/* seq # of first unacked datum */
-name|sequence
+name|seq_t
 name|snd_wl
 decl_stmt|;
 comment|/* seq # of last sent window */
-name|sequence
+name|seq_t
 name|snd_hi
 decl_stmt|;
 comment|/* highest seq # sent */
-name|sequence
+name|seq_t
 name|snd_wnd
 decl_stmt|;
 comment|/* send window max */
-name|sequence
+name|seq_t
 name|t_rexmt_val
 decl_stmt|;
-comment|/* value saved in rexmt timer */
-name|sequence
+comment|/* val saved in rexmt timer */
+name|seq_t
 name|t_rtl_val
 decl_stmt|;
-comment|/* value saved in rexmt too long timer */
-name|sequence
+comment|/* val saved in rexmt too long timer */
+name|seq_t
 name|t_xmt_val
 decl_stmt|;
 comment|/* seq # sent when xmt timer started */
 comment|/* various flags and state variables */
-name|unsigned
-name|short
+name|u_short
 name|ack_due
 range|:
 literal|1
@@ -336,74 +329,44 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* user has closed and does not expect 					   to receive any more data */
-name|unsigned
-name|short
-name|t_flag2
-decl_stmt|;
-comment|/* (unused) */
-name|unsigned
-name|short
+name|u_short
 name|t_lport
 decl_stmt|;
 comment|/* local port */
-name|unsigned
-name|short
+name|u_short
 name|t_fport
 decl_stmt|;
 comment|/* foreign port */
-name|unsigned
-name|char
+name|u_char
 name|t_state
 decl_stmt|;
 comment|/* state of this connection */
-name|unsigned
-name|char
+name|u_char
 name|t_xmtime
 decl_stmt|;
 comment|/* current rexmt time */
-name|unsigned
-name|char
-name|t_sec
-decl_stmt|;
-comment|/* security */
-name|unsigned
-name|char
-name|t_prec
-decl_stmt|;
-comment|/* precedence */
-name|unsigned
-name|char
-name|t_compt
-decl_stmt|;
-comment|/* compartment */
 comment|/* timers */
-name|unsigned
-name|char
+name|u_char
 name|t_init
 decl_stmt|;
 comment|/* initialization too long */
-name|unsigned
-name|char
+name|u_char
 name|t_rexmt
 decl_stmt|;
 comment|/* retransmission */
-name|unsigned
-name|char
+name|u_char
 name|t_rexmttl
 decl_stmt|;
 comment|/* retransmit too long */
-name|unsigned
-name|char
+name|u_char
 name|t_persist
 decl_stmt|;
 comment|/* retransmit persistance */
-name|unsigned
-name|char
+name|u_char
 name|t_finack
 decl_stmt|;
 comment|/* fin acknowledged */
-name|unsigned
-name|char
+name|u_char
 name|t_xmt
 decl_stmt|;
 comment|/* round trip transmission time */
@@ -531,6 +494,118 @@ end_define
 begin_comment
 comment|/* passive open */
 end_comment
+
+begin_comment
+comment|/*  * Tcp debugging record.  */
+end_comment
+
+begin_struct
+struct|struct
+name|t_debug
+block|{
+name|long
+name|t_tod
+decl_stmt|;
+comment|/* time of day */
+name|struct
+name|tcb
+modifier|*
+name|t_tcb
+decl_stmt|;
+comment|/* -> tcb */
+name|char
+name|t_old
+decl_stmt|;
+comment|/* old state */
+name|char
+name|t_inp
+decl_stmt|;
+comment|/* input */
+name|char
+name|t_tim
+decl_stmt|;
+comment|/* timer id */
+name|char
+name|t_new
+decl_stmt|;
+comment|/* new state */
+name|seq_t
+name|t_sno
+decl_stmt|;
+comment|/* seq_t number */
+name|seq_t
+name|t_ano
+decl_stmt|;
+comment|/* acknowledgement */
+name|u_short
+name|t_wno
+decl_stmt|;
+comment|/* window */
+name|u_short
+name|t_lno
+decl_stmt|;
+comment|/* length */
+name|u_char
+name|t_flg
+decl_stmt|;
+comment|/* message flags */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Tcp machine predicates  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ack_ok
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|(!(y)->t_ack || ((x)->iss< (y)->t_ackno&& (y)->t_ackno<= (x)->snd_hi))
+end_define
+
+begin_define
+define|#
+directive|define
+name|syn_ok
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|((y)->t_syn)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ack_fin
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|((x)->seq_fin> (x)->iss&& (y)->t_ackno> (x)->seq_fin)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rcv_empty
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x)->usr_abort || \       ((x)->t_ucb->uc_rbuf == NULL&& (x)->t_rcv_next == (x)->t_rcv_prev))
+end_define
 
 end_unit
 
