@@ -5720,9 +5720,25 @@ decl_stmt|;
 name|vm_offset_t
 name|nmb_img
 decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|ndis_miniport_block
+argument_list|)
+name|link
+expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|nd_head
+argument_list|,
+name|ndis_miniport_block
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
