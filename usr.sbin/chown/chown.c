@@ -442,6 +442,12 @@ block|{
 if|if
 condition|(
 name|hflag
+operator|&&
+operator|(
+name|Lflag
+operator|||
+name|Hflag
+operator|)
 condition|)
 name|errx
 argument_list|(
