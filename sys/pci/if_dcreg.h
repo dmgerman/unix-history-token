@@ -4133,6 +4133,28 @@ value|0x0985
 end_define
 
 begin_comment
+comment|/*  * 3COM PCI vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_VENDORID_3COM
+value|0x10b7
+end_define
+
+begin_comment
+comment|/*  * 3COM OfficeConnect 10/100B (3CSOHO100B-TX)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_3CSOHOB
+value|0x9300
+end_define
+
+begin_comment
 comment|/*  * ASIX vendor ID.  */
 end_comment
 

@@ -455,6 +455,14 @@ literal|"Conexant LANfinity MiniPCI 10/100BaseTX"
 block|}
 block|,
 block|{
+name|DC_VENDORID_3COM
+block|,
+name|DC_DEVICEID_3CSOHOB
+block|,
+literal|"3Com OfficeConnect 10/100B"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -8911,6 +8919,9 @@ name|DC_DEVICEID_AN985
 case|:
 case|case
 name|DC_DEVICEID_EN2242
+case|:
+case|case
+name|DC_DEVICEID_3CSOHOB
 case|:
 name|sc
 operator|->
