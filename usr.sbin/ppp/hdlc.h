@@ -91,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|MAX_MRU
-value|M_MAXLEN
+value|2048
 end_define
 
 begin_define
@@ -116,7 +116,7 @@ begin_define
 define|#
 directive|define
 name|MAX_MTU
-value|M_MAXLEN
+value|2048
 end_define
 
 begin_define

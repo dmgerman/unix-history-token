@@ -367,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|M_MAXLEN
-value|(2048 - sizeof(struct mbuf))
+value|(4096 - sizeof(struct mbuf))
 end_define
 
 begin_struct_decl
