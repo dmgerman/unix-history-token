@@ -977,6 +977,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* LOCK_DEBUG == 0 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1002,6 +1006,12 @@ parameter_list|)
 define|\
 value|_rel_sleep_lock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_define
 define|#
@@ -1029,10 +1039,56 @@ define|\
 value|_rel_spin_lock((m))
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SMP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mtx_lock_spin_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+value|critical_enter()
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_unlock_spin_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+value|critical_exit()
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOCK_DEBUG */
+end_comment
 
 begin_define
 define|#
