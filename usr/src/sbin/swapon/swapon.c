@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)swapon.c	4.3 (Berkeley) %G%"
+literal|"@(#)swapon.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,10 +139,8 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|fprintf
+name|printf
 argument_list|(
-name|stdout
-argument_list|,
 literal|"Adding %s as swap device\n"
 argument_list|,
 name|fsp
@@ -165,11 +163,21 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+extern|extern errno;
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+name|printf
 argument_list|(
-name|fsp
-operator|->
-name|fs_spec
+literal|"%s: %s\n"
+argument_list|,
+name|sys_errlist
+index|[
+name|errno
+index|]
 argument_list|)
 expr_stmt|;
 name|stat
