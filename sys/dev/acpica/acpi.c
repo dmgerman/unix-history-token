@@ -3461,11 +3461,19 @@ expr_stmt|;
 comment|/* 	     * Check that the device is present.  If it's not present, 	     * leave it disabled (so that we have a device_t attached to 	     * the handle, but we don't probe it). 	     */
 if|if
 condition|(
+operator|(
+name|type
+operator|==
+name|ACPI_TYPE_DEVICE
+operator|)
+operator|&&
+operator|(
 operator|!
 name|acpi_DeviceIsPresent
 argument_list|(
 name|child
 argument_list|)
+operator|)
 condition|)
 block|{
 name|device_disable
