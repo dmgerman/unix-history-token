@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atexit.c	5.1 (Berkeley) %G%"
+literal|"@(#)atexit.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,7 @@ operator|=
 operator|&
 name|__atexit0
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|p
@@ -136,11 +137,17 @@ operator|-
 literal|1
 operator|)
 return|;
-name|__atexit
+name|p
+operator|->
+name|ind
+operator|=
+literal|0
+expr_stmt|;
+name|p
 operator|->
 name|next
 operator|=
-name|p
+name|__atexit
 expr_stmt|;
 name|__atexit
 operator|=
