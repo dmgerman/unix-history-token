@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.22
+literal|3.23
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.22
+literal|3.23
 operator|%
 name|G
 operator|%
@@ -2276,6 +2276,17 @@ end_expr_stmt
 
 begin_block
 block|{
+name|char
+name|buf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|TextTimeOut
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2308,9 +2319,21 @@ comment|/* return message to sender */
 operator|(
 name|void
 operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Cannot send mail for %s"
+argument_list|,
+name|TextTimeOut
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|returntosender
 argument_list|(
-literal|"Cannot send mail for three days"
+name|buf
 argument_list|,
 operator|&
 name|CurEnv
