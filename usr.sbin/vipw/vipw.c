@@ -321,7 +321,7 @@ switch|switch
 condition|(
 name|pw_edit
 argument_list|(
-name|NULL
+literal|0
 argument_list|)
 condition|)
 block|{
