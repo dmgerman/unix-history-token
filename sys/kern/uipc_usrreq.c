@@ -3118,6 +3118,9 @@ name|unp_gc
 argument_list|()
 expr_stmt|;
 block|}
+name|UNP_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|unp
@@ -3134,9 +3137,6 @@ name|unp_addr
 argument_list|,
 name|M_SONAME
 argument_list|)
-expr_stmt|;
-name|UNP_UNLOCK
-argument_list|()
 expr_stmt|;
 name|uma_zfree
 argument_list|(
