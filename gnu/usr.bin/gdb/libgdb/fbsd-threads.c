@@ -3966,12 +3966,11 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"Thread %ld (LWP %d)"
+literal|"Thread %p (LWP %d)"
 argument_list|,
-name|GET_THREAD
-argument_list|(
-name|ptid
-argument_list|)
+name|th
+operator|.
+name|th_thread
 argument_list|,
 name|ti
 operator|.
@@ -3990,12 +3989,11 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"Thread %ld (%s)"
+literal|"Thread %p (%s)"
 argument_list|,
-name|GET_THREAD
-argument_list|(
-name|ptid
-argument_list|)
+name|th
+operator|.
+name|th_thread
 argument_list|,
 name|thread_db_state_str
 argument_list|(
