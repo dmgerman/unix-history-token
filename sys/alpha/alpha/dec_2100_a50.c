@@ -659,7 +659,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"dec_2100_a50_intr_map bogus PCI pin %d\n"
+literal|"dec_2100_a50_intr_map: bogus PCI pin %d\n"
 argument_list|,
 name|cfg
 operator|->
@@ -709,7 +709,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"dec_2100_a50_intr_map bogus PCI pin %d\n"
+literal|"dec_2100_a50_intr_map: bogus PCI pin %d\n"
 argument_list|,
 name|cfg
 operator|->
