@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tail.c	4.1 (Berkeley) %G%"
+literal|"@(#)tail.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,24 +129,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|lseek
-argument_list|(
-literal|0
-argument_list|,
-operator|(
-name|long
-operator|)
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|piped
-operator|=
-name|errno
-operator|==
-name|ESPIPE
-expr_stmt|;
 name|arg
 operator|=
 name|argv
@@ -270,6 +252,24 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|lseek
+argument_list|(
+literal|0
+argument_list|,
+operator|(
+name|long
+operator|)
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|piped
+operator|=
+name|errno
+operator|==
+name|ESPIPE
+expr_stmt|;
 name|bylines
 operator|=
 operator|-
