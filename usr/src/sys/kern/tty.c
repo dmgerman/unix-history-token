@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	6.13	84/12/31	*/
+comment|/*	tty.c	6.14	85/02/08	*/
 end_comment
 
 begin_include
@@ -2722,7 +2722,7 @@ operator|>>
 literal|16
 expr_stmt|;
 break|break;
-comment|/* 	 * Allow SPGRP only if tty is ours and is open for reading. 	 * Quick check: if we can find a process in the new pgrp, 	 * this user must own that process. 	 * SHOULD VERIFY THAT PGRP IS IN USE AND IS THIS USER'S. 	 */
+comment|/* 	 * Allow SPGRP only if tty is open for reading. 	 * Quick check: if we can find a process in the new pgrp, 	 * this user must own that process. 	 * SHOULD VERIFY THAT PGRP IS IN USE AND IS THIS USER'S. 	 */
 case|case
 name|TIOCSPGRP
 case|:
@@ -2759,23 +2759,6 @@ condition|)
 return|return
 operator|(
 name|EPERM
-operator|)
-return|;
-if|if
-condition|(
-name|u
-operator|.
-name|u_uid
-operator|&&
-name|u
-operator|.
-name|u_ttyp
-operator|!=
-name|tp
-condition|)
-return|return
-operator|(
-name|EACCES
 operator|)
 return|;
 name|p
