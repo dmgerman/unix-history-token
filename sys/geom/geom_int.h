@@ -81,9 +81,6 @@ begin_enum
 enum|enum
 name|g_events
 block|{
-name|EV_NEW_PROVIDER
-block|,
-comment|/* provider */
 name|EV_CALL_ME
 block|,
 comment|/* func, arg */
