@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.198 (Berkeley) %G%"
+literal|"@(#)conf.c	8.199 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -10634,6 +10634,10 @@ modifier|*
 name|getcfname
 parameter_list|()
 block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
 if|if
 condition|(
 name|ConfFile
@@ -10684,6 +10688,21 @@ return|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|stat
+argument_list|(
+literal|"/etc/sendmail.cf"
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|>=
+literal|0
+condition|)
+return|return
+literal|"/etc/sendmail.cf"
+return|;
 return|return
 name|_PATH_SENDMAILCF
 return|;
