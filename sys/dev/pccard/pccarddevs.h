@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.55 2003/07/11 09:16:40 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.57 2003/07/15 03:27:53 imp Exp   */
 end_comment
 
 begin_comment
@@ -593,6 +593,17 @@ end_define
 
 begin_comment
 comment|/* ASUS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_SIEMENS
+value|0x02ac
+end_define
+
+begin_comment
+comment|/* Siemens */
 end_comment
 
 begin_define
@@ -3859,6 +3870,31 @@ define|#
 directive|define
 name|PCMCIA_STR_SANDISK_SDCFB
 value|"Sandisk CompactFlash Card"
+end_define
+
+begin_comment
+comment|/* Siemens */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_SIEMENS_SS1021
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_SIEMENS_SS1021
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_SIEMENS_SS1021
+value|"Siemens SpeedStream 1021"
 end_define
 
 begin_comment
