@@ -7955,7 +7955,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"pci_alloc_map: unexpedly can't find resource."
+literal|"pci_alloc_map: unexpectedly can't find resource."
 argument_list|)
 expr_stmt|;
 name|rle
