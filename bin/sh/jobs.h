@@ -252,6 +252,10 @@ name|void
 name|showjobs
 parameter_list|(
 name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
