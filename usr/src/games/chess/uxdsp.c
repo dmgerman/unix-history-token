@@ -3256,35 +3256,6 @@ name|x
 operator|=
 literal|' '
 expr_stmt|;
-if|if
-condition|(
-name|r
-operator|%
-literal|2
-operator|==
-literal|0
-operator|&&
-name|c
-operator|%
-literal|2
-operator|==
-literal|1
-operator|||
-name|r
-operator|%
-literal|2
-operator|==
-literal|1
-operator|&&
-name|c
-operator|%
-literal|2
-operator|==
-literal|0
-condition|)
-name|standout
-argument_list|()
-expr_stmt|;
 name|gotoXY
 argument_list|(
 literal|5
@@ -3306,7 +3277,7 @@ argument_list|)
 expr_stmt|;
 name|printz
 argument_list|(
-literal|"%c%c"
+literal|"%c%c "
 argument_list|,
 name|x
 argument_list|,
@@ -3317,14 +3288,6 @@ index|[
 name|sq
 index|]
 index|]
-argument_list|)
-expr_stmt|;
-name|standend
-argument_list|()
-expr_stmt|;
-name|printz
-argument_list|(
-literal|" "
 argument_list|)
 expr_stmt|;
 block|}
@@ -3470,14 +3433,29 @@ argument_list|(
 literal|"|"
 argument_list|)
 expr_stmt|;
-comment|/*		  if (j % 2 == m) 			  standout(); */
+if|if
+condition|(
+name|j
+operator|%
+literal|2
+operator|==
+name|m
+condition|)
 name|printz
 argument_list|(
-literal|"    "
+literal|"#"
 argument_list|)
 expr_stmt|;
-name|standend
-argument_list|()
+else|else
+name|printz
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+name|printz
+argument_list|(
+literal|"   "
+argument_list|)
 expr_stmt|;
 block|}
 name|printz
