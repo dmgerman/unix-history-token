@@ -139,6 +139,21 @@ modifier|*
 modifier|*
 name|new_argv
 decl_stmt|;
+comment|/* old_argc and old_argv hold the values returned from the        previous invocation of read_cvsrc and are used to free the        allocated memory.  The first invocation of read_cvsrc gets argv        from the system, this memory must not be free'd.  */
+specifier|static
+name|int
+name|old_argc
+init|=
+literal|0
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+modifier|*
+name|old_argv
+init|=
+name|NULL
+decl_stmt|;
 comment|/* don't do anything if argc is -1, since that implies "help" mode */
 if|if
 condition|(
@@ -507,6 +522,8 @@ name|new_argc
 operator|++
 index|]
 operator|=
+name|xstrdup
+argument_list|(
 operator|(
 operator|*
 name|argv
@@ -514,13 +531,35 @@ operator|)
 index|[
 name|i
 index|]
+argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|old_argv
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Free the memory which was allocated in the previous            read_cvsrc call.  */
+name|free_names
+argument_list|(
+operator|&
+name|old_argc
+argument_list|,
+name|old_argv
+argument_list|)
+expr_stmt|;
+block|}
+name|old_argc
+operator|=
 operator|*
 name|argc
 operator|=
 name|new_argc
 expr_stmt|;
+name|old_argv
+operator|=
 operator|*
 name|argv
 operator|=

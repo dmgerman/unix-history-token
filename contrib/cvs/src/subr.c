@@ -555,7 +555,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * Recover the space allocated by line2argv()  */
+comment|/* Free a vector, where (*ARGV)[0], (*ARGV)[1], ... (*ARGV)[*PARGC - 1]    are malloc'd and so is *ARGV itself.  Such a vector is allocated by    line2argv or expand_wild, for example.  */
 end_comment
 
 begin_function

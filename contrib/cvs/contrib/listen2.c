@@ -15,6 +15,18 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<io.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<process.h>
+end_include
+
 begin_function
 name|int
 name|main
@@ -193,6 +205,12 @@ argument_list|(
 name|sa
 argument_list|)
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|int save_stdin, save_stdout;
+endif|#
+directive|endif
 name|s
 operator|=
 name|accept
@@ -232,6 +250,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+comment|/* This, of course, does not work because sockets are 	   not file descriptors and file descriptors are not 	   sockets.  Duh!  */
+block|save_stdin = _dup (0); 	if (save_stdin< 0) 	{ 	    printf ("Cannot save stdin: %s\n", strerror (errno)); 	    exit (1); 	} 	save_stdout = _dup (1); 	if (save_stdout< 0) 	{ 	    printf ("Cannot save stdout: %s\n", strerror (errno)); 	    exit (1); 	} 	if (_dup2 (s, 0)< 0) 	{ 	    printf ("Cannot dup stdin: %s\n", strerror (errno)); 	    exit (1); 	} 	if (_dup2 (s, 1)< 0) 	{ 	    printf ("Cannot dup stdout: %s\n", strerror (errno)); 	    exit (1); 	}
+comment|/* Of course this will be "cvs" eventually, but "netstat" 	   is for testing.  */
+block|if (_spawnl (_P_DETACH, "netstat", "netstat", NULL)< 0) 	{ 	    printf ("Cannot spawn subprocess: %s\n", strerror (errno)); 	    exit (1); 	}
+else|#
+directive|else
 if|if
 condition|(
 name|send
@@ -263,6 +290,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|closesocket

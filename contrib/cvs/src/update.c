@@ -635,7 +635,7 @@ expr_stmt|;
 comment|/* parse the args */
 name|optind
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 while|while
 condition|(
