@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: pkill.c,v 1.7 2004/02/15 17:03:30 soren Exp $	*/
+comment|/*	$NetBSD: pkill.c,v 1.6 2004/01/06 07:35:58 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -13,13 +13,28 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_expr_stmt
-name|__FBSDID
+name|__RCSID
 argument_list|(
-literal|"$FreeBSD$"
+literal|"$NetBSD: pkill.c,v 1.6 2004/01/06 07:35:58 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !lint */
+end_comment
 
 begin_include
 include|#
