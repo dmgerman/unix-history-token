@@ -340,6 +340,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|MMAXOPTIONLEN
+value|65536
+end_define
+
+begin_comment
+comment|/* maximum length of a mount option */
+end_comment
+
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
