@@ -8,7 +8,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 2.2 %G%"
+literal|"@(#)main.c 2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1100,6 +1100,8 @@ decl_stmt|,
 name|uid
 decl_stmt|,
 name|gid
+decl_stmt|,
+name|i
 decl_stmt|;
 name|char
 name|name
@@ -1494,6 +1496,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|i
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|gethead
@@ -1504,7 +1511,19 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-empty_stmt|;
+name|i
+operator|++
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"resync restor, skipped %i blocks\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|checktype
@@ -4218,6 +4237,9 @@ name|struct
 name|s_spcl
 name|tmpbuf
 decl_stmt|;
+name|char
+name|c
+decl_stmt|;
 if|if
 condition|(
 name|bct
@@ -4281,17 +4303,73 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"Tape read error"
+name|stderr
+argument_list|,
+literal|"Tape read error, continue?"
 argument_list|)
 expr_stmt|;
+do|do
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"[yn]\n"
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|getchar
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+name|getchar
+argument_list|()
+operator|!=
+literal|'\n'
+condition|)
+comment|/* void */
+empty_stmt|;
+block|}
+do|while
+condition|(
+name|c
+operator|!=
+literal|'y'
+operator|&&
+name|c
+operator|!=
+literal|'n'
+condition|)
+do|;
 name|eflag
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'n'
+condition|)
 name|done
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|NTREC
+operator|*
+name|TP_BSIZE
+expr_stmt|;
+name|blkclr
+argument_list|(
+name|tbf
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 block|}
