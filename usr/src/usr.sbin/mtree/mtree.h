@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtree.h	5.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtree.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -57,8 +57,9 @@ name|off_t
 name|st_size
 decl_stmt|;
 comment|/* size */
-name|time_t
-name|st_mtime
+name|struct
+name|timespec
+name|st_mtimespec
 decl_stmt|;
 comment|/* last modification time */
 name|u_long

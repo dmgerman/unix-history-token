@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.19 (Berkeley) %G%"
+literal|"@(#)create.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -865,13 +865,23 @@ argument_list|(
 operator|&
 name|indent
 argument_list|,
-literal|"time=%ld"
+literal|"time=%ld.%ld"
 argument_list|,
 name|p
 operator|->
 name|fts_statp
 operator|->
-name|st_mtime
+name|st_mtimespec
+operator|.
+name|ts_sec
+argument_list|,
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_mtimespec
+operator|.
+name|ts_nsec
 argument_list|)
 expr_stmt|;
 if|if

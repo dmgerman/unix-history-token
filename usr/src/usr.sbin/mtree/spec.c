@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	5.17 (Berkeley) %G%"
+literal|"@(#)spec.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1017,7 +1017,45 @@ name|F_TIME
 case|:
 name|ip
 operator|->
-name|st_mtime
+name|st_mtimespec
+operator|.
+name|ts_sec
+operator|=
+name|strtoul
+argument_list|(
+name|val
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ep
+operator|!=
+literal|'.'
+condition|)
+name|err
+argument_list|(
+literal|"invalid time %s"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|ep
+operator|+
+literal|1
+expr_stmt|;
+name|ip
+operator|->
+name|st_mtimespec
+operator|.
+name|ts_nsec
 operator|=
 name|strtoul
 argument_list|(

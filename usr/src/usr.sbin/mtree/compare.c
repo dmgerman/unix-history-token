@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compare.c	5.10 (Berkeley) %G%"
+literal|"@(#)compare.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -743,6 +743,7 @@ operator|=
 literal|"\t"
 expr_stmt|;
 block|}
+comment|/* 	 * XXX 	 * Catches nano-second differences, but doesn't display them. 	 */
 if|if
 condition|(
 name|s
@@ -753,13 +754,31 @@ name|F_TIME
 operator|&&
 name|s
 operator|->
-name|st_mtime
+name|st_mtimespec
+operator|.
+name|ts_sec
 operator|!=
 name|p
 operator|->
 name|fts_statp
 operator|->
-name|st_mtime
+name|st_mtimespec
+operator|.
+name|ts_sec
+operator|||
+name|s
+operator|->
+name|st_mtimespec
+operator|.
+name|ts_nsec
+operator|!=
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_mtimespec
+operator|.
+name|ts_nsec
 condition|)
 block|{
 name|LABEL
@@ -778,7 +797,9 @@ argument_list|(
 operator|&
 name|s
 operator|->
-name|st_mtime
+name|st_mtimespec
+operator|.
+name|ts_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -796,7 +817,9 @@ name|p
 operator|->
 name|fts_statp
 operator|->
-name|st_mtime
+name|st_mtimespec
+operator|.
+name|ts_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
