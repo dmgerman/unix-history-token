@@ -1577,7 +1577,7 @@ argument_list|)
 expr_stmt|;
 name|tcsetpgrp
 argument_list|(
-literal|1
+name|STDERR_FILENO
 argument_list|,
 name|child_pid
 argument_list|)
@@ -1665,6 +1665,14 @@ continue|continue;
 block|}
 break|break;
 block|}
+name|tcsetpgrp
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+name|getpgrp
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pid
