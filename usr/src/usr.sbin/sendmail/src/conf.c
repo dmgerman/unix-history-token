@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.172 (Berkeley) %G%"
+literal|"@(#)conf.c	8.173 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9692,11 +9692,14 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|setreuid
+name|setresuid
 argument_list|(
 name|o_uid
 argument_list|,
 name|o_euid
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|setresgid

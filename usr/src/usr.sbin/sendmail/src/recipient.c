@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.88 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.89 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3518,9 +3518,11 @@ operator|->
 name|q_user
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HASSETREUID
+operator|||
+name|USESETEUID
 name|saveduid
 operator|=
 name|geteuid
@@ -3552,6 +3554,33 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|USESETEUID
+if|if
+condition|(
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"seteuid(%d) failure (real=%d, eff=%d)"
+argument_list|,
+name|uid
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|setreuid
@@ -3576,6 +3605,8 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 else|else
 name|sfflags
 operator||=
@@ -3767,9 +3798,11 @@ argument_list|)
 expr_stmt|;
 name|resetuid
 label|:
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HASSETREUID
+operator|||
+name|USESETEUID
 if|if
 condition|(
 name|saveduid
@@ -3784,6 +3817,31 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|USESETEUID
+if|if
+condition|(
+name|seteuid
+argument_list|(
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"seteuid(0) failure (real=%d, eff=%d)"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|setreuid
@@ -3831,6 +3889,8 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|setgid
 argument_list|(

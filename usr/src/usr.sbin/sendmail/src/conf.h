@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.163 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.164 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -272,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|QUEUESIZE
-value|1000
+value|3000
 end_define
 
 begin_comment
@@ -582,24 +582,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSETREUID
+name|USESETEUID
 value|1
 end_define
 
 begin_comment
-comment|/* has setreuid(2) call */
+comment|/* has useable seteuid(2) call */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|setreuid
+name|seteuid
 parameter_list|(
-name|r
-parameter_list|,
 name|e
 parameter_list|)
-value|setresuid(r, e, -1)
+value|setresuid(-1, e, -1)
 end_define
 
 begin_define
@@ -1163,7 +1161,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  SunOS and Solaris ** **	Tested on SunOS 4.1.x (a.k.a. Solaris 1.1.x) and **	Solaris 2.2 (a.k.a. SunOS 5.2). */
+comment|/* **  SunOS and Solaris ** **	Tested on SunOS 4.1.x (a.k.a. Solaris 1.1.x) and **	Solaris 2.4 (a.k.a. SunOS 5.4). */
 end_comment
 
 begin_if
@@ -2005,12 +2003,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSETREUID
+name|USESETEUID
 value|1
 end_define
 
 begin_comment
-comment|/* has setreuid(2) call */
+comment|/* has useable seteuid(2) call */
 end_comment
 
 begin_define
@@ -2298,6 +2296,17 @@ begin_comment
 comment|/* has unsetenv(3) call */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USESETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* has useable seteuid(2) call */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -2409,6 +2418,17 @@ end_define
 
 begin_comment
 comment|/* has the setsid(2) POSIX syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USESETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* has useable seteuid(2) call */
 end_comment
 
 begin_include
@@ -2612,6 +2632,17 @@ end_define
 
 begin_comment
 comment|/* has the setsid(2) POSIX syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USESETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* has useable seteuid(2) call */
 end_comment
 
 begin_ifdef
@@ -6137,12 +6168,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSETREUID
+name|USESETEUID
 value|1
 end_define
 
 begin_comment
-comment|/* has setreuid(2) call */
+comment|/* has useable seteuid(2) call */
 end_comment
 
 begin_define
@@ -6194,18 +6225,6 @@ define|#
 directive|define
 name|GIDSET_T
 value|gid_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|setreuid
-parameter_list|(
-name|r
-parameter_list|,
-name|e
-parameter_list|)
-value|seteuid(e)
 end_define
 
 begin_undef
@@ -6616,6 +6635,9 @@ begin_comment
 comment|/********************************************************************** **  End of Per-Operating System defines **********************************************************************/
 end_comment
 
+begin_escape
+end_escape
+
 begin_comment
 comment|/********************************************************************** **  More general defines **********************************************************************/
 end_comment
@@ -6754,12 +6776,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|HASSETREUID
+name|USESETEUID
 value|1
 end_define
 
 begin_comment
-comment|/* has seteuid(2) call& working saved uids */
+comment|/* has useable seteuid(2) call */
 end_comment
 
 begin_define
@@ -6816,18 +6838,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|setreuid
-parameter_list|(
-name|r
-parameter_list|,
-name|e
-parameter_list|)
-value|seteuid(e)
-end_define
 
 begin_ifndef
 ifndef|#
@@ -7165,32 +7175,43 @@ begin_comment
 comment|/* has Posix waitpid(2) call */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* **  If no type for argument two of getgroups call is defined, assume **  it's an integer -- unfortunately, there seem to be several choices **  here. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GIDSET_T
-end_ifndef
+begin_if
+if|#
+directive|if
+name|_POSIX_VERSION
+operator|>=
+literal|199500
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USESETEUID
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|GIDSET_T
-value|int
+name|USESETEUID
+value|1
 end_define
+
+begin_comment
+comment|/* has useable seteuid(2) call */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* **  Tweaking for systems that (for example) claim to be BSD or POSIX **  but don't have all the standard BSD or POSIX routines (boo hiss). */
@@ -7395,6 +7416,50 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HASSETREUID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|0
+end_define
+
+begin_comment
+comment|/* assume no setreuid(2) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USESETEUID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USESETEUID
+value|0
+end_define
+
+begin_comment
+comment|/* assume no seteuid(2) call or no saved ids */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HASSETRLIMIT
 end_ifndef
 
@@ -7497,6 +7562,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  If no type for argument two of getgroups call is defined, assume **  it's an integer -- unfortunately, there seem to be several choices **  here. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GIDSET_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|int
+end_define
 
 begin_endif
 endif|#
