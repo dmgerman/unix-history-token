@@ -199,6 +199,9 @@ specifier|static
 name|int
 name|ufs_extattr_valid_attrname
 parameter_list|(
+name|int
+name|attrnamespace
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -509,7 +512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether the name passed is a valid name for an actual  * attribute.  *  * Invalid currently consists of:  *	 NULL pointer for attrname  *	 zero-length attrname (used to retrieve application attribute list)  *	 attrname consisting of "$" (used to treive system attribute list)  */
+comment|/*  * Determine whether the name passed is a valid name for an actual  * attribute.  *  * Invalid currently consists of:  *	 NULL pointer for attrname  *	 zero-length attrname (used to retrieve application attribute list)  */
 end_comment
 
 begin_function
@@ -517,6 +520,9 @@ specifier|static
 name|int
 name|ufs_extattr_valid_attrname
 parameter_list|(
+name|int
+name|attrnamespace
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -542,27 +548,6 @@ name|attrname
 argument_list|)
 operator|==
 literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|attrname
-argument_list|)
-operator|==
-literal|1
-operator|&&
-name|attrname
-index|[
-literal|0
-index|]
-operator|==
-literal|'$'
 condition|)
 return|return
 operator|(
@@ -2474,6 +2459,8 @@ condition|(
 operator|!
 name|ufs_extattr_valid_attrname
 argument_list|(
+name|attrnamespace
+argument_list|,
 name|attrname
 argument_list|)
 condition|)
@@ -2894,6 +2881,8 @@ condition|(
 operator|!
 name|ufs_extattr_valid_attrname
 argument_list|(
+name|attrnamespace
+argument_list|,
 name|attrname
 argument_list|)
 condition|)
@@ -4328,6 +4317,8 @@ condition|(
 operator|!
 name|ufs_extattr_valid_attrname
 argument_list|(
+name|attrnamespace
+argument_list|,
 name|name
 argument_list|)
 condition|)
@@ -4822,6 +4813,8 @@ condition|(
 operator|!
 name|ufs_extattr_valid_attrname
 argument_list|(
+name|attrnamespace
+argument_list|,
 name|name
 argument_list|)
 condition|)
