@@ -1284,26 +1284,6 @@ operator||
 name|EV_ONESHOT
 operator|)
 expr_stmt|;
-comment|/* 		 * Return the 16 bits of the wait(2) value. 		 */
-if|if
-condition|(
-name|kn
-operator|->
-name|kn_sfflags
-operator|&
-name|NOTE_EXIT
-condition|)
-name|kn
-operator|->
-name|kn_data
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|hint
-operator|&
-literal|0xffff
-expr_stmt|;
 return|return
 operator|(
 literal|1

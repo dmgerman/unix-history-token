@@ -1084,7 +1084,7 @@ name|switchticks
 operator|=
 name|ticks
 expr_stmt|;
-comment|/* 	 * Notify interested parties of our demise.  Pass the lower (only) 	 * 16 bits of our exit code along with it. 	 */
+comment|/* 	 * notify interested parties of our demise. 	 */
 name|KNOTE
 argument_list|(
 operator|&
@@ -1093,12 +1093,6 @@ operator|->
 name|p_klist
 argument_list|,
 name|NOTE_EXIT
-operator||
-operator|(
-name|rv
-operator|&
-literal|0xffff
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Notify parent that we're gone.  If parent has the PS_NOCLDWAIT 	 * flag set, notify process 1 instead (and hope it will handle 	 * this situation). 	 */
