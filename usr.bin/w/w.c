@@ -2325,9 +2325,8 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* 	 * Print time of day. 	 */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|strftime
 argument_list|(
 name|buf
@@ -2336,8 +2335,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 name|use_ampm
 condition|?
@@ -2350,19 +2347,9 @@ argument_list|(
 name|nowp
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|buf
-index|[
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
