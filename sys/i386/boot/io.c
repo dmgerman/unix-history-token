@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.7 1994/09/16 13:33:17 davidg Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.8 1994/09/18 07:39:55 swallace Exp $  */
 end_comment
 
 begin_include
@@ -557,21 +557,22 @@ directive|if
 name|BOOTWAIT
 end_if
 
-begin_macro
-name|spinwait
-argument_list|(
-argument|i
-argument_list|)
-end_macro
+begin_comment
+comment|/*  * This routine uses an inb to an unused port, the time to execute that  * inb is approximately 1.25uS.  This value is pretty constant across  * all CPU's and all buses, with the exception of some PCI implentations  * that do not forward this I/O adress to the ISA bus as they know it  * is not a valid ISA bus address, those machines execute this inb in  * 60 nS :-(.  *  * XXX we need to use BIOS timer calls or something more reliable to  * produce timeouts in the boot code.  */
+end_comment
 
-begin_decl_stmt
-name|int
-name|i
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|delay1ms
+argument_list|()
+end_macro
 
 begin_block
 block|{
+name|int
+name|i
+init|=
+literal|800
+decl_stmt|;
 while|while
 condition|(
 operator|--
@@ -633,10 +634,8 @@ name|i
 operator|>
 literal|0
 condition|;
-name|spinwait
-argument_list|(
-literal|10000
-argument_list|)
+name|delay1ms
+argument_list|()
 operator|,
 name|i
 operator|--
