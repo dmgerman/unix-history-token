@@ -701,27 +701,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|vtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|(((vm_offset_t) (*vtopte(va))&PG_FRAME) | ((vm_offset_t)(va)& PAGE_MASK))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -730,21 +709,6 @@ parameter_list|(
 name|va
 parameter_list|)
 value|pmap_kextract(((vm_offset_t) (va)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|avtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|(((vm_offset_t) (*avtopte(va))&PG_FRAME) | ((vm_offset_t)(va)& PAGE_MASK))
 end_define
 
 begin_endif
