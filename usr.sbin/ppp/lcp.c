@@ -2380,12 +2380,6 @@ name|lcp
 argument_list|,
 name|TY_MRU
 argument_list|)
-operator|||
-name|lcp
-operator|->
-name|want_mru
-operator|<
-name|DEF_MRU
 condition|)
 block|{
 name|ua_htons
