@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* coff object file format    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* coff object file format    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2002    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -308,6 +308,30 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|TC_OR32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"coff/or32.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|"coff-or32-big"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TC_I960
 end_ifdef
 
@@ -448,41 +472,13 @@ else|#
 directive|else
 end_else
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* FIXME: The "shl" varaible does not appear to exist.  What happened to it ?  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|TARGET_FORMAT
 define|\
-value|(shl							\    ? (sh_small ? "coff-shl-small" : "coff-shl")		\    : (sh_small ? "coff-sh-small" : "coff-sh"))
+value|(!target_big_endian					\    ? (sh_small ? "coff-shl-small" : "coff-shl")		\    : (sh_small ? "coff-sh-small" : "coff-sh"))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TARGET_FORMAT
-define|\
-value|(sh_small ? "coff-shl-small" : "coff-shl")
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -773,7 +769,7 @@ value|coff_obj_read_begin_hook
 end_define
 
 begin_comment
-comment|/* ***********************************************************************     This file really contains two implementations of the COFF back end.    They are in the process of being merged, but this is only a    preliminary, mechanical merging.  Many definitions that are    identical between the two are still found in both versions.     The first version, with BFD_ASSEMBLER defined, uses high-level BFD    interfaces and data structures.  The second version, with    BFD_ASSEMBLER not defined, also uses BFD, but mostly for swapping    data structures and for doing the actual I/O.  The latter defines    the preprocessor symbols BFD and BFD_HEADERS.  Try not to let this    confuse you.     These two are in the process of being merged, and eventually the    BFD_ASSEMBLER version should take over completely.  Release timing    issues and namespace problems convinced me to merge the two    together in this fashion, a little sooner than I would have liked.    The real merge should be much better done by the time the next    release comes out.     For now, the structure of this file is:<common> 	#ifdef BFD_ASSEMBLER<one version> 	#else<other version> 	#endif<common>    Unfortunately, the common portions are very small at the moment,    and many declarations or definitions are duplicated.  The structure    of obj-coff.c is similar.     See doc/internals.texi for a brief discussion of the history, if    you care.     Ken Raeburn, 5 May 1994     *********************************************************************** */
+comment|/* This file really contains two implementations of the COFF back end.    They are in the process of being merged, but this is only a    preliminary, mechanical merging.  Many definitions that are    identical between the two are still found in both versions.     The first version, with BFD_ASSEMBLER defined, uses high-level BFD    interfaces and data structures.  The second version, with    BFD_ASSEMBLER not defined, also uses BFD, but mostly for swapping    data structures and for doing the actual I/O.  The latter defines    the preprocessor symbols BFD and BFD_HEADERS.  Try not to let this    confuse you.     These two are in the process of being merged, and eventually the    BFD_ASSEMBLER version should take over completely.  Release timing    issues and namespace problems convinced me to merge the two    together in this fashion, a little sooner than I would have liked.    The real merge should be much better done by the time the next    release comes out.     For now, the structure of this file is:<common> 	#ifdef BFD_ASSEMBLER<one version> 	#else<other version> 	#endif<common>    Unfortunately, the common portions are very small at the moment,    and many declarations or definitions are duplicated.  The structure    of obj-coff.c is similar.     See doc/internals.texi for a brief discussion of the history, if    you care.     Ken Raeburn, 5 May 1994.  */
 end_comment
 
 begin_ifdef
@@ -885,7 +881,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The number of auxiliary entries */
+comment|/* The number of auxiliary entries.  */
 end_comment
 
 begin_define
@@ -900,7 +896,7 @@ value|(coffsymbol (symbol_get_bfdsym (s))->native->u.syment.n_numaux)
 end_define
 
 begin_comment
-comment|/* The number of auxiliary entries */
+comment|/* The number of auxiliary entries.  */
 end_comment
 
 begin_define
@@ -993,15 +989,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Auxiliary entry macros. SA_ stands for symbol auxiliary */
+comment|/* Auxiliary entry macros. SA_ stands for symbol auxiliary.  */
 end_comment
 
 begin_comment
-comment|/* Omit the tv related fields */
+comment|/* Omit the tv related fields.  */
 end_comment
 
 begin_comment
-comment|/* Accessors */
+comment|/* Accessors.  */
 end_comment
 
 begin_define
@@ -1227,7 +1223,7 @@ value|(SYM_AUXENT (s)->x_scn.x_nlinno=(v))
 end_define
 
 begin_comment
-comment|/*  * Internal use only definitions. SF_ stands for symbol flags.  *  * These values can be assigned to sy_symbol.ost_flags field of a symbolS.  *  * You'll break i960 if you shift the SYSPROC bits anywhere else.  for  * more on the balname/callname hack, see tc-i960.h.  b.out is done  * differently.  */
+comment|/* Internal use only definitions. SF_ stands for symbol flags.       These values can be assigned to sy_symbol.ost_flags field of a symbolS.       You'll break i960 if you shift the SYSPROC bits anywhere else.  for    more on the balname/callname hack, see tc-i960.h.  b.out is done    differently.  */
 end_comment
 
 begin_define
@@ -1422,7 +1418,7 @@ comment|/* All other bits are unused.  */
 end_comment
 
 begin_comment
-comment|/* Accessors */
+comment|/* Accessors.  */
 end_comment
 
 begin_define
@@ -1646,7 +1642,7 @@ comment|/* used by i960 */
 end_comment
 
 begin_comment
-comment|/* Modifiers */
+comment|/* Modifiers.  */
 end_comment
 
 begin_define
@@ -2134,7 +2130,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sanity check */
+comment|/* Sanity check.  */
 end_comment
 
 begin_ifdef
@@ -2176,10 +2172,14 @@ comment|/* TC_I960 */
 else|#
 directive|else
 comment|/* not BFD_ASSEMBLER */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
 name|TC_A29K
-comment|/* Allow translate from aout relocs to coff relocs */
+operator|||
+name|defined
+name|TC_OR32
+comment|/* Allow translate from aout relocs to coff relocs.  */
 define|#
 directive|define
 name|NO_RELOC
@@ -2254,7 +2254,7 @@ comment|/* SYMBOL TABLE */
 end_comment
 
 begin_comment
-comment|/* Symbol table entry data type */
+comment|/* Symbol table entry data type.  */
 end_comment
 
 begin_typedef
@@ -2274,7 +2274,7 @@ index|[
 name|OBJ_COFF_MAX_AUXENTRIES
 index|]
 decl_stmt|;
-comment|/* obj_coff internal use only flags */
+comment|/* obj_coff internal use only flags.  */
 name|unsigned
 name|int
 name|ost_flags
@@ -2303,11 +2303,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Symbol table macros and constants */
+comment|/* Symbol table macros and constants.  */
 end_comment
 
 begin_comment
-comment|/* Possible and usefull section number in symbol table  * The values of TEXT, DATA and BSS may not be portable.  */
+comment|/* Possible and usefull section number in symbol table    The values of TEXT, DATA and BSS may not be portable.  */
 end_comment
 
 begin_define
@@ -2353,15 +2353,15 @@ value|50
 end_define
 
 begin_comment
-comment|/*  *  Macros to extract information from a symbol table entry.  *  This syntaxic indirection allows independence regarding a.out or coff.  *  The argument (s) of all these macros is a pointer to a symbol table entry.  */
+comment|/* Macros to extract information from a symbol table entry.    This syntaxic indirection allows independence regarding a.out or coff.    The argument (s) of all these macros is a pointer to a symbol table entry.  */
 end_comment
 
 begin_comment
-comment|/* Predicates */
+comment|/* Predicates.  */
 end_comment
 
 begin_comment
-comment|/* True if the symbol is external */
+comment|/* True if the symbol is external.  */
 end_comment
 
 begin_define
@@ -2375,7 +2375,7 @@ value|((s)->sy_symbol.ost_entry.n_scnum == C_UNDEF_SECTION)
 end_define
 
 begin_comment
-comment|/* True if symbol has been defined, ie :    section> 0 (DATA, TEXT or BSS)    section == 0 and value> 0 (external bss symbol) */
+comment|/* True if symbol has been defined, ie :    section> 0 (DATA, TEXT or BSS)    section == 0 and value> 0 (external bss symbol).  */
 end_comment
 
 begin_define
@@ -2390,7 +2390,7 @@ value|((s)->sy_symbol.ost_entry.n_scnum> C_UNDEF_SECTION \    || ((s)->sy_symbol
 end_define
 
 begin_comment
-comment|/* True if a debug special symbol entry */
+comment|/* True if a debug special symbol entry.  */
 end_comment
 
 begin_define
@@ -2404,11 +2404,11 @@ value|((s)->sy_symbol.ost_entry.n_scnum == C_DEBUG_SECTION)
 end_define
 
 begin_comment
-comment|/* True if a symbol is local symbol name */
+comment|/* True if a symbol is local symbol name.  */
 end_comment
 
 begin_comment
-comment|/* A symbol name whose name includes ^A is a gas internal pseudo symbol */
+comment|/* A symbol name whose name includes ^A is a gas internal pseudo symbol.  */
 end_comment
 
 begin_define
@@ -2423,7 +2423,7 @@ value|((s)->sy_symbol.ost_entry.n_scnum == C_REGISTER_SECTION \    || (S_LOCAL_N
 end_define
 
 begin_comment
-comment|/* True if a symbol is not defined in this file */
+comment|/* True if a symbol is not defined in this file.  */
 end_comment
 
 begin_define
@@ -2437,7 +2437,7 @@ value|((s)->sy_symbol.ost_entry.n_scnum == 0 \&& S_GET_VALUE (s) == 0)
 end_define
 
 begin_comment
-comment|/*  * True if a symbol can be multiply defined (bss symbols have this def  * though it is bad practice)  */
+comment|/* True if a symbol can be multiply defined (bss symbols have this def    though it is bad practice).  */
 end_comment
 
 begin_define
@@ -2507,11 +2507,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Accessors */
+comment|/* Accessors.  */
 end_comment
 
 begin_comment
-comment|/* The name of the symbol */
+comment|/* The name of the symbol.  */
 end_comment
 
 begin_define
@@ -2525,7 +2525,7 @@ value|((char*) (s)->sy_symbol.ost_entry.n_offset)
 end_define
 
 begin_comment
-comment|/* The pointer to the string table */
+comment|/* The pointer to the string table.  */
 end_comment
 
 begin_define
@@ -2539,7 +2539,7 @@ value|((s)->sy_symbol.ost_entry.n_offset)
 end_define
 
 begin_comment
-comment|/* The numeric value of the segment */
+comment|/* The numeric value of the segment.  */
 end_comment
 
 begin_define
@@ -2553,7 +2553,7 @@ value|s_get_segment(s)
 end_define
 
 begin_comment
-comment|/* The data type */
+comment|/* The data type.  */
 end_comment
 
 begin_define
@@ -2567,7 +2567,7 @@ value|((s)->sy_symbol.ost_entry.n_type)
 end_define
 
 begin_comment
-comment|/* The storage class */
+comment|/* The storage class.  */
 end_comment
 
 begin_define
@@ -2581,7 +2581,7 @@ value|((s)->sy_symbol.ost_entry.n_sclass)
 end_define
 
 begin_comment
-comment|/* The number of auxiliary entries */
+comment|/* The number of auxiliary entries.  */
 end_comment
 
 begin_define
@@ -2595,11 +2595,11 @@ value|((s)->sy_symbol.ost_entry.n_numaux)
 end_define
 
 begin_comment
-comment|/* Modifiers */
+comment|/* Modifiers.  */
 end_comment
 
 begin_comment
-comment|/* Set the name of the symbol */
+comment|/* Set the name of the symbol.  */
 end_comment
 
 begin_define
@@ -2615,7 +2615,7 @@ value|((s)->sy_symbol.ost_entry.n_offset = (unsigned long) (v))
 end_define
 
 begin_comment
-comment|/* Set the offset of the symbol */
+comment|/* Set the offset of the symbol.  */
 end_comment
 
 begin_define
@@ -2631,7 +2631,7 @@ value|((s)->sy_symbol.ost_entry.n_offset = (v))
 end_define
 
 begin_comment
-comment|/* The numeric value of the segment */
+comment|/* The numeric value of the segment.  */
 end_comment
 
 begin_define
@@ -2647,7 +2647,7 @@ value|((s)->sy_symbol.ost_entry.n_scnum = SEGMENT_TO_SYMBOL_TYPE(v))
 end_define
 
 begin_comment
-comment|/* The data type */
+comment|/* The data type.  */
 end_comment
 
 begin_define
@@ -2663,7 +2663,7 @@ value|((s)->sy_symbol.ost_entry.n_type = (v))
 end_define
 
 begin_comment
-comment|/* The storage class */
+comment|/* The storage class.  */
 end_comment
 
 begin_define
@@ -2679,7 +2679,7 @@ value|((s)->sy_symbol.ost_entry.n_sclass = (v))
 end_define
 
 begin_comment
-comment|/* The number of auxiliary entries */
+comment|/* The number of auxiliary entries.  */
 end_comment
 
 begin_define
@@ -2695,11 +2695,11 @@ value|((s)->sy_symbol.ost_entry.n_numaux = (v))
 end_define
 
 begin_comment
-comment|/* Additional modifiers */
+comment|/* Additional modifiers.  */
 end_comment
 
 begin_comment
-comment|/* The symbol is external (does not mean undefined) */
+comment|/* The symbol is external (does not mean undefined).  */
 end_comment
 
 begin_define
@@ -2713,15 +2713,15 @@ value|{ S_SET_STORAGE_CLASS(s, C_EXT) ; SF_CLEAR_LOCAL(s); }
 end_define
 
 begin_comment
-comment|/* Auxiliary entry macros. SA_ stands for symbol auxiliary */
+comment|/* Auxiliary entry macros. SA_ stands for symbol auxiliary.  */
 end_comment
 
 begin_comment
-comment|/* Omit the tv related fields */
+comment|/* Omit the tv related fields.  */
 end_comment
 
 begin_comment
-comment|/* Accessors */
+comment|/* Accessors.  */
 end_comment
 
 begin_define
@@ -2867,7 +2867,7 @@ value|(SYM_AUXENT (s)->x_scn.x_nlinno)
 end_define
 
 begin_comment
-comment|/* Modifiers */
+comment|/* Modifiers.  */
 end_comment
 
 begin_define
@@ -3029,7 +3029,7 @@ value|(SYM_AUXENT (s)->x_scn.x_nlinno=(v))
 end_define
 
 begin_comment
-comment|/*  * Internal use only definitions. SF_ stands for symbol flags.  *  * These values can be assigned to sy_symbol.ost_flags field of a symbolS.  *  * You'll break i960 if you shift the SYSPROC bits anywhere else.  for  * more on the balname/callname hack, see tc-i960.h.  b.out is done  * differently.  */
+comment|/* Internal use only definitions. SF_ stands for symbol flags.       These values can be assigned to sy_symbol.ost_flags field of a symbolS.       You'll break i960 if you shift the SYSPROC bits anywhere else.  for    more on the balname/callname hack, see tc-i960.h.  b.out is done    differently.  */
 end_comment
 
 begin_define
@@ -3235,7 +3235,7 @@ comment|/* All other bits are unused.  */
 end_comment
 
 begin_comment
-comment|/* Accessors */
+comment|/* Accessors.  */
 end_comment
 
 begin_define
@@ -3459,7 +3459,7 @@ comment|/* used by i960 */
 end_comment
 
 begin_comment
-comment|/* Modifiers */
+comment|/* Modifiers.  */
 end_comment
 
 begin_define
@@ -3703,11 +3703,11 @@ comment|/* used by i960 */
 end_comment
 
 begin_comment
-comment|/* File header macro and type definition */
+comment|/* File header macro and type definition.  */
 end_comment
 
 begin_comment
-comment|/*  * File position calculators. Beware to use them when all the  * appropriate fields are set in the header.  */
+comment|/* File position calculators. Beware to use them when all the    appropriate fields are set in the header.  */
 end_comment
 
 begin_ifdef
@@ -3821,11 +3821,11 @@ value|(long) (FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * 
 end_define
 
 begin_comment
-comment|/* Accessors */
+comment|/* Accessors.  */
 end_comment
 
 begin_comment
-comment|/* aouthdr */
+comment|/* aouthdr.  */
 end_comment
 
 begin_define
@@ -3909,7 +3909,7 @@ value|((h)->aouthdr.data_start)
 end_define
 
 begin_comment
-comment|/* filehdr */
+comment|/* filehdr.  */
 end_comment
 
 begin_define
@@ -3993,7 +3993,7 @@ value|((h)->filehdr.f_flags)
 end_define
 
 begin_comment
-comment|/* Extra fields to achieve bsd a.out compatibility and for convenience */
+comment|/* Extra fields to achieve bsd a.out compatibility and for convenience.  */
 end_comment
 
 begin_define
@@ -4091,11 +4091,11 @@ value|(data_section_header.s_nreloc * RELSZ)
 end_define
 
 begin_comment
-comment|/* Modifiers */
+comment|/* Modifiers.  */
 end_comment
 
 begin_comment
-comment|/* aouthdr */
+comment|/* aouthdr.  */
 end_comment
 
 begin_define
@@ -4195,7 +4195,7 @@ value|((h)->aouthdr.data_start = (v))
 end_define
 
 begin_comment
-comment|/* filehdr */
+comment|/* filehdr.  */
 end_comment
 
 begin_define
@@ -4283,7 +4283,7 @@ value|((h)->filehdr.f_flags = (v))
 end_define
 
 begin_comment
-comment|/* Extra fields to achieve bsd a.out compatibility and for convinience */
+comment|/* Extra fields to achieve bsd a.out compatibility and for convinience.  */
 end_comment
 
 begin_define
@@ -4325,7 +4325,7 @@ value|((h)->lineno_size = (v))
 end_define
 
 begin_comment
-comment|/* Segment flipping */
+comment|/* Segment flipping.  */
 end_comment
 
 begin_typedef
@@ -4349,11 +4349,11 @@ comment|/* names + '\0' + sizeof (int) */
 name|long
 name|relocation_size
 decl_stmt|;
-comment|/* Cumulated size of relocation 			   information for all sections in 			   bytes.  */
+comment|/* Cumulated size of relocation 					   information for all sections in 					   bytes.  */
 name|long
 name|lineno_size
 decl_stmt|;
-comment|/* Size of the line number information 				   table in bytes */
+comment|/* Size of the line number information 					   table in bytes.  */
 block|}
 name|object_headers
 typedef|;
@@ -4371,13 +4371,13 @@ name|char
 modifier|*
 name|frag
 decl_stmt|;
-comment|/* Frag to which the line number is related */
+comment|/* Frag to which the line number is related.  */
 name|struct
 name|lineno_list
 modifier|*
 name|next
 decl_stmt|;
-comment|/* Forward chain pointer */
+comment|/* Forward chain pointer.  */
 block|}
 struct|;
 end_struct
@@ -4551,7 +4551,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sanity check */
+comment|/* Sanity check.  */
 end_comment
 
 begin_ifdef

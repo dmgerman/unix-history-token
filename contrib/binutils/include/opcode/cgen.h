@@ -16,7 +16,7 @@ name|CGEN_H
 end_define
 
 begin_comment
-comment|/* ??? This file requires bfd.h but only to get bfd_vma.    Seems like an awful lot to require just to get such a fundamental type.    Perhaps the definition of bfd_vma can be moved outside of bfd.h.    Or perhaps one could duplicate its definition in another file.    Until such time, this file conditionally compiles definitions that require    bfd_vma using BFD_VERSION.  */
+comment|/* ??? This file requires bfd.h but only to get bfd_vma.    Seems like an awful lot to require just to get such a fundamental type.    Perhaps the definition of bfd_vma can be moved outside of bfd.h.    Or perhaps one could duplicate its definition in another file.    Until such time, this file conditionally compiles definitions that require    bfd_vma using BFD_VERSION_DATE.  */
 end_comment
 
 begin_comment
@@ -559,7 +559,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 end_ifdef
 
 begin_typedef
@@ -623,7 +623,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 end_ifdef
 
 begin_typedef
@@ -687,7 +687,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 end_ifdef
 
 begin_typedef
@@ -811,7 +811,7 @@ end_enum
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 end_ifdef
 
 begin_comment
@@ -1374,7 +1374,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 end_ifdef
 
 begin_comment
@@ -3276,7 +3276,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 specifier|const
 name|char
 operator|*
@@ -3495,7 +3495,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 name|bfd_vma
 argument_list|(
 argument|*get_vma_operand

@@ -1549,6 +1549,15 @@ operator|=
 name|arch_sh4
 expr_stmt|;
 break|break;
+case|case
+name|bfd_mach_sh5
+case|:
+comment|/* When we get here for sh64, it's because we want to disassemble 	 SHcompact, i.e. arch_sh4.  */
+name|target_arch
+operator|=
+name|arch_sh4
+expr_stmt|;
+break|break;
 default|default:
 name|abort
 argument_list|()

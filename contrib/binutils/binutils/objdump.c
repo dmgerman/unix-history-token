@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"getopt.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"progress.h"
 end_include
 
@@ -25,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"bucomm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"getopt.h"
 end_include
 
 begin_include

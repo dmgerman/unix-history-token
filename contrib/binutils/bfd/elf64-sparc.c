@@ -7443,7 +7443,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Register %%g%d used incompatibly: %s in %s"
+literal|"Register %%g%d used incompatibly: %s in %s, previously %s in %s"
 argument_list|)
 argument_list|,
 operator|(
@@ -7465,17 +7465,6 @@ argument_list|,
 name|bfd_archive_filename
 argument_list|(
 name|abfd
-argument_list|)
-argument_list|)
-expr_stmt|;
-call|(
-modifier|*
-name|_bfd_error_handler
-call|)
-argument_list|(
-name|_
-argument_list|(
-literal|"  previously %s in %s"
 argument_list|)
 argument_list|,
 operator|*
@@ -7577,28 +7566,15 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Symbol `%s' has differing types: %s in %s"
+literal|"Symbol `%s' has differing types: REGISTER in %s, previously %s in %s"
 argument_list|)
 argument_list|,
 operator|*
 name|namep
 argument_list|,
-literal|"REGISTER"
-argument_list|,
 name|bfd_archive_filename
 argument_list|(
 name|abfd
-argument_list|)
-argument_list|)
-expr_stmt|;
-call|(
-modifier|*
-name|_bfd_error_handler
-call|)
-argument_list|(
-name|_
-argument_list|(
-literal|"  previously %s in %s"
 argument_list|)
 argument_list|,
 name|stt_types
@@ -7835,7 +7811,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Symbol `%s' has differing types: %s in %s"
+literal|"Symbol `%s' has differing types: %s in %s, previously REGISTER in %s"
 argument_list|)
 argument_list|,
 operator|*
@@ -7850,19 +7826,6 @@ name|bfd_archive_filename
 argument_list|(
 name|abfd
 argument_list|)
-argument_list|)
-expr_stmt|;
-call|(
-modifier|*
-name|_bfd_error_handler
-call|)
-argument_list|(
-name|_
-argument_list|(
-literal|"  previously %s in %s"
-argument_list|)
-argument_list|,
-literal|"REGISTER"
 argument_list|,
 name|bfd_archive_filename
 argument_list|(
@@ -10900,6 +10863,8 @@ name|outrel
 decl_stmt|;
 name|boolean
 name|skip
+decl_stmt|,
+name|relocate
 decl_stmt|;
 if|if
 condition|(
@@ -10996,6 +10961,10 @@ name|skip
 operator|=
 name|false
 expr_stmt|;
+name|relocate
+operator|=
+name|false
+expr_stmt|;
 name|outrel
 operator|.
 name|r_offset
@@ -11026,6 +10995,27 @@ operator|-
 literal|1
 condition|)
 name|skip
+operator|=
+name|true
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|outrel
+operator|.
+name|r_offset
+operator|==
+operator|(
+name|bfd_vma
+operator|)
+operator|-
+literal|2
+condition|)
+name|skip
+operator|=
+name|true
+operator|,
+name|relocate
 operator|=
 name|true
 expr_stmt|;
@@ -11505,6 +11495,11 @@ operator|->
 name|reloc_count
 expr_stmt|;
 comment|/* This reloc will be computed at runtime, so there's no 		   need to do anything now.  */
+if|if
+condition|(
+operator|!
+name|relocate
+condition|)
 continue|continue;
 block|}
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Interface between the opcode library and its callers.     Copyright 2001 Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.        Written by Cygnus Support, 1993.     The opcode library (libopcodes.a) provides instruction decoders for    a large variety of instruction sets, callable with an identical    interface, for making instruction-processing programs more independent    of the instruction set being processed.  */
+comment|/* Interface between the opcode library and its callers.     Copyright 2001, 2002 Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.        Written by Cygnus Support, 1993.     The opcode library (libopcodes.a) provides instruction decoders for    a large variety of instruction sets, callable with an identical    interface, for making instruction-processing programs more independent    of the instruction set being processed.  */
 end_comment
 
 begin_ifndef
@@ -113,6 +113,11 @@ comment|/* Endianness (for bi-endian cpus).  Mono-endian cpus can ignore this.  
 name|enum
 name|bfd_endian
 name|endian
+decl_stmt|;
+comment|/* An arch/mach-specific bitmask of selected instruction subsets, mainly      for processors with run-time-switchable instruction sets.  The default,      zero, means that there is no constraint.  CGEN-based opcodes ports      may use ISA_foo masks.  */
+name|unsigned
+name|long
+name|insn_sets
 decl_stmt|;
 comment|/* Some targets need information about the current section to accurately      display insns.  If this is NULL, the target disassembler function      will have to make its best guess.  */
 name|asection
@@ -788,6 +793,32 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|int
+name|print_insn_big_or32
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|print_insn_little_or32
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
 name|print_insn_pdp11
 name|PARAMS
 argument_list|(
@@ -971,6 +1002,45 @@ decl_stmt|;
 specifier|extern
 name|int
 name|print_insn_xstormy16
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|print_insn_sh64
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|print_insn_sh64l
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|print_insn_sh64x_media
 name|PARAMS
 argument_list|(
 operator|(
@@ -1176,7 +1246,7 @@ parameter_list|,
 name|FPRINTF_FUNC
 parameter_list|)
 define|\
-value|(INFO).flavour = bfd_target_unknown_flavour, \   (INFO).arch = bfd_arch_unknown, \   (INFO).mach = 0, \   (INFO).endian = BFD_ENDIAN_UNKNOWN, \   (INFO).octets_per_byte = 1, \   INIT_DISASSEMBLE_INFO_NO_ARCH(INFO, STREAM, FPRINTF_FUNC)
+value|(INFO).flavour = bfd_target_unknown_flavour, \   (INFO).arch = bfd_arch_unknown, \   (INFO).mach = 0, \   (INFO).insn_sets = 0, \   (INFO).endian = BFD_ENDIAN_UNKNOWN, \   (INFO).octets_per_byte = 1, \   INIT_DISASSEMBLE_INFO_NO_ARCH(INFO, STREAM, FPRINTF_FUNC)
 comment|/* Call this macro to initialize only the internal variables for the    disassembler.  Architecture dependent things such as byte order, or machine    variant are not touched by this macro.  This makes things much easier for    GDB which must initialize these things separately.  */
 define|#
 directive|define

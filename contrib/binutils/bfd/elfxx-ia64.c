@@ -14670,9 +14670,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|outrel
 operator|.
 name|r_offset
+operator||
+literal|1
+operator|)
 operator|==
 operator|(
 name|bfd_vma

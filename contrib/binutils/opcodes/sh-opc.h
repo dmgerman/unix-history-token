@@ -127,6 +127,8 @@ name|A_PC
 block|,
 name|A_DISP_PC
 block|,
+name|A_DISP_PC_ABS
+block|,
 name|A_DISP_REG_M
 block|,
 name|A_DISP_REG_N

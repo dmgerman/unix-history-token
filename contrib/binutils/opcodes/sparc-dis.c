@@ -1727,6 +1727,9 @@ argument_list|,
 literal|"%%hi(%#x)"
 argument_list|,
 operator|(
+operator|(
+name|unsigned
+operator|)
 literal|0xFFFFFFFF
 operator|&
 operator|(
@@ -3107,8 +3110,12 @@ operator|->
 name|target
 operator|=
 operator|(
+operator|(
+name|unsigned
+operator|)
 literal|0xFFFFFFFF
 operator|&
+operator|(
 operator|(
 name|int
 operator|)
@@ -3118,6 +3125,7 @@ name|prev_insn
 argument_list|)
 operator|<<
 literal|10
+operator|)
 operator|)
 expr_stmt|;
 if|if

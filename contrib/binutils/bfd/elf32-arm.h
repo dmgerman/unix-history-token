@@ -4769,6 +4769,10 @@ name|skip
 operator|=
 name|false
 expr_stmt|;
+name|relocate
+operator|=
+name|false
+expr_stmt|;
 name|outrel
 operator|.
 name|r_offset
@@ -4802,6 +4806,27 @@ name|skip
 operator|=
 name|true
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|outrel
+operator|.
+name|r_offset
+operator|==
+operator|(
+name|bfd_vma
+operator|)
+operator|-
+literal|2
+condition|)
+name|skip
+operator|=
+name|true
+operator|,
+name|relocate
+operator|=
+name|true
+expr_stmt|;
 name|outrel
 operator|.
 name|r_offset
@@ -4822,7 +4847,6 @@ if|if
 condition|(
 name|skip
 condition|)
-block|{
 name|memset
 argument_list|(
 operator|&
@@ -4834,11 +4858,6 @@ sizeof|sizeof
 name|outrel
 argument_list|)
 expr_stmt|;
-name|relocate
-operator|=
-name|false
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4870,14 +4889,9 @@ name|flags
 operator|&
 name|SEC_ALLOC
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
-name|relocate
-operator|=
-name|false
-expr_stmt|;
-else|else
 name|relocate
 operator|=
 name|true
@@ -4967,14 +4981,9 @@ name|flags
 operator|&
 name|SEC_ALLOC
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
-name|relocate
-operator|=
-name|false
-expr_stmt|;
-else|else
 name|relocate
 operator|=
 name|true
@@ -8706,7 +8715,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Warning: Not setting interwork flag of %s since it has already been specified as non-interworking"
+literal|"\ Warning: Not setting interworking flag of %s since it has already been specified as non-interworking"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -8720,7 +8729,7 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Warning: Clearing the interwork flag of %s due to outside request"
+literal|"\ Warning: Clearing the interworking flag of %s due to outside request"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -8902,7 +8911,7 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Warning: Clearing the interwork flag in %s because non-interworking code in %s has been linked with it"
+literal|"\ Warning: Clearing the interworking flag of %s because non-interworking code in %s has been linked with it"
 argument_list|)
 argument_list|,
 name|bfd_get_filename
@@ -9232,7 +9241,7 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Error: %s compiled for EABI version %d, whereas %s is compiled for version %d"
+literal|"\ ERROR: %s is compiled for EABI version %d, whereas %s is compiled for version %d"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -9296,7 +9305,7 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Error: %s compiled for APCS-%d, whereas %s is compiled for APCS-%d"
+literal|"\ ERROR: %s is compiled for APCS-%d, whereas target %s uses APCS-%d"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -9356,7 +9365,7 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Error: %s passes floats in FP registers, whereas %s passes them in integer registers"
+literal|"\ ERROR: %s passes floats in float registers, whereas %s passes them in integer registers"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -9375,7 +9384,7 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Error: %s passes floats in integer registers, whereas %s passes them in FP registers"
+literal|"\ ERROR: %s passes floats in integer registers, whereas %s passes them in float registers"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -9419,7 +9428,7 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Error: %s uses VFP instructions, whereas %s FPA instructions"
+literal|"\ ERROR: %s uses VFP instructions, whereas %s uses FPA instructions"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -9438,7 +9447,7 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Error: %s uses FPA instructions, whereas %s VFP instructions"
+literal|"\ ERROR: %s uses FPA instructions, whereas %s uses VFP instructions"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -9505,7 +9514,7 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Error: %s uses software FP, whereas %s uses hardware FP"
+literal|"\ ERROR: %s uses software FP, whereas %s uses hardware FP"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -9524,7 +9533,7 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Error: %s uses hardware FP, whereas %s uses software FP"
+literal|"\ ERROR: %s uses hardware FP, whereas %s uses software FP"
 argument_list|)
 argument_list|,
 name|bfd_archive_filename
@@ -9737,10 +9746,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-name|_
-argument_list|(
 literal|" [APCS-26]"
-argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -9748,10 +9754,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-name|_
-argument_list|(
 literal|" [APCS-32]"
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -19,12 +19,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"getopt.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"bucomm.h"
 end_include
 
@@ -32,6 +26,12 @@ begin_include
 include|#
 directive|include
 file|"libiberty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"getopt.h"
 end_include
 
 begin_ifndef

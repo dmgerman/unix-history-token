@@ -50,6 +50,21 @@ end_define
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|alpha_validate_fix
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|fix
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|alpha_force_relocation
 name|PARAMS
@@ -94,6 +109,20 @@ name|valueT
 name|alpha_gp_value
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TC_VALIDATE_FIX
+parameter_list|(
+name|FIXP
+parameter_list|,
+name|SEGTYPE
+parameter_list|,
+name|SKIP
+parameter_list|)
+value|alpha_validate_fix (FIXP)
+end_define
 
 begin_define
 define|#

@@ -771,10 +771,10 @@ literal|"osf-core"
 block|,
 name|bfd_target_unknown_flavour
 block|,
-name|BFD_ENDIAN_BIG
+name|BFD_ENDIAN_LITTLE
 block|,
 comment|/* target byte order */
-name|BFD_ENDIAN_BIG
+name|BFD_ENDIAN_LITTLE
 block|,
 comment|/* target headers byte order */
 operator|(

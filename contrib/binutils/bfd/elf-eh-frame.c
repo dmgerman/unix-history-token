@@ -2534,11 +2534,9 @@ name|free_no_table
 goto|;
 block|}
 block|}
-comment|/* For shared libraries, try to get rid of as many RELATIVE relocs 	     as possible. 	     FIXME: For this to work, ELF backends need to perform the 	     relocation if omitting dynamic relocs, not skip it.  */
+comment|/* For shared libraries, try to get rid of as many RELATIVE relocs 	     as possible.  */
 if|if
 condition|(
-literal|0
-operator|&&
 name|info
 operator|->
 name|shared
@@ -2561,8 +2559,6 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|&&
 name|info
 operator|->
 name|shared
@@ -2749,6 +2745,37 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|info
+operator|->
+name|shared
+operator|&&
+operator|(
+name|cie
+operator|.
+name|fde_encoding
+operator|&
+literal|0xf0
+operator|)
+operator|==
+name|DW_EH_PE_absptr
+operator|&&
+name|cie
+operator|.
+name|make_relative
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* If shared library uses absolute pointers 		     which we cannot turn into PC relative, 		     don't create the binary search table, 		     since it is affected by runtime relocations.  */
+name|hdr_info
+operator|->
+name|table
+operator|=
+name|false
+expr_stmt|;
+block|}
 name|cie_usage_count
 operator|++
 expr_stmt|;
@@ -3789,7 +3816,7 @@ operator|(
 name|bfd_vma
 operator|)
 operator|-
-literal|1
+literal|2
 return|;
 comment|/* If converting LSDA pointers to DW_EH_PE_pcrel, there will be no need      for run-time relocation against LSDA field.  */
 if|if
@@ -3844,7 +3871,7 @@ operator|(
 name|bfd_vma
 operator|)
 operator|-
-literal|1
+literal|2
 return|;
 return|return
 operator|(

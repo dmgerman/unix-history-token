@@ -4636,7 +4636,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|ARM
-comment|/* Set the flags field from the COFF header read in */
+comment|/* Set the flags field from the COFF header read in.  */
 if|if
 condition|(
 operator|!
@@ -4747,6 +4747,26 @@ operator|->
 name|f_magic
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|OR32_MAGIC_BIG
+case|case
+name|OR32_MAGIC_BIG
+case|:
+case|case
+name|OR32_MAGIC_LITTLE
+case|:
+name|arch
+operator|=
+name|bfd_arch_or32
+expr_stmt|;
+name|machine
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PPCMAGIC
@@ -4904,12 +4924,13 @@ operator|=
 name|bfd_mach_arm_4T
 expr_stmt|;
 break|break;
+comment|/* The COFF header does not have enough bits available 	     to cover all the different ARM architectures.  So 	     we interpret F_ARM_5, the highest flag value to mean 	     "the highest ARM architecture known to BFD" which is 	     currently the XScale.  */
 case|case
 name|F_ARM_5
 case|:
 name|machine
 operator|=
-name|bfd_mach_arm_5
+name|bfd_mach_arm_XScale
 expr_stmt|;
 break|break;
 block|}
@@ -7727,7 +7748,7 @@ operator||=
 name|F_ARM_5
 expr_stmt|;
 break|break;
-comment|/* FIXME: we do not have F_ARM vaues greater than F_ARM_5.  */
+comment|/* FIXME: we do not have F_ARM vaues greater than F_ARM_5. 	     See also the comment in coff_set_arch_mach_hook().  */
 case|case
 name|bfd_mach_arm_5T
 case|:
@@ -8199,6 +8220,35 @@ operator|*
 name|magicp
 operator|=
 name|W65MAGIC
+expr_stmt|;
+return|return
+name|true
+return|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OR32_MAGIC_BIG
+case|case
+name|bfd_arch_or32
+case|:
+if|if
+condition|(
+name|bfd_big_endian
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+operator|*
+name|magicp
+operator|=
+name|OR32_MAGIC_BIG
+expr_stmt|;
+else|else
+operator|*
+name|magicp
+operator|=
+name|OR32_MAGIC_LITTLE
 expr_stmt|;
 return|return
 name|true
@@ -12063,6 +12113,21 @@ name|magic
 operator|=
 name|MIPS_PE_MAGIC
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OR32
+define|#
+directive|define
+name|__A_MAGIC_SET__
+name|internal_a
+operator|.
+name|magic
+operator|=
+name|NMAGIC
+expr_stmt|;
+comment|/* Assume separate i/d.  */
 endif|#
 directive|endif
 ifndef|#

@@ -76,6 +76,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DMGL_VERBOSE
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Include implementation details.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMGL_TYPES
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Also try to demangle type encodings.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DMGL_AUTO
 value|(1<< 8)
 end_define
@@ -514,6 +536,9 @@ specifier|const
 name|char
 operator|*
 name|mangled
+operator|,
+name|int
+name|options
 operator|)
 argument_list|)
 decl_stmt|;

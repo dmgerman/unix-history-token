@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for the generic parts of PE/PEI; the common executable parts.    Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Solutions.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for the generic parts of PE/PEI; the common executable parts.    Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Solutions.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* Most of this hacked by Steve Chamberlain<sac@cygnus.com>.     PE/PEI rearrangement (and code added): Donn Terry 					  Softway Systems, Inc. */
+comment|/* Most of this hacked by Steve Chamberlain<sac@cygnus.com>.     PE/PEI rearrangement (and code added): Donn Terry 					  Softway Systems, Inc.  */
 end_comment
 
 begin_comment
-comment|/* Hey look, some documentation [and in a place you expect to find it]!     The main reference for the pei format is "Microsoft Portable Executable    and Common Object File Format Specification 4.1".  Get it if you need to    do some serious hacking on this code.     Another reference:    "Peering Inside the PE: A Tour of the Win32 Portable Executable    File Format", MSJ 1994, Volume 9.     The *sole* difference between the pe format and the pei format is that the    latter has an MSDOS 2.0 .exe header on the front that prints the message    "This app must be run under Windows." (or some such).    (FIXME: Whether that statement is *really* true or not is unknown.    Are there more subtle differences between pe and pei formats?    For now assume there aren't.  If you find one, then for God sakes    document it here!)     The Microsoft docs use the word "image" instead of "executable" because    the former can also refer to a DLL (shared library).  Confusion can arise    because the `i' in `pei' also refers to "image".  The `pe' format can    also create images (i.e. executables), it's just that to run on a win32    system you need to use the pei format.     FIXME: Please add more docs here so the next poor fool that has to hack    on this code has a chance of getting something accomplished without    wasting too much time. */
+comment|/* Hey look, some documentation [and in a place you expect to find it]!     The main reference for the pei format is "Microsoft Portable Executable    and Common Object File Format Specification 4.1".  Get it if you need to    do some serious hacking on this code.     Another reference:    "Peering Inside the PE: A Tour of the Win32 Portable Executable    File Format", MSJ 1994, Volume 9.     The *sole* difference between the pe format and the pei format is that the    latter has an MSDOS 2.0 .exe header on the front that prints the message    "This app must be run under Windows." (or some such).    (FIXME: Whether that statement is *really* true or not is unknown.    Are there more subtle differences between pe and pei formats?    For now assume there aren't.  If you find one, then for God sakes    document it here!)     The Microsoft docs use the word "image" instead of "executable" because    the former can also refer to a DLL (shared library).  Confusion can arise    because the `i' in `pei' also refers to "image".  The `pe' format can    also create images (i.e. executables), it's just that to run on a win32    system you need to use the pei format.     FIXME: Please add more docs here so the next poor fool that has to hack    on this code has a chance of getting something accomplished without    wasting too much time.  */
 end_comment
 
 begin_comment
@@ -6054,17 +6054,7 @@ name|file
 argument_list|,
 name|_
 argument_list|(
-literal|" vma:            Hint    Time      Forward  DLL       First\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|_
-argument_list|(
-literal|"                 Table   Stamp     Chain    Name      Thunk\n"
+literal|"\  vma:            Hint    Time      Forward  DLL       First\n\                  Table   Stamp     Chain    Name      Thunk\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7959,17 +7949,7 @@ name|file
 argument_list|,
 name|_
 argument_list|(
-literal|" vma:\t\tBegin    End      EH       EH       PrologEnd  Exception\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|_
-argument_list|(
-literal|"     \t\tAddress  Address  Handler  Data     Address    Mask\n"
+literal|"\  vma:\t\tBegin    End      EH       EH       PrologEnd  Exception\n\      \t\tAddress  Address  Handler  Data     Address    Mask\n"
 argument_list|)
 argument_list|)
 expr_stmt|;

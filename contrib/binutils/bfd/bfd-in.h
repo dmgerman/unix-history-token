@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Contributed by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -145,7 +145,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* forward declaration */
+comment|/* Forward declaration.  */
 typedef|typedef
 name|struct
 name|_bfd
@@ -158,6 +158,7 @@ comment|/* typedef enum boolean {false, true} boolean; */
 comment|/* Yup, SVR4 has a "typedef enum boolean" in<sys/types.h>  -fnf */
 comment|/* It gets worse if the host also defines a true/false enum... -sts */
 comment|/* And even worse if your compiler has built-in boolean types... -law */
+comment|/* And even worse if your compiler provides a stdbool.h that conflicts    with these definitions... gcc 2.95 and later do.  If so, it must    be included first.  -drow */
 if|#
 directive|if
 name|defined
@@ -183,6 +184,20 @@ operator|)
 define|#
 directive|define
 name|TRUE_FALSE_ALREADY_DEFINED
+else|#
+directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__bool_true_false_are_defined
+argument_list|)
+comment|/* We have<stdbool.h>.  */
+define|#
+directive|define
+name|TRUE_FALSE_ALREADY_DEFINED
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#
@@ -481,7 +496,7 @@ name|unsigned
 name|char
 name|bfd_byte
 typedef|;
-comment|/** File formats */
+comment|/* File formats.  */
 typedef|typedef
 enum|enum
 name|bfd_format
@@ -490,19 +505,19 @@ name|bfd_unknown
 init|=
 literal|0
 block|,
-comment|/* file format is unknown */
+comment|/* File format is unknown.  */
 name|bfd_object
 block|,
-comment|/* linker/assember/compiler output */
+comment|/* Linker/assember/compiler output.  */
 name|bfd_archive
 block|,
-comment|/* object archive file */
+comment|/* Object archive file.  */
 name|bfd_core
 block|,
-comment|/* core dump */
+comment|/* Core dump.  */
 name|bfd_type_end
+comment|/* Marks the end; don't use it!  */
 block|}
-comment|/* marks the end; don't use it! */
 name|bfd_format
 typedef|;
 comment|/* Values that may appear in the flags field of a BFD.  These also    appear in the object_flags field of the bfd_target structure, where    they indicate the set of flags used by that backend (not all flags    are meaningful for all object file formats) (FIXME: at the moment,    the object_flags values have mostly just been copied from backend    to another, and are not necessarily correct).  */
@@ -571,7 +586,7 @@ define|#
 directive|define
 name|BFD_IN_MEMORY
 value|0x800
-comment|/* symbols and relocation */
+comment|/* Symbols and relocation.  */
 comment|/* A count of carsyms (canonical archive symbols).  */
 typedef|typedef
 name|unsigned
@@ -650,7 +665,7 @@ name|x
 parameter_list|)
 value|(bfd_asymbol_bfd(x)->xvec->flavour)
 comment|/* A canonical archive symbol.  */
-comment|/* This is a type pun with struct ranlib on purpose! */
+comment|/* This is a type pun with struct ranlib on purpose!  */
 typedef|typedef
 struct|struct
 name|carsym
@@ -662,22 +677,22 @@ decl_stmt|;
 name|file_ptr
 name|file_offset
 decl_stmt|;
-comment|/* look here to find the file */
+comment|/* Look here to find the file.  */
 block|}
 name|carsym
 typedef|;
-comment|/* to make these you call a carsymogen */
-comment|/* Used in generating armaps (archive tables of contents).    Perhaps just a forward definition would do? */
+comment|/* To make these you call a carsymogen.  */
+comment|/* Used in generating armaps (archive tables of contents).    Perhaps just a forward definition would do?  */
 struct|struct
 name|orl
+comment|/* Output ranlib.  */
 block|{
-comment|/* output ranlib */
 name|char
 modifier|*
 modifier|*
 name|name
 decl_stmt|;
-comment|/* symbol name */
+comment|/* Symbol name.  */
 union|union
 block|{
 name|file_ptr
@@ -690,14 +705,14 @@ decl_stmt|;
 block|}
 name|u
 union|;
-comment|/* bfd* or file position */
+comment|/* bfd* or file position.  */
 name|int
 name|namidx
 decl_stmt|;
-comment|/* index into string table */
+comment|/* Index into string table.  */
 block|}
 struct|;
-comment|/* Linenumber stuff */
+comment|/* Linenumber stuff.  */
 typedef|typedef
 struct|struct
 name|lineno_cache_entry
@@ -706,7 +721,7 @@ name|unsigned
 name|int
 name|line_number
 decl_stmt|;
-comment|/* Linenumber from start of function*/
+comment|/* Linenumber from start of function.  */
 union|union
 block|{
 name|struct
@@ -714,18 +729,18 @@ name|symbol_cache_entry
 modifier|*
 name|sym
 decl_stmt|;
-comment|/* Function name */
+comment|/* Function name.  */
 name|bfd_vma
 name|offset
 decl_stmt|;
-comment|/* Offset into section */
+comment|/* Offset into section.  */
 block|}
 name|u
 union|;
 block|}
 name|alent
 typedef|;
-comment|/* object and core file sections */
+comment|/* Object and core file sections.  */
 define|#
 directive|define
 name|align_power
@@ -1214,7 +1229,7 @@ define|#
 directive|define
 name|COFF_SWAP_TABLE
 value|(PTR)&bfd_coff_std_swap_table
-comment|/* User program access to BFD facilities */
+comment|/* User program access to BFD facilities.  */
 comment|/* Direct I/O routines, for programs which know more about the object    file than BFD does.  Use higher level routines if possible.  */
 specifier|extern
 name|bfd_size_type
@@ -2599,6 +2614,33 @@ decl_stmt|;
 specifier|extern
 name|boolean
 name|bfd_m68k_elf32_create_embedded_relocs
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
+name|sec
+operator|*
+operator|,
+expr|struct
+name|sec
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_mips_elf32_create_embedded_relocs
 name|PARAMS
 argument_list|(
 operator|(

@@ -3309,7 +3309,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: address 0x%s out of range for Intex Hex file"
+literal|"%s: address 0x%s out of range for Intel Hex file"
 argument_list|)
 argument_list|,
 name|bfd_get_filename

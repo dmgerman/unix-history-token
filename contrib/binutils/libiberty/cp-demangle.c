@@ -3407,12 +3407,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IN_LIBGCC2
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|status_t
@@ -3429,11 +3423,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* When passed to demangle_bare_function_type, indicates that the    function's return type is not encoded before its parameter types.  */
@@ -11603,12 +11592,6 @@ begin_comment
 comment|/* Demangle TYPE_NAME into RESULT, which must be an initialized    dyn_string_t.  On success, returns STATUS_OK.  On failiure, returns    an error message, and the contents of RESULT are unchanged.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IN_LIBGCC2
-end_ifdef
-
 begin_function
 specifier|static
 name|status_t
@@ -11636,6 +11619,8 @@ init|=
 name|demangling_new
 argument_list|(
 name|type_name
+argument_list|,
+name|DMGL_GNU_V3
 argument_list|)
 decl_stmt|;
 if|if
@@ -11728,6 +11713,12 @@ name|status
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IN_LIBGCC2
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -12042,11 +12033,16 @@ modifier|*
 name|cplus_demangle_v3
 parameter_list|(
 name|mangled
+parameter_list|,
+name|options
 parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|mangled
+decl_stmt|;
+name|int
+name|options
 decl_stmt|;
 block|{
 name|dyn_string_t
@@ -12055,23 +12051,60 @@ decl_stmt|;
 name|status_t
 name|status
 decl_stmt|;
-comment|/* If this isn't a mangled name, don't pretend to demangle it.  */
+name|int
+name|type
+init|=
+operator|!
+operator|!
+operator|(
+name|options
+operator|&
+name|DMGL_TYPES
+operator|)
+decl_stmt|;
 if|if
 condition|(
-name|strncmp
-argument_list|(
 name|mangled
-argument_list|,
-literal|"_Z"
-argument_list|,
-literal|2
-argument_list|)
-operator|!=
+index|[
 literal|0
+index|]
+operator|==
+literal|'_'
+operator|&&
+name|mangled
+index|[
+literal|1
+index|]
+operator|==
+literal|'Z'
+condition|)
+comment|/* It is not a type.  */
+name|type
+operator|=
+literal|0
+expr_stmt|;
+else|else
+block|{
+comment|/* It is a type. Stop if we don't want to demangle types. */
+if|if
+condition|(
+operator|!
+name|type
 condition|)
 return|return
 name|NULL
 return|;
+block|}
+name|flag_verbose
+operator|=
+operator|!
+operator|!
+operator|(
+name|options
+operator|&
+name|DMGL_VERBOSE
+operator|)
+expr_stmt|;
 comment|/* Create a dyn_string to hold the demangled name.  */
 name|demangled
 operator|=
@@ -12081,19 +12114,32 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Attempt the demangling.  */
+if|if
+condition|(
+operator|!
+name|type
+condition|)
+comment|/* Appears to be a function or variable name.  */
 name|status
 operator|=
 name|cp_demangle
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|mangled
 argument_list|,
 name|demangled
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* Try to demangle it as the name of a type.  */
+name|status
+operator|=
+name|cp_demangle_type
+argument_list|(
+name|mangled
+argument_list|,
+name|demangled
 argument_list|)
 expr_stmt|;
 if|if

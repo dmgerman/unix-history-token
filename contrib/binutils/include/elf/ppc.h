@@ -1112,6 +1112,24 @@ value|DT_LOPROC
 end_define
 
 begin_comment
+comment|/* Specify the start and size of the .opd section.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_PPC64_OPD
+value|(DT_LOPROC + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_PPC64_OPDSZ
+value|(DT_LOPROC + 2)
+end_define
+
+begin_comment
 comment|/* Processor specific flags for the ELF header e_flags field.  */
 end_comment
 
