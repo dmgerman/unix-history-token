@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernel.h	8.3 (Berkeley) 1/21/94  * $Id: kernel.h,v 1.49 1999/01/14 05:48:46 jdp Exp $  */
+comment|/*-  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernel.h	8.3 (Berkeley) 1/21/94  * $Id: kernel.h,v 1.50 1999/01/28 00:57:54 dillon Exp $  */
 end_comment
 
 begin_ifndef
@@ -513,7 +513,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A system initialization call instance  *  * The subsystem  */
+comment|/*  * A system initialization call instance  *  * At the moment there is one instance of sysinit.  We probably do not  * want two which is why this code is if'd out, but we definitely want  * to discern SYSINIT's which take non-constant data pointers and  * SYSINIT's which take constant data pointers,  */
 end_comment
 
 begin_struct
@@ -537,13 +537,12 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|void
 operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* init function*/
+comment|/* function		*/
 name|void
 modifier|*
 name|udata
@@ -557,8 +556,45 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
-comment|/*  * Default: no special processing  */
+unit|struct c_sysinit { 	unsigned int	subsystem;
+comment|/* subsystem identifier*/
+end_comment
+
+begin_comment
+unit|unsigned int	order;
+comment|/* init order within subsystem*/
+end_comment
+
+begin_comment
+unit|void		(*func) __P((const void *));
+comment|/* function 	*/
+end_comment
+
+begin_comment
+unit|const void	*udata;
+comment|/* multiplexer/argument */
+end_comment
+
+begin_comment
+unit|si_elem_t	type;
+comment|/* sysinit_elem_type*/
+end_comment
+
+begin_endif
+unit|};
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Default: no special processing  *  * The C_ version of SYSINIT is for data pointers to const  * data ( and functions taking data pointers to const data ).  * At the moment it is no different from SYSINIT and thus  * still results in warnings.  *  */
 end_comment
 
 begin_define
@@ -578,6 +614,25 @@ name|ident
 parameter_list|)
 define|\
 value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident,						\ 		SI_TYPE_DEFAULT					\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_SYSINIT
+parameter_list|(
+name|uniquifier
+parameter_list|,
+name|subsystem
+parameter_list|,
+name|order
+parameter_list|,
+name|func
+parameter_list|,
+name|ident
+parameter_list|)
+define|\
+value|SYSINIT(uniquifier, subsystem, order, func, ident)
 end_define
 
 begin_comment
@@ -600,7 +655,26 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|static struct sysinit uniquifier ## _sys_uninit = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident,						\ 		SI_TYPE_DEFAULT					\ 	};							\ 	DATA_SET(sysuninit_set,uniquifier ## _sys_uninit)
+value|static struct sysinit uniquifier ## _sys_uninit = {	\ 		subsystem,					\ 		order,						\ 		func, 						\ 		ident,						\ 		SI_TYPE_DEFAULT					\ 	};							\ 	DATA_SET(sysuninit_set,uniquifier ## _sys_uninit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_SYSUNINIT
+parameter_list|(
+name|uniquifier
+parameter_list|,
+name|subsystem
+parameter_list|,
+name|order
+parameter_list|,
+name|func
+parameter_list|,
+name|ident
+parameter_list|)
+define|\
+value|SYSUNINIT(uniquifier, subsystem, order, func, ident)
 end_define
 
 begin_comment
@@ -623,7 +697,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident,						\ 		SI_TYPE_KTHREAD					\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
+value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func, 						\ 		ident,						\ 		SI_TYPE_KTHREAD					\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
 end_define
 
 begin_define
@@ -642,7 +716,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident,						\ 		SI_TYPE_KPROCESS					\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
+value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident,						\ 		SI_TYPE_KPROCESS				\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
 end_define
 
 begin_comment
