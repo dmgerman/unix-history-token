@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eui64.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/event.h>
 end_include
 
@@ -151,6 +157,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|DCONS_POLL_OFFLINE
+value|2
+end_define
+
+begin_comment
+comment|/* sec */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RETRY
 value|3
 end_define
@@ -198,6 +215,14 @@ name|int
 name|tc_set
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|poll_hz
+init|=
+name|DCONS_POLL_HZ
 decl_stmt|;
 end_decl_stmt
 
@@ -1458,7 +1483,9 @@ argument|i; 	u_int32_t ptr[DCONS_NPORT*
 literal|2
 argument|+
 literal|1
-argument|]; 	static int retry = RETRY;  again: 	dlen = dread(dc,&ptr, sizeof(ptr), 		dc->paddr + __offsetof(struct dcons_buf, magic));  	if (dlen<
+argument|]; 	static int retry = RETRY; 	char ebuf[
+literal|64
+argument|];  again: 	dlen = dread(dc,&ptr, sizeof(ptr), 		dc->paddr + __offsetof(struct dcons_buf, magic));  	if (dlen<
 literal|0
 argument|) { 		if (errno == ETIMEDOUT) 			if (retry -->
 literal|0
@@ -1470,11 +1497,17 @@ argument|); 		return(-
 literal|1
 argument|); 	} 	if (ptr[
 literal|0
-argument|] != htonl(DCONS_MAGIC)) { 		dconschat_ready(dc,
+argument|] != htonl(DCONS_MAGIC)) { 		if ((dc->flags& F_USE_CROM) !=
 literal|0
-argument|,
-literal|"wrong magic"
-argument|); 		return(-
+argument|) 			dc->paddr =
+literal|0
+argument|; 		snprintf(ebuf, sizeof(ebuf),
+literal|"wrong magic 0x%08x"
+argument|, ptr[
+literal|0
+argument|]); 		dconschat_ready(dc,
+literal|0
+argument|, ebuf); 		return(-
 literal|1
 argument|); 	} 	retry = RETRY; 	for (i =
 literal|0
@@ -1866,13 +1899,11 @@ argument|;  	while (
 literal|1
 argument|) { 		if ((dc->flags& F_READY) ==
 literal|0
-argument|&& (++counter %
-literal|200
-argument|) ==
+argument|&& 			(++counter % (poll_hz * DCONS_POLL_OFFLINE)) ==
 literal|0
 argument|) 			dconschat_fetch_header(dc); 		if ((dc->flags& F_READY) !=
 literal|0
-argument|) 			 dconschat_proc_dcons(dc); 		dconschat_proc_socket(dc); 	} 	return (
+argument|) 			dconschat_proc_dcons(dc); 		dconschat_proc_socket(dc); 	} 	return (
 literal|0
 argument|); }  static void usage(void) { 	fprintf(stderr,
 literal|"usage: dconschat [-brvwRT1] [-h hz] [-C port] [-G port]\n"
@@ -1897,7 +1928,7 @@ literal|"\t-t	EUI64 of target host (must be specified)\n"
 literal|"\t-a	physical address of dcons buffer on target host\n"
 argument|); 	exit(
 literal|0
-argument|); } int main(int argc, char **argv) { 	struct dcons_state *dc; 	struct fw_eui64 eui; 	char devname[
+argument|); } int main(int argc, char **argv) { 	struct dcons_state *dc; 	struct fw_eui64 eui; 	struct eui64 target; 	char devname[
 literal|256
 argument|]
 argument_list|,
@@ -1912,10 +1943,7 @@ literal|0
 argument_list|,
 argument|wildcard=
 literal|0
-argument_list|,
-argument|poll_hz = DCONS_POLL_HZ; 	int port[DCONS_NPORT]; 	u_int64_t target =
-literal|0
-argument|;  	bzero(&sc, sizeof(sc)); 	dc =&sc; 	dc->flags |= USE_CROM ? F_USE_CROM :
+argument|; 	int port[DCONS_NPORT];  	bzero(&sc, sizeof(sc)); 	dc =&sc; 	dc->flags |= USE_CROM ? F_USE_CROM :
 literal|0
 argument|;
 comment|/* defualt ports */
@@ -1951,17 +1979,19 @@ argument|) 				poll_hz = DCONS_POLL_HZ; 			break; 		case
 literal|'r'
 argument|: 			dc->flags |= F_REPLAY; 			break; 		case
 literal|'t'
-argument|: 			target = strtoull(optarg, NULL,
+argument|: 			if (eui64_hostton(optarg,&target) !=
 literal|0
-argument|); 			eui.hi = target>>
-literal|32
-argument|; 			eui.lo = target& (((u_int64_t)
+argument|&& 			    eui64_aton(optarg,&target) !=
+literal|0
+argument|) 				errx(
 literal|1
-argument|<<
-literal|32
-argument|) -
-literal|1
-argument|); 			dc->type = TYPE_FW; 			break; 		case
+argument|,
+literal|"invalid target: %s"
+argument|, optarg); 			eui.hi = ntohl(*(u_int32_t*)&(target.octet[
+literal|0
+argument|])); 			eui.lo = ntohl(*(u_int32_t*)&(target.octet[
+literal|4
+argument|])); 			dc->type = TYPE_FW; 			break; 		case
 literal|'u'
 argument|: 			unit = strtol(optarg, NULL,
 literal|0
