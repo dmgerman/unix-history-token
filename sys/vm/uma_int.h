@@ -765,7 +765,7 @@ parameter_list|,
 name|cpu
 parameter_list|)
 define|\
-value|mtx_init(&(z)->uz_cpu[(cpu)].uc_lock, (z)->uz_lname, MTX_DEF)
+value|mtx_init(&(z)->uz_cpu[(cpu)].uc_lock, (z)->uz_lname, MTX_DUPOK|MTX_DEF)
 end_define
 
 begin_define

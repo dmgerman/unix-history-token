@@ -1354,6 +1354,8 @@ argument_list|,
 literal|"process lock"
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_DUPOK
 argument_list|)
 expr_stmt|;
 name|intr_init2

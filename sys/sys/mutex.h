@@ -152,6 +152,17 @@ begin_comment
 comment|/* We can sleep with this lock. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MTX_DUPOK
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Don't log a duplicate acquire */
+end_comment
+
 begin_comment
 comment|/*  * Option flags passed to certain lock/unlock routines, through the use  * of corresponding mtx_{lock,unlock}_flags() interface macros.  */
 end_comment

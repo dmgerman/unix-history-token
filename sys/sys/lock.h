@@ -192,6 +192,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LO_DUPOK
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Don't check for duplicate acquires */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LI_RECURSEMASK
 value|0x0000ffff
 end_define

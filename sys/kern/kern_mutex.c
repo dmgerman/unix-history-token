@@ -2546,6 +2546,8 @@ operator||
 name|MTX_SLEEPABLE
 operator||
 name|MTX_NOWITNESS
+operator||
+name|MTX_DUPOK
 operator|)
 operator|)
 operator|==
@@ -2680,6 +2682,18 @@ operator|->
 name|lo_flags
 operator||=
 name|LO_WITNESS
+expr_stmt|;
+if|if
+condition|(
+name|opts
+operator|&
+name|MTX_DUPOK
+condition|)
+name|lock
+operator|->
+name|lo_flags
+operator||=
+name|LO_DUPOK
 expr_stmt|;
 name|m
 operator|->

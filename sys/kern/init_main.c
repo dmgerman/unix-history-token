@@ -1090,6 +1090,8 @@ argument_list|,
 literal|"process group"
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_DUPOK
 argument_list|)
 expr_stmt|;
 name|p
