@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.47 1999/08/13 10:29:26 phk Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.48 1999/08/23 21:07:13 bde Exp $ */
 end_comment
 
 begin_comment
@@ -1559,11 +1559,11 @@ name|ni_vp
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|vn_isdisk
+argument_list|(
 name|devvp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
+argument_list|)
 condition|)
 block|{
 name|vrele
@@ -1574,29 +1574,6 @@ expr_stmt|;
 return|return
 operator|(
 name|ENOTBLK
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|devsw
-argument_list|(
-name|devvp
-operator|->
-name|v_rdev
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|vrele
-argument_list|(
-name|devvp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
 operator|)
 return|;
 block|}
