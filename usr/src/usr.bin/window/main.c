@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.8 83/08/26"
+literal|"@(#)main.c	3.9 83/09/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,10 +511,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|curwin
-operator|=
-name|cmdwin
-expr_stmt|;
 name|wwupdate
 argument_list|()
 expr_stmt|;
@@ -569,9 +565,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|curwin
+name|incmd
 operator|=
-name|selwin
+literal|0
 expr_stmt|;
 name|wwcursor
 argument_list|(
@@ -605,9 +601,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|curwin
-operator|==
-name|cmdwin
+name|incmd
 condition|)
 block|{
 name|docmd
@@ -625,7 +619,7 @@ condition|)
 block|{
 name|wwcurtowin
 argument_list|(
-name|curwin
+name|selwin
 argument_list|)
 expr_stmt|;
 name|wwupdate
@@ -738,7 +732,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-name|curwin
+name|selwin
 operator|->
 name|ww_pty
 argument_list|,
@@ -784,7 +778,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-name|curwin
+name|selwin
 operator|->
 name|ww_pty
 argument_list|,
@@ -803,9 +797,9 @@ name|ibufc
 operator|-=
 name|n
 expr_stmt|;
-name|curwin
+name|incmd
 operator|=
-name|cmdwin
+literal|1
 expr_stmt|;
 break|break;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.3 83/08/25	  */
+comment|/*  *	@(#)defs.h	3.4 83/09/01	  */
 end_comment
 
 begin_include
@@ -181,18 +181,6 @@ comment|/* the window for the box */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|ww
-modifier|*
-name|curwin
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the current window */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|shell
@@ -245,6 +233,16 @@ name|char
 name|debug
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|incmd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in command mode */
+end_comment
 
 begin_decl_stmt
 name|char

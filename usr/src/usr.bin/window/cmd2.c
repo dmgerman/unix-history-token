@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.10 83/08/26"
+literal|"@(#)cmd2.c	3.11 83/09/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -927,12 +927,19 @@ name|struct
 name|ww
 modifier|*
 name|w
+decl_stmt|,
+modifier|*
+name|wp
 decl_stmt|;
 specifier|register
 name|i
 expr_stmt|;
 name|int
 name|n
+decl_stmt|;
+name|char
+modifier|*
+name|msg
 decl_stmt|;
 for|for
 control|(
@@ -979,7 +986,7 @@ argument_list|)
 operator|+
 literal|2
 argument_list|,
-literal|"Active Windows"
+literal|"Windows"
 argument_list|)
 operator|)
 operator|==
@@ -1032,10 +1039,14 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|wp
+operator|=
 name|window
 index|[
 name|i
 index|]
+operator|)
 operator|==
 literal|0
 condition|)
@@ -1047,12 +1058,9 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%c %c   %s\n"
+literal|"%c %c %-13s %-.*s\n"
 argument_list|,
-name|window
-index|[
-name|i
-index|]
+name|wp
 operator|==
 name|selwin
 condition|?
@@ -1064,17 +1072,25 @@ name|i
 operator|+
 literal|'1'
 argument_list|,
-name|window
-index|[
-name|i
-index|]
+name|wp
+operator|->
+name|ww_state
+operator|==
+name|WWS_HASPROC
+condition|?
+literal|""
+else|:
+literal|"(No process)"
+argument_list|,
+name|wwncol
+operator|-
+literal|20
+argument_list|,
+name|wp
 operator|->
 name|ww_label
 condition|?
-name|window
-index|[
-name|i
-index|]
+name|wp
 operator|->
 name|ww_label
 else|:
