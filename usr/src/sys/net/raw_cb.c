@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.17	83/05/27	*/
+comment|/*	raw_cb.c	4.18	83/05/30	*/
 end_comment
 
 begin_include
@@ -492,7 +492,7 @@ name|s_net
 operator|=
 name|spup
 operator|->
-name|sp_net
+name|spup_net
 expr_stmt|;
 name|inpup
 operator|.
@@ -502,7 +502,7 @@ name|s_impno
 operator|=
 name|spup
 operator|->
-name|sp_host
+name|spup_host
 expr_stmt|;
 if|if
 condition|(
