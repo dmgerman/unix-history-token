@@ -7726,7 +7726,7 @@ name|dev
 operator|->
 name|lowspeed
 condition|?
-name|UHCI_TD_LS
+name|UHCI_TD_LOWSPEED
 else|:
 literal|0
 expr_stmt|;
