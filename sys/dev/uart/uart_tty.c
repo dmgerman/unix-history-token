@@ -952,6 +952,8 @@ name|parity
 operator|=
 name|UART_PARITY_NONE
 expr_stmt|;
+if|if
+condition|(
 name|UART_PARAM
 argument_list|(
 name|sc
@@ -966,7 +968,14 @@ name|stopbits
 argument_list|,
 name|parity
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|UART_SETSIG
 argument_list|(
 name|sc
