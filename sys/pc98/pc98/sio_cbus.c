@@ -176,6 +176,55 @@ literal|"RSA-98III"
 block|}
 block|,
 block|{
+literal|0x11802fbf
+block|,
+name|NULL
+block|}
+block|,
+comment|/* OYO8011 - PC-9801-12X */
+block|{
+literal|0x4180a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8041 - PC-9821CB-B04 */
+block|{
+literal|0x4182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8241 - (Nw150) */
+block|{
+literal|0x5181a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8151 - PC-9821CB2-B04 */
+block|{
+literal|0x5182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8251 - PC-9801-12X */
+block|{
+literal|0x7182a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8271 - PC-9801-12X */
+block|{
+literal|0x9181a3b8
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NEC8191 - PC-9801-120 */
+block|{
 literal|0
 block|}
 block|}
@@ -193,14 +242,9 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|PC98
 name|int
 name|logical_id
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* Check isapnp ids */
 if|if
 condition|(
@@ -223,9 +267,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|PC98
 name|logical_id
 operator|=
 name|isa_get_logicalid
@@ -253,9 +294,46 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|0x11802fbf
+case|:
+comment|/* PC-9801-12X */
+case|case
+literal|0x4180a3b8
+case|:
+comment|/* PC-9821CB-B04 */
+case|case
+literal|0x4182a3b8
+case|:
+comment|/* (Nw150) */
+case|case
+literal|0x5181a3b8
+case|:
+comment|/* PC-9821CB2-B04 */
+case|case
+literal|0x5182a3b8
+case|:
+comment|/* PC-9801-12X */
+case|case
+literal|0x7182a3b8
+case|:
+comment|/* PC-9801-12X */
+case|case
+literal|0x9181a3b8
+case|:
+comment|/* PC-9801-120 */
+name|SET_FLAG
+argument_list|(
+name|dev
+argument_list|,
+name|SET_IFTYPE
+argument_list|(
+name|COM_IF_NS16550
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|sioprobe
