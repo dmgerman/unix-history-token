@@ -180,7 +180,7 @@ end_function_decl
 begin_decl_stmt
 name|struct
 name|fs_ops
-name|zipfs_fsops
+name|gzipfs_fsops
 init|=
 block|{
 literal|"zip"

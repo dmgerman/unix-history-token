@@ -396,7 +396,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|fs_ops
-name|zipfs_fsops
+name|gzipfs_fsops
 decl_stmt|;
 end_decl_stmt
 

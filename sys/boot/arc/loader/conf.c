@@ -55,7 +55,7 @@ operator|&
 name|ufs_fsops
 block|,
 operator|&
-name|zipfs_fsops
+name|gzipfs_fsops
 block|,
 name|NULL
 block|}

@@ -136,7 +136,7 @@ block|,
 endif|#
 directive|endif
 operator|&
-name|zipfs_fsops
+name|gzipfs_fsops
 block|,
 name|NULL
 block|}

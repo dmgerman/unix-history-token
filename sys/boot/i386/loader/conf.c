@@ -116,7 +116,7 @@ ifdef|#
 directive|ifdef
 name|LOADER_GZIP_SUPPORT
 operator|&
-name|zipfs_fsops
+name|gzipfs_fsops
 block|,
 endif|#
 directive|endif
