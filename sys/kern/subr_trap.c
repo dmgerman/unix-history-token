@@ -228,7 +228,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"failed to set signal flags proprly for ast()\n"
+literal|"failed to set signal flags properly for ast()\n"
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
