@@ -834,7 +834,7 @@ name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
-literal|"Pentium 4 Ternal Control Circuitry support"
+literal|"Pentium 4 Thermal Control Circuitry support"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
