@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * OMRON: $Id: genassym.c,v 1.2 92/06/14 06:15:25 moti Exp $  *  * from: hp300/hp300/genassym.c	7.11 (Berkeley) 7/8/92  *  *	@(#)genassym.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/genassym.c	7.13 (Berkeley) 12/27/92  *  *	@(#)genassym.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -418,6 +418,18 @@ expr|struct
 name|proc
 argument_list|,
 name|p_flag
+argument_list|)
+expr_stmt|;
+name|off
+argument_list|(
+literal|"P_MDFLAG"
+argument_list|,
+expr|struct
+name|proc
+argument_list|,
+name|p_md
+operator|.
+name|md_flags
 argument_list|)
 expr_stmt|;
 name|def
@@ -894,6 +906,40 @@ argument_list|(
 expr|struct
 name|pcb
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* exception frame offset/sizes */
+name|off
+argument_list|(
+literal|"FR_SP"
+argument_list|,
+expr|struct
+name|frame
+argument_list|,
+name|f_regs
+index|[
+literal|15
+index|]
+argument_list|)
+expr_stmt|;
+name|off
+argument_list|(
+literal|"FR_HW"
+argument_list|,
+expr|struct
+name|frame
+argument_list|,
+name|f_sr
+argument_list|)
+expr_stmt|;
+name|off
+argument_list|(
+literal|"FR_ADJ"
+argument_list|,
+expr|struct
+name|frame
+argument_list|,
+name|f_stackadj
 argument_list|)
 expr_stmt|;
 name|def
