@@ -44,7 +44,7 @@ name|char
 name|RCSid
 index|[]
 init|=
-literal|"$Id: strip.c,v 1.4 1994/12/18 01:18:17 ache Exp $"
+literal|"$Id: strip.c,v 1.5 1995/05/30 06:34:16 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1186,7 +1186,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: strip [-d] file ...\n"
+literal|"usage: strip [-dx] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
