@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rm.c,v 1.4 1994/01/26 19:23:09 ats Exp $"
+literal|"$Id: rm.c,v 1.5 1994/01/26 21:22:58 ats Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -945,15 +945,15 @@ block|{
 comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.  Symbolic links are excluded 		 * because their permissions are meaningless. 		 */
 if|if
 condition|(
+operator|!
+name|stdin_ok
+operator|||
 name|S_ISLNK
 argument_list|(
 name|sp
 operator|->
 name|st_mode
 argument_list|)
-operator|||
-operator|!
-name|stdin_ok
 operator|||
 operator|!
 name|access
