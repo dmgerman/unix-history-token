@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.3	%G%	*/
+comment|/*	conf.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -181,7 +181,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HTTAB
+name|HPTAB
 value|0
 end_define
 
