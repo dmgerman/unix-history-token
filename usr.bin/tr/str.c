@@ -1299,6 +1299,7 @@ operator|*
 name|s
 operator|->
 name|str
+operator|++
 expr_stmt|;
 if|if
 condition|(
