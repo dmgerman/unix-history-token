@@ -82,6 +82,20 @@ end_struct
 begin_define
 define|#
 directive|define
+name|MD_NAME
+value|"md"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDCTL_NAME
+value|"mdctl"
+end_define
+
+begin_define
+define|#
+directive|define
 name|MDIOVERSION
 value|1
 end_define
@@ -110,6 +124,17 @@ end_define
 
 begin_comment
 comment|/* detach disk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDIOCQUERY
+value|_IOWR('m', 2, struct md_ioctl)
+end_define
+
+begin_comment
+comment|/* query status */
 end_comment
 
 begin_define
