@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.21 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * remote login server:  *	\0  *	remuser\0  *	locuser\0  *	terminal_type/speed\0  *	data (not used currently)  */
+comment|/*  * remote login server:  *	\0  *	remuser\0  *	locuser\0  *	terminal_type/speed\0  *	data  */
 end_comment
 
 begin_include
@@ -152,11 +152,23 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<utmp.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TIOCPKT_WINDOW
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_WINDOW
+value|0x80
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -229,8 +241,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|encrypt
-init|=
-literal|0
 decl_stmt|,
 name|retval
 decl_stmt|;
@@ -276,17 +286,10 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|envinit
+name|env
 index|[
 literal|2
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|utmp
-name|utmp
 decl_stmt|;
 end_decl_stmt
 
@@ -294,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|NMAX
-value|sizeof(utmp.ut_name)
+value|30
 end_define
 
 begin_decl_stmt
@@ -355,24 +358,6 @@ name|pwd
 parameter_list|)
 value|((pwd)->pw_uid == 0)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TIOCPKT_WINDOW
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TIOCPKT_WINDOW
-value|0x80
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -934,6 +919,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|do_rlogin
@@ -948,8 +935,6 @@ condition|)
 name|authenticated
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|c
@@ -1339,9 +1324,7 @@ name|hp
 operator|->
 name|h_name
 argument_list|,
-name|pwd
-operator|->
-name|pw_name
+name|lusername
 argument_list|,
 literal|0
 argument_list|)
@@ -1361,9 +1344,7 @@ name|hp
 operator|->
 name|h_name
 argument_list|,
-name|pwd
-operator|->
-name|pw_name
+name|lusername
 argument_list|,
 literal|0
 argument_list|)
@@ -2695,16 +2676,21 @@ expr_stmt|;
 block|}
 end_block
 
-begin_function
-name|int
+begin_macro
 name|do_rlogin
-parameter_list|(
-name|host
-parameter_list|)
+argument_list|(
+argument|host
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|host
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|getstr
 argument_list|(
@@ -2715,7 +2701,7 @@ argument_list|(
 name|rusername
 argument_list|)
 argument_list|,
-literal|"remuser"
+literal|"remuser too long"
 argument_list|)
 expr_stmt|;
 name|getstr
@@ -2727,7 +2713,7 @@ argument_list|(
 name|lusername
 argument_list|)
 argument_list|,
-literal|"locuser"
+literal|"locuser too long"
 argument_list|)
 expr_stmt|;
 name|getstr
@@ -2743,7 +2729,7 @@ argument_list|)
 operator|-
 name|ENVSIZE
 argument_list|,
-literal|"Terminal type"
+literal|"Terminal type too long"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2751,19 +2737,12 @@ condition|(
 name|getuid
 argument_list|()
 condition|)
-block|{
-name|pwd
-operator|=
-operator|&
-name|nouser
-expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|pwd
 operator|=
 name|getpwnam
@@ -2777,26 +2756,12 @@ name|pwd
 operator|==
 name|NULL
 condition|)
-block|{
-name|pwd
-operator|=
-operator|&
-name|nouser
-expr_stmt|;
-name|pwd
-operator|->
-name|pw_name
-operator|=
-name|lusername
-expr_stmt|;
-comment|/* pass on to login */
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|ruserok
@@ -2815,7 +2780,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_macro
 name|getstr
@@ -2824,7 +2789,7 @@ argument|buf
 argument_list|,
 argument|cnt
 argument_list|,
-argument|err
+argument|errmsg
 argument_list|)
 end_macro
 
@@ -2844,7 +2809,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|err
+name|errmsg
 decl_stmt|;
 end_decl_stmt
 
@@ -2881,20 +2846,13 @@ name|cnt
 operator|<
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s too long\r\n"
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
-name|exit
+name|fatal
 argument_list|(
 literal|1
+argument_list|,
+name|errmsg
 argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|buf
 operator|++
@@ -2940,10 +2898,6 @@ name|struct
 name|termios
 name|tt
 decl_stmt|;
-name|struct
-name|sgttyb
-name|tp
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -2957,10 +2911,6 @@ name|ENVSIZE
 argument_list|,
 literal|'/'
 argument_list|)
-decl_stmt|,
-modifier|*
-modifier|*
-name|cpp
 decl_stmt|;
 name|char
 modifier|*
@@ -3066,14 +3016,14 @@ operator|&
 name|tt
 argument_list|)
 expr_stmt|;
-name|envinit
+name|env
 index|[
 literal|0
 index|]
 operator|=
 name|term
 expr_stmt|;
-name|envinit
+name|env
 index|[
 literal|1
 index|]
@@ -3082,7 +3032,7 @@ literal|0
 expr_stmt|;
 name|environ
 operator|=
-name|envinit
+name|env
 expr_stmt|;
 block|}
 end_block
@@ -3104,28 +3054,39 @@ begin_comment
 comment|/*  * Do the remote kerberos login to the named host with the  * given inet address  *  * Return 0 on valid authorization  * Return -1 on valid authentication, no authorization  * Return>0 for error conditions  */
 end_comment
 
-begin_function
-name|int
+begin_macro
 name|do_krb_login
-parameter_list|(
-name|host
-parameter_list|,
-name|dest
-parameter_list|,
-name|encrypt
-parameter_list|)
+argument_list|(
+argument|host
+argument_list|,
+argument|dest
+argument_list|,
+argument|encrypt
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|host
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|sockaddr_in
 modifier|*
 name|dest
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|encrypt
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|int
 name|rc
@@ -3156,18 +3117,11 @@ condition|(
 name|getuid
 argument_list|()
 condition|)
-block|{
-name|pwd
-operator|=
-operator|&
-name|nouser
-expr_stmt|;
 return|return
 operator|(
 name|KFAILURE
 operator|)
 return|;
-block|}
 name|kdata
 operator|=
 operator|(
@@ -3215,19 +3169,12 @@ operator|&
 name|rc
 argument_list|)
 condition|)
-block|{
-name|pwd
-operator|=
-operator|&
-name|nouser
-expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|authopts
 operator|=
 name|KOPT_DO_MUTUAL
@@ -3315,18 +3262,11 @@ name|rc
 operator|!=
 name|KSUCCESS
 condition|)
-block|{
-name|pwd
-operator|=
-operator|&
-name|nouser
-expr_stmt|;
 return|return
 operator|(
 name|rc
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -3342,18 +3282,11 @@ operator|)
 operator|!=
 name|KSUCCESS
 condition|)
-block|{
-name|pwd
-operator|=
-operator|&
-name|nouser
-expr_stmt|;
 return|return
 operator|(
 name|rc
 operator|)
 return|;
-block|}
 name|getstr
 argument_list|(
 name|lusername
@@ -3396,25 +3329,12 @@ name|pwd
 operator|==
 name|NULL
 condition|)
-block|{
-name|pwd
-operator|=
-operator|&
-name|nouser
-expr_stmt|;
-name|pwd
-operator|->
-name|pw_name
-operator|=
-name|lusername
-expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 comment|/* XXX need to use something other than ruserok */
 comment|/* returns -1 for invalid authentication */
 return|return
@@ -3435,12 +3355,16 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERBEROS */
+end_comment
 
 end_unit
 
