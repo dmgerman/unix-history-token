@@ -327,10 +327,10 @@ name|struct
 name|pccard_product
 name|product
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|prodext
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|flags
 decl_stmt|;
 block|}
@@ -1017,13 +1017,13 @@ name|rid
 decl_stmt|,
 name|i
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cisdata
 index|[
 literal|9
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|required
 index|[
 literal|6
@@ -1290,12 +1290,12 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|vendor
 decl_stmt|,
 name|product
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|prodext
 decl_stmt|;
 specifier|const
@@ -2000,7 +2000,7 @@ name|xe_pccard_product
 modifier|*
 name|xpp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|prodext
 decl_stmt|;
 name|DEVPRINTF
@@ -2070,7 +2070,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|fcn
 init|=
 name|PCCARD_FUNCTION_UNSPEC
@@ -2092,7 +2092,7 @@ literal|"pccard_match\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Make sure we're a network driver */
+comment|/* Make sure we're a network function */
 name|error
 operator|=
 name|pccard_get_function
