@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_serv.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_serv.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5518,7 +5518,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * nfs readdir service  * - mallocs what it thinks is enough to read  *	count rounded up to a multiple of DIRBLKSIZ<= MAX_READDIR  * - calls VOP_READDIR()  * - loops arround building the reply  *	if the output generated exceeds count break out of loop  *	The nfsm_clget macro is used here so that the reply will be packed  *	tightly in mbuf clusters.  * - it only knows that it has encountered eof when the VOP_READDIR()  *	reads nothing  * - as such one readdir rpc will return eof false although you are there  *	and then the next will return eof  * - it trims out records with d_ino == 0  *	this doesn't matter for Unix clients, but they might confuse clients  *	for other os'.  * NB: It is tempting to set eof to true if the VOP_READDIR() reads less  *	than requested, but this may not apply to all filesystems. For  *	example, client NFS does not { although it is never remote mounted  *	anyhow }  * PS: The NFS protocol spec. does not clarify what the "count" byte  *	argument is a count of.. just name strings and file id's or the  *	entire reply rpc or ...  *	I tried just file name and id sizes and it confused the Sun client,  *	so I am using the full rpc size now. The "paranoia.." comment refers  *	to including the status longwords that are not a part of the dir.  *	"entry" structures, but are in the rpc.  */
+comment|/*  * nfs readdir service  * - mallocs what it thinks is enough to read  *	count rounded up to a multiple of DIRBLKSIZ<= MAX_READDIR  * - calls VOP_READDIR()  * - loops around building the reply  *	if the output generated exceeds count break out of loop  *	The nfsm_clget macro is used here so that the reply will be packed  *	tightly in mbuf clusters.  * - it only knows that it has encountered eof when the VOP_READDIR()  *	reads nothing  * - as such one readdir rpc will return eof false although you are there  *	and then the next will return eof  * - it trims out records with d_ino == 0  *	this doesn't matter for Unix clients, but they might confuse clients  *	for other os'.  * NB: It is tempting to set eof to true if the VOP_READDIR() reads less  *	than requested, but this may not apply to all filesystems. For  *	example, client NFS does not { although it is never remote mounted  *	anyhow }  * PS: The NFS protocol spec. does not clarify what the "count" byte  *	argument is a count of.. just name strings and file id's or the  *	entire reply rpc or ...  *	I tried just file name and id sizes and it confused the Sun client,  *	so I am using the full rpc size now. The "paranoia.." comment refers  *	to including the status longwords that are not a part of the dir.  *	"entry" structures, but are in the rpc.  */
 end_comment
 
 begin_macro
@@ -6045,6 +6045,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* 	 * Check for degenerate cases of nothing useful read. 	 * If so go try again 	 */
 name|cpos
 operator|=
 name|rbuf
@@ -6066,30 +6067,40 @@ operator|*
 operator|)
 name|cpos
 expr_stmt|;
-comment|/* 	 * Check for degenerate cases of nothing useful read. 	 * If so  go try again 	 */
-if|if
+while|while
 condition|(
 name|cpos
-operator|>=
+operator|<
 name|cend
-operator|||
-operator|(
+operator|&&
 name|dp
 operator|->
 name|d_ino
 operator|==
 literal|0
-operator|&&
-operator|(
+condition|)
+block|{
 name|cpos
-operator|+
+operator|+=
 name|dp
 operator|->
 name|d_reclen
+expr_stmt|;
+name|dp
+operator|=
+operator|(
+expr|struct
+name|direct
+operator|*
 operator|)
+name|cpos
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|cpos
 operator|>=
 name|cend
-operator|)
 condition|)
 block|{
 name|toff
@@ -6108,6 +6119,27 @@ goto|goto
 name|again
 goto|;
 block|}
+name|cpos
+operator|=
+name|rbuf
+operator|+
+name|on
+expr_stmt|;
+name|cend
+operator|=
+name|rbuf
+operator|+
+name|siz
+expr_stmt|;
+name|dp
+operator|=
+operator|(
+expr|struct
+name|direct
+operator|*
+operator|)
+name|cpos
+expr_stmt|;
 name|vrele
 argument_list|(
 name|vp
