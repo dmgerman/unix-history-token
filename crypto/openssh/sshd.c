@@ -402,6 +402,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Indicates that a key-regeneration alarm occured.  */
+end_comment
+
+begin_decl_stmt
+specifier|volatile
+name|int
+name|received_regeneration
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Any really sensitive data in the application is contained in this  * structure. The idea is that this structure could be locked into memory so  * that the pages do not get written into swap.  However, there are some  * problems. The private key contains BIGNUMs, and we do not (in principle)  * have access to the internals of them, and locking just the structure is  * not very useful.  Currently, memory locking is not implemented.  */
 end_comment
 
@@ -802,14 +813,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Signal handler for the key regeneration alarm.  Note that this  * alarm only occurs in the daemon waiting for connections, and it does not  * do anything with the private key or random state before forking.  * Thus there should be no concurrency control/asynchronous execution  * problems.  */
-end_comment
-
-begin_comment
-comment|/* XXX do we really want this work to be done in a signal handler ? -m */
-end_comment
-
 begin_function
 name|void
 name|key_regeneration_alarm
@@ -818,11 +821,43 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|int
-name|save_errno
-init|=
-name|errno
-decl_stmt|;
+name|received_regeneration
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Reschedule the alarm. */
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|key_regeneration_alarm
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+name|options
+operator|.
+name|key_regeneration_time
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Regenerate the keys.  Note that this alarm only occurs in the daemon  * waiting for connections, and it does not do anything with the  * private key or random state before forking.  However, it calls routines  * which may malloc() so we do not call this routine directly from the   * signal handler.  */
+end_comment
+
+begin_function
+name|void
+name|key_regeneration
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|received_regeneration
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Check if we should generate a new key. */
 if|if
 condition|(
@@ -903,25 +938,6 @@ literal|"RSA key generation complete."
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Reschedule the alarm. */
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|key_regeneration_alarm
-argument_list|)
-expr_stmt|;
-name|alarm
-argument_list|(
-name|options
-operator|.
-name|key_regeneration_time
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|save_errno
-expr_stmt|;
 block|}
 end_function
 
@@ -3463,6 +3479,13 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|received_regeneration
+condition|)
+name|key_regeneration
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|fdset
 operator|!=
 name|NULL
@@ -4061,6 +4084,10 @@ name|SIGALRM
 argument_list|,
 name|SIG_DFL
 argument_list|)
+expr_stmt|;
+name|received_regeneration
+operator|=
+literal|0
 expr_stmt|;
 name|signal
 argument_list|(
