@@ -1462,23 +1462,17 @@ block|{
 comment|/* 	 * td will only be NULL when we're in an interrupt 	 * (e.g. in tcp_input()) 	 */
 if|if
 condition|(
-operator|(
-name|u_quad_t
-operator|)
 name|cc
 operator|>
-operator|(
-name|u_quad_t
-operator|)
 name|sb_max
-operator|*
-name|MCLBYTES
 operator|/
 operator|(
 name|MSIZE
 operator|+
 name|MCLBYTES
 operator|)
+operator|*
+name|MCLBYTES
 condition|)
 return|return
 operator|(
