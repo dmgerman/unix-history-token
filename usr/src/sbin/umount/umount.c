@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)umount.c	4.5 (Berkeley) %G%"
+literal|"@(#)umount.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,6 +152,10 @@ name|again
 label|:
 if|if
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -177,6 +181,10 @@ goto|;
 block|}
 if|if
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
