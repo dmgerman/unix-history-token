@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rt6.c,v 1.3.2.1 2000/01/11 06:58:26 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rt6.c,v 1.17 2000/12/13 07:57:05 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,61 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_icmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
 end_include
 
 begin_include
@@ -141,7 +87,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip6.h>
+file|"ip6.h"
 end_include
 
 begin_include
@@ -205,6 +151,13 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
+specifier|register
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+name|addr
+decl_stmt|;
 name|dp
 operator|=
 operator|(
@@ -229,32 +182,17 @@ name|dp
 operator|->
 name|ip6r_len
 expr_stmt|;
-comment|/* 'ep' points to the end of avaible data. */
+comment|/* 'ep' points to the end of available data. */
 name|ep
 operator|=
 name|snapend
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s> %s: "
-argument_list|,
-name|ip6addr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip6_src
-argument_list|)
-argument_list|,
-name|ip6addr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip6_dst
-argument_list|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("%s> %s: ", 	       ip6addr_string(&ip->ip6_src), 	       ip6addr_string(&ip->ip6_dst));
+endif|#
+directive|endif
 name|TCHECK
 argument_list|(
 name|dp
@@ -264,16 +202,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"srcrt (len=%d, "
+literal|"srcrt (len=%d"
 argument_list|,
 name|dp
 operator|->
 name|ip6r_len
 argument_list|)
 expr_stmt|;
+comment|/*)*/
 name|printf
 argument_list|(
-literal|"type=%d, "
+literal|", type=%d"
 argument_list|,
 name|dp
 operator|->
@@ -282,7 +221,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"segleft=%d, "
+literal|", segleft=%d"
 argument_list|,
 name|dp
 operator|->
@@ -296,6 +235,15 @@ operator|->
 name|ip6r_type
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|IPV6_RTHDR_TYPE_0
+define|#
+directive|define
+name|IPV6_RTHDR_TYPE_0
+value|0
+endif|#
+directive|endif
 case|case
 name|IPV6_RTHDR_TYPE_0
 case|:
@@ -326,7 +274,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"rsv=0x%0x, "
+literal|", rsv=0x%0x"
 argument_list|,
 operator|(
 name|u_int32_t
@@ -355,6 +303,16 @@ name|len
 operator|>>=
 literal|1
 expr_stmt|;
+name|addr
+operator|=
+operator|&
+name|dp0
+operator|->
+name|ip6r0_addr
+index|[
+literal|0
+index|]
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -369,80 +327,43 @@ name|i
 operator|++
 control|)
 block|{
-name|struct
-name|in6_addr
-modifier|*
-name|addr
-decl_stmt|;
-name|addr
-operator|=
-operator|(
-operator|(
-expr|struct
-name|in6_addr
-operator|*
-operator|)
-operator|(
-name|dp0
-operator|+
-literal|1
-operator|)
-operator|)
-operator|+
-name|i
-expr_stmt|;
 if|if
 condition|(
 operator|(
 name|u_char
 operator|*
 operator|)
+operator|(
 name|addr
+operator|+
+literal|1
+operator|)
 operator|>
 name|ep
-operator|-
-sizeof|sizeof
-argument_list|(
-operator|*
-name|addr
-argument_list|)
 condition|)
 goto|goto
 name|trunc
 goto|;
 name|printf
 argument_list|(
-literal|"[%d]%s"
+literal|", [%d]%s"
 argument_list|,
 name|i
 argument_list|,
 name|ip6addr_string
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|!=
-name|len
-operator|-
-literal|1
-condition|)
-name|printf
-argument_list|(
-literal|", "
-argument_list|)
+name|addr
+operator|++
 expr_stmt|;
 block|}
+comment|/*(*/
 name|printf
 argument_list|(
-literal|")"
+literal|") "
 argument_list|)
 expr_stmt|;
 return|return

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-krb.c,v 1.12 1999/11/21 09:36:55 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-krb.c,v 1.15 2000/09/29 04:58:42 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,36 +64,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
 end_include
 
 begin_include

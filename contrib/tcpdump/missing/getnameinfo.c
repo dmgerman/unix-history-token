@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/getnameinfo.c,v 1.3.2.2 2000/01/25 18:39:03 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/getnameinfo.c,v 1.8 2000/10/24 00:56:53 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,23 +111,6 @@ include|#
 directive|include
 file|<errno.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_PORTABLE_PROTOTYPE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"cdecl_ext.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -589,6 +572,8 @@ name|sp
 operator|->
 name|s_name
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|servlen
 condition|)
@@ -607,9 +592,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|numserv
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|numserv
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -625,6 +615,8 @@ name|strlen
 argument_list|(
 name|numserv
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|servlen
 condition|)
@@ -866,6 +858,8 @@ name|strlen
 argument_list|(
 name|numaddr
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|hostlen
 condition|)
@@ -1107,6 +1101,8 @@ name|hp
 operator|->
 name|h_name
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|hostlen
 condition|)
@@ -1185,6 +1181,8 @@ name|strlen
 argument_list|(
 name|numaddr
 argument_list|)
+operator|+
+literal|1
 operator|>
 name|hostlen
 condition|)

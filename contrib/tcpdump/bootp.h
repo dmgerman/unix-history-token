@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/bootp.h,v 1.8 1999/10/17 23:35:46 mcr Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/bootp.h,v 1.10 2000/12/03 23:42:23 fenner Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -11,23 +11,19 @@ begin_struct
 struct|struct
 name|bootp
 block|{
-name|unsigned
-name|char
+name|u_int8_t
 name|bp_op
 decl_stmt|;
 comment|/* packet opcode type */
-name|unsigned
-name|char
+name|u_int8_t
 name|bp_htype
 decl_stmt|;
 comment|/* hardware addr type */
-name|unsigned
-name|char
+name|u_int8_t
 name|bp_hlen
 decl_stmt|;
 comment|/* hardware addr length */
-name|unsigned
-name|char
+name|u_int8_t
 name|bp_hops
 decl_stmt|;
 comment|/* gateway hops */
@@ -35,13 +31,11 @@ name|u_int32_t
 name|bp_xid
 decl_stmt|;
 comment|/* transaction ID */
-name|unsigned
-name|short
+name|u_int16_t
 name|bp_secs
 decl_stmt|;
 comment|/* seconds since boot began */
-name|unsigned
-name|short
+name|u_int16_t
 name|bp_flags
 decl_stmt|;
 comment|/* flags: 0x8000 is broadcast */
@@ -65,32 +59,28 @@ name|in_addr
 name|bp_giaddr
 decl_stmt|;
 comment|/* gateway IP address */
-name|unsigned
-name|char
+name|u_int8_t
 name|bp_chaddr
 index|[
 literal|16
 index|]
 decl_stmt|;
 comment|/* client hardware address */
-name|unsigned
-name|char
+name|u_int8_t
 name|bp_sname
 index|[
 literal|64
 index|]
 decl_stmt|;
 comment|/* server host name */
-name|unsigned
-name|char
+name|u_int8_t
 name|bp_file
 index|[
 literal|128
 index|]
 decl_stmt|;
 comment|/* boot file name */
-name|unsigned
-name|char
+name|u_int8_t
 name|bp_vend
 index|[
 literal|64
@@ -166,105 +156,105 @@ begin_define
 define|#
 directive|define
 name|TAG_PAD
-value|((unsigned char)   0)
+value|((u_int8_t)   0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_SUBNET_MASK
-value|((unsigned char)   1)
+value|((u_int8_t)   1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_TIME_OFFSET
-value|((unsigned char)   2)
+value|((u_int8_t)   2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_GATEWAY
-value|((unsigned char)   3)
+value|((u_int8_t)   3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_TIME_SERVER
-value|((unsigned char)   4)
+value|((u_int8_t)   4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NAME_SERVER
-value|((unsigned char)   5)
+value|((u_int8_t)   5)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_DOMAIN_SERVER
-value|((unsigned char)   6)
+value|((u_int8_t)   6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_LOG_SERVER
-value|((unsigned char)   7)
+value|((u_int8_t)   7)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_COOKIE_SERVER
-value|((unsigned char)   8)
+value|((u_int8_t)   8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_LPR_SERVER
-value|((unsigned char)   9)
+value|((u_int8_t)   9)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_IMPRESS_SERVER
-value|((unsigned char)  10)
+value|((u_int8_t)  10)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_RLP_SERVER
-value|((unsigned char)  11)
+value|((u_int8_t)  11)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_HOSTNAME
-value|((unsigned char)  12)
+value|((u_int8_t)  12)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_BOOTSIZE
-value|((unsigned char)  13)
+value|((u_int8_t)  13)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_END
-value|((unsigned char) 255)
+value|((u_int8_t) 255)
 end_define
 
 begin_comment
@@ -275,35 +265,35 @@ begin_define
 define|#
 directive|define
 name|TAG_DUMPPATH
-value|((unsigned char)  14)
+value|((u_int8_t)  14)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_DOMAINNAME
-value|((unsigned char)  15)
+value|((u_int8_t)  15)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_SWAP_SERVER
-value|((unsigned char)  16)
+value|((u_int8_t)  16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_ROOTPATH
-value|((unsigned char)  17)
+value|((u_int8_t)  17)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_EXTPATH
-value|((unsigned char)  18)
+value|((u_int8_t)  18)
 end_define
 
 begin_comment
@@ -314,294 +304,294 @@ begin_define
 define|#
 directive|define
 name|TAG_IP_FORWARD
-value|((unsigned char)  19)
+value|((u_int8_t)  19)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NL_SRCRT
-value|((unsigned char)  20)
+value|((u_int8_t)  20)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_PFILTERS
-value|((unsigned char)  21)
+value|((u_int8_t)  21)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_REASS_SIZE
-value|((unsigned char)  22)
+value|((u_int8_t)  22)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_DEF_TTL
-value|((unsigned char)  23)
+value|((u_int8_t)  23)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_MTU_TIMEOUT
-value|((unsigned char)  24)
+value|((u_int8_t)  24)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_MTU_TABLE
-value|((unsigned char)  25)
+value|((u_int8_t)  25)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_INT_MTU
-value|((unsigned char)  26)
+value|((u_int8_t)  26)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_LOCAL_SUBNETS
-value|((unsigned char)  27)
+value|((u_int8_t)  27)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_BROAD_ADDR
-value|((unsigned char)  28)
+value|((u_int8_t)  28)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_DO_MASK_DISC
-value|((unsigned char)  29)
+value|((u_int8_t)  29)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_SUPPLY_MASK
-value|((unsigned char)  30)
+value|((u_int8_t)  30)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_DO_RDISC
-value|((unsigned char)  31)
+value|((u_int8_t)  31)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_RTR_SOL_ADDR
-value|((unsigned char)  32)
+value|((u_int8_t)  32)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_STATIC_ROUTE
-value|((unsigned char)  33)
+value|((u_int8_t)  33)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_USE_TRAILERS
-value|((unsigned char)  34)
+value|((u_int8_t)  34)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_ARP_TIMEOUT
-value|((unsigned char)  35)
+value|((u_int8_t)  35)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_ETH_ENCAP
-value|((unsigned char)  36)
+value|((u_int8_t)  36)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_TCP_TTL
-value|((unsigned char)  37)
+value|((u_int8_t)  37)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_TCP_KEEPALIVE
-value|((unsigned char)  38)
+value|((u_int8_t)  38)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_KEEPALIVE_GO
-value|((unsigned char)  39)
+value|((u_int8_t)  39)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NIS_DOMAIN
-value|((unsigned char)  40)
+value|((u_int8_t)  40)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NIS_SERVERS
-value|((unsigned char)  41)
+value|((u_int8_t)  41)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NTP_SERVERS
-value|((unsigned char)  42)
+value|((u_int8_t)  42)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_VENDOR_OPTS
-value|((unsigned char)  43)
+value|((u_int8_t)  43)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NETBIOS_NS
-value|((unsigned char)  44)
+value|((u_int8_t)  44)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NETBIOS_DDS
-value|((unsigned char)  45)
+value|((u_int8_t)  45)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NETBIOS_NODE
-value|((unsigned char)  46)
+value|((u_int8_t)  46)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NETBIOS_SCOPE
-value|((unsigned char)  47)
+value|((u_int8_t)  47)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_XWIN_FS
-value|((unsigned char)  48)
+value|((u_int8_t)  48)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_XWIN_DM
-value|((unsigned char)  49)
+value|((u_int8_t)  49)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NIS_P_DOMAIN
-value|((unsigned char)  64)
+value|((u_int8_t)  64)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NIS_P_SERVERS
-value|((unsigned char)  65)
+value|((u_int8_t)  65)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_MOBILE_HOME
-value|((unsigned char)  68)
+value|((u_int8_t)  68)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_SMPT_SERVER
-value|((unsigned char)  69)
+value|((u_int8_t)  69)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_POP3_SERVER
-value|((unsigned char)  70)
+value|((u_int8_t)  70)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_NNTP_SERVER
-value|((unsigned char)  71)
+value|((u_int8_t)  71)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_WWW_SERVER
-value|((unsigned char)  72)
+value|((u_int8_t)  72)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_FINGER_SERVER
-value|((unsigned char)  73)
+value|((u_int8_t)  73)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_IRC_SERVER
-value|((unsigned char)  74)
+value|((u_int8_t)  74)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_STREETTALK_SRVR
-value|((unsigned char)  75)
+value|((u_int8_t)  75)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_STREETTALK_STDA
-value|((unsigned char)  76)
+value|((u_int8_t)  76)
 end_define
 
 begin_comment
@@ -612,98 +602,364 @@ begin_define
 define|#
 directive|define
 name|TAG_REQUESTED_IP
-value|((unsigned char)  50)
+value|((u_int8_t)  50)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_IP_LEASE
-value|((unsigned char)  51)
+value|((u_int8_t)  51)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_OPT_OVERLOAD
-value|((unsigned char)  52)
+value|((u_int8_t)  52)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_TFTP_SERVER
-value|((unsigned char)  66)
+value|((u_int8_t)  66)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_BOOTFILENAME
-value|((unsigned char)  67)
+value|((u_int8_t)  67)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_DHCP_MESSAGE
-value|((unsigned char)  53)
+value|((u_int8_t)  53)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_SERVER_ID
-value|((unsigned char)  54)
+value|((u_int8_t)  54)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_PARM_REQUEST
-value|((unsigned char)  55)
+value|((u_int8_t)  55)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_MESSAGE
-value|((unsigned char)  56)
+value|((u_int8_t)  56)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_MAX_MSG_SIZE
-value|((unsigned char)  57)
+value|((u_int8_t)  57)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_RENEWAL_TIME
-value|((unsigned char)  58)
+value|((u_int8_t)  58)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_REBIND_TIME
-value|((unsigned char)  59)
+value|((u_int8_t)  59)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_VENDOR_CLASS
-value|((unsigned char)  60)
+value|((u_int8_t)  60)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TAG_CLIENT_ID
-value|((unsigned char)  61)
+value|((u_int8_t)  61)
+end_define
+
+begin_comment
+comment|/* RFC 2241 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAG_NDS_SERVERS
+value|((u_int8_t)  85)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_NDS_TREE_NAME
+value|((u_int8_t)  86)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_NDS_CONTEXT
+value|((u_int8_t)  87)
+end_define
+
+begin_comment
+comment|/* RFC 2485 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAG_OPEN_GROUP_UAP
+value|((u_int8_t)  98)
+end_define
+
+begin_comment
+comment|/* RFC 2563 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAG_DISABLE_AUTOCONF
+value|((u_int8_t) 116)
+end_define
+
+begin_comment
+comment|/* RFC 2610 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAG_SLP_DA
+value|((u_int8_t)  78)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_SLP_SCOPE
+value|((u_int8_t)  79)
+end_define
+
+begin_comment
+comment|/* RFC 2937 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAG_NS_SEARCH
+value|((u_int8_t) 117)
+end_define
+
+begin_comment
+comment|/* RFC 3011 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAG_IP4_SUBNET_SELECT
+value|((u_int8_t) 118)
+end_define
+
+begin_comment
+comment|/* ftp://ftp.isi.edu/.../assignments/bootp-dhcp-extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAG_USER_CLASS
+value|((u_int8_t)  77)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_SLP_NAMING_AUTH
+value|((u_int8_t)  80)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_CLIENT_FQDN
+value|((u_int8_t)  81)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_AGENT_CIRCUIT
+value|((u_int8_t)  82)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_AGENT_REMOTE
+value|((u_int8_t)  83)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_AGENT_MASK
+value|((u_int8_t)  84)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_TZ_STRING
+value|((u_int8_t)  88)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_FQDN_OPTION
+value|((u_int8_t)  89)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_AUTH
+value|((u_int8_t)  90)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_VINES_SERVERS
+value|((u_int8_t)  91)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_SERVER_RANK
+value|((u_int8_t)  92)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_CLIENT_ARCH
+value|((u_int8_t)  93)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_CLIENT_NDI
+value|((u_int8_t)  94)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_CLIENT_GUID
+value|((u_int8_t)  97)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_LDAP_URL
+value|((u_int8_t)  95)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_6OVER4
+value|((u_int8_t)  96)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_PRINTER_NAME
+value|((u_int8_t) 100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_MDHCP_SERVER
+value|((u_int8_t) 101)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_IPX_COMPAT
+value|((u_int8_t) 110)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_NETINFO_PARENT
+value|((u_int8_t) 112)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_NETINFO_PARENT_TAG
+value|((u_int8_t) 113)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_URL
+value|((u_int8_t) 114)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_FAILOVER
+value|((u_int8_t) 115)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_EXTENDED_REQUEST
+value|((u_int8_t) 126)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_EXTENDED_OPTION
+value|((u_int8_t) 127)
 end_define
 
 begin_comment
@@ -774,8 +1030,7 @@ begin_struct
 struct|struct
 name|cmu_vend
 block|{
-name|unsigned
-name|char
+name|u_int8_t
 name|v_magic
 index|[
 literal|4
@@ -817,8 +1072,7 @@ decl_stmt|,
 name|v_ts2
 decl_stmt|;
 comment|/* Time servers */
-name|unsigned
-name|char
+name|u_int8_t
 name|v_unused
 index|[
 literal|24

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/smb.h,v 1.3 2000/12/17 23:07:50 guy Exp $ (LBL) */
+end_comment
+
+begin_comment
 comment|/*     Copyright (C) Andrew Tridgell 1995-1999     This software may be distributed either under the terms of the    BSD-style license that accompanies tcpdump or the GNU GPL version 2    or later */
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993, 1994, 1995, 1996, 1997  *      The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * L2TP support contributed by Motonori Shindo (mshindo@ascend.co.jp)  */
+comment|/*  * Copyright (c) 1991, 1993, 1994, 1995, 1996, 1997  *      The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * L2TP support contributed by Motonori Shindo (mshindo@mshindo.net)  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-l2tp.c,v 1.6 1999/12/22 06:27:21 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-l2tp.c,v 1.8 2000/08/18 07:44:46 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1721,19 +1721,14 @@ name|u_int
 name|length
 parameter_list|)
 block|{
-name|printf
+name|print_octets
 argument_list|(
-literal|"%lx"
-argument_list|,
-operator|*
-operator|(
-name|u_long
-operator|*
-operator|)
 name|dat
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
+comment|/* Tie Break Value is 64bits long */
 block|}
 end_function
 
@@ -2960,10 +2955,10 @@ name|ptr
 argument_list|)
 condition|)
 block|{
-comment|/* IETF == 0 */
+comment|/* Vendor Specific Attribute */
 name|printf
 argument_list|(
-literal|"vendor=%04x"
+literal|"VENDOR%04x:"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -2972,7 +2967,49 @@ name|ptr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ptr
+operator|++
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ATTR%04x"
+argument_list|,
+name|ntohs
+argument_list|(
+operator|*
+name|ptr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"("
+argument_list|)
+expr_stmt|;
+name|print_octets
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ptr
+operator|+
+literal|2
+argument_list|,
+name|len
+operator|-
+literal|6
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|")"
+argument_list|)
+expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* IETF-defined Attribute */
 name|ptr
 operator|++
 expr_stmt|;
@@ -3068,6 +3105,7 @@ name|ptr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|l2tp_avp_print
 argument_list|(
@@ -3527,19 +3565,29 @@ block|}
 block|}
 else|else
 block|{
-if|#
-directive|if
-literal|0
-block|printf(" {"); 		ppp_hdlc_print((u_char *)ptr, length - cnt); 		printf("}");
-else|#
-directive|else
 name|printf
 argument_list|(
-literal|"[hdlc|]"
+literal|" {"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|ppp_print
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ptr
+argument_list|,
+name|length
+operator|-
+name|cnt
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"}"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Rx protocol format  *  * $Id: rx.h,v 1.1 1999/11/17 05:45:58 assar Exp $  */
+comment|/*  * Rx protocol format  *  * $Id: rx.h,v 1.3 2000/10/03 02:55:02 itojun Exp $  */
 end_comment
 
 begin_define
@@ -223,7 +223,7 @@ decl_stmt|;
 name|u_int32_t
 name|serial
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|type
 decl_stmt|;
 define|#
@@ -266,7 +266,7 @@ define|#
 directive|define
 name|RX_PACKET_TYPE_VERSION
 value|13
-name|u_char
+name|u_int8_t
 name|flags
 decl_stmt|;
 define|#
@@ -289,17 +289,17 @@ define|#
 directive|define
 name|RX_FREE_PACKET
 value|16
-name|u_char
+name|u_int8_t
 name|userStatus
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|securityIndex
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|spare
 decl_stmt|;
 comment|/* How clever: even though the AFS */
-name|u_short
+name|u_int16_t
 name|serviceId
 decl_stmt|;
 comment|/* header files indicate that the */
@@ -325,6 +325,83 @@ directive|define
 name|NUM_RX_FLAGS
 value|5
 end_define
+
+begin_define
+define|#
+directive|define
+name|RX_MAXACKS
+value|255
+end_define
+
+begin_struct
+struct|struct
+name|rx_ackPacket
+block|{
+name|u_int16_t
+name|bufferSpace
+decl_stmt|;
+comment|/* Number of packet buffers available */
+name|u_int16_t
+name|maxSkew
+decl_stmt|;
+comment|/* Max diff between ack'd packet and */
+comment|/* highest packet received */
+name|u_int32_t
+name|firstPacket
+decl_stmt|;
+comment|/* The first packet in ack list */
+name|u_int32_t
+name|previousPacket
+decl_stmt|;
+comment|/* Previous packet recv'd (obsolete) */
+name|u_int32_t
+name|serial
+decl_stmt|;
+comment|/* # of packet that prompted the ack */
+name|u_int8_t
+name|reason
+decl_stmt|;
+comment|/* Reason for acknowledgement */
+name|u_int8_t
+name|nAcks
+decl_stmt|;
+comment|/* Number of acknowledgements */
+name|u_int8_t
+name|acks
+index|[
+name|RX_MAXACKS
+index|]
+decl_stmt|;
+comment|/* Up to RX_MAXACKS acknowledgements */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Values for the acks array  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RX_ACK_TYPE_NACK
+value|0
+end_define
+
+begin_comment
+comment|/* Don't have this packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RX_ACK_TYPE_ACK
+value|1
+end_define
+
+begin_comment
+comment|/* I have this packet */
+end_comment
 
 end_unit
 

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/bpf_dump.c,v 1.10 1999/11/21 09:36:44 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/bpf_dump.c,v 1.13 2000/12/09 02:58:45 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,20 +71,6 @@ include|#
 directive|include
 file|"interface.h"
 end_include
-
-begin_function_decl
-specifier|extern
-name|void
-name|bpf_dump
-parameter_list|(
-name|struct
-name|bpf_program
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void

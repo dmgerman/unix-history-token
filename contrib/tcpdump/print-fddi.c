@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-fddi.c,v 1.40 1999/12/14 16:49:02 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-fddi.c,v 1.50 2000/12/23 20:48:13 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,57 +72,10 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|rtentry
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -171,6 +124,12 @@ begin_include
 include|#
 directive|include
 file|"ethertype.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ether.h"
 end_include
 
 begin_include
@@ -236,13 +195,6 @@ end_endif
 begin_comment
 comment|/*  * FDDI support for tcpdump, by Jeffrey Mogul [DECWRL], June 1992  *  * Based in part on code by Van Jacobson, which bears this note:  *  * NOTE:  This is a very preliminary hack for FDDI support.  * There are all sorts of wired in constants& nothing (yet)  * to print SMT packets as anything other than hex dumps.  * Most of the necessary changes are waiting on my redoing  * the "header" that a kernel fddi driver supplies to bpf:  I  * want it to look like one byte of 'direction' (0 or 1  * depending on whether the packet was inbound or outbound),  * two bytes of system/driver dependent data (anything an  * implementor thinks would be useful to filter on and/or  * save per-packet, then the real 21-byte FDDI header.  * Steve McCanne& I have also talked about adding the  * 'direction' byte to all bpf headers (e.g., in the two  * bytes of padding on an ethernet header).  It's not clear  * we could do this in a backwards compatible way& we hate  * the idea of an incompatible bpf change.  Discussions are  * proceeding.  *  * Also, to really support FDDI (and better support 802.2  * over ethernet) we really need to re-think the rather simple  * minded assumptions about fixed length& fixed format link  * level headers made in gencode.c.  One day...  *  *  - vj  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|FDDI_HDRLEN
-value|(sizeof(struct fddi_header))
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -1345,7 +1297,7 @@ name|p
 operator|+
 name|caplen
 expr_stmt|;
-comment|/* 	 * Actually, the only printer that uses packetp is print-bootp.c, 	 * and it assumes that packetp points to an Ethernet header.  The 	 * right thing to do is to fix print-bootp.c to know which link 	 * type is in use when it excavates. XXX 	 */
+comment|/* 	 * Actually, the only printers that use packetp are print-arp.c 	 * and print-bootp.c, and they assume that packetp points to an 	 * Ethernet header.  The right thing to do is to fix them to know 	 * which link type is in use when they excavate. XXX 	 */
 name|packetp
 operator|=
 operator|(
@@ -1431,6 +1383,9 @@ argument_list|(
 operator|&
 name|ehdr
 argument_list|)
+argument_list|,
+operator|&
+name|extracted_ethertype
 argument_list|)
 operator|==
 literal|0
@@ -1447,6 +1402,8 @@ argument_list|(
 name|fddip
 argument_list|,
 name|length
+operator|+
+name|FDDI_HDRLEN
 argument_list|,
 name|ESRC
 argument_list|(
@@ -1530,6 +1487,8 @@ argument_list|(
 name|fddip
 argument_list|,
 name|length
+operator|+
+name|FDDI_HDRLEN
 argument_list|,
 name|ESRC
 argument_list|(

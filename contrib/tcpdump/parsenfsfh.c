@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/parsenfsfh.c,v 1.16 1999/11/21 09:36:47 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/parsenfsfh.c,v 1.18 2000/07/01 03:39:00 assar Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,23 +59,6 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_MEMORY_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<memory.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -423,6 +406,9 @@ name|int
 name|fhtype
 init|=
 name|FHT_UNKNOWN
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -2010,7 +1996,6 @@ case|:
 ifdef|#
 directive|ifdef
 name|DEBUG
-block|{
 comment|/* XXX debugging */
 name|int
 name|i
@@ -2053,10 +2038,48 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* XXX for now, give "bogus" values to aid debugging */
+comment|/* Save the actual handle, so it can be display with -u */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|32
+condition|;
+name|i
+operator|++
+control|)
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+operator|&
+operator|(
+name|fsidp
+operator|->
+name|Opaque_Handle
+index|[
+name|i
+operator|*
+literal|2
+index|]
+operator|)
+argument_list|,
+literal|"%.2X"
+argument_list|,
+name|fhp
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|fsidp
 operator|->
 name|fsid_code

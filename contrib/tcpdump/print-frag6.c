@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-frag6.c,v 1.3.2.1 2000/01/11 06:58:24 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-frag6.c,v 1.12 2000/10/07 05:53:10 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,61 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_icmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
 end_include
 
 begin_include
@@ -141,7 +87,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip6.h>
+file|"ip6.h"
 end_include
 
 begin_include
@@ -223,7 +169,7 @@ operator|*
 operator|)
 name|bp2
 expr_stmt|;
-comment|/* 'ep' points to the end of avaible data. */
+comment|/* 'ep' points to the end of available data. */
 name|ep
 operator|=
 name|snapend
@@ -340,9 +286,25 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-literal|0
+literal|1
 comment|/* it is meaningless to decode non-first fragment */
-block|if (ntohs(dp->ip6f_offlg& IP6F_OFF_MASK) != 0) 		return 65535; 	else
+if|if
+condition|(
+name|ntohs
+argument_list|(
+name|dp
+operator|->
+name|ip6f_offlg
+operator|&
+name|IP6F_OFF_MASK
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+literal|65535
+return|;
+else|else
 endif|#
 directive|endif
 block|{

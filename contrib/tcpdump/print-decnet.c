@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-decnet.c,v 1.27 1999/11/21 09:36:50 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-decnet.c,v 1.30 2000/09/28 06:42:57 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,12 +60,6 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_struct_decl
 struct_decl|struct
 name|mbuf
@@ -77,17 +71,6 @@ struct_decl|struct
 name|rtentry
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -111,23 +94,6 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_MALLOC_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<malloc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -4349,6 +4315,9 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
+name|size_t
+name|siz
+decl_stmt|;
 name|int
 name|area
 init|=
@@ -4378,6 +4347,8 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+name|siz
+operator|=
 sizeof|sizeof
 argument_list|(
 literal|"00.0000"
@@ -4395,9 +4366,11 @@ argument_list|(
 literal|"dnnum_string: malloc"
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|str
+argument_list|,
+name|siz
 argument_list|,
 literal|"%d.%d"
 argument_list|,

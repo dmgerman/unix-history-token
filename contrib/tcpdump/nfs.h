@@ -1318,7 +1318,7 @@ name|NFFIFO
 init|=
 literal|7
 block|}
-name|nfstype
+name|nfs_type
 typedef|;
 end_typedef
 
@@ -1456,7 +1456,7 @@ comment|/*  * Used to convert between two u_longs and a u_quad_t.  */
 end_comment
 
 begin_endif
-unit|union nfs_quadconvert { 	u_int32_t lval[2]; 	u_quad_t  qval; }; typedef union nfs_quadconvert	nfsquad_t;
+unit|union nfs_quadconvert { 	u_int32_t lval[2]; 	u_int64_t qval; }; typedef union nfs_quadconvert	nfsquad_t;
 endif|#
 directive|endif
 end_endif

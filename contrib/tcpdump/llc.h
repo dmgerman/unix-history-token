@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/tcpdump/llc.h,v 1.6.1.1 1999/10/07 23:47:10 mcr Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1993, 1994, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/tcpdump/llc.h,v 1.8 2000/12/18 07:55:36 guy Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -15,26 +15,26 @@ begin_struct
 struct|struct
 name|llc
 block|{
-name|u_char
+name|u_int8_t
 name|dsap
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|ssap
 decl_stmt|;
 union|union
 block|{
-name|u_char
+name|u_int8_t
 name|u_ctl
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|is_ctl
 decl_stmt|;
 struct|struct
 block|{
-name|u_char
+name|u_int8_t
 name|snap_ui
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|snap_pi
 index|[
 literal|5
@@ -45,16 +45,16 @@ name|snap
 struct|;
 struct|struct
 block|{
-name|u_char
+name|u_int8_t
 name|snap_ui
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|snap_orgcode
 index|[
 literal|3
 index|]
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|snap_ethertype
 index|[
 literal|2
@@ -144,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|LLC_IS_POLL
-value|0x0001
+value|0x0100
 end_define
 
 begin_define
@@ -227,28 +227,28 @@ name|LLC_S_CMD
 parameter_list|(
 name|is
 parameter_list|)
-value|(((is)>> 10)& 0x03)
+value|(((is)>> 1)& 0x03)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LLC_RR
-value|0x0100
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|LLC_RNR
-value|0x0500
+value|0x0005
 end_define
 
 begin_define
 define|#
 directive|define
 name|LLC_REJ
-value|0x0900
+value|0x0009
 end_define
 
 begin_define
@@ -258,7 +258,7 @@ name|LLC_IS_NR
 parameter_list|(
 name|is
 parameter_list|)
-value|(((is)>> 1)& 0x7f)
+value|(((is)>> 9)& 0x7f)
 end_define
 
 begin_define
@@ -268,7 +268,7 @@ name|LLC_I_NS
 parameter_list|(
 name|is
 parameter_list|)
-value|(((is)>> 9)& 0x7f)
+value|(((is)>> 1)& 0x7f)
 end_define
 
 begin_ifndef

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/machdep.c,v 1.5 1999/11/21 09:36:47 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/machdep.c,v 1.6 2000/01/17 06:24:23 itojun Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,9 @@ parameter_list|(
 name|char
 modifier|*
 name|ebuf
+parameter_list|,
+name|size_t
+name|ebufsiz
 parameter_list|)
 block|{
 ifdef|#
@@ -126,9 +129,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|ebufsiz
 argument_list|,
 literal|"setsysinfo: errno %d"
 argument_list|,

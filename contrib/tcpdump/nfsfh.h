@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Header: /tcpdump/master/tcpdump/nfsfh.h,v 1.8 1999/12/15 06:49:05 fenner Exp $  *  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  *	$FreeBSD$  *	$NetBSD: nfsfh.h,v 1.1.1.2 1997/10/03 17:25:13 christos Exp $	*/
+comment|/*  * $Header: /tcpdump/master/tcpdump/nfsfh.h,v 1.9 2000/06/01 01:16:36 assar Exp $  *  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  *	$FreeBSD$  *	$NetBSD: nfsfh.h,v 1.1.1.2 1997/10/03 17:25:13 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -47,6 +47,16 @@ name|my_devt
 name|Fsid_dev
 decl_stmt|;
 comment|/* XXX avoid name conflict with AIX */
+name|char
+name|Opaque_Handle
+index|[
+literal|2
+operator|*
+literal|32
+operator|+
+literal|1
+index|]
+decl_stmt|;
 name|u_int32_t
 name|fsid_code
 decl_stmt|;

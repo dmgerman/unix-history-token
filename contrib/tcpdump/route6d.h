@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Header: /tcpdump/master/tcpdump/route6d.h,v 1.1 1999/10/30 05:11:22 itojun Exp $  */
+comment|/*  * $Header: /tcpdump/master/tcpdump/route6d.h,v 1.2 2000/04/28 11:14:49 itojun Exp $  */
 end_comment
 
 begin_define
@@ -32,13 +32,13 @@ name|struct
 name|in6_addr
 name|rip6_dest
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|rip6_tag
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|rip6_plen
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|rip6_metric
 decl_stmt|;
 block|}
@@ -49,13 +49,13 @@ begin_struct
 struct|struct
 name|rip6
 block|{
-name|u_char
+name|u_int8_t
 name|rip6_cmd
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|rip6_vers
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|rip6_res1
 index|[
 literal|2

@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ah.c,v 1.5 1999/12/15 08:10:17 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ah.c,v 1.14 2000/12/12 09:58:40 itojun Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,67 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_icmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
 end_include
 
 begin_include
@@ -142,65 +82,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_comment
-comment|/* there's no standard definition so we are on our own */
-end_comment
-
-begin_struct
-struct|struct
-name|ah
-block|{
-name|u_int8_t
-name|ah_nxt
-decl_stmt|;
-comment|/* Next Header */
-name|u_int8_t
-name|ah_len
-decl_stmt|;
-comment|/* Length of data, in 32bit */
-name|u_int16_t
-name|ah_reserve
-decl_stmt|;
-comment|/* Reserved for future use */
-name|u_int32_t
-name|ah_spi
-decl_stmt|;
-comment|/* Security parameter index */
-comment|/* variable size, 32bit bound*/
-comment|/* Authentication data */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|newah
-block|{
-name|u_int8_t
-name|ah_nxt
-decl_stmt|;
-comment|/* Next Header */
-name|u_int8_t
-name|ah_len
-decl_stmt|;
-comment|/* Length of data + 1, in 32bit */
-name|u_int16_t
-name|ah_reserve
-decl_stmt|;
-comment|/* Reserved for future use */
-name|u_int32_t
-name|ah_spi
-decl_stmt|;
-comment|/* Security parameter index */
-name|u_int32_t
-name|ah_seq
-decl_stmt|;
-comment|/* Sequence number field */
-comment|/* variable size, 32bit bound*/
-comment|/* Authentication data */
-block|}
-struct|;
-end_struct
+begin_include
+include|#
+directive|include
+file|"ah.h"
+end_include
 
 begin_include
 include|#
@@ -263,7 +149,7 @@ name|ep
 operator|=
 name|snapend
 expr_stmt|;
-comment|/* 'ep' points to the end of avaible data. */
+comment|/* 'ep' points to the end of available data. */
 if|if
 condition|(
 operator|(
@@ -309,7 +195,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"AH(spi=%u"
+literal|"AH(spi=0x%08x"
 argument_list|,
 name|spi
 argument_list|)

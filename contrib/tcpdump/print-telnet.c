@@ -41,7 +41,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-telnet.c,v 1.2.2.2 2000/01/11 06:58:28 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-telnet.c,v 1.12 2000/09/29 04:58:51 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,37 +71,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcpip.h>
 end_include
 
 begin_define
@@ -128,22 +104,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -458,9 +423,16 @@ default|default:
 operator|(
 name|void
 operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|tnet
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tnet
+argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 name|telcmds
 index|[
@@ -729,15 +701,13 @@ literal|8
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t\t\t\t%s"
-argument_list|,
-name|tnet
+literal|"\n\t\t\t\t"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%*s\t%s"
+literal|"%*s\t"
 argument_list|,
 operator|(
 literal|8
@@ -748,7 +718,10 @@ operator|*
 literal|3
 argument_list|,
 literal|""
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|safeputs
+argument_list|(
 name|tnet
 argument_list|)
 expr_stmt|;
@@ -757,7 +730,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s%s"
+literal|"%s"
 argument_list|,
 operator|(
 name|first
@@ -766,7 +739,10 @@ condition|?
 literal|" [telnet "
 else|:
 literal|", "
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|safeputs
+argument_list|(
 name|tnet
 argument_list|)
 expr_stmt|;

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-null.c,v 1.30 1999/12/22 06:27:21 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-null.c,v 1.40 2000/12/16 22:00:50 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,12 +72,6 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_struct_decl
 struct_decl|struct
 name|mbuf
@@ -90,63 +84,10 @@ name|rtentry
 struct_decl|;
 end_struct_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
 end_include
 
 begin_include
@@ -167,23 +108,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -195,6 +119,29 @@ include|#
 directive|include
 file|"addrtoname.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"ip.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ip6.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -219,7 +166,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The DLT_NULL packet header is 4 bytes long. It contains a network  * order 32 bit integer that specifies the family, e.g. AF_INET  */
+comment|/*  * The DLT_NULL packet header is 4 bytes long. It contains a host-byte-order  * 32-bit integer that specifies the family, e.g. AF_INET.  *  * Note here that "host" refers to the host on which the packets were  * captured; that isn't necessarily *this* host.  *  * The OpenBSD DLT_LOOP packet header is the same, except that the integer  * is in network byte order.  */
 end_comment
 
 begin_define
@@ -234,53 +181,26 @@ specifier|static
 name|void
 name|null_print
 parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-name|p
-parameter_list|,
-specifier|const
-name|struct
-name|ip
-modifier|*
-name|ip
+name|u_int
+name|family
 parameter_list|,
 name|u_int
 name|length
 parameter_list|)
 block|{
-name|u_int
-name|family
-decl_stmt|;
-name|memcpy
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|family
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|p
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|family
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|nflag
 condition|)
+name|printf
+argument_list|(
+literal|"AF %u "
+argument_list|,
+name|family
+argument_list|)
+expr_stmt|;
+else|else
 block|{
-comment|/* XXX just dump the header */
-return|return;
-block|}
 switch|switch
 condition|(
 name|family
@@ -291,7 +211,7 @@ name|AF_INET
 case|:
 name|printf
 argument_list|(
-literal|"ip: "
+literal|"ip "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -303,7 +223,7 @@ name|AF_INET6
 case|:
 name|printf
 argument_list|(
-literal|"ip6: "
+literal|"ip6 "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -314,14 +234,14 @@ name|AF_NS
 case|:
 name|printf
 argument_list|(
-literal|"ns: "
+literal|"ns "
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"AF %d: "
+literal|"AF %u "
 argument_list|,
 name|family
 argument_list|)
@@ -329,7 +249,30 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|printf
+argument_list|(
+literal|"%d: "
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+block|}
 end_function
+
+begin_comment
+comment|/*  * Byte-swap a 32-bit number.  * ("htonl()" or "ntohl()" won't work - we want to byte-swap even on  * big-endian platforms.)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWAPLONG
+parameter_list|(
+name|y
+parameter_list|)
+define|\
+value|((((y)&0xff)<<24) | (((y)&0xff00)<<8) | (((y)&0xff0000)>>8) | (((y)>>24)&0xff))
+end_define
 
 begin_function
 name|void
@@ -371,12 +314,54 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
+name|u_int
+name|family
+decl_stmt|;
 name|ts_print
 argument_list|(
 operator|&
 name|h
 operator|->
 name|ts
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|family
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|family
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * This isn't necessarily in our host byte order; if this is 	 * a DLT_LOOP capture, it's in network byte order, and if 	 * this is a DLT_NULL capture from a machine with the opposite 	 * byte-order, it's in the opposite byte order from ours. 	 * 	 * If the upper 16 bits aren't all zero, assume it's byte-swapped. 	 */
+if|if
+condition|(
+operator|(
+name|family
+operator|&
+literal|0xFFFF0000
+operator|)
+operator|!=
+literal|0
+condition|)
+name|family
+operator|=
+name|SWAPLONG
+argument_list|(
+name|family
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Some printers want to get back at the link level addresses, 	 * and/or check that they're not walking off the end of the packet. 	 * Rather than pass them all the way down, we set these globals. 	 */
@@ -413,18 +398,17 @@ name|eflag
 condition|)
 name|null_print
 argument_list|(
-name|p
-argument_list|,
-name|ip
+name|family
 argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+name|IP_V
+argument_list|(
 name|ip
-operator|->
-name|ip_v
+argument_list|)
 condition|)
 block|{
 case|case
@@ -470,9 +454,10 @@ name|printf
 argument_list|(
 literal|"ip v%d"
 argument_list|,
+name|IP_V
+argument_list|(
 name|ip
-operator|->
-name|ip_v
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

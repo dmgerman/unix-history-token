@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-snmp.c,v 1.39 1999/12/22 06:27:22 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-snmp.c,v 1.44 2000/11/10 17:34:10 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,23 +59,6 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_MEMORY_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<memory.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -469,7 +452,7 @@ parameter_list|(
 name|e
 parameter_list|)
 define|\
-value|( e>= 0&& e< sizeof(ErrorStatus)/sizeof(ErrorStatus[0]) \ 	? ErrorStatus[e] : (sprintf(errbuf, "err=%u", e), errbuf))
+value|( e>= 0&& e< sizeof(ErrorStatus)/sizeof(ErrorStatus[0]) \ 		? ErrorStatus[e] \ 		: (snprintf(errbuf, sizeof(errbuf), "err=%u", e), errbuf))
 end_define
 
 begin_comment
@@ -512,7 +495,7 @@ parameter_list|(
 name|t
 parameter_list|)
 define|\
-value|( t>= 0&& t< sizeof(GenericTrap)/sizeof(GenericTrap[0]) \ 	? GenericTrap[t] : (sprintf(buf, "gt=%d", t), buf))
+value|( t>= 0&& t< sizeof(GenericTrap)/sizeof(GenericTrap[0]) \ 		? GenericTrap[t] \ 		: (snprintf(buf, sizeof(buf), "gt=%d", t), buf))
 end_define
 
 begin_comment
@@ -1227,6 +1210,8 @@ expr_stmt|;
 if|if
 condition|(
 name|vflag
+operator|>
+literal|1
 condition|)
 name|printf
 argument_list|(
@@ -1282,6 +1267,8 @@ block|{
 if|if
 condition|(
 name|vflag
+operator|>
+literal|1
 condition|)
 name|printf
 argument_list|(
@@ -1388,6 +1375,8 @@ expr_stmt|;
 if|if
 condition|(
 name|vflag
+operator|>
+literal|1
 condition|)
 name|printf
 argument_list|(
@@ -1470,6 +1459,8 @@ block|{
 if|if
 condition|(
 name|vflag
+operator|>
+literal|1
 condition|)
 name|printf
 argument_list|(
@@ -2376,7 +2367,6 @@ condition|;
 name|p
 operator|++
 control|)
-empty_stmt|;
 name|printf
 argument_list|(
 literal|"_%.2x"
@@ -2769,12 +2759,17 @@ if|#
 directive|if
 literal|0
 comment|/*is looks illegal, but what is the intention???*/
-block|sprintf(first, "%.f", d);
+block|snprintf(first, sizeof(first), "%.f", d);
 else|#
 directive|else
-name|sprintf
+name|snprintf
 argument_list|(
 name|first
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|first
+argument_list|)
 argument_list|,
 literal|"%f"
 argument_list|,
@@ -2783,9 +2778,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sprintf
+name|snprintf
 argument_list|(
 name|last
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|last
+argument_list|)
 argument_list|,
 literal|"%5.5d"
 argument_list|,
@@ -3300,6 +3300,109 @@ directive|ifdef
 name|LIBSMI
 end_ifdef
 
+begin_if
+if|#
+directive|if
+operator|(
+name|SMI_VERSION_MAJOR
+operator|==
+literal|0
+operator|&&
+name|SMI_VERSION_MINOR
+operator|>=
+literal|2
+operator|)
+operator|||
+operator|(
+name|SMI_VERSION_MAJOR
+operator|>
+literal|0
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LIBSMI_API_V2
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LIBSMI_API_V1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBSMI_API_V1
+end_ifdef
+
+begin_comment
+comment|/* Some of the API revisions introduced new calls that can be  * represented by macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|smiGetNodeType
+parameter_list|(
+name|n
+parameter_list|)
+value|smiGetType((n)->typemodule, (n)->typename)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* These calls in the V1 API were removed in V2. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|smiFreeRange
+parameter_list|(
+name|r
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|smiFreeType
+parameter_list|(
+name|r
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|smiFreeNode
+parameter_list|(
+name|r
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|smi2be
@@ -3315,6 +3418,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|smi2be
 name|smi2betab
@@ -3636,6 +3740,8 @@ parameter_list|)
 block|{
 name|int
 name|ok
+init|=
+literal|1
 decl_stmt|;
 switch|switch
 condition|(
@@ -3844,6 +3950,9 @@ name|ok
 init|=
 literal|1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LIBSMI_API_V1
 for|for
 control|(
 name|smiRange
@@ -3859,15 +3968,28 @@ operator|->
 name|name
 argument_list|)
 init|;
+else|#
+directive|else
+control|for
+operator|(
 name|smiRange
-condition|;
+operator|=
+name|smiGetFirstRange
+argument_list|(
+name|smiType
+argument_list|)
+expr|;
+endif|#
+directive|endif
+name|smiRange
+expr|;
 name|smiRange
 operator|=
 name|smiGetNextRange
 argument_list|(
 name|smiRange
 argument_list|)
-control|)
+operator|)
 block|{
 name|ok
 operator|=
@@ -3879,7 +4001,7 @@ name|smiRange
 argument_list|,
 name|elem
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|ok
@@ -3892,10 +4014,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-block|}
+control|}
 if|if
 condition|(
 name|ok
+ifdef|#
+directive|ifdef
+name|LIBSMI_API_V1
 operator|&&
 name|smiType
 operator|->
@@ -3904,12 +4029,17 @@ operator|&&
 name|smiType
 operator|->
 name|parentname
+endif|#
+directive|endif
 condition|)
 block|{
 name|SmiType
 modifier|*
 name|parentType
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LIBSMI_API_V1
 name|parentType
 operator|=
 name|smiGetType
@@ -3923,6 +4053,17 @@ operator|->
 name|parentname
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|parentType
+operator|=
+name|smiGetParentType
+argument_list|(
+name|smiType
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|parentType
@@ -4019,6 +4160,9 @@ condition|(
 name|vflag
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|LIBSMI_API_V1
 name|fputs
 argument_list|(
 name|smiNode
@@ -4028,6 +4172,22 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fputs
+argument_list|(
+name|smiGetNodeModule
+argument_list|(
+name|smiNode
+argument_list|)
+operator|->
+name|name
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fputs
 argument_list|(
 literal|"::"
@@ -4158,6 +4318,34 @@ return|return;
 block|}
 if|if
 condition|(
+name|elem
+operator|->
+name|type
+operator|==
+name|BE_NOSUCHOBJECT
+operator|||
+name|elem
+operator|->
+name|type
+operator|==
+name|BE_NOSUCHINST
+operator|||
+name|elem
+operator|->
+name|type
+operator|==
+name|BE_ENDOFMIBVIEW
+condition|)
+block|{
+name|asn1_print
+argument_list|(
+name|elem
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|NOTIFY_CLASS
 argument_list|(
 name|pduid
@@ -4244,6 +4432,49 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|LIBSMI_API_V1
+name|smiType
+operator|=
+name|smiGetType
+argument_list|(
+name|smiNode
+operator|->
+name|typemodule
+argument_list|,
+name|smiNode
+operator|->
+name|typename
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|smiType
+operator|=
+name|smiGetNodeType
+argument_list|(
+name|smiNode
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+operator|!
+name|smiType
+condition|)
+block|{
+name|asn1_print
+argument_list|(
+name|elem
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+ifdef|#
+directive|ifdef
+name|LIBSMI_API_V1
 if|if
 condition|(
 operator|!
@@ -4259,6 +4490,25 @@ name|type
 argument_list|)
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+operator|!
+name|smi_check_type
+argument_list|(
+name|smiType
+operator|->
+name|basetype
+argument_list|,
+name|elem
+operator|->
+name|type
+argument_list|)
+condition|)
+block|{
+endif|#
+directive|endif
 name|fputs
 argument_list|(
 literal|"[wrongType]"
@@ -4266,32 +4516,6 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-block|}
-name|smiType
-operator|=
-name|smiGetType
-argument_list|(
-name|smiNode
-operator|->
-name|typemodule
-argument_list|,
-name|smiNode
-operator|->
-name|typename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|smiType
-condition|)
-block|{
-name|asn1_print
-argument_list|(
-name|elem
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -4328,19 +4552,11 @@ name|BE_OID
 case|:
 if|if
 condition|(
-name|smiNode
+name|smiType
 operator|->
 name|basetype
 operator|==
 name|SMI_BASETYPE_BITS
-operator|&&
-name|smiNode
-operator|->
-name|typemodule
-operator|&&
-name|smiNode
-operator|->
-name|typename
 condition|)
 block|{
 comment|/* print bit labels */
@@ -4376,6 +4592,9 @@ condition|(
 name|vflag
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|LIBSMI_API_V1
 name|fputs
 argument_list|(
 name|smiNode
@@ -4385,6 +4604,22 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fputs
+argument_list|(
+name|smiGetNodeModule
+argument_list|(
+name|smiNode
+argument_list|)
+operator|->
+name|name
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fputs
 argument_list|(
 literal|"::"
@@ -4448,6 +4683,9 @@ break|break;
 case|case
 name|BE_INT
 case|:
+ifdef|#
+directive|ifdef
+name|LIBSMI_API_V1
 if|if
 condition|(
 name|smiNode
@@ -4480,6 +4718,28 @@ operator|->
 name|typename
 argument_list|)
 init|;
+else|#
+directive|else
+control|if
+operator|(
+name|smiType
+operator|->
+name|basetype
+operator|==
+name|SMI_BASETYPE_ENUM
+operator|)
+block|{
+for|for
+control|(
+name|nn
+operator|=
+name|smiGetFirstNamedNumber
+argument_list|(
+name|smiType
+argument_list|)
+init|;
+endif|#
+directive|endif
 name|nn
 condition|;
 name|nn
@@ -4534,8 +4794,9 @@ break|break;
 block|}
 block|}
 block|}
-break|break;
-block|}
+control|break
+condition|;
+control|}
 if|if
 condition|(
 operator|!
@@ -4560,22 +4821,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  * General SNMP header  *	SEQUENCE {  *		version INTEGER {version-1(0)},  *		community OCTET STRING,  *		data ANY	-- PDUs  *	}  * PDUs for all but Trap: (see rfc1157 from page 15 on)  *	SEQUENCE {  *		request-id INTEGER,  *		error-status INTEGER,  *		error-index INTEGER,  *		varbindlist SEQUENCE OF  *			SEQUENCE {  *				name ObjectName,  *				value ObjectValue  *			}  *	}  * PDU for Trap:  *	SEQUENCE {  *		enterprise OBJECT IDENTIFIER,  *		agent-addr NetworkAddress,  *		generic-trap INTEGER,  *		specific-trap INTEGER,  *		time-stamp TimeTicks,  *		varbindlist SEQUENCE OF  *			SEQUENCE {  *				name ObjectName,  *				value ObjectValue  *			}  *	}  */
-end_comment
-
-begin_comment
 comment|/*  * Decode SNMP varBind  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|varbind_print
@@ -5000,13 +5249,7 @@ name|vbend
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Decode SNMP PDUs: GetRequest, GetNextRequest, GetResponse, SetRequest,  * GetBulk, Inform, V2Trap, and Report  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|snmppdu_print
@@ -5078,7 +5321,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* ignore the reqId */
+if|if
+condition|(
+name|vflag
+condition|)
+name|printf
+argument_list|(
+literal|"R=%d "
+argument_list|,
+name|elem
+operator|.
+name|data
+operator|.
+name|integer
+argument_list|)
+expr_stmt|;
 name|length
 operator|-=
 name|count
@@ -5459,13 +5716,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Decode SNMP Trap PDU  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|trappdu_print
@@ -5862,13 +6113,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Decode arbitrary SNMP PDUs.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|pdu_print
@@ -5947,10 +6192,30 @@ operator|-
 name|count
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vflag
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"{ "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 name|asn1_print
 argument_list|(
 operator|&
 name|pdu
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|" "
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 comment|/* descend into PDU */
@@ -6087,14 +6352,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|vflag
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"} "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 block|}
-end_function
-
-begin_comment
+block|}
 comment|/*  * Decode a scoped SNMP PDU.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|scopedpdu_print
@@ -6364,13 +6636,7 @@ name|version
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Decode SNMP Community Header (SNMPv1 and SNMPv2c)  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|community_print
@@ -6502,13 +6768,7 @@ name|version
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Decode SNMPv3 User-based Security Message Header (SNMPv3)  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|usm_print
@@ -6969,13 +7229,7 @@ name|count
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Decode SNMPv3 Message Header (SNMPv3)  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|v3msg_print
@@ -7078,6 +7332,19 @@ name|data
 operator|.
 name|raw
 expr_stmt|;
+if|if
+condition|(
+name|vflag
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"{ "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* msgID (INTEGER) */
 if|if
 condition|(
@@ -7431,6 +7698,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|vflag
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"} "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|model
 operator|==
 literal|3
@@ -7443,7 +7723,7 @@ condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"USM "
+literal|"{ USM "
 argument_list|,
 name|stdout
 argument_list|)
@@ -7553,6 +7833,19 @@ operator|.
 name|asnlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vflag
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"} "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -7561,7 +7854,7 @@ condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"ScopedPDU "
+literal|"{ ScopedPDU "
 argument_list|,
 name|stdout
 argument_list|)
@@ -7576,14 +7869,21 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vflag
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"} "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 block|}
-end_function
-
-begin_comment
+block|}
 comment|/*  * Decode SNMP header and pass on to PDU printing routines  */
-end_comment
-
-begin_function
 name|void
 name|snmp_print
 parameter_list|(
@@ -7786,7 +8086,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|"%s "
+literal|"{ %s "
 argument_list|,
 name|SnmpVersion
 index|[
@@ -7874,6 +8174,19 @@ name|integer
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|vflag
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"} "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

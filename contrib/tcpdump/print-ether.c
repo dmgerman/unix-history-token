@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ether.c,v 1.48 1999/11/21 09:36:51 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ether.c,v 1.61 2000/12/22 22:45:10 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,12 +60,6 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_struct_decl
 struct_decl|struct
 name|mbuf
@@ -78,63 +72,10 @@ name|rtentry
 struct_decl|;
 end_struct_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
 end_include
 
 begin_include
@@ -148,23 +89,6 @@ include|#
 directive|include
 file|<pcap.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -182,6 +106,12 @@ begin_include
 include|#
 directive|include
 file|"ethertype.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ether.h"
 end_include
 
 begin_decl_stmt
@@ -300,13 +230,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|u_short
-name|extracted_ethertype
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * This is the top level routine of the printer.  'p' is the points  * to the ether header of the packet, 'h->tv' is the timestamp,  * 'h->length' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  */
 end_comment
@@ -353,6 +276,9 @@ decl_stmt|;
 name|u_short
 name|ether_type
 decl_stmt|;
+name|u_short
+name|extracted_ethertype
+decl_stmt|;
 name|ts_print
 argument_list|(
 operator|&
@@ -365,11 +291,7 @@ if|if
 condition|(
 name|caplen
 operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
+name|ETHER_HDRLEN
 condition|)
 block|{
 name|printf
@@ -405,19 +327,11 @@ name|caplen
 expr_stmt|;
 name|length
 operator|-=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
+name|ETHER_HDRLEN
 expr_stmt|;
 name|caplen
 operator|-=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
+name|ETHER_HDRLEN
 expr_stmt|;
 name|ep
 operator|=
@@ -430,11 +344,7 @@ name|p
 expr_stmt|;
 name|p
 operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
+name|ETHER_HDRLEN
 expr_stmt|;
 name|ether_type
 operator|=
@@ -477,6 +387,9 @@ name|EDST
 argument_list|(
 name|ep
 argument_list|)
+argument_list|,
+operator|&
+name|extracted_ethertype
 argument_list|)
 operator|==
 literal|0
@@ -497,6 +410,8 @@ operator|)
 name|ep
 argument_list|,
 name|length
+operator|+
+name|ETHER_HDRLEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -547,6 +462,9 @@ argument_list|,
 name|length
 argument_list|,
 name|caplen
+argument_list|,
+operator|&
+name|extracted_ethertype
 argument_list|)
 operator|==
 literal|0
@@ -568,11 +486,7 @@ name|ep
 argument_list|,
 name|length
 operator|+
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ep
-argument_list|)
+name|ETHER_HDRLEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -613,7 +527,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Prints the packet encapsulated in an Ethernet data segment  * (or an equivalent encapsulation), given the Ethernet type code.  *  * Returns non-zero if it can do so, zero if the ethertype is unknown.  *  * Stuffs the ether type into a global for the benefit of lower layers  * that might want to know what it is.  */
+comment|/*  * Prints the packet encapsulated in an Ethernet data segment  * (or an equivalent encapsulation), given the Ethernet type code.  *  * Returns non-zero if it can do so, zero if the ethertype is unknown.  *  * The Ethernet type code is passed through a pointer; if it was  * ETHERTYPE_8021Q, it gets updated to be the Ethernet type of  * the 802.1Q payload, for the benefit of lower layers that might  * want to know what it is.  */
 end_comment
 
 begin_function
@@ -633,10 +547,15 @@ name|length
 parameter_list|,
 name|u_int
 name|caplen
+parameter_list|,
+name|u_short
+modifier|*
+name|extracted_ethertype
 parameter_list|)
 block|{
 name|recurse
 label|:
+operator|*
 name|extracted_ethertype
 operator|=
 name|ethertype
@@ -780,27 +699,25 @@ name|ETHERTYPE_8021Q
 case|:
 name|printf
 argument_list|(
-literal|"802.1Q vlan#%d P%d%s"
+literal|"802.1Q vlan#%d P%d%s "
 argument_list|,
 name|ntohs
 argument_list|(
 operator|*
 operator|(
-name|unsigned
-name|short
+name|u_int16_t
 operator|*
 operator|)
 name|p
 argument_list|)
 operator|&
-literal|0xFFF
+literal|0xfff
 argument_list|,
 name|ntohs
 argument_list|(
 operator|*
 operator|(
-name|unsigned
-name|short
+name|u_int16_t
 operator|*
 operator|)
 name|p
@@ -813,8 +730,7 @@ name|ntohs
 argument_list|(
 operator|*
 operator|(
-name|unsigned
-name|short
+name|u_int16_t
 operator|*
 operator|)
 name|p
@@ -834,8 +750,7 @@ name|ntohs
 argument_list|(
 operator|*
 operator|(
-name|unsigned
-name|short
+name|u_int16_t
 operator|*
 operator|)
 operator|(
@@ -866,6 +781,7 @@ condition|)
 goto|goto
 name|recurse
 goto|;
+operator|*
 name|extracted_ethertype
 operator|=
 literal|0
@@ -887,6 +803,8 @@ argument_list|,
 name|p
 operator|-
 literal|12
+argument_list|,
+name|extracted_ethertype
 argument_list|)
 operator|==
 literal|0
@@ -911,6 +829,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|extracted_ethertype
 condition|)
 block|{
@@ -922,6 +841,7 @@ name|etherproto_string
 argument_list|(
 name|htons
 argument_list|(
+operator|*
 name|extracted_ethertype
 argument_list|)
 argument_list|)

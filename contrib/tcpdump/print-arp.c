@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-arp.c,v 1.44 1999/11/21 09:36:48 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-arp.c,v 1.49 2000/10/10 05:05:07 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,72 +57,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|rtentry
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_MEMORY_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<memory.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -151,6 +87,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ether.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ethertype.h"
 end_include
 
@@ -163,6 +105,243 @@ end_include
 begin_comment
 comment|/* must come after interface.h */
 end_comment
+
+begin_comment
+comment|/*  * Address Resolution Protocol.  *  * See RFC 826 for protocol description.  ARP packets are variable  * in size; the arphdr structure defines the fixed-length portion.  * Protocol type values are the same as those for 10 Mb/s Ethernet.  * It is followed by the variable-sized fields ar_sha, arp_spa,  * arp_tha and arp_tpa in that order, according to the lengths  * specified.  Field names used correspond to RFC 826.  */
+end_comment
+
+begin_struct
+struct|struct
+name|arphdr
+block|{
+name|u_short
+name|ar_hrd
+decl_stmt|;
+comment|/* format of hardware address */
+define|#
+directive|define
+name|ARPHRD_ETHER
+value|1
+comment|/* ethernet hardware format */
+define|#
+directive|define
+name|ARPHRD_IEEE802
+value|6
+comment|/* token-ring hardware format */
+define|#
+directive|define
+name|ARPHRD_FRELAY
+value|15
+comment|/* frame relay hardware format */
+name|u_short
+name|ar_pro
+decl_stmt|;
+comment|/* format of protocol address */
+name|u_char
+name|ar_hln
+decl_stmt|;
+comment|/* length of hardware address */
+name|u_char
+name|ar_pln
+decl_stmt|;
+comment|/* length of protocol address */
+name|u_short
+name|ar_op
+decl_stmt|;
+comment|/* one of: */
+define|#
+directive|define
+name|ARPOP_REQUEST
+value|1
+comment|/* request to resolve address */
+define|#
+directive|define
+name|ARPOP_REPLY
+value|2
+comment|/* response to previous request */
+define|#
+directive|define
+name|ARPOP_REVREQUEST
+value|3
+comment|/* request protocol address given hardware */
+define|#
+directive|define
+name|ARPOP_REVREPLY
+value|4
+comment|/* response giving protocol address */
+define|#
+directive|define
+name|ARPOP_INVREQUEST
+value|8
+comment|/* request to identify peer */
+define|#
+directive|define
+name|ARPOP_INVREPLY
+value|9
+comment|/* response identifying peer */
+comment|/*  * The remaining fields are variable in size,  * according to the sizes above.  */
+ifdef|#
+directive|ifdef
+name|COMMENT_ONLY
+name|u_char
+name|ar_sha
+index|[]
+decl_stmt|;
+comment|/* sender hardware address */
+name|u_char
+name|ar_spa
+index|[]
+decl_stmt|;
+comment|/* sender protocol address */
+name|u_char
+name|ar_tha
+index|[]
+decl_stmt|;
+comment|/* target hardware address */
+name|u_char
+name|ar_tpa
+index|[]
+decl_stmt|;
+comment|/* target protocol address */
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ARP_HDRLEN
+value|8
+end_define
+
+begin_comment
+comment|/*  * Ethernet Address Resolution Protocol.  *  * See RFC 826 for protocol description.  Structure below is adapted  * to resolving internet addresses.  Field names used correspond to   * RFC 826.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ether_arp
+block|{
+name|struct
+name|arphdr
+name|ea_hdr
+decl_stmt|;
+comment|/* fixed-size header */
+name|u_char
+name|arp_sha
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* sender hardware address */
+name|u_char
+name|arp_spa
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* sender protocol address */
+name|u_char
+name|arp_tha
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* target hardware address */
+name|u_char
+name|arp_tpa
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* target protocol address */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|arp_hrd
+value|ea_hdr.ar_hrd
+end_define
+
+begin_define
+define|#
+directive|define
+name|arp_pro
+value|ea_hdr.ar_pro
+end_define
+
+begin_define
+define|#
+directive|define
+name|arp_hln
+value|ea_hdr.ar_hln
+end_define
+
+begin_define
+define|#
+directive|define
+name|arp_pln
+value|ea_hdr.ar_pln
+end_define
+
+begin_define
+define|#
+directive|define
+name|arp_op
+value|ea_hdr.ar_op
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHER_ARP_HDRLEN
+value|(ARP_HDRLEN + 6 + 4 + 6 + 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA
+parameter_list|(
+name|ap
+parameter_list|)
+value|((ap)->arp_sha)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THA
+parameter_list|(
+name|ap
+parameter_list|)
+value|((ap)->arp_tha)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA
+parameter_list|(
+name|ap
+parameter_list|)
+value|((ap)->arp_spa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPA
+parameter_list|(
+name|ap
+parameter_list|)
+value|((ap)->arp_tpa)
+end_define
 
 begin_comment
 comment|/* Compatibility */
@@ -288,11 +467,7 @@ if|if
 condition|(
 name|length
 operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_arp
-argument_list|)
+name|ETHER_ARP_HDRLEN
 condition|)
 block|{
 operator|(

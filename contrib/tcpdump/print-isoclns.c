@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.16 1999/11/21 09:36:55 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.22 2000/10/11 04:04:33 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,45 +60,10 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|rtentry
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
 end_include
 
 begin_include
@@ -123,6 +88,12 @@ begin_include
 include|#
 directive|include
 file|"ethertype.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ether.h"
 end_include
 
 begin_include
@@ -179,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|SYSTEM_ID_LEN
-value|sizeof(struct ether_addr)
+value|ETHER_ADDR_LEN
 end_define
 
 begin_define
@@ -454,17 +425,23 @@ name|isis_ptp_adjancey_values
 index|[]
 init|=
 block|{
+block|{
 name|ISIS_PTP_ADJ_UP
 block|,
 literal|"UP"
+block|}
 block|,
+block|{
 name|ISIS_PTP_ADJ_INIT
 block|,
 literal|"INIT"
+block|}
 block|,
+block|{
 name|ISIS_PTP_ADJ_DOWN
 block|,
 literal|"DOWN"
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1106,12 +1083,6 @@ operator|*
 operator|)
 operator|&
 name|p
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|u_char
-name|cksum
 index|[
 literal|2
 index|]
@@ -1794,6 +1765,7 @@ comment|/*  * print_nsap  * Print out an NSAP.   */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_nsap
 parameter_list|(
@@ -1900,19 +1872,21 @@ name|max_area
 decl_stmt|,
 name|priority
 decl_stmt|,
-modifier|*
-name|pptr
-decl_stmt|,
 name|type
 decl_stmt|,
 name|len
 decl_stmt|,
-modifier|*
-name|tptr
-decl_stmt|,
 name|tmp
 decl_stmt|,
 name|alen
+decl_stmt|;
+specifier|const
+name|u_char
+modifier|*
+name|pptr
+decl_stmt|,
+modifier|*
+name|tptr
 decl_stmt|;
 name|u_short
 name|packet_len
@@ -1922,13 +1896,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|header_ptp
-operator|=
-operator|(
-expr|struct
-name|isis_ptp_header
-operator|*
-operator|)
 name|header
 operator|=
 operator|(
@@ -1937,6 +1904,15 @@ name|isis_header
 operator|*
 operator|)
 name|p
+expr_stmt|;
+name|header_ptp
+operator|=
+operator|(
+expr|struct
+name|isis_ptp_header
+operator|*
+operator|)
+name|header
 expr_stmt|;
 name|printf
 argument_list|(
@@ -2059,7 +2035,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" bogus fixed header length"
+literal|" bogus fixed header length %u"
 argument_list|,
 name|header
 operator|->
@@ -2120,7 +2096,11 @@ argument_list|,
 name|pdu_type
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -2140,7 +2120,11 @@ operator|->
 name|pkt_version
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|max_area
 operator|=
@@ -2462,10 +2446,6 @@ name|ISIS_PTP_HEADER_SIZE
 expr_stmt|;
 name|pptr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|p
 operator|+
 name|ISIS_PTP_HEADER_SIZE
@@ -2479,10 +2459,6 @@ name|ISIS_HEADER_SIZE
 expr_stmt|;
 name|pptr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|p
 operator|+
 name|ISIS_HEADER_SIZE
@@ -2631,11 +2607,7 @@ while|while
 condition|(
 name|tmp
 operator|>=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_addr
-argument_list|)
+name|ETHER_ADDR_LEN
 condition|)
 block|{
 name|printf
@@ -2650,19 +2622,11 @@ argument_list|)
 expr_stmt|;
 name|tmp
 operator|-=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_addr
-argument_list|)
+name|ETHER_ADDR_LEN
 expr_stmt|;
 name|tptr
 operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_addr
-argument_list|)
+name|ETHER_ADDR_LEN
 expr_stmt|;
 block|}
 break|break;

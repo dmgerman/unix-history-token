@@ -1,10 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ppp.h,v 1.8 1999/11/21 03:43:56 assar Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ppp.h,v 1.11 2000/10/09 01:53:19 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
 comment|/*  * Point to Point Protocol (PPP) RFC1331  *  * Copyright 1989 by Carnegie Mellon.  *  * Permission to use, copy, modify, and distribute this program for any  * purpose and without fee is hereby granted, provided that this copyright  * and permission notice appear on all copies and supporting documentation,  * the name of Carnegie Mellon not be used in advertising or publicity  * pertaining to distribution of the program without specific prior  * permission, and notice be given in supporting documentation that copying  * and distribution is by permission of Carnegie Mellon and Stanford  * University.  Carnegie Mellon makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $FreeBSD$  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_HDRLEN
+value|4
+end_define
+
+begin_comment
+comment|/* length of PPP header */
 end_comment
 
 begin_undef
@@ -188,6 +199,28 @@ begin_comment
 comment|/* Banyan Vines */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PPP_IPV6
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PPP_IPV6
+value|0x0057
+end_define
+
+begin_comment
+comment|/* IPv6 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -312,6 +345,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PPP_IPV6CP
+value|0x8057
+end_define
+
+begin_comment
+comment|/* IPv6 Control Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_CCP
+value|0x80fd
+end_define
+
+begin_comment
+comment|/* Compress Control Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PPP_LCP
 value|0xc021
 end_define
@@ -351,6 +406,39 @@ end_define
 
 begin_comment
 comment|/* Challenge Handshake Authentication Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_BACP
+value|0xc02b
+end_define
+
+begin_comment
+comment|/* Bandwidth Allocation Control Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_BAP
+value|0xc02d
+end_define
+
+begin_comment
+comment|/* BAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_MP
+value|0xc03d
+end_define
+
+begin_comment
+comment|/* Multi-Link */
 end_comment
 
 begin_decl_stmt

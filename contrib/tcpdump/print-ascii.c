@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ascii.c,v 1.2.2.2 2000/01/11 06:58:23 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ascii.c,v 1.6 2000/01/29 16:47:46 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,9 +204,20 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|hsp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hexstuff
+argument_list|)
+operator|-
+operator|(
+name|hsp
+operator|-
+name|hexstuff
+operator|)
 argument_list|,
 literal|" %02x%02x"
 argument_list|,
@@ -319,9 +330,20 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|hsp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hexstuff
+argument_list|)
+operator|-
+operator|(
+name|hsp
+operator|-
+name|hexstuff
+operator|)
 argument_list|,
 literal|" %02x"
 argument_list|,

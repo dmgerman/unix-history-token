@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-gre.c,v 1.6 1999/11/21 09:36:52 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-gre.c,v 1.9 2000/12/18 05:41:59 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,18 +70,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -275,6 +263,8 @@ name|u_short
 name|flags
 decl_stmt|,
 name|proto
+decl_stmt|,
+name|extracted_ethertype
 decl_stmt|;
 name|gre
 operator|=
@@ -444,6 +434,9 @@ argument_list|,
 name|length
 argument_list|,
 name|length
+argument_list|,
+operator|&
+name|extracted_ethertype
 argument_list|)
 operator|==
 literal|0
