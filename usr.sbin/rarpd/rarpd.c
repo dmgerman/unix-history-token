@@ -10,6 +10,8 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -40,7 +42,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rarpd.c,v 1.15 1997/02/22 16:12:44 peter Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +50,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [ -fsv ] [ hostname ]  *		rarpd [ -fsv ] interface [ hostname ]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
@@ -750,6 +756,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -2027,6 +2034,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -2038,7 +2046,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rarpd [ -afnv ] [ interface ]\n"
+literal|"usage: rarpd [-afnv] [interface]\n"
 argument_list|)
 expr_stmt|;
 name|exit
