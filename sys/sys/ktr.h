@@ -256,9 +256,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KTR_LOCKMGR
+name|KTR_EVH
 value|0x00020000
 end_define
+
+begin_comment
+comment|/* Eventhandler */
+end_comment
 
 begin_define
 define|#
