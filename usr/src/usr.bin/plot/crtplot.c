@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crtplot.c	4.6 (Berkeley) %G%"
+literal|"@(#)crtplot.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -832,14 +832,6 @@ name|x
 decl_stmt|,
 name|y
 decl_stmt|;
-name|double
-name|floor
-parameter_list|()
-function_decl|;
-name|int
-name|abs
-parameter_list|()
-function_decl|;
 name|length
 operator|=
 name|abs
