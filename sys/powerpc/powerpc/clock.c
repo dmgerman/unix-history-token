@@ -819,7 +819,7 @@ begin_function
 name|void
 name|delay
 parameter_list|(
-name|unsigned
+name|int
 name|n
 parameter_list|)
 block|{

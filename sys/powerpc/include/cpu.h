@@ -110,18 +110,14 @@ parameter_list|()
 value|0
 end_define
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
 name|void
 name|delay
-name|__P
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -318,6 +314,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|fork_trampoline
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
