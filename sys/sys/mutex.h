@@ -1174,7 +1174,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|START_GIANT_DEPRECIATED
+name|START_GIANT_DEPRECATED
 parameter_list|(
 name|sysctlvar
 parameter_list|)
@@ -1185,7 +1185,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|END_GIANT_DEPRECIATED
+name|END_GIANT_DEPRECATED
 define|\
 value|if (__gotgiant) mtx_unlock(&Giant)
 end_define
@@ -1235,7 +1235,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|START_GIANT_DEPRECIATED
+name|START_GIANT_DEPRECATED
 parameter_list|(
 name|sysctl
 parameter_list|)
@@ -1244,7 +1244,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|END_GIANT_DEPRECIATED
+name|END_GIANT_DEPRECATED
 end_define
 
 begin_define

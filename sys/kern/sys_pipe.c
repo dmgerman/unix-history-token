@@ -5342,7 +5342,6 @@ argument_list|(
 name|cpipe
 argument_list|)
 expr_stmt|;
-comment|/* XXX: erm, doesn't zalloc already have its own locks and 		 * not need the giant vm lock? 		 */
 name|zfree
 argument_list|(
 name|pipe_zone
