@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fs.h	6.2	84/09/28	*/
+comment|/*	fs.h	6.3	85/02/08	*/
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ comment|/* max number inodes/cyl group */
 end_comment
 
 begin_comment
-comment|/*  * MINBSIZE is the smallest allowable block size.  * In order to insure that it is possible to create files of size  * 2^32 with only two levels of indirection, MINBSIZE is set to 4096.  * MINBSIZE must be big enough to hold a cylinder group block,  * thus changes to (struct cg) must keep its size within MINBSIZE.  * MAXCPG is limited only to dimension an array in (struct cg);  * it can be made larger as long as that structures size remains  * within the bounds dictated by MINBSIZE.  * Note that super blocks are always of size MAXBSIZE,  * and that MAXBSIZE must be>= MINBSIZE.  */
+comment|/*  * MINBSIZE is the smallest allowable block size.  * In order to insure that it is possible to create files of size  * 2^32 with only two levels of indirection, MINBSIZE is set to 4096.  * MINBSIZE must be big enough to hold a cylinder group block,  * thus changes to (struct cg) must keep its size within MINBSIZE.  * MAXCPG is limited only to dimension an array in (struct cg);  * it can be made larger as long as that structures size remains  * within the bounds dictated by MINBSIZE.  * Note that super blocks are always of size SBSIZE,  * and that both SBSIZE and MAXBSIZE must be>= MINBSIZE.  */
 end_comment
 
 begin_define
@@ -793,7 +793,7 @@ parameter_list|,
 name|loc
 parameter_list|)
 define|\
-value|(((map)[loc / NBBY]>> (loc % NBBY))& (0xff>> (NBBY - (fs)->fs_frag)))
+value|(((map)[(loc) / NBBY]>> ((loc) % NBBY))& (0xff>> (NBBY - (fs)->fs_frag)))
 end_define
 
 begin_define
