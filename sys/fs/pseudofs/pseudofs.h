@@ -66,35 +66,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PFS_RDONLY
-value|0x0000
+name|PFS_RD
+value|0x0001
 end_define
 
 begin_comment
-comment|/* read-only (default) */
+comment|/* readable */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PFS_WRONLY
-value|0x0001
+name|PFS_WR
+value|0x0002
 end_define
 
 begin_comment
-comment|/* write-only */
+comment|/* writeable */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PFS_RDWR
-value|0x0002
+value|(PFS_RD|PFS_WR)
 end_define
-
-begin_comment
-comment|/* read-write */
-end_comment
 
 begin_define
 define|#
@@ -117,6 +113,13 @@ end_define
 begin_comment
 comment|/* raw writer */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PFS_RAW
+value|(PFS_RAWRD|PFS_RAWWR)
+end_define
 
 begin_comment
 comment|/*  * Data structures  */
