@@ -304,9 +304,6 @@ name|pw
 operator|->
 name|pw_passwd
 operator|&&
-ifdef|#
-directive|ifdef
-name|DES
 name|strcmp
 argument_list|(
 name|crypt
@@ -327,23 +324,6 @@ name|pw_passwd
 argument_list|)
 condition|)
 block|{
-else|#
-directive|else
-name|strcmp
-argument_list|(
-name|getpass
-argument_list|(
-literal|"Old password:"
-argument_list|)
-argument_list|,
-name|pw
-operator|->
-name|pw_passwd
-argument_list|)
-block|)
-block|{
-endif|#
-directive|endif
 name|errno
 operator|=
 name|EACCES
@@ -598,9 +578,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|DES
 return|return
 operator|(
 name|crypt
@@ -611,15 +588,6 @@ name|salt
 argument_list|)
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-name|buf
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
