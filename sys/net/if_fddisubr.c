@@ -304,16 +304,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|senderr
-parameter_list|(
-name|e
-parameter_list|)
-value|{ error = (e); goto bad;}
-end_define
-
 begin_comment
 comment|/*  * This really should be defined in if_llc.h but in case it isn't.  */
 end_comment
@@ -339,33 +329,21 @@ end_endif
 begin_define
 define|#
 directive|define
-name|RTALLOC1
+name|IFP2AC
 parameter_list|(
-name|a
-parameter_list|,
-name|b
+name|IFP
 parameter_list|)
-value|rtalloc1(a, b, 0UL)
+value|((struct arpcom *)IFP)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARPRESOLVE
+name|senderr
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
 name|e
-parameter_list|,
-name|f
 parameter_list|)
-value|arpresolve(a, b, c, d, e, f)
+value|{ error = (e); goto bad; }
 end_define
 
 begin_comment
@@ -447,12 +425,10 @@ name|arpcom
 modifier|*
 name|ac
 init|=
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
+name|IFP2AC
+argument_list|(
 name|ifp
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -518,11 +494,13 @@ name|rt0
 operator|=
 name|rt
 operator|=
-name|RTALLOC1
+name|rtalloc1
 argument_list|(
 name|dst
 argument_list|,
 literal|1
+argument_list|,
+literal|0UL
 argument_list|)
 operator|)
 operator|!=
@@ -594,13 +572,15 @@ name|rt
 operator|->
 name|rt_gwroute
 operator|=
-name|RTALLOC1
+name|rtalloc1
 argument_list|(
 name|rt
 operator|->
 name|rt_gateway
 argument_list|,
 literal|1
+argument_list|,
+literal|0UL
 argument_list|)
 expr_stmt|;
 if|if
@@ -677,7 +657,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ARPRESOLVE
+name|arpresolve
 argument_list|(
 name|ifp
 argument_list|,
@@ -1869,14 +1849,10 @@ operator|)
 operator|&&
 name|bcmp
 argument_list|(
-operator|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
+name|IFP2AC
+argument_list|(
 name|ifp
-operator|)
+argument_list|)
 operator|->
 name|ac_enaddr
 argument_list|,
@@ -2109,12 +2085,10 @@ argument_list|)
 expr_stmt|;
 name|aarpinput
 argument_list|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
+name|IFP2AC
+argument_list|(
 name|ifp
+argument_list|)
 argument_list|,
 name|m
 argument_list|)
@@ -2337,12 +2311,10 @@ case|:
 comment|/* probably this should be done with a NETISR as well */
 name|aarpinput
 argument_list|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
+name|IFP2AC
+argument_list|(
 name|ifp
+argument_list|)
 argument_list|,
 name|m
 argument_list|)
@@ -2514,14 +2486,10 @@ name|if_addrlen
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
+name|IFP2AC
+argument_list|(
 name|ifp
-operator|)
+argument_list|)
 operator|->
 name|ac_enaddr
 argument_list|,
@@ -2631,7 +2599,9 @@ operator|!=
 literal|1
 condition|)
 return|return
+operator|(
 name|EADDRNOTAVAIL
+operator|)
 return|;
 operator|*
 name|llsa
@@ -2639,7 +2609,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -2672,7 +2644,9 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EADDRNOTAVAIL
+operator|)
 return|;
 name|MALLOC
 argument_list|(
@@ -2766,7 +2740,9 @@ operator|)
 name|sdl
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 endif|#
 directive|endif
@@ -2809,7 +2785,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -2824,7 +2802,9 @@ name|sin6_addr
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EADDRNOTAVAIL
+operator|)
 return|;
 name|MALLOC
 argument_list|(
@@ -2918,14 +2898,18 @@ operator|)
 name|sdl
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 endif|#
 directive|endif
 default|default:
 comment|/* 		 * Well, the text isn't quite right, but it's the name 		 * that counts... 		 */
 return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
 return|;
 block|}
 block|}
