@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: fat.h,v 1.6 1997/02/22 09:40:45 peter Exp $ */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: fat.h,v 1.4 1994/08/21 18:43:57 ws Exp $	*/
+comment|/*	$NetBSD: fat.h,v 1.12 1997/11/17 15:36:36 ws Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (C) 1994 Wolfgang Solfrank.  * Copyright (C) 1994 TooLs GmbH.  * All rights reserved.  * Original code by Paul Popelka (paulp@uts.amdahl.com) (see below).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (C) 1994, 1997 Wolfgang Solfrank.  * Copyright (C) 1994, 1997 TooLs GmbH.  * All rights reserved.  * Original code by Paul Popelka (paulp@uts.amdahl.com) (see below).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -62,30 +62,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CLUST_RSRVS
-value|0xfff0
+name|CLUST_RSRVD
+value|0xfffffff6
 end_define
 
 begin_comment
-comment|/* start of reserved cluster range */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLUST_RSRVE
-value|0xfff6
-end_define
-
-begin_comment
-comment|/* end of reserved cluster range */
+comment|/* reserved cluster range */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CLUST_BAD
-value|0xfff7
+value|0xfffffff7
 end_define
 
 begin_comment
@@ -96,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|CLUST_EOFS
-value|0xfff8
+value|0xfffffff8
 end_define
 
 begin_comment
@@ -107,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|CLUST_EOFE
-value|0xffff
+value|0xffffffff
 end_define
 
 begin_comment
@@ -118,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|FAT12_MASK
-value|0x0fff
+value|0x00000fff
 end_define
 
 begin_comment
@@ -129,15 +118,26 @@ begin_define
 define|#
 directive|define
 name|FAT16_MASK
-value|0xffff
+value|0x0000ffff
 end_define
 
 begin_comment
 comment|/* mask for 16 bit cluster numbers */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FAT32_MASK
+value|0x0fffffff
+end_define
+
 begin_comment
-comment|/*  * Return true if filesystem uses 12 bit fats. Microsoft Programmer's  * Reference says if the maximum cluster number in a filesystem is greater  * than 4086 then we've got a 16 bit fat filesystem.  */
+comment|/* mask for FAT32 cluster numbers */
+end_comment
+
+begin_comment
+comment|/*  * MSDOSFS:  * Return true if filesystem uses 12 bit fats. Microsoft Programmer's  * Reference says if the maximum cluster number in a filesystem is greater  * than 4078 ((CLUST_RSRVS - CLUST_FIRST)& FAT12_MASK) then we've got a  * 16 bit fat filesystem. While mounting, the result of this test is stored  * in pm_fatentrysize.  * GEMDOS-flavour (atari):  * If the filesystem is on floppy we've got a 12 bit fat filesystem, otherwise  * 16 bit. We check the d_type field in the disklabel struct while mounting  * and store the result in the pm_fatentrysize. Note that this kind of  * detection gets flakey when mounting a vnd-device.  */
 end_comment
 
 begin_define
@@ -147,7 +147,7 @@ name|FAT12
 parameter_list|(
 name|pmp
 parameter_list|)
-value|(pmp->pm_maxcluster<= 4086)
+value|(pmp->pm_fatmask == FAT12_MASK)
 end_define
 
 begin_define
@@ -157,7 +157,17 @@ name|FAT16
 parameter_list|(
 name|pmp
 parameter_list|)
-value|(pmp->pm_maxcluster>  4086)
+value|(pmp->pm_fatmask == FAT16_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FAT32
+parameter_list|(
+name|pmp
+parameter_list|)
+value|(pmp->pm_fatmask == FAT32_MASK)
 end_define
 
 begin_define
@@ -165,9 +175,11 @@ define|#
 directive|define
 name|MSDOSFSEOF
 parameter_list|(
+name|pmp
+parameter_list|,
 name|cn
 parameter_list|)
-value|(((cn)& 0xfff8) == 0xfff8)
+value|((((cn) | ~(pmp)->pm_fatmask)& CLUST_EOFS) == CLUST_EOFS)
 end_define
 
 begin_ifdef
@@ -245,6 +257,10 @@ operator|,
 name|u_long
 operator|*
 name|cnp
+operator|,
+name|int
+operator|*
+name|sp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -394,254 +410,6 @@ name|dep
 operator|,
 name|u_int
 name|frcn
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|readep
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|msdosfsmount
-operator|*
-name|pmp
-operator|,
-name|u_long
-name|dirclu
-operator|,
-name|u_long
-name|dirofs
-operator|,
-expr|struct
-name|buf
-operator|*
-operator|*
-name|bpp
-operator|,
-expr|struct
-name|direntry
-operator|*
-operator|*
-name|epp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|readde
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|denode
-operator|*
-name|dep
-operator|,
-expr|struct
-name|buf
-operator|*
-operator|*
-name|bpp
-operator|,
-expr|struct
-name|direntry
-operator|*
-operator|*
-name|epp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|deextend
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|denode
-operator|*
-name|dep
-operator|,
-name|off_t
-name|length
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fillinusemap
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|msdosfsmount
-operator|*
-name|pmp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|reinsert
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|denode
-operator|*
-name|dep
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|dosdirempty
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|denode
-operator|*
-name|dep
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|createde
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|denode
-operator|*
-name|dep
-operator|,
-expr|struct
-name|denode
-operator|*
-name|ddep
-operator|,
-expr|struct
-name|denode
-operator|*
-operator|*
-name|depp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|deupdat
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|denode
-operator|*
-name|dep
-operator|,
-expr|struct
-name|timespec
-operator|*
-name|tp
-operator|,
-name|int
-name|waitfor
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|removede
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|denode
-operator|*
-name|pdep
-operator|,
-expr|struct
-name|denode
-operator|*
-name|dep
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|detrunc
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|denode
-operator|*
-name|dep
-operator|,
-name|u_long
-name|length
-operator|,
-name|int
-name|flags
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|doscheckpath
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|denode
-operator|*
-name|source
-operator|,
-expr|struct
-name|denode
-operator|*
-name|target
 operator|)
 argument_list|)
 decl_stmt|;

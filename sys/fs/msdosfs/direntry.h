@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: direntry.h,v 1.4 1997/02/22 09:40:45 peter Exp $ */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: direntry.h,v 1.7 1994/08/21 18:43:54 ws Exp $	*/
+comment|/*	$NetBSD: direntry.h,v 1.14 1997/11/17 15:36:32 ws Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (C) 1994 Wolfgang Solfrank.  * Copyright (C) 1994 TooLs GmbH.  * All rights reserved.  * Original code by Paul Popelka (paulp@uts.amdahl.com) (see below).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (C) 1994, 1995, 1997 Wolfgang Solfrank.  * Copyright (C) 1994, 1995, 1997 TooLs GmbH.  * All rights reserved.  * Original code by Paul Popelka (paulp@uts.amdahl.com) (see below).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ begin_struct
 struct|struct
 name|direntry
 block|{
-name|u_char
+name|u_int8_t
 name|deName
 index|[
 literal|8
@@ -45,14 +45,14 @@ directive|define
 name|SLOT_DELETED
 value|0xe5
 comment|/* file in this slot deleted */
-name|u_char
+name|u_int8_t
 name|deExtension
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/* extension, blank filled */
-name|u_char
+name|u_int8_t
 name|deAttributes
 decl_stmt|;
 comment|/* file attributes */
@@ -91,35 +91,67 @@ directive|define
 name|ATTR_ARCHIVE
 value|0x20
 comment|/* file is new or modified */
-name|u_char
+name|u_int8_t
 name|deReserved
 index|[
-literal|10
+literal|1
 index|]
 decl_stmt|;
 comment|/* reserved */
-name|u_char
-name|deTime
+name|u_int8_t
+name|deCHundredth
+decl_stmt|;
+comment|/* hundredth of seconds in CTime */
+name|u_int8_t
+name|deCTime
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* create/last update time */
-name|u_char
-name|deDate
+comment|/* create time */
+name|u_int8_t
+name|deCDate
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* create/last update date */
-name|u_char
+comment|/* create date */
+name|u_int8_t
+name|deADate
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* access date */
+name|u_int8_t
+name|deHighClust
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* high bytes of cluster number */
+name|u_int8_t
+name|deMTime
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* last update time */
+name|u_int8_t
+name|deMDate
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* last update date */
+name|u_int8_t
 name|deStartCluster
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* starting cluster of file */
-name|u_char
+name|u_int8_t
 name|deFileSize
 index|[
 literal|4
@@ -129,6 +161,85 @@ comment|/* size of file in bytes */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Structure of a Win95 long name directory entry  */
+end_comment
+
+begin_struct
+struct|struct
+name|winentry
+block|{
+name|u_int8_t
+name|weCnt
+decl_stmt|;
+define|#
+directive|define
+name|WIN_LAST
+value|0x40
+define|#
+directive|define
+name|WIN_CNT
+value|0x3f
+name|u_int8_t
+name|wePart1
+index|[
+literal|10
+index|]
+decl_stmt|;
+name|u_int8_t
+name|weAttributes
+decl_stmt|;
+define|#
+directive|define
+name|ATTR_WIN95
+value|0x0f
+name|u_int8_t
+name|weReserved1
+decl_stmt|;
+name|u_int8_t
+name|weChksum
+decl_stmt|;
+name|u_int8_t
+name|wePart2
+index|[
+literal|12
+index|]
+decl_stmt|;
+name|u_int16_t
+name|weReserved2
+decl_stmt|;
+name|u_int8_t
+name|wePart3
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|WIN_CHARS
+value|13
+end_define
+
+begin_comment
+comment|/* Number of chars per winentry */
+end_comment
+
+begin_comment
+comment|/*  * Maximum filename length in Win95  * Note: Must be< sizeof(dirent.d_name)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WIN_MAXLEN
+value|255
+end_define
 
 begin_comment
 comment|/*  * This is the format of the contents of the deTime field in the direntry  * structure.  * We don't use bitfields because we don't know how compilers for  * arbitrary machines will lay them out.  */
@@ -252,6 +363,12 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|dirent
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|void
 name|unix2dostime
@@ -263,13 +380,17 @@ name|timespec
 operator|*
 name|tsp
 operator|,
-name|u_short
+name|u_int16_t
 operator|*
 name|ddp
 operator|,
-name|u_short
+name|u_int16_t
 operator|*
 name|dtp
+operator|,
+name|u_int8_t
+operator|*
+name|dhp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -281,11 +402,14 @@ name|dos2unixtime
 name|__P
 argument_list|(
 operator|(
-name|u_short
+name|u_int
 name|dd
 operator|,
-name|u_short
+name|u_int
 name|dt
+operator|,
+name|u_int
+name|dh
 operator|,
 expr|struct
 name|timespec
@@ -311,17 +435,21 @@ operator|,
 name|u_char
 operator|*
 name|un
+operator|,
+name|int
+name|lower
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|unix2dosfn
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 name|un
@@ -329,8 +457,121 @@ operator|,
 name|u_char
 name|dn
 index|[
-literal|11
+literal|12
 index|]
+operator|,
+name|int
+name|unlen
+operator|,
+name|u_int
+name|gen
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|unix2winfn
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+name|un
+operator|,
+name|int
+name|unlen
+operator|,
+expr|struct
+name|winentry
+operator|*
+name|wep
+operator|,
+name|int
+name|cnt
+operator|,
+name|int
+name|chksum
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|winChkName
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+name|un
+operator|,
+name|int
+name|unlen
+operator|,
+expr|struct
+name|winentry
+operator|*
+name|wep
+operator|,
+name|int
+name|chksum
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|win2unixfn
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|winentry
+operator|*
+name|wep
+operator|,
+expr|struct
+name|dirent
+operator|*
+name|dp
+operator|,
+name|int
+name|chksum
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int8_t
+name|winChksum
+name|__P
+argument_list|(
+operator|(
+name|u_int8_t
+operator|*
+name|name
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|winSlotCnt
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+name|un
 operator|,
 name|int
 name|unlen

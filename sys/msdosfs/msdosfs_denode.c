@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.30 1998/02/06 12:13:46 eivind Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.31 1998/02/09 06:09:51 eivind Exp $ */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: msdosfs_denode.c,v 1.9 1994/08/21 18:44:00 ws Exp $	*/
+comment|/*	$NetBSD: msdosfs_denode.c,v 1.28 1998/02/10 14:10:00 mrg Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (C) 1994 Wolfgang Solfrank.  * Copyright (C) 1994 TooLs GmbH.  * All rights reserved.  * Original code by Paul Popelka (paulp@uts.amdahl.com) (see below).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (C) 1994, 1995, 1997 Wolfgang Solfrank.  * Copyright (C) 1994, 1995, 1997 TooLs GmbH.  * All rights reserved.  * Original code by Paul Popelka (paulp@uts.amdahl.com) (see below).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -150,9 +150,11 @@ name|DEHASH
 parameter_list|(
 name|dev
 parameter_list|,
-name|deno
+name|dcl
+parameter_list|,
+name|doff
 parameter_list|)
-value|(dehashtbl[((dev) + (deno))& dehash])
+value|(dehashtbl[((dev) + (dcl) + (doff) / 	\ 				sizeof(struct direntry))& dehash])
 end_define
 
 begin_decl_stmt
@@ -258,6 +260,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 name|int
 name|msdosfs_init
@@ -291,7 +297,9 @@ name|dehash_slock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -354,7 +362,7 @@ argument_list|(
 name|dev
 argument_list|,
 name|dirclust
-operator|+
+argument_list|,
 name|diroff
 argument_list|)
 init|;
@@ -492,7 +500,7 @@ argument_list|,
 name|dep
 operator|->
 name|de_dirclust
-operator|+
+argument_list|,
 name|dep
 operator|->
 name|de_diroffset
@@ -618,7 +626,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If deget() succeeds it returns with the gotten denode locked().  *  * pmp	     - address of msdosfsmount structure of the filesystem containing  *	       the denode of interest.  The pm_dev field and the address of  *	       the msdosfsmount structure are used.  * dirclust  - which cluster bp contains, if dirclust is 0 (root directory)  *	       diroffset is relative to the beginning of the root directory,  *	       otherwise it is cluster relative.  * diroffset - offset past begin of cluster of denode we want  * direntptr - address of the direntry structure of interest. If direntptr is  *	       NULL, the block is read if necessary.  * depp	     - returns the address of the gotten denode.  */
+comment|/*  * If deget() succeeds it returns with the gotten denode locked().  *  * pmp	     - address of msdosfsmount structure of the filesystem containing  *	       the denode of interest.  The pm_dev field and the address of  *	       the msdosfsmount structure are used.  * dirclust  - which cluster bp contains, if dirclust is 0 (root directory)  *	       diroffset is relative to the beginning of the root directory,  *	       otherwise it is cluster relative.  * diroffset - offset past begin of cluster of denode we want  * depp	     - returns the address of the gotten denode.  */
 end_comment
 
 begin_function
@@ -630,8 +638,6 @@ parameter_list|,
 name|dirclust
 parameter_list|,
 name|diroffset
-parameter_list|,
-name|direntptr
 parameter_list|,
 name|depp
 parameter_list|)
@@ -649,11 +655,6 @@ name|u_long
 name|diroffset
 decl_stmt|;
 comment|/* index of entry within the cluster */
-name|struct
-name|direntry
-modifier|*
-name|direntptr
-decl_stmt|;
 name|struct
 name|denode
 modifier|*
@@ -680,6 +681,11 @@ init|=
 name|pmp
 operator|->
 name|pm_mountp
+decl_stmt|;
+name|struct
+name|direntry
+modifier|*
+name|direntptr
 decl_stmt|;
 name|struct
 name|denode
@@ -709,7 +715,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"deget(pmp %p, dirclust %ld, diroffset %x, direntptr %p, depp %p)\n"
+literal|"deget(pmp %p, dirclust %lu, diroffset %lx, depp %p)\n"
 argument_list|,
 name|pmp
 argument_list|,
@@ -717,53 +723,30 @@ name|dirclust
 argument_list|,
 name|diroffset
 argument_list|,
-name|direntptr
-argument_list|,
 name|depp
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If dir entry is given and refers to a directory, convert to 	 * canonical form 	 */
+comment|/* 	 * On FAT32 filesystems, root is a (more or less) normal 	 * directory 	 */
 if|if
 condition|(
-name|direntptr
-operator|&&
-operator|(
-name|direntptr
-operator|->
-name|deAttributes
-operator|&
-name|ATTR_DIRECTORY
-operator|)
-condition|)
-block|{
-name|dirclust
-operator|=
-name|getushort
+name|FAT32
 argument_list|(
-name|direntptr
-operator|->
-name|deStartCluster
+name|pmp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|dirclust
 operator|==
 name|MSDOSFSROOT
 condition|)
-name|diroffset
+name|dirclust
 operator|=
-name|MSDOSFSROOT_OFS
+name|pmp
+operator|->
+name|pm_rootdirblk
 expr_stmt|;
-else|else
-name|diroffset
-operator|=
-literal|0
-expr_stmt|;
-block|}
-comment|/* 	 * See if the denode is in the denode cache. Use the location of 	 * the directory entry to compute the hash value. For subdir use 	 * address of "." entry. for root dir use cluster MSDOSFSROOT, 	 * offset MSDOSFSROOT_OFS 	 * 	 * NOTE: The check for de_refcnt> 0 below insures the denode being 	 * examined does not represent an unlinked but still open file. 	 * These files are not to be accessible even when the directory 	 * entry that represented the file happens to be reused while the 	 * deleted file is still open. 	 */
+comment|/* 	 * See if the denode is in the denode cache. Use the location of 	 * the directory entry to compute the hash value. For subdir use 	 * address of "." entry. For root dir (if not FAT32) use cluster 	 * MSDOSFSROOT, offset MSDOSFSROOT_OFS 	 * 	 * NOTE: The check for de_refcnt> 0 below insures the denode being 	 * examined does not represent an unlinked but still open file. 	 * These files are not to be accessible even when the directory 	 * entry that represented the file happens to be reused while the 	 * deleted file is still open. 	 */
 name|ldep
 operator|=
 name|msdosfs_hashget
@@ -786,7 +769,9 @@ operator|=
 name|ldep
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if MALLOC should block. 	 */
@@ -963,12 +948,47 @@ argument_list|(
 name|ldep
 argument_list|)
 expr_stmt|;
+name|ldep
+operator|->
+name|de_pmp
+operator|=
+name|pmp
+expr_stmt|;
+name|ldep
+operator|->
+name|de_devvp
+operator|=
+name|pmp
+operator|->
+name|pm_devvp
+expr_stmt|;
+name|ldep
+operator|->
+name|de_refcnt
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Copy the directory entry into the denode area of the vnode. 	 */
 if|if
 condition|(
+operator|(
 name|dirclust
 operator|==
 name|MSDOSFSROOT
+operator|||
+operator|(
+name|FAT32
+argument_list|(
+name|pmp
+argument_list|)
+operator|&&
+name|dirclust
+operator|==
+name|pmp
+operator|->
+name|pm_rootdirblk
+operator|)
+operator|)
 operator|&&
 name|diroffset
 operator|==
@@ -976,12 +996,37 @@ name|MSDOSFSROOT_OFS
 condition|)
 block|{
 comment|/* 		 * Directory entry for the root directory. There isn't one, 		 * so we manufacture one. We should probably rummage 		 * through the root directory and find a label entry (if it 		 * exists), and then use the time and date from that entry 		 * as the time and date for the root denode. 		 */
+name|nvp
+operator|->
+name|v_flag
+operator||=
+name|VROOT
+expr_stmt|;
+comment|/* should be further down		XXX */
 name|ldep
 operator|->
 name|de_Attributes
 operator|=
 name|ATTR_DIRECTORY
 expr_stmt|;
+if|if
+condition|(
+name|FAT32
+argument_list|(
+name|pmp
+argument_list|)
+condition|)
+name|ldep
+operator|->
+name|de_StartCluster
+operator|=
+name|pmp
+operator|->
+name|pm_rootdirblk
+expr_stmt|;
+comment|/* de_FileSize will be filled in further down */
+else|else
+block|{
 name|ldep
 operator|->
 name|de_StartCluster
@@ -1000,17 +1045,24 @@ name|pmp
 operator|->
 name|pm_BytesPerSec
 expr_stmt|;
+block|}
 comment|/* 		 * fill in time and date so that dos2unixtime() doesn't 		 * spit up when called from msdosfs_getattr() with root 		 * denode 		 */
 name|ldep
 operator|->
-name|de_Time
+name|de_CHun
+operator|=
+literal|0
+expr_stmt|;
+name|ldep
+operator|->
+name|de_CTime
 operator|=
 literal|0x0000
 expr_stmt|;
 comment|/* 00:00:00	 */
 name|ldep
 operator|->
-name|de_Date
+name|de_CDate
 operator|=
 operator|(
 literal|0
@@ -1031,19 +1083,33 @@ name|DD_DAY_SHIFT
 operator|)
 expr_stmt|;
 comment|/* Jan 1, 1980	 */
+name|ldep
+operator|->
+name|de_ADate
+operator|=
+name|ldep
+operator|->
+name|de_CDate
+expr_stmt|;
+name|ldep
+operator|->
+name|de_MTime
+operator|=
+name|ldep
+operator|->
+name|de_CTime
+expr_stmt|;
+name|ldep
+operator|->
+name|de_MDate
+operator|=
+name|ldep
+operator|->
+name|de_CDate
+expr_stmt|;
 comment|/* leave the other fields as garbage */
 block|}
 else|else
-block|{
-name|bp
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|direntptr
-condition|)
 block|{
 name|error
 operator|=
@@ -1067,9 +1133,10 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
-block|}
 name|DE_INTERNALIZE
 argument_list|(
 name|ldep
@@ -1077,10 +1144,6 @@ argument_list|,
 name|direntptr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bp
-condition|)
 name|brelse
 argument_list|(
 name|bp
@@ -1088,26 +1151,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Fill in a few fields of the vnode and finish filling in the 	 * denode.  Then return the address of the found denode. 	 */
-name|ldep
-operator|->
-name|de_pmp
-operator|=
-name|pmp
-expr_stmt|;
-name|ldep
-operator|->
-name|de_devvp
-operator|=
-name|pmp
-operator|->
-name|pm_devvp
-expr_stmt|;
-name|ldep
-operator|->
-name|de_refcnt
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|ldep
@@ -1132,16 +1175,9 @@ condition|(
 name|ldep
 operator|->
 name|de_StartCluster
-operator|==
+operator|!=
 name|MSDOSFSROOT
 condition|)
-name|nvp
-operator|->
-name|v_flag
-operator||=
-name|VROOT
-expr_stmt|;
-else|else
 block|{
 name|error
 operator|=
@@ -1155,6 +1191,8 @@ literal|0
 argument_list|,
 operator|&
 name|size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1168,11 +1206,12 @@ name|ldep
 operator|->
 name|de_FileSize
 operator|=
-name|size
-operator|<<
+name|de_cn2off
+argument_list|(
 name|pmp
-operator|->
-name|pm_cnshift
+argument_list|,
+name|size
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -1233,7 +1272,9 @@ operator|=
 name|ldep
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1244,19 +1285,12 @@ name|deupdat
 parameter_list|(
 name|dep
 parameter_list|,
-name|tp
-parameter_list|,
 name|waitfor
 parameter_list|)
 name|struct
 name|denode
 modifier|*
 name|dep
-decl_stmt|;
-name|struct
-name|timespec
-modifier|*
-name|tp
 decl_stmt|;
 name|int
 name|waitfor
@@ -1276,28 +1310,50 @@ modifier|*
 name|dirp
 decl_stmt|;
 name|struct
-name|vnode
-modifier|*
-name|vp
-init|=
+name|timespec
+name|ts
+decl_stmt|;
+if|if
+condition|(
 name|DETOV
 argument_list|(
 name|dep
 argument_list|)
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MSDOSFS_DEBUG
-name|printf
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_RDONLY
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|TIMEVAL_TO_TIMESPEC
 argument_list|(
-literal|"deupdat(): dep %p\n"
+operator|&
+name|time
 argument_list|,
-name|dep
+operator|&
+name|ts
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * If the denode-modified and update-mtime bits are off, 	 * or this denode is from a readonly filesystem, 	 * or this denode is for a directory, 	 * or the denode represents an open but unlinked file, 	 * then don't do anything.  DOS directory 	 * entries that describe a directory do not ever get 	 * updated.  This is the way DOS treats them. 	 */
+name|DETIMES
+argument_list|(
+name|dep
+argument_list|,
+operator|&
+name|ts
+argument_list|,
+operator|&
+name|ts
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1305,29 +1361,38 @@ name|dep
 operator|->
 name|de_flag
 operator|&
-operator|(
 name|DE_MODIFIED
-operator||
-name|DE_UPDATE
-operator|)
 operator|)
 operator|==
 literal|0
-operator|||
-name|vp
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|dep
 operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-operator|||
+name|de_flag
+operator|&=
+operator|~
+name|DE_MODIFIED
+expr_stmt|;
+if|if
+condition|(
 name|dep
 operator|->
 name|de_Attributes
 operator|&
 name|ATTR_DIRECTORY
-operator|||
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
 name|dep
 operator|->
 name|de_refcnt
@@ -1335,9 +1400,10 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-comment|/* 	 * Read in the cluster containing the directory entry we want to 	 * update. 	 */
 name|error
 operator|=
 name|readde
@@ -1356,53 +1422,10 @@ condition|(
 name|error
 condition|)
 return|return
-name|error
-return|;
-comment|/* 	 * If the mtime is to be updated, put the passed in time into the 	 * directory entry. 	 */
-if|if
-condition|(
-name|dep
-operator|->
-name|de_flag
-operator|&
-name|DE_UPDATE
-condition|)
-block|{
-name|dep
-operator|->
-name|de_Attributes
-operator||=
-name|ATTR_ARCHIVE
-expr_stmt|;
-name|unix2dostime
-argument_list|(
-name|tp
-argument_list|,
-operator|&
-name|dep
-operator|->
-name|de_Date
-argument_list|,
-operator|&
-name|dep
-operator|->
-name|de_Time
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * The mtime is now up to date.  The denode will be unmodifed soon. 	 */
-name|dep
-operator|->
-name|de_flag
-operator|&=
-operator|~
 operator|(
-name|DE_MODIFIED
-operator||
-name|DE_UPDATE
+name|error
 operator|)
-expr_stmt|;
-comment|/* 	 * Copy the directory entry out of the denode into the cluster it 	 * came from. 	 */
+return|;
 name|DE_EXTERNALIZE
 argument_list|(
 name|dirp
@@ -1410,32 +1433,31 @@ argument_list|,
 name|dep
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Write the cluster back to disk.  If they asked for us to wait 	 * for the write to complete, then use bwrite() otherwise use 	 * bdwrite(). 	 */
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* note that error is 0 from above, but ... */
 if|if
 condition|(
 name|waitfor
 condition|)
-name|error
-operator|=
+return|return
+operator|(
 name|bwrite
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 else|else
+block|{
 name|bdwrite
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
 return|return
-name|error
+operator|(
+literal|0
+operator|)
 return|;
+block|}
 block|}
 end_function
 
@@ -1532,7 +1554,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"detrunc(): file %s, length %d, flags %d\n"
+literal|"detrunc(): file %s, length %lu, flags %x\n"
 argument_list|,
 name|dep
 operator|->
@@ -1548,6 +1570,7 @@ directive|endif
 comment|/* 	 * Disallow attempts to truncate the root directory since it is of 	 * fixed size.  That's just the way dos filesystems are.  We use 	 * the VROOT bit in the vnode because checking for the directory 	 * bit and a startcluster of 0 in the denode is not adequate to 	 * recognize the root directory at this point in a file or 	 * directory's life. 	 */
 if|if
 condition|(
+operator|(
 name|DETOV
 argument_list|(
 name|dep
@@ -1556,6 +1579,13 @@ operator|->
 name|v_flag
 operator|&
 name|VROOT
+operator|)
+operator|&&
+operator|!
+name|FAT32
+argument_list|(
+name|pmp
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -1572,7 +1602,9 @@ name|de_diroffset
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 if|if
@@ -1652,6 +1684,8 @@ literal|0
 argument_list|,
 operator|&
 name|eofentry
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1672,7 +1706,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
@@ -1680,17 +1716,12 @@ name|fc_purge
 argument_list|(
 name|dep
 argument_list|,
-operator|(
+name|de_clcount
+argument_list|(
+name|pmp
+argument_list|,
 name|length
-operator|+
-name|pmp
-operator|->
-name|pm_crbomask
-operator|)
-operator|>>
-name|pmp
-operator|->
-name|pm_cnshift
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the new length is not a multiple of the cluster size then we 	 * must zero the tail end of the new last cluster in case it 	 * becomes part of the file again because of a seek. 	 */
@@ -1709,7 +1740,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * should read from file vnode or filesystem vnode 		 * depending on if file or dir 		 */
 if|if
 condition|(
 name|isadir
@@ -1806,6 +1836,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MSDOSFS_DEBUG
@@ -1819,7 +1854,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 comment|/* 		 * is this the right place for it? 		 */
@@ -1863,11 +1900,18 @@ name|de_FileSize
 operator|=
 name|length
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isadir
+condition|)
 name|dep
 operator|->
 name|de_flag
 operator||=
 name|DE_UPDATE
+operator||
+name|DE_MODIFIED
 expr_stmt|;
 name|vflags
 operator|=
@@ -1911,23 +1955,11 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-name|TIMEVAL_TO_TIMESPEC
-argument_list|(
-operator|&
-name|time
-argument_list|,
-operator|&
-name|ts
-argument_list|)
-expr_stmt|;
 name|allerror
 operator|=
 name|deupdat
 argument_list|(
 name|dep
-argument_list|,
-operator|&
-name|ts
 argument_list|,
 literal|1
 argument_list|)
@@ -1937,7 +1969,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"detrunc(): allerror %d, eofentry %d\n"
+literal|"detrunc(): allerror %d, eofentry %lu\n"
 argument_list|,
 name|allerror
 argument_list|,
@@ -1989,7 +2021,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|fc_setcache
@@ -1998,15 +2032,14 @@ name|dep
 argument_list|,
 name|FC_LASTFC
 argument_list|,
-operator|(
+name|de_cluster
+argument_list|(
+name|pmp
+argument_list|,
 name|length
 operator|-
 literal|1
-operator|)
-operator|>>
-name|pmp
-operator|->
-name|pm_cnshift
+argument_list|)
 argument_list|,
 name|eofentry
 argument_list|)
@@ -2022,6 +2055,8 @@ operator|&&
 operator|!
 name|MSDOSFSEOF
 argument_list|(
+name|pmp
+argument_list|,
 name|chaintofree
 argument_list|)
 condition|)
@@ -2033,7 +2068,9 @@ name|chaintofree
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|allerror
+operator|)
 return|;
 block|}
 end_function
@@ -2057,7 +2094,7 @@ name|denode
 modifier|*
 name|dep
 decl_stmt|;
-name|off_t
+name|u_long
 name|length
 decl_stmt|;
 name|struct
@@ -2088,6 +2125,7 @@ decl_stmt|;
 comment|/* 	 * The root of a DOS filesystem cannot be extended. 	 */
 if|if
 condition|(
+operator|(
 name|DETOV
 argument_list|(
 name|dep
@@ -2096,11 +2134,20 @@ operator|->
 name|v_flag
 operator|&
 name|VROOT
+operator|)
+operator|&&
+operator|!
+name|FAT32
+argument_list|(
+name|pmp
+argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
-comment|/* 	 * Directories can only be extended by the superuser. 	 * Is this really important? 	 */
+comment|/* 	 * Directories cannot be extended. 	 */
 if|if
 condition|(
 name|dep
@@ -2109,24 +2156,11 @@ name|de_Attributes
 operator|&
 name|ATTR_DIRECTORY
 condition|)
-block|{
-name|error
-operator|=
-name|suser
-argument_list|(
-name|cred
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 return|return
-name|error
+operator|(
+name|EISDIR
+operator|)
 return|;
-block|}
 if|if
 condition|(
 name|length
@@ -2175,7 +2209,9 @@ operator|->
 name|pm_freeclustercount
 condition|)
 return|return
+operator|(
 name|ENOSPC
+operator|)
 return|;
 name|error
 operator|=
@@ -2217,41 +2253,35 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
-name|dep
-operator|->
-name|de_flag
-operator||=
-name|DE_UPDATE
-expr_stmt|;
 name|dep
 operator|->
 name|de_FileSize
 operator|=
 name|length
 expr_stmt|;
-name|TIMEVAL_TO_TIMESPEC
-argument_list|(
-operator|&
-name|time
-argument_list|,
-operator|&
-name|ts
-argument_list|)
+name|dep
+operator|->
+name|de_flag
+operator||=
+name|DE_UPDATE
+operator||
+name|DE_MODIFIED
 expr_stmt|;
 return|return
+operator|(
 name|deupdat
 argument_list|(
 name|dep
 argument_list|,
-operator|&
-name|ts
-argument_list|,
 literal|1
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2261,7 +2291,7 @@ comment|/*  * Move a denode to its correct hash queue after the file it represen
 end_comment
 
 begin_function
-name|int
+name|void
 name|reinsert
 parameter_list|(
 name|dep
@@ -2275,17 +2305,13 @@ block|{
 comment|/* 	 * Fix up the denode cache.  If the denode is for a directory, 	 * there is nothing to do since the hash is based on the starting 	 * cluster of the directory file and that hasn't changed.  If for a 	 * file the hash is based on the location of the directory entry, 	 * so we must remove it from the cache and re-enter it with the 	 * hash based on the new location of the directory entry. 	 */
 if|if
 condition|(
-operator|(
 name|dep
 operator|->
 name|de_Attributes
 operator|&
 name|ATTR_DIRECTORY
-operator|)
-operator|==
-literal|0
 condition|)
-block|{
+return|return;
 name|msdosfs_hashrem
 argument_list|(
 name|dep
@@ -2296,10 +2322,6 @@ argument_list|(
 name|dep
 argument_list|)
 expr_stmt|;
-block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -2372,18 +2394,18 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove the denode from the denode hash chain we are in. 	 */
+comment|/* 	 * Remove the denode from its hash chain. 	 */
 name|msdosfs_hashrem
 argument_list|(
 name|dep
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Purge old data structures associated with the denode. 	 */
 name|cache_purge
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Indicate that one less file on the filesystem is open. 	 */
 if|if
 condition|(
 name|dep
@@ -2405,12 +2427,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|dep
-operator|->
-name|de_flag
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
+comment|/* XXX */
+block|dep->de_flag = 0;
+endif|#
+directive|endif
 name|FREE
 argument_list|(
 name|dep
@@ -2425,7 +2448,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2516,7 +2541,7 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Ignore inodes related to stale file handles. 	 */
+comment|/* 	 * Ignore denodes related to stale file handles. 	 */
 if|if
 condition|(
 name|dep
@@ -2611,39 +2636,13 @@ operator|=
 name|SLOT_DELETED
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|dep
-operator|->
-name|de_flag
-operator|&
-operator|(
-name|DE_MODIFIED
-operator||
-name|DE_UPDATE
-operator|)
-condition|)
-block|{
-name|TIMEVAL_TO_TIMESPEC
-argument_list|(
-operator|&
-name|time
-argument_list|,
-operator|&
-name|ts
-argument_list|)
-expr_stmt|;
 name|deupdat
 argument_list|(
 name|dep
 argument_list|,
-operator|&
-name|ts
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|out
 label|:
 name|VOP_UNLOCK
@@ -2655,13 +2654,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|dep
-operator|->
-name|de_flag
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 	 * If we are done with the denode, then reclaim it so that it can 	 * be reused now. 	 */
+comment|/* 	 * If we are done with the denode, reclaim it 	 * so that it can be reused immediately. 	 */
 ifdef|#
 directive|ifdef
 name|MSDOSFS_DEBUG
@@ -2709,7 +2702,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function

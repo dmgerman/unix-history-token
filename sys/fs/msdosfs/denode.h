@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.13 1997/08/26 07:32:36 phk Exp $ */
+comment|/*	$Id: denode.h,v 1.14 1997/10/17 12:36:16 phk Exp $ */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: denode.h,v 1.8 1994/08/21 18:43:49 ws Exp $	*/
+comment|/*	$NetBSD: denode.h,v 1.25 1997/11/17 15:36:28 ws Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (C) 1994 Wolfgang Solfrank.  * Copyright (C) 1994 TooLs GmbH.  * All rights reserved.  * Original code by Paul Popelka (paulp@uts.amdahl.com) (see below).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (C) 1994, 1995, 1997 Wolfgang Solfrank.  * Copyright (C) 1994, 1995, 1997 TooLs GmbH.  * All rights reserved.  * Original code by Paul Popelka (paulp@uts.amdahl.com) (see below).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -38,11 +38,11 @@ begin_struct
 struct|struct
 name|fatcache
 block|{
-name|u_short
+name|u_long
 name|fc_frcn
 decl_stmt|;
 comment|/* file relative cluster number */
-name|u_short
+name|u_long
 name|fc_fsrcn
 decl_stmt|;
 comment|/* filesystem relative cluster number */
@@ -91,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|FCE_EMPTY
-value|0xffff
+value|0xffffffff
 end_define
 
 begin_comment
@@ -172,15 +172,15 @@ comment|/* cluster of the directory file containing this entry */
 name|u_long
 name|de_diroffset
 decl_stmt|;
-comment|/* ordinal of this entry in the directory */
-name|u_long
-name|de_fndclust
-decl_stmt|;
-comment|/* cluster of found dir entry */
+comment|/* offset of this entry in the directory cluster */
 name|u_long
 name|de_fndoffset
 decl_stmt|;
 comment|/* offset of found dir entry */
+name|int
+name|de_fndcnt
+decl_stmt|;
+comment|/* number of slots before de_fndoffset */
 name|long
 name|de_refcnt
 decl_stmt|;
@@ -197,34 +197,42 @@ modifier|*
 name|de_lockf
 decl_stmt|;
 comment|/* byte level lock list */
-comment|/* the next two fields must be contiguous in memory... */
 name|u_char
 name|de_Name
 index|[
-literal|8
+literal|12
 index|]
 decl_stmt|;
-comment|/* name, from directory entry */
-name|u_char
-name|de_Extension
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* extension, from directory entry */
+comment|/* name, from DOS directory entry */
 name|u_char
 name|de_Attributes
 decl_stmt|;
 comment|/* attributes, from directory entry */
+name|u_char
+name|de_CHun
+decl_stmt|;
+comment|/* Hundredth of second of CTime*/
 name|u_short
-name|de_Time
+name|de_CTime
 decl_stmt|;
 comment|/* creation time */
 name|u_short
-name|de_Date
+name|de_CDate
 decl_stmt|;
 comment|/* creation date */
 name|u_short
+name|de_ADate
+decl_stmt|;
+comment|/* access date */
+name|u_short
+name|de_MTime
+decl_stmt|;
+comment|/* modification time */
+name|u_short
+name|de_MDate
+decl_stmt|;
+comment|/* modification date */
+name|u_long
 name|de_StartCluster
 decl_stmt|;
 comment|/* starting cluster of file */
@@ -260,23 +268,69 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* modification time update request */
+comment|/* Modification time update request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE_CREATE
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Creation time update */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE_ACCESS
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Access time update */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DE_MODIFIED
-value|0x0080
+value|0x0020
 end_define
 
 begin_comment
-comment|/* denode has been modified, but DE_UPDATE 				 * isn't set */
+comment|/* Denode has been modified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE_RENAME
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Denode is in the process of being renamed */
 end_comment
 
 begin_comment
 comment|/*  * Transfer directory entries between internal and external form.  * dep is a struct denode * (internal form),  * dp is a struct direntry * (external form).  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DE_INTERNALIZE32
+parameter_list|(
+name|dep
+parameter_list|,
+name|dp
+parameter_list|)
+define|\
+value|((dep)->de_StartCluster |= getushort((dp)->deHighClust)<< 16)
+end_define
 
 begin_define
 define|#
@@ -288,7 +342,20 @@ parameter_list|,
 name|dp
 parameter_list|)
 define|\
-value|(bcopy((dp)->deName, (dep)->de_Name, 11),	\ 	 (dep)->de_Attributes = (dp)->deAttributes,	\ 	 (dep)->de_Time = getushort((dp)->deTime),	\ 	 (dep)->de_Date = getushort((dp)->deDate),	\ 	 (dep)->de_StartCluster = getushort((dp)->deStartCluster), \ 	 (dep)->de_FileSize = getulong((dp)->deFileSize))
+value|(bcopy((dp)->deName, (dep)->de_Name, 11),	\ 	 (dep)->de_Attributes = (dp)->deAttributes,	\ 	 (dep)->de_CHun = (dp)->deCHundredth,		\ 	 (dep)->de_CTime = getushort((dp)->deCTime),	\ 	 (dep)->de_CDate = getushort((dp)->deCDate),	\ 	 (dep)->de_ADate = getushort((dp)->deADate),	\ 	 (dep)->de_MTime = getushort((dp)->deMTime),	\ 	 (dep)->de_MDate = getushort((dp)->deMDate),	\ 	 (dep)->de_StartCluster = getushort((dp)->deStartCluster), \ 	 (dep)->de_FileSize = getulong((dp)->deFileSize), \ 	 (FAT32((dep)->de_pmp) ? DE_INTERNALIZE32((dep), (dp)) : 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DE_EXTERNALIZE32
+parameter_list|(
+name|dp
+parameter_list|,
+name|dep
+parameter_list|)
+define|\
+value|putushort((dp)->deHighClust, (dep)->de_StartCluster>> 16)
 end_define
 
 begin_define
@@ -301,7 +368,7 @@ parameter_list|,
 name|dep
 parameter_list|)
 define|\
-value|(bcopy((dep)->de_Name, (dp)->deName, 11),	\ 	 bzero((dp)->deReserved, 10),                   \ 	 (dp)->deAttributes = (dep)->de_Attributes,	\ 	 putushort((dp)->deTime, (dep)->de_Time),	\ 	 putushort((dp)->deDate, (dep)->de_Date),	\ 	 putushort((dp)->deStartCluster, (dep)->de_StartCluster), \ 	 putulong((dp)->deFileSize, (dep)->de_FileSize))
+value|(bcopy((dep)->de_Name, (dp)->deName, 11),	\ 	 bzero((dp)->deReserved, 10),                   \ 	 (dp)->deAttributes = (dep)->de_Attributes,	\ 	 (dp)->deCHundredth = (dep)->de_CHun,		\ 	 putushort((dp)->deCTime, (dep)->de_CTime),	\ 	 putushort((dp)->deCDate, (dep)->de_CDate),	\ 	 putushort((dp)->deADate, (dep)->de_ADate),	\ 	 putushort((dp)->deMTime, (dep)->de_MTime),	\ 	 putushort((dp)->deMDate, (dep)->de_MDate),	\ 	 putushort((dp)->deStartCluster, (dep)->de_StartCluster), \ 	 putulong((dp)->deFileSize,			\ 	     ((dep)->de_Attributes& ATTR_DIRECTORY) ? 0 : (dep)->de_FileSize), \ 	 (FAT32((dep)->de_pmp) ? DE_EXTERNALIZE32((dp), (dep)) : 0))
 end_define
 
 begin_define
@@ -347,14 +414,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|DE_TIMES
+name|DETIMES
 parameter_list|(
 name|dep
 parameter_list|,
-name|t
+name|acc
+parameter_list|,
+name|mod
+parameter_list|,
+name|cre
 parameter_list|)
 define|\
-value|if ((dep)->de_flag& DE_UPDATE) { \ 		if (!((dep)->de_Attributes& ATTR_DIRECTORY)) { \ 			struct timespec DE_TIMES_ts; \ 			(dep)->de_flag |= DE_MODIFIED; \ 			TIMEVAL_TO_TIMESPEC((t),&DE_TIMES_ts); \ 			unix2dostime(&DE_TIMES_ts,&(dep)->de_Date, \&(dep)->de_Time); \ 			(dep)->de_Attributes |= ATTR_ARCHIVE; \ 		} \ 		(dep)->de_flag&= ~DE_UPDATE; \ 	}
+value|if ((dep)->de_flag& (DE_UPDATE | DE_CREATE | DE_ACCESS)) { \ 		(dep)->de_flag |= DE_MODIFIED; \ 		if ((dep)->de_flag& DE_UPDATE) { \ 			unix2dostime((mod),&(dep)->de_MDate,&(dep)->de_MTime, NULL); \ 			(dep)->de_Attributes |= ATTR_ARCHIVE; \ 		} \ 		if (!((dep)->de_pmp->pm_flags& MSDOSFSMNT_NOWIN95)) { \ 			if ((dep)->de_flag& DE_ACCESS) \ 				unix2dostime((acc),&(dep)->de_ADate, NULL, NULL); \ 			if ((dep)->de_flag& DE_CREATE) \ 				unix2dostime((cre),&(dep)->de_CDate,&(dep)->de_CTime,&(dep)->de_CHun); \ 		} \ 		(dep)->de_flag&= ~(DE_UPDATE | DE_CREATE | DE_ACCESS); \ 	}
 end_define
 
 begin_comment
@@ -380,8 +451,14 @@ comment|/* cluster this dir entry came from */
 name|u_long
 name|defid_dirofs
 decl_stmt|;
-comment|/* index of entry within the cluster */
-comment|/* u_long	defid_gen;	 generation number */
+comment|/* offset of entry within the cluster */
+if|#
+directive|if
+literal|0
+block|u_long	defid_gen;
+comment|/* generation number */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -450,24 +527,298 @@ operator|(
 expr|struct
 name|msdosfsmount
 operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+expr|struct
+name|denode
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|uniqdosname
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+operator|,
+expr|struct
+name|componentname
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|findwin95
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|readep
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|msdosfsmount
+operator|*
 name|pmp
 operator|,
 name|u_long
-name|dirclust
+name|dirclu
 operator|,
 name|u_long
-name|diroffset
+name|dirofs
+operator|,
+expr|struct
+name|buf
+operator|*
+operator|*
+name|bpp
 operator|,
 expr|struct
 name|direntry
 operator|*
-name|direntptr
+operator|*
+name|epp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|readde
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|dep
+operator|,
+expr|struct
+name|buf
+operator|*
+operator|*
+name|bpp
+operator|,
+expr|struct
+name|direntry
+operator|*
+operator|*
+name|epp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|deextend
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|dep
+operator|,
+name|u_long
+name|length
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|cred
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fillinusemap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|msdosfsmount
+operator|*
+name|pmp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|reinsert
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|dep
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dosdirempty
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|dep
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|createde
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|dep
+operator|,
+expr|struct
+name|denode
+operator|*
+name|ddep
 operator|,
 expr|struct
 name|denode
 operator|*
 operator|*
 name|depp
+operator|,
+expr|struct
+name|componentname
+operator|*
+name|cnp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|deupdat
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|dep
+operator|,
+name|int
+name|waitfor
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|removede
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|pdep
+operator|,
+expr|struct
+name|denode
+operator|*
+name|dep
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|detrunc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|dep
+operator|,
+name|u_long
+name|length
+operator|,
+name|int
+name|flags
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|cred
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|doscheckpath
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|denode
+operator|*
+name|source
+operator|,
+expr|struct
+name|denode
+operator|*
+name|target
 operator|)
 argument_list|)
 decl_stmt|;
