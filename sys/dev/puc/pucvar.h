@@ -54,10 +54,6 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|puc_init_t
-modifier|*
-name|init
-decl_stmt|;
 name|uint32_t
 name|rval
 index|[
@@ -104,6 +100,10 @@ name|ilr_offset
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|puc_init_t
+modifier|*
+name|init
 decl_stmt|;
 block|}
 struct|;

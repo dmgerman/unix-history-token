@@ -112,8 +112,6 @@ block|{
 literal|"ARGOSY SP320 Dual port serial PCMCIA"
 block|,
 comment|/* http://www.argosy.com.tw/product/sp320.htm */
-name|NULL
-block|,
 block|{
 literal|0
 block|,
