@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)tty.c	1.2 %G%"
+literal|"@(#)tty.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,7 +213,7 @@ operator|-
 name|SIGINT
 index|]
 operator|=
-name|signal
+name|sigset
 argument_list|(
 name|s
 argument_list|,
@@ -223,7 +223,7 @@ operator|)
 operator|==
 name|SIG_DFL
 condition|)
-name|signal
+name|sigset
 argument_list|(
 name|s
 argument_list|,
@@ -531,7 +531,7 @@ condition|;
 name|s
 operator|++
 control|)
-name|signal
+name|sigset
 argument_list|(
 name|s
 argument_list|,
