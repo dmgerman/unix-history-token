@@ -1282,7 +1282,14 @@ begin_function
 name|void
 name|cleanup
 parameter_list|()
-block|{ }
+block|{
+comment|/* Make sure the pidfile is gone. */
+name|unlink
+argument_list|(
+name|path_dhclient_pid
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
