@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dol.c	5.14 (Berkeley) %G%"
+literal|"@(#)dol.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,6 +169,24 @@ begin_comment
 comment|/*  * The following variables give the information about the current  * $ expansion, recording the current word position, the remaining  * words within this expansion, the count of remaining words, and the  * information about any : modifier which is being applied.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXWLEN
+value|(BUFSIZ - 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXMOD
+value|MAXWLEN
+end_define
+
+begin_comment
+comment|/* This cannot overflow	*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|Char
@@ -209,11 +227,25 @@ begin_decl_stmt
 specifier|static
 name|Char
 name|dolmod
+index|[
+name|MAXMOD
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* : modifier character */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dolnmod
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of modifiers */
 end_comment
 
 begin_decl_stmt
@@ -643,13 +675,6 @@ condition|)
 continue|continue;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|MAXWLEN
-value|(BUFSIZ - 4)
-end_define
 
 begin_comment
 comment|/*  * Pack up more characters in this word  */
@@ -1627,7 +1652,7 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|dolmod
+name|dolnmod
 operator|=
 name|dolmcnt
 operator|=
@@ -1815,6 +1840,10 @@ literal|0
 expr_stmt|;
 comment|/* 	 * KLUDGE: dolmod is set here because it will cause setDolp to call 	 * domod and thus to copy wbuf. Otherwise setDolp would use it 	 * directly. If we saved it ourselves, no one would know when to free 	 * it. The actual function of the 'q' causes filename expansion not to 	 * be done on the interpolated value. 	 */
 name|dolmod
+index|[
+name|dolnmod
+operator|++
+index|]
 operator|=
 literal|'q'
 expr_stmt|;
@@ -2695,6 +2724,8 @@ operator|==
 literal|':'
 condition|)
 block|{
+do|do
+block|{
 name|c
 operator|=
 name|DgetC
@@ -2741,6 +2772,10 @@ name|c
 argument_list|)
 expr_stmt|;
 name|dolmod
+index|[
+name|dolnmod
+operator|++
+index|]
 operator|=
 name|c
 expr_stmt|;
@@ -2753,6 +2788,26 @@ condition|)
 name|dolmcnt
 operator|=
 literal|10000
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|c
+operator|=
+name|DgetC
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+operator|==
+literal|':'
+condition|)
+do|;
+name|unDredc
+argument_list|(
+name|c
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2782,9 +2837,12 @@ name|Char
 modifier|*
 name|dp
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
-name|dolmod
+name|dolnmod
 operator|==
 literal|0
 operator|||
@@ -2801,21 +2859,72 @@ return|return;
 block|}
 name|dp
 operator|=
+name|cp
+operator|=
+name|Strsave
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|dolnmod
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+operator|(
+name|dp
+operator|=
 name|domod
 argument_list|(
 name|cp
 argument_list|,
 name|dolmod
+index|[
+name|i
+index|]
+argument_list|)
+operator|)
+condition|)
+block|{
+name|xfree
+argument_list|(
+operator|(
+name|ptr_t
+operator|)
+name|cp
 argument_list|)
 expr_stmt|;
+name|cp
+operator|=
+name|dp
+expr_stmt|;
+name|dolmcnt
+operator|--
+expr_stmt|;
+block|}
+else|else
+block|{
+name|dp
+operator|=
+name|cp
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|dp
 condition|)
 block|{
-name|dolmcnt
-operator|--
-expr_stmt|;
 name|addla
 argument_list|(
 name|dp
@@ -2830,12 +2939,6 @@ name|dp
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|addla
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
 name|dolp
 operator|=
 name|STRNULL
