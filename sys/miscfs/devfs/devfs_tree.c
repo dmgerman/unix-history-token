@@ -7,7 +7,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.43 1997/10/11 18:31:28 phk Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.44 1997/10/12 20:24:34 phk Exp $  */
 end_comment
 
 begin_include
@@ -2320,14 +2320,6 @@ name|linklist
 argument_list|)
 expr_stmt|;
 block|}
-name|dev_free_name
-argument_list|(
-operator|(
-name|devnm_p
-operator|)
-name|devnmp
-argument_list|)
-expr_stmt|;
 return|return ;
 block|}
 end_function
