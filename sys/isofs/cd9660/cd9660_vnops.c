@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vnops.c	8.3 (Berkeley) 1/23/94  * $Id: cd9660_vnops.c,v 1.22 1995/11/20 03:57:50 dyson Exp $  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vnops.c	8.3 (Berkeley) 1/23/94  * $Id: cd9660_vnops.c,v 1.23 1995/12/03 17:14:38 bde Exp $  */
 end_comment
 
 begin_include
@@ -2203,6 +2203,9 @@ name|u_short
 name|elen
 decl_stmt|;
 name|int
+name|namlen
+decl_stmt|;
+name|int
 name|reclen
 decl_stmt|;
 name|int
@@ -2509,29 +2512,6 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
-name|isoflags
-operator|=
-name|isonum_711
-argument_list|(
-name|imp
-operator|->
-name|iso_ftype
-operator|==
-name|ISO_FTYPE_HIGH_SIERRA
-condition|?
-operator|&
-name|ep
-operator|->
-name|date
-index|[
-literal|6
-index|]
-else|:
-name|ep
-operator|->
-name|flags
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|reclen
@@ -2589,6 +2569,31 @@ expr_stmt|;
 comment|/* illegal directory, so stop looking */
 break|break;
 block|}
+name|namlen
+operator|=
+name|isonum_711
+argument_list|(
+name|ep
+operator|->
+name|name_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reclen
+operator|<
+name|ISO_DIRECTORY_RECORD_SIZE
+operator|+
+name|namlen
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+comment|/* illegal entry, stop */
+break|break;
+block|}
 comment|/* XXX: be more intelligent if we can */
 name|idp
 operator|->
@@ -2604,11 +2609,29 @@ name|current
 operator|.
 name|d_namlen
 operator|=
+name|namlen
+expr_stmt|;
+name|isoflags
+operator|=
 name|isonum_711
 argument_list|(
+name|imp
+operator|->
+name|iso_ftype
+operator|==
+name|ISO_FTYPE_HIGH_SIERRA
+condition|?
+operator|&
 name|ep
 operator|->
-name|name_len
+name|date
+index|[
+literal|6
+index|]
+else|:
+name|ep
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2649,26 +2672,6 @@ name|idp
 operator|->
 name|curroff
 expr_stmt|;
-if|if
-condition|(
-name|reclen
-operator|<
-name|ISO_DIRECTORY_RECORD_SIZE
-operator|+
-name|idp
-operator|->
-name|current
-operator|.
-name|d_namlen
-condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-comment|/* illegal entry, stop */
-break|break;
-block|}
 name|idp
 operator|->
 name|curroff
