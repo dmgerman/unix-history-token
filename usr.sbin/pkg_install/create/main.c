@@ -49,7 +49,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNOhvyf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:o:"
+literal|"YNOhvyf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:o:b:"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,6 +190,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+modifier|*
+name|InstalledPkg
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|PlayPen
 index|[
 name|FILENAME_MAX
@@ -258,6 +267,9 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|start
+decl_stmt|,
+modifier|*
+name|tmp
 decl_stmt|;
 name|pkgs
 operator|=
@@ -468,6 +480,52 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'b'
+case|:
+while|while
+condition|(
+operator|(
+name|tmp
+operator|=
+name|strrchr
+argument_list|(
+name|optarg
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|'/'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|tmp
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* 		 * If character after the '/' is alphanumeric, then we've 		 * found the package name.  Otherwise we've come across 		 * a trailing '/' and need to continue our quest. 		 */
+if|if
+condition|(
+name|isalpha
+argument_list|(
+operator|*
+name|tmp
+argument_list|)
+condition|)
+block|{
+name|InstalledPkg
+operator|=
+name|tmp
+expr_stmt|;
+break|break;
+block|}
+block|}
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -501,9 +559,17 @@ expr_stmt|;
 comment|/* If no packages, yelp */
 if|if
 condition|(
+operator|(
 name|pkgs
 operator|==
 name|start
+operator|)
+operator|&&
+operator|(
+name|InstalledPkg
+operator|==
+name|NULL
+operator|)
 condition|)
 name|warnx
 argument_list|(
@@ -520,11 +586,25 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|start
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
 name|start
 index|[
 literal|1
 index|]
+operator|!=
+name|NULL
+operator|)
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"only one package name allowed ('%s' extraneous)"
@@ -534,9 +614,26 @@ index|[
 literal|1
 index|]
 argument_list|)
-operator|,
+expr_stmt|;
 name|usage
 argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|start
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+condition|)
+name|start
+index|[
+literal|0
+index|]
+operator|=
+name|InstalledPkg
 expr_stmt|;
 if|if
 condition|(
@@ -577,7 +674,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: pkg_create [-YNOhvy] [-P pkgs] [-p prefix] [-f contents] [-i iscript]"
 argument_list|,
@@ -587,7 +684,9 @@ literal|"                  [-t template] [-X excludefile] [-D displayfile] "
 argument_list|,
 literal|"                  [-m mtreefile] [-o origin] -c comment -d description "
 argument_list|,
-literal|"                  -f packlist pkg-name"
+literal|"                  -f packlist pkg-filename"
+argument_list|,
+literal|"       pkg_create [-YNhvy] -b pkg-name [pkg-filename]"
 argument_list|)
 expr_stmt|;
 name|exit
