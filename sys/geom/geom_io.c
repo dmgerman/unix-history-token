@@ -792,7 +792,20 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* Reject requests past the end of media. */
+comment|/* Reject requests before or past the end of media. */
+if|if
+condition|(
+name|bp
+operator|->
+name|bio_offset
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 if|if
 condition|(
 name|bp
