@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/amr/amr_compat.h>
 end_include
 
