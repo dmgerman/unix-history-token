@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.25 1997/07/18 17:52:05 wollman Exp $"
+literal|"$Id: ping.c,v 1.26 1997/07/20 06:09:55 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2888,11 +2888,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
 name|ntransmitted
 operator|++
 expr_stmt|;
-comment|/* only count those that made it out */
 if|if
 condition|(
 operator|!
