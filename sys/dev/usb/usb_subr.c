@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.88 2001/11/10 16:53:32 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.89 2001/11/10 17:10:42 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3962,6 +3962,11 @@ name|usbd_pipe_handle
 name|pipe
 parameter_list|)
 block|{
+name|usbd_abort_pipe
+argument_list|(
+name|pipe
+argument_list|)
+expr_stmt|;
 name|pipe
 operator|->
 name|methods
