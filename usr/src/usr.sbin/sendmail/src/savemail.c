@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.17 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1514,6 +1514,18 @@ operator|->
 name|e_from
 operator|.
 name|q_paddr
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|define
+argument_list|(
+literal|'u'
+argument_list|,
+name|NULL
 argument_list|,
 name|e
 argument_list|)
