@@ -163,21 +163,7 @@ value|(65536 + 100)
 end_define
 
 begin_comment
-comment|/* Global variables */
-end_comment
-
-begin_comment
-comment|/*  * ip_input() and ip_output() set this secret value before calling us to  * let us know which divert port to divert a packet to; this is done so  * we can use the existing prototype for struct protosw's pr_input().  * This is stored in host order.  */
-end_comment
-
-begin_decl_stmt
-name|u_short
-name|ip_divert_port
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * A 16 bit cookie is passed to the user process.  * The user process can send it back to help the caller know something  * about where the packet came from.  *  * If IPFW is the caller then the cookie is the rule that sent  * us here. On reinjection is is the rule after which processing  * should continue. Leaving it the same will make processing start  * at the rule number after that which sent it here. Setting it to  * 0 will restart processing at the beginning.   */
+comment|/*  * A 16 bit cookie is passed to and from the user process.  * The user process can send it back to help the caller know  * something about where the packet originally came from.  *  * In the case of ipfw, then the cookie is the rule that sent  * us here. On reinjection is is the rule after which processing  * should continue. Leaving it the same will make processing start  * at the rule number after that which sent it here. Setting it to  * 0 will restart processing at the beginning.   *  * For divert_packet(), ip_divert_cookie is an input value only.  * For div_output(), ip_divert_cookie is an output value only.  */
 end_comment
 
 begin_decl_stmt
@@ -367,7 +353,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Setup generic address and protocol structures  * for div_input routine, then pass them along with  * mbuf chain. ip->ip_len is assumed to have had  * the header length (hlen) subtracted out already.  * We tell whether the packet was incoming or outgoing  * by seeing if hlen == 0, which is a hack.  */
+comment|/*  * IPPROTO_DIVERT is not a real IP protocol; don't allow any packets  * with that protocol number to enter the system from the outside.  */
 end_comment
 
 begin_function
@@ -381,6 +367,39 @@ name|m
 parameter_list|,
 name|int
 name|hlen
+parameter_list|)
+block|{
+name|ipstat
+operator|.
+name|ips_noproto
+operator|++
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Divert a packet by passing it up to the divert socket at port 'port'.  *  * Setup generic address and protocol structures for div_input routine,  * then pass them along with mbuf chain.  */
+end_comment
+
+begin_function
+name|void
+name|divert_packet
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|incoming
+parameter_list|,
+name|int
+name|port
 parameter_list|)
 block|{
 name|struct
@@ -398,17 +417,33 @@ name|socket
 modifier|*
 name|sa
 decl_stmt|;
+name|u_int16_t
+name|nport
+decl_stmt|;
 comment|/* Sanity check */
-if|if
-condition|(
-name|ip_divert_port
-operator|==
-literal|0
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"div_input: port is 0"
+name|port
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: port=0"
+operator|,
+name|__FUNCTION__
+operator|)
 argument_list|)
+expr_stmt|;
+comment|/* Record and reset divert cookie */
+name|divsrc
+operator|.
+name|sin_port
+operator|=
+name|ip_divert_cookie
+expr_stmt|;
+name|ip_divert_cookie
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Assure header */
 if|if
@@ -454,39 +489,7 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* Record divert cookie */
-name|divsrc
-operator|.
-name|sin_port
-operator|=
-name|ip_divert_cookie
-expr_stmt|;
-name|ip_divert_cookie
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Restore packet header fields */
-name|ip
-operator|->
-name|ip_len
-operator|+=
-name|hlen
-expr_stmt|;
-name|HTONS
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|HTONS
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Record receive interface address, if any 	 * But only for incoming packets. 	 */
+comment|/* 	 * Record receive interface address, if any. 	 * But only for incoming packets. 	 */
 name|divsrc
 operator|.
 name|sin_addr
@@ -497,7 +500,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|hlen
+name|incoming
 condition|)
 block|{
 name|struct
@@ -505,13 +508,9 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 comment|/* Sanity check */
-if|if
-condition|(
-operator|!
+name|KASSERT
+argument_list|(
 operator|(
 name|m
 operator|->
@@ -519,20 +518,12 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"div_input: no pkt hdr"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* More fields affected by ip_input() */
-name|HTONS
-argument_list|(
-name|ip
-operator|->
-name|ip_id
+argument_list|,
+operator|(
+literal|"%s: !PKTHDR"
+operator|,
+name|__FUNCTION__
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Find IP address for receive interface */
@@ -667,6 +658,16 @@ name|sa
 operator|=
 name|NULL
 expr_stmt|;
+name|nport
+operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_int16_t
+operator|)
+name|port
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|inp
@@ -694,10 +695,7 @@ name|inp
 operator|->
 name|inp_lport
 operator|==
-name|htons
-argument_list|(
-name|ip_divert_port
-argument_list|)
+name|nport
 condition|)
 name|sa
 operator|=
@@ -706,10 +704,6 @@ operator|->
 name|inp_socket
 expr_stmt|;
 block|}
-name|ip_divert_port
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|sa
@@ -1175,14 +1169,14 @@ name|error
 return|;
 name|cantsend
 label|:
-name|ip_divert_cookie
-operator|=
-literal|0
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|ip_divert_cookie
+operator|=
+literal|0
 expr_stmt|;
 return|return
 name|error

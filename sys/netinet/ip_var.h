@@ -96,14 +96,14 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IPDIVERT
-name|u_short
-name|ipq_divert
+name|u_int32_t
+name|ipq_div_info
 decl_stmt|;
-comment|/* divert protocol port */
-name|u_short
+comment|/* ipfw divert port& flags */
+name|u_int16_t
 name|ipq_div_cookie
 decl_stmt|;
-comment|/* divert protocol cookie */
+comment|/* ipfw divert cookie */
 endif|#
 directive|endif
 block|}
@@ -914,6 +914,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|divert_packet
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|struct
 name|pr_usrreqs
@@ -923,14 +941,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_short
-name|ip_divert_port
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_short
+name|u_int16_t
 name|ip_divert_cookie
 decl_stmt|;
 end_decl_stmt

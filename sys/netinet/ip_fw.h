@@ -759,6 +759,20 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|IP_FW_PORT_DYNT_FLAG
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_PORT_TEE_FLAG
+value|0x20000
+end_define
+
 begin_comment
 comment|/*  * Function definitions.  */
 end_comment

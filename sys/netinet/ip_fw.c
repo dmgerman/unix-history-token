@@ -2702,7 +2702,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parameters:  *  *	pip	Pointer to packet header (struct ip **)  *      bridge_ipfw extension: pip = NULL means a complete ethernet packet  *      including ethernet header in the mbuf. Other fields  *      are ignored/invalid.  *  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  *	*cookie Skip up to the first rule past this rule number;  *	*m	The packet; we set to NULL when/if we nuke it.  *	*flow_id pointer to the last matching rule (in/out)  *	*next_hop socket we are forwarding to (in/out).  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port.  */
+comment|/*  * Parameters:  *  *	pip	Pointer to packet header (struct ip **)  *      bridge_ipfw extension: pip = NULL means a complete ethernet packet  *      including ethernet header in the mbuf. Other fields  *      are ignored/invalid.  *  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  *	*cookie Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee  *	*m	The packet; we set to NULL when/if we nuke it.  *	*flow_id pointer to the last matching rule (in/out)  *	*next_hop socket we are forwarding to (in/out).  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port, with these caveats:  *  *		- If IP_FW_PORT_TEE_FLAG is set, tee the packet instead  *		  of diverting it (ie, 'ipfw tee').  *  *		- If IP_FW_PORT_DYNT_FLAG is set, interpret the lower  *		  16 bits as a dummynet pipe number instead of diverting  */
 end_comment
 
 begin_function
@@ -2793,10 +2793,18 @@ name|dst_port
 decl_stmt|;
 name|u_int16_t
 name|skipto
-init|=
+decl_stmt|;
+comment|/* Grab and reset cookie */
+name|skipto
+operator|=
 operator|*
 name|cookie
-decl_stmt|;
+expr_stmt|;
+operator|*
+name|cookie
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|pip
@@ -2979,6 +2987,7 @@ operator|*
 name|flow_id
 condition|)
 block|{
+comment|/* Accept if passed first test */
 if|if
 condition|(
 name|fw_one_pass
@@ -2986,8 +2995,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* accept if passed first test */
-comment|/* 	     * pkt has already been tagged. Look for the next rule 	     * to restart processing 	     */
+comment|/* 		 * Packet has already been tagged. Look for the next rule 		 * to restart processing. 		 */
 name|chain
 operator|=
 name|LIST_NEXT
@@ -3034,8 +3042,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|chain
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|dropit
@@ -3043,7 +3052,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 	 * Go down the chain, looking for enlightment 	 * If we've been asked to start at a given rule immediatly, do so. 	 */
+comment|/* 		 * Go down the chain, looking for enlightment. 		 * If we've been asked to start at a given rule, do so 		 */
 name|chain
 operator|=
 name|LIST_FIRST
@@ -3055,6 +3064,8 @@ expr_stmt|;
 if|if
 condition|(
 name|skipto
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -3070,7 +3081,6 @@ while|while
 condition|(
 name|chain
 operator|&&
-operator|(
 name|chain
 operator|->
 name|rule
@@ -3078,9 +3088,7 @@ operator|->
 name|fw_number
 operator|<=
 name|skipto
-operator|)
 condition|)
-block|{
 name|chain
 operator|=
 name|LIST_NEXT
@@ -3090,22 +3098,17 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
-operator|!
 name|chain
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|dropit
 goto|;
 block|}
 block|}
-operator|*
-name|cookie
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -3558,7 +3561,7 @@ name|PULLUP_TO
 parameter_list|(
 name|l
 parameter_list|)
-value|do {                                            \ 			    int len = (pip ? l : l + 14 ) ;             \ 			    if ((*m)->m_len< (len) ) {                 \ 				if ( (*m = m_pullup(*m, (len))) == 0)   \ 				    goto bogusfrag;                     \ 				ip = mtod(*m, struct ip *);             \ 				if (pip)                                \ 				    *pip = ip ;                         \ 				else                                    \ 				    ip = (struct ip *)((char *)ip + 14);\ 				offset = (ip->ip_off& IP_OFFMASK);     \ 			    }                                           \ 			} while (0)
+value|do {						\ 			    int len = (pip ? (l) : (l) + 14 );		\ 			    if ((*m)->m_len< (len) ) {                 \ 				if ( (*m = m_pullup(*m, (len))) == 0)   \ 				    goto bogusfrag;                     \ 				ip = mtod(*m, struct ip *);             \ 				if (pip)                                \ 				    *pip = ip ;                         \ 				else                                    \ 				    ip = (struct ip *)((char *)ip + 14);\ 				offset = (ip->ip_off& IP_OFFMASK);     \ 			    }                                           \ 			} while (0)
 comment|/* Protocol specific checks for uid only */
 if|if
 condition|(
@@ -3914,13 +3917,6 @@ break|break;
 block|}
 default|default:
 continue|continue;
-comment|/*  * XXX Shouldn't GCC be allowing two bogusfrag labels if they're both inside  * separate blocks? Hmm.... It seems it's got incorrect behavior here.  */
-if|#
-directive|if
-literal|0
-block|bogusfrag: 				if (fw_verbose) 					ipfw_report(NULL, ip, rif, oif); 				goto dropit;
-endif|#
-directive|endif
 block|}
 block|}
 comment|/* Protocol specific checks */
@@ -4242,6 +4238,8 @@ block|}
 undef|#
 directive|undef
 name|PULLUP_TO
+default|default:
+break|break;
 name|bogusfrag
 label|:
 if|if
@@ -4397,8 +4395,22 @@ return|;
 case|case
 name|IP_FW_F_TEE
 case|:
-comment|/* 			 * XXX someday tee packet here, but beware that you 			 * can't use m_copym() or m_copypacket() because 			 * the divert input routine modifies the mbuf 			 * (and these routines only increment reference 			 * counts in the case of mbuf clusters), so need 			 * to write custom routine. 			 */
-continue|continue;
+operator|*
+name|cookie
+operator|=
+name|f
+operator|->
+name|fw_number
+expr_stmt|;
+return|return
+operator|(
+name|f
+operator|->
+name|fw_divert_port
+operator||
+name|IP_FW_PORT_TEE_FLAG
+operator|)
+return|;
 endif|#
 directive|endif
 case|case
@@ -4448,7 +4460,7 @@ name|f
 operator|->
 name|fw_pipe_nr
 operator||
-literal|0x10000
+name|IP_FW_PORT_DYNT_FLAG
 operator|)
 return|;
 endif|#
@@ -4810,8 +4822,6 @@ block|}
 name|dropit
 label|:
 comment|/* 	 * Finally, drop the packet. 	 */
-comment|/* *cookie = 0; */
-comment|/* XXX is this necessary ? */
 if|if
 condition|(
 operator|*
