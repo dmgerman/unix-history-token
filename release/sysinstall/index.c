@@ -256,7 +256,7 @@ literal|"emulators"
 block|,
 literal|"Utilities for emulating other OS types."
 block|,
-literal|"emulators"
+literal|"ftp"
 block|,
 literal|"FTP client and server utilities."
 block|,
@@ -408,9 +408,13 @@ literal|"tcl80"
 block|,
 literal|"TCL v8.0 and packages that depend on it."
 block|,
-literal|"tcl81"
+literal|"tcl80"
 block|,
-literal|"TCL v8.1 and packages that depend on it."
+literal|"TCL v8.0 and packages that depend on it."
+block|,
+literal|"tcl82"
+block|,
+literal|"TCL v8.2 and packages that depend on it."
 block|,
 literal|"tk41"
 block|,
@@ -427,6 +431,14 @@ block|,
 literal|"tk81"
 block|,
 literal|"Tk8.1 and packages that depend on it."
+block|,
+literal|"tk82"
+block|,
+literal|"Tk8.2 and packages that depend on it."
+block|,
+literal|"tkstep80"
+block|,
+literal|"tkstep wm and packages that depend on it."
 block|,
 literal|"troff"
 block|,
