@@ -449,6 +449,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Policy -- Can ucred cr1 send SIGIO to process cr2?  * Should use cr_cansignal() once cr_cansignal() allows SIGIO and SIGURG  * in the right situations.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CANSIGIO
+parameter_list|(
+name|cr1
+parameter_list|,
+name|cr2
+parameter_list|)
+define|\
+value|((cr1)->cr_uid == 0 || \ 	    (cr1)->cr_ruid == (cr2)->cr_ruid || \ 	    (cr1)->cr_uid == (cr2)->cr_ruid || \ 	    (cr1)->cr_ruid == (cr2)->cr_uid || \ 	    (cr1)->cr_uid == (cr2)->cr_uid)
+end_define
+
 begin_decl_stmt
 name|int
 name|sugid_coredump
@@ -9338,7 +9355,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cr_cansignal
+name|CANSIGIO
 argument_list|(
 name|sigio
 operator|->
@@ -9347,11 +9364,9 @@ argument_list|,
 name|sigio
 operator|->
 name|sio_proc
-argument_list|,
-name|sig
+operator|->
+name|p_ucred
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|psignal
 argument_list|(
@@ -9401,20 +9416,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|cr_cansignal
+name|CANSIGIO
 argument_list|(
 name|sigio
 operator|->
 name|sio_ucred
 argument_list|,
 name|p
-argument_list|,
-name|sig
+operator|->
+name|p_ucred
 argument_list|)
-operator|==
-literal|0
-operator|)
 operator|&&
 operator|(
 name|checkctty
