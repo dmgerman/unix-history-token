@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.7 (Berkeley) %G%"
+literal|"@(#)man.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1688,10 +1688,6 @@ condition|(
 name|f_cat
 condition|)
 block|{
-name|found
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|ap
@@ -1724,25 +1720,7 @@ operator|*
 name|ap
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|f_all
-condition|)
-block|{
-name|found
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 block|}
-block|}
-if|if
-condition|(
-operator|!
-name|found
-condition|)
-block|{
 if|if
 condition|(
 name|intmpp
@@ -1772,7 +1750,6 @@ name|list
 operator|.
 name|qe_next
 control|)
-block|{
 name|cat
 argument_list|(
 name|intmpp
@@ -1780,14 +1757,6 @@ operator|->
 name|s
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|f_all
-condition|)
-break|break;
-block|}
-block|}
 name|cleanup
 argument_list|()
 expr_stmt|;
@@ -1802,10 +1771,6 @@ condition|(
 name|f_how
 condition|)
 block|{
-name|found
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|ap
@@ -1838,25 +1803,7 @@ operator|*
 name|ap
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|f_all
-condition|)
-block|{
-name|found
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 block|}
-block|}
-if|if
-condition|(
-operator|!
-name|found
-condition|)
-block|{
 name|intmpp
 operator|=
 name|getlist
@@ -1893,7 +1840,6 @@ name|list
 operator|.
 name|qe_next
 control|)
-block|{
 name|how
 argument_list|(
 name|intmpp
@@ -1901,14 +1847,6 @@ operator|->
 name|s
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|f_all
-condition|)
-break|break;
-block|}
-block|}
 name|cleanup
 argument_list|()
 expr_stmt|;
@@ -2019,10 +1957,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * 9: We display things in a single command; build a list of things 	 *    to display. 	 */
-name|found
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|ap
@@ -2068,25 +2002,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|f_all
-condition|)
-block|{
-name|found
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 block|}
-block|}
-if|if
-condition|(
-operator|!
-name|found
-condition|)
-block|{
 name|intmpp
 operator|=
 name|getlist
@@ -2123,7 +2039,6 @@ name|list
 operator|.
 name|qe_next
 control|)
-block|{
 name|len
 operator|+=
 name|strlen
@@ -2133,14 +2048,6 @@ operator|->
 name|s
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|f_all
-condition|)
-break|break;
-block|}
-block|}
 if|if
 condition|(
 operator|(
@@ -2196,10 +2103,6 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-name|found
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|ap
@@ -2254,25 +2157,7 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|f_all
-condition|)
-block|{
-name|found
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 block|}
-block|}
-if|if
-condition|(
-operator|!
-name|found
-condition|)
-block|{
 name|intmpp
 operator|=
 name|getlist
@@ -2340,7 +2225,6 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-block|}
 block|}
 operator|*
 name|p
