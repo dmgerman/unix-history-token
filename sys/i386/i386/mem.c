@@ -646,12 +646,14 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-name|pmap_kremove
+name|pmap_qremove
 argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
 name|ptvmmap
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 continue|continue;
