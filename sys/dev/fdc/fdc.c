@@ -8597,6 +8597,10 @@ operator|==
 name|n
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|fd
@@ -8620,6 +8624,10 @@ return|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|fd
