@@ -3861,7 +3861,7 @@ name|MHLEN
 expr_stmt|;
 name|top
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|mp
 operator|=
