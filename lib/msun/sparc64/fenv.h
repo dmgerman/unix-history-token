@@ -179,7 +179,7 @@ name|__stxfsr
 parameter_list|(
 name|__r
 parameter_list|)
-value|__asm("stx %%fsr, %0" : "=m" (*(__r)))
+value|__asm __volatile("stx %%fsr, %0" : "=m" (*(__r)))
 end_define
 
 begin_function

@@ -160,7 +160,7 @@ name|__mf_fpcr
 parameter_list|(
 name|__cw
 parameter_list|)
-value|__asm ("mf_fpcr %0" : "=f" (*(__cw)))
+value|__asm __volatile("mf_fpcr %0" : "=f" (*(__cw)))
 end_define
 
 begin_define

@@ -158,7 +158,7 @@ name|__stfpsr
 parameter_list|(
 name|__r
 parameter_list|)
-value|__asm("mov %0=ar.fpsr" : "=r" (*(__r)))
+value|__asm __volatile("mov %0=ar.fpsr" : "=r" (*(__r)))
 end_define
 
 begin_define
