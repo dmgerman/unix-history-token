@@ -133,7 +133,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_int64_t
+name|uint64_t
 name|ia64_gateway_page
 index|[]
 decl_stmt|;
@@ -343,7 +343,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_int64_t
+name|uint64_t
 name|pmap_ptc_e_base
 init|=
 literal|0x100000000
@@ -352,7 +352,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int64_t
+name|uint64_t
 name|pmap_ptc_e_count1
 init|=
 literal|3
@@ -361,7 +361,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int64_t
+name|uint64_t
 name|pmap_ptc_e_count2
 init|=
 literal|2
@@ -370,7 +370,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int64_t
+name|uint64_t
 name|pmap_ptc_e_stride1
 init|=
 literal|0x2000
@@ -379,7 +379,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int64_t
+name|uint64_t
 name|pmap_ptc_e_stride2
 init|=
 literal|0x100000000
@@ -420,7 +420,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|pmap_ridmap
 decl_stmt|;
@@ -1036,7 +1036,7 @@ expr_stmt|;
 name|pmap_ridmap
 operator|=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|*
 operator|)
 name|pmap_steal_memory
@@ -1948,7 +1948,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|addr
 decl_stmt|;
 name|int
@@ -2076,7 +2076,7 @@ end_function
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|pmap_allocate_rid
 parameter_list|(
 name|void
@@ -2190,7 +2190,7 @@ specifier|static
 name|void
 name|pmap_free_rid
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|rid
 parameter_list|)
 block|{
@@ -2269,7 +2269,7 @@ modifier|*
 name|pte
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|vhp
 decl_stmt|,
@@ -2279,7 +2279,7 @@ decl_stmt|;
 name|vhp
 operator|=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|*
 operator|)
 name|vhpte
@@ -2287,7 +2287,7 @@ expr_stmt|;
 name|p
 operator|=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|*
 operator|)
 name|pte
@@ -2375,14 +2375,14 @@ block|{
 return|return
 operator|*
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|*
 operator|)
 name|pte1
 operator|==
 operator|*
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|*
 operator|)
 name|pte2
@@ -3011,7 +3011,7 @@ name|ia64_lpte
 modifier|*
 name|vhpte
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|tag
 decl_stmt|;
 name|vhpte
@@ -3239,7 +3239,7 @@ name|ia64_lpte
 modifier|*
 name|pte
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|tag
 decl_stmt|;
 name|tag
@@ -8478,7 +8478,7 @@ argument_list|,
 name|ia64_tpa
 argument_list|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 operator|&
 name|buf
@@ -8721,7 +8721,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|t
 decl_stmt|;
 name|struct
@@ -8765,7 +8765,7 @@ block|)
 empty_stmt|;
 operator|*
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|*
 operator|)
 operator|&
