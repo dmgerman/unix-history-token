@@ -9652,6 +9652,11 @@ name|u_int
 name|map
 parameter_list|)
 block|{
+name|int
+name|count
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -9672,6 +9677,11 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+name|count
+operator|++
+operator|<
+literal|100000
+operator|&&
 operator|(
 name|stopped_cpus
 operator|&
@@ -9682,6 +9692,37 @@ name|map
 condition|)
 comment|/* spin */
 empty_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+operator|(
+name|stopped_cpus
+operator|&
+name|map
+operator|)
+operator|!=
+name|map
+condition|)
+name|printf
+argument_list|(
+literal|"Warning: CPUs 0x%x did not stop!\n"
+argument_list|,
+operator|(
+operator|~
+operator|(
+name|stopped_cpus
+operator|&
+name|map
+operator|)
+operator|)
+operator|&
+name|map
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|1
 return|;
@@ -9694,6 +9735,11 @@ name|u_int
 name|map
 parameter_list|)
 block|{
+name|int
+name|count
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -9707,7 +9753,28 @@ operator|=
 name|map
 expr_stmt|;
 comment|/* signal other cpus to restart */
+comment|/* wait for each to clear its bit */
 while|while
+condition|(
+name|count
+operator|++
+operator|<
+literal|100000
+operator|&&
+operator|(
+name|stopped_cpus
+operator|&
+name|map
+operator|)
+operator|!=
+literal|0
+condition|)
+comment|/* spin */
+empty_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
 condition|(
 operator|(
 name|stopped_cpus
@@ -9717,9 +9784,24 @@ operator|)
 operator|!=
 literal|0
 condition|)
-comment|/* wait for each to clear its bit */
-comment|/* spin */
-empty_stmt|;
+name|printf
+argument_list|(
+literal|"Warning: CPUs 0x%x did not restart!\n"
+argument_list|,
+operator|(
+operator|~
+operator|(
+name|stopped_cpus
+operator|&
+name|map
+operator|)
+operator|)
+operator|&
+name|map
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|1
 return|;
