@@ -380,11 +380,17 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
 return|return
 operator|(
 name|NLERR
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -508,10 +514,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|saverr
-operator|=
-name|errno
-expr_stmt|;
 name|free
 argument_list|(
 name|plang
@@ -519,7 +521,7 @@ argument_list|)
 expr_stmt|;
 name|errno
 operator|=
-name|saverr
+name|ENOMEM
 expr_stmt|;
 return|return
 operator|(
