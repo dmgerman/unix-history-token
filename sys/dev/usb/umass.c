@@ -6982,6 +6982,10 @@ block|{
 case|case
 name|USBD_NORMAL_COMPLETION
 case|:
+name|maxlun
+operator|=
+name|buf
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|UDMASS_BBB
@@ -6999,10 +7003,6 @@ operator|,
 name|maxlun
 operator|)
 argument_list|)
-expr_stmt|;
-name|maxlun
-operator|=
-name|buf
 expr_stmt|;
 break|break;
 case|case
