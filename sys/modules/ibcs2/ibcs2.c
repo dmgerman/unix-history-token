@@ -18,19 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/exec.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
+file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysent.h>
 end_include
 
 begin_include
@@ -45,24 +45,10 @@ directive|include
 file|<sys/errno.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|execsw
-name|coff_execsw
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
-name|MOD_EXEC
+name|MOD_MISC
 argument_list|(
 literal|"ibcs2_mod"
-argument_list|,
-argument|-
-literal|1
-argument_list|,
-argument|(struct execsw*)&coff_execsw
 argument_list|)
 end_macro
 
