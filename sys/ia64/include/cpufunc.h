@@ -77,26 +77,15 @@ directive|define
 name|HAVE_INLINE_FFS
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|int
+begin_define
+define|#
+directive|define
 name|ffs
 parameter_list|(
-name|int
-name|mask
+name|x
 parameter_list|)
-block|{
-return|return
-operator|(
-name|__builtin_ffs
-argument_list|(
-name|mask
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
+value|__builtin_ffs(x)
+end_define
 
 begin_endif
 endif|#
