@@ -329,6 +329,16 @@ file|<dev/sym/sym_defs.h>
 end_include
 
 begin_comment
+comment|/* We want to know if the ncr has been configured */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"ncr.h"
+end_include
+
+begin_comment
 comment|/*  *  On x86 architecture, write buffers management does not   *  reorder writes to memory. So, preventing compiler from    *  optimizing the code is enough to guarantee some ordering   *  when the CPU is writing data accessed by the PCI chip.  *  On Alpha architecture, explicit barriers are to be used.  *  By the way, the *BSD semantic associates the barrier   *  with some window on the BUS and the corresponding verbs   *  are for now unused. What a strangeness. The driver must   *  ensure that accesses from the CPU to the start and done   *  queues are not reordered by either the compiler or the   *  CPU and uses 'volatile' for this purpose.  */
 end_comment
 
@@ -5292,7 +5302,7 @@ name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|u32
 name|no_data
 index|[
-literal|36
+literal|38
 index|]
 decl_stmt|;
 else|#
@@ -5300,7 +5310,7 @@ directive|else
 name|u32
 name|no_data
 index|[
-literal|28
+literal|30
 index|]
 decl_stmt|;
 endif|#
@@ -10555,6 +10565,21 @@ name|XE_EXTRA_DATA
 argument_list|)
 block|,
 literal|0
+block|,
+name|SCR_STORE_REL
+argument_list|(
+name|scratcha
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|offsetof
+argument_list|(
+expr|struct
+name|sym_ccb
+argument_list|,
+name|xerr_status
+argument_list|)
 block|,
 comment|/* 	 *  Count this byte. 	 *  This will allow to return a positive  	 *  residual to user. 	 */
 name|SCR_LOAD_REL
@@ -25022,7 +25047,7 @@ name|SYM_CONF_MAX_SG
 expr_stmt|;
 if|if
 condition|(
-name|dp_sg
+name|dp_scr
 operator|!=
 name|tmp
 condition|)
@@ -36532,10 +36557,33 @@ argument_list|(
 name|pci_tag
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NNCR
+operator|>
+literal|0
+comment|/* Only claim chips we are allowed to take precedence over the ncr */
+if|if
+condition|(
+name|chip
+operator|&&
+operator|!
+operator|(
+name|chip
+operator|->
+name|lp_probe_bit
+operator|&
+name|SYM_SETUP_LP_PROBE_MAP
+operator|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|chip
 condition|)
+endif|#
+directive|endif
 return|return
 name|chip
 operator|->
