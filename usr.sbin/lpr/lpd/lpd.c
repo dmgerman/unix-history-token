@@ -644,6 +644,14 @@ expr_stmt|;
 block|}
 name|sin
 operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
+name|sin
+operator|.
 name|sin_family
 operator|=
 name|AF_INET
