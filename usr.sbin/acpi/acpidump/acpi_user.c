@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Doug Rabson  * Copyright (c) 2000 Mitsuru IWASAKI<iwasaki@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: acpi_user.c,v 1.5 2000/08/09 14:47:52 iwasaki Exp $  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 1999 Doug Rabson  * Copyright (c) 2000 Mitsuru IWASAKI<iwasaki@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -124,7 +130,9 @@ begin_function
 specifier|static
 name|void
 name|acpi_user_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -366,12 +374,13 @@ decl_stmt|;
 name|u_long
 name|addr
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|acpi_user_init
 argument_list|()
 expr_stmt|;
+comment|/* Attempt to use sysctl to find RSD PTR record */
 name|len
 operator|=
 sizeof|sizeof
@@ -426,12 +435,14 @@ literal|"RSD PTR "
 argument_list|,
 literal|8
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctl %s does not point to RSDP\n"
+literal|"sysctl %s does not point to RSDP"
 argument_list|,
 name|machdep_acpi_root
 argument_list|)
@@ -453,7 +464,7 @@ argument_list|)
 condition|)
 name|warnx
 argument_list|(
-literal|"RSDP has invalid checksum\n"
+literal|"RSDP has invalid checksum"
 argument_list|)
 expr_stmt|;
 if|if
@@ -488,6 +499,13 @@ name|defined
 argument_list|(
 name|__ia64__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+comment|/* On ia32, scan physical memory for RSD PTR if above failed */
 for|for
 control|(
 name|addr
@@ -643,31 +661,24 @@ block|}
 end_function
 
 begin_function
-name|void
-name|acpi_load_dsdt
+name|struct
+name|ACPIsdt
+modifier|*
+name|dsdt_load_file
 parameter_list|(
 name|char
 modifier|*
-name|dumpfile
-parameter_list|,
-name|u_int8_t
-modifier|*
-modifier|*
-name|dpp
-parameter_list|,
-name|u_int8_t
-modifier|*
-modifier|*
-name|endp
+name|infile
 parameter_list|)
 block|{
-name|u_int8_t
+name|struct
+name|ACPIsdt
+modifier|*
+name|sdt
+decl_stmt|;
+name|uint8_t
 modifier|*
 name|dp
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|end
 decl_stmt|;
 name|struct
 name|stat
@@ -680,7 +691,7 @@ name|acpi_mem_fd
 operator|=
 name|open
 argument_list|(
-name|dumpfile
+name|infile
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -689,17 +700,15 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"opening %s\n"
+literal|"opening %s"
 argument_list|,
-name|dumpfile
+name|infile
 argument_list|)
 expr_stmt|;
-block|}
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -719,17 +728,15 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"fstat %s\n"
+literal|"fstat %s"
 argument_list|,
-name|dumpfile
+name|infile
 argument_list|)
 expr_stmt|;
-block|}
 name|dp
 operator|=
 name|mmap
@@ -755,17 +762,24 @@ name|dp
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"mmap %s\n"
+literal|"mmap %s"
 argument_list|,
-name|dumpfile
+name|infile
 argument_list|)
 expr_stmt|;
-block|}
+name|sdt
+operator|=
+operator|(
+expr|struct
+name|ACPIsdt
+operator|*
+operator|)
+name|dp
+expr_stmt|;
 if|if
 condition|(
 name|strncmp
@@ -776,53 +790,30 @@ literal|"DSDT"
 argument_list|,
 literal|4
 argument_list|)
-operator|==
+operator|!=
+literal|0
+operator|||
+name|acpi_checksum
+argument_list|(
+name|sdt
+argument_list|,
+name|sdt
+operator|->
+name|len
+argument_list|)
+operator|!=
 literal|0
 condition|)
-block|{
-name|memcpy
-argument_list|(
-operator|&
-name|dsdt_header
-argument_list|,
-name|dp
-argument_list|,
-name|SIZEOF_SDT_HDR
-argument_list|)
-expr_stmt|;
-name|dp
-operator|+=
-name|SIZEOF_SDT_HDR
-expr_stmt|;
-name|sb
-operator|.
-name|st_size
-operator|-=
-name|SIZEOF_SDT_HDR
-expr_stmt|;
-block|}
-name|end
-operator|=
+return|return
 operator|(
-name|u_int8_t
-operator|*
+name|NULL
 operator|)
-name|dp
-operator|+
-name|sb
-operator|.
-name|st_size
-expr_stmt|;
-operator|*
-name|dpp
-operator|=
-name|dp
-expr_stmt|;
-operator|*
-name|endp
-operator|=
-name|end
-expr_stmt|;
+return|;
+return|return
+operator|(
+name|sdt
+operator|)
+return|;
 block|}
 end_function
 
