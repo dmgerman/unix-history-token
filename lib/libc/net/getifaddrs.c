@@ -280,6 +280,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|MAX_SYSCTL_TRY
+value|5
+end_define
+
 begin_function
 name|int
 name|getifaddrs
@@ -309,6 +316,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NET_RT_IFLIST
+name|int
+name|ntry
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|mib
 index|[
@@ -473,6 +485,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* no flags */
+do|do
+block|{
+comment|/* 		 * We'll try to get addresses several times in case that 		 * the number of addresses is unexpectedly increased during 		 * the two sysctl calls.  This should rarely happen, but we'll 		 * try to do our best for applications that assume success of 		 * this library (which should usually be the case). 		 * Portability note: since FreeBSD does not add margin of 		 * memory at the first sysctl, the possibility of failure on 		 * the second sysctl call is a bit higher. 		 */
 if|if
 condition|(
 name|sysctl
@@ -539,6 +554,18 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOMEM
+operator|||
+operator|++
+name|ntry
+operator|>=
+name|MAX_SYSCTL_TRY
+condition|)
+block|{
 name|free
 argument_list|(
 name|buf
@@ -551,6 +578,24 @@ literal|1
 operator|)
 return|;
 block|}
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+do|while
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+do|;
 for|for
 control|(
 name|next
