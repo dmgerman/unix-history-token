@@ -577,9 +577,6 @@ operator|,
 expr|struct
 name|ibcs2_socksys_args
 operator|*
-operator|,
-name|int
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

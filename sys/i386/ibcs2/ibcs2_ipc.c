@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Scott Bartram  * Copyright (c) 1995 Steven Wallace  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: ibcs2_ipc.c,v 1.11 1997/03/24 11:23:31 bde Exp $  */
+comment|/*  * Copyright (c) 1995 Scott Bartram  * Copyright (c) 1995 Steven Wallace  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: ibcs2_ipc.c,v 1.12 1997/07/20 09:39:42 bde Exp $  */
 end_comment
 
 begin_include
@@ -510,8 +510,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -522,10 +520,6 @@ name|struct
 name|ibcs2_msgsys_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 switch|switch
@@ -562,8 +556,6 @@ name|msgsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -669,8 +661,6 @@ name|p
 argument_list|,
 operator|&
 name|margs
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 if|if
@@ -747,8 +737,6 @@ name|p
 argument_list|,
 operator|&
 name|margs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -761,8 +749,6 @@ name|p
 argument_list|,
 operator|&
 name|margs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -794,8 +780,6 @@ name|msgsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -822,8 +806,6 @@ name|msgsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 default|default:
@@ -1106,8 +1088,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1118,10 +1098,6 @@ name|struct
 name|ibcs2_semsys_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -1223,8 +1199,6 @@ name|semsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 if|if
@@ -1408,8 +1382,6 @@ name|semsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1479,8 +1451,6 @@ name|semsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1496,8 +1466,6 @@ name|semsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -1515,8 +1483,6 @@ name|semsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -1534,8 +1500,6 @@ name|semsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1750,8 +1714,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1762,10 +1724,6 @@ name|struct
 name|ibcs2_shmsys_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -1796,8 +1754,6 @@ name|shmsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -1886,8 +1842,6 @@ name|shmsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 if|if
@@ -2071,8 +2025,6 @@ name|shmsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -2088,8 +2040,6 @@ name|shmsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -2107,8 +2057,6 @@ name|shmsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -2126,8 +2074,6 @@ name|shmsys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Steven Wallace  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: ibcs2_other.c,v 1.6 1997/07/20 09:39:45 bde Exp $  */
+comment|/*  * Copyright (c) 1995 Steven Wallace  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: ibcs2_other.c,v 1.7 1997/08/25 21:57:55 bde Exp $  */
 end_comment
 
 begin_comment
@@ -76,10 +76,6 @@ name|struct
 name|ibcs2_secure_args
 modifier|*
 name|uap
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 switch|switch
@@ -93,8 +89,12 @@ case|case
 name|IBCS2_SECURE_GETLUID
 case|:
 comment|/* get login uid */
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|p
 operator|->
@@ -143,18 +143,11 @@ name|struct
 name|ibcs2_lseek_args
 modifier|*
 name|uap
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
 name|lseek_args
 name|largs
-decl_stmt|;
-name|off_t
-name|lret
 decl_stmt|;
 name|int
 name|error
@@ -191,23 +184,7 @@ name|p
 argument_list|,
 operator|&
 name|largs
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|lret
 argument_list|)
-expr_stmt|;
-operator|*
-operator|(
-name|long
-operator|*
-operator|)
-name|retval
-operator|=
-name|lret
 expr_stmt|;
 return|return
 operator|(
@@ -247,10 +224,6 @@ parameter_list|,
 name|void
 modifier|*
 name|uap
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -311,8 +284,6 @@ name|p
 argument_list|,
 operator|&
 name|sock
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 if|if
@@ -393,8 +364,12 @@ name|s
 operator|=
 name|fd
 operator|=
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 expr_stmt|;
 name|conn
 operator|.
@@ -423,8 +398,6 @@ name|p
 argument_list|,
 operator|&
 name|conn
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 if|if
@@ -448,16 +421,18 @@ name|p
 argument_list|,
 operator|&
 name|cl
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 return|return
 name|error
 return|;
 block|}
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|fd
 expr_stmt|;

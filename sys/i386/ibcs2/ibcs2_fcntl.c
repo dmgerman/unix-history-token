@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Scott Bartram  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: ibcs2_fcntl.c,v 1.8 1997/03/24 11:52:23 bde Exp $  */
+comment|/*  * Copyright (c) 1995 Scott Bartram  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: ibcs2_fcntl.c,v 1.9 1997/07/20 09:39:41 bde Exp $  */
 end_comment
 
 begin_include
@@ -835,8 +835,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -847,10 +845,6 @@ name|struct
 name|ibcs2_open_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -945,8 +939,6 @@ name|open_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -980,8 +972,6 @@ argument_list|(
 name|p
 argument_list|,
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1029,8 +1019,12 @@ name|fdp
 operator|->
 name|fd_ofiles
 index|[
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 index|]
 decl_stmt|;
 comment|/* ignore any error, just give it a try */
@@ -1076,8 +1070,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1088,10 +1080,6 @@ name|struct
 name|ibcs2_creat_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -1170,8 +1158,6 @@ name|p
 argument_list|,
 operator|&
 name|cup
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1184,8 +1170,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1196,10 +1180,6 @@ name|struct
 name|ibcs2_access_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -1264,8 +1244,6 @@ name|p
 argument_list|,
 operator|&
 name|cup
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1278,8 +1256,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1290,10 +1266,6 @@ name|struct
 name|ibcs2_fcntl_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -1376,8 +1348,6 @@ name|p
 argument_list|,
 operator|&
 name|fa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -1434,8 +1404,6 @@ name|p
 argument_list|,
 operator|&
 name|fa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -1492,8 +1460,6 @@ name|p
 argument_list|,
 operator|&
 name|fa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -1551,8 +1517,6 @@ name|p
 argument_list|,
 operator|&
 name|fa
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 if|if
@@ -1562,13 +1526,21 @@ condition|)
 return|return
 name|error
 return|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|oflags2ioflags
 argument_list|(
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -1634,8 +1606,6 @@ name|p
 argument_list|,
 operator|&
 name|fa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -1747,8 +1717,6 @@ name|p
 argument_list|,
 operator|&
 name|fa
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 if|if
@@ -1897,8 +1865,6 @@ name|p
 argument_list|,
 operator|&
 name|fa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -2010,8 +1976,6 @@ name|p
 argument_list|,
 operator|&
 name|fa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}

@@ -1371,9 +1371,6 @@ operator|,
 expr|struct
 name|linux_setup_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1392,9 +1389,6 @@ operator|,
 expr|struct
 name|linux_fork_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1413,9 +1407,6 @@ operator|,
 expr|struct
 name|linux_open_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1434,9 +1425,6 @@ operator|,
 expr|struct
 name|linux_waitpid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1455,9 +1443,6 @@ operator|,
 expr|struct
 name|linux_creat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1476,9 +1461,6 @@ operator|,
 expr|struct
 name|linux_unlink_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1497,9 +1479,6 @@ operator|,
 expr|struct
 name|linux_execve_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1518,9 +1497,6 @@ operator|,
 expr|struct
 name|linux_chdir_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1539,9 +1515,6 @@ operator|,
 expr|struct
 name|linux_time_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1560,9 +1533,6 @@ operator|,
 expr|struct
 name|linux_mknod_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1581,9 +1551,6 @@ operator|,
 expr|struct
 name|linux_chmod_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1602,9 +1569,6 @@ operator|,
 expr|struct
 name|linux_chown_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1623,9 +1587,6 @@ operator|,
 expr|struct
 name|linux_break_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1644,9 +1605,6 @@ operator|,
 expr|struct
 name|linux_stat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1665,9 +1623,6 @@ operator|,
 expr|struct
 name|linux_lseek_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1686,9 +1641,6 @@ operator|,
 expr|struct
 name|linux_mount_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1707,9 +1659,6 @@ operator|,
 expr|struct
 name|linux_umount_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1728,9 +1677,6 @@ operator|,
 expr|struct
 name|linux_stime_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1749,9 +1695,6 @@ operator|,
 expr|struct
 name|linux_ptrace_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1770,9 +1713,6 @@ operator|,
 expr|struct
 name|linux_alarm_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1791,9 +1731,6 @@ operator|,
 expr|struct
 name|linux_fstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1812,9 +1749,6 @@ operator|,
 expr|struct
 name|linux_pause_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1833,9 +1767,6 @@ operator|,
 expr|struct
 name|linux_utime_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1854,9 +1785,6 @@ operator|,
 expr|struct
 name|linux_stty_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1875,9 +1803,6 @@ operator|,
 expr|struct
 name|linux_gtty_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1896,9 +1821,6 @@ operator|,
 expr|struct
 name|linux_access_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1917,9 +1839,6 @@ operator|,
 expr|struct
 name|linux_nice_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1938,9 +1857,6 @@ operator|,
 expr|struct
 name|linux_ftime_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1959,9 +1875,6 @@ operator|,
 expr|struct
 name|linux_kill_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1980,9 +1893,6 @@ operator|,
 expr|struct
 name|linux_rename_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2001,9 +1911,6 @@ operator|,
 expr|struct
 name|linux_mkdir_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2022,9 +1929,6 @@ operator|,
 expr|struct
 name|linux_rmdir_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2043,9 +1947,6 @@ operator|,
 expr|struct
 name|linux_pipe_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2064,9 +1965,6 @@ operator|,
 expr|struct
 name|linux_times_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2085,9 +1983,6 @@ operator|,
 expr|struct
 name|linux_prof_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2106,9 +2001,6 @@ operator|,
 expr|struct
 name|linux_brk_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2127,9 +2019,6 @@ operator|,
 expr|struct
 name|linux_signal_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2148,9 +2037,6 @@ operator|,
 expr|struct
 name|linux_phys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2169,9 +2055,6 @@ operator|,
 expr|struct
 name|linux_lock_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2190,9 +2073,6 @@ operator|,
 expr|struct
 name|linux_ioctl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2211,9 +2091,6 @@ operator|,
 expr|struct
 name|linux_fcntl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2232,9 +2109,6 @@ operator|,
 expr|struct
 name|linux_mpx_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2253,9 +2127,6 @@ operator|,
 expr|struct
 name|linux_ulimit_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2274,9 +2145,6 @@ operator|,
 expr|struct
 name|linux_olduname_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2295,9 +2163,6 @@ operator|,
 expr|struct
 name|linux_ustat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2316,9 +2181,6 @@ operator|,
 expr|struct
 name|linux_sigaction_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2337,9 +2199,6 @@ operator|,
 expr|struct
 name|linux_siggetmask_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2358,9 +2217,6 @@ operator|,
 expr|struct
 name|linux_sigsetmask_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2379,9 +2235,6 @@ operator|,
 expr|struct
 name|linux_sigsuspend_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2400,9 +2253,6 @@ operator|,
 expr|struct
 name|linux_sigpending_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2421,9 +2271,6 @@ operator|,
 expr|struct
 name|linux_select_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2442,9 +2289,6 @@ operator|,
 expr|struct
 name|linux_symlink_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2463,9 +2307,6 @@ operator|,
 expr|struct
 name|linux_readlink_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2484,9 +2325,6 @@ operator|,
 expr|struct
 name|linux_uselib_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2505,9 +2343,6 @@ operator|,
 expr|struct
 name|linux_readdir_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2526,9 +2361,6 @@ operator|,
 expr|struct
 name|linux_mmap_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2547,9 +2379,6 @@ operator|,
 expr|struct
 name|linux_truncate_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2568,9 +2397,6 @@ operator|,
 expr|struct
 name|linux_statfs_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2589,9 +2415,6 @@ operator|,
 expr|struct
 name|linux_fstatfs_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2610,9 +2433,6 @@ operator|,
 expr|struct
 name|linux_ioperm_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2631,9 +2451,6 @@ operator|,
 expr|struct
 name|linux_socketcall_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2652,9 +2469,6 @@ operator|,
 expr|struct
 name|linux_ksyslog_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2673,9 +2487,6 @@ operator|,
 expr|struct
 name|linux_setitimer_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2694,9 +2505,6 @@ operator|,
 expr|struct
 name|linux_getitimer_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2715,9 +2523,6 @@ operator|,
 expr|struct
 name|linux_newstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2736,9 +2541,6 @@ operator|,
 expr|struct
 name|linux_newlstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2757,9 +2559,6 @@ operator|,
 expr|struct
 name|linux_newfstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2778,9 +2577,6 @@ operator|,
 expr|struct
 name|linux_uname_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2799,9 +2595,6 @@ operator|,
 expr|struct
 name|linux_iopl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2820,9 +2613,6 @@ operator|,
 expr|struct
 name|linux_vhangup_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2841,9 +2631,6 @@ operator|,
 expr|struct
 name|linux_idle_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2862,9 +2649,6 @@ operator|,
 expr|struct
 name|linux_vm86_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2883,9 +2667,6 @@ operator|,
 expr|struct
 name|linux_wait4_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2904,9 +2685,6 @@ operator|,
 expr|struct
 name|linux_swapoff_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2925,9 +2703,6 @@ operator|,
 expr|struct
 name|linux_sysinfo_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2946,9 +2721,6 @@ operator|,
 expr|struct
 name|linux_ipc_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2967,9 +2739,6 @@ operator|,
 expr|struct
 name|linux_sigreturn_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2988,9 +2757,6 @@ operator|,
 expr|struct
 name|linux_clone_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3009,9 +2775,6 @@ operator|,
 expr|struct
 name|linux_newuname_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3030,9 +2793,6 @@ operator|,
 expr|struct
 name|linux_modify_ldt_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3051,9 +2811,6 @@ operator|,
 expr|struct
 name|linux_adjtimex_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3072,9 +2829,6 @@ operator|,
 expr|struct
 name|linux_sigprocmask_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3093,9 +2847,6 @@ operator|,
 expr|struct
 name|linux_create_module_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3114,9 +2865,6 @@ operator|,
 expr|struct
 name|linux_init_module_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3135,9 +2883,6 @@ operator|,
 expr|struct
 name|linux_delete_module_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3156,9 +2901,6 @@ operator|,
 expr|struct
 name|linux_get_kernel_syms_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3177,9 +2919,6 @@ operator|,
 expr|struct
 name|linux_quotactl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3198,9 +2937,6 @@ operator|,
 expr|struct
 name|linux_getpgid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3219,9 +2955,6 @@ operator|,
 expr|struct
 name|linux_bdflush_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3240,9 +2973,6 @@ operator|,
 expr|struct
 name|linux_personality_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3261,9 +2991,6 @@ operator|,
 expr|struct
 name|linux_llseek_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3282,9 +3009,6 @@ operator|,
 expr|struct
 name|linux_getdents_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3303,9 +3027,6 @@ operator|,
 expr|struct
 name|linux_newselect_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3324,9 +3045,6 @@ operator|,
 expr|struct
 name|linux_msync_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;

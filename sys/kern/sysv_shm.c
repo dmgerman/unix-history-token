@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.30 1997/10/11 18:31:25 phk Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.31 1997/10/12 20:24:03 phk Exp $ */
 end_comment
 
 begin_comment
@@ -159,10 +159,6 @@ expr|struct
 name|shmat_args
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -190,10 +186,6 @@ expr|struct
 name|shmctl_args
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -221,10 +213,6 @@ expr|struct
 name|shmdt_args
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -252,10 +240,6 @@ expr|struct
 name|shmget_args
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -330,10 +314,6 @@ expr|struct
 name|oshmctl_args
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -358,10 +338,6 @@ name|uap
 operator|,
 name|int
 name|mode
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -389,10 +365,6 @@ name|mode
 operator|,
 name|int
 name|segnum
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -984,8 +956,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -996,10 +966,6 @@ name|struct
 name|shmdt_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -1129,8 +1095,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1141,10 +1105,6 @@ name|struct
 name|shmat_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -1603,8 +1563,12 @@ operator|->
 name|shm_nattch
 operator|++
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|attach_va
 expr_stmt|;
@@ -1687,8 +1651,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1699,10 +1661,6 @@ name|struct
 name|oshmctl_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 ifdef|#
@@ -1892,8 +1850,6 @@ operator|(
 name|p
 operator|,
 name|uap
-operator|,
-name|retval
 operator|)
 return|;
 block|}
@@ -1947,8 +1903,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1959,10 +1913,6 @@ name|struct
 name|shmctl_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -2295,8 +2245,6 @@ parameter_list|,
 name|mode
 parameter_list|,
 name|segnum
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2313,10 +2261,6 @@ name|mode
 decl_stmt|;
 name|int
 name|segnum
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -2454,8 +2398,12 @@ condition|)
 return|return
 name|EEXIST
 return|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|IXSEQ_TO_IPCID
 argument_list|(
@@ -2482,8 +2430,6 @@ parameter_list|,
 name|uap
 parameter_list|,
 name|mode
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2497,10 +2443,6 @@ name|uap
 decl_stmt|;
 name|int
 name|mode
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -2900,8 +2842,12 @@ name|shmseg
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|shmid
 expr_stmt|;
@@ -2918,8 +2864,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2930,10 +2874,6 @@ name|struct
 name|shmget_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -2989,8 +2929,6 @@ argument_list|,
 name|mode
 argument_list|,
 name|segnum
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 if|if
@@ -3030,8 +2968,6 @@ argument_list|,
 name|uap
 argument_list|,
 name|mode
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -3044,8 +2980,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -3058,10 +2992,6 @@ name|shmsys_args
 comment|/* { 		u_int	which; 		int	a2; 		int	a3; 		int	a4; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 if|if
@@ -3104,8 +3034,6 @@ operator|&
 name|uap
 operator|->
 name|a2
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 return|;

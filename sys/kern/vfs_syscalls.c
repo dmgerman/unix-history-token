@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_syscalls.c	8.13 (Berkeley) 4/15/94  * $Id: vfs_syscalls.c,v 1.78 1997/10/23 09:29:09 kato Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_syscalls.c	8.13 (Berkeley) 4/15/94  * $Id: vfs_syscalls.c,v 1.79 1997/10/28 10:29:55 bde Exp $  */
 end_comment
 
 begin_comment
@@ -273,8 +273,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -287,10 +285,6 @@ name|mount_args
 comment|/* { 		syscallarg(char *) type; 		syscallarg(char *) path; 		syscallarg(int) flags; 		syscallarg(caddr_t) data; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -1646,8 +1640,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1660,10 +1652,6 @@ name|unmount_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -2240,8 +2228,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2252,10 +2238,6 @@ name|struct
 name|sync_args
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -2484,8 +2466,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2498,10 +2478,6 @@ name|quotactl_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) cmd; 		syscallarg(int) uid; 		syscallarg(caddr_t) arg; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -2645,8 +2621,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2659,10 +2633,6 @@ name|statfs_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(struct statfs *) buf; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -2904,8 +2874,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2918,10 +2886,6 @@ name|fstatfs_args
 comment|/* { 		syscallarg(int) fd; 		syscallarg(struct statfs *) buf; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -3152,8 +3116,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -3166,10 +3128,6 @@ name|getfsstat_args
 comment|/* { 		syscallarg(struct statfs *) buf; 		syscallarg(long) bufsize; 		syscallarg(int) flags; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -3457,14 +3415,22 @@ name|count
 operator|>
 name|maxcount
 condition|)
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|maxcount
 expr_stmt|;
 else|else
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|count
 expr_stmt|;
@@ -3513,8 +3479,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -3526,10 +3490,6 @@ name|fchdir_args
 comment|/* { 		syscallarg(int) fd; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -3788,8 +3748,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -3801,10 +3759,6 @@ name|chdir_args
 comment|/* { 		syscallarg(char *) path; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -3925,8 +3879,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -3938,10 +3890,6 @@ name|chroot_args
 comment|/* { 		syscallarg(char *) path; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -4205,8 +4153,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -4219,10 +4165,6 @@ name|open_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 		syscallarg(int) mode; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -4448,8 +4390,12 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|indx
 expr_stmt|;
@@ -4698,8 +4644,12 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|indx
 expr_stmt|;
@@ -4754,8 +4704,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -4768,10 +4716,6 @@ name|ocreat_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) mode; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -4831,8 +4775,6 @@ name|p
 argument_list|,
 operator|&
 name|nuap
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 return|;
@@ -4892,8 +4834,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -4906,10 +4846,6 @@ name|mknod_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) mode; 		syscallarg(int) dev; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -5317,8 +5253,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -5331,10 +5265,6 @@ name|mkfifo_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) mode; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -5560,8 +5490,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -5574,10 +5502,6 @@ name|link_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(char *) link; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -5871,8 +5795,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -5885,10 +5807,6 @@ name|symlink_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(char *) link; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -6137,8 +6055,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -6151,10 +6067,6 @@ name|undelete_args
 comment|/* { 		syscallarg(char *) path; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -6396,8 +6308,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -6409,10 +6319,6 @@ name|unlink_args
 comment|/* { 		syscallarg(char *) path; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -6691,8 +6597,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -6706,11 +6610,6 @@ comment|/* { 		syscallarg(int) fd; 		syscallarg(int) pad; 		syscallarg(off_t) of
 modifier|*
 name|uap
 decl_stmt|;
-name|register_t
-modifier|*
-name|retval
-decl_stmt|;
-comment|/* XXX */
 block|{
 name|struct
 name|ucred
@@ -6897,7 +6796,11 @@ operator|(
 name|off_t
 operator|*
 operator|)
-name|retval
+operator|(
+name|p
+operator|->
+name|p_retval
+operator|)
 operator|=
 name|fp
 operator|->
@@ -6964,8 +6867,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -6979,18 +6880,11 @@ comment|/* { 		syscallarg(int) fd; 		syscallarg(long) offset; 		syscallarg(int) 
 modifier|*
 name|uap
 decl_stmt|;
-name|register_t
-modifier|*
-name|retval
-decl_stmt|;
 block|{
 name|struct
 name|lseek_args
 comment|/* { 		syscallarg(int) fd; 		syscallarg(int) pad; 		syscallarg(off_t) offset; 		syscallarg(int) whence; 	} */
 name|nuap
-decl_stmt|;
-name|off_t
-name|qret
 decl_stmt|;
 name|int
 name|error
@@ -7048,23 +6942,7 @@ name|p
 argument_list|,
 operator|&
 name|nuap
-argument_list|,
-operator|(
-name|register_t
-operator|*
-operator|)
-operator|&
-name|qret
 argument_list|)
-expr_stmt|;
-operator|*
-operator|(
-name|long
-operator|*
-operator|)
-name|retval
-operator|=
-name|qret
 expr_stmt|;
 return|return
 operator|(
@@ -7120,8 +6998,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -7134,10 +7010,6 @@ name|access_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -7431,8 +7303,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -7445,10 +7315,6 @@ name|ostat_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(struct ostat *) ub; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -7620,8 +7486,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -7634,10 +7498,6 @@ name|olstat_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(struct ostat *) ub; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -8009,8 +7869,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -8023,10 +7881,6 @@ name|stat_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(struct stat *) ub; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -8185,8 +8039,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -8199,10 +8051,6 @@ name|lstat_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(struct stat *) ub; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -8383,8 +8231,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -8397,10 +8243,6 @@ name|pathconf_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) name; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -8463,7 +8305,9 @@ argument_list|,
 name|name
 argument_list|)
 argument_list|,
-name|retval
+name|p
+operator|->
+name|p_retval
 argument_list|)
 expr_stmt|;
 name|vput
@@ -8526,8 +8370,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -8540,10 +8382,6 @@ name|readlink_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(char *) buf; 		syscallarg(int) count; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -8715,8 +8553,12 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|SCARG
 argument_list|(
@@ -8778,8 +8620,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -8792,10 +8632,6 @@ name|chflags_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -8967,8 +8803,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -8981,10 +8815,6 @@ name|fchflags_args
 comment|/* { 		syscallarg(int) fd; 		syscallarg(int) flags; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -9156,8 +8986,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -9170,10 +8998,6 @@ name|chmod_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) mode; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -9347,8 +9171,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -9361,10 +9183,6 @@ name|fchmod_args
 comment|/* { 		syscallarg(int) fd; 		syscallarg(int) mode; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -9541,8 +9359,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -9555,10 +9371,6 @@ name|chown_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) uid; 		syscallarg(int) gid; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -9745,8 +9557,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -9759,10 +9569,6 @@ name|lchown_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) uid; 		syscallarg(int) gid; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -9948,8 +9754,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -9962,10 +9766,6 @@ name|fchown_args
 comment|/* { 		syscallarg(int) fd; 		syscallarg(int) uid; 		syscallarg(int) gid; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -10150,8 +9950,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -10164,10 +9962,6 @@ name|utimes_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(struct timeval *) tptr; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -10466,8 +10260,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -10480,10 +10272,6 @@ name|truncate_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) pad; 		syscallarg(off_t) length; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -10718,8 +10506,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -10732,10 +10518,6 @@ name|ftruncate_args
 comment|/* { 		syscallarg(int) fd; 		syscallarg(int) pad; 		syscallarg(off_t) length; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -10979,8 +10761,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -10993,10 +10773,6 @@ name|otruncate_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(long) length; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -11042,8 +10818,6 @@ name|p
 argument_list|,
 operator|&
 name|nuap
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 return|;
@@ -11090,8 +10864,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -11104,10 +10876,6 @@ name|oftruncate_args
 comment|/* { 		syscallarg(int) fd; 		syscallarg(long) length; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -11153,8 +10921,6 @@ name|p
 argument_list|,
 operator|&
 name|nuap
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 return|;
@@ -11207,8 +10973,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -11220,10 +10984,6 @@ name|fsync_args
 comment|/* { 		syscallarg(int) fd; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -11403,8 +11163,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -11417,10 +11175,6 @@ name|rename_args
 comment|/* { 		syscallarg(char *) from; 		syscallarg(char *) to; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -12029,8 +11783,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -12043,10 +11795,6 @@ name|mkdir_args
 comment|/* { 		syscallarg(char *) path; 		syscallarg(int) mode; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -12316,8 +12064,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -12329,10 +12075,6 @@ name|rmdir_args
 comment|/* { 		syscallarg(char *) path; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -12614,8 +12356,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -12628,10 +12368,6 @@ name|ogetdirentries_args
 comment|/* { 		syscallarg(int) fd; 		syscallarg(char *) buf; 		syscallarg(u_int) count; 		syscallarg(long *) basep; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -13424,8 +13160,12 @@ name|long
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|SCARG
 argument_list|(
@@ -13499,8 +13239,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -13513,10 +13251,6 @@ name|getdirentries_args
 comment|/* { 		syscallarg(int) fd; 		syscallarg(char *) buf; 		syscallarg(u_int) count; 		syscallarg(long *) basep; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -14041,8 +13775,12 @@ name|long
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|SCARG
 argument_list|(
@@ -14096,8 +13834,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -14110,11 +13846,6 @@ comment|/* { 		syscallarg(int) newmask; 	} */
 modifier|*
 name|uap
 decl_stmt|;
-name|int
-modifier|*
-name|retval
-decl_stmt|;
-comment|/* XXX */
 block|{
 specifier|register
 name|struct
@@ -14128,8 +13859,12 @@ name|p
 operator|->
 name|p_fd
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|fdp
 operator|->
@@ -14194,8 +13929,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -14208,10 +13941,6 @@ name|revoke_args
 comment|/* { 		syscallarg(char *) path; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -14654,8 +14383,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -14666,10 +14393,6 @@ name|struct
 name|__getcwd_args
 modifier|*
 name|uap
-decl_stmt|;
-name|register_t
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct

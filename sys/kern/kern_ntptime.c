@@ -555,10 +555,6 @@ name|struct
 name|ntp_adjtime_args
 modifier|*
 name|uap
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -925,7 +921,9 @@ name|error
 condition|)
 block|{
 comment|/* 		 * Status word error decode. See comments in 		 * ntp_gettime() routine. 		 */
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]
@@ -942,7 +940,9 @@ operator||
 name|STA_CLOCKERR
 operator|)
 condition|)
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]
@@ -966,7 +966,9 @@ operator|&
 name|STA_PPSSIGNAL
 operator|)
 condition|)
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]
@@ -983,7 +985,9 @@ name|time_status
 operator|&
 name|STA_PPSJITTER
 condition|)
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]
@@ -1004,7 +1008,9 @@ operator||
 name|STA_PPSERROR
 operator|)
 condition|)
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.33 1997/09/14 02:43:25 peter Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.34 1997/10/06 08:30:08 peter Exp $  */
 end_comment
 
 begin_comment
@@ -588,8 +588,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -601,10 +599,6 @@ name|pipe_args
 comment|/* { 		int	dummy; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-name|retval
-index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -719,7 +713,9 @@ condition|)
 goto|goto
 name|free2
 goto|;
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]
@@ -806,7 +802,9 @@ name|caddr_t
 operator|)
 name|wpipe
 expr_stmt|;
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|1
 index|]
@@ -841,7 +839,9 @@ name|fdp
 operator|->
 name|fd_ofiles
 index|[
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]

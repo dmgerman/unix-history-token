@@ -198,10 +198,6 @@ name|struct
 name|ibcs2_gtty_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -240,8 +236,6 @@ name|p
 argument_list|,
 operator|&
 name|ioctl_arg
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -260,10 +254,6 @@ name|struct
 name|ibcs2_stty_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -302,8 +292,6 @@ name|p
 argument_list|,
 operator|&
 name|ioctl_arg
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -2179,8 +2167,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2191,10 +2177,6 @@ name|struct
 name|ibcs2_ioctl_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -3051,8 +3033,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3078,8 +3058,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3162,8 +3140,6 @@ name|p
 argument_list|,
 operator|&
 name|sa
-argument_list|,
-name|retval
 argument_list|)
 condition|)
 return|return
@@ -3301,8 +3277,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3329,8 +3303,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3357,8 +3329,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3385,8 +3355,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3413,8 +3381,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3441,8 +3407,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3468,8 +3432,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3495,8 +3457,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3523,8 +3483,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3551,8 +3509,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3579,8 +3535,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3607,8 +3561,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3635,8 +3587,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3663,8 +3613,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 comment|/* Xenix keyboard and display ioctl's from sys/kd.h -- type 'k' */
@@ -3692,8 +3640,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3720,8 +3666,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3748,8 +3692,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3776,8 +3718,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3804,8 +3744,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3832,8 +3770,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 comment|/* socksys */
@@ -3851,8 +3787,6 @@ name|ibcs2_socksys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -3879,8 +3813,6 @@ name|ioctl_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 default|default:

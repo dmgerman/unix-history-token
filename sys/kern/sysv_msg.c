@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.15 1997/02/22 09:39:22 peter Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.16 1997/08/02 14:31:37 bde Exp $ */
 end_comment
 
 begin_comment
@@ -117,10 +117,6 @@ expr|struct
 name|msgctl_args
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -147,10 +143,6 @@ expr|struct
 name|msgget_args
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -177,10 +169,6 @@ expr|struct
 name|msgsnd_args
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -207,10 +195,6 @@ expr|struct
 name|msgrcv_args
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -651,8 +635,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -665,10 +647,6 @@ name|msgsys_args
 comment|/* { 		u_int	which; 		int	a2; 		int	a3; 		int	a4; 		int	a5; 		int	a6; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 if|if
@@ -713,8 +691,6 @@ operator|&
 name|uap
 operator|->
 name|a2
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 return|;
@@ -894,8 +870,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -907,10 +881,6 @@ name|struct
 name|msgctl_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -1506,8 +1476,12 @@ name|eval
 operator|==
 literal|0
 condition|)
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|rval
 expr_stmt|;
@@ -1551,8 +1525,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1564,10 +1536,6 @@ name|struct
 name|msgget_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -2026,8 +1994,12 @@ block|}
 name|found
 label|:
 comment|/* Construct the unique msqid */
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|IXSEQ_TO_IPCID
 argument_list|(
@@ -2085,8 +2057,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2098,10 +2068,6 @@ name|struct
 name|msgsnd_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -3365,8 +3331,12 @@ operator|)
 name|msqptr
 argument_list|)
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -3420,8 +3390,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -3433,10 +3401,6 @@ name|struct
 name|msgrcv_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -4466,8 +4430,12 @@ operator|)
 name|msqptr
 argument_list|)
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|msgsz
 expr_stmt|;

@@ -97,9 +97,6 @@ operator|,
 expr|struct
 name|getipdomainname_args
 operator|*
-operator|,
-name|int
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -119,9 +116,6 @@ operator|,
 expr|struct
 name|setipdomainname_args
 operator|*
-operator|,
-name|int
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -138,8 +132,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 specifier|register
 name|struct
@@ -152,10 +144,6 @@ name|struct
 name|ibcs2_socksys_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|int
@@ -268,8 +256,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -281,8 +267,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -294,8 +278,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -307,8 +289,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -320,8 +300,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -333,8 +311,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -346,8 +322,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -375,8 +349,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -404,8 +376,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -417,8 +387,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -430,8 +398,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -443,8 +409,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -456,8 +420,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -469,8 +431,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -482,8 +442,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -495,8 +453,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -508,8 +464,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -521,8 +475,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -534,8 +486,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -547,8 +497,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -560,8 +508,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 case|case
@@ -573,8 +519,6 @@ argument_list|(
 name|p
 argument_list|,
 name|passargs
-argument_list|,
-name|retval
 argument_list|)
 return|;
 default|default:
@@ -638,8 +582,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -650,10 +592,6 @@ name|struct
 name|getipdomainname_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|char
@@ -770,8 +708,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -782,10 +718,6 @@ name|struct
 name|setipdomainname_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|char

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_signal.c,v 1.8 1997/02/22 09:38:24 peter Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_signal.c,v 1.9 1997/07/20 16:06:03 bde Exp $  */
 end_comment
 
 begin_include
@@ -455,10 +455,6 @@ name|struct
 name|linux_sigaction_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|linux_sigaction_t
@@ -655,8 +651,6 @@ name|p
 argument_list|,
 operator|&
 name|sa
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 condition|)
@@ -742,10 +736,6 @@ name|struct
 name|linux_signal_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|caddr_t
@@ -898,8 +888,6 @@ name|p
 argument_list|,
 operator|&
 name|sa_args
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 condition|)
@@ -927,8 +915,12 @@ condition|)
 return|return
 name|error
 return|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 operator|(
 name|int
@@ -956,10 +948,6 @@ name|struct
 name|linux_sigprocmask_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|int
@@ -991,8 +979,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -1162,10 +1154,6 @@ name|struct
 name|linux_siggetmask_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 ifdef|#
@@ -1182,8 +1170,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|bsd_to_linux_sigset
 argument_list|(
@@ -1211,10 +1203,6 @@ name|struct
 name|linux_sigsetmask_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|int
@@ -1241,8 +1229,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|bsd_to_linux_sigset
 argument_list|(
@@ -1298,10 +1290,6 @@ name|struct
 name|linux_sigpending_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|linux_sigset_t
@@ -1370,10 +1358,6 @@ name|struct
 name|linux_sigsuspend_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -1416,8 +1400,6 @@ name|p
 argument_list|,
 operator|&
 name|tmp
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1436,10 +1418,6 @@ name|struct
 name|linux_pause_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -1475,8 +1453,6 @@ name|p
 argument_list|,
 operator|&
 name|tmp
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1495,10 +1471,6 @@ name|struct
 name|linux_kill_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -1554,8 +1526,6 @@ name|p
 argument_list|,
 operator|&
 name|tmp
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_dummy.c,v 1.6 1997/07/20 16:05:53 bde Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_dummy.c,v 1.7 1997/10/29 08:17:09 kato Exp $  */
 end_comment
 
 begin_include
@@ -46,10 +46,6 @@ name|struct
 name|linux_setup_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -80,10 +76,6 @@ name|struct
 name|linux_break_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -114,10 +106,6 @@ name|struct
 name|linux_stat_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -148,10 +136,6 @@ name|struct
 name|linux_fstat_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -182,10 +166,6 @@ name|struct
 name|linux_mount_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -216,10 +196,6 @@ name|struct
 name|linux_umount_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -250,10 +226,6 @@ name|struct
 name|linux_stime_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -284,10 +256,6 @@ name|struct
 name|linux_ptrace_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -318,10 +286,6 @@ name|struct
 name|linux_stty_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -352,10 +316,6 @@ name|struct
 name|linux_gtty_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -386,10 +346,6 @@ name|struct
 name|linux_ftime_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -420,10 +376,6 @@ name|struct
 name|linux_prof_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -454,10 +406,6 @@ name|struct
 name|linux_phys_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -488,10 +436,6 @@ name|struct
 name|linux_lock_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -522,10 +466,6 @@ name|struct
 name|linux_mpx_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -556,10 +496,6 @@ name|struct
 name|linux_ulimit_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -590,10 +526,6 @@ name|struct
 name|linux_olduname_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -624,10 +556,6 @@ name|struct
 name|linux_ustat_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -658,10 +586,6 @@ name|struct
 name|linux_ioperm_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -693,10 +617,6 @@ name|struct
 name|linux_ksyslog_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -732,10 +652,6 @@ name|struct
 name|linux_vhangup_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -766,10 +682,6 @@ name|struct
 name|linux_idle_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -800,10 +712,6 @@ name|struct
 name|linux_vm86_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -834,10 +742,6 @@ name|struct
 name|linux_swapoff_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -868,10 +772,6 @@ name|struct
 name|linux_sysinfo_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -902,10 +802,6 @@ name|struct
 name|linux_clone_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -936,10 +832,6 @@ name|struct
 name|linux_uname_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -970,10 +862,6 @@ name|struct
 name|linux_modify_ldt_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -1004,10 +892,6 @@ name|struct
 name|linux_adjtimex_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -1038,10 +922,6 @@ name|struct
 name|linux_create_module_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -1072,10 +952,6 @@ name|struct
 name|linux_init_module_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -1106,10 +982,6 @@ name|struct
 name|linux_delete_module_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -1140,10 +1012,6 @@ name|struct
 name|linux_get_kernel_syms_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -1174,10 +1042,6 @@ name|struct
 name|linux_quotactl_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf
@@ -1208,10 +1072,6 @@ name|struct
 name|linux_bdflush_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|printf

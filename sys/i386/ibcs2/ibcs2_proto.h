@@ -977,9 +977,6 @@ operator|,
 expr|struct
 name|ibcs2_read_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -998,9 +995,6 @@ operator|,
 expr|struct
 name|ibcs2_open_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1019,9 +1013,6 @@ operator|,
 expr|struct
 name|ibcs2_wait_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1040,9 +1031,6 @@ operator|,
 expr|struct
 name|ibcs2_creat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1061,9 +1049,6 @@ operator|,
 expr|struct
 name|ibcs2_unlink_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1082,9 +1067,6 @@ operator|,
 expr|struct
 name|ibcs2_execv_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1103,9 +1085,6 @@ operator|,
 expr|struct
 name|ibcs2_chdir_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1124,9 +1103,6 @@ operator|,
 expr|struct
 name|ibcs2_time_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1145,9 +1121,6 @@ operator|,
 expr|struct
 name|ibcs2_mknod_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1166,9 +1139,6 @@ operator|,
 expr|struct
 name|ibcs2_chmod_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1187,9 +1157,6 @@ operator|,
 expr|struct
 name|ibcs2_chown_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1208,9 +1175,6 @@ operator|,
 expr|struct
 name|ibcs2_stat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1229,9 +1193,6 @@ operator|,
 expr|struct
 name|ibcs2_lseek_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1250,9 +1211,6 @@ operator|,
 expr|struct
 name|ibcs2_mount_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1271,9 +1229,6 @@ operator|,
 expr|struct
 name|ibcs2_umount_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1292,9 +1247,6 @@ operator|,
 expr|struct
 name|ibcs2_setuid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1313,9 +1265,6 @@ operator|,
 expr|struct
 name|ibcs2_stime_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1334,9 +1283,6 @@ operator|,
 expr|struct
 name|ibcs2_alarm_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1355,9 +1301,6 @@ operator|,
 expr|struct
 name|ibcs2_fstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1376,9 +1319,6 @@ operator|,
 expr|struct
 name|ibcs2_pause_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1397,9 +1337,6 @@ operator|,
 expr|struct
 name|ibcs2_utime_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1418,9 +1355,6 @@ operator|,
 expr|struct
 name|ibcs2_stty_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1439,9 +1373,6 @@ operator|,
 expr|struct
 name|ibcs2_gtty_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1460,9 +1391,6 @@ operator|,
 expr|struct
 name|ibcs2_access_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1481,9 +1409,6 @@ operator|,
 expr|struct
 name|ibcs2_nice_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1502,9 +1427,6 @@ operator|,
 expr|struct
 name|ibcs2_statfs_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1523,9 +1445,6 @@ operator|,
 expr|struct
 name|ibcs2_kill_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1544,9 +1463,6 @@ operator|,
 expr|struct
 name|ibcs2_fstatfs_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1565,9 +1481,6 @@ operator|,
 expr|struct
 name|ibcs2_pgrpsys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1586,9 +1499,6 @@ operator|,
 expr|struct
 name|ibcs2_xenix_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1607,9 +1517,6 @@ operator|,
 expr|struct
 name|ibcs2_times_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1628,9 +1535,6 @@ operator|,
 expr|struct
 name|ibcs2_plock_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1649,9 +1553,6 @@ operator|,
 expr|struct
 name|ibcs2_setgid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1670,9 +1571,6 @@ operator|,
 expr|struct
 name|ibcs2_sigsys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1691,9 +1589,6 @@ operator|,
 expr|struct
 name|ibcs2_msgsys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1712,9 +1607,6 @@ operator|,
 expr|struct
 name|ibcs2_sysi86_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1733,9 +1625,6 @@ operator|,
 expr|struct
 name|ibcs2_shmsys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1754,9 +1643,6 @@ operator|,
 expr|struct
 name|ibcs2_semsys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1775,9 +1661,6 @@ operator|,
 expr|struct
 name|ibcs2_ioctl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1796,9 +1679,6 @@ operator|,
 expr|struct
 name|ibcs2_uadmin_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1817,9 +1697,6 @@ operator|,
 expr|struct
 name|ibcs2_utssys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1838,9 +1715,6 @@ operator|,
 expr|struct
 name|ibcs2_execve_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1859,9 +1733,6 @@ operator|,
 expr|struct
 name|ibcs2_fcntl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1880,9 +1751,6 @@ operator|,
 expr|struct
 name|ibcs2_ulimit_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1901,9 +1769,6 @@ operator|,
 expr|struct
 name|ibcs2_rmdir_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1922,9 +1787,6 @@ operator|,
 expr|struct
 name|ibcs2_mkdir_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1943,9 +1805,6 @@ operator|,
 expr|struct
 name|ibcs2_getdents_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1964,9 +1823,6 @@ operator|,
 expr|struct
 name|ibcs2_sysfs_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1985,9 +1841,6 @@ operator|,
 expr|struct
 name|ibcs2_getmsg_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2006,9 +1859,6 @@ operator|,
 expr|struct
 name|ibcs2_putmsg_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2027,9 +1877,6 @@ operator|,
 expr|struct
 name|ibcs2_poll_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2048,9 +1895,6 @@ operator|,
 expr|struct
 name|ibcs2_secure_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2069,9 +1913,6 @@ operator|,
 expr|struct
 name|ibcs2_symlink_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2090,9 +1931,6 @@ operator|,
 expr|struct
 name|ibcs2_lstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2111,9 +1949,6 @@ operator|,
 expr|struct
 name|ibcs2_readlink_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2132,9 +1967,6 @@ operator|,
 expr|struct
 name|ibcs2_isc_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;

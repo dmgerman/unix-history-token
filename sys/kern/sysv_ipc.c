@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: sysv_ipc.c,v 1.6 1997/02/22 09:39:21 peter Exp $ */
 end_comment
 
 begin_comment
@@ -337,8 +337,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -349,10 +347,6 @@ name|struct
 name|semsys_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -373,8 +367,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -391,8 +383,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -403,10 +393,6 @@ name|struct
 name|semconfig_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -427,8 +413,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -445,8 +429,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -458,10 +440,6 @@ name|struct
 name|__semctl_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -482,8 +460,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -500,8 +476,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -513,10 +487,6 @@ name|struct
 name|semget_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -537,8 +507,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -555,8 +523,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -568,10 +534,6 @@ name|struct
 name|semop_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -592,8 +554,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -653,8 +613,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -666,10 +624,6 @@ name|struct
 name|msgsys_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -690,8 +644,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -708,8 +660,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -721,10 +671,6 @@ name|struct
 name|msgctl_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -745,8 +691,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -763,8 +707,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -776,10 +718,6 @@ name|struct
 name|msgget_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -800,8 +738,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -818,8 +754,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -831,10 +765,6 @@ name|struct
 name|msgsnd_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -855,8 +785,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -873,8 +801,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -886,10 +812,6 @@ name|struct
 name|msgrcv_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -910,8 +832,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -951,8 +871,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -963,10 +881,6 @@ name|struct
 name|shmdt_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -987,8 +901,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1005,8 +917,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1017,10 +927,6 @@ name|struct
 name|shmat_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -1041,8 +947,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1059,8 +963,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1071,10 +973,6 @@ name|struct
 name|shmctl_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -1095,8 +993,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1113,8 +1009,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1125,10 +1019,6 @@ name|struct
 name|shmget_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -1149,8 +1039,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1167,8 +1055,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1180,10 +1066,6 @@ name|struct
 name|shmsys_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sysv_nosys
@@ -1204,8 +1086,6 @@ name|nosys_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}

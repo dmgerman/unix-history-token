@@ -3156,9 +3156,6 @@ operator|,
 expr|struct
 name|nosys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3177,9 +3174,6 @@ operator|,
 expr|struct
 name|rexit_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 name|__dead2
@@ -3199,9 +3193,6 @@ operator|,
 expr|struct
 name|fork_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3220,9 +3211,6 @@ operator|,
 expr|struct
 name|read_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3241,9 +3229,6 @@ operator|,
 expr|struct
 name|write_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3262,9 +3247,6 @@ operator|,
 expr|struct
 name|open_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3283,9 +3265,6 @@ operator|,
 expr|struct
 name|close_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3304,9 +3283,6 @@ operator|,
 expr|struct
 name|wait_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3325,9 +3301,6 @@ operator|,
 expr|struct
 name|link_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3346,9 +3319,6 @@ operator|,
 expr|struct
 name|unlink_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3367,9 +3337,6 @@ operator|,
 expr|struct
 name|chdir_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3388,9 +3355,6 @@ operator|,
 expr|struct
 name|fchdir_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3409,9 +3373,6 @@ operator|,
 expr|struct
 name|mknod_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3430,9 +3391,6 @@ operator|,
 expr|struct
 name|chmod_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3451,9 +3409,6 @@ operator|,
 expr|struct
 name|chown_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3472,9 +3427,6 @@ operator|,
 expr|struct
 name|obreak_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3493,9 +3445,6 @@ operator|,
 expr|struct
 name|getfsstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3514,9 +3463,6 @@ operator|,
 expr|struct
 name|getpid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3535,9 +3481,6 @@ operator|,
 expr|struct
 name|mount_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3556,9 +3499,6 @@ operator|,
 expr|struct
 name|unmount_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3577,9 +3517,6 @@ operator|,
 expr|struct
 name|setuid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3598,9 +3535,6 @@ operator|,
 expr|struct
 name|getuid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3619,9 +3553,6 @@ operator|,
 expr|struct
 name|geteuid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3640,9 +3571,6 @@ operator|,
 expr|struct
 name|ptrace_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3661,9 +3589,6 @@ operator|,
 expr|struct
 name|recvmsg_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3682,9 +3607,6 @@ operator|,
 expr|struct
 name|sendmsg_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3703,9 +3625,6 @@ operator|,
 expr|struct
 name|recvfrom_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3724,9 +3643,6 @@ operator|,
 expr|struct
 name|accept_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3745,9 +3661,6 @@ operator|,
 expr|struct
 name|getpeername_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3766,9 +3679,6 @@ operator|,
 expr|struct
 name|getsockname_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3787,9 +3697,6 @@ operator|,
 expr|struct
 name|access_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3808,9 +3715,6 @@ operator|,
 expr|struct
 name|chflags_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3829,9 +3733,6 @@ operator|,
 expr|struct
 name|fchflags_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3850,9 +3751,6 @@ operator|,
 expr|struct
 name|sync_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3871,9 +3769,6 @@ operator|,
 expr|struct
 name|kill_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3892,9 +3787,6 @@ operator|,
 expr|struct
 name|getppid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3913,9 +3805,6 @@ operator|,
 expr|struct
 name|dup_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3934,9 +3823,6 @@ operator|,
 expr|struct
 name|pipe_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3955,9 +3841,6 @@ operator|,
 expr|struct
 name|getegid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3976,9 +3859,6 @@ operator|,
 expr|struct
 name|profil_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3997,9 +3877,6 @@ operator|,
 expr|struct
 name|ktrace_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4018,9 +3895,6 @@ operator|,
 expr|struct
 name|sigaction_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4039,9 +3913,6 @@ operator|,
 expr|struct
 name|getgid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4060,9 +3931,6 @@ operator|,
 expr|struct
 name|sigprocmask_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4081,9 +3949,6 @@ operator|,
 expr|struct
 name|getlogin_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4102,9 +3967,6 @@ operator|,
 expr|struct
 name|setlogin_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4123,9 +3985,6 @@ operator|,
 expr|struct
 name|acct_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4144,9 +4003,6 @@ operator|,
 expr|struct
 name|sigpending_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4165,9 +4021,6 @@ operator|,
 expr|struct
 name|sigaltstack_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4186,9 +4039,6 @@ operator|,
 expr|struct
 name|ioctl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4207,9 +4057,6 @@ operator|,
 expr|struct
 name|reboot_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4228,9 +4075,6 @@ operator|,
 expr|struct
 name|revoke_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4249,9 +4093,6 @@ operator|,
 expr|struct
 name|symlink_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4270,9 +4111,6 @@ operator|,
 expr|struct
 name|readlink_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4291,9 +4129,6 @@ operator|,
 expr|struct
 name|execve_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4312,9 +4147,6 @@ operator|,
 expr|struct
 name|umask_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4333,9 +4165,6 @@ operator|,
 expr|struct
 name|chroot_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4354,9 +4183,6 @@ operator|,
 expr|struct
 name|msync_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4375,9 +4201,6 @@ operator|,
 expr|struct
 name|vfork_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4396,9 +4219,6 @@ operator|,
 expr|struct
 name|sbrk_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4417,9 +4237,6 @@ operator|,
 expr|struct
 name|sstk_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4438,9 +4255,6 @@ operator|,
 expr|struct
 name|ovadvise_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4459,9 +4273,6 @@ operator|,
 expr|struct
 name|munmap_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4480,9 +4291,6 @@ operator|,
 expr|struct
 name|mprotect_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4501,9 +4309,6 @@ operator|,
 expr|struct
 name|madvise_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4522,9 +4327,6 @@ operator|,
 expr|struct
 name|mincore_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4543,9 +4345,6 @@ operator|,
 expr|struct
 name|getgroups_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4564,9 +4363,6 @@ operator|,
 expr|struct
 name|setgroups_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4585,9 +4381,6 @@ operator|,
 expr|struct
 name|getpgrp_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4606,9 +4399,6 @@ operator|,
 expr|struct
 name|setpgid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4627,9 +4417,6 @@ operator|,
 expr|struct
 name|setitimer_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4648,9 +4435,6 @@ operator|,
 expr|struct
 name|swapon_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4669,9 +4453,6 @@ operator|,
 expr|struct
 name|getitimer_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4690,9 +4471,6 @@ operator|,
 expr|struct
 name|getdtablesize_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4711,9 +4489,6 @@ operator|,
 expr|struct
 name|dup2_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4732,9 +4507,6 @@ operator|,
 expr|struct
 name|fcntl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4753,9 +4525,6 @@ operator|,
 expr|struct
 name|select_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4774,9 +4543,6 @@ operator|,
 expr|struct
 name|fsync_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4795,9 +4561,6 @@ operator|,
 expr|struct
 name|setpriority_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4816,9 +4579,6 @@ operator|,
 expr|struct
 name|socket_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4837,9 +4597,6 @@ operator|,
 expr|struct
 name|connect_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4858,9 +4615,6 @@ operator|,
 expr|struct
 name|getpriority_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4879,9 +4633,6 @@ operator|,
 expr|struct
 name|sigreturn_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4900,9 +4651,6 @@ operator|,
 expr|struct
 name|bind_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4921,9 +4669,6 @@ operator|,
 expr|struct
 name|setsockopt_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4942,9 +4687,6 @@ operator|,
 expr|struct
 name|listen_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4963,9 +4705,6 @@ operator|,
 expr|struct
 name|sigsuspend_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4984,9 +4723,6 @@ operator|,
 expr|struct
 name|gettimeofday_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5005,9 +4741,6 @@ operator|,
 expr|struct
 name|getrusage_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5026,9 +4759,6 @@ operator|,
 expr|struct
 name|getsockopt_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5047,9 +4777,6 @@ operator|,
 expr|struct
 name|readv_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5068,9 +4795,6 @@ operator|,
 expr|struct
 name|writev_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5089,9 +4813,6 @@ operator|,
 expr|struct
 name|settimeofday_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5110,9 +4831,6 @@ operator|,
 expr|struct
 name|fchown_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5131,9 +4849,6 @@ operator|,
 expr|struct
 name|fchmod_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5152,9 +4867,6 @@ operator|,
 expr|struct
 name|setreuid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5173,9 +4885,6 @@ operator|,
 expr|struct
 name|setregid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5194,9 +4903,6 @@ operator|,
 expr|struct
 name|rename_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5215,9 +4921,6 @@ operator|,
 expr|struct
 name|flock_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5236,9 +4939,6 @@ operator|,
 expr|struct
 name|mkfifo_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5257,9 +4957,6 @@ operator|,
 expr|struct
 name|sendto_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5278,9 +4975,6 @@ operator|,
 expr|struct
 name|shutdown_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5299,9 +4993,6 @@ operator|,
 expr|struct
 name|socketpair_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5320,9 +5011,6 @@ operator|,
 expr|struct
 name|mkdir_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5341,9 +5029,6 @@ operator|,
 expr|struct
 name|rmdir_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5362,9 +5047,6 @@ operator|,
 expr|struct
 name|utimes_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5383,9 +5065,6 @@ operator|,
 expr|struct
 name|adjtime_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5404,9 +5083,6 @@ operator|,
 expr|struct
 name|setsid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5425,9 +5101,6 @@ operator|,
 expr|struct
 name|quotactl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5446,9 +5119,6 @@ operator|,
 expr|struct
 name|nfssvc_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5467,9 +5137,6 @@ operator|,
 expr|struct
 name|statfs_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5488,9 +5155,6 @@ operator|,
 expr|struct
 name|fstatfs_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5509,9 +5173,6 @@ operator|,
 expr|struct
 name|getfh_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5530,9 +5191,6 @@ operator|,
 expr|struct
 name|getdomainname_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5551,9 +5209,6 @@ operator|,
 expr|struct
 name|setdomainname_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5572,9 +5227,6 @@ operator|,
 expr|struct
 name|uname_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5593,9 +5245,6 @@ operator|,
 expr|struct
 name|sysarch_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5614,9 +5263,6 @@ operator|,
 expr|struct
 name|rtprio_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5635,9 +5281,6 @@ operator|,
 expr|struct
 name|semsys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5656,9 +5299,6 @@ operator|,
 expr|struct
 name|msgsys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5677,9 +5317,6 @@ operator|,
 expr|struct
 name|shmsys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5698,9 +5335,6 @@ operator|,
 expr|struct
 name|ntp_adjtime_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5719,9 +5353,6 @@ operator|,
 expr|struct
 name|setgid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5740,9 +5371,6 @@ operator|,
 expr|struct
 name|setegid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5761,9 +5389,6 @@ operator|,
 expr|struct
 name|seteuid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5788,9 +5413,6 @@ operator|,
 expr|struct
 name|lfs_bmapv_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5809,9 +5431,6 @@ operator|,
 expr|struct
 name|lfs_markv_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5830,9 +5449,6 @@ operator|,
 expr|struct
 name|lfs_segclean_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5851,9 +5467,6 @@ operator|,
 expr|struct
 name|lfs_segwait_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5882,9 +5495,6 @@ operator|,
 expr|struct
 name|stat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5903,9 +5513,6 @@ operator|,
 expr|struct
 name|fstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5924,9 +5531,6 @@ operator|,
 expr|struct
 name|lstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5945,9 +5549,6 @@ operator|,
 expr|struct
 name|pathconf_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5966,9 +5567,6 @@ operator|,
 expr|struct
 name|fpathconf_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5987,9 +5585,6 @@ operator|,
 expr|struct
 name|__getrlimit_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6008,9 +5603,6 @@ operator|,
 expr|struct
 name|__setrlimit_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6029,9 +5621,6 @@ operator|,
 expr|struct
 name|getdirentries_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6050,9 +5639,6 @@ operator|,
 expr|struct
 name|mmap_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6071,9 +5657,6 @@ operator|,
 expr|struct
 name|lseek_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6092,9 +5675,6 @@ operator|,
 expr|struct
 name|truncate_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6113,9 +5693,6 @@ operator|,
 expr|struct
 name|ftruncate_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6134,9 +5711,6 @@ operator|,
 expr|struct
 name|sysctl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6155,9 +5729,6 @@ operator|,
 expr|struct
 name|mlock_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6176,9 +5747,6 @@ operator|,
 expr|struct
 name|munlock_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6197,9 +5765,6 @@ operator|,
 expr|struct
 name|utrace_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6218,9 +5783,6 @@ operator|,
 expr|struct
 name|undelete_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6239,9 +5801,6 @@ operator|,
 expr|struct
 name|getpgid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6260,9 +5819,6 @@ operator|,
 expr|struct
 name|poll_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6281,9 +5837,6 @@ operator|,
 expr|struct
 name|nosys_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6302,9 +5855,6 @@ operator|,
 expr|struct
 name|__semctl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6323,9 +5873,6 @@ operator|,
 expr|struct
 name|semget_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6344,9 +5891,6 @@ operator|,
 expr|struct
 name|semop_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6365,9 +5909,6 @@ operator|,
 expr|struct
 name|semconfig_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6386,9 +5927,6 @@ operator|,
 expr|struct
 name|msgctl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6407,9 +5945,6 @@ operator|,
 expr|struct
 name|msgget_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6428,9 +5963,6 @@ operator|,
 expr|struct
 name|msgsnd_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6449,9 +5981,6 @@ operator|,
 expr|struct
 name|msgrcv_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6470,9 +5999,6 @@ operator|,
 expr|struct
 name|shmat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6491,9 +6017,6 @@ operator|,
 expr|struct
 name|shmctl_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6512,9 +6035,6 @@ operator|,
 expr|struct
 name|shmdt_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6533,9 +6053,6 @@ operator|,
 expr|struct
 name|shmget_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6554,9 +6071,6 @@ operator|,
 expr|struct
 name|clock_gettime_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6575,9 +6089,6 @@ operator|,
 expr|struct
 name|clock_settime_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6596,9 +6107,6 @@ operator|,
 expr|struct
 name|clock_getres_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6617,9 +6125,6 @@ operator|,
 expr|struct
 name|nanosleep_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6638,9 +6143,6 @@ operator|,
 expr|struct
 name|minherit_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6659,9 +6161,6 @@ operator|,
 expr|struct
 name|rfork_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6680,9 +6179,6 @@ operator|,
 expr|struct
 name|openbsd_poll_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6701,9 +6197,6 @@ operator|,
 expr|struct
 name|issetugid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6722,9 +6215,6 @@ operator|,
 expr|struct
 name|lchown_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6743,9 +6233,6 @@ operator|,
 expr|struct
 name|modnext_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6764,9 +6251,6 @@ operator|,
 expr|struct
 name|modstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6785,9 +6269,6 @@ operator|,
 expr|struct
 name|modfnext_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6806,9 +6287,6 @@ operator|,
 expr|struct
 name|modfind_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6827,9 +6305,6 @@ operator|,
 expr|struct
 name|kldload_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6848,9 +6323,6 @@ operator|,
 expr|struct
 name|kldunload_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6869,9 +6341,6 @@ operator|,
 expr|struct
 name|kldfind_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6890,9 +6359,6 @@ operator|,
 expr|struct
 name|kldnext_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6911,9 +6377,6 @@ operator|,
 expr|struct
 name|kldstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6932,9 +6395,6 @@ operator|,
 expr|struct
 name|kldfirstmod_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6953,9 +6413,6 @@ operator|,
 expr|struct
 name|getsid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6974,9 +6431,6 @@ operator|,
 expr|struct
 name|signanosleep_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6995,9 +6449,6 @@ operator|,
 expr|struct
 name|aio_return_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7016,9 +6467,6 @@ operator|,
 expr|struct
 name|aio_suspend_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7037,9 +6485,6 @@ operator|,
 expr|struct
 name|aio_cancel_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7058,9 +6503,6 @@ operator|,
 expr|struct
 name|aio_error_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7079,9 +6521,6 @@ operator|,
 expr|struct
 name|aio_read_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7100,9 +6539,6 @@ operator|,
 expr|struct
 name|aio_write_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7121,9 +6557,6 @@ operator|,
 expr|struct
 name|lio_listio_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7142,9 +6575,6 @@ operator|,
 expr|struct
 name|yield_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7163,9 +6593,6 @@ operator|,
 expr|struct
 name|thr_sleep_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7184,9 +6611,6 @@ operator|,
 expr|struct
 name|thr_wakeup_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7205,9 +6629,6 @@ operator|,
 expr|struct
 name|mlockall_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7226,9 +6647,6 @@ operator|,
 expr|struct
 name|munlockall_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7247,9 +6665,6 @@ operator|,
 expr|struct
 name|__getcwd_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7713,9 +7128,6 @@ operator|,
 expr|struct
 name|ocreat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7734,9 +7146,6 @@ operator|,
 expr|struct
 name|olseek_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7755,9 +7164,6 @@ operator|,
 expr|struct
 name|ostat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7776,9 +7182,6 @@ operator|,
 expr|struct
 name|olstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7797,9 +7200,6 @@ operator|,
 expr|struct
 name|ofstat_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7818,9 +7218,6 @@ operator|,
 expr|struct
 name|getkerninfo_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7839,9 +7236,6 @@ operator|,
 expr|struct
 name|getpagesize_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7860,9 +7254,6 @@ operator|,
 expr|struct
 name|ommap_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7881,9 +7272,6 @@ operator|,
 expr|struct
 name|owait_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7902,9 +7290,6 @@ operator|,
 expr|struct
 name|gethostname_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7923,9 +7308,6 @@ operator|,
 expr|struct
 name|sethostname_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7944,9 +7326,6 @@ operator|,
 expr|struct
 name|accept_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7965,9 +7344,6 @@ operator|,
 expr|struct
 name|osend_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7986,9 +7362,6 @@ operator|,
 expr|struct
 name|orecv_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8007,9 +7380,6 @@ operator|,
 expr|struct
 name|osigvec_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8028,9 +7398,6 @@ operator|,
 expr|struct
 name|osigblock_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8049,9 +7416,6 @@ operator|,
 expr|struct
 name|osigsetmask_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8070,9 +7434,6 @@ operator|,
 expr|struct
 name|osigstack_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8091,9 +7452,6 @@ operator|,
 expr|struct
 name|orecvmsg_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8112,9 +7470,6 @@ operator|,
 expr|struct
 name|osendmsg_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8133,9 +7488,6 @@ operator|,
 expr|struct
 name|recvfrom_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8154,9 +7506,6 @@ operator|,
 expr|struct
 name|otruncate_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8175,9 +7524,6 @@ operator|,
 expr|struct
 name|oftruncate_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8196,9 +7542,6 @@ operator|,
 expr|struct
 name|ogetpeername_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8217,9 +7560,6 @@ operator|,
 expr|struct
 name|ogethostid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8238,9 +7578,6 @@ operator|,
 expr|struct
 name|osethostid_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8259,9 +7596,6 @@ operator|,
 expr|struct
 name|ogetrlimit_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8280,9 +7614,6 @@ operator|,
 expr|struct
 name|osetrlimit_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8301,9 +7632,6 @@ operator|,
 expr|struct
 name|okillpg_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8322,9 +7650,6 @@ operator|,
 expr|struct
 name|oquota_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8343,9 +7668,6 @@ operator|,
 expr|struct
 name|getsockname_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8364,9 +7686,6 @@ operator|,
 expr|struct
 name|ogetdirentries_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;

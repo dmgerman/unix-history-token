@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_syscalls.c	8.4 (Berkeley) 2/21/94  * $Id: uipc_syscalls.c,v 1.30 1997/09/02 20:05:58 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_syscalls.c	8.4 (Berkeley) 2/21/94  * $Id: uipc_syscalls.c,v 1.31 1997/10/12 20:24:17 phk Exp $  */
 end_comment
 
 begin_include
@@ -126,10 +126,6 @@ name|mp
 operator|,
 name|int
 name|flags
-operator|,
-name|int
-operator|*
-name|retsize
 operator|)
 argument_list|)
 decl_stmt|;
@@ -157,10 +153,6 @@ name|mp
 operator|,
 name|caddr_t
 name|namelenp
-operator|,
-name|int
-operator|*
-name|retsize
 operator|)
 argument_list|)
 decl_stmt|;
@@ -182,10 +174,6 @@ expr|struct
 name|accept_args
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|,
 name|int
 name|compat
@@ -212,10 +200,6 @@ operator|*
 name|uap
 operator|,
 name|int
-operator|*
-name|retval
-operator|,
-name|int
 name|compat
 operator|)
 argument_list|)
@@ -238,10 +222,6 @@ expr|struct
 name|getpeername_args
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|,
 name|int
 name|compat
@@ -294,8 +274,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -308,10 +286,6 @@ name|socket_args
 comment|/* { 		int	domain; 		int	type; 		int	protocol; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -434,8 +408,12 @@ name|caddr_t
 operator|)
 name|so
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|fd
 expr_stmt|;
@@ -459,8 +437,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -473,10 +449,6 @@ name|bind_args
 comment|/* { 		int	s; 		caddr_t	name; 		int	namelen; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -586,8 +558,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -600,10 +570,6 @@ name|listen_args
 comment|/* { 		int	s; 		int	backlog; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -672,8 +638,6 @@ name|p
 parameter_list|,
 name|uap
 parameter_list|,
-name|retval
-parameter_list|,
 name|compat
 parameter_list|)
 name|struct
@@ -687,10 +651,6 @@ name|accept_args
 comment|/* { 		int	s; 		caddr_t	name; 		int	*anamelen; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 name|int
 name|compat
@@ -1003,7 +963,9 @@ argument_list|,
 operator|&
 name|fp
 argument_list|,
-name|retval
+name|p
+operator|->
+name|p_retval
 argument_list|)
 expr_stmt|;
 if|if
@@ -1253,8 +1215,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1266,10 +1226,6 @@ name|accept_args
 modifier|*
 name|uap
 decl_stmt|;
-name|int
-modifier|*
-name|retval
-decl_stmt|;
 block|{
 return|return
 operator|(
@@ -1278,8 +1234,6 @@ argument_list|(
 name|p
 argument_list|,
 name|uap
-argument_list|,
-name|retval
 argument_list|,
 literal|0
 argument_list|)
@@ -1301,8 +1255,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1314,10 +1266,6 @@ name|accept_args
 modifier|*
 name|uap
 decl_stmt|;
-name|int
-modifier|*
-name|retval
-decl_stmt|;
 block|{
 return|return
 operator|(
@@ -1326,8 +1274,6 @@ argument_list|(
 name|p
 argument_list|,
 name|uap
-argument_list|,
-name|retval
 argument_list|,
 literal|1
 argument_list|)
@@ -1356,8 +1302,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1370,10 +1314,6 @@ name|connect_args
 comment|/* { 		int	s; 		caddr_t	name; 		int	namelen; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -1646,8 +1586,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1660,10 +1598,6 @@ name|socketpair_args
 comment|/* { 		int	domain; 		int	type; 		int	protocol; 		int	*rsv; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-name|retval
-index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -1943,16 +1877,6 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* old pipe(2) syscall compatability, unused these days */
-block|retval[0] = sv[0];
-comment|/* XXX ??? */
-block|retval[1] = sv[1];
-comment|/* XXX ??? */
-endif|#
-directive|endif
 return|return
 operator|(
 name|error
@@ -2035,8 +1959,6 @@ parameter_list|,
 name|mp
 parameter_list|,
 name|flags
-parameter_list|,
-name|retsize
 parameter_list|)
 specifier|register
 name|struct
@@ -2055,13 +1977,7 @@ name|mp
 decl_stmt|;
 name|int
 name|flags
-decl_stmt|,
-decl|*
-name|retsize
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|struct
 name|file
@@ -2575,8 +2491,12 @@ name|error
 operator|==
 literal|0
 condition|)
-operator|*
-name|retsize
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|len
 operator|-
@@ -2612,8 +2532,12 @@ name|UIO_WRITE
 argument_list|,
 name|ktriov
 argument_list|,
-operator|*
-name|retsize
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 argument_list|,
 name|error
 argument_list|)
@@ -2647,7 +2571,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -2656,8 +2580,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2670,10 +2592,6 @@ name|sendto_args
 comment|/* { 		int	s; 		caddr_t	buf; 		size_t	len; 		int	flags; 		caddr_t	to; 		int	tolen; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -2762,8 +2680,6 @@ argument_list|,
 name|uap
 operator|->
 name|flags
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 return|;
@@ -2783,8 +2699,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2797,10 +2711,6 @@ name|osend_args
 comment|/* { 		int	s; 		caddr_t	buf; 		int	len; 		int	flags; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -2880,8 +2790,6 @@ argument_list|,
 name|uap
 operator|->
 name|flags
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 return|;
@@ -2895,8 +2803,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -2909,10 +2815,6 @@ name|osendmsg_args
 comment|/* { 		int	s; 		caddr_t	msg; 		int	flags; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -3089,8 +2991,6 @@ argument_list|,
 name|uap
 operator|->
 name|flags
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 name|done
@@ -3128,8 +3028,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -3142,10 +3040,6 @@ name|sendmsg_args
 comment|/* { 		int	s; 		caddr_t	msg; 		int	flags; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -3330,8 +3224,6 @@ argument_list|,
 name|uap
 operator|->
 name|flags
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 name|done
@@ -3368,8 +3260,6 @@ parameter_list|,
 name|mp
 parameter_list|,
 name|namelenp
-parameter_list|,
-name|retsize
 parameter_list|)
 specifier|register
 name|struct
@@ -3388,10 +3278,6 @@ name|mp
 decl_stmt|;
 name|caddr_t
 name|namelenp
-decl_stmt|;
-name|int
-modifier|*
-name|retsize
 decl_stmt|;
 block|{
 name|struct
@@ -3781,8 +3667,12 @@ condition|)
 goto|goto
 name|out
 goto|;
-operator|*
-name|retsize
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|len
 operator|-
@@ -4190,8 +4080,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -4204,10 +4092,6 @@ name|recvfrom_args
 comment|/* { 		int	s; 		caddr_t	buf; 		size_t	len; 		int	flags; 		caddr_t	from; 		int	*fromlenaddr; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -4342,8 +4226,6 @@ operator|)
 name|uap
 operator|->
 name|fromlenaddr
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 return|;
@@ -4363,8 +4245,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -4375,10 +4255,6 @@ name|struct
 name|recvfrom_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|uap
@@ -4394,8 +4270,6 @@ argument_list|(
 name|p
 argument_list|,
 name|uap
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 return|;
@@ -4420,8 +4294,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -4434,10 +4306,6 @@ name|orecv_args
 comment|/* { 		int	s; 		caddr_t	buf; 		int	len; 		int	flags; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -4520,8 +4388,6 @@ operator|(
 name|caddr_t
 operator|)
 literal|0
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 return|;
@@ -4539,8 +4405,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -4553,10 +4417,6 @@ name|orecvmsg_args
 comment|/* { 		int	s; 		struct	omsghdr *msg; 		int	flags; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -4746,8 +4606,6 @@ operator|->
 name|msg
 operator|->
 name|msg_namelen
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 if|if
@@ -4823,8 +4681,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -4837,10 +4693,6 @@ name|recvmsg_args
 comment|/* { 		int	s; 		struct	msghdr *msg; 		int	flags; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -5048,8 +4900,6 @@ operator|(
 name|caddr_t
 operator|)
 literal|0
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 if|if
@@ -5122,8 +4972,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -5136,10 +4984,6 @@ name|shutdown_args
 comment|/* { 		int	s; 		int	how; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -5208,8 +5052,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -5222,10 +5064,6 @@ name|setsockopt_args
 comment|/* { 		int	s; 		int	level; 		int	name; 		caddr_t	val; 		int	valsize; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -5400,8 +5238,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -5414,10 +5250,6 @@ name|getsockopt_args
 comment|/* { 		int	s; 		int	level; 		int	name; 		caddr_t	val; 		int	*avalsize; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -5705,8 +5537,6 @@ name|p
 parameter_list|,
 name|uap
 parameter_list|,
-name|retval
-parameter_list|,
 name|compat
 parameter_list|)
 name|struct
@@ -5720,10 +5550,6 @@ name|getsockname_args
 comment|/* { 		int	fdes; 		caddr_t	asa; 		int	*alen; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 name|int
 name|compat
@@ -5976,8 +5802,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -5989,10 +5813,6 @@ name|getsockname_args
 modifier|*
 name|uap
 decl_stmt|;
-name|int
-modifier|*
-name|retval
-decl_stmt|;
 block|{
 return|return
 operator|(
@@ -6001,8 +5821,6 @@ argument_list|(
 name|p
 argument_list|,
 name|uap
-argument_list|,
-name|retval
 argument_list|,
 literal|0
 argument_list|)
@@ -6024,8 +5842,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -6037,10 +5853,6 @@ name|getsockname_args
 modifier|*
 name|uap
 decl_stmt|;
-name|int
-modifier|*
-name|retval
-decl_stmt|;
 block|{
 return|return
 operator|(
@@ -6049,8 +5861,6 @@ argument_list|(
 name|p
 argument_list|,
 name|uap
-argument_list|,
-name|retval
 argument_list|,
 literal|1
 argument_list|)
@@ -6085,8 +5895,6 @@ name|p
 parameter_list|,
 name|uap
 parameter_list|,
-name|retval
-parameter_list|,
 name|compat
 parameter_list|)
 name|struct
@@ -6100,10 +5908,6 @@ name|getpeername_args
 comment|/* { 		int	fdes; 		caddr_t	asa; 		int	*alen; 	} */
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 name|int
 name|compat
@@ -6378,8 +6182,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -6391,10 +6193,6 @@ name|getpeername_args
 modifier|*
 name|uap
 decl_stmt|;
-name|int
-modifier|*
-name|retval
-decl_stmt|;
 block|{
 return|return
 operator|(
@@ -6403,8 +6201,6 @@ argument_list|(
 name|p
 argument_list|,
 name|uap
-argument_list|,
-name|retval
 argument_list|,
 literal|0
 argument_list|)
@@ -6426,8 +6222,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -6438,10 +6232,6 @@ name|struct
 name|ogetpeername_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 comment|/* XXX uap should have type `getpeername_args *' to begin with. */
@@ -6457,8 +6247,6 @@ name|getpeername_args
 operator|*
 operator|)
 name|uap
-argument_list|,
-name|retval
 argument_list|,
 literal|1
 argument_list|)

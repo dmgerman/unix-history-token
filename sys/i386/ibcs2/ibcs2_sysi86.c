@@ -137,10 +137,6 @@ name|struct
 name|ibcs2_sysi86_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 switch|switch
@@ -300,8 +296,12 @@ case|case
 name|SI86_MEM
 case|:
 comment|/* size of physical memory */
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|ctob
 argument_list|(

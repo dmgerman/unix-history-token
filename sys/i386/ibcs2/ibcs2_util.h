@@ -307,10 +307,6 @@ operator|,
 name|void
 operator|*
 name|uap
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;

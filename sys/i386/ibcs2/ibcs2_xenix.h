@@ -270,9 +270,6 @@ operator|,
 expr|struct
 name|xenix_rdchk_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -291,9 +288,6 @@ operator|,
 expr|struct
 name|xenix_chsize_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -312,9 +306,6 @@ operator|,
 expr|struct
 name|xenix_ftime_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -333,9 +324,6 @@ operator|,
 expr|struct
 name|xenix_nap_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -354,9 +342,6 @@ operator|,
 expr|struct
 name|xenix_scoinfo_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -375,9 +360,6 @@ operator|,
 expr|struct
 name|xenix_eaccess_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -396,9 +378,6 @@ operator|,
 expr|struct
 name|ibcs2_sigaction_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -417,9 +396,6 @@ operator|,
 expr|struct
 name|ibcs2_sigprocmask_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -438,9 +414,6 @@ operator|,
 expr|struct
 name|ibcs2_sigpending_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -459,9 +432,6 @@ operator|,
 expr|struct
 name|ibcs2_sigsuspend_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -480,9 +450,6 @@ operator|,
 expr|struct
 name|ibcs2_getgroups_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -501,9 +468,6 @@ operator|,
 expr|struct
 name|ibcs2_setgroups_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -522,9 +486,6 @@ operator|,
 expr|struct
 name|ibcs2_sysconf_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -543,9 +504,6 @@ operator|,
 expr|struct
 name|ibcs2_pathconf_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -564,9 +522,6 @@ operator|,
 expr|struct
 name|ibcs2_fpathconf_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -585,9 +540,6 @@ operator|,
 expr|struct
 name|ibcs2_rename_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -606,28 +558,10 @@ operator|,
 expr|struct
 name|xenix_utsname_args
 operator|*
-operator|,
-name|int
-index|[]
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_43
-end_ifdef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_43 */
-end_comment
 
 begin_endif
 endif|#

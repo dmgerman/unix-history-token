@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.31 1997/10/29 08:17:12 kato Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.32 1997/10/30 10:53:30 kato Exp $  */
 end_comment
 
 begin_include
@@ -178,10 +178,6 @@ name|struct
 name|linux_alarm_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -444,8 +440,12 @@ operator|.
 name|tv_sec
 operator|++
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|old_it
 operator|.
@@ -472,16 +472,12 @@ name|struct
 name|linux_brk_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 if|#
 directive|if
 literal|0
-block|struct vmspace *vm = p->p_vmspace;     vm_offset_t new, old;     int error;      if ((vm_offset_t)args->dsend< (vm_offset_t)vm->vm_daddr) 	return EINVAL;     if (((caddr_t)args->dsend - (caddr_t)vm->vm_daddr)> p->p_rlimit[RLIMIT_DATA].rlim_cur) 	return ENOMEM;      old = round_page((vm_offset_t)vm->vm_daddr) + ctob(vm->vm_dsize);     new = round_page((vm_offset_t)args->dsend);     *retval = old;     if ((new-old)> 0) { 	if (swap_pager_full) 	    return ENOMEM; 	error = vm_map_find(&vm->vm_map, NULL, 0,&old, (new-old), FALSE, 			VM_PROT_ALL, VM_PROT_ALL, 0); 	if (error) 	    return error; 	vm->vm_dsize += btoc((new-old)); 	*retval = (int)(vm->vm_daddr + ctob(vm->vm_dsize));     }     return 0;
+block|struct vmspace *vm = p->p_vmspace;     vm_offset_t new, old;     int error;      if ((vm_offset_t)args->dsend< (vm_offset_t)vm->vm_daddr) 	return EINVAL;     if (((caddr_t)args->dsend - (caddr_t)vm->vm_daddr)> p->p_rlimit[RLIMIT_DATA].rlim_cur) 	return ENOMEM;      old = round_page((vm_offset_t)vm->vm_daddr) + ctob(vm->vm_dsize);     new = round_page((vm_offset_t)args->dsend);     p->p_retval[0] = old;     if ((new-old)> 0) { 	if (swap_pager_full) 	    return ENOMEM; 	error = vm_map_find(&vm->vm_map, NULL, 0,&old, (new-old), FALSE, 			VM_PROT_ALL, VM_PROT_ALL, 0); 	if (error) 	    return error; 	vm->vm_dsize += btoc((new-old)); 	p->p_retval[0] = (int)(vm->vm_daddr + ctob(vm->vm_dsize));     }     return 0;
 else|#
 directive|else
 name|struct
@@ -576,11 +572,11 @@ name|p
 argument_list|,
 operator|&
 name|tmp
-argument_list|,
-name|retval
 argument_list|)
 condition|)
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]
@@ -591,7 +587,9 @@ operator|)
 name|new
 expr_stmt|;
 else|else
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]
@@ -622,10 +620,6 @@ name|struct
 name|linux_uselib_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -1575,10 +1569,6 @@ name|struct
 name|linux_select_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -1687,8 +1677,6 @@ name|p
 argument_list|,
 operator|&
 name|newsel
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1707,10 +1695,6 @@ name|struct
 name|linux_newselect_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -1990,8 +1974,6 @@ name|p
 argument_list|,
 operator|&
 name|bsa
-argument_list|,
-name|retval
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2039,8 +2021,12 @@ condition|)
 block|{
 if|if
 condition|(
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 condition|)
 block|{
 comment|/* 	     * Compute how much time was left of the timeout, 	     * by subtracting the current time and the time 	     * before we started the call, and subtracting 	     * that result from the user-supplied value. 	     */
@@ -2174,10 +2160,6 @@ name|struct
 name|linux_getpgid_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -2237,8 +2219,12 @@ name|curproc
 operator|=
 name|p
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|curproc
 operator|->
@@ -2263,10 +2249,6 @@ name|struct
 name|linux_fork_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|int
@@ -2300,8 +2282,6 @@ name|fork_args
 operator|*
 operator|)
 name|args
-argument_list|,
-name|retval
 argument_list|)
 condition|)
 return|return
@@ -2309,14 +2289,18 @@ name|error
 return|;
 if|if
 condition|(
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|1
 index|]
 operator|==
 literal|1
 condition|)
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]
@@ -2372,10 +2356,6 @@ name|struct
 name|linux_mmap_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -2576,8 +2556,6 @@ name|p
 argument_list|,
 operator|&
 name|bsd_args
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -2596,10 +2574,6 @@ name|struct
 name|linux_msync_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -2636,8 +2610,6 @@ name|p
 argument_list|,
 operator|&
 name|bsd_args
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -2656,10 +2628,6 @@ name|struct
 name|linux_pipe_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|int
@@ -2688,8 +2656,6 @@ argument_list|(
 name|p
 argument_list|,
 literal|0
-argument_list|,
-name|retval
 argument_list|)
 condition|)
 return|return
@@ -2701,7 +2667,9 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-name|retval
+name|p
+operator|->
+name|p_retval
 argument_list|,
 name|args
 operator|->
@@ -2718,8 +2686,12 @@ condition|)
 return|return
 name|error
 return|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -2742,10 +2714,6 @@ name|struct
 name|linux_time_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -2812,8 +2780,12 @@ condition|)
 return|return
 name|error
 return|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 name|tm
 expr_stmt|;
@@ -2877,10 +2849,6 @@ name|struct
 name|linux_times_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -3027,8 +2995,12 @@ operator|&
 name|boottime
 argument_list|)
 expr_stmt|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 operator|(
 name|int
@@ -3105,10 +3077,6 @@ name|struct
 name|linux_newuname_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -3262,10 +3230,6 @@ name|struct
 name|linux_utime_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -3466,8 +3430,6 @@ name|p
 argument_list|,
 operator|&
 name|bsdutimes
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -3486,10 +3448,6 @@ name|struct
 name|linux_waitpid_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -3568,8 +3526,6 @@ name|p
 argument_list|,
 operator|&
 name|tmp
-argument_list|,
-name|retval
 argument_list|)
 condition|)
 return|return
@@ -3692,10 +3648,6 @@ name|struct
 name|linux_wait4_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -3780,8 +3732,6 @@ name|p
 argument_list|,
 operator|&
 name|tmp
-argument_list|,
-name|retval
 argument_list|)
 condition|)
 return|return
@@ -3914,10 +3864,6 @@ name|struct
 name|linux_mknod_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|caddr_t
@@ -4006,8 +3952,6 @@ name|p
 argument_list|,
 operator|&
 name|bsd_mkfifo
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -4044,8 +3988,6 @@ name|p
 argument_list|,
 operator|&
 name|bsd_mknod
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -4069,10 +4011,6 @@ name|struct
 name|linux_personality_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 ifdef|#
@@ -4105,7 +4043,9 @@ return|return
 name|EINVAL
 return|;
 comment|/* Yes Jim, it's still a Linux... */
-name|retval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]
@@ -4135,10 +4075,6 @@ name|struct
 name|linux_setitimer_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -4282,8 +4218,6 @@ name|p
 argument_list|,
 operator|&
 name|bsa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -4302,10 +4236,6 @@ name|struct
 name|linux_getitimer_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -4353,8 +4283,6 @@ name|p
 argument_list|,
 operator|&
 name|bsa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -4373,10 +4301,6 @@ name|struct
 name|linux_iopl_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|int
@@ -4443,10 +4367,6 @@ name|struct
 name|linux_nice_args
 modifier|*
 name|args
-parameter_list|,
-name|int
-modifier|*
-name|retval
 parameter_list|)
 block|{
 name|struct
@@ -4481,8 +4401,6 @@ name|p
 argument_list|,
 operator|&
 name|bsd_args
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}

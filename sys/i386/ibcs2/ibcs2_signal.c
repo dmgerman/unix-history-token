@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Scott Bartram  * Copyright (c) 1995 Steven Wallace  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: ibcs2_signal.c,v 1.10 1997/03/24 11:23:32 bde Exp $  */
+comment|/*  * Copyright (c) 1995 Scott Bartram  * Copyright (c) 1995 Steven Wallace  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: ibcs2_signal.c,v 1.11 1997/07/20 09:39:46 bde Exp $  */
 end_comment
 
 begin_include
@@ -717,8 +717,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 specifier|register
 name|struct
@@ -730,10 +728,6 @@ name|struct
 name|ibcs2_sigaction_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -947,8 +941,6 @@ name|p
 argument_list|,
 operator|&
 name|sa
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 operator|!=
@@ -1035,8 +1027,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 specifier|register
 name|struct
@@ -1048,10 +1038,6 @@ name|struct
 name|ibcs2_sigsys_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -1120,8 +1106,12 @@ argument_list|)
 operator|==
 name|IBCS2_SIGSET_MASK
 condition|)
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 operator|(
 name|int
@@ -1211,8 +1201,6 @@ name|p
 argument_list|,
 operator|&
 name|sa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1356,8 +1344,12 @@ literal|0
 block|if (signum != SIGALRM) 				sa.sa_flags |= SA_RESTART;
 endif|#
 directive|endif
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 operator|(
 name|int
@@ -1401,8 +1393,6 @@ name|p
 argument_list|,
 operator|&
 name|sa_args
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 operator|!=
@@ -1446,8 +1436,12 @@ condition|)
 return|return
 name|error
 return|;
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 operator|(
 name|int
@@ -1486,8 +1480,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* return SIG_HOLD and unblock signal*/
-operator|*
-name|retval
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
 operator|=
 operator|(
 name|int
@@ -1547,8 +1545,6 @@ name|p
 argument_list|,
 operator|&
 name|sa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1664,8 +1660,6 @@ name|p
 argument_list|,
 operator|&
 name|sa_args
-argument_list|,
-name|retval
 argument_list|)
 operator|)
 operator|!=
@@ -1720,8 +1714,6 @@ name|p
 argument_list|,
 operator|&
 name|sa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -1740,8 +1732,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 specifier|register
 name|struct
@@ -1753,10 +1743,6 @@ name|struct
 name|ibcs2_sigprocmask_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|ibcs2_sigset_t
@@ -1956,8 +1942,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 specifier|register
 name|struct
@@ -1969,10 +1953,6 @@ name|struct
 name|ibcs2_sigpending_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|sigset_t
@@ -2029,8 +2009,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 specifier|register
 name|struct
@@ -2042,10 +2020,6 @@ name|struct
 name|ibcs2_sigsuspend_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|ibcs2_sigset_t
@@ -2116,8 +2090,6 @@ name|p
 argument_list|,
 operator|&
 name|sa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -2130,8 +2102,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 specifier|register
 name|struct
@@ -2143,10 +2113,6 @@ name|struct
 name|ibcs2_pause_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -2172,8 +2138,6 @@ name|p
 argument_list|,
 operator|&
 name|bsa
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}
@@ -2186,8 +2150,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 specifier|register
 name|struct
@@ -2199,10 +2161,6 @@ name|struct
 name|ibcs2_kill_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -2249,8 +2207,6 @@ name|p
 argument_list|,
 operator|&
 name|ka
-argument_list|,
-name|retval
 argument_list|)
 return|;
 block|}

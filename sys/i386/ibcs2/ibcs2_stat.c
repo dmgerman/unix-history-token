@@ -449,8 +449,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -461,10 +459,6 @@ name|struct
 name|ibcs2_statfs_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 specifier|register
@@ -626,8 +620,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -638,10 +630,6 @@ name|struct
 name|ibcs2_fstatfs_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -772,8 +760,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -784,10 +770,6 @@ name|struct
 name|ibcs2_stat_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -870,8 +852,6 @@ name|p
 argument_list|,
 operator|&
 name|cup
-argument_list|,
-name|retval
 argument_list|)
 condition|)
 return|return
@@ -944,8 +924,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -956,10 +934,6 @@ name|struct
 name|ibcs2_lstat_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -1042,8 +1016,6 @@ name|p
 argument_list|,
 operator|&
 name|cup
-argument_list|,
-name|retval
 argument_list|)
 condition|)
 return|return
@@ -1116,8 +1088,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1128,10 +1098,6 @@ name|struct
 name|ibcs2_fstat_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 name|struct
@@ -1199,8 +1165,6 @@ name|p
 argument_list|,
 operator|&
 name|cup
-argument_list|,
-name|retval
 argument_list|)
 condition|)
 return|return
@@ -1273,8 +1237,6 @@ parameter_list|(
 name|p
 parameter_list|,
 name|uap
-parameter_list|,
-name|retval
 parameter_list|)
 name|struct
 name|proc
@@ -1285,10 +1247,6 @@ name|struct
 name|ibcs2_utssys_args
 modifier|*
 name|uap
-decl_stmt|;
-name|int
-modifier|*
-name|retval
 decl_stmt|;
 block|{
 switch|switch
