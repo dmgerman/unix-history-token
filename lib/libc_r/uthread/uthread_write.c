@@ -244,7 +244,7 @@ operator|)
 operator|||
 operator|(
 name|n
-operator|>=
+operator|>
 literal|0
 operator|&&
 name|num
@@ -341,7 +341,7 @@ elseif|else
 if|if
 condition|(
 name|n
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
