@@ -199,6 +199,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|uiomove_frombuf
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|buflen
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|uiomoveco
 parameter_list|(
 name|void
