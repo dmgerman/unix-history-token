@@ -329,6 +329,13 @@ name|page_size
 decl_stmt|,
 name|num_objs
 decl_stmt|;
+name|int
+name|nsfbufs
+decl_stmt|,
+name|nsfbufspeak
+decl_stmt|,
+name|nsfbufsused
+decl_stmt|;
 name|u_int
 name|mbuf_hiwm
 decl_stmt|,
@@ -398,13 +405,6 @@ modifier|*
 name|seen
 init|=
 name|NULL
-decl_stmt|;
-name|long
-name|nsfbufs
-decl_stmt|,
-name|nsfbufspeak
-decl_stmt|,
-name|nsfbufsused
 decl_stmt|;
 name|mlen
 operator|=
@@ -2007,7 +2007,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%i/%i/%i sfbufs in use (current/peak/max)\n"
+literal|"%d/%d/%d sfbufs in use (current/peak/max)\n"
 argument_list|,
 name|nsfbufsused
 argument_list|,
