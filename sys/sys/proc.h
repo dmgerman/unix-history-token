@@ -83,7 +83,7 @@ file|<sys/rtprio.h>
 end_include
 
 begin_comment
-comment|/* XXX */
+comment|/* XXX. */
 end_comment
 
 begin_include
@@ -217,7 +217,7 @@ name|struct
 name|mtx
 name|s_mtx
 decl_stmt|;
-comment|/* Mutex to protect members */
+comment|/* Mutex to protect members. */
 block|}
 struct|;
 end_struct
@@ -416,15 +416,15 @@ argument|thread
 argument_list|)
 name|td_plist
 expr_stmt|;
-comment|/* (*) All threads in this proc */
+comment|/* (*) All threads in this proc. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
 argument_list|)
 name|td_kglist
 expr_stmt|;
-comment|/* (*) All threads in this ksegrp */
-comment|/* The two queues below should someday be merged */
+comment|/* (*) All threads in this ksegrp. */
+comment|/* The two queues below should someday be merged. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -698,7 +698,7 @@ comment|/* (a) Kernel VA of kstack. */
 name|int
 name|td_kstack_pages
 decl_stmt|;
-comment|/* (a) Size of the kstack */
+comment|/* (a) Size of the kstack. */
 name|struct
 name|vm_object
 modifier|*
@@ -1713,7 +1713,7 @@ comment|/* (*) Next upcall time. */
 name|int
 name|kg_upquantum
 decl_stmt|;
-comment|/* (*) Quantum to schedule an upcall */
+comment|/* (*) Quantum to schedule an upcall. */
 define|#
 directive|define
 name|kg_endzero
@@ -1857,7 +1857,7 @@ block|,
 comment|/* In creation */
 name|PRS_NORMAL
 block|,
-comment|/* KSEs can be run */
+comment|/* KSEs can be run. */
 name|PRS_ZOMBIE
 block|}
 name|p_state
@@ -1963,7 +1963,7 @@ comment|/* (j) Statclock hits in intr. */
 name|int
 name|p_profthreads
 decl_stmt|;
-comment|/* (c) Num threads in addupc_task */
+comment|/* (c) Num threads in addupc_task. */
 name|int
 name|p_maxthrwaits
 decl_stmt|;
@@ -3304,7 +3304,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Primary thread in proc0 */
+comment|/* Primary thread in proc0. */
 end_comment
 
 begin_decl_stmt
@@ -3316,7 +3316,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Primary ksegrp in proc0 */
+comment|/* Primary ksegrp in proc0. */
 end_comment
 
 begin_decl_stmt
@@ -3328,7 +3328,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Primary kse in proc0 */
+comment|/* Primary kse in proc0. */
 end_comment
 
 begin_decl_stmt
