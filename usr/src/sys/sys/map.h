@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)map.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)map.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -58,9 +58,6 @@ end_define
 begin_decl_stmt
 name|struct
 name|map
-modifier|*
-name|kernelmap
-decl_stmt|,
 modifier|*
 name|kmemmap
 decl_stmt|,
