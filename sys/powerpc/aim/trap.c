@@ -401,6 +401,9 @@ decl_stmt|;
 name|faultbuf
 name|env
 decl_stmt|;
+name|uint
+name|segment
+decl_stmt|;
 name|up
 operator|=
 name|udaddr
@@ -412,7 +415,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (setfault(env)) { 		curpcb->pcb_onfault = 0; 		return EFAULT; 	}
+block|if (setfault(env)) { 		PCPU_GET(curpcb)->pcb_onfault = 0; 		return EFAULT; 	}
 endif|#
 directive|endif
 while|while
@@ -464,20 +467,27 @@ name|l
 operator|=
 name|len
 expr_stmt|;
+name|segment
+operator|=
+operator|(
+name|uint
+operator|)
+name|up
+operator|>>
+name|ADDR_SR_SHFT
+expr_stmt|;
 name|setusr
 argument_list|(
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_pm
 operator|->
 name|pm_sr
 index|[
-operator|(
-name|u_int
-operator|)
-name|up
-operator|>>
-name|ADDR_SR_SHFT
+name|segment
 index|]
 argument_list|)
 expr_stmt|;
@@ -503,7 +513,10 @@ operator|-=
 name|l
 expr_stmt|;
 block|}
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_onfault
 operator|=
@@ -557,6 +570,9 @@ decl_stmt|;
 name|faultbuf
 name|env
 decl_stmt|;
+name|uint
+name|segment
+decl_stmt|;
 name|kp
 operator|=
 name|kaddr
@@ -568,7 +584,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (setfault(env)) { 		curpcb->pcb_onfault = 0; 		return EFAULT; 	}
+block|if (setfault(env)) { 		PCPU_GET(curpcb)->pcb_onfault = 0; 		return EFAULT; 	}
 endif|#
 directive|endif
 while|while
@@ -620,20 +636,27 @@ name|l
 operator|=
 name|len
 expr_stmt|;
-name|setusr
-argument_list|(
-name|curpcb
-operator|->
-name|pcb_pm
-operator|->
-name|pm_sr
-index|[
+name|segment
+operator|=
 operator|(
 name|u_int
 operator|)
 name|up
 operator|>>
 name|ADDR_SR_SHFT
+expr_stmt|;
+name|setusr
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|curpcb
+argument_list|)
+operator|->
+name|pcb_pm
+operator|->
+name|pm_sr
+index|[
+name|segment
 index|]
 argument_list|)
 expr_stmt|;
@@ -659,7 +682,10 @@ operator|-=
 name|l
 expr_stmt|;
 block|}
+name|PCPU_GET
+argument_list|(
 name|curpcb
+argument_list|)
 operator|->
 name|pcb_onfault
 operator|=
@@ -686,17 +712,17 @@ comment|/*  * kcopy(const void *src, void *dst, size_t len);  *  * Copy len byte
 end_comment
 
 begin_comment
-unit|int kcopy(const void *src, void *dst, size_t len) { 	faultbuf env, *oldfault;  	oldfault = curpcb->pcb_onfault; 	if (setfault(env)) { 		curpcb->pcb_onfault = oldfault; 		return EFAULT; 	}  	bcopy(src, dst, len);  	curpcb->pcb_onfault = oldfault; 	return 0; }  int badaddr(void *addr, size_t size) {  	return badaddr_read(addr, size, NULL); }  int badaddr_read(void *addr, size_t size, int *rptr) { 	faultbuf env; 	int x;
+unit|int kcopy(const void *src, void *dst, size_t len) { 	faultbuf env, *oldfault;  	oldfault = PCPU_GET(curpcb)->pcb_onfault; 	if (setfault(env)) { 		PCPU_GET(curpcb)->pcb_onfault = oldfault; 		return EFAULT; 	}  	bcopy(src, dst, len);  	PCPU_GET(curpcb)->pcb_onfault = oldfault; 	return 0; }  int badaddr(void *addr, size_t size) {  	return badaddr_read(addr, size, NULL); }  int badaddr_read(void *addr, size_t size, int *rptr) { 	faultbuf env; 	int x;
 comment|/* Get rid of any stale machine checks that have been waiting.  */
 end_comment
 
 begin_comment
-unit|__asm __volatile ("sync; isync");  	if (setfault(env)) { 		curpcb->pcb_onfault = 0; 		__asm __volatile ("sync"); 		return 1; 	}  	__asm __volatile ("sync");  	switch (size) { 	case 1: 		x = *(volatile int8_t *)addr; 		break; 	case 2: 		x = *(volatile int16_t *)addr; 		break; 	case 4: 		x = *(volatile int32_t *)addr; 		break; 	default: 		panic("badaddr: invalid size (%d)", size); 	}
+unit|__asm __volatile ("sync; isync");  	if (setfault(env)) { 		PCPU_GET(curpcb)->pcb_onfault = 0; 		__asm __volatile ("sync"); 		return 1; 	}  	__asm __volatile ("sync");  	switch (size) { 	case 1: 		x = *(volatile int8_t *)addr; 		break; 	case 2: 		x = *(volatile int16_t *)addr; 		break; 	case 4: 		x = *(volatile int32_t *)addr; 		break; 	default: 		panic("badaddr: invalid size (%d)", size); 	}
 comment|/* Make sure we took the machine check, if we caused one. */
 end_comment
 
 begin_comment
-unit|__asm __volatile ("sync; isync");  	curpcb->pcb_onfault = 0; 	__asm __volatile ("sync");
+unit|__asm __volatile ("sync; isync");  	PCPU_GET(curpcb)->pcb_onfault = 0; 	__asm __volatile ("sync");
 comment|/* To be sure. */
 end_comment
 

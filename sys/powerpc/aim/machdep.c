@@ -1982,7 +1982,7 @@ literal|0
 end_if
 
 begin_endif
-unit|curpm = curpcb->pcb_pmreal = curpcb->pcb_pm = kernel_pmap;
+unit|curpm = PCPU_GET(curpcb)->pcb_pmreal = PCPU_GET(curpcb)->pcb_pm = kernel_pmap;
 endif|#
 directive|endif
 end_endif
