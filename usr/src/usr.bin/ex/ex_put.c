@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	6.2 %G%"
+literal|"@(#)ex_put.c	6.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3568,72 +3568,6 @@ name|tty
 operator|=
 name|f
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|TIMEBOMB
-comment|/* 	 * The following is a TEMPORARY hack to help track down a bug. 	 * It is never intended to get off Ernie CoVax. 	 */
-if|if
-condition|(
-name|f
-operator|==
-name|normf
-operator|&&
-name|nlttyc
-operator|.
-name|t_suspc
-operator|==
-literal|'\377'
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"\r\n\nPlease tell mark suspc is 377, and let him know\r\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"what you just did.  Did you hit del?\r\n"
-argument_list|)
-expr_stmt|;
-name|nlttyc
-operator|.
-name|t_suspc
-operator|=
-name|CTRL
-argument_list|(
-name|z
-argument_list|)
-expr_stmt|;
-name|nlttyc
-operator|.
-name|t_dsuspc
-operator|=
-name|CTRL
-argument_list|(
-name|y
-argument_list|)
-expr_stmt|;
-name|nlttyc
-operator|.
-name|t_flushc
-operator|=
-name|CTRL
-argument_list|(
-name|o
-argument_list|)
-expr_stmt|;
-name|nlttyc
-operator|.
-name|t_lnextc
-operator|=
-name|CTRL
-argument_list|(
-name|v
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|sTTY
