@@ -886,20 +886,21 @@ name|cmd
 condition|)
 block|{
 case|case
-name|F_SETLKW
+name|F_GETLK
 case|:
 case|case
 name|F_SETLK
 case|:
 case|case
-name|F_GETLK
+name|F_SETLKW
 case|:
 name|error
 operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 operator|(
 name|intptr_t
@@ -970,16 +971,14 @@ operator|(
 name|error
 operator|)
 return|;
-switch|switch
+if|if
 condition|(
 name|uap
 operator|->
 name|cmd
-condition|)
-block|{
-case|case
+operator|==
 name|F_GETLK
-case|:
+condition|)
 name|error
 operator|=
 name|copyout
@@ -988,7 +987,8 @@ operator|&
 name|fl
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 operator|(
 name|intptr_t
@@ -1003,8 +1003,6 @@ name|fl
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 return|return
 operator|(
 name|error
@@ -1034,25 +1032,25 @@ parameter_list|)
 block|{
 specifier|register
 name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
-specifier|register
-name|struct
 name|filedesc
 modifier|*
 name|fdp
+decl_stmt|;
+name|struct
+name|flock
+modifier|*
+name|flp
 decl_stmt|;
 specifier|register
 name|struct
 name|file
 modifier|*
 name|fp
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 specifier|register
 name|char
@@ -1064,36 +1062,41 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|struct
-name|flock
-modifier|*
-name|flp
-decl_stmt|;
-name|int
-name|tmp
-decl_stmt|,
-name|error
-init|=
-literal|0
-decl_stmt|,
-name|flg
-init|=
-name|F_POSIX
-decl_stmt|;
 name|u_int
 name|newmin
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|int
+name|error
+decl_stmt|,
+name|flg
+decl_stmt|,
+name|tmp
+decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|flg
+operator|=
+name|F_POSIX
+expr_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 name|fdp
 operator|=
 name|p
 operator|->
 name|p_fd
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|FILEDESC_LOCK
 argument_list|(
@@ -1399,8 +1402,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|error
+operator|==
+literal|0
 condition|)
 block|{
 name|fdrop
@@ -1643,7 +1647,7 @@ operator|->
 name|f_offset
 expr_stmt|;
 block|}
-comment|/* 		 * lockop may block 		 */
+comment|/* 		 * VOP_ADVLOCK() may block. 		 */
 name|fhold
 argument_list|(
 name|fp
@@ -1961,7 +1965,7 @@ operator|->
 name|f_offset
 expr_stmt|;
 block|}
-comment|/* 		 * lockop may block 		 */
+comment|/* 		 * VOP_ADVLOCK() may block. 		 */
 name|fhold
 argument_list|(
 name|fp
@@ -2648,11 +2652,6 @@ name|sigiolst
 decl_stmt|;
 block|{
 name|struct
-name|sigio
-modifier|*
-name|sigio
-decl_stmt|;
-name|struct
 name|proc
 modifier|*
 name|p
@@ -2661,6 +2660,11 @@ name|struct
 name|pgrp
 modifier|*
 name|pg
+decl_stmt|;
+name|struct
+name|sigio
+modifier|*
+name|sigio
 decl_stmt|;
 name|sigio
 operator|=
@@ -3137,7 +3141,7 @@ argument_list|(
 name|proc
 argument_list|)
 expr_stmt|;
-comment|/*  		 * since funsetownlst() is called without the proctree 		 * locked we need to check for P_WEXIT. 		 * XXX: is ESRCH correct? 		 */
+comment|/*  		 * Since funsetownlst() is called without the proctree 		 * locked, we need to check for P_WEXIT. 		 * XXX: is ESRCH correct? 		 */
 if|if
 condition|(
 operator|(
@@ -3388,24 +3392,20 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|int
 name|fd
-init|=
+decl_stmt|,
+name|error
+decl_stmt|;
+name|fd
+operator|=
 name|uap
 operator|->
 name|fd
-decl_stmt|;
-name|int
+expr_stmt|;
 name|error
-init|=
+operator|=
 literal|0
-decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
 expr_stmt|;
 name|fdp
 operator|=
@@ -3414,6 +3414,12 @@ operator|->
 name|td_proc
 operator|->
 name|p_fd
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|FILEDESC_LOCK
 argument_list|(
@@ -5270,13 +5276,11 @@ decl_stmt|;
 block|{
 name|KASSERT
 argument_list|(
-operator|(
 name|fp
 operator|->
 name|f_count
 operator|==
 literal|0
-operator|)
 argument_list|,
 operator|(
 literal|"ffree: fp_fcount not 0!"
@@ -5632,12 +5636,6 @@ name|newfdp
 decl_stmt|,
 modifier|*
 name|fdp
-init|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 decl_stmt|;
 specifier|register
 name|struct
@@ -5653,6 +5651,14 @@ decl_stmt|,
 name|j
 decl_stmt|;
 comment|/* Certain daemons might not have file descriptors. */
+name|fdp
+operator|=
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_fd
+expr_stmt|;
 if|if
 condition|(
 name|fdp
@@ -6228,14 +6234,12 @@ name|fpp
 operator|!=
 name|NULL
 condition|)
-block|{
 name|fhold
 argument_list|(
 operator|*
 name|fpp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -6277,6 +6281,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+comment|/* Certain daemons might not have file descriptors. */
 name|fdp
 operator|=
 name|td
@@ -6285,7 +6290,6 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-comment|/* Certain daemons might not have file descriptors. */
 if|if
 condition|(
 name|fdp
@@ -6315,7 +6319,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * we are the last reference to the structure, we can 	 * safely assume it will not change out from under us. 	 */
+comment|/* 	 * We are the last reference to the structure, so we can 	 * safely assume it will not change out from under us. 	 */
 name|FILEDESC_UNLOCK
 argument_list|(
 name|fdp
@@ -6571,18 +6575,20 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
-init|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 decl_stmt|;
 specifier|register
 name|int
 name|i
 decl_stmt|;
 comment|/* Certain daemons might not have file descriptors. */
+name|fdp
+operator|=
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_fd
+expr_stmt|;
 if|if
 condition|(
 name|fdp
@@ -6590,7 +6596,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * note: fdp->fd_ofiles may be reallocated out from under us while 	 * we are blocked in a close.  Be careful! 	 */
+comment|/* 	 * Note: fdp->fd_ofiles may be reallocated out from under us while 	 * we are blocked in a close.  Be careful! 	 */
 name|FILEDESC_LOCK
 argument_list|(
 name|fdp
@@ -6793,18 +6799,20 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
-init|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
 decl_stmt|;
 specifier|register
 name|int
 name|i
 decl_stmt|;
 comment|/* Certain daemons might not have file descriptors. */
+name|fdp
+operator|=
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_fd
+expr_stmt|;
 if|if
 condition|(
 name|fdp
@@ -8007,7 +8015,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Like fget() but loads the underlying socket, or returns an error if  * the descriptor does not represent a socket.  *  * We bump the ref count on the returned socket.  XXX Also obtain the SX lock in  * the future.  */
+comment|/*  * Like fget() but loads the underlying socket, or returns an error if  * the descriptor does not represent a socket.  *  * We bump the ref count on the returned socket.  XXX Also obtain the SX  * lock in the future.  */
 end_comment
 
 begin_function
@@ -8049,6 +8057,8 @@ expr_stmt|;
 if|if
 condition|(
 name|fflagp
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|fflagp
@@ -8809,9 +8819,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|u_int
-operator|)
+name|dfd
+operator|<
+literal|0
+operator|||
 name|dfd
 operator|>=
 name|fdp
@@ -8975,7 +8986,7 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * we now own the reference to fp that the ofiles[] array 		 * used to own.  Release it. 		 */
+comment|/* 		 * We now own the reference to fp that the ofiles[] array 		 * used to own.  Release it. 		 */
 if|if
 condition|(
 name|fp
@@ -8997,7 +9008,7 @@ return|;
 case|case
 name|ENXIO
 case|:
-comment|/* 		 * Steal away the file pointer from dfd, and stuff it into indx. 		 */
+comment|/* 		 * Steal away the file pointer from dfd and stuff it into indx. 		 */
 name|fp
 operator|=
 name|fdp
@@ -9183,9 +9194,8 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
 name|struct
-name|proc
-modifier|*
-name|p
+name|xfile
+name|xf
 decl_stmt|;
 name|struct
 name|filedesc
@@ -9198,8 +9208,9 @@ modifier|*
 name|fp
 decl_stmt|;
 name|struct
-name|xfile
-name|xf
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|error
@@ -9215,17 +9226,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|req
 operator|->
 name|oldptr
+operator|==
+name|NULL
 condition|)
 block|{
 name|n
 operator|=
 literal|16
 expr_stmt|;
-comment|/* slight overestimate */
+comment|/* A slight overestimate. */
 name|sx_slock
 argument_list|(
 operator|&
@@ -9268,7 +9280,9 @@ argument_list|,
 name|n
 operator|*
 sizeof|sizeof
+argument_list|(
 name|xf
+argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -9283,7 +9297,9 @@ operator|&
 name|xf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|xf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|xf
@@ -9291,7 +9307,9 @@ operator|.
 name|xf_size
 operator|=
 sizeof|sizeof
+argument_list|(
 name|xf
+argument_list|)
 expr_stmt|;
 name|sx_slock
 argument_list|(
@@ -9450,7 +9468,9 @@ operator|&
 name|xf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|xf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
