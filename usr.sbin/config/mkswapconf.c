@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkswapconf.c,v 1.14 1997/09/17 06:20:45 charnier Exp $"
+literal|"$Id: mkswapconf.c,v 1.15 1998/06/09 14:02:08 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -446,20 +446,6 @@ literal|"dev_t\tdumpdev = NODEV;\t\t\t/* unconfigured */\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"void\nsetconf()\n{\n}\n"
-argument_list|)
-expr_stmt|;
 name|fclose
 argument_list|(
 name|fp
