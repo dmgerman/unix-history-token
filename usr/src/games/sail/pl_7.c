@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pl_7.c	5.7 (Berkeley) %G%"
+literal|"@(#)pl_7.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/ttydefaults.h>
+end_include
 
 begin_include
 include|#
@@ -2962,7 +2968,9 @@ name|blockalarm
 argument_list|()
 expr_stmt|;
 name|tstp
-argument_list|()
+argument_list|(
+name|SIGTSTP
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
