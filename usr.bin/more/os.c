@@ -488,7 +488,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* There's really no terribly impressive reason why we should just 	 * sighup after a single EOF read, nor is there any particular 	 * reason why we SIGHUP ourselves rather than calling exit().  However, 	 * none of it hurts, either. */
+comment|/* 	 * XXX This is a hack.  We do want to exit if we read a couple EOFs 	 *     from the terminal (to avoid spinning on input if the user 	 *     leaves us hanging), but we should be comparing against the 	 *     tty variable from ttyin.c. 	 * 	 *     We wait for two successive EOFs just to give any potential 	 *     oddities the benefit of the doubt. 	 */
+if|if
+condition|(
+name|fd
+operator|==
+literal|2
+condition|)
+block|{
 if|if
 condition|(
 name|n
@@ -498,6 +505,12 @@ condition|)
 name|neofs
 operator|++
 expr_stmt|;
+else|else
+name|neofs
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|neofs
