@@ -410,6 +410,18 @@ literal|".-.-.-"
 block|}
 block|,
 block|{
+literal|'"'
+block|,
+literal|".-..-."
+block|}
+block|,
+block|{
+literal|'!'
+block|,
+literal|"..--."
+block|}
+block|,
+block|{
 literal|'?'
 block|,
 literal|"..--.."
@@ -472,6 +484,11 @@ literal|".-.-."
 block|}
 block|,
 comment|/* AR */
+block|{
+literal|'@'
+block|,
+literal|".--.-."
+block|}
 comment|/* prosigns without already assigned values */
 block|{
 literal|'#'
@@ -481,7 +498,7 @@ block|}
 block|,
 comment|/* AS */
 block|{
-literal|'@'
+literal|'&'
 block|,
 literal|"...-.-"
 block|}
