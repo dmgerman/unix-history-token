@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ixreg.h,v 1.2 1995/02/26 19:40:07 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ixreg.h,v 1.3 1995/02/26 20:13:15 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -812,7 +812,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* System Configuration Pointer */
 block|{
@@ -843,10 +842,10 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* Intermediate System Configuration Pointer */
 block|{
+specifier|volatile
 name|u_short
 name|busy
 decl_stmt|;
@@ -871,10 +870,10 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* System Control Block */
 block|{
+specifier|volatile
 name|u_short
 name|status
 decl_stmt|;
@@ -1056,18 +1055,22 @@ name|u_short
 name|rfa_offset
 decl_stmt|;
 comment|/* receive frame area */
+specifier|volatile
 name|u_short
 name|crc_errors
 decl_stmt|;
 comment|/* frame was aligned, but bad crc */
+specifier|volatile
 name|u_short
 name|aln_errors
 decl_stmt|;
 comment|/* frame was not aligned, and had bad crc */
+specifier|volatile
 name|u_short
 name|rsc_errors
 decl_stmt|;
 comment|/* did not have resources to receive */
+specifier|volatile
 name|u_short
 name|ovr_errors
 decl_stmt|;
@@ -1079,10 +1082,10 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* command block - nop (also the common part of cb's */
 block|{
+specifier|volatile
 name|u_short
 name|status
 decl_stmt|;
@@ -1248,7 +1251,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* command block - configure command */
 block|{
@@ -1270,7 +1272,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* command block - multicast address setup command */
 block|{
@@ -1285,7 +1286,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* command block - transmit command */
 block|{
@@ -1322,7 +1322,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* command block - tdr command */
 block|{
@@ -1337,7 +1336,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* command block - dump command */
 block|{
@@ -1352,7 +1350,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* command block - diagnose command */
 block|{
@@ -1367,10 +1364,10 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* Transmit Buffer Descriptor */
 block|{
+specifier|volatile
 name|u_short
 name|act_count
 decl_stmt|;
@@ -1395,10 +1392,10 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* Receive Frame Descriptor */
 block|{
+specifier|volatile
 name|u_short
 name|status
 decl_stmt|;
@@ -1460,10 +1457,10 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-specifier|volatile
 struct|struct
 comment|/* Receive Buffer Descriptor */
 block|{
+specifier|volatile
 name|u_short
 name|act_count
 decl_stmt|;
