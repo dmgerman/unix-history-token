@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.88 1996/12/15 23:25:50 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.89 1996/12/16 14:31:45 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -3150,7 +3150,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.88 1996/12/15 23:25:50 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.89 1996/12/16 14:31:45 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -13767,6 +13767,42 @@ operator|&
 literal|0x1f
 condition|)
 block|{
+name|unsigned
+name|f10
+init|=
+literal|10000
+operator|<<
+operator|(
+name|tp
+operator|->
+name|widedone
+condition|?
+name|tp
+operator|->
+name|widedone
+operator|-
+literal|1
+else|:
+literal|0
+operator|)
+decl_stmt|;
+name|unsigned
+name|mb10
+init|=
+operator|(
+name|f10
+operator|+
+name|tp
+operator|->
+name|period
+operator|/
+literal|2
+operator|)
+operator|/
+name|tp
+operator|->
+name|period
+decl_stmt|;
 comment|/* 		**  Disable extended Sreq/Sack filtering 		*/
 if|if
 condition|(
@@ -13785,32 +13821,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%dns (%d MHz) offset %d.\n"
+literal|"%d.%d MB/s (%d ns, offset %d)\n"
 argument_list|,
-name|tp
-operator|->
-name|period
-operator|<
-literal|200
-condition|?
-literal|"FAST SCSI-2 "
-else|:
-literal|""
-argument_list|,
-name|tp
-operator|->
-name|period
-argument_list|,
-operator|(
-literal|1000
-operator|+
-name|tp
-operator|->
-name|period
+name|mb10
 operator|/
-literal|2
-operator|)
-operator|/
+literal|10
+argument_list|,
+name|mb10
+operator|%
+literal|10
+argument_list|,
 name|tp
 operator|->
 name|period
@@ -14028,13 +14048,13 @@ name|EWS
 condition|)
 name|printf
 argument_list|(
-literal|"WIDE SCSI (16 bit) enabled.\n"
+literal|"WIDE SCSI (16 bit) enabled"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"WIDE SCSI disabled.\n"
+literal|"WIDE SCSI disabled"
 argument_list|)
 expr_stmt|;
 comment|/* 	**	set actual value and sync_status 	*/
