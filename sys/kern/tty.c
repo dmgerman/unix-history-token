@@ -12316,7 +12316,7 @@ name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|"%lld.%02ldu "
+literal|"%ld.%02ldu "
 argument_list|,
 name|utime
 operator|.
