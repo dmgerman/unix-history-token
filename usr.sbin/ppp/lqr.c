@@ -536,12 +536,9 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|ntohl
-argument_list|(
 name|lqr
 operator|.
 name|signature
-argument_list|)
 argument_list|,
 operator|(
 name|u_long
