@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.9 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -528,7 +528,7 @@ condition|(
 name|wait3
 argument_list|(
 operator|(
-expr|struct
+expr|union
 name|wait
 operator|*
 operator|)
