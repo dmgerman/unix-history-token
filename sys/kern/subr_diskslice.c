@@ -3583,7 +3583,9 @@ name|dev
 operator|->
 name|si_bsize_phys
 operator|=
-name|DEV_BSIZE
+name|lp
+operator|->
+name|d_secsize
 expr_stmt|;
 name|dev
 operator|->
