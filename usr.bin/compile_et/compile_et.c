@@ -98,7 +98,7 @@ name|char
 name|rcsid_compile_et_c
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/usr.bin/compile_et/compile_et.c,v 1.3 1996/07/12 19:05:17 jkh Exp $"
+literal|"$Header: /home/ncvs/src/usr.bin/compile_et/compile_et.c,v 1.4 1997/06/30 06:42:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1220,9 +1220,19 @@ name|fprintf
 argument_list|(
 name|hfile
 argument_list|,
-literal|"extern void initialize_%s_error_table ();\n"
+literal|"extern void initialize_%s_error_table (%s);\n"
 argument_list|,
 name|table_name
+argument_list|,
+operator|(
+name|language
+operator|==
+name|lang_C
+operator|)
+condition|?
+literal|"void"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|fprintf
