@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.9 (Berkeley) %G%"
+literal|"@(#)w.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * w - print system status (who and what)  *  * This program is similar to the systat command on Tenex/Tops 10/20  * It needs read permission on /dev/mem, /dev/kmem, and /dev/drum.  */
+comment|/*  * w - print system status (who and what)  *  * This program is similar to the systat command on Tenex/Tops 10/20  */
 end_comment
 
 begin_include
@@ -128,26 +128,11 @@ directive|include
 file|<sys/tty.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|NMAX
-value|sizeof(utmp.ut_name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LMAX
-value|sizeof(utmp.ut_line)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HMAX
-value|sizeof(utmp.ut_host)
-end_define
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_define
 define|#
@@ -366,7 +351,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* /dev/kmem, mem, and swap */
+comment|/* kmem, mem, and swap */
 end_comment
 
 begin_decl_stmt
@@ -1006,7 +991,7 @@ name|kmem
 operator|=
 name|open
 argument_list|(
-literal|"/dev/kmem"
+name|_PATH_KMEM
 argument_list|,
 literal|0
 argument_list|)
@@ -1019,7 +1004,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"No kmem\n"
+literal|"w: no %s.\n"
+argument_list|,
+name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1030,7 +1017,7 @@ expr_stmt|;
 block|}
 name|nlist
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|nl
 argument_list|)
@@ -1051,7 +1038,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"No namelist\n"
+literal|"w: no %s namelist.\n"
+argument_list|,
+name|_PATH_UNIX
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1116,7 +1105,7 @@ name|ut
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/utmp"
+name|_PATH_UTMP
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1574,7 +1563,7 @@ if|if
 condition|(
 name|sel_user
 operator|&&
-name|strcmpn
+name|strncmp
 argument_list|(
 name|utmp
 operator|.
@@ -1582,7 +1571,7 @@ name|ut_name
 argument_list|,
 name|sel_user
 argument_list|,
-name|NMAX
+name|UT_NAMESIZE
 argument_list|)
 operator|!=
 literal|0
@@ -1924,7 +1913,7 @@ name|strcpy
 argument_list|(
 name|ttybuf
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -1986,9 +1975,9 @@ name|printf
 argument_list|(
 literal|"%-*.*s "
 argument_list|,
-name|NMAX
+name|UT_NAMESIZE
 argument_list|,
-name|NMAX
+name|UT_NAMESIZE
 argument_list|,
 name|utmp
 operator|.
@@ -1997,7 +1986,7 @@ argument_list|)
 expr_stmt|;
 name|width
 operator|-=
-name|NMAX
+name|UT_NAMESIZE
 operator|+
 literal|1
 expr_stmt|;
@@ -2010,14 +1999,14 @@ operator|!
 name|prfrom
 condition|)
 block|{
-comment|/* long form: all (up to) LMAX chars */
+comment|/* long form: all (up to) UT_LINESIZE chars */
 name|printf
 argument_list|(
 literal|"%-*.*s"
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|,
 name|utmp
 operator|.
@@ -2026,7 +2015,7 @@ argument_list|)
 expr_stmt|;
 name|width
 operator|-=
-name|LMAX
+name|UT_LINESIZE
 expr_stmt|;
 block|}
 else|else
@@ -2245,10 +2234,10 @@ name|strcpy
 argument_list|(
 name|ttyname
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
-name|strcatn
+name|strncat
 argument_list|(
 name|ttyname
 argument_list|,
@@ -2256,7 +2245,7 @@ name|utmp
 operator|.
 name|ut_line
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|)
 expr_stmt|;
 name|stat
@@ -2710,7 +2699,7 @@ name|mem
 operator|=
 name|open
 argument_list|(
-literal|"/dev/mem"
+name|_PATH_MEM
 argument_list|,
 literal|0
 argument_list|)
@@ -2723,7 +2712,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"No mem\n"
+literal|"w: no %s.\n"
+argument_list|,
+name|_PATH_MEM
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2739,7 +2730,7 @@ name|swap
 operator|=
 name|open
 argument_list|(
-literal|"/dev/drum"
+name|_PATH_DRUM
 argument_list|,
 literal|0
 argument_list|)
@@ -2752,7 +2743,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"No drum\n"
+literal|"w: no %s\n"
+argument_list|,
+name|_PATH_DRUM
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3611,7 +3604,7 @@ operator|.
 name|u_comm
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Get args if there's a chance we'll print it. 		 * Cant just save pointer: getargs returns static place. 		 * Cant use strcpyn: that crock blank pads. 		 */
+comment|/* 		 * Get args if there's a chance we'll print it. 		 * Can't just save pointer: getargs returns static place. 		 * Can't use strncpy, it blank pads. 		 */
 name|pr
 index|[
 name|np
@@ -3624,7 +3617,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|strcatn
+name|strncat
 argument_list|(
 name|pr
 index|[
