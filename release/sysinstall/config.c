@@ -2173,6 +2173,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|Mkdir
+argument_list|(
+literal|"/compat/linux"
+argument_list|)
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Installing Linux compatibility library..."
@@ -3536,6 +3541,10 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|restoreflag
+init|=
+literal|0
 decl_stmt|;
 name|PkgNodePtr
 name|tmp
@@ -3654,6 +3663,13 @@ operator|!=
 name|DITEM_FAILURE
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|restoreflag
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|tmp
@@ -3740,6 +3756,14 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
+operator||
+operator|(
+name|restoreflag
+condition|?
+name|DITEM_RESTORE
+else|:
+literal|0
+operator|)
 return|;
 block|}
 end_function
