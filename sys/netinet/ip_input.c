@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pfil.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -133,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/pfil.h>
 end_include
 
 begin_include
