@@ -101,6 +101,13 @@ name|screech
 argument_list|)
 expr_stmt|;
 block|}
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 comment|/* We don't work too well when running as non-root anymore */
 if|if
 condition|(
