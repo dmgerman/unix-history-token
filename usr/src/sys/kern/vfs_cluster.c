@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.6	%G%	*/
+comment|/*	vfs_cluster.c	4.7	%G%	*/
 end_comment
 
 begin_include
@@ -97,10 +97,10 @@ name|BUFHASH
 parameter_list|(
 name|dev
 parameter_list|,
-name|blkno
+name|dblkno
 parameter_list|)
 define|\
-value|((struct buf *)&bufhash[((int)dev+(int)blkno) % BUFHSZ])
+value|((struct buf *)&bufhash[((int)(dev)+(int)(dblkno)) % BUFHSZ])
 end_define
 
 begin_comment
@@ -1314,7 +1314,7 @@ name|BUFHASH
 argument_list|(
 name|dev
 argument_list|,
-name|blkno
+name|dblkno
 argument_list|)
 expr_stmt|;
 for|for
