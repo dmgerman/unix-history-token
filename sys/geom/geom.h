@@ -51,11 +51,11 @@ directive|include
 file|<sys/sbuf.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNELSIM
+end_ifdef
 
 begin_comment
 comment|/*  * The GEOM subsystem makes a few concessions in order to be able to run as a  * user-land simulation as well as a kernel component.  */
