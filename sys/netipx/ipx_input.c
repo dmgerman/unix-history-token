@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/intrq.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netipx/ipx.h>
 end_include
 
@@ -300,13 +306,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|ifqueue
-name|ipxintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|ipxqmaxlen
@@ -318,6 +317,15 @@ end_decl_stmt
 begin_decl_stmt
 name|long
 name|ipx_pexseq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|ipxintrq_present
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 

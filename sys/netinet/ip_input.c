@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/intrq.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -593,13 +599,6 @@ begin_comment
 comment|/* first inet address */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|ifqueue
-name|ipintrq
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -740,6 +739,15 @@ begin_decl_stmt
 specifier|static
 name|int
 name|maxnipq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|ipintrq_present
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 

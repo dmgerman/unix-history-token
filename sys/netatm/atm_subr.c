@@ -13,6 +13,12 @@ directive|include
 file|<netatm/kern_include.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/intrq.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -92,13 +98,6 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|atm_stackq_tail
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ifqueue
-name|atm_intrq
 decl_stmt|;
 end_decl_stmt
 
@@ -182,6 +181,15 @@ literal|0
 block|,
 literal|0
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|atmintrq_present
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 

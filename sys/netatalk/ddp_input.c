@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990,1994 Regents of The University of Michigan.  * All Rights Reserved.  See COPYRIGHT.  */
+comment|/*  * Copyright (c) 1990,1994 Regents of The University of Michigan.  * All Rights Reserved.  See COPYRIGHT.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/intrq.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netatalk/at.h>
 end_include
 
@@ -86,15 +92,6 @@ include|#
 directive|include
 file|<netatalk/at_extern.h>
 end_include
-
-begin_decl_stmt
-name|struct
-name|ifqueue
-name|atintrq1
-decl_stmt|,
-name|atintrq2
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -129,6 +126,19 @@ specifier|static
 name|struct
 name|route
 name|forwro
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|atintrq1_present
+init|=
+literal|1
+decl_stmt|,
+name|atintrq2_present
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 

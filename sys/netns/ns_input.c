@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/intrq.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netns/ns.h>
 end_include
 
@@ -211,13 +217,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|ifqueue
-name|nsintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|nsqmaxlen
 init|=
@@ -236,6 +235,15 @@ end_decl_stmt
 begin_decl_stmt
 name|long
 name|ns_pexseq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|nsintrq_present
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
