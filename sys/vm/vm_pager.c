@@ -499,21 +499,6 @@ begin_comment
 comment|/*  * Kernel address space for mapping pages.  * Used by pagers where KVAs are needed for IO.  *  * XXX needs to be large enough to support the number of pending async  * cleaning requests (NPENDINGIO == 64) * the maximum swap cluster size  * (MAXPHYS == 64k) if you want to get the most efficiency.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PAGER_MAP_SIZE
-value|(8 * 1024 * 1024)
-end_define
-
-begin_decl_stmt
-name|int
-name|pager_map_size
-init|=
-name|PAGER_MAP_SIZE
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|vm_map_t
 name|pager_map

@@ -416,8 +416,6 @@ name|nswbuf
 operator|*
 name|MAXPHYS
 operator|)
-operator|+
-name|pager_map_size
 argument_list|)
 expr_stmt|;
 name|buffer_map
@@ -470,8 +468,6 @@ name|nswbuf
 operator|*
 name|MAXPHYS
 operator|)
-operator|+
-name|pager_map_size
 argument_list|)
 expr_stmt|;
 name|pager_map
