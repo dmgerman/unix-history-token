@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1992-1995 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.13.2.12 1997/03/04 06:49:40 kato Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.13.2.13 1997/03/09 13:30:06 kato Exp $  */
 end_comment
 
 begin_include
@@ -2799,7 +2799,7 @@ comment|/* override the keyboard lock switch */
 block|c |= KBD_OVERRIDE_KBD_LOCK;
 endif|#
 directive|endif
-comment|/*      * enable the keyboard port, but disable the keyboard intr.       * the aux port (mouse port) is disabled too.      */
+comment|/* enable the keyboard port, but disable the keyboard intr. */
 if|if
 condition|(
 operator|!
@@ -2808,16 +2808,10 @@ argument_list|(
 name|sc_kbdc
 argument_list|,
 name|KBD_KBD_CONTROL_BITS
-operator||
-name|KBD_AUX_CONTROL_BITS
 argument_list|,
 name|KBD_ENABLE_KBD_PORT
 operator||
 name|KBD_DISABLE_KBD_INT
-operator||
-name|KBD_DISABLE_AUX_PORT
-operator||
-name|KBD_DISABLE_AUX_INT
 argument_list|)
 condition|)
 block|{
@@ -3011,7 +3005,7 @@ name|sc_kbdc
 argument_list|,
 name|KBD_KBD_CONTROL_BITS
 operator||
-name|KBD_AUX_CONTROL_BITS
+name|KBD_TRANSLATION
 operator||
 name|KBD_OVERRIDE_KBD_LOCK
 argument_list|,
@@ -3019,7 +3013,7 @@ operator|(
 name|c
 operator|&
 operator|(
-name|KBD_AUX_CONTROL_BITS
+name|KBD_TRANSLATION
 operator||
 name|KBD_OVERRIDE_KBD_LOCK
 operator|)
@@ -22945,63 +22939,18 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|c
-operator|=
-name|get_controller_command_byte
-argument_list|(
-name|sc_kbdc
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|c = get_controller_command_byte(sc_kbdc);     if ((c == -1)  	|| !set_controller_command_byte(sc_kbdc,              kbdc_get_device_mask(sc_kbdc),             KBD_DISABLE_KBD_PORT | KBD_DISABLE_KBD_INT                 | KBD_DISABLE_AUX_PORT | KBD_DISABLE_AUX_INT)) {
+comment|/* CONTROLLER ERROR */
+block|kbdc_lock(sc_kbdc, FALSE); 	splx(s); 	return;     }
+comment|/*       * Now that the keyboard controller is told not to generate       * the keyboard and mouse interrupts, call `splx()' to allow       * the other tty interrupts. The clock interrupt may also occur,       * but the timeout routine (`scrn_timer()') will be blocked       * by the lock flag set via `kbdc_lock()'      */
+block|splx(s);
+endif|#
+directive|endif
 if|if
 condition|(
-operator|(
-name|c
-operator|==
-operator|-
-literal|1
-operator|)
-operator|||
-operator|!
-name|set_controller_command_byte
-argument_list|(
-name|sc_kbdc
-argument_list|,
-name|kbdc_get_device_mask
-argument_list|(
-name|sc_kbdc
-argument_list|)
-argument_list|,
-name|KBD_ENABLE_KBD_PORT
-operator||
-name|KBD_DISABLE_KBD_INT
-operator||
-name|KBD_DISABLE_AUX_PORT
-operator||
-name|KBD_DISABLE_AUX_INT
-argument_list|)
-condition|)
-block|{
-comment|/* CONTROLLER ERROR */
-name|kbdc_lock
-argument_list|(
-name|sc_kbdc
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/*       * Now that the keyboard controller is told not to generate       * the keyboard and mouse interrupts, call `splx()' to allow       * the other tty interrupts. The clock interrupt may also occur,       * but the timeout routine (`scrn_timer()') will be blocked       * by the lock flag set via `kbdc_lock()'      */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|send_kbd_command_and_data
 argument_list|(
 name|sc_kbdc
@@ -23010,32 +22959,32 @@ name|command
 argument_list|,
 name|data
 argument_list|)
-expr_stmt|;
-comment|/* restore the interrupts */
-if|if
-condition|(
-operator|!
-name|set_controller_command_byte
-argument_list|(
-name|sc_kbdc
-argument_list|,
-name|kbdc_get_device_mask
-argument_list|(
-name|sc_kbdc
-argument_list|)
-argument_list|,
-name|c
-operator|&
-operator|(
-name|KBD_KBD_CONTROL_BITS
-operator||
-name|KBD_AUX_CONTROL_BITS
-operator|)
-argument_list|)
+operator|!=
+name|KBD_ACK
 condition|)
-block|{
+name|send_kbd_command
+argument_list|(
+name|sc_kbdc
+argument_list|,
+name|KBDC_ENABLE_KBD
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* restore the interrupts */
+block|if (!set_controller_command_byte(sc_kbdc,             kbdc_get_device_mask(sc_kbdc), 	    c& (KBD_KBD_CONTROL_BITS | KBD_AUX_CONTROL_BITS))) {
 comment|/* CONTROLLER ERROR */
 block|}
+else|#
+directive|else
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|kbdc_lock
 argument_list|(
 name|sc_kbdc
