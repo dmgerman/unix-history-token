@@ -1643,13 +1643,15 @@ specifier|const
 name|char
 modifier|*
 name|name
-init|=
-literal|"md"
 decl_stmt|;
 name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|name
+operator|=
+name|MD_NAME
+expr_stmt|;
 comment|/* scan files in kernel */
 name|mstat
 operator|.

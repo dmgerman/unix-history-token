@@ -4347,7 +4347,7 @@ name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
-literal|"mdctl"
+name|MDCTL_NAME
 argument_list|)
 expr_stmt|;
 block|}
@@ -4427,7 +4427,7 @@ name|moduledata_t
 name|md_mod
 init|=
 block|{
-literal|"md"
+name|MD_NAME
 block|,
 name|md_modevent
 block|,
