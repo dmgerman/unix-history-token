@@ -876,6 +876,11 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|seteuid
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1160,8 +1165,9 @@ if|if
 condition|(
 name|setsid
 argument_list|()
-operator|!=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|perror
 argument_list|(
@@ -1339,8 +1345,9 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|)
-operator|!=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|perror
 argument_list|(
@@ -1865,6 +1872,12 @@ literal|6
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* reset uid to users' to allow the user to give a signal. */
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 comment|/* twiddle thumbs until we get a signal */
 while|while
 condition|(
