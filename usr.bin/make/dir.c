@@ -1626,7 +1626,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-comment|/* index of first slash, if any */
+comment|/* final component of the name */
 name|Boolean
 name|hasSlash
 decl_stmt|;
@@ -2038,18 +2038,58 @@ operator|-
 literal|1
 condition|)
 block|{
+name|Lst_Close
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'\0'
+operator|||
+name|ISDOT
+argument_list|(
+name|cp
+argument_list|)
+operator|||
+name|ISDOTDOT
+argument_list|(
+name|cp
+argument_list|)
+condition|)
+block|{
 name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
 operator|(
-literal|"must be here but isn't -- returing NULL\n"
+literal|"returning %s\n"
+operator|,
+name|name
 operator|)
 argument_list|)
 expr_stmt|;
-name|Lst_Close
+return|return
+operator|(
+name|estrdup
 argument_list|(
-name|path
+name|name
+argument_list|)
+operator|)
+return|;
+block|}
+else|else
+block|{
+name|DEBUGF
+argument_list|(
+name|DIR
+argument_list|,
+operator|(
+literal|"must be here but isn't -- returning NULL\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2061,6 +2101,7 @@ operator|)
 name|NULL
 operator|)
 return|;
+block|}
 block|}
 block|}
 block|}
