@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.50 2003/04/27 03:31:47 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.51 2003/06/03 01:29:01 imp Exp   */
 end_comment
 
 begin_comment
@@ -6146,6 +6146,27 @@ define|#
 directive|define
 name|PCMCIA_STR_OEM2_CDROM1
 value|"Generic PCMCIA CD-ROM"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_OEM2_IDE
+value|{ "PCMCIA", "IDE CARD", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_OEM2_IDE
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_OEM2_IDE
+value|"Generic PCMCIA IDE CARD"
 end_define
 
 begin_define
