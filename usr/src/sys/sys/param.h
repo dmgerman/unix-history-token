@@ -1,17 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	3.11	%G%	*/
+comment|/*	param.h	3.12	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * tunable variables  *  * NB: NBUF is well known in locore.s  */
+comment|/*  * tunable variables  *  * NB: NBUF must be less than MAXNBUF in locore.s.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NBUF
-value|62
+value|128
 end_define
 
 begin_comment
