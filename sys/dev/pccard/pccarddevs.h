@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.48 2003/04/18 14:52:14 sanpei Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.49 2003/04/26 22:13:51 imp Exp   */
 end_comment
 
 begin_comment
@@ -4729,6 +4729,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_OEM2
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* Generic OEM */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_PLANET
 value|0xffffffff
 end_define
@@ -6078,6 +6089,27 @@ define|#
 directive|define
 name|PCMCIA_STR_NTT_ME_WLAN
 value|"NTT-ME 11Mbps Wireless LAN PC Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_OEM2_CDROM1
+value|{ "PCMCIA", "CD-ROM", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_OEM2_CDROM1
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_OEM2_CDROM1
+value|"Generic PCMCIA CD-ROM"
 end_define
 
 begin_define
