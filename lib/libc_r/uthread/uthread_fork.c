@@ -354,7 +354,6 @@ block|}
 comment|/* Unblock signals: */
 name|_thread_kern_sig_unblock
 argument_list|(
-operator|&
 name|status
 argument_list|)
 expr_stmt|;
