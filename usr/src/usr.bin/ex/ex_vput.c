@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vput.c	7.1	%G%"
+literal|"@(#)ex_vput.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3995,15 +3995,11 @@ block|{
 name|vputc
 argument_list|(
 literal|'\r'
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|vputc
 argument_list|(
 literal|'\n'
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
