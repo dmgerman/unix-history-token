@@ -3035,6 +3035,8 @@ name|MPPEDictSetup
 block|}
 block|,
 block|{
+literal|2
+block|,
 name|MPPEInitOptsOutput
 block|,
 name|MPPESetOptsOutput

@@ -791,6 +791,14 @@ name|fp
 parameter_list|)
 block|{
 comment|/* The given fsm (ccp) is now up */
+name|bundle_CalculateBandwidth
+argument_list|(
+name|fp
+operator|->
+name|bundle
+argument_list|)
+expr_stmt|;
+comment|/* Against ccp_MTUOverhead */
 block|}
 end_function
 
@@ -3588,6 +3596,40 @@ operator|.
 name|seq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|l
+operator|->
+name|ccp
+operator|.
+name|fsm
+operator|.
+name|state
+operator|!=
+name|ST_OPENED
+operator|&&
+name|ccp_Required
+argument_list|(
+operator|&
+name|l
+operator|->
+name|ccp
+argument_list|)
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"%s: Not transmitting... waiting for CCP\n"
+argument_list|,
+name|l
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|link_PushPacket
 argument_list|(
 name|l

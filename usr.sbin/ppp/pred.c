@@ -1731,6 +1731,8 @@ name|Pred1DictSetup
 block|}
 block|,
 block|{
+literal|0
+block|,
 name|Pred1InitOptsOutput
 block|,
 name|Pred1SetOptsOutput

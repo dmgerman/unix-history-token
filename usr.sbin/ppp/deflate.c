@@ -2925,6 +2925,8 @@ name|DeflateDictSetup
 block|}
 block|,
 block|{
+literal|0
+block|,
 name|DeflateInitOptsOutput
 block|,
 name|DeflateSetOptsOutput
@@ -2974,6 +2976,8 @@ name|DeflateDictSetup
 block|}
 block|,
 block|{
+literal|0
+block|,
 name|DeflateInitOptsOutput
 block|,
 name|DeflateSetOptsOutput
