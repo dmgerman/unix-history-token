@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.34 1998/10/14 18:52:04 jkh Exp $"
+literal|"$Id: file.c,v 1.35 1998/12/05 06:29:03 asami Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -872,6 +872,13 @@ argument_list|(
 name|fname
 argument_list|,
 name|spec
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|fname
+argument_list|,
+literal|".tgz"
 argument_list|)
 expr_stmt|;
 block|}
