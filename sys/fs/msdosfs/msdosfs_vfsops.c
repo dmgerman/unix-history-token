@@ -3424,12 +3424,6 @@ expr_stmt|;
 comment|/* 	 * fillinusemap() needs pm_devvp. 	 */
 name|pmp
 operator|->
-name|pm_dev
-operator|=
-name|dev
-expr_stmt|;
-name|pmp
-operator|->
 name|pm_devvp
 operator|=
 name|devvp

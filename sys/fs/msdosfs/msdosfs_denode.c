@@ -137,7 +137,7 @@ value|((dcl) + (doff) / sizeof(struct direntry))
 end_define
 
 begin_comment
-comment|/*  * If deget() succeeds it returns with the gotten denode locked().  *  * pmp	     - address of msdosfsmount structure of the filesystem containing  *	       the denode of interest.  The pm_dev field and the address of  *	       the msdosfsmount structure are used.  * dirclust  - which cluster bp contains, if dirclust is 0 (root directory)  *	       diroffset is relative to the beginning of the root directory,  *	       otherwise it is cluster relative.  * diroffset - offset past begin of cluster of denode we want  * depp	     - returns the address of the gotten denode.  */
+comment|/*  * If deget() succeeds it returns with the gotten denode locked().  *  * pmp	     - address of msdosfsmount structure of the filesystem containing  *	       the denode of interest.  The address of  *	       the msdosfsmount structure are used.  * dirclust  - which cluster bp contains, if dirclust is 0 (root directory)  *	       diroffset is relative to the beginning of the root directory,  *	       otherwise it is cluster relative.  * diroffset - offset past begin of cluster of denode we want  * depp	     - returns the address of the gotten denode.  */
 end_comment
 
 begin_function
@@ -179,15 +179,6 @@ name|error
 decl_stmt|;
 name|u_int
 name|hash
-decl_stmt|;
-name|struct
-name|cdev
-modifier|*
-name|dev
-init|=
-name|pmp
-operator|->
-name|pm_dev
 decl_stmt|;
 name|struct
 name|mount
@@ -400,12 +391,6 @@ operator|->
 name|de_flag
 operator|=
 literal|0
-expr_stmt|;
-name|ldep
-operator|->
-name|de_dev
-operator|=
-name|dev
 expr_stmt|;
 name|ldep
 operator|->

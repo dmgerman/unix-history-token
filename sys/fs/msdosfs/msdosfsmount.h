@@ -79,12 +79,6 @@ name|pm_mountp
 decl_stmt|;
 comment|/* vfs mount struct for this fs */
 name|struct
-name|cdev
-modifier|*
-name|pm_dev
-decl_stmt|;
-comment|/* block special device mounted */
-name|struct
 name|g_consumer
 modifier|*
 name|pm_cp
