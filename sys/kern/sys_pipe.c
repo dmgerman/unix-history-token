@@ -5895,8 +5895,6 @@ modifier|*
 name|cpipe
 decl_stmt|;
 block|{
-name|GIANT_REQUIRED
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|cpipe
@@ -6294,12 +6292,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|pipe_free_kmem
 argument_list|(
 name|cpipe
@@ -6310,12 +6302,6 @@ argument_list|(
 name|pipe_zone
 argument_list|,
 name|cpipe
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
