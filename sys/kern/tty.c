@@ -181,6 +181,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -12456,11 +12462,10 @@ expr_stmt|;
 name|pctcpu
 operator|=
 operator|(
+name|sched_pctcpu
+argument_list|(
 name|td
-operator|->
-name|td_kse
-operator|->
-name|ke_pctcpu
+argument_list|)
 operator|*
 literal|10000
 operator|+
