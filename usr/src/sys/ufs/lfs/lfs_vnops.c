@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.97 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.98 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -428,6 +428,14 @@ block|,
 comment|/* islocked */
 block|{
 operator|&
+name|vop_pathconf_desc
+block|,
+name|ufs_pathconf
+block|}
+block|,
+comment|/* pathconf */
+block|{
+operator|&
 name|vop_advlock_desc
 block|,
 name|ufs_advlock
@@ -798,6 +806,14 @@ name|ufs_islocked
 block|}
 block|,
 comment|/* islocked */
+block|{
+operator|&
+name|vop_pathconf_desc
+block|,
+name|spec_pathconf
+block|}
+block|,
+comment|/* pathconf */
 block|{
 operator|&
 name|vop_advlock_desc
@@ -1176,6 +1192,14 @@ name|ufs_islocked
 block|}
 block|,
 comment|/* islocked */
+block|{
+operator|&
+name|vop_pathconf_desc
+block|,
+name|fifo_pathconf
+block|}
+block|,
+comment|/* pathconf */
 block|{
 operator|&
 name|vop_advlock_desc
