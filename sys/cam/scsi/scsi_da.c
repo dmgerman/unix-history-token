@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of SCSI Direct Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_da.c,v 1.11 1998/10/13 23:34:54 ken Exp $  */
+comment|/*  * Implementation of SCSI Direct Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_da.c,v 1.12 1998/10/22 22:16:56 ken Exp $  */
 end_comment
 
 begin_include
@@ -202,6 +202,10 @@ block|,
 name|DA_Q_NO_SYNC_CACHE
 init|=
 literal|0x01
+block|,
+name|DA_Q_NO_6_BYTE
+init|=
+literal|0x02
 block|}
 name|da_quirks
 typedef|;
@@ -317,6 +321,9 @@ name|da_quirks
 name|quirks
 decl_stmt|;
 name|int
+name|minimum_cmd_size
+decl_stmt|;
+name|int
 name|ordered_tag_count
 decl_stmt|;
 name|struct
@@ -412,6 +419,42 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Doesn't work correctly with 6 byte reads/writes. 		 * Returns illegal request, and points to byte 9 of the 		 * 6-byte CDB. 		 * Reported by:  Adam McDougall<bsdx@spawnet.com> 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"QUANTUM"
+block|,
+literal|"VIKING 4*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
+comment|/* 		 * See above. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"QUANTUM"
+block|,
+literal|"VIKING 2*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
 block|}
 block|}
 decl_stmt|;
@@ -2689,7 +2732,9 @@ comment|/*byte2*/
 literal|0
 argument_list|,
 comment|/*minimum_cmd_size*/
-literal|6
+name|softc
+operator|->
+name|minimum_cmd_size
 argument_list|,
 name|blknum
 argument_list|,
@@ -4077,6 +4122,27 @@ name|quirks
 operator|=
 name|DA_Q_NONE
 expr_stmt|;
+if|if
+condition|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|DA_Q_NO_6_BYTE
+condition|)
+name|softc
+operator|->
+name|minimum_cmd_size
+operator|=
+literal|10
+expr_stmt|;
+else|else
+name|softc
+operator|->
+name|minimum_cmd_size
+operator|=
+literal|6
+expr_stmt|;
 comment|/* 	 * Block our timeout handler while we 	 * add this softc to the dev list. 	 */
 name|s
 operator|=
@@ -4457,8 +4523,9 @@ argument_list|,
 comment|/*byte2*/
 literal|0
 argument_list|,
-comment|/*minimum_cmd_size*/
-literal|6
+name|softc
+operator|->
+name|minimum_cmd_size
 argument_list|,
 name|bp
 operator|->
