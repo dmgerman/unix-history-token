@@ -107,17 +107,6 @@ directive|include
 file|<machine/clock.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CLK_CALIBRATION_LOOP
-end_ifdef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
