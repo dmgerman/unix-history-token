@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getmntinfo.c	6.1 (Berkeley) %G%"
+literal|"@(#)getmntinfo.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,12 +58,17 @@ name|int
 name|getmntinfo
 parameter_list|(
 name|mntbufp
+parameter_list|,
+name|flags
 parameter_list|)
 name|struct
 name|statfs
 modifier|*
 modifier|*
 name|mntbufp
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|{
 specifier|static
@@ -92,6 +97,8 @@ argument_list|(
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|MNT_NOWAIT
 argument_list|)
 operator|)
 operator|<
@@ -116,6 +123,8 @@ argument_list|(
 name|mntbuf
 argument_list|,
 name|bufsize
+argument_list|,
+name|flags
 argument_list|)
 operator|)
 operator|<
@@ -195,6 +204,8 @@ argument_list|(
 name|mntbuf
 argument_list|,
 name|bufsize
+argument_list|,
+name|flags
 argument_list|)
 operator|)
 operator|<
