@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	6.11	85/05/27	*/
+comment|/*	uipc_socket.c	6.12	85/06/02	*/
 end_comment
 
 begin_include
@@ -124,7 +124,7 @@ file|"../net/if.h"
 end_include
 
 begin_comment
-comment|/*  * Socket operation routines.  * These routines are called by the routines in  * sys_socket.c or from a system process, and  * implement the semantics of socket operations by  * switching out to the protocol specific routines.  *  * TODO:  *	sostat  *	test socketpair  *	PR_RIGHTS  *	clean up select, async  *	out-of-band is a kludge  */
+comment|/*  * Socket operation routines.  * These routines are called by the routines in  * sys_socket.c or from a system process, and  * implement the semantics of socket operations by  * switching out to the protocol specific routines.  *  * TODO:  *	test socketpair  *	clean up async  *	out-of-band is a kludge  */
 end_comment
 
 begin_comment
@@ -201,6 +201,8 @@ argument_list|(
 name|dom
 argument_list|,
 name|proto
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 else|else
@@ -320,7 +322,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|proto
 argument_list|,
 operator|(
 expr|struct
@@ -1863,7 +1865,7 @@ name|iov
 operator|->
 name|iov_len
 operator|>=
-name|CLBYTES
+name|NBPG
 operator|&&
 name|space
 operator|>=
@@ -1908,6 +1910,17 @@ name|m
 expr_stmt|;
 name|len
 operator|=
+name|min
+argument_list|(
+name|CLBYTES
+argument_list|,
+name|iov
+operator|->
+name|iov_len
+argument_list|)
+expr_stmt|;
+name|space
+operator|-=
 name|CLBYTES
 expr_stmt|;
 block|}
@@ -1925,6 +1938,10 @@ name|iov
 operator|->
 name|iov_len
 argument_list|)
+expr_stmt|;
+name|space
+operator|-=
+name|len
 expr_stmt|;
 block|}
 name|error
@@ -1969,10 +1986,6 @@ operator|&
 name|m
 operator|->
 name|m_next
-expr_stmt|;
-name|space
-operator|-=
-name|len
 expr_stmt|;
 if|if
 condition|(
@@ -2083,6 +2096,10 @@ name|so_options
 operator|&=
 operator|~
 name|SO_DONTROUTE
+expr_stmt|;
+name|rights
+operator|=
+literal|0
 expr_stmt|;
 name|top
 operator|=
@@ -2795,6 +2812,12 @@ condition|(
 name|m
 operator|==
 literal|0
+operator|||
+name|m
+operator|->
+name|m_type
+operator|!=
+name|MT_DATA
 condition|)
 name|panic
 argument_list|(
@@ -2853,8 +2876,6 @@ name|tomark
 expr_stmt|;
 if|if
 condition|(
-name|moff
-operator|+
 name|len
 operator|>
 name|m
@@ -2911,6 +2932,8 @@ operator|==
 name|m
 operator|->
 name|m_len
+operator|-
+name|moff
 condition|)
 block|{
 if|if
