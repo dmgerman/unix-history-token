@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.5	83/01/29	*/
+comment|/*	up.c	4.5	83/01/31	*/
 end_comment
 
 begin_comment
@@ -630,7 +630,8 @@ name|i_cc
 operator|=
 sizeof|sizeof
 argument_list|(
-name|upbad
+expr|struct
+name|dkbad
 argument_list|)
 expr_stmt|;
 name|tio
@@ -665,7 +666,8 @@ argument_list|)
 operator|==
 sizeof|sizeof
 argument_list|(
-name|upbad
+expr|struct
+name|dkbad
 argument_list|)
 condition|)
 break|break;
@@ -878,7 +880,7 @@ literal|0
 expr_stmt|;
 name|recal
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|upaddr
 operator|->
@@ -968,7 +970,7 @@ name|upba
 operator|=
 name|info
 expr_stmt|;
-name|readmore
+name|restart
 label|:
 name|bn
 operator|=
@@ -1478,13 +1480,6 @@ goto|;
 block|}
 block|}
 block|}
-name|io
-operator|->
-name|i_active
-operator|=
-literal|0
-expr_stmt|;
-comment|/* else force retry */
 block|}
 comment|/* 	 * Clear drive error and, every eight attempts, 	 * (starting with the fourth) 	 * recalibrate to clear the slate. 	 */
 name|upaddr
@@ -1508,12 +1503,6 @@ literal|07
 operator|)
 operator|==
 literal|4
-operator|&&
-name|io
-operator|->
-name|i_active
-operator|==
-literal|0
 condition|)
 block|{
 name|upaddr
@@ -1526,10 +1515,10 @@ name|UP_GO
 expr_stmt|;
 name|recal
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 goto|goto
-name|nextrecal
+name|restart
 goto|;
 block|}
 comment|/* 	 * Advance recalibration finite state machine 	 * if recalibrate in progress, through 	 *	RECAL 	 *	SEEK 	 *	OFFSET (optional) 	 *	RETRY 	 */
@@ -1555,8 +1544,11 @@ name|UP_SEEK
 operator||
 name|UP_GO
 expr_stmt|;
+name|recal
+operator|++
+expr_stmt|;
 goto|goto
-name|nextrecal
+name|restart
 goto|;
 case|case
 literal|2
@@ -1603,19 +1595,11 @@ name|UP_OFFSET
 operator||
 name|UP_GO
 expr_stmt|;
-name|nextrecal
-label|:
 name|recal
 operator|++
 expr_stmt|;
-name|io
-operator|->
-name|i_active
-operator|=
-literal|1
-expr_stmt|;
 goto|goto
-name|readmore
+name|restart
 goto|;
 name|donerecal
 label|:
@@ -1626,23 +1610,9 @@ name|recal
 operator|=
 literal|0
 expr_stmt|;
-name|io
-operator|->
-name|i_active
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * If still ``active'', then don't need any more retries. 	 */
-if|if
-condition|(
-name|io
-operator|->
-name|i_active
-condition|)
-block|{
-comment|/* 		 * If we were offset positioning, 		 * return to centerline. 		 */
+comment|/* 	 * If we were offset positioning, 	 * return to centerline. 	 */
 if|if
 condition|(
 name|io
@@ -1685,17 +1655,10 @@ argument_list|)
 expr_stmt|;
 block|}
 goto|goto
-name|readmore
+name|restart
 goto|;
-block|}
 name|success
 label|:
-name|io
-operator|->
-name|i_active
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|upaddr
@@ -1705,7 +1668,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|readmore
+name|restart
 goto|;
 comment|/* 	 * Release unibus  	 */
 name|ubafree
@@ -1876,12 +1839,6 @@ name|i_unit
 index|]
 index|]
 expr_stmt|;
-name|io
-operator|->
-name|i_active
-operator|=
-literal|2
-expr_stmt|;
 name|cn
 operator|=
 name|bn
@@ -1947,11 +1904,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|,
-name|io
-operator|->
-name|i_bn
-operator|+
-name|npf
+name|bn
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Compute the 		 * byte and bit position of the error.  The variable i 		 * is the byte offset in the transfer. 		 */
@@ -2331,8 +2284,6 @@ block|}
 if|if
 condition|(
 name|twc
-operator|!=
-literal|0
 condition|)
 name|up
 operator|->
