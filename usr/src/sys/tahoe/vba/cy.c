@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	1.12	87/04/09	*/
+comment|/*	cy.c	1.13	87/04/09	*/
 end_comment
 
 begin_include
@@ -1571,7 +1571,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+name|EIO
 operator|)
 return|;
 block|}
@@ -1607,7 +1607,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+name|EIO
 operator|)
 return|;
 block|}
