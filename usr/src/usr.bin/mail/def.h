@@ -46,7 +46,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	2.6 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	2.7 %G%";  */
 end_comment
 
 begin_comment
@@ -878,6 +878,29 @@ end_define
 begin_comment
 comment|/* The nil group pointer */
 end_comment
+
+begin_comment
+comment|/*  * Structure of the hash table of ignored header fields  */
+end_comment
+
+begin_struct
+struct|struct
+name|ignore
+block|{
+name|struct
+name|ignore
+modifier|*
+name|i_link
+decl_stmt|;
+comment|/* Next ignored field in bucket */
+name|char
+modifier|*
+name|i_field
+decl_stmt|;
+comment|/* This ignored field */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Token values returned by the scanner used for argument lists.  * Also, sizes of scanner-related things.  */
