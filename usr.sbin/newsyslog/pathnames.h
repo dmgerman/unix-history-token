@@ -24,15 +24,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|_PATH_GZIP
-value|"/usr/bin/gzip"
+name|_PATH_BZIP2
+value|"/usr/bin/bzip2"
 end_define
 
 begin_define
 define|#
 directive|define
-name|_PATH_BZIP2
-value|"/usr/bin/bzip2"
+name|_PATH_GZIP
+value|"/usr/bin/gzip"
 end_define
 
 end_unit
