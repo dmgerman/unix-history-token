@@ -363,6 +363,18 @@ comment|/* Prototypes for non-quad routines. */
 end_comment
 
 begin_decl_stmt
+name|u_int32_t
+name|arc4random
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|bcmp
 name|__P
