@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tr.c	4.1 (Berkeley) %G%"
+literal|"@(#)tr.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -535,6 +535,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|clearerr
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -586,6 +591,7 @@ operator|&
 literal|0377
 index|]
 condition|)
+block|{
 name|putchar
 argument_list|(
 name|save
@@ -593,6 +599,19 @@ operator|=
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|stdout
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|exit
 argument_list|(
