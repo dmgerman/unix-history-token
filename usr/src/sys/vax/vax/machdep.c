@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.49	82/01/16	*/
+comment|/*	machdep.c	4.50	82/01/17	*/
 end_comment
 
 begin_include
@@ -2273,7 +2273,7 @@ directive|endif
 operator|(
 name|void
 operator|)
-name|spl4
+name|spl1
 argument_list|()
 expr_stmt|;
 name|howto
