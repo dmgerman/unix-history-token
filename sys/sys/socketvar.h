@@ -988,6 +988,12 @@ name|uio
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|knote
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * File operations on sockets.  */
 end_comment
@@ -1152,6 +1158,26 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sokqfilter
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|file
+operator|*
+name|fp
+operator|,
+expr|struct
+name|knote
+operator|*
+name|kn
 operator|)
 argument_list|)
 decl_stmt|;

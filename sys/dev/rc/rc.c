@@ -370,11 +370,16 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_TTY
+operator||
+name|D_KQFILTER
 block|,
 comment|/* bmaj */
 operator|-
 literal|1
-block|}
+block|,
+comment|/* kqfilter */
+name|ttykqfilter
+block|, }
 decl_stmt|;
 end_decl_stmt
 

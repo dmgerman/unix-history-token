@@ -1734,6 +1734,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|ttykqfilter
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+name|dev
+operator|,
+expr|struct
+name|knote
+operator|*
+name|kn
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|ttyread
 name|__P
 argument_list|(

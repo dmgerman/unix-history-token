@@ -577,6 +577,9 @@ name|filterops
 modifier|*
 name|kn_fop
 decl_stmt|;
+name|caddr_t
+name|kn_hook
+decl_stmt|;
 define|#
 directive|define
 name|KN_ACTIVE
