@@ -809,7 +809,31 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"bio_request on thin air"
+literal|"NULL cp in g_io_request"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL bp in g_io_request"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|bio_data
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL bp->data in g_io_request"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1182,6 +1206,58 @@ name|int
 name|error
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|bp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL bp in g_io_deliver"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|bio_from
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL bio_from in g_io_deliver"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|bio_from
+operator|->
+name|geom
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL bio_from->geom in g_io_deliver"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|bio_to
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL bio_to in g_io_deliver"
+operator|)
+argument_list|)
+expr_stmt|;
 name|g_trace
 argument_list|(
 name|G_T_BIO

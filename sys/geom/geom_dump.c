@@ -1055,6 +1055,9 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|g_topology_assert
+argument_list|()
+expr_stmt|;
 name|g_conf_specific
 argument_list|(
 name|p
