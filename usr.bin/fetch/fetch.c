@@ -774,6 +774,12 @@ decl_stmt|;
 name|double
 name|bps
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|v_level
+condition|)
+return|return;
 name|gettimeofday
 argument_list|(
 operator|&
