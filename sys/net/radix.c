@@ -329,7 +329,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|rn_satsifies_leaf
+name|rn_satisfies_leaf
 parameter_list|(
 name|char
 modifier|*
@@ -842,7 +842,7 @@ end_block
 begin_function
 specifier|static
 name|int
-name|rn_satsifies_leaf
+name|rn_satisfies_leaf
 parameter_list|(
 name|trial
 parameter_list|,
@@ -1298,7 +1298,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|rn_satsifies_leaf
+name|rn_satisfies_leaf
 argument_list|(
 name|v
 argument_list|,
@@ -1414,7 +1414,7 @@ if|if
 condition|(
 name|x
 operator|&&
-name|rn_satsifies_leaf
+name|rn_satisfies_leaf
 argument_list|(
 name|v
 argument_list|,
