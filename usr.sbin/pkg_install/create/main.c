@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNOhjvyzf:p:P:C:c:d:i:I:k:K:r:t:X:D:m:s:o:b:"
+literal|"YNOhjvyzf:p:P:C:c:d:i:I:k:K:r:t:X:D:m:s:S:o:b:"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|SrcDir
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|BaseDir
 init|=
 name|NULL
 decl_stmt|;
@@ -346,6 +355,14 @@ case|case
 literal|'s'
 case|:
 name|SrcDir
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|BaseDir
 operator|=
 name|optarg
 expr_stmt|;
@@ -704,9 +721,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_create [-YNOhvy] [-P pkgs] [-C conflicts] [-p prefix] [-f contents] "
+literal|"usage: pkg_create [-YNOhvyz] [-P pkgs] [-C conflicts] [-p prefix] "
 argument_list|,
 literal|"                  [-i iscript] [-I piscript] [-k dscript] [-K pdscript] "
 argument_list|,
@@ -714,9 +731,11 @@ literal|"                  [-r rscript] [-t template] [-X excludefile] "
 argument_list|,
 literal|"                  [-D displayfile] [-m mtreefile] [-o origin] "
 argument_list|,
+literal|"                  [-s srcdir] [-S basedir] "
+argument_list|,
 literal|"                  -c comment -d description -f packlist pkg-filename"
 argument_list|,
-literal|"       pkg_create [-YNhvy] -b pkg-name [pkg-filename]"
+literal|"       pkg_create [-YNhvyz] -b pkg-name [pkg-filename]"
 argument_list|)
 expr_stmt|;
 name|exit

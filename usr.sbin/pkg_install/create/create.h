@@ -111,6 +111,14 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
+name|BaseDir
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
 name|ExcludeFrom
 decl_stmt|;
 end_decl_stmt
@@ -199,6 +207,22 @@ name|zipper
 name|Zipper
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|add_cksum
+parameter_list|(
+name|Package
+modifier|*
+parameter_list|,
+name|PackingList
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
