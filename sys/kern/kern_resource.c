@@ -3462,7 +3462,7 @@ condition|)
 comment|/* XXX no %qd in kernel.  Truncate. */
 name|printf
 argument_list|(
-literal|"freeing uidinfo: uid = %d, sbsize = %ld"
+literal|"freeing uidinfo: uid = %d, sbsize = %ld\n"
 argument_list|,
 name|uip
 operator|->
@@ -3486,7 +3486,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"freeing uidinfo: uid = %d, proccnt = %ld"
+literal|"freeing uidinfo: uid = %d, proccnt = %ld\n"
 argument_list|,
 name|uip
 operator|->
@@ -3591,7 +3591,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"negative proccnt for uid = %d"
+literal|"negative proccnt for uid = %d\n"
 argument_list|,
 name|uip
 operator|->
@@ -3705,7 +3705,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"negative sbsize for uid = %d"
+literal|"negative sbsize for uid = %d\n"
 argument_list|,
 name|uip
 operator|->
