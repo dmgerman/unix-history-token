@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds.c	7.12 (Berkeley) %G%"
+literal|"@(#)ex_cmds.c	7.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2068,16 +2068,6 @@ argument_list|)
 expr_stmt|;
 name|suspend
 label|:
-if|if
-condition|(
-operator|!
-name|ldisc
-condition|)
-name|error
-argument_list|(
-literal|"Old tty driver|Not using new tty driver/shell"
-argument_list|)
-expr_stmt|;
 name|c
 operator|=
 name|exclam
