@@ -3408,6 +3408,8 @@ operator|.
 name|flags
 operator|=
 name|MDF_ACTIVE
+operator||
+name|MDF_16BITS
 expr_stmt|;
 block|}
 if|if
