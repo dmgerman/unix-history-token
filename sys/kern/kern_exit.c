@@ -1093,6 +1093,15 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
+name|VOP_LOCK
+argument_list|(
+name|ttyvp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|VOP_REVOKE
 argument_list|(
 name|ttyvp
@@ -1100,7 +1109,7 @@ argument_list|,
 name|REVOKEALL
 argument_list|)
 expr_stmt|;
-name|vrele
+name|vput
 argument_list|(
 name|ttyvp
 argument_list|)
