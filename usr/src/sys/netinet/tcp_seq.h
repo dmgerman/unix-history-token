@@ -67,7 +67,7 @@ parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|(tp)->rcv_nxt = (tp)->irs + 1
+value|(tp)->rcv_adv = (tp)->rcv_nxt = (tp)->irs + 1
 end_define
 
 begin_define
