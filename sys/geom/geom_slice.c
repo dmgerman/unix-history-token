@@ -1082,9 +1082,6 @@ return|return;
 case|case
 name|BIO_GETATTR
 case|:
-case|case
-name|BIO_SETATTR
-case|:
 comment|/* Give the real method a chance to override */
 if|if
 condition|(

@@ -3480,10 +3480,6 @@ literal|1
 operator|)
 return|;
 break|break;
-case|case
-name|BIO_SETATTR
-case|:
-break|break;
 default|default:
 name|KASSERT
 argument_list|(

@@ -1228,14 +1228,6 @@ operator|=
 name|ENOIOCTL
 expr_stmt|;
 break|break;
-case|case
-name|BIO_SETATTR
-case|:
-name|error
-operator|=
-name|ENOIOCTL
-expr_stmt|;
-break|break;
 default|default:
 name|error
 operator|=

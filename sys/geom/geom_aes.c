@@ -1029,9 +1029,6 @@ break|break;
 case|case
 name|BIO_GETATTR
 case|:
-case|case
-name|BIO_SETATTR
-case|:
 name|bp2
 operator|=
 name|g_clone_bio

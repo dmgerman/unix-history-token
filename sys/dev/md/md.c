@@ -1592,9 +1592,6 @@ block|{
 case|case
 name|BIO_GETATTR
 case|:
-case|case
-name|BIO_SETATTR
-case|:
 name|g_io_deliver
 argument_list|(
 name|bp
