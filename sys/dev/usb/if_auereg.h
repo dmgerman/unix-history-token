@@ -1007,10 +1007,17 @@ name|struct
 name|callout_handle
 name|aue_stat_ch
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|struct
 name|mtx
 name|aue_mtx
 decl_stmt|;
+endif|#
+directive|endif
 name|u_int16_t
 name|aue_flags
 decl_stmt|;

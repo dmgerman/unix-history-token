@@ -637,10 +637,17 @@ name|struct
 name|callout_handle
 name|cue_stat_ch
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|struct
 name|mtx
 name|cue_mtx
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|cue_dying
 decl_stmt|;

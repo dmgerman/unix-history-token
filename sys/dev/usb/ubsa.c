@@ -727,10 +727,17 @@ name|u_char
 name|sc_msr
 decl_stmt|;
 comment|/* ubsa status register */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|void
 modifier|*
 name|sc_swicookie
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1178,6 +1185,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1186,6 +1201,11 @@ modifier|*
 name|ucom_ithd
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|USB_MATCH
@@ -1951,6 +1971,11 @@ name|sc_intr_number
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|swi_add
 argument_list|(
 operator|&
@@ -1972,6 +1997,8 @@ operator|->
 name|sc_swicookie
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ucom_attach
 argument_list|(
 name|ucom
@@ -2085,6 +2112,11 @@ operator|->
 name|sc_ucom
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|ithread_remove_handler
 argument_list|(
 name|sc
@@ -2092,6 +2124,8 @@ operator|->
 name|sc_swicookie
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|rv
@@ -3370,6 +3404,11 @@ name|sc_msr
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|swi_sched
 argument_list|(
 name|sc
@@ -3379,6 +3418,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ubsa_notify
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
