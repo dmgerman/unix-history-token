@@ -636,14 +636,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_IPFW
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_typedef
 typedef|typedef
 name|int
@@ -656,32 +648,29 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_decl_stmt
-specifier|extern
-name|ip_dn_ctl_t
-modifier|*
-name|ip_dn_ctl_ptr
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* raw_ip.c */
+end_comment
 
-begin_function_decl
+begin_typedef
+typedef|typedef
 name|void
-name|dn_rule_delete
+name|ip_dn_ruledel_t
 parameter_list|(
 name|void
 modifier|*
-name|r
 parameter_list|)
 function_decl|;
-end_function_decl
+end_typedef
 
 begin_comment
-comment|/* used in ip_fw.c */
+comment|/* ip_fw.c */
 end_comment
 
-begin_function_decl
+begin_typedef
+typedef|typedef
 name|int
-name|dummynet_io
+name|ip_dn_io_t
 parameter_list|(
 name|int
 name|pipe
@@ -718,7 +707,35 @@ name|int
 name|flags
 parameter_list|)
 function_decl|;
-end_function_decl
+end_typedef
+
+begin_comment
+comment|/* ip_{in,out}put.c, bridge.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|ip_dn_ctl_t
+modifier|*
+name|ip_dn_ctl_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ip_dn_ruledel_t
+modifier|*
+name|ip_dn_ruledel_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ip_dn_io_t
+modifier|*
+name|ip_dn_io_ptr
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

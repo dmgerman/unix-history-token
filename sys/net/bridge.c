@@ -109,6 +109,16 @@ begin_comment
 comment|/* for struct arpcom */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -121,14 +131,10 @@ directive|include
 file|"opt_ipdn.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFIREWALL
-argument_list|)
-end_if
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -142,36 +148,68 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DUMMYNET
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<netinet/ip_dummynet.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<net/bridge.h>
 end_include
+
+begin_function_decl
+specifier|static
+name|struct
+name|ifnet
+modifier|*
+name|bridge_in
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|ether_header
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|mbuf
+modifier|*
+name|bdg_forward
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|ether_header
+modifier|*
+specifier|const
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|bdgtakeifaces
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * For debugging, you can use the following macros.  * remember, rdtsc() only works on Pentium-class machines      quad_t ticks;     DDB(ticks = rdtsc();)     ... interesting code ...     DDB(bdg_fw_ticks += (u_long)(rdtsc() - ticks) ; bdg_fw_count++ ;)   *  */
@@ -256,14 +294,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|do_bridge
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bdg_hash_table
 modifier|*
 name|bdg_table
@@ -276,21 +306,6 @@ begin_comment
 comment|/*  * System initialization  */
 end_comment
 
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|interfaces
-argument_list|,
-argument|SI_SUB_PROTO_IF
-argument_list|,
-argument|SI_ORDER_FIRST
-argument_list|,
-argument|bdginit
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -300,18 +315,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
-name|bdg_softc
-modifier|*
-name|ifp2sc
-init|=
-name|NULL
+name|callout_handle
+name|bdg_timeout_h
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX make it static of size BDG_MAX_PORTS */
-end_comment
 
 begin_define
 define|#
@@ -1287,16 +1296,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/* diagnostic vars */
-end_comment
-
 begin_expr_stmt
 name|SY
 argument_list|(
@@ -1404,11 +1403,6 @@ literal|"Cycle counter count"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_STRUCT
@@ -1630,15 +1624,13 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+name|bdg_timeout_h
+operator|=
 name|timeout
 argument_list|(
 name|bdg_timeout
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 literal|2
 operator|*
@@ -1761,6 +1753,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bdgtakeifaces
 parameter_list|(
@@ -1808,7 +1801,7 @@ literal|'\0'
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"BRIDGE 010131, have %d interfaces\n"
+literal|"BRIDGE 011004, have %d interfaces\n"
 argument_list|,
 name|if_index
 argument_list|)
@@ -2025,6 +2018,7 @@ comment|/*  * bridge_in() is invoked to perform bridging decision on input packe
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ifnet
 modifier|*
@@ -2403,6 +2397,7 @@ comment|/*  * Forward to dst, excluding src port and muted interfaces.  * If src
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|mbuf
 modifier|*
@@ -2467,9 +2462,6 @@ init|=
 name|dst
 decl_stmt|;
 comment|/* real dst from ether_output */
-ifdef|#
-directive|ifdef
-name|IPFIREWALL
 name|struct
 name|ip_fw
 modifier|*
@@ -2478,8 +2470,6 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* did we match a firewall rule ? */
-endif|#
-directive|endif
 comment|/*      * XXX eh is usually a pointer within the mbuf (some ethernet drivers      * do that), so we better copy it before doing anything with the mbuf,      * or we might corrupt the header.      */
 name|struct
 name|ether_header
@@ -2491,17 +2481,6 @@ decl_stmt|;
 name|DEB
 argument_list|(
 argument|quad_t ticks; ticks = rdtsc();
-argument_list|)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFIREWALL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|DUMMYNET
 argument_list|)
 if|if
 condition|(
@@ -2547,8 +2526,6 @@ expr_stmt|;
 comment|/* For sure this is our own mbuf. */
 block|}
 else|else
-endif|#
-directive|endif
 name|bdg_thru
 operator|++
 expr_stmt|;
@@ -2676,9 +2653,6 @@ argument_list|(
 literal|"bdg_forward: bad dst"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL
 comment|/*      * Do filtering in a very similar way to what is done in ip_output.      * Only if firewall is loaded, enabled, and the packet is not      * from ether_output() (src==NULL, or we would filter it twice).      * Additional restrictions may apply e.g. non-IP, short packets,      * and pkts already gone through a pipe.      */
 if|if
 condition|(
@@ -2901,14 +2875,19 @@ comment|/* a PASS rule.  */
 goto|goto
 name|forward
 goto|;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
 if|if
 condition|(
+name|do_bridge
+operator|&&
+name|ip_dn_io_ptr
+operator|!=
+name|NULL
+operator|&&
+operator|(
 name|i
 operator|&
 name|IP_FW_PORT_DYNT_FLAG
+operator|)
 condition|)
 block|{
 comment|/* 	     * Pass the pkt to dummynet, which consumes it. 	     * If shared, make a copy and keep the original. 	     * Need to prepend the ethernet header, optimize the common 	     * case of eh pointing already into the original mbuf. 	     */
@@ -3057,7 +3036,7 @@ name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 block|}
-name|dummynet_io
+name|ip_dn_io_ptr
 argument_list|(
 operator|(
 name|i
@@ -3084,8 +3063,6 @@ return|return
 name|m0
 return|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * XXX add divert/forward actions... 	 */
 comment|/* if none of the above matches, we have to drop the pkt */
 name|bdg_ipfw_drops
@@ -3102,9 +3079,6 @@ return|;
 block|}
 name|forward
 label|:
-endif|#
-directive|endif
-comment|/* IPFIREWALL */
 comment|/*      * Again, bring up the headers in case of shared bufs to avoid      * corruptions in the future.      */
 if|if
 condition|(
@@ -3460,6 +3434,169 @@ name|m0
 return|;
 block|}
 end_function
+
+begin_function
+specifier|static
+name|int
+name|bridge_modevent
+parameter_list|(
+name|module_t
+name|mod
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|void
+modifier|*
+name|unused
+parameter_list|)
+block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|MOD_LOAD
+case|:
+name|bridge_in_ptr
+operator|=
+name|bridge_in
+expr_stmt|;
+name|bdg_forward_ptr
+operator|=
+name|bdg_forward
+expr_stmt|;
+name|bdgtakeifaces_ptr
+operator|=
+name|bdgtakeifaces
+expr_stmt|;
+name|bdginit
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|MOD_UNLOAD
+case|:
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+name|do_bridge
+operator|=
+literal|0
+expr_stmt|;
+name|bridge_in_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|bdg_forward_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|bdgtakeifaces_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|untimeout
+argument_list|(
+name|bdg_timeout
+argument_list|,
+name|NULL
+argument_list|,
+name|bdg_timeout_h
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bdg_table
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|bdg_table
+argument_list|,
+name|M_IFADDR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp2sc
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|ifp2sc
+argument_list|,
+name|M_IFADDR
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|moduledata_t
+name|bridge_mod
+init|=
+block|{
+literal|"bridge"
+block|,
+name|bridge_modevent
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DECLARE_MODULE
+argument_list|(
+name|bridge
+argument_list|,
+name|bridge_mod
+argument_list|,
+name|SI_SUB_PSEUDO
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|bridge
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

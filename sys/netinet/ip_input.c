@@ -237,6 +237,12 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/ip_dummynet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -253,23 +259,6 @@ begin_include
 include|#
 directive|include
 file|<netkey/key.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DUMMYNET
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_dummynet.h>
 end_include
 
 begin_endif
@@ -886,13 +875,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ip_fw_ctl_t
-modifier|*
-name|ip_fw_ctl_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|fw_enable
 init|=
@@ -900,23 +882,16 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DUMMYNET
-end_ifdef
+begin_comment
+comment|/* Dummynet hooks */
+end_comment
 
 begin_decl_stmt
-name|ip_dn_ctl_t
+name|ip_dn_io_t
 modifier|*
-name|ip_dn_ctl_ptr
+name|ip_dn_io_ptr
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * We need to save the IP options in case a protocol wants to respond  * to an incoming packet over the same route if the packet got here  * using IP source routing.  This allows connection establishment and  * maintenance when the remote end is on a network that is not known  * to us.  */
@@ -1486,17 +1461,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFIREWALL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|DUMMYNET
-argument_list|)
 comment|/*          * dummynet packet are prepended a vestigial mbuf with          * m_type = MT_DUMMYNET and m_data pointing to the matching          * rule.          */
 if|if
 condition|(
@@ -1557,8 +1521,6 @@ name|rule
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -2024,21 +1986,8 @@ goto|;
 endif|#
 directive|endif
 comment|/* 	 * IpHack's section. 	 * Right now when no processing on packet has done 	 * and it is still fresh out of network we do our black 	 * deals with it. 	 * - Firewall: deny/allow/divert 	 * - Xlate: translate packet's addr/port (NAT). 	 * - Pipe: pass pkt through dummynet. 	 * - Wrap: fake packet's addr/port<unimpl.> 	 * - Encapsulate: put it in another IP and send out.<unimp.>  	 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFIREWALL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|DUMMYNET
-argument_list|)
 name|iphack
 label|:
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|PFIL_HOOKS
@@ -2253,11 +2202,12 @@ comment|/* common case */
 goto|goto
 name|pass
 goto|;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
 if|if
 condition|(
+name|ip_dn_io_ptr
+operator|!=
+name|NULL
+operator|&&
 operator|(
 name|i
 operator|&
@@ -2268,7 +2218,7 @@ literal|0
 condition|)
 block|{
 comment|/* Send packet to the appropriate pipe */
-name|dummynet_io
+name|ip_dn_io_ptr
 argument_list|(
 name|i
 operator|&
@@ -2291,8 +2241,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPDIVERT

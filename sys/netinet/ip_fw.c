@@ -212,22 +212,11 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DUMMYNET
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet/ip_dummynet.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1284,6 +1273,15 @@ name|sopt
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|ip_dn_ruledel_t
+modifier|*
+name|ip_dn_ruledel_ptr
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2797,9 +2795,6 @@ name|fw_skipto_rule
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
 case|case
 name|IP_FW_F_PIPE
 case|:
@@ -2840,8 +2835,6 @@ name|fw_skipto_rule
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_FORWARD
@@ -7227,9 +7220,6 @@ goto|;
 goto|goto
 name|again
 goto|;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
 case|case
 name|IP_FW_F_PIPE
 case|:
@@ -7250,8 +7240,6 @@ operator||
 name|IP_FW_PORT_DYNT_FLAG
 operator|)
 return|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_FORWARD
@@ -7994,16 +7982,17 @@ expr_stmt|;
 name|static_count
 operator|--
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
-name|dn_rule_delete
+if|if
+condition|(
+name|ip_dn_ruledel_ptr
+operator|!=
+name|NULL
+condition|)
+name|ip_dn_ruledel_ptr
 argument_list|(
 name|fcp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|flush_rule_ptrs
 argument_list|()
 expr_stmt|;
@@ -8978,17 +8967,6 @@ operator|)
 return|;
 block|}
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPDIVERT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|DUMMYNET
-argument_list|)
 ifdef|#
 directive|ifdef
 name|IPDIVERT
@@ -9001,9 +8979,6 @@ name|IP_FW_F_TEE
 case|:
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|DUMMYNET
 case|case
 name|IP_FW_F_PIPE
 case|:
@@ -9012,8 +8987,6 @@ case|case
 name|IP_FW_F_QUEUE
 case|:
 comment|/* queue 0 is invalid */
-endif|#
-directive|endif
 if|if
 condition|(
 name|frwl
@@ -9039,9 +9012,6 @@ operator|)
 return|;
 block|}
 break|break;
-endif|#
-directive|endif
-comment|/* IPDIVERT || DUMMYNET */
 case|case
 name|IP_FW_F_DENY
 case|:
@@ -10093,6 +10063,16 @@ argument_list|,
 name|SI_SUB_PSEUDO
 argument_list|,
 name|SI_ORDER_ANY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|ipfw
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -141,6 +141,12 @@ directive|include
 file|<net/ethernet.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/bridge.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -388,23 +394,6 @@ begin_comment
 comment|/* NETATALK */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BRIDGE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<net/bridge.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* netgraph node hooks for ng_ether(4) */
 end_comment
@@ -553,6 +542,49 @@ name|t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* bridge support */
+end_comment
+
+begin_decl_stmt
+name|int
+name|do_bridge
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bridge_in_t
+modifier|*
+name|bridge_in_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bdg_forward_t
+modifier|*
+name|bdg_forward_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bdgtakeifaces_t
+modifier|*
+name|bdgtakeifaces_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|bdg_softc
+modifier|*
+name|ifp2sc
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1947,12 +1979,13 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BRIDGE
 if|if
 condition|(
 name|do_bridge
+operator|&&
+name|bdg_forward_ptr
+operator|!=
+name|NULL
 operator|&&
 name|BDG_USED
 argument_list|(
@@ -1994,7 +2027,7 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|=
-name|bdg_forward
+name|bdg_forward_ptr
 argument_list|(
 name|m
 argument_list|,
@@ -2020,8 +2053,6 @@ literal|0
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Queue message on interface, update output statistics if 	 * successful, and start output if interface not yet active. 	 */
 if|if
 condition|(
@@ -2081,15 +2112,10 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|BRIDGE
 name|struct
 name|ether_header
 name|save_eh
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* Check for a BPF tap */
 if|if
 condition|(
@@ -2170,13 +2196,14 @@ name|NULL
 condition|)
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|BRIDGE
 comment|/* Check for bridging mode */
 if|if
 condition|(
 name|do_bridge
+operator|&&
+name|bdg_forward_ptr
+operator|!=
+name|NULL
 operator|&&
 name|BDG_USED
 argument_list|(
@@ -2195,7 +2222,7 @@ condition|(
 operator|(
 name|bif
 operator|=
-name|bridge_in
+name|bridge_in_ptr
 argument_list|(
 name|ifp
 argument_list|,
@@ -2235,7 +2262,7 @@ expr_stmt|;
 comment|/* because it might change */
 name|m
 operator|=
-name|bdg_forward
+name|bdg_forward_ptr
 argument_list|(
 name|m
 argument_list|,
@@ -2245,7 +2272,7 @@ name|bif
 argument_list|)
 expr_stmt|;
 comment|/* needs forwarding */
-comment|/* 			 * Do not continue if bdg_forward() processed our 			 * packet (and cleared the mbuf pointer m) or if 			 * it dropped (m_free'd) the packet itself. 			 */
+comment|/* 			 * Do not continue if bdg_forward_ptr() processed our 			 * packet (and cleared the mbuf pointer m) or if 			 * it dropped (m_free'd) the packet itself. 			 */
 if|if
 condition|(
 name|m
@@ -2315,15 +2342,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|BRIDGE
 name|recvLocal
 label|:
-endif|#
-directive|endif
 comment|/* Continue with upper layer processing */
 name|ether_demux
 argument_list|(
@@ -3303,14 +3323,15 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BRIDGE
-name|bdgtakeifaces
+if|if
+condition|(
+name|bdgtakeifaces_ptr
+operator|!=
+name|NULL
+condition|)
+name|bdgtakeifaces_ptr
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -3363,14 +3384,15 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BRIDGE
-name|bdgtakeifaces
+if|if
+condition|(
+name|bdgtakeifaces_ptr
+operator|!=
+name|NULL
+condition|)
+name|bdgtakeifaces_ptr
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

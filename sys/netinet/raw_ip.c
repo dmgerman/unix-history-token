@@ -147,6 +147,12 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/ip_dummynet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -174,23 +180,6 @@ directive|include
 file|"opt_ipdn.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DUMMYNET
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_dummynet.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|struct
 name|inpcbhead
@@ -202,6 +191,24 @@ begin_decl_stmt
 name|struct
 name|inpcbinfo
 name|ripcbinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* control hooks for ipfw and dummynet */
+end_comment
+
+begin_decl_stmt
+name|ip_fw_ctl_t
+modifier|*
+name|ip_fw_ctl_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ip_dn_ctl_t
+modifier|*
+name|ip_dn_ctl_ptr
 decl_stmt|;
 end_decl_stmt
 
@@ -1257,7 +1264,7 @@ if|if
 condition|(
 name|ip_fw_ctl_ptr
 operator|==
-literal|0
+name|NULL
 condition|)
 name|error
 operator|=
@@ -1272,9 +1279,6 @@ name|sopt
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
 case|case
 name|IP_DUMMYNET_GET
 case|:
@@ -1297,9 +1301,6 @@ name|sopt
 argument_list|)
 expr_stmt|;
 break|break ;
-endif|#
-directive|endif
-comment|/* DUMMYNET */
 case|case
 name|MRT_INIT
 case|:
@@ -1434,9 +1435,6 @@ name|sopt
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
 case|case
 name|IP_DUMMYNET_CONFIGURE
 case|:
@@ -1465,8 +1463,6 @@ name|sopt
 argument_list|)
 expr_stmt|;
 break|break ;
-endif|#
-directive|endif
 case|case
 name|IP_RSVP_ON
 case|:

@@ -232,22 +232,11 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DUMMYNET
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet/ip_dummynet.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -611,17 +600,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFIREWALL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|DUMMYNET
-argument_list|)
 comment|/*            * dummynet packet are prepended a vestigial mbuf with          * m_type = MT_DUMMYNET and m_data pointing to the matching          * rule.          */
 if|if
 condition|(
@@ -781,8 +759,6 @@ name|rule
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -2482,11 +2458,12 @@ comment|/* common case */
 goto|goto
 name|pass
 goto|;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
 if|if
 condition|(
+name|ip_dn_io_ptr
+operator|!=
+name|NULL
+operator|&&
 operator|(
 name|off
 operator|&
@@ -2499,7 +2476,7 @@ block|{
 comment|/*                      * pass the pkt to dummynet. Need to include                      * pipe number, m, ifp, ro, dst because these are                      * not recomputed in the next pass.                      * All other parameters have been already used and                      * so they are not needed anymore.                       * XXX note: if the ifp or ro entry are deleted                      * while a pkt is in dummynet, we are in trouble!                      */
 name|error
 operator|=
-name|dummynet_io
+name|ip_dn_io_ptr
 argument_list|(
 name|off
 operator|&
@@ -2524,8 +2501,6 @@ goto|goto
 name|done
 goto|;
 block|}
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPDIVERT
