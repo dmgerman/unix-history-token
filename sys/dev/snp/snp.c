@@ -207,6 +207,129 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * This is the main snoop per-device structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|snoop
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|snoop
+argument_list|)
+name|snp_list
+expr_stmt|;
+comment|/* List glue. */
+name|dev_t
+name|snp_target
+decl_stmt|;
+comment|/* Target tty device. */
+name|struct
+name|tty
+modifier|*
+name|snp_tty
+decl_stmt|;
+comment|/* Target tty pointer. */
+name|u_long
+name|snp_len
+decl_stmt|;
+comment|/* Possible length. */
+name|u_long
+name|snp_base
+decl_stmt|;
+comment|/* Data base. */
+name|u_long
+name|snp_blen
+decl_stmt|;
+comment|/* Used length. */
+name|caddr_t
+name|snp_buf
+decl_stmt|;
+comment|/* Allocation pointer. */
+name|int
+name|snp_flags
+decl_stmt|;
+comment|/* Flags. */
+name|struct
+name|selinfo
+name|snp_sel
+decl_stmt|;
+comment|/* Select info. */
+name|int
+name|snp_olddisc
+decl_stmt|;
+comment|/* Old line discipline. */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Possible flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNOOP_ASYNC
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNOOP_OPEN
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNOOP_RWAIT
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNOOP_OFLOW
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNOOP_DOWN
+value|0x0020
+end_define
+
+begin_comment
+comment|/*  * Other constants.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNOOP_MINLEN
+value|(4*1024)
+end_define
+
+begin_comment
+comment|/* This should be power of 2. 						 * 4K tested to be the minimum 						 * for which on normal tty 						 * usage there is no need to 						 * allocate more. 						 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNOOP_MAXLEN
+value|(64*1024)
+end_define
+
+begin_comment
+comment|/* This one also,64K enough 						 * If we grow more,something 						 * really bad in this world.. 						 */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
