@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mouse.h,v 1.7 1997/02/22 09:34:50 peter Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mouse.h,v 1.8 1997/10/19 10:44:02 yokota Exp $  */
 end_comment
 
 begin_ifndef
@@ -28,177 +28,117 @@ file|<sys/ioccom.h>
 end_include
 
 begin_comment
-comment|/*  * NOTE: MOUSEIOC, MOUSEIOCREAD, and mouseinfo are now obsolete,   * but will stay for compatibility reasons. But, remember,   * the MOUSEIOCREAD ioctl command doesn't work and never worked before.    * Some day we shall get rid of these...   */
+comment|/* ioctls */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MOUSEIOC
-value|('M'<<8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOUSEIOCREAD
-value|(MOUSEIOC|60)
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|mouseinfo
-block|{
-name|unsigned
-name|char
-name|status
-decl_stmt|;
-name|char
-name|xmotion
-decl_stmt|;
-name|char
-name|ymotion
-decl_stmt|;
-block|}
-name|mouseinfo_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUTSTATMASK
-value|0x07
-end_define
-
-begin_comment
-comment|/* Any mouse button down if any bit set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUTCHNGMASK
-value|0x38
-end_define
-
-begin_comment
-comment|/* Any mouse button changed if any bit set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUT3STAT
-value|0x01
-end_define
-
-begin_comment
-comment|/* Button 3 down if set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUT2STAT
-value|0x02
-end_define
-
-begin_comment
-comment|/* Button 2 down if set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUT1STAT
-value|0x04
-end_define
-
-begin_comment
-comment|/* Button 1 down if set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUT3CHNG
-value|0x08
-end_define
-
-begin_comment
-comment|/* Button 3 changed if set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUT2CHNG
-value|0x10
-end_define
-
-begin_comment
-comment|/* Button 2 changed if set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUT1CHNG
-value|0x20
-end_define
-
-begin_comment
-comment|/* Button 1 changed if set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOVEMENT
-value|0x40
-end_define
-
-begin_comment
-comment|/* Mouse movement detected */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUSE_GETSTATE
-value|_IOR('M',0,mousestatus_t)
+name|MOUSE_GETSTATUS
+value|_IOR('M', 0, mousestatus_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MOUSE_GETHWINFO
-value|_IOR('M',1,mousehw_t)
+value|_IOR('M', 1, mousehw_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MOUSE_GETMODE
-value|_IOR('M',2,mousemode_t)
+value|_IOR('M', 2, mousemode_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MOUSE_SETMODE
-value|_IOW('M',3,mousemode_t)
+value|_IOW('M', 3, mousemode_t)
 end_define
 
-begin_comment
-comment|/* new ioctls */
-end_comment
+begin_define
+define|#
+directive|define
+name|MOUSE_GETLEVEL
+value|_IOR('M', 4, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SETLEVEL
+value|_IOW('M', 5, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_GETVARS
+value|_IOR('M', 6, mousevar_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SETVARS
+value|_IOW('M', 7, mousevar_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_READSTATE
+value|_IOWR('M', 8, mousedata_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_READDATA
+value|_IOWR('M', 9, mousedata_t)
+end_define
+
+begin_if
+if|#
+directive|if
+name|notyet
+end_if
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SETRESOLUTION
+value|_IOW('M', 10, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SETSCALING
+value|_IOW('M', 11, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SETRATE
+value|_IOW('M', 12, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_GETHWID
+value|_IOR('M', 13, int)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* mouse status block */
@@ -209,6 +149,10 @@ typedef|typedef
 struct|struct
 name|mousestatus
 block|{
+name|int
+name|flags
+decl_stmt|;
+comment|/* state change flags */
 name|int
 name|button
 decl_stmt|;
@@ -225,6 +169,10 @@ name|int
 name|dy
 decl_stmt|;
 comment|/* y movement */
+name|int
+name|dz
+decl_stmt|;
+comment|/* z movement */
 block|}
 name|mousestatus_t
 typedef|;
@@ -305,6 +253,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MOUSE_MAXBUTTON
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
 name|MOUSE_STDBUTTONS
 value|0x0007
 end_define
@@ -317,12 +272,51 @@ begin_define
 define|#
 directive|define
 name|MOUSE_EXTBUTTONS
-value|0x00f8
+value|0x7ffffff8
 end_define
 
 begin_comment
-comment|/* the others */
+comment|/* the others (28 of them!) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_BUTTONS
+value|(MOUSE_STDBUTTONS | MOUSE_EXTBUTTONS)
+end_define
+
+begin_comment
+comment|/* flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_STDBUTTONSCHANGED
+value|MOUSE_STDBUTTONS
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_EXTBUTTONSCHANGED
+value|MOUSE_EXTBUTTONS
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_BUTTONSCHANGED
+value|MOUSE_BUTTONS
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_POSCHANGED
+value|0x80000000
+end_define
 
 begin_typedef
 typedef|typedef
@@ -332,6 +326,7 @@ block|{
 name|int
 name|buttons
 decl_stmt|;
+comment|/* -1 if unknown */
 name|int
 name|iftype
 decl_stmt|;
@@ -340,6 +335,10 @@ name|int
 name|type
 decl_stmt|;
 comment|/* mouse/track ball/pad... */
+name|int
+name|model
+decl_stmt|;
+comment|/* I/F dependent model ID: MOUSE_MODEL_XXX */
 name|int
 name|hwid
 decl_stmt|;
@@ -352,6 +351,13 @@ end_typedef
 begin_comment
 comment|/* iftype */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_IF_UNKNOWN
+value|(-1)
+end_define
 
 begin_define
 define|#
@@ -379,6 +385,13 @@ define|#
 directive|define
 name|MOUSE_IF_PS2
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_IF_SYSMOUSE
+value|4
 end_define
 
 begin_comment
@@ -424,6 +437,73 @@ name|MOUSE_PAD
 value|3
 end_define
 
+begin_comment
+comment|/* model */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_UNKNOWN
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_GENERIC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_GLIDEPOINT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_NETSCROLL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_NET
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_INTELLI
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_THINK
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_EASYSCROLL
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_MOUSEMANPLUS
+value|7
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -440,11 +520,27 @@ comment|/* report rate (per sec), -1 if unknown */
 name|int
 name|resolution
 decl_stmt|;
-comment|/* 1:low, 2:medium low, 3:medium high 				 * 4:high, 0: default, -1 if unknown  				 */
+comment|/* MOUSE_RES_XXX, -1 if unknown */
 name|int
 name|accelfactor
 decl_stmt|;
 comment|/* accelation factor (must be 1 or greater) */
+name|int
+name|level
+decl_stmt|;
+comment|/* driver operation level */
+name|int
+name|packetsize
+decl_stmt|;
+comment|/* the length of the data packet */
+name|unsigned
+name|char
+name|syncmask
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* sync. data bits in the header byte */
 block|}
 name|mousemode_t
 typedef|;
@@ -453,6 +549,13 @@ end_typedef
 begin_comment
 comment|/* protocol */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PROTO_UNKNOWN
+value|(-1)
+end_define
 
 begin_define
 define|#
@@ -528,7 +631,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* MS/ATI inport mouse */
+comment|/* MS/ATI InPort mouse */
 end_comment
 
 begin_define
@@ -540,6 +643,197 @@ end_define
 
 begin_comment
 comment|/* PS/2 mouse, 3 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PROTO_HITTAB
+value|8
+end_define
+
+begin_comment
+comment|/* Hitachi Tablet 3 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PROTO_GLIDEPOINT
+value|9
+end_define
+
+begin_comment
+comment|/* ALPS GlidePoint, 3/4 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PROTO_INTELLI
+value|10
+end_define
+
+begin_comment
+comment|/* MS IntelliMouse, 4 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PROTO_THINK
+value|11
+end_define
+
+begin_comment
+comment|/* Kensignton Thinking Mouse, 3/4 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PROTO_SYSMOUSE
+value|12
+end_define
+
+begin_comment
+comment|/* /dev/sysmouse */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_RES_UNKNOWN
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_RES_DEFAULT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_RES_LOW
+value|(-2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_RES_MEDIUMLOW
+value|(-3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_RES_MEDIUMHIGH
+value|(-4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_RES_HIGH
+value|(-5)
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|mousedata
+block|{
+name|int
+name|len
+decl_stmt|;
+comment|/* # of data in the buffer */
+name|int
+name|buf
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* data buffer */
+block|}
+name|mousedata_t
+typedef|;
+end_typedef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|MOUSE_GETVARS
+argument_list|)
+operator|)
+end_if
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|mousevar
+block|{
+name|int
+name|var
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+name|mousevar_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* magic numbers in var[0] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VARS_PS2_SIG
+value|0x00325350
+end_define
+
+begin_comment
+comment|/* 'PS2' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VARS_BUS_SIG
+value|0x00535542
+end_define
+
+begin_comment
+comment|/* 'BUS' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VARS_INPORT_SIG
+value|0x00504e49
+end_define
+
+begin_comment
+comment|/* 'INP' */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MOUSE_GETVARS */
 end_comment
 
 begin_comment
@@ -619,7 +913,81 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* middle button, in the 4th byte */
+comment|/* middle button, the 4th byte */
+end_comment
+
+begin_comment
+comment|/* ALPS GlidePoint extention (variant of M+ protocol) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_ALPS_BUTTON2DOWN
+value|0x20
+end_define
+
+begin_comment
+comment|/* middle button, the 4th byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_ALPS_TAP
+value|0x10
+end_define
+
+begin_comment
+comment|/* `tapping' action, the 4th byte */
+end_comment
+
+begin_comment
+comment|/* Kinsington Thinking Mouse extention (variant of M+ protocol) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_THINK_BUTTON2DOWN
+value|0x20
+end_define
+
+begin_comment
+comment|/* lower-left button, the 4th byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_THINK_BUTTON4DOWN
+value|0x10
+end_define
+
+begin_comment
+comment|/* lower-right button, the 4th byte */
+end_comment
+
+begin_comment
+comment|/* MS IntelliMouse (variant of MS Serial) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_INTELLI_PACKETSIZE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_INTELLI_BUTTON2DOWN
+value|0x10
+end_define
+
+begin_comment
+comment|/* middle button the 4th byte */
 end_comment
 
 begin_comment
@@ -781,12 +1149,8 @@ begin_define
 define|#
 directive|define
 name|MOUSE_PS2_SYNCMASK
-value|0x08
+value|0xc8
 end_define
-
-begin_comment
-comment|/* 0x0c for 2 button mouse */
-end_comment
 
 begin_define
 define|#
@@ -794,10 +1158,6 @@ directive|define
 name|MOUSE_PS2_SYNC
 value|0x08
 end_define
-
-begin_comment
-comment|/* 0x0c for 2 button mouse */
-end_comment
 
 begin_define
 define|#
@@ -846,12 +1206,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MOUSE_PS2_BUTTON4UP
-value|0x08
+name|MOUSE_PS2_TAP
+value|MOUSE_PS2_SYNC
 end_define
 
 begin_comment
-comment|/* GlidePoint tapping feature  					 * Yes! this is the same bit as SYNC! 					 */
+comment|/* GlidePoint (PS/2) `tapping' 					        * Yes! this is the same bit  						* as SYNC! 					 	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2PLUS_BUTTON4DOWN
+value|0x10
+end_define
+
+begin_comment
+comment|/* 4th button on MouseMan+ */
 end_comment
 
 begin_define
@@ -881,6 +1252,157 @@ directive|define
 name|MOUSE_PS2_YOVERFLOW
 value|0x80
 end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2PLUS_ZNEG
+value|0x08
+end_define
+
+begin_comment
+comment|/* MouseMan+ negative wheel movement */
+end_comment
+
+begin_comment
+comment|/* sysmouse extended data packet */
+end_comment
+
+begin_comment
+comment|/*  * /dev/sysmouse sends data in two formats, depending on the protocol  * level.  At the level 0, format is exactly the same as MousSystems'  * five byte packet.  At the level 1, the first five bytes are the same  * as at the level 0.  There are additional three bytes which shows  * `dz' and the states of additional buttons.  `dz' is expressed as the  * sum of the byte 5 and 6 which contain signed seven bit values.  * The states of the button 4 though 10 are in the bit 0 though 6 in   * the byte 7 respectively: 1 indicates the button is up.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_PACKETSIZE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_SYNCMASK
+value|0xf8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_SYNC
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_BUTTON1UP
+value|0x04
+end_define
+
+begin_comment
+comment|/* left, 1st byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_BUTTON2UP
+value|0x02
+end_define
+
+begin_comment
+comment|/* middle, 1st byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_BUTTON3UP
+value|0x01
+end_define
+
+begin_comment
+comment|/* right, 1st byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_BUTTON4UP
+value|0x0001
+end_define
+
+begin_comment
+comment|/* 7th byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_BUTTON5UP
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_BUTTON6UP
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_BUTTON7UP
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_BUTTON8UP
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_BUTTON9UP
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_BUTTON10UP
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_MAXBUTTON
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_STDBUTTONS
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYS_EXTBUTTONS
+value|0x7f
+end_define
+
+begin_comment
+comment|/* the others */
+end_comment
 
 begin_endif
 endif|#
