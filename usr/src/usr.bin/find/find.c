@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.6 (Berkeley) %G%"
+literal|"@(#)find.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1576,7 +1576,13 @@ name|s
 operator|==
 literal|'f'
 condition|?
-literal|0100000
+name|S_IFREG
+else|:
+name|s
+operator|==
+literal|'l'
+condition|?
+name|S_IFLNK
 else|:
 literal|0
 expr_stmt|;
