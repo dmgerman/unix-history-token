@@ -513,19 +513,13 @@ condition|;
 operator|++
 name|argv
 control|)
-if|if
-condition|(
+name|errs
+operator|+=
 name|umountfs
 argument_list|(
 operator|*
 name|argv
 argument_list|)
-operator|==
-literal|0
-condition|)
-name|errs
-operator|=
-literal|1
 expr_stmt|;
 name|exit
 argument_list|(
@@ -716,6 +710,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Returns 1 on failure, 0 on success */
+end_comment
+
 begin_function
 name|int
 name|umountfs
@@ -786,18 +784,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+comment|/* Continue and let the system call check it... */
+name|strcpy
 argument_list|(
-literal|"%s"
-argument_list|,
 name|rname
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 name|name
 operator|=
