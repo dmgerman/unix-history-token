@@ -870,7 +870,7 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"FILESYSTEM CLEAN; SKIPPING CHECKS\n"
+literal|"FILE SYSTEM CLEAN; SKIPPING CHECKS\n"
 argument_list|)
 expr_stmt|;
 return|return

@@ -1445,7 +1445,7 @@ literal|1
 condition|)
 name|rwerror
 argument_list|(
-literal|"SET FILESYSTEM FLAGS"
+literal|"SET FILE SYSTEM FLAGS"
 argument_list|,
 name|FS_UNCLEAN
 argument_list|)

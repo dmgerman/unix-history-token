@@ -1032,7 +1032,7 @@ block|{
 comment|/* 					 * file system is clean; 					 * skip snapshot and report it clean 					 */
 name|pwarn
 argument_list|(
-literal|"FILESYSTEM CLEAN; %s\n"
+literal|"FILE SYSTEM CLEAN; %s\n"
 argument_list|,
 literal|"SKIPPING CHECKS"
 argument_list|)
