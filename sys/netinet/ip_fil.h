@@ -2352,6 +2352,20 @@ name|NetBSD1_2
 operator|>
 literal|1
 operator|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+expr|\
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500011
+operator|)
+operator|)
 end_if
 
 begin_if

@@ -16,6 +16,16 @@ name|_SYS_PROTOSW_H_
 end_define
 
 begin_comment
+comment|/*  * For pfil_head structure.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/pfil.h>
+end_include
+
+begin_comment
 comment|/* Forward declare these structures referenced from prototypes below. */
 end_comment
 
@@ -214,6 +224,10 @@ modifier|*
 name|pr_usrreqs
 decl_stmt|;
 comment|/* supersedes pr_usrreq() */
+name|struct
+name|pfil_head
+name|pr_pfh
+decl_stmt|;
 block|}
 struct|;
 end_struct
