@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1987, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resolv.h	5.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1987, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resolv.h	5.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -285,19 +285,19 @@ name|__P
 argument_list|(
 operator|(
 specifier|const
-name|char
+name|u_char
 operator|*
 operator|,
-name|char
+name|u_char
 operator|*
 operator|,
 name|int
 operator|,
-name|char
+name|u_char
 operator|*
 operator|*
 operator|,
-name|char
+name|u_char
 operator|*
 operator|*
 operator|)
@@ -312,18 +312,18 @@ name|__P
 argument_list|(
 operator|(
 specifier|const
-name|char
+name|u_char
 operator|*
 operator|,
 specifier|const
-name|char
+name|u_char
 operator|*
 operator|,
 specifier|const
-name|char
+name|u_char
 operator|*
 operator|,
-name|char
+name|u_char
 operator|*
 operator|,
 name|int
