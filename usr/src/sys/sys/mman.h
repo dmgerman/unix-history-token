@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mman.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mman.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -236,14 +236,14 @@ end_include
 begin_decl_stmt
 name|__BEGIN_DECLS
 comment|/* Some of these int's should probably be size_t's */
-name|int
+name|caddr_t
 name|mmap
 name|__P
 argument_list|(
 operator|(
 name|caddr_t
 operator|,
-name|int
+name|size_t
 operator|,
 name|int
 operator|,
