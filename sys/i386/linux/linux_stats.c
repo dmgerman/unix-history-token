@@ -199,7 +199,7 @@ operator|->
 name|st_dev
 argument_list|)
 operator|<<
-literal|10
+literal|8
 operator|)
 expr_stmt|;
 name|tbuf
