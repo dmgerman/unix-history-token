@@ -6234,7 +6234,7 @@ name|ASM_OP_ITC_D
 operator|,
 name|fmt
 operator|=
-name|ASM_FMT_M42
+name|ASM_FMT_M41
 expr_stmt|;
 break|break;
 case|case
@@ -6246,7 +6246,7 @@ name|ASM_OP_ITC_I
 operator|,
 name|fmt
 operator|=
-name|ASM_FMT_M42
+name|ASM_FMT_M41
 expr_stmt|;
 break|break;
 case|case
