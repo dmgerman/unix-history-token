@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c 1.2 %G%"
+literal|"@(#)cpp.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -578,7 +578,7 @@ begin_define
 define|#
 directive|define
 name|SBSIZE
-value|48000
+value|60000
 end_define
 
 begin_comment
@@ -1131,7 +1131,7 @@ begin_define
 define|#
 directive|define
 name|symsiz
-value|1000
+value|1500
 end_define
 
 begin_comment
