@@ -921,6 +921,7 @@ end_comment
 
 begin_enum
 enum|enum
+name|dpt_immediate_cmd
 block|{
 name|EATA_GENERIC_ABORT
 block|,
@@ -945,7 +946,6 @@ name|EATA_RESET_MASKED_BUS
 block|,
 name|EATA_POWER_OFF_WARN
 block|}
-name|dpt_immediate_cmd
 enum|;
 end_enum
 
@@ -1218,6 +1218,7 @@ end_comment
 
 begin_enum
 enum|enum
+name|dpt_message
 block|{
 name|HA_NO_ERROR
 block|,
@@ -1284,7 +1285,6 @@ comment|/* PCI Target Abort			*/
 name|HA_PCI_STABORT
 comment|/* PCI Signaled Target Abort		*/
 block|}
-name|dpt_message
 enum|;
 end_enum
 
