@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.13 (Berkeley) %G%"
+literal|"@(#)mci.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,16 +84,6 @@ modifier|*
 name|mci_scan
 parameter_list|()
 function_decl|;
-if|if
-condition|(
-name|MaxMciCache
-operator|<=
-literal|0
-condition|)
-block|{
-comment|/* we don't support caching */
-return|return;
-block|}
 comment|/* 	**  Find the best slot.  This may cause expired connections 	**  to be closed. 	*/
 name|mcislot
 operator|=
@@ -102,6 +92,16 @@ argument_list|(
 name|mci
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mcislot
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* we don't support caching */
+return|return;
+block|}
 comment|/* if this is already cached, we are done */
 if|if
 condition|(
@@ -247,6 +247,18 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|MaxMciCache
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* we don't support caching */
+return|return
+name|NULL
+return|;
+block|}
 if|if
 condition|(
 name|MciCache
@@ -793,6 +805,13 @@ name|STAB
 modifier|*
 name|s
 decl_stmt|;
+specifier|extern
+name|MCI
+modifier|*
+modifier|*
+name|mci_scan
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|DAEMON
@@ -813,6 +832,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* clear out any expired connections */
+operator|(
+name|void
+operator|)
 name|mci_scan
 argument_list|(
 name|NULL
