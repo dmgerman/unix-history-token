@@ -610,6 +610,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"lge"
+block|,
+literal|"Level 1 LXT1001 gigabit ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"nge"
 block|,
 literal|"NatSemi PCI gigabit ethernet card"
