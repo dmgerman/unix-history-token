@@ -156,6 +156,12 @@ begin_comment
 comment|/* #define _POSIX_THREAD_SAFE_FUNCTIONS */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_POSIX_SEMAPHORES
+end_define
+
 begin_comment
 comment|/* access function */
 end_comment
