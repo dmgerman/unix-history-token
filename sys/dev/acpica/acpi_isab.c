@@ -299,8 +299,17 @@ operator|&&
 operator|!
 name|acpi_disabled
 argument_list|(
-literal|"isa	"
+literal|"isa"
 argument_list|)
+operator|&&
+name|devclass_get_device
+argument_list|(
+name|isab_devclass
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+name|NULL
 operator|&&
 operator|(
 name|acpi_MatchHid
