@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	2.10 %G%"
+literal|"@(#)lex.c	2.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2007,6 +2007,24 @@ name|char
 modifier|*
 name|version
 decl_stmt|;
+if|if
+condition|(
+name|pr
+operator|&&
+name|value
+argument_list|(
+literal|"quiet"
+argument_list|)
+operator|==
+name|NOSTR
+condition|)
+name|printf
+argument_list|(
+name|greeting
+argument_list|,
+name|version
+argument_list|)
+expr_stmt|;
 name|mdot
 operator|=
 name|newfileinfo
@@ -2025,24 +2043,6 @@ literal|1
 index|]
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|pr
-operator|&&
-name|value
-argument_list|(
-literal|"quiet"
-argument_list|)
-operator|==
-name|NOSTR
-condition|)
-name|printf
-argument_list|(
-name|greeting
-argument_list|,
-name|version
-argument_list|)
 expr_stmt|;
 name|dot
 operator|=
