@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -474,6 +474,26 @@ operator|->
 name|s_ttyp
 operator|=
 name|NULL
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|p
+operator|->
+name|p_session
+operator|->
+name|s_login
+argument_list|,
+name|sess
+operator|->
+name|s_login
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sess
+operator|->
+name|s_login
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
