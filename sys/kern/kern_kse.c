@@ -222,11 +222,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|spare
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2693,8 +2688,6 @@ condition|)
 name|thread_alloc_spare
 argument_list|(
 name|td
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Creating upcalls more than number of physical cpu does 	 * not help performance. 	 */
@@ -4094,11 +4087,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|spare
 parameter_list|)
 block|{
 if|if
@@ -4108,12 +4096,6 @@ operator|->
 name|td_standin
 condition|)
 return|return;
-if|if
-condition|(
-name|spare
-operator|==
-name|NULL
-condition|)
 name|spare
 operator|=
 name|thread_alloc
@@ -4849,8 +4831,6 @@ condition|)
 name|thread_alloc_spare
 argument_list|(
 name|td
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|flags
@@ -5767,8 +5747,6 @@ condition|)
 name|thread_alloc_spare
 argument_list|(
 name|td
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
