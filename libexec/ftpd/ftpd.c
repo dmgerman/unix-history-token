@@ -12096,9 +12096,7 @@ name|reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"%s: permission denied."
-argument_list|,
-name|name
+literal|"Operation not permitted."
 argument_list|)
 expr_stmt|;
 elseif|else
