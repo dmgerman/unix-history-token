@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: common.c,v 1.1 1998/11/05 19:48:16 des Exp $  */
+comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: common.c,v 1.2 1998/11/06 22:14:08 des Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -37,6 +37,18 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -90,7 +102,7 @@ block|,
 block|{
 name|TRY_AGAIN
 block|,
-name|FETCH_RESOLV
+name|FETCH_TEMP
 block|,
 literal|"Transient resolver failure"
 block|}
@@ -251,18 +263,22 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|com_err
-argument_list|(
-literal|"libfetch"
-argument_list|,
+name|fetchLastErrCode
+operator|=
 name|p
 index|[
 name|n
 index|]
 operator|.
 name|cat
+expr_stmt|;
+name|com_err
+argument_list|(
+literal|"libfetch"
 argument_list|,
-literal|"(%d %s)"
+name|fetchLastErrCode
+argument_list|,
+literal|"(%03d %s)"
 argument_list|,
 name|e
 argument_list|,
@@ -289,8 +305,12 @@ name|void
 parameter_list|)
 block|{
 name|int
-name|cat
+name|e
 decl_stmt|;
+name|e
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -307,7 +327,7 @@ block|{
 case|case
 literal|0
 case|:
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_OK
 expr_stmt|;
@@ -327,7 +347,7 @@ case|:
 case|case
 name|ENEEDAUTH
 case|:
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_AUTH
 expr_stmt|;
@@ -339,7 +359,7 @@ case|case
 name|EISDIR
 case|:
 comment|/* XXX */
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_UNAVAIL
 expr_stmt|;
@@ -347,7 +367,7 @@ break|break;
 case|case
 name|ENOMEM
 case|:
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_MEMORY
 expr_stmt|;
@@ -358,7 +378,7 @@ case|:
 case|case
 name|EAGAIN
 case|:
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_TEMP
 expr_stmt|;
@@ -366,7 +386,7 @@ break|break;
 case|case
 name|EEXIST
 case|:
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_EXISTS
 expr_stmt|;
@@ -374,7 +394,7 @@ break|break;
 case|case
 name|ENOSPC
 case|:
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_FULL
 expr_stmt|;
@@ -397,7 +417,7 @@ case|:
 case|case
 name|EHOSTUNREACH
 case|:
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_NETWORK
 expr_stmt|;
@@ -408,7 +428,7 @@ case|:
 case|case
 name|ECONNRESET
 case|:
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_ABORT
 expr_stmt|;
@@ -416,7 +436,7 @@ break|break;
 case|case
 name|ETIMEDOUT
 case|:
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_TIMEOUT
 expr_stmt|;
@@ -427,13 +447,13 @@ case|:
 case|case
 name|EHOSTDOWN
 case|:
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_DOWN
 expr_stmt|;
 break|break;
 default|default:
-name|cat
+name|fetchLastErrCode
 operator|=
 name|FETCH_UNKNOWN
 expr_stmt|;
@@ -442,18 +462,116 @@ name|com_err
 argument_list|(
 literal|"libfetch"
 argument_list|,
-name|cat
+name|fetchLastErrCode
 argument_list|,
-literal|"(%02d %s)"
+literal|"(%03d %s)"
 argument_list|,
-name|errno
+name|e
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|e
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Emit status message  */
+end_comment
+
+begin_function
+name|int
+name|_fetch_info
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|com_err_initialized
+condition|)
+name|_fetch_init_com_err
+argument_list|()
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|vasprintf
+argument_list|(
+operator|&
+name|s
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+block|{
+name|com_err
+argument_list|(
+literal|"libfetch"
+argument_list|,
+name|FETCH_MEMORY
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+else|else
+block|{
+name|com_err
+argument_list|(
+literal|"libfetch"
+argument_list|,
+name|FETCH_VERBOSE
+argument_list|,
+literal|"%s"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 end_function
 
@@ -475,6 +593,9 @@ name|host
 parameter_list|,
 name|int
 name|port
+parameter_list|,
+name|int
+name|verbose
 parameter_list|)
 block|{
 name|struct
@@ -505,6 +626,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|verbose
+condition|)
+name|_fetch_info
+argument_list|(
+literal|"looking up %s"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
 comment|/* look up host name */
 if|if
 condition|(
@@ -530,6 +662,19 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|verbose
+condition|)
+name|_fetch_info
+argument_list|(
+literal|"connecting to %s:%d"
+argument_list|,
+name|host
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
 comment|/* set up socket address structure */
 name|bzero
 argument_list|(
