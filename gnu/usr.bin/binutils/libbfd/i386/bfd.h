@@ -88,7 +88,7 @@ comment|/* The word size used by BFD on the host.  This may be 64 with a 32    b
 define|#
 directive|define
 name|BFD_ARCH_SIZE
-value|64
+value|32
 comment|/* The word size of the default bfd target.  */
 define|#
 directive|define
