@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.22 1997/05/09 04:02:58 peter Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.23 1997/05/09 09:46:50 peter Exp $  */
 end_comment
 
 begin_comment
@@ -23,47 +23,6 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LKM
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lkm.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/psl.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -79,37 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/acct.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_prot.h>
 end_include
 
 begin_include
