@@ -36,12 +36,6 @@ begin_comment
 comment|/*  * Local functions  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FORE_PCI
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -55,11 +49,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Begin CP Initialization  *  * This function will poll for the successful downloading and starting of  * the CP microcode program.  After the microcode is running, we will allocate  * any needed kernel memory (must do it in non-interrupt mode), build the CP  * queue configurations and issue an Initialize command to the CP.  *  * Arguments:  *	fup		pointer to device unit structure  *  * Returns:  *	none  */
@@ -798,25 +787,14 @@ name|fu_flags
 operator||=
 name|CUF_INITED
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FORE_PCI
 name|fore_get_prom
 argument_list|(
 name|fup
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FORE_PCI
-end_ifdef
 
 begin_comment
 comment|/*  * Get device PROM values from CP  *   * This function will issue a GET_PROM command to the CP in order to  * initiate the DMA transfer of the CP's PROM structure to the host.  * This will be called after CP initialization has completed.  * There is (currently) no retry if this fails.  *  * Called at interrupt level.  *  * Arguments:  *	fup	pointer to device unit structure  *  * Returns:  *	none  *  */
@@ -984,15 +962,6 @@ block|}
 return|return;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FORE_PCI */
-end_comment
 
 end_unit
 

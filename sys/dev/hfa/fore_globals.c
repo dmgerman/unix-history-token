@@ -33,40 +33,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Supported device models  */
-end_comment
-
-begin_decl_stmt
-name|Fore_device
-name|fore_devices
-index|[]
-init|=
-block|{
-ifdef|#
-directive|ifdef
-name|FORE_SBUS
-block|{
-name|SBA200E_PROM_NAME
-block|,
-name|DEV_FORE_SBA200E
-block|}
-block|,
-block|{
-name|SBA200_PROM_NAME
-block|,
-name|DEV_FORE_SBA200
-block|}
-block|,
-endif|#
-directive|endif
-block|{
-literal|""
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Device unit table  */
 end_comment
 

@@ -409,19 +409,6 @@ modifier|*
 name|fu_ctlreg
 decl_stmt|;
 comment|/* Device control register */
-ifdef|#
-directive|ifdef
-name|FORE_SBUS
-name|Fore_reg
-modifier|*
-name|fu_intlvl
-decl_stmt|;
-comment|/* Interrupt level register */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|FORE_PCI
 name|Fore_reg
 modifier|*
 name|fu_imask
@@ -436,8 +423,6 @@ name|pcici_t
 name|fu_pcitag
 decl_stmt|;
 comment|/* PCI tag */
-endif|#
-directive|endif
 name|Fore_mem
 modifier|*
 name|fu_ram
@@ -660,9 +645,6 @@ name|int
 name|fu_stats_ret
 decl_stmt|;
 comment|/* Stats request return code */
-ifdef|#
-directive|ifdef
-name|FORE_PCI
 name|Fore_prom
 modifier|*
 name|fu_prom
@@ -673,8 +655,6 @@ modifier|*
 name|fu_promd
 decl_stmt|;
 comment|/* Device PROM buffer (DMA) */
-endif|#
-directive|endif
 name|struct
 name|callout_handle
 name|fu_thandle

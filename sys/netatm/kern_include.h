@@ -19,16 +19,6 @@ directive|define
 name|_NETATM_KERN_INCLUDE_H
 end_define
 
-begin_comment
-comment|/*  * Note that we're compiling kernel code  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATM_KERNEL
-end_define
-
 begin_include
 include|#
 directive|include

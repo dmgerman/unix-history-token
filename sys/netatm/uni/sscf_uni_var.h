@@ -304,7 +304,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ATM_KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_comment
@@ -439,7 +439,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ATM_KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_endif

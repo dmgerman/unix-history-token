@@ -206,68 +206,6 @@ begin_comment
 comment|/* Minimum for buffer supply calculations */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FORE_SBUS
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun4c
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BUF_DATA_ALIGN
-value|32
-end_define
-
-begin_comment
-comment|/* Fore-required data alignment */
-end_comment
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|sun4m
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|BUF_DATA_ALIGN
-value|64
-end_define
-
-begin_comment
-comment|/* Fore-required data alignment */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FORE_PCI
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -278,11 +216,6 @@ end_define
 begin_comment
 comment|/* Fore-required data alignment */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

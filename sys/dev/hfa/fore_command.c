@@ -201,9 +201,6 @@ operator|*
 operator|)
 name|memp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FORE_PCI
 comment|/* 	 * Allocate memory for PROM buffer 	 */
 name|memp
 operator|=
@@ -242,8 +239,6 @@ operator|*
 operator|)
 name|memp
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -769,9 +764,6 @@ name|fu_stats
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|FORE_PCI
 case|case
 name|CMD_GET_PROM
 case|:
@@ -954,9 +946,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* FORE_PCI */
 default|default:
 name|log
 argument_list|(
@@ -1107,9 +1096,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|FORE_PCI
 comment|/* 	 * Free the PROM buffer 	 */
 if|if
 condition|(
@@ -1132,8 +1118,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Free the status words 	 */
 if|if
 condition|(
