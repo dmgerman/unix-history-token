@@ -1118,7 +1118,7 @@ expr_stmt|;
 if|if
 condition|(
 name|kmdp
-operator|!=
+operator|==
 name|NULL
 condition|)
 name|kmdp
