@@ -59,8 +59,22 @@ end_struct_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|DDB
 end_ifdef
+
+begin_function_decl
+name|void
+name|ddb_trap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -71,14 +85,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-return|return;
-block|}
-end_function
-
-begin_endif
+ifdef|#
+directive|ifdef
+name|DDB
+name|ddb_trap
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
 begin_comment
 comment|/* CPU register mangling inlines */
