@@ -1,4 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccs_id
+init|=
+literal|"@(#)ex_extern.c	7.1	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Provide defs of the global variables.  * This crock is brought to you by the turkeys  * who broke Unix on the Bell Labs 3B machine,  * all in the name of "but that's what the C  * book says!"  */
 end_comment
