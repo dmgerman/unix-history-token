@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pk.h	5.3	85/04/10	*/
+comment|/*	pk.h	5.4	86/01/06	*/
 end_comment
 
 begin_struct
@@ -34,6 +34,10 @@ name|HDRSIZ
 value|6
 end_define
 
+begin_comment
+comment|/* Packet header size */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -41,12 +45,27 @@ name|PACKSIZE
 value|64
 end_define
 
+begin_comment
+comment|/* Standard packet size */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|WINDOWS
 value|3
 end_define
+
+begin_define
+define|#
+directive|define
+name|TAILSIZE
+value|2
+end_define
+
+begin_comment
+comment|/* Number of trailing nulls after packet    */
+end_comment
 
 begin_struct
 struct|struct
@@ -228,22 +247,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PKASSERT
-parameter_list|(
-name|e
-parameter_list|,
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|i1
-parameter_list|)
-value|if (!(e)) {assert(s1, s2, i1);pkfail();} else
-end_define
-
-begin_define
-define|#
-directive|define
 name|ISCNTL
 parameter_list|(
 name|a
@@ -290,20 +293,6 @@ name|mask
 index|[
 literal|8
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|npbits
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pkactive
 decl_stmt|;
 end_decl_stmt
 
@@ -529,8 +518,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|M_CLOSE
+value|002
+end_define
+
+begin_define
+define|#
+directive|define
 name|M_RJ
-value|4
+value|004
 end_define
 
 begin_define
@@ -557,13 +553,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_CLOSE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|M_INITA
 value|0200
 end_define
@@ -573,20 +562,6 @@ define|#
 directive|define
 name|M_INITB
 value|0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|PKOPRI
-value|31
-end_define
-
-begin_define
-define|#
-directive|define
-name|PKIPRI
-value|30
 end_define
 
 begin_define
@@ -622,13 +597,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pkdebug
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

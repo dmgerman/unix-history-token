@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk0.c	5.4 (Berkeley) %G%"
+literal|"@(#)pk0.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,9 +105,19 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|PKTIME
+value|4
+end_define
+
 begin_decl_stmt
+specifier|extern
 name|int
-name|pkactive
+name|pktimeout
+decl_stmt|,
+name|Ntimeout
 decl_stmt|;
 end_decl_stmt
 
@@ -1162,6 +1172,14 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
+name|pktimeout
+operator|=
+name|PKTIME
+expr_stmt|;
+name|Ntimeout
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|pkaccept
@@ -1490,6 +1508,14 @@ operator|-
 literal|1
 return|;
 block|}
+name|pktimeout
+operator|=
+name|PKTIME
+expr_stmt|;
+name|Ntimeout
+operator|=
+literal|0
+expr_stmt|;
 name|count
 operator|=
 name|icount

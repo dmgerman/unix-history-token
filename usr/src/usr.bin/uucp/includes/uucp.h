@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucp.h	5.9	85/10/24	*/
+comment|/*	uucp.h	5.10	86/01/06	*/
 end_comment
 
 begin_include
@@ -275,32 +275,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VENTEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|NOVATION
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|DF112
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|PENRIL
-argument_list|)
-end_if
-
 begin_comment
-comment|/*  * We need a timer to write slowly to ventels.  * define INTERVALTIMER to use 4.[23] bsd interval timer.  * define FASTTIMER if you have the nap() system call.  * define FTIME if you have the ftime() system call.  * define BUSYLOOP if you must do a busy loop.  * Look at uucpdelay() in condevs.c for details.  */
+comment|/*  * We need a timer to write slowly to certain modems.  * and for generating breaks.  *  * define INTERVALTIMER to use 4.[23] bsd interval timer.  * define FASTTIMER if you have the nap() system call.  * define FTIME if you have the ftime() system call.  * define BUSYLOOP if you must do a busy loop.  * Look at uucpdelay() in condevs.c for details.  */
 end_comment
 
 begin_define
@@ -320,12 +296,6 @@ end_comment
 begin_comment
 comment|/*#define BUSYLOOP /**/
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|VENTEL || NOVATION || DF112 || PENRIL
-end_endif
 
 begin_comment
 comment|/*  * If your site is using "ndir.h" to retrofit the Berkeley  * directory reading routines, define NDIR.  * You will probably also have to set LIBNDIR in Makefile.  * Otherwise,<dir.h> is assumed to have the Berkeley directory definitions.  */

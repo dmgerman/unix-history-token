@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk1.c	5.6 (Berkeley) %G%"
+literal|"@(#)pk1.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,9 +111,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|PKTIME
-value|25
+name|MAXPKTIME
+value|32
 end_define
+
+begin_comment
+comment|/* was 16 */
+end_comment
 
 begin_define
 define|#
@@ -125,8 +129,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTIMEOUT
-value|10
+name|MAXTIMEOUT
+value|32
 end_define
 
 begin_decl_stmt
@@ -184,6 +188,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|pktimeout
+init|=
+literal|4
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * packet driver support routines  *  */
 end_comment
@@ -234,16 +246,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-operator|++
-name|pkactive
-operator|>=
-name|NPLINES
-condition|)
-return|return
-name|NULL
-return|;
 if|if
 condition|(
 operator|(
@@ -380,9 +382,20 @@ name|i
 operator|==
 literal|0
 condition|)
+block|{
+name|DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"pkopen: can't malloc i = 0\n"
+argument_list|,
+name|CNULL
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 name|pk
 operator|->
 name|p_rwindow
@@ -440,9 +453,20 @@ name|i
 operator|>=
 name|NPLINES
 condition|)
+block|{
+name|DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"pkopen: i>=NPLINES\n"
+argument_list|,
+name|CNULL
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 name|pkoutput
 argument_list|(
 name|pk
@@ -487,9 +511,20 @@ name|i
 operator|>=
 name|PKMAXSTMSG
 condition|)
+block|{
+name|DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"pkopen: i>= PKMAXSTMSG\n"
+argument_list|,
+name|CNULL
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 name|pkreset
 argument_list|(
 name|pk
@@ -538,27 +573,25 @@ begin_define
 define|#
 directive|define
 name|GETRIES
-value|5
+value|10
 end_define
 
 begin_comment
 comment|/*  * Pseudo-dma byte collection.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|pkgetpack
 argument_list|(
-argument|ipk
+name|pk
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+specifier|register
+expr|struct
 name|pack
-modifier|*
-name|ipk
-decl_stmt|;
-end_decl_stmt
+operator|*
+name|pk
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -573,12 +606,6 @@ specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-specifier|register
-name|struct
-name|pack
-modifier|*
-name|pk
 decl_stmt|;
 specifier|register
 name|struct
@@ -601,10 +628,6 @@ decl_stmt|;
 name|char
 name|hdchk
 decl_stmt|;
-name|pk
-operator|=
-name|ipk
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -621,7 +644,7 @@ name|CONNODATA
 operator|||
 name|Ntimeout
 operator|>
-name|NTIMEOUT
+name|MAXTIMEOUT
 condition|)
 name|pkfail
 argument_list|()
@@ -699,11 +722,16 @@ name|SUCCESS
 condition|)
 break|break;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|noise
 operator|++
+operator|<
+literal|10
+operator|||
+name|noise
 operator|<
 operator|(
 literal|3
@@ -714,13 +742,14 @@ name|p_rsize
 operator|)
 condition|)
 continue|continue;
+block|}
 name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
-literal|"Noisy line - set up RXMIT"
+literal|"Noisy line - set up RXMIT\n"
 argument_list|,
-literal|""
+name|CNULL
 argument_list|)
 expr_stmt|;
 name|noise
@@ -780,33 +809,6 @@ argument_list|(
 name|pk
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|!=
-name|SYN
-condition|)
-continue|continue;
-name|p
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|pkcget
-argument_list|(
-name|ifn
-argument_list|,
-name|p
-argument_list|,
-name|HDRSIZ
-operator|-
-literal|1
-argument_list|)
-operator|==
-name|SUCCESS
-condition|)
-break|break;
 block|}
 if|if
 condition|(
@@ -1059,10 +1061,6 @@ argument_list|(
 name|pk
 argument_list|)
 expr_stmt|;
-name|Connodata
-operator|=
-literal|0
-expr_stmt|;
 name|bp
 operator|=
 name|pk
@@ -1099,11 +1097,13 @@ operator|)
 operator|*
 name|bp
 expr_stmt|;
+name|Connodata
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
-block|{
 return|return;
-block|}
 if|if
 condition|(
 name|pkcget
@@ -1144,10 +1144,6 @@ operator|*
 operator|)
 name|bp
 argument_list|)
-expr_stmt|;
-name|Ntimeout
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_block
@@ -1604,6 +1600,8 @@ index|[
 name|PKMAXBUF
 operator|+
 name|HDRSIZ
+operator|+
+name|TAILSIZE
 index|]
 decl_stmt|,
 modifier|*
@@ -1669,6 +1667,33 @@ operator|*
 name|p
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|TAILSIZE
+operator|!=
+literal|0
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|TAILSIZE
+condition|;
+name|i
+operator|++
+control|)
+operator|*
+name|b
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+endif|#
+directive|endif
+endif|TAILSIZE
 if|if
 condition|(
 name|write
@@ -1684,10 +1709,14 @@ operator|->
 name|p_xsize
 operator|+
 name|HDRSIZ
+operator|+
+name|TAILSIZE
 argument_list|)
 operator|!=
 operator|(
 name|HDRSIZ
+operator|+
+name|TAILSIZE
 operator|+
 name|pk
 operator|->
@@ -1834,7 +1863,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	pkcget(fn, b, n)	get n characters from input  *	char *b;		- buffer for characters  *	int fn;			- file descriptor  *	int n;			- requested number of characters  *  *	return codes:  *		n - number of characters returned  *		0 - end of file  */
+comment|/*  *	get n characters from input  *  *	return codes:  *		n - number of characters returned  *		0 - end of file  */
 end_comment
 
 begin_decl_stmt
@@ -1879,16 +1908,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|register
-name|int
-name|n
+name|char
+modifier|*
+name|b
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|register
-name|char
-modifier|*
-name|b
+name|int
+name|n
 decl_stmt|;
 end_decl_stmt
 
@@ -1948,6 +1977,20 @@ block|{
 name|Ntimeout
 operator|++
 expr_stmt|;
+name|pktimeout
+operator|+=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|pktimeout
+operator|>
+name|MAXPKTIME
+condition|)
+name|pktimeout
+operator|=
+name|MAXPKTIME
+expr_stmt|;
 name|DEBUG
 argument_list|(
 literal|4
@@ -1970,7 +2013,7 @@ argument_list|)
 expr_stmt|;
 name|alarm
 argument_list|(
-name|PKTIME
+name|pktimeout
 argument_list|)
 expr_stmt|;
 while|while
