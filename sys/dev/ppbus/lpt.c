@@ -2786,6 +2786,22 @@ name|len
 decl_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|LP_BYPASS
+condition|)
+block|{
+comment|/* we can't do reads in bypass mode */
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|error
 operator|=
