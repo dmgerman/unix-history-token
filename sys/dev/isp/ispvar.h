@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|14
+value|16
 end_define
 
 begin_comment
@@ -378,53 +378,6 @@ parameter_list|)
 value|(IS_FC(isp)? MAX_FC_TARG : MAX_TARGETS)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP2100_SCCLUN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_ISP_FC_LUN
-parameter_list|(
-name|isp
-parameter_list|)
-value|65536
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_ISP_FC_LUN
-parameter_list|(
-name|isp
-parameter_list|)
-value|16
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|_ISP_SCSI_LUN
-parameter_list|(
-name|isp
-parameter_list|)
-define|\
-value|((ISP_FW_REVX(isp->isp_fwrev)>= ISP_FW_REV(7, 55, 0))? 32 : 8)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -432,8 +385,7 @@ name|ISP_MAX_LUNS
 parameter_list|(
 name|isp
 parameter_list|)
-define|\
-value|(IS_FC(isp)? _ISP_FC_LUN(isp) : _ISP_SCSI_LUN(isp))
+value|(isp)->isp_maxluns
 end_define
 
 begin_comment
@@ -1312,6 +1264,10 @@ name|isp_revision
 decl_stmt|;
 comment|/* HBA Chip H/W Revision */
 name|u_int32_t
+name|isp_maxluns
+decl_stmt|;
+comment|/* maximum luns supported */
+name|u_int32_t
 label|:
 literal|4
 operator|,
@@ -1330,11 +1286,9 @@ operator|:
 literal|1
 operator|,
 comment|/* SBus or PCI */
-name|isp_dogactive
 operator|:
 literal|1
 operator|,
-comment|/* watchdog running */
 name|isp_dblev
 operator|:
 literal|8
@@ -1353,27 +1307,32 @@ comment|/* config options */
 comment|/* 	 * Volatile state 	 */
 specifier|volatile
 name|u_int32_t
-operator|:
-literal|9
-operator|,
+name|isp_mboxbsy
+range|:
+literal|8
+decl_stmt|,
+comment|/* mailbox command active */
+range|:
+literal|1
+decl_stmt|,
 name|isp_state
-operator|:
+range|:
 literal|3
-operator|,
+decl_stmt|,
 name|isp_sendmarker
-operator|:
+range|:
 literal|2
-operator|,
+decl_stmt|,
 comment|/* send a marker entry */
 name|isp_update
-operator|:
+range|:
 literal|2
-operator|,
+decl_stmt|,
 comment|/* update parameters */
 name|isp_nactive
-operator|:
+range|:
 literal|16
-expr_stmt|;
+decl_stmt|;
 comment|/* how many commands active */
 specifier|volatile
 name|u_int16_t
@@ -1395,6 +1354,13 @@ name|u_int16_t
 name|isp_lasthdls
 decl_stmt|;
 comment|/* last handle seed */
+specifier|volatile
+name|u_int16_t
+name|isp_mboxtmp
+index|[
+name|MAX_MAILBOX
+index|]
+decl_stmt|;
 comment|/* 	 * Active commands are stored here, indexed by handle functions. 	 */
 name|ISP_SCSI_XFER_T
 modifier|*
