@@ -37,6 +37,13 @@ directive|include
 file|<dev/sound/chip.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|ESS_BUFFSIZE
+value|(65536 - 256)
+end_define
+
 begin_comment
 comment|/* channel interface */
 end_comment
@@ -169,12 +176,6 @@ begin_comment
 comment|/* channel interface for ESS */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|void
@@ -198,11 +199,6 @@ name|dir
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -522,7 +518,7 @@ name|pcm_channel
 name|ess_chantemplate
 init|=
 block|{
-name|sbchan_init
+name|esschan_init
 block|,
 name|esschan_setdir
 block|,
@@ -5028,12 +5024,6 @@ begin_comment
 comment|/* channel interface for ESS18xx */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -5056,14 +5046,97 @@ name|int
 name|dir
 parameter_list|)
 block|{
-comment|/* the same as sbchan_init()? */
+name|struct
+name|sb_info
+modifier|*
+name|sb
+init|=
+name|devinfo
+decl_stmt|;
+name|struct
+name|sb_chinfo
+modifier|*
+name|ch
+init|=
+operator|(
+name|dir
+operator|==
+name|PCMDIR_PLAY
+operator|)
+condition|?
+operator|&
+name|sb
+operator|->
+name|pch
+else|:
+operator|&
+name|sb
+operator|->
+name|rch
+decl_stmt|;
+name|ch
+operator|->
+name|parent
+operator|=
+name|sb
+expr_stmt|;
+name|ch
+operator|->
+name|channel
+operator|=
+name|c
+expr_stmt|;
+name|ch
+operator|->
+name|buffer
+operator|=
+name|b
+expr_stmt|;
+name|ch
+operator|->
+name|buffer
+operator|->
+name|bufsize
+operator|=
+name|ESS_BUFFSIZE
+expr_stmt|;
+if|if
+condition|(
+name|chn_allocbuf
+argument_list|(
+name|ch
+operator|->
+name|buffer
+argument_list|,
+name|sb
+operator|->
+name|parent_dmat
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+name|NULL
+return|;
+name|ch
+operator|->
+name|buffer
+operator|->
+name|chan
+operator|=
+name|rman_get_start
+argument_list|(
+name|sb
+operator|->
+name|drq1
+argument_list|)
+expr_stmt|;
+return|return
+name|ch
+return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
