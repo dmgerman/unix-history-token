@@ -3461,8 +3461,8 @@ argument_list|)
 expr_stmt|;
 comment|/* setrunqueue(td); */
 block|}
-return|return;
 block|}
+elseif|else
 if|if
 condition|(
 name|ke
