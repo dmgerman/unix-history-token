@@ -15,6 +15,17 @@ directive|define
 name|_SYS_BLIST_H_
 end_define
 
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|u_daddr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* unsigned disk address */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
