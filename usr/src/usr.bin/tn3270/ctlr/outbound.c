@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)outbound.c	4.1 (Berkeley) %G%"
+literal|"@(#)outbound.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1573,6 +1573,58 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|i
+operator|>
+name|HighestScreen
+argument_list|()
+operator|)
+condition|)
+block|{
+name|char
+name|s_buffer
+index|[
+literal|200
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|s_buffer
+argument_list|,
+literal|"tn3270:  %s%d.\n\t%s%d%s%d%s\n"
+argument_list|,
+literal|"Invalid 3270 order 'Repeat to Address' to address "
+argument_list|,
+name|i
+argument_list|,
+literal|"(Screen currently set to "
+argument_list|,
+name|NumberLines
+argument_list|,
+literal|" by "
+argument_list|,
+name|NumberColumns
+argument_list|,
+literal|".)"
+argument_list|)
+expr_stmt|;
+name|ExitString
+argument_list|(
+name|s_buffer
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|c
 operator|=
 name|buffer
@@ -1686,6 +1738,58 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|i
+operator|>
+name|HighestScreen
+argument_list|()
+operator|)
+condition|)
+block|{
+name|char
+name|s_buffer
+index|[
+literal|200
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|s_buffer
+argument_list|,
+literal|"tn3270:  %s%d.\n\t%s%d%s%d%s\n"
+argument_list|,
+literal|"Invalid 3270 order 'Erase Unprotected to Address' to address "
+argument_list|,
+name|i
+argument_list|,
+literal|"(Screen currently set to "
+argument_list|,
+name|NumberLines
+argument_list|,
+literal|" by "
+argument_list|,
+name|NumberColumns
+argument_list|,
+literal|".)"
+argument_list|)
+expr_stmt|;
+name|ExitString
+argument_list|(
+name|s_buffer
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 do|do
 block|{
 if|if
