@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.42 1998/11/21 00:20:24 dt Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.43 1998/12/07 21:58:34 archie Exp $ */
 end_comment
 
 begin_comment
@@ -153,6 +153,12 @@ parameter_list|)
 value|(dehashtbl[((dev) + (dcl) + (doff) / 	\ 				sizeof(struct direntry))& dehash])
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NULL_SIMPLELOCKS
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -160,6 +166,11 @@ name|simplelock
 name|dehash_slock
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_union
 union|union
