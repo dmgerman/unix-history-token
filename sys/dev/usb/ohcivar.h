@@ -364,6 +364,9 @@ decl_stmt|;
 comment|/* cookie from shutdown hook */
 endif|#
 directive|endif
+name|usb_callout_t
+name|sc_tmo_rhsc
+decl_stmt|;
 name|device_ptr_t
 name|sc_child
 decl_stmt|;
