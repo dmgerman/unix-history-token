@@ -399,6 +399,10 @@ name|int
 name|c
 decl_stmt|;
 block|{
+name|c
+operator|&=
+literal|0xFF
+expr_stmt|;
 if|if
 condition|(
 name|isprint
@@ -3943,7 +3947,8 @@ block|{
 name|char
 modifier|*
 name|cp
-decl_stmt|,
+decl_stmt|;
+name|int
 name|c
 decl_stmt|;
 name|int
@@ -4012,6 +4017,8 @@ name|c
 operator|=
 operator|*
 name|cp
+operator|&
+literal|0xFF
 expr_stmt|;
 name|h
 operator|++
@@ -4282,7 +4289,7 @@ modifier|*
 name|el
 decl_stmt|;
 block|{
-name|char
+name|int
 name|c
 decl_stmt|;
 name|c
@@ -4296,6 +4303,8 @@ index|[
 operator|-
 literal|1
 index|]
+operator|&
+literal|0xFF
 expr_stmt|;
 if|if
 condition|(
