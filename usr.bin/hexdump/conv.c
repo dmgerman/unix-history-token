@@ -115,12 +115,6 @@ comment|/* case '\a': */
 case|case
 literal|'\007'
 case|:
-if|if
-condition|(
-name|odmode
-condition|)
-comment|/* od didn't know about \a */
-break|break;
 name|str
 operator|=
 literal|"\\a"
@@ -181,11 +175,6 @@ goto|;
 case|case
 literal|'\v'
 case|:
-if|if
-condition|(
-name|odmode
-condition|)
-break|break;
 name|str
 operator|=
 literal|"\\v"
