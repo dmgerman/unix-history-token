@@ -11720,6 +11720,8 @@ name|fail
 goto|;
 block|}
 block|}
+do|do
+block|{
 name|printf
 argument_list|(
 literal|"Trying %s...\n"
@@ -11732,8 +11734,6 @@ name|ai_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-do|do
-block|{
 name|net
 operator|=
 name|socket
@@ -12209,23 +12209,9 @@ name|next
 operator|->
 name|ai_next
 expr_stmt|;
-if|if
-condition|(
-name|next
-operator|!=
-name|NULL
-condition|)
-block|{
-name|int
-name|oerrno
-init|=
-name|errno
-decl_stmt|;
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"telnet: connect to address %s: "
+literal|"connect to address %s"
 argument_list|,
 name|sockaddr_ntop
 argument_list|(
@@ -12235,19 +12221,13 @@ name|ai_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
-name|oerrno
-expr_stmt|;
-name|perror
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|next
+operator|!=
+name|NULL
+condition|)
+block|{
 name|res
 operator|=
 name|next
@@ -12262,9 +12242,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|perror
+name|warnx
 argument_list|(
-literal|"telnet: Unable to connect to remote host"
+literal|"Unable to connect to remote host"
 argument_list|)
 expr_stmt|;
 operator|(
