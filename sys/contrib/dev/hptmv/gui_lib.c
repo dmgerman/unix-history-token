@@ -7306,7 +7306,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAX_ARRAY_PER_VBUS
+name|MAX_VDEVICE_PER_VBUS
 condition|;
 name|i
 operator|++
