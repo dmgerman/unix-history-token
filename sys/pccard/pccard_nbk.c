@@ -1723,12 +1723,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|struct
 name|pccard_product
 modifier|*
-name|pccard_product_lookup
+name|pccard_do_product_lookup
 parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
 name|device_t
 name|dev
 parameter_list|,
@@ -1953,6 +1957,13 @@ argument_list|(
 name|card_compat_do_attach
 argument_list|,
 name|pccard_compat_do_attach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|card_do_product_lookup
+argument_list|,
+name|pccard_do_product_lookup
 argument_list|)
 block|,
 endif|#
