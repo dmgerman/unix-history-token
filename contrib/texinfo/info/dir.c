@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dir.c -- How to build a special "dir" node from "localdir" files.    $Id: dir.c,v 1.6 1997/07/27 21:09:20 karl Exp $     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* dir.c -- how to build a special "dir" node from "localdir" files.    $Id: dir.c,v 1.7 1998/06/28 19:51:36 karl Exp $     Copyright (C) 1993, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -391,6 +391,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|IS_SLASH
+argument_list|(
 name|fullpath
 index|[
 name|strlen
@@ -400,8 +403,7 @@ argument_list|)
 operator|-
 literal|1
 index|]
-operator|!=
-literal|'/'
+argument_list|)
 condition|)
 name|strcat
 argument_list|(
@@ -453,6 +455,9 @@ block|{
 name|long
 name|filesize
 decl_stmt|;
+name|int
+name|compressed
+decl_stmt|;
 name|char
 modifier|*
 name|contents
@@ -466,6 +471,9 @@ name|filesize
 argument_list|,
 operator|&
 name|finfo
+argument_list|,
+operator|&
+name|compressed
 argument_list|)
 decl_stmt|;
 if|if
