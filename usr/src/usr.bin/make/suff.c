@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)suff.c	5.4 (Berkeley) %G%"
+literal|"@(#)suff.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1813,7 +1813,7 @@ operator|(
 name|Suff
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2427,7 +2427,7 @@ operator|(
 name|Src
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2506,7 +2506,7 @@ operator|(
 name|Src
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2518,7 +2518,7 @@ name|s2
 operator|->
 name|file
 operator|=
-name|Str_Concat
+name|str_concat
 argument_list|(
 name|targ
 operator|->
@@ -3115,7 +3115,7 @@ operator|(
 name|Src
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3376,7 +3376,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Break the result into a vector of strings whose nodes 		 * we can find, then add those nodes to the members list. 		 * Unfortunately, we can't use Str_BreakString b/c it 		 * doesn't understand about variable specifications with 		 * spaces in them... 		 */
+comment|/* 		 * Break the result into a vector of strings whose nodes 		 * we can find, then add those nodes to the members list. 		 * Unfortunately, we can't use brk_string b/c it 		 * doesn't understand about variable specifications with 		 * spaces in them... 		 */
 name|char
 modifier|*
 name|start
@@ -4297,7 +4297,7 @@ block|}
 comment|/*      * Locate the transformation rule itself      */
 name|tname
 operator|=
-name|Str_Concat
+name|str_concat
 argument_list|(
 name|s
 operator|->
@@ -5039,7 +5039,7 @@ operator|(
 name|Src
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -5106,7 +5106,7 @@ name|targ
 operator|->
 name|pref
 operator|=
-name|malloc
+name|emalloc
 argument_list|(
 name|prefLen
 operator|+
@@ -5202,7 +5202,7 @@ operator|(
 name|Src
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -6251,7 +6251,7 @@ operator|(
 name|Suff
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
