@@ -530,7 +530,7 @@ name|char
 name|bridge_version
 index|[]
 init|=
-literal|"$Revision$ $Date$"
+literal|"031224"
 decl_stmt|;
 end_decl_stmt
 
