@@ -223,6 +223,12 @@ parameter_list|)
 value|((timer_freq + (x) / 2) / (x))
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_comment
 comment|/*  * Time in timer cycles that it takes for microtime() to disable interrupts  * and latch the count.  microtime() currently uses "cli; outb ..." so it  * normally takes less than 2 timer cycles.  Add a few for cache misses.  * Add a few more to allow for latency in bogus calls to microtime() with  * interrupts already disabled.  */
 end_comment
@@ -244,6 +250,11 @@ directive|define
 name|TIMER0_MAX_FREQ
 value|20000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -414,6 +425,12 @@ name|i8254_ticked
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_comment
 comment|/*  * XXX new_function and timer_func should not handle clockframes, but  * timer_func currently needs to hold hardclock to handle the  * timer0_state == 0 case.  We should use inthand_add()/inthand_remove()  * to switch between clkintr() and a slightly different timerintr().  */
 end_comment
@@ -443,6 +460,25 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|u_int
+name|timer0_prescaler_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_char
+name|timer0_state
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
 name|u_char
 name|rtc_statusa
 init|=
@@ -460,13 +496,6 @@ init|=
 name|RTCSB_24HR
 operator||
 name|RTCSB_PINTR
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|timer0_prescaler_count
 decl_stmt|;
 end_decl_stmt
 
@@ -501,13 +530,6 @@ directive|define
 name|ACQUIRE_PENDING
 value|3
 end_define
-
-begin_decl_stmt
-specifier|static
-name|u_char
-name|timer0_state
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -648,6 +670,9 @@ operator|&
 name|frame
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 switch|switch
 condition|(
 name|timer0_state
@@ -845,8 +870,16 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
 
 begin_comment
 comment|/*  * The acquire and release functions must be called at ipl>= splclock().  */
@@ -953,6 +986,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|acquire_timer2
@@ -999,6 +1037,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_function
 name|int
 name|release_timer0
@@ -1041,6 +1085,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -3376,6 +3425,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 if|if
 condition|(
 name|timer0_state
@@ -3388,6 +3440,8 @@ name|EBUSY
 operator|)
 return|;
 comment|/* too much trouble to handle */
+endif|#
+directive|endif
 name|set_timer_freq
 argument_list|(
 name|freq

@@ -105,6 +105,12 @@ name|clockframe
 struct_decl|;
 end_struct_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_function_decl
 name|int
 name|acquire_timer0
@@ -129,19 +135,24 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acquire_timer2
+name|release_timer0
 parameter_list|(
-name|int
-name|mode
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
-name|release_timer0
+name|acquire_timer2
 parameter_list|(
-name|void
+name|int
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
