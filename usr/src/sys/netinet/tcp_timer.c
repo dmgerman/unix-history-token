@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -524,9 +524,13 @@ name|int
 name|tcp_backoff
 index|[
 name|TCP_MAXRXTSHIFT
+operator|+
+literal|1
 index|]
 init|=
 block|{
+literal|1
+block|,
 literal|2
 block|,
 literal|4
@@ -553,18 +557,6 @@ literal|64
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tcp_keeplen
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* must be nonzero for 4.2 compat- XXX */
-end_comment
 
 begin_comment
 comment|/*  * TCP timer processing.  */
@@ -641,13 +633,20 @@ name|TCPT_REXMT
 case|:
 if|if
 condition|(
+operator|++
 name|tp
 operator|->
 name|t_rxtshift
-operator|>=
+operator|>
 name|TCP_MAXRXTSHIFT
 condition|)
 block|{
+name|tp
+operator|->
+name|t_rxtshift
+operator|=
+name|TCP_MAXRXTSHIFT
+expr_stmt|;
 name|tcpstat
 operator|.
 name|tcps_timeoutdrop
@@ -696,19 +695,11 @@ operator|->
 name|t_rxtshift
 index|]
 expr_stmt|;
-name|tp
-operator|->
-name|t_rxtshift
-operator|++
-expr_stmt|;
 name|TCPT_RANGESET
 argument_list|(
 name|tp
 operator|->
-name|t_timer
-index|[
-name|TCPT_REXMT
-index|]
+name|t_rxtcur
 argument_list|,
 name|rexmt
 argument_list|,
@@ -717,23 +708,29 @@ argument_list|,
 name|TCPTV_REXMTMAX
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If losing, let the lower level know 		 * and try for a better route. 		 */
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_REXMT
+index|]
+operator|=
+name|tp
+operator|->
+name|t_rxtcur
+expr_stmt|;
+comment|/* 		 * If losing, let the lower level know and try for 		 * a better route.  Also, if we backed off this far, 		 * our srtt estimate is probably bogus.  Clobber it 		 * so we'll take the next rtt measurement as our srtt; 		 * move the current srtt into rttvar to keep the current 		 * retransmit times until then. 		 */
 if|if
 condition|(
 name|tp
 operator|->
 name|t_rxtshift
-operator|>=
+operator|>
 name|TCP_MAXRXTSHIFT
 operator|/
 literal|4
-operator|||
-name|rexmt
-operator|>=
-literal|10
-operator|*
-name|PR_SLOWHZ
 condition|)
+block|{
 name|in_losing
 argument_list|(
 name|tp
@@ -741,6 +738,25 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
+name|tp
+operator|->
+name|t_rttvar
+operator|+=
+operator|(
+name|tp
+operator|->
+name|t_srtt
+operator|>>
+literal|2
+operator|)
+expr_stmt|;
+name|tp
+operator|->
+name|t_srtt
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|tp
 operator|->
 name|snd_nxt

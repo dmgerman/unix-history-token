@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2029,6 +2029,74 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * If we didn't have to retransmit, 		 * set the initial estimate of srtt. 		 * Set the variance to half the rtt 		 * (so our first retransmit happens at 2*rtt). 		 */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_rtt
+condition|)
+block|{
+name|tp
+operator|->
+name|t_srtt
+operator|=
+name|tp
+operator|->
+name|t_rtt
+operator|<<
+literal|3
+expr_stmt|;
+name|tp
+operator|->
+name|t_rttvar
+operator|=
+name|tp
+operator|->
+name|t_rtt
+operator|<<
+literal|1
+expr_stmt|;
+name|tp
+operator|->
+name|t_rtt
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|t_rxtshift
+operator|=
+literal|0
+expr_stmt|;
+name|TCPT_RANGESET
+argument_list|(
+name|tp
+operator|->
+name|t_rxtcur
+argument_list|,
+operator|(
+operator|(
+name|tp
+operator|->
+name|t_srtt
+operator|>>
+literal|2
+operator|)
+operator|+
+name|tp
+operator|->
+name|t_rttvar
+operator|)
+operator|>>
+literal|1
+argument_list|,
+name|TCPTV_MIN
+argument_list|,
+name|TCPTV_REXMTMAX
+argument_list|)
+expr_stmt|;
+block|}
 name|tp
 operator|->
 name|irs
@@ -2324,10 +2392,21 @@ name|ti
 operator|->
 name|ti_len
 expr_stmt|;
-goto|goto
-name|dropafterack
-goto|;
+name|todrop
+operator|=
+name|ti
+operator|->
+name|ti_len
+expr_stmt|;
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_ACKNOW
+expr_stmt|;
 block|}
+else|else
+block|{
 name|tcpstat
 operator|.
 name|tcps_rcvpartduppack
@@ -2339,6 +2418,7 @@ name|tcps_rcvpartdupbyte
 operator|+=
 name|todrop
 expr_stmt|;
+block|}
 name|m_adj
 argument_list|(
 name|m
@@ -2986,7 +3066,7 @@ name|tcps_rcvackbyte
 operator|+=
 name|acked
 expr_stmt|;
-comment|/* 		 * If transmit timer is running and timed sequence 		 * number was acked, update smoothed round trip time. 		 */
+comment|/* 		 * If transmit timer is running and timed sequence 		 * number was acked, update smoothed round trip time. 		 * Since we now have an rtt measurement, cancel the 		 * timer backoff (cf., Phil Karn's retransmit alg.). 		 * Recompute the initial retransmit timer. 		 */
 if|if
 condition|(
 name|tp
@@ -3056,7 +3136,7 @@ name|t_srtt
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 				 * We accumulate a smoothed rtt variance, 				 * then set the retransmit timer to smoothed 				 * rtt + 2 times the smoothed variance. 				 * rttvar is strored as fixed point 				 * with 2 bits after the binary point 				 * (scaled by 4).  The following is equivalent 				 * to rfc793 smoothing with an alpha of .75 				 * (rttvar = rttvar*3/4 + |delta| / 4). 				 * This replaces rfc793's wired-in beta. 				 */
+comment|/* 				 * We accumulate a smoothed rtt variance 				 * (actually, a smoothed mean difference), 				 * then set the retransmit timer to smoothed 				 * rtt + 2 times the smoothed variance. 				 * rttvar is strored as fixed point 				 * with 2 bits after the binary point 				 * (scaled by 4).  The following is equivalent 				 * to rfc793 smoothing with an alpha of .75 				 * (rttvar = rttvar*3/4 + |delta| / 4). 				 * This replaces rfc793's wired-in beta. 				 */
 if|if
 condition|(
 name|delta
@@ -3127,8 +3207,41 @@ name|t_rtt
 operator|=
 literal|0
 expr_stmt|;
+name|tp
+operator|->
+name|t_rxtshift
+operator|=
+literal|0
+expr_stmt|;
+name|TCPT_RANGESET
+argument_list|(
+name|tp
+operator|->
+name|t_rxtcur
+argument_list|,
+operator|(
+operator|(
+name|tp
+operator|->
+name|t_srtt
+operator|>>
+literal|2
+operator|)
+operator|+
+name|tp
+operator|->
+name|t_rttvar
+operator|)
+operator|>>
+literal|1
+argument_list|,
+name|TCPTV_MIN
+argument_list|,
+name|TCPTV_REXMTMAX
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* 		 * If all outstanding data is acked, stop retransmit 		 * timer and remember to restart (more output or persist). 		 * If there is more data to be acked, restart retransmit 		 * timer; set to smoothed rtt + 2*rttvar. 		 */
+comment|/* 		 * If all outstanding data is acked, stop retransmit 		 * timer and remember to restart (more output or persist). 		 * If there is more data to be acked, restart retransmit 		 * timer, using current (possibly backed-off) value. 		 */
 if|if
 condition|(
 name|ti
@@ -3166,45 +3279,18 @@ index|]
 operator|==
 literal|0
 condition|)
-block|{
-name|TCPT_RANGESET
-argument_list|(
 name|tp
 operator|->
 name|t_timer
 index|[
 name|TCPT_REXMT
 index|]
-argument_list|,
-operator|(
-operator|(
-name|tp
-operator|->
-name|t_srtt
-operator|>>
-literal|2
-operator|)
-operator|+
-name|tp
-operator|->
-name|t_rttvar
-operator|)
-operator|>>
-literal|1
-argument_list|,
-name|TCPTV_MIN
-argument_list|,
-name|TCPTV_REXMTMAX
-argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_rxtshift
 operator|=
-literal|0
+name|tp
+operator|->
+name|t_rxtcur
 expr_stmt|;
-block|}
-comment|/* 		 * When new data is acked, open the congestion window 		 * by one max sized segment. 		 */
+comment|/* 		 * When new data is acked, open the congestion window 		 * by one max-sized segment. 		 */
 name|tp
 operator|->
 name|snd_cwnd
@@ -3870,13 +3956,6 @@ expr_stmt|;
 comment|/* 		 * Note the amount of data that peer has sent into 		 * our window, in order to estimate the sender's 		 * buffer size. 		 */
 name|len
 operator|=
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_hiwat
-operator|-
-operator|(
 name|tp
 operator|->
 name|rcv_nxt
@@ -3884,7 +3963,6 @@ operator|-
 name|tp
 operator|->
 name|rcv_adv
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -4664,7 +4742,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *  Determine a reasonable value for maxseg size.  *  If the route is known, use one that can be handled  *  on the given interface without forcing IP to fragment.  *  If bigger than an mbuf cluster (MCLBYTES), round down to nearest size  *  to utilize large mbufs.  *  If interface pointer is unavailable, or the destination isn't local,  *  use a conservative size (512 or the default IP max size, but no more  *  than the mtu of the interface through which we route),  *  as we can't discover anything about intervening gateways or networks.  *  *  This is ugly, and doesn't belong at this level, but has to happen somehow.  */
+comment|/*  *  Determine a reasonable value for maxseg size.  *  If the route is known, use one that can be handled  *  on the given interface without forcing IP to fragment.  *  If bigger than an mbuf cluster (MCLBYTES), round down to nearest size  *  to utilize large mbufs.  *  If interface pointer is unavailable, or the destination isn't local,  *  use a conservative size (512 or the default IP max size, but no more  *  than the mtu of the interface through which we route),  *  as we can't discover anything about intervening gateways or networks.  *  We also initialize the congestion/slow start window to be a single  *  segment if the destination isn't local; this information should  *  probably all be saved with the routing entry at the transport level.  *  *  This is ugly, and doesn't belong at this level, but has to happen somehow.  */
 end_comment
 
 begin_expr_stmt
@@ -4890,14 +4968,24 @@ operator|(
 name|mss
 operator|)
 return|;
-return|return
-operator|(
+name|mss
+operator|=
 name|MIN
 argument_list|(
 name|mss
 argument_list|,
 name|TCP_MSS
 argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|snd_cwnd
+operator|=
+name|mss
+expr_stmt|;
+return|return
+operator|(
+name|mss
 operator|)
 return|;
 block|}

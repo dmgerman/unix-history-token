@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -41,12 +41,14 @@ name|short
 name|t_rxtshift
 decl_stmt|;
 comment|/* log(2) of rexmt exp. backoff */
-name|struct
-name|mbuf
-modifier|*
-name|t_tcpopt
+name|short
+name|t_rxtcur
 decl_stmt|;
-comment|/* tcp options */
+comment|/* current retransmit value */
+name|short
+name|t_unused
+decl_stmt|;
+comment|/* XXX */
 name|u_short
 name|t_maxseg
 decl_stmt|;
