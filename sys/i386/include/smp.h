@@ -33,6 +33,12 @@ name|defined
 argument_list|(
 name|I386_CPU
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|COMPILING_LINT
+argument_list|)
 end_if
 
 begin_error
