@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION_ADDENDUM
-value|"FreeBSD localisations 20010713"
+value|"FreeBSD localizations 20010713"
 end_define
 
 begin_function_decl
