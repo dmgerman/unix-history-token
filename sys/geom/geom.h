@@ -494,7 +494,7 @@ name|int
 name|spoiled
 decl_stmt|;
 name|struct
-name|g_stat
+name|devstat
 modifier|*
 name|stat
 decl_stmt|;
@@ -577,7 +577,7 @@ name|u_int
 name|stripeoffset
 decl_stmt|;
 name|struct
-name|g_stat
+name|devstat
 modifier|*
 name|stat
 decl_stmt|;

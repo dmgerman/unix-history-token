@@ -353,42 +353,5 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* geom_stats.c */
-end_comment
-
-begin_function_decl
-name|void
-name|g_stat_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|g_stat
-modifier|*
-name|g_stat_new
-parameter_list|(
-name|void
-modifier|*
-name|id
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|g_stat_delete
-parameter_list|(
-name|struct
-name|g_stat
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 end_unit
 

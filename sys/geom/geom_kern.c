@@ -87,12 +87,6 @@ directive|include
 file|<geom/geom_int.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<geom/geom_stats.h>
-end_include
-
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -393,9 +387,6 @@ name|topology_lock
 argument_list|,
 literal|"GEOM topology"
 argument_list|)
-expr_stmt|;
-name|g_stat_init
-argument_list|()
 expr_stmt|;
 name|g_io_init
 argument_list|()
@@ -993,30 +984,6 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|g_event
-argument_list|)
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug_sizeof
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|g_stat
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|g_stat
 argument_list|)
 argument_list|,
 literal|""
