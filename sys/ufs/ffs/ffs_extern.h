@@ -680,7 +680,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|vop_vector
-name|ffs_vnodeops
+name|ffs_vnodeops1
 decl_stmt|;
 end_decl_stmt
 
@@ -688,7 +688,23 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|vop_vector
-name|ffs_fifoops
+name|ffs_fifoops1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vop_vector
+name|ffs_vnodeops2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vop_vector
+name|ffs_fifoops2
 decl_stmt|;
 end_decl_stmt
 

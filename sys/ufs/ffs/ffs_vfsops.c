@@ -6144,6 +6144,12 @@ name|ump
 operator|->
 name|um_dev
 expr_stmt|;
+name|fs
+operator|=
+name|ump
+operator|->
+name|um_fs
+expr_stmt|;
 comment|/* 	 * We do not lock vnode creation as it is believed to be too 	 * expensive for such rare case as simultaneous creation of vnode 	 * for same ino by different processes. We just allow them to race 	 * and check later to decide who wins. Let the race begin! 	 */
 if|if
 condition|(
@@ -6192,6 +6198,14 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* Allocate a new vnode/inode. */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_magic
+operator|==
+name|FS_UFS1_MAGIC
+condition|)
 name|error
 operator|=
 name|getnewvnode
@@ -6201,7 +6215,23 @@ argument_list|,
 name|mp
 argument_list|,
 operator|&
-name|ffs_vnodeops
+name|ffs_vnodeops1
+argument_list|,
+operator|&
+name|vp
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|getnewvnode
+argument_list|(
+literal|"ufs"
+argument_list|,
+name|mp
+argument_list|,
+operator|&
+name|ffs_vnodeops2
 argument_list|,
 operator|&
 name|vp
@@ -6245,12 +6275,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * FFS supports recursive locking. 	 */
-name|fs
-operator|=
-name|ump
-operator|->
-name|um_fs
-expr_stmt|;
 name|vp
 operator|->
 name|v_vnlock
@@ -6543,6 +6567,16 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the vnode from the inode, check for aliases. 	 * Note that the underlying vnode may have changed. 	 */
+if|if
+condition|(
+name|ip
+operator|->
+name|i_ump
+operator|->
+name|um_fstype
+operator|==
+name|UFS1
+condition|)
 name|error
 operator|=
 name|ufs_vinit
@@ -6550,7 +6584,21 @@ argument_list|(
 name|mp
 argument_list|,
 operator|&
-name|ffs_fifoops
+name|ffs_fifoops1
+argument_list|,
+operator|&
+name|vp
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|ufs_vinit
+argument_list|(
+name|mp
+argument_list|,
+operator|&
+name|ffs_fifoops2
 argument_list|,
 operator|&
 name|vp
