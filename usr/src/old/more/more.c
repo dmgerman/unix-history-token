@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.22 (Berkeley) %G%"
+literal|"@(#)more.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,19 +59,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -101,18 +101,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<a.out.h>
 end_include
 
@@ -120,6 +108,18 @@ begin_include
 include|#
 directive|include
 file|<varargs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -6432,14 +6432,7 @@ operator|!
 name|no_intty
 condition|)
 block|{
-name|file
-operator|->
-name|_flag
-operator|&=
-operator|~
-name|_IOEOF
-expr_stmt|;
-comment|/* why doesn't fseek do this ??!!??! */
+comment|/*    file->_flag&= ~_IOEOF; /* why doesn't fseek do this ??!!??! */
 name|Currline
 operator|=
 name|saveln
