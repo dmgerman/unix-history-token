@@ -1951,6 +1951,12 @@ name|isa16bit
 operator|=
 name|isa16bit
 expr_stmt|;
+name|sc
+operator|->
+name|mem_shared
+operator|=
+literal|1
+expr_stmt|;
 name|error
 operator|=
 name|ed_alloc_memory
