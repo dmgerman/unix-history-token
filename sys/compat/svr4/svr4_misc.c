@@ -5117,9 +5117,7 @@ name|p
 operator|->
 name|p_session
 operator|->
-name|s_leader
-operator|->
-name|p_pid
+name|s_sid
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
