@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id: mapper.c,v 1.2 1994/09/08 02:51:19 wollman Exp $  */
+comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id: mapper.c,v 3.5 1995/05/09 01:00:39 fenner Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) Xerox Corporation 1992. All rights reserved.  *  * License is granted to copy, to use, and to make and to use derivative  * works for research and evaluation purposes, provided that Xerox is  * acknowledged in all documentation pertaining to any such copy or derivative  * work. Xerox grants no other licenses expressed or implied. The Xerox trade  * name should not be used in any advertising without its written permission.  *  * XEROX CORPORATION MAKES NO REPRESENTATIONS CONCERNING EITHER THE  * MERCHANTABILITY OF THIS SOFTWARE OR THE SUITABILITY OF THIS SOFTWARE  * FOR ANY PARTICULAR PURPOSE.  The software is provided "as is" without  * express or implied warranty of any kind.  *  * These notices must be retained in any copies of any part of this software.  */
+comment|/*  * Copyright (c) Xerox Corporation 1992. All rights reserved.  *    * License is granted to copy, to use, and to make and to use derivative  * works for research and evaluation purposes, provided that Xerox is  * acknowledged in all documentation pertaining to any such copy or derivative  * work. Xerox grants no other licenses expressed or implied. The Xerox trade  * name should not be used in any advertising without its written permission.  *    * XEROX CORPORATION MAKES NO REPRESENTATIONS CONCERNING EITHER THE  * MERCHANTABILITY OF THIS SOFTWARE OR THE SUITABILITY OF THIS SOFTWARE  * FOR ANY PARTICULAR PURPOSE.  The software is provided "as is" without  * express or implied warranty of any kind.  *    * These notices must be retained in any copies of any part of this software.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -61,7 +67,7 @@ name|neighbor
 modifier|*
 name|next
 decl_stmt|;
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|;
 comment|/* IP address in NET order */
@@ -97,7 +103,7 @@ name|interface
 modifier|*
 name|next
 decl_stmt|;
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|;
 comment|/* IP address of the interface in NET order */
@@ -116,11 +122,11 @@ typedef|typedef
 struct|struct
 name|node
 block|{
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|;
 comment|/* IP address of this entry in NET order */
-name|u_long
+name|u_int32
 name|version
 decl_stmt|;
 comment|/* which mrouted version is running */
@@ -168,7 +174,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|u_int32
 name|our_addr
 decl_stmt|,
 name|target_addr
@@ -236,7 +242,7 @@ name|addr
 parameter_list|,
 name|ptr
 parameter_list|)
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|;
 name|Node
@@ -375,7 +381,7 @@ name|addr
 parameter_list|,
 name|node
 parameter_list|)
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|;
 name|Node
@@ -475,7 +481,7 @@ name|addr
 parameter_list|,
 name|node
 parameter_list|)
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|;
 name|Node
@@ -745,7 +751,7 @@ name|ask
 parameter_list|(
 name|dst
 parameter_list|)
-name|u_long
+name|u_int32
 name|dst
 decl_stmt|;
 block|{
@@ -776,7 +782,7 @@ name|ask2
 parameter_list|(
 name|dst
 parameter_list|)
-name|u_long
+name|u_int32
 name|dst
 decl_stmt|;
 block|{
@@ -815,7 +821,7 @@ name|dst
 parameter_list|,
 name|group
 parameter_list|)
-name|u_long
+name|u_int32
 name|src
 decl_stmt|,
 name|dst
@@ -861,7 +867,7 @@ name|src
 parameter_list|,
 name|dst
 parameter_list|)
-name|u_long
+name|u_int32
 name|src
 decl_stmt|,
 name|dst
@@ -909,7 +915,7 @@ name|p
 parameter_list|,
 name|datalen
 parameter_list|)
-name|u_long
+name|u_int32
 name|src
 decl_stmt|,
 name|dst
@@ -960,7 +966,7 @@ name|src
 parameter_list|,
 name|dst
 parameter_list|)
-name|u_long
+name|u_int32
 name|src
 decl_stmt|,
 name|dst
@@ -1006,7 +1012,7 @@ name|src
 parameter_list|,
 name|dst
 parameter_list|)
-name|u_long
+name|u_int32
 name|src
 decl_stmt|,
 name|dst
@@ -1062,7 +1068,7 @@ name|datalen
 parameter_list|,
 name|level
 parameter_list|)
-name|u_long
+name|u_int32
 name|src
 decl_stmt|,
 name|dst
@@ -1130,7 +1136,7 @@ name|GET_ADDR
 parameter_list|(
 name|a
 parameter_list|)
-value|(a = ((u_long)*p++<< 24), a += ((u_long)*p++<< 16),\ 		     a += ((u_long)*p++<< 8), a += *p++)
+value|(a = ((u_int32)*p++<< 24), a += ((u_int32)*p++<< 16),\ 		     a += ((u_int32)*p++<< 8), a += *p++)
 comment|/* if node is running a recent mrouted, ask for additional info */
 if|if
 condition|(
@@ -1267,7 +1273,7 @@ literal|0
 condition|)
 block|{
 comment|/* loop through interfaces */
-name|u_long
+name|u_int32
 name|ifc_addr
 decl_stmt|;
 name|u_char
@@ -1692,7 +1698,7 @@ name|ncount
 operator|--
 condition|)
 block|{
-name|u_long
+name|u_int32
 name|neighbor
 decl_stmt|;
 name|Neighbor
@@ -1921,7 +1927,7 @@ name|p
 parameter_list|,
 name|datalen
 parameter_list|)
-name|u_long
+name|u_int32
 name|src
 decl_stmt|,
 name|dst
@@ -1989,7 +1995,7 @@ literal|0
 condition|)
 block|{
 comment|/* loop through interfaces */
-name|u_long
+name|u_int32
 name|ifc_addr
 decl_stmt|;
 name|u_char
@@ -2044,7 +2050,7 @@ name|ifc_addr
 operator|=
 operator|*
 operator|(
-name|u_long
+name|u_int32
 operator|*
 operator|)
 name|p
@@ -2423,7 +2429,7 @@ name|ncount
 operator|--
 condition|)
 block|{
-name|u_long
+name|u_int32
 name|neighbor
 decl_stmt|;
 name|Neighbor
@@ -2463,7 +2469,7 @@ name|neighbor
 operator|=
 operator|*
 operator|(
-name|u_long
+name|u_int32
 operator|*
 operator|)
 name|p
@@ -2770,7 +2776,7 @@ name|inet_name
 parameter_list|(
 name|addr
 parameter_list|)
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|;
 block|{
@@ -3257,7 +3263,7 @@ name|addr
 parameter_list|,
 name|buf
 parameter_list|)
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|;
 name|char
@@ -3742,7 +3748,7 @@ name|void
 name|graph_map
 parameter_list|()
 block|{
-name|u_long
+name|time_t
 name|now
 init|=
 name|time
@@ -3969,7 +3975,7 @@ block|}
 end_block
 
 begin_function
-name|u_long
+name|u_int32
 name|host_addr
 parameter_list|(
 name|name
@@ -4041,6 +4047,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -4383,6 +4390,20 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|&&
+operator|(
+name|BSD
+operator|>=
+literal|199103
+operator|)
+operator|)
 name|addr
 operator|.
 name|sin_len
@@ -4390,6 +4411,8 @@ operator|=
 sizeof|sizeof
 name|addr
 expr_stmt|;
+endif|#
+directive|endif
 name|addr
 operator|.
 name|sin_addr
@@ -4656,10 +4679,7 @@ name|igmp_socket
 argument_list|,
 name|recv_buf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|recv_buf
-argument_list|)
+name|RECV_BUF_SIZE
 argument_list|,
 literal|0
 argument_list|,
@@ -4761,14 +4781,21 @@ end_function
 
 begin_function
 name|void
-name|leave_group_message
+name|accept_leave_message
 parameter_list|()
 block|{ }
 end_function
 
 begin_function
 name|void
-name|mtrace
+name|accept_mtrace
+parameter_list|()
+block|{ }
+end_function
+
+begin_function
+name|void
+name|accept_membership_query
 parameter_list|()
 block|{ }
 end_function

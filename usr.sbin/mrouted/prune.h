@@ -1,152 +1,216 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.h,v 1.2 1994/09/08 02:51:24 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.h,v 3.5 1995/05/09 01:00:39 fenner Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Macro for copying the user-level cache table to the kernel  * level table variable passed on by the setsock option  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COPY_TABLES
-parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|)
-value|{ \ 	register u_int _i; \ 	(to).mfcc_origin.s_addr     = (from)->kt_origin; \ 	(to).mfcc_mcastgrp.s_addr   = (from)->kt_mcastgrp; \ 	(to).mfcc_originmask.s_addr = (from)->kt_originmask; \ 	(to).mfcc_parent            = (from)->kt_parent; \ 	for (_i = 0; _i< numvifs; _i++) \ 	    (to).mfcc_ttls[_i]	  = (from)->kt_ttls[_i]; \ };
-end_define
-
-begin_comment
-comment|/*  * User level Kernel Cache Table structure  *  * A copy of the kernel table is kept at the user level. Modifications are  * made to this table and then passed on to the kernel. A timeout value is  * an extra field in the user level table.  *  */
+comment|/*  * Group table  *  * Each group entry is a member of two doubly-linked lists:  *  * a) A list hanging off of the routing table entry for this source (rt_groups)  *	sorted by group address under the routing entry (gt_next, gt_prev)  * b) An independent list pointed to by kernel_table, which is a list of  *	active source,group's (gt_gnext, gt_gprev).  *  */
 end_comment
 
 begin_struct
 struct|struct
-name|ktable
+name|gtable
 block|{
 name|struct
-name|ktable
+name|gtable
 modifier|*
-name|kt_next
+name|gt_next
 decl_stmt|;
-comment|/* pointer to the next entry        */
-name|u_long
-name|kt_origin
+comment|/* pointer to the next entry	    */
+name|struct
+name|gtable
+modifier|*
+name|gt_prev
 decl_stmt|;
-comment|/* subnet origin of multicasts      */
-name|u_long
-name|kt_mcastgrp
+comment|/* back pointer for linked list	    */
+name|struct
+name|gtable
+modifier|*
+name|gt_gnext
+decl_stmt|;
+comment|/* fwd pointer for group list	    */
+name|struct
+name|gtable
+modifier|*
+name|gt_gprev
+decl_stmt|;
+comment|/* rev pointer for group list	    */
+name|u_int32
+name|gt_mcastgrp
 decl_stmt|;
 comment|/* multicast group associated       */
-name|u_long
-name|kt_originmask
-decl_stmt|;
-comment|/* subnet mask for origin           */
-name|vifi_t
-name|kt_parent
-decl_stmt|;
-comment|/* incoming vif                     */
-name|u_long
-name|kt_gateway
-decl_stmt|;
-comment|/* upstream router                  */
 name|vifbitmap_t
-name|kt_children
-decl_stmt|;
-comment|/* outgoing children vifs           */
-name|vifbitmap_t
-name|kt_leaves
-decl_stmt|;
-comment|/* subset of outgoing children vifs */
-name|vifbitmap_t
-name|kt_scope
+name|gt_scope
 decl_stmt|;
 comment|/* scoped interfaces                */
 name|u_char
-name|kt_ttls
+name|gt_ttls
 index|[
 name|MAXVIFS
 index|]
 decl_stmt|;
 comment|/* ttl vector for forwarding        */
 name|vifbitmap_t
-name|kt_grpmems
+name|gt_grpmems
 decl_stmt|;
 comment|/* forw. vifs for src, grp          */
 name|int
-name|kt_timer
+name|gt_prsent_timer
 decl_stmt|;
-comment|/* for timing out entry in cache    */
-name|struct
-name|prunlst
-modifier|*
-name|kt_rlist
-decl_stmt|;
-comment|/* router list nghboring this rter  */
-name|u_short
-name|kt_prun_count
-decl_stmt|;
-comment|/* count of total no. of prunes     */
+comment|/* prune timer for this group	    */
 name|int
-name|kt_prsent_timer
+name|gt_timer
 decl_stmt|;
-comment|/* prune lifetime timer             */
-name|u_int
-name|kt_grftsnt
+comment|/* timer for this group entry	    */
+name|time_t
+name|gt_ctime
 decl_stmt|;
-comment|/* graft sent upstream              */
+comment|/* time of entry creation         */
+name|u_char
+name|gt_grftsnt
+decl_stmt|;
+comment|/* graft sent/retransmit timer	    */
+name|struct
+name|stable
+modifier|*
+name|gt_srctbl
+decl_stmt|;
+comment|/* source table			    */
+name|struct
+name|ptable
+modifier|*
+name|gt_pruntbl
+decl_stmt|;
+comment|/* prune table			    */
+name|struct
+name|rtentry
+modifier|*
+name|gt_route
+decl_stmt|;
+comment|/* parent route			    */
+ifdef|#
+directive|ifdef
+name|RSRR
+name|struct
+name|rsrr_cache
+modifier|*
+name|gt_rsrr_cache
+decl_stmt|;
+comment|/* RSRR cache                       */
+endif|#
+directive|endif
+comment|/* RSRR */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * structure to store incoming prunes  */
+comment|/*  * Source table  *  * When source-based prunes exist, there will be a struct ptable here as well.  */
 end_comment
 
 begin_struct
 struct|struct
-name|prunlst
+name|stable
 block|{
 name|struct
-name|prunlst
+name|stable
 modifier|*
-name|rl_next
+name|st_next
 decl_stmt|;
+comment|/* pointer to the next entry        */
+name|u_int32
+name|st_origin
+decl_stmt|;
+comment|/* host origin of multicasts        */
 name|u_long
-name|rl_router
+name|st_pktcnt
 decl_stmt|;
-name|u_long
-name|rl_router_subnet
-decl_stmt|;
-name|vifi_t
-name|rl_vifi
-decl_stmt|;
-name|int
-name|rl_timer
-decl_stmt|;
+comment|/* packet count for src-grp entry   */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * structure to store incoming prunes.  Can hang off of either group or source.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ptable
+block|{
+name|struct
+name|ptable
+modifier|*
+name|pt_next
+decl_stmt|;
+comment|/* pointer to the next entry	    */
+name|u_int32
+name|pt_router
+decl_stmt|;
+comment|/* router that sent this prune	    */
+name|vifi_t
+name|pt_vifi
+decl_stmt|;
+comment|/* vif prune received on	    */
+name|int
+name|pt_timer
+decl_stmt|;
+comment|/* timer for prune		    */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The packet format for a traceroute request.  */
+end_comment
 
 begin_struct
 struct|struct
 name|tr_query
 block|{
-name|u_long
+name|u_int32
 name|tr_src
 decl_stmt|;
 comment|/* traceroute source */
-name|u_long
+name|u_int32
 name|tr_dst
 decl_stmt|;
 comment|/* traceroute destination */
-name|u_long
+name|u_int32
 name|tr_raddr
 decl_stmt|;
 comment|/* traceroute response address */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BYTE_ORDER
+argument_list|)
+operator|&&
+operator|(
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+operator|)
+struct|struct
+block|{
+name|u_int
+name|qid
+range|:
+literal|24
+decl_stmt|;
+comment|/* traceroute query id */
+name|u_int
+name|ttl
+range|:
+literal|8
+decl_stmt|;
+comment|/* traceroute response ttl */
+block|}
+name|q
+struct|;
+else|#
+directive|else
 struct|struct
 block|{
 name|u_int
@@ -164,8 +228,10 @@ comment|/* traceroute query id */
 block|}
 name|q
 struct|;
+endif|#
+directive|endif
+comment|/* BYTE_ORDER */
 block|}
-name|tr_query
 struct|;
 end_struct
 
@@ -183,35 +249,39 @@ name|tr_qid
 value|q.qid
 end_define
 
+begin_comment
+comment|/*  * Traceroute response format.  A traceroute response has a tr_query at the  * beginning, followed by one tr_resp for each hop taken.  */
+end_comment
+
 begin_struct
 struct|struct
 name|tr_resp
 block|{
-name|u_long
+name|u_int32
 name|tr_qarr
 decl_stmt|;
 comment|/* query arrival time */
-name|u_long
+name|u_int32
 name|tr_inaddr
 decl_stmt|;
 comment|/* incoming interface address */
-name|u_long
+name|u_int32
 name|tr_outaddr
 decl_stmt|;
 comment|/* outgoing interface address */
-name|u_long
+name|u_int32
 name|tr_rmtaddr
 decl_stmt|;
 comment|/* parent address in source tree */
-name|u_long
+name|u_int32
 name|tr_vifin
 decl_stmt|;
 comment|/* input packet count on interface */
-name|u_long
+name|u_int32
 name|tr_vifout
 decl_stmt|;
 comment|/* output packet count on interface */
-name|u_long
+name|u_int32
 name|tr_pktcnt
 decl_stmt|;
 comment|/* total incoming packets for src-grp */
@@ -232,7 +302,6 @@ name|tr_rflags
 decl_stmt|;
 comment|/* forwarding error codes */
 block|}
-name|tr_resp
 struct|;
 end_struct
 
@@ -276,35 +345,63 @@ begin_define
 define|#
 directive|define
 name|TR_NO_ERR
-value|0x0
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|TR_WRONG_IF
-value|0x1
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|TR_PRUNED
-value|0x2
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_OPRUNED
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|TR_SCOPED
-value|0x4
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|TR_NO_RTE
-value|0x5
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_NO_FWD
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_NO_SPACE
+value|0x81
+end_define
+
+begin_define
+define|#
+directive|define
+name|TR_OLD_ROUTER
+value|0x82
 end_define
 
 begin_comment
@@ -315,28 +412,28 @@ begin_define
 define|#
 directive|define
 name|PROTO_DVMRP
-value|0x1
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|PROTO_MOSPF
-value|0x2
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|PROTO_PIM
-value|0x3
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|PROTO_CBT
-value|0x4
+value|4
 end_define
 
 begin_define
@@ -348,7 +445,7 @@ name|x
 parameter_list|,
 name|i
 parameter_list|)
-value|{ \ 			(i) = 0; \ 			while ((x)<< (i)) \ 				(i)++; \ 			}
+value|{ \ 			u_int32 _x = ntohl(x); \ 			(i) = 0; \ 			while ((_x)<< (i)) \ 				(i)++; \ 			};
 end_define
 
 begin_define
@@ -360,7 +457,17 @@ name|x
 parameter_list|,
 name|i
 parameter_list|)
-value|{ \ 			x = ~((1<< (32 - (i))) - 1); \ 			}
+value|{ \ 			x = htonl(~((1<< (32 - (i))) - 1)); \ 			};
+end_define
+
+begin_define
+define|#
+directive|define
+name|NBR_VERS
+parameter_list|(
+name|n
+parameter_list|)
+value|(((n)->al_pv<< 8) + (n)->al_mv)
 end_define
 
 end_unit

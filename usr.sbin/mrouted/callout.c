@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: callout.c,v 1.3 1995/05/16 00:28:42 jkh Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: callout.c,v 3.5 1995/05/09 01:00:39 fenner Exp $  */
 end_comment
 
 begin_include
@@ -226,7 +226,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sets the timer  */
+comment|/*   * sets the timer  */
 end_comment
 
 begin_function
@@ -295,11 +295,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|node
-operator|<=
+operator|==
 literal|0
 condition|)
 block|{
@@ -488,10 +485,10 @@ begin_function
 name|void
 name|timer_clearTimer
 parameter_list|(
-name|id
+name|timer_id
 parameter_list|)
 name|int
-name|id
+name|timer_id
 decl_stmt|;
 block|{
 name|struct
@@ -514,7 +511,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|id
+name|timer_id
 condition|)
 block|{
 name|in_callout
@@ -544,7 +541,7 @@ name|ptr
 operator|->
 name|id
 operator|==
-name|id
+name|timer_id
 condition|)
 block|{
 comment|/* got the right node */

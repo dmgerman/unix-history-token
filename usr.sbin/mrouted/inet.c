@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: inet.c,v 1.4 1993/05/30 01:36:38 deering Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: inet.c,v 3.5 1995/05/09 01:00:39 fenner Exp $  */
 end_comment
 
 begin_include
@@ -17,7 +17,7 @@ begin_decl_stmt
 name|char
 name|s1
 index|[
-literal|16
+literal|19
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -30,7 +30,7 @@ begin_decl_stmt
 name|char
 name|s2
 index|[
-literal|16
+literal|19
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -43,7 +43,7 @@ begin_decl_stmt
 name|char
 name|s3
 index|[
-literal|16
+literal|19
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -51,6 +51,15 @@ end_decl_stmt
 begin_comment
 comment|/* or inet_fmts().                             */
 end_comment
+
+begin_decl_stmt
+name|char
+name|s4
+index|[
+literal|19
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Verify that a given IP address is credible as a host address.  * (Without a mask, cannot detect addresses of the form {subnet,0} or  * {subnet,-1}.)  */
@@ -62,12 +71,12 @@ name|inet_valid_host
 parameter_list|(
 name|naddr
 parameter_list|)
-name|u_long
+name|u_int32
 name|naddr
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|;
 name|addr
@@ -105,7 +114,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verify that a given subnet number and mask pair are credible.  */
+comment|/*  * Verify that a given subnet number and mask pair are credible.  *  * With CIDR, almost any subnet and mask are credible.  mrouted still  * can't handle aggregated class A's, so we still check that, but  * otherwise the only requirements are that the subnet address is  * within the [ABC] range and that the host bits of the subnet  * are all 0.  */
 end_comment
 
 begin_function
@@ -116,14 +125,14 @@ name|nsubnet
 parameter_list|,
 name|nmask
 parameter_list|)
-name|u_long
+name|u_int32
 name|nsubnet
 decl_stmt|,
 name|nmask
 decl_stmt|;
 block|{
 specifier|register
-name|u_long
+name|u_int32
 name|subnet
 decl_stmt|,
 name|mask
@@ -155,6 +164,21 @@ condition|)
 return|return
 operator|(
 name|FALSE
+operator|)
+return|;
+if|if
+condition|(
+name|subnet
+operator|==
+literal|0
+operator|&&
+name|mask
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|TRUE
 operator|)
 return|;
 if|if
@@ -177,14 +201,6 @@ operator|&
 literal|0xff000000
 operator|)
 operator|==
-literal|0
-operator|||
-operator|(
-name|subnet
-operator|&
-literal|0xff000000
-operator|)
-operator|==
 literal|0x7f000000
 condition|)
 return|return
@@ -196,18 +212,18 @@ block|}
 elseif|else
 if|if
 condition|(
-name|IN_CLASSB
+name|IN_CLASSD
+argument_list|(
+name|subnet
+argument_list|)
+operator|||
+name|IN_BADCLASS
 argument_list|(
 name|subnet
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|mask
-operator|<
-literal|0xffff0000
-condition|)
+comment|/* Above Class C address space */
 return|return
 operator|(
 name|FALSE
@@ -217,30 +233,19 @@ block|}
 elseif|else
 if|if
 condition|(
-name|IN_CLASSC
-argument_list|(
 name|subnet
-argument_list|)
+operator|&
+operator|~
+name|mask
 condition|)
 block|{
-if|if
-condition|(
-name|mask
-operator|<
-literal|0xffffff00
-condition|)
+comment|/* Host bits are set in the subnet */
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
 block|}
-else|else
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
 return|return
 operator|(
 name|TRUE
@@ -262,7 +267,7 @@ name|addr
 parameter_list|,
 name|s
 parameter_list|)
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|;
 name|char
@@ -320,7 +325,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert an IP subnet number in u_long (network) format into a printable  * string.  */
+comment|/*  * Convert an IP subnet number in u_long (network) format into a printable  * string including the netmask as a number of bits.  */
 end_comment
 
 begin_function
@@ -334,7 +339,7 @@ name|mask
 parameter_list|,
 name|s
 parameter_list|)
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|,
 name|mask
@@ -352,6 +357,37 @@ decl_stmt|,
 modifier|*
 name|m
 decl_stmt|;
+name|int
+name|bits
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|addr
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|mask
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|s
+argument_list|,
+literal|"default"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|s
+operator|)
+return|;
+block|}
 name|a
 operator|=
 operator|(
@@ -370,6 +406,18 @@ operator|)
 operator|&
 name|mask
 expr_stmt|;
+name|bits
+operator|=
+literal|33
+operator|-
+name|ffs
+argument_list|(
+name|ntohl
+argument_list|(
+name|mask
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -383,7 +431,7 @@ name|sprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"%u.%u.%u.%u"
+literal|"%u.%u.%u.%u/%d"
 argument_list|,
 name|a
 index|[
@@ -404,6 +452,8 @@ name|a
 index|[
 literal|3
 index|]
+argument_list|,
+name|bits
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -420,7 +470,7 @@ name|sprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"%u.%u.%u"
+literal|"%u.%u.%u/%d"
 argument_list|,
 name|a
 index|[
@@ -436,6 +486,8 @@ name|a
 index|[
 literal|2
 index|]
+argument_list|,
+name|bits
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -452,7 +504,7 @@ name|sprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"%u.%u"
+literal|"%u.%u/%d"
 argument_list|,
 name|a
 index|[
@@ -463,6 +515,8 @@ name|a
 index|[
 literal|1
 index|]
+argument_list|,
+name|bits
 argument_list|)
 expr_stmt|;
 else|else
@@ -470,12 +524,14 @@ name|sprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"%u"
+literal|"%u/%d"
 argument_list|,
 name|a
 index|[
 literal|0
 index|]
+argument_list|,
+name|bits
 argument_list|)
 expr_stmt|;
 return|return
@@ -491,7 +547,7 @@ comment|/*  * Convert the printable string representation of an IP address into 
 end_comment
 
 begin_function
-name|u_long
+name|u_int32
 name|inet_parse
 parameter_list|(
 name|s
@@ -501,8 +557,10 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-name|u_long
+name|u_int32
 name|a
+init|=
+literal|0
 decl_stmt|;
 name|u_int
 name|a0

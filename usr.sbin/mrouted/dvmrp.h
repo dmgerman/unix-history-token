@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: dvmrp.h,v 1.6 1994/08/24 23:53:30 thyagara Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: dvmrp.h,v 3.5 1995/05/09 01:00:39 fenner Exp $  */
 end_comment
 
 begin_comment
@@ -139,6 +139,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DVMRP_NF_PIM
+value|0x04
+end_define
+
+begin_comment
+comment|/* neighbor is a PIM neighbor */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DVMRP_NF_DOWN
 value|0x10
 end_define
@@ -167,6 +178,17 @@ end_define
 
 begin_comment
 comment|/* I am the subnet's querier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DVMRP_NF_LEAF
+value|0x80
+end_define
+
+begin_comment
+comment|/* Neighbor reports that it is a leaf */
 end_comment
 
 begin_comment
@@ -214,11 +236,26 @@ begin_define
 define|#
 directive|define
 name|INADDR_DVMRP_GROUP
-value|(u_long)0xe0000004
+value|(u_int32)0xe0000004
 end_define
 
 begin_comment
 comment|/* 224.0.0.4 */
+end_comment
+
+begin_comment
+comment|/* address for multicast mtrace msg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INADDR_ALLRTRS_GROUP
+value|(u_int32)0xe0000002
+end_define
+
+begin_comment
+comment|/* 224.0.0.2 */
 end_comment
 
 begin_define
@@ -346,6 +383,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LEAVE_EXPIRE_TIME
+value|3
+end_define
+
+begin_comment
+comment|/* " " after receiving a leave	    */
+end_comment
+
+begin_comment
+comment|/* Note: LEAVE_EXPIRE_TIME should ideally be shorter, but the resolution of  * the timer in mrouted doesn't allow us to follow the spec and make it any  * shorter. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UNREACHABLE
 value|32
 end_define
@@ -390,12 +442,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFAULT_RATE_LIMIT
+name|DEFAULT_PHY_RATE_LIMIT
 value|0
 end_define
 
 begin_comment
-comment|/* default rate limit  */
+comment|/* default phyint rate limit  	    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_TUN_RATE_LIMIT
+value|500
+end_define
+
+begin_comment
+comment|/* default tunnel rate limit	    */
 end_comment
 
 begin_define

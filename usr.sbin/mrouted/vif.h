@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: vif.h,v 1.6 1994/08/24 23:54:47 thyagara Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: vif.h,v 3.5 1995/05/09 01:00:39 fenner Exp $  */
 end_comment
 
 begin_comment
@@ -27,23 +27,23 @@ name|u_char
 name|uv_threshold
 decl_stmt|;
 comment|/* min ttl required to forward on vif   */
-name|u_long
+name|u_int32
 name|uv_lcl_addr
 decl_stmt|;
 comment|/* local address of this vif            */
-name|u_long
+name|u_int32
 name|uv_rmt_addr
 decl_stmt|;
 comment|/* remote end-point addr (tunnels only) */
-name|u_long
+name|u_int32
 name|uv_subnet
 decl_stmt|;
 comment|/* subnet number         (phyints only) */
-name|u_long
+name|u_int32
 name|uv_subnetmask
 decl_stmt|;
 comment|/* subnet mask           (phyints only) */
-name|u_long
+name|u_int32
 name|uv_subnetbcast
 decl_stmt|;
 comment|/* subnet broadcast addr (phyints only) */
@@ -72,6 +72,16 @@ modifier|*
 name|uv_acl
 decl_stmt|;
 comment|/* access control list of groups        */
+name|int
+name|uv_leaf_timer
+decl_stmt|;
+comment|/* time until this vif is considrd leaf */
+name|struct
+name|phaddr
+modifier|*
+name|uv_addrs
+decl_stmt|;
+comment|/* Additional subnets on this vif       */
 block|}
 struct|;
 end_struct
@@ -127,6 +137,36 @@ begin_comment
 comment|/* Maybe one way interface   */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VIFF_LEAF
+value|0x1000
+end_define
+
+begin_comment
+comment|/* all neighbors are leaves  */
+end_comment
+
+begin_struct
+struct|struct
+name|phaddr
+block|{
+name|struct
+name|phaddr
+modifier|*
+name|pa_next
+decl_stmt|;
+name|u_long
+name|pa_addr
+decl_stmt|;
+name|u_long
+name|pa_mask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|vif_acl
@@ -137,11 +177,11 @@ modifier|*
 name|acl_next
 decl_stmt|;
 comment|/* next acl member         */
-name|u_long
+name|u_int32
 name|acl_addr
 decl_stmt|;
 comment|/* Group address           */
-name|u_long
+name|u_int32
 name|acl_mask
 decl_stmt|;
 comment|/* Group addr. mask        */
@@ -159,7 +199,7 @@ modifier|*
 name|al_next
 decl_stmt|;
 comment|/* link to next addr, MUST BE FIRST */
-name|u_long
+name|u_int32
 name|al_addr
 decl_stmt|;
 comment|/* local group or neighbor address  */
@@ -167,7 +207,11 @@ name|u_long
 name|al_timer
 decl_stmt|;
 comment|/* for timing out group or neighbor */
-name|u_long
+name|time_t
+name|al_ctime
+decl_stmt|;
+comment|/* neighbor creation time	    */
+name|u_int32
 name|al_genid
 decl_stmt|;
 comment|/* generation id for neighbor       */
@@ -182,22 +226,70 @@ comment|/* router mrouted version	    */
 name|u_long
 name|al_timerid
 decl_stmt|;
-comment|/* returned by set timer */
+comment|/* returned by set timer            */
 name|u_long
 name|al_query
 decl_stmt|;
-comment|/* second query in case of leave*/
+comment|/* second query in case of leave    */
 name|u_short
 name|al_old
 decl_stmt|;
-comment|/* if old memberships are present */
+comment|/* if old memberships are present   */
 name|u_short
 name|al_last
 decl_stmt|;
-comment|/* # of query's since last old rep */
+comment|/* # of query's since last old rep  */
+name|u_char
+name|al_flags
+decl_stmt|;
+comment|/* flags related to this neighbor   */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|NF_LEAF
+value|0x01
+end_define
+
+begin_comment
+comment|/* This neighbor is a leaf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NF_PRUNE
+value|0x02
+end_define
+
+begin_comment
+comment|/* This neighbor understands prunes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NF_GENID
+value|0x04
+end_define
+
+begin_comment
+comment|/* I supply genid& rtrlist in probe*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NF_MTRACE
+value|0x08
+end_define
+
+begin_comment
+comment|/* I can understand mtrace requests */
+end_comment
 
 begin_define
 define|#
