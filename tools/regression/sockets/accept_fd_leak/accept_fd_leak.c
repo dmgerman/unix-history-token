@@ -487,7 +487,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"TEST FAILED (%d, %d, %d)\n"
+literal|"FAIL (%d, %d, %d)\n"
 argument_list|,
 name|fd1
 argument_list|,
@@ -503,6 +503,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"PASS\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
