@@ -918,6 +918,18 @@ name|data
 expr_stmt|;
 if|if
 condition|(
+name|mode
+operator|->
+name|level
+operator|==
+operator|-
+literal|1
+condition|)
+empty_stmt|;
+comment|/* don't change the current setting */
+elseif|else
+if|if
+condition|(
 operator|(
 name|mode
 operator|->
@@ -937,6 +949,7 @@ condition|)
 return|return
 name|EINVAL
 return|;
+else|else
 name|mouse_level
 operator|=
 name|mode
