@@ -135,7 +135,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<crypto/rijndael/rijndael.h>
+file|<crypto/rijndael/rijndael-api-fst.h>
 end_include
 
 begin_include
