@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1215,11 +1221,6 @@ directive|if
 name|defined
 argument_list|(
 name|sparc
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
 argument_list|)
 end_if
 
