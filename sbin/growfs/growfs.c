@@ -2215,6 +2215,16 @@ name|cs_nifree
 operator|--
 expr_stmt|;
 block|}
+comment|/* 	 * XXX Newfs writes out two blocks of initialized inodes 	 *     unconditionally.  Should we check here to make sure that they 	 *     were actually written? 	 */
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_magic
+operator|==
+name|FS_UFS1_MAGIC
+condition|)
+block|{
 name|bzero
 argument_list|(
 name|iobuf
@@ -2228,7 +2238,11 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|2
+operator|*
+name|sblock
+operator|.
+name|fs_frag
 init|;
 name|i
 operator|<
@@ -2351,6 +2365,7 @@ argument_list|,
 name|Nflag
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -7068,7 +7083,7 @@ operator|-
 literal|1
 init|;
 name|inc
-operator|>=
+operator|>
 literal|0
 condition|;
 name|inc
@@ -7264,6 +7279,21 @@ name|n
 decl_stmt|;
 name|DBG_ENTER
 expr_stmt|;
+if|if
+condition|(
+name|bno
+operator|<
+literal|0
+condition|)
+block|{
+name|err
+argument_list|(
+literal|32
+argument_list|,
+literal|"rdfs: attempting to read negative block number\n"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|lseek
@@ -8583,16 +8613,7 @@ decl_stmt|;
 comment|/* first inode in cached block */
 name|DBG_ENTER
 expr_stmt|;
-name|inumber
-operator|+=
-operator|(
-name|cg
-operator|*
-name|sblock
-operator|.
-name|fs_ipg
-operator|)
-expr_stmt|;
+comment|/* 	 * The inumber passed in is relative to the cg, so use it here to see 	 * if the inode has been allocated yet. 	 */
 if|if
 condition|(
 name|isclr
@@ -8613,12 +8634,32 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/* 	 * Now make the inumber relative to the entire inode space so it can 	 * be sanity checked. 	 */
+name|inumber
+operator|+=
+operator|(
+name|cg
+operator|*
+name|sblock
+operator|.
+name|fs_ipg
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|inumber
 operator|<
 name|ROOTINO
-operator|||
+condition|)
+block|{
+name|DBG_LEAVE
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 name|inumber
 operator|>
 name|maxino
@@ -10715,7 +10756,6 @@ name|inodeupdated
 decl_stmt|;
 name|DBG_ENTER
 expr_stmt|;
-comment|/* 	 * XXX We should skip unused inodes even from being read from disk 	 *     here by using the bitmap. 	 */
 name|ino
 operator|=
 name|ginode
