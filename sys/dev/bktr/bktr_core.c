@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.66 1999/02/11 10:22:30 roger Exp $ */
+comment|/* $Id: brooktree848.c,v 1.67 1999/02/25 07:45:47 roger Exp $ */
 end_comment
 
 begin_comment
@@ -758,6 +758,27 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_PCI_DRIVER
+end_ifdef
+
+begin_expr_stmt
+name|COMPAT_PCI_DRIVER
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr_device
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
 name|DATA_SET
 argument_list|(
@@ -767,6 +788,15 @@ name|bktr_device
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_PCI_DRIVER */
+end_comment
 
 begin_decl_stmt
 specifier|static
