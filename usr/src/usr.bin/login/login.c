@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.17 82/05/19"
+literal|"@(#)login.c	4.18 82/06/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -2070,6 +2070,13 @@ argument_list|,
 name|pwd
 operator|->
 name|pw_gid
+argument_list|)
+expr_stmt|;
+name|chmod
+argument_list|(
+name|ttyn
+argument_list|,
+literal|622
 argument_list|)
 expr_stmt|;
 name|setgid
