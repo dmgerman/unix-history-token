@@ -66,15 +66,6 @@ argument_list|)
 name|i_nextsnap
 expr_stmt|;
 comment|/* snapshot file list. */
-name|daddr_t
-name|i_snaplistsize
-decl_stmt|;
-comment|/* size of snapblklist. */
-name|daddr_t
-modifier|*
-name|i_snapblklist
-decl_stmt|;
-comment|/* list of known snapshot blocks. */
 name|struct
 name|vnode
 modifier|*
@@ -161,12 +152,22 @@ name|u_int32_t
 name|i_reclen
 decl_stmt|;
 comment|/* Size of found directory entry. */
+union|union
+block|{
 name|struct
 name|dirhash
 modifier|*
-name|i_dirhash
+name|dirhash
 decl_stmt|;
-comment|/* Hashing for large directories */
+comment|/* Hashing for large directories. */
+name|daddr_t
+modifier|*
+name|snapblklist
+decl_stmt|;
+comment|/* Collect expunged snapshot blocks. */
+block|}
+name|i_un
+union|;
 comment|/* 	 * Data for extended attribute modification.  	 */
 name|u_char
 modifier|*
@@ -323,6 +324,20 @@ end_define
 begin_comment
 comment|/* Blocks to be freed in free count. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|i_dirhash
+value|i_un.dirhash
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_snapblklist
+value|i_un.snapblklist
+end_define
 
 begin_define
 define|#
