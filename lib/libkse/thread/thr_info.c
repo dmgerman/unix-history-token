@@ -1434,6 +1434,25 @@ name|magic
 operator|==
 name|PTHREAD_MAGIC
 condition|)
+block|{
+if|if
+condition|(
+name|thread
+operator|->
+name|name
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Free space for previous name. */
+name|free
+argument_list|(
+name|thread
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 name|thread
 operator|->
 name|name
@@ -1443,7 +1462,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-return|return;
+block|}
 block|}
 end_function
 
