@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -948,6 +948,11 @@ operator|)
 name|reply
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|SmtpClosing
+condition|)
+return|return;
 block|}
 comment|/* now actually close the connection */
 operator|(
