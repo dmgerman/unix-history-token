@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)object.c 1.6 %G%"
+literal|"@(#)object.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +196,9 @@ name|private
 name|Linetab
 modifier|*
 name|linep
+decl_stmt|,
+modifier|*
+name|prevlinep
 decl_stmt|;
 end_decl_stmt
 
@@ -264,7 +267,7 @@ define|#
 directive|define
 name|exitblock
 parameter_list|()
-value|{ \     --curlevel; \     curblock = blkstack[curlevel]; \ }
+value|{ \     if (curblock->class == FUNC or curblock->class == PROC) { \ 	if (prevlinep != linep) { \ 	    curblock->symvalue.funcv.src = true; \ 	} \     } \     --curlevel; \     curblock = blkstack[curlevel]; \ }
 end_define
 
 begin_comment
@@ -1054,6 +1057,8 @@ decl_stmt|;
 specifier|register
 name|Name
 name|n
+decl_stmt|,
+name|nn
 decl_stmt|;
 name|s
 operator|=
@@ -1231,23 +1236,34 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|s
+name|nn
 operator|=
-name|insert
-argument_list|(
 name|identname
 argument_list|(
 name|mname
 argument_list|,
 name|true
 argument_list|)
-argument_list|)
 expr_stmt|;
-name|s
+if|if
+condition|(
+name|curmodule
+operator|==
+name|nil
+name|or
+name|curmodule
 operator|->
-name|language
+name|name
+operator|!=
+name|nn
+condition|)
+block|{
+name|s
 operator|=
-name|curlang
+name|insert
+argument_list|(
+name|nn
+argument_list|)
 expr_stmt|;
 name|s
 operator|->
@@ -1269,6 +1285,20 @@ name|findbeginning
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|s
+operator|=
+name|curmodule
+expr_stmt|;
+block|}
+name|s
+operator|->
+name|language
+operator|=
+name|curlang
 expr_stmt|;
 name|enterblock
 argument_list|(
@@ -1553,6 +1583,16 @@ name|program
 operator|->
 name|level
 expr_stmt|;
+name|t
+operator|->
+name|symvalue
+operator|.
+name|funcv
+operator|.
+name|src
+operator|=
+name|false
+expr_stmt|;
 block|}
 name|t
 operator|->
@@ -1806,6 +1846,16 @@ operator|->
 name|class
 operator|=
 name|FUNC
+expr_stmt|;
+name|t
+operator|->
+name|symvalue
+operator|.
+name|funcv
+operator|.
+name|src
+operator|=
+name|false
 expr_stmt|;
 name|t
 operator|->
@@ -2605,6 +2655,16 @@ condition|(
 name|isnew
 condition|)
 block|{
+name|s
+operator|->
+name|symvalue
+operator|.
+name|funcv
+operator|.
+name|src
+operator|=
+name|false
+expr_stmt|;
 name|s
 operator|->
 name|symvalue
