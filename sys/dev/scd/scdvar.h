@@ -24,9 +24,6 @@ name|bio
 modifier|*
 name|bp
 decl_stmt|;
-name|int
-name|p_offset
-decl_stmt|;
 name|short
 name|count
 decl_stmt|;
@@ -53,10 +50,6 @@ name|blksize
 decl_stmt|;
 name|u_long
 name|disksize
-decl_stmt|;
-name|struct
-name|disklabel
-name|dlabel
 decl_stmt|;
 name|int
 name|openflag
