@@ -2857,15 +2857,6 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_flag_clear
-argument_list|(
-name|fs
-operator|.
-name|m
-argument_list|,
-name|PG_ZERO
-argument_list|)
-expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
 name|fs

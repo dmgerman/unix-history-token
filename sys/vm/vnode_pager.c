@@ -1939,13 +1939,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_flag_clear
-argument_list|(
-name|m
-argument_list|,
-name|PG_ZERO
-argument_list|)
-expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -2259,13 +2252,6 @@ expr_stmt|;
 name|vm_page_undirty
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-name|vm_page_flag_clear
-argument_list|(
-name|m
-argument_list|,
-name|PG_ZERO
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
@@ -3556,13 +3542,6 @@ expr_stmt|;
 comment|/* handled by vm_fault now */
 comment|/* vm_page_zero_invalid(mt, FALSE); */
 block|}
-name|vm_page_flag_clear
-argument_list|(
-name|mt
-argument_list|,
-name|PG_ZERO
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|i

@@ -3605,13 +3605,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|m
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_ZERO
-expr_stmt|;
 if|if
 condition|(
 name|nextoff

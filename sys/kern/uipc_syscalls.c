@@ -8704,13 +8704,6 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_flag_clear
-argument_list|(
-name|pg
-argument_list|,
-name|PG_ZERO
-argument_list|)
-expr_stmt|;
 name|vm_page_io_finish
 argument_list|(
 name|pg
