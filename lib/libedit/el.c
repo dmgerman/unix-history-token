@@ -1050,7 +1050,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX */
-block|case EL_TERMINAL: 		rv = term_get(el, (const char *)&ret); 		break;  	case EL_BIND: 	case EL_TELLTC: 	case EL_SETTC: 	case EL_ECHOTC: 	case EL_SETTY: 	{ 		char *argv[20]; 		int i;  		for (i = 1; i< 20; i++) 			if ((argv[i] = va_arg(va, char *)) == NULL) 				break;  		switch (op) { 		case EL_BIND: 			argv[0] = "bind"; 			rv = map_bind(el, i, argv); 			break;  		case EL_TELLTC: 			argv[0] = "telltc"; 			rv = term_telltc(el, i, argv); 			break;  		case EL_SETTC: 			argv[0] = "settc"; 			rv = term_settc(el, i, argv); 			break;  		case EL_ECHOTC: 			argv[0] = "echotc"; 			rv = term_echotc(el, i, argv); 			break;  		case EL_SETTY: 			argv[0] = "setty"; 			rv = tty_stty(el, i, argv); 			break;  		default: 			rv = -1; 			EL_ABORT((el->errfile, "Bad op %d\n", op)); 			break; 		} 		break; }  public void el_data_set (el, data)     EditLine *el;     void *data; {     el->data = data;      return; }  public void * el_data_get (el)     EditLine *el; {     if (el->data) 	return (el->data);     return (NULL); 	}  	case EL_ADDFN: 	{ 		char *name = va_arg(va, char *); 		char *help = va_arg(va, char *); 		el_func_t func = va_arg(va, el_func_t);  		rv = map_addfunc(el, name, help, func); 		break; 	}  	case EL_HIST: 		{ 			hist_fun_t func = va_arg(va, hist_fun_t); 			ptr_t ptr = va_arg(va, char *); 			rv = hist_set(el, func, ptr); 		} 		break;
+block|case EL_TERMINAL: 		rv = term_get(el, (const char *)&ret); 		break;  	case EL_BIND: 	case EL_TELLTC: 	case EL_SETTC: 	case EL_ECHOTC: 	case EL_SETTY: 	{ 		char *argv[20]; 		int i;  		for (i = 1; i< 20; i++) 			if ((argv[i] = va_arg(va, char *)) == NULL) 				break;  		switch (op) { 		case EL_BIND: 			argv[0] = "bind"; 			rv = map_bind(el, i, argv); 			break;  		case EL_TELLTC: 			argv[0] = "telltc"; 			rv = term_telltc(el, i, argv); 			break;  		case EL_SETTC: 			argv[0] = "settc"; 			rv = term_settc(el, i, argv); 			break;  		case EL_ECHOTC: 			argv[0] = "echotc"; 			rv = term_echotc(el, i, argv); 			break;  		case EL_SETTY: 			argv[0] = "setty"; 			rv = tty_stty(el, i, argv); 			break;  		default: 			rv = -1; 			EL_ABORT((el->errfile, "Bad op %d\n", op)); 			break; 		} 		break; 	}  	case EL_ADDFN: 	{ 		char *name = va_arg(va, char *); 		char *help = va_arg(va, char *); 		el_func_t func = va_arg(va, el_func_t);  		rv = map_addfunc(el, name, help, func); 		break; 	}  	case EL_HIST: 		{ 			hist_fun_t func = va_arg(va, hist_fun_t); 			ptr_t ptr = va_arg(va, char *); 			rv = hist_set(el, func, ptr); 		} 		break;
 endif|#
 directive|endif
 comment|/* XXX */
@@ -1064,6 +1064,76 @@ block|}
 return|return
 operator|(
 name|rv
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* el_data_get():  *	Set user private data.  */
+end_comment
+
+begin_function
+name|public
+name|void
+name|el_data_set
+parameter_list|(
+name|el
+parameter_list|,
+name|data
+parameter_list|)
+name|EditLine
+modifier|*
+name|el
+decl_stmt|;
+name|void
+modifier|*
+name|data
+decl_stmt|;
+block|{
+name|el
+operator|->
+name|data
+operator|=
+name|data
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/* el_data_get():  *	Return user private data.  */
+end_comment
+
+begin_function
+name|public
+name|void
+modifier|*
+name|el_data_get
+parameter_list|(
+name|el
+parameter_list|)
+name|EditLine
+modifier|*
+name|el
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|el
+operator|->
+name|data
+condition|)
+return|return
+operator|(
+name|el
+operator|->
+name|data
+operator|)
+return|;
+return|return
+operator|(
+name|NULL
 operator|)
 return|;
 block|}

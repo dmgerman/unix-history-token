@@ -488,6 +488,40 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Set user private data.  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|el_data_set
+name|__P
+argument_list|(
+operator|(
+name|EditLine
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|el_data_get
+name|__P
+argument_list|(
+operator|(
+name|EditLine
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * User-defined function interface.  */
 end_comment
 
