@@ -308,64 +308,71 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OPTION_EXCLUDE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPTION_FAST_READ
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPTION_HELP
+name|OPTION_CHECK_LINKS
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTION_INCLUDE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPTION_NODUMP
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPTION_NO_SAME_PERMISSIONS
+name|OPTION_EXCLUDE
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
+name|OPTION_FAST_READ
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_HELP
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_INCLUDE
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_NODUMP
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_NO_SAME_PERMISSIONS
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
 name|OPTION_NULL
-value|7
+value|24
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPTION_ONE_FILE_SYSTEM
-value|8
+value|27
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPTION_VERSION
-value|9
+value|30
 end_define
 
 begin_decl_stmt
@@ -445,6 +452,16 @@ block|,
 name|NULL
 block|,
 literal|'C'
+block|}
+block|,
+block|{
+literal|"check-links"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_CHECK_LINKS
 block|}
 block|,
 block|{
@@ -835,6 +852,9 @@ name|char
 name|mode
 decl_stmt|;
 name|char
+name|option_o
+decl_stmt|;
+name|char
 name|possible_help_request
 decl_stmt|;
 name|char
@@ -870,6 +890,10 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Mark as "unused" */
+name|option_o
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|setlocale
@@ -1162,6 +1186,17 @@ name|opt
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_CHECK_LINKS
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|option_warn_links
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 name|OPTION_EXCLUDE
 case|:
 comment|/* GNU tar */
@@ -1367,13 +1402,54 @@ break|break;
 case|case
 literal|'l'
 case|:
-comment|/* SUSv2; note that GNU -l conflicts */
+comment|/* SUSv2 and GNU conflict badly here */
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"POSIXLY_CORRECT"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* User has asked for POSIX/SUS behavior. */
 name|bsdtar
 operator|->
 name|option_warn_links
 operator|=
 literal|1
 expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Error: -l has different behaviors in different tar programs.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  For the GNU behavior, use --one-file-system instead.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  For the POSIX behavior, use --check-links instead.\n"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'m'
@@ -1439,20 +1515,12 @@ break|break;
 case|case
 literal|'o'
 case|:
-comment|/* SUSv2; note that GNU -o conflicts */
-name|bsdtar
-operator|->
-name|option_no_owner
+comment|/* SUSv2 and GNU conflict here */
+name|option_o
 operator|=
 literal|1
 expr_stmt|;
-name|bsdtar
-operator|->
-name|extract_flags
-operator|&=
-operator|~
-name|ARCHIVE_EXTRACT_OWNER
-expr_stmt|;
+comment|/* Record it and resolve it later. */
 break|break;
 case|case
 name|OPTION_ONE_FILE_SYSTEM
@@ -1944,11 +2012,47 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|option_o
+operator|>
+literal|0
+condition|)
+block|{
+switch|switch
+condition|(
+name|mode
+condition|)
+block|{
+case|case
+literal|'c'
+case|:
+comment|/* 			 * In GNU tar, -o means "old format."  The 			 * "ustar" format is the closest thing 			 * supported by libarchive. 			 */
+name|bsdtar
+operator|->
+name|create_format
+operator|=
+literal|"ustar"
+expr_stmt|;
+comment|/* TODO: bsdtar->create_format = "v7"; */
+break|break;
+case|case
+literal|'x'
+case|:
+comment|/* POSIX-compatible behavior. */
 name|bsdtar
 operator|->
 name|option_no_owner
-condition|)
-block|{
+operator|=
+literal|1
+expr_stmt|;
+name|bsdtar
+operator|->
+name|extract_flags
+operator|&=
+operator|~
+name|ARCHIVE_EXTRACT_OWNER
+expr_stmt|;
+break|break;
+default|default:
 name|only_mode
 argument_list|(
 name|bsdtar
@@ -1960,22 +2064,8 @@ argument_list|,
 literal|"xc"
 argument_list|)
 expr_stmt|;
-comment|/* Warn about nonsensical -co combination, but ignore it. */
-if|if
-condition|(
-name|mode
-operator|==
-literal|'c'
-condition|)
-name|bsdtar_warnc
-argument_list|(
-name|bsdtar
-argument_list|,
-literal|0
-argument_list|,
-literal|"Ignoring nonsensical -o option"
-argument_list|)
-expr_stmt|;
+break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -2023,7 +2113,7 @@ name|bsdtar
 argument_list|,
 name|mode
 argument_list|,
-literal|"-l"
+literal|"--check-links"
 argument_list|,
 literal|"cr"
 argument_list|)
