@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.9 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -330,16 +336,18 @@ name|type
 decl_stmt|,
 name|class
 decl_stmt|,
+name|buflen
+decl_stmt|,
 name|ancount
 decl_stmt|,
 name|qdcount
-decl_stmt|,
-name|buflen
 decl_stmt|;
 name|int
 name|haveanswer
 decl_stmt|,
 name|getclass
+init|=
+name|C_ANY
 decl_stmt|;
 name|char
 modifier|*
@@ -1427,6 +1435,10 @@ name|C_IN
 argument_list|,
 name|T_PTR
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|,
 literal|0
@@ -1636,6 +1648,9 @@ operator|!
 name|stayopen
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|hostf
