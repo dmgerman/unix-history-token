@@ -260,7 +260,6 @@ name|NTOHL
 parameter_list|(
 name|x
 parameter_list|)
-value|(x)
 end_define
 
 begin_define
@@ -270,7 +269,6 @@ name|NTOHS
 parameter_list|(
 name|x
 parameter_list|)
-value|(x)
 end_define
 
 begin_define
@@ -280,7 +278,6 @@ name|HTONL
 parameter_list|(
 name|x
 parameter_list|)
-value|(x)
 end_define
 
 begin_define
@@ -290,7 +287,6 @@ name|HTONS
 parameter_list|(
 name|x
 parameter_list|)
-value|(x)
 end_define
 
 begin_else
