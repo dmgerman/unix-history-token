@@ -176,6 +176,10 @@ expr_stmt|;
 comment|/* center dialog box on screen */
 name|x
 operator|=
+name|DialogX
+condition|?
+name|DialogX
+else|:
 operator|(
 name|COLS
 operator|-
@@ -186,6 +190,10 @@ literal|2
 expr_stmt|;
 name|y
 operator|=
+name|DialogY
+condition|?
+name|DialogY
+else|:
 operator|(
 name|LINES
 operator|-

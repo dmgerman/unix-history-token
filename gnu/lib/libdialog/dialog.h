@@ -163,6 +163,21 @@ name|self
 parameter_list|)
 function_decl|;
 name|void
+function_decl|(
+modifier|*
+name|selected
+function_decl|)
+parameter_list|(
+name|struct
+name|_dmenu_item
+modifier|*
+name|self
+parameter_list|,
+name|int
+name|is_selected
+parameter_list|)
+function_decl|;
+name|void
 modifier|*
 name|data
 decl_stmt|;
@@ -227,6 +242,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|DialogX
+decl_stmt|,
+name|DialogY
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Attribute names  */
