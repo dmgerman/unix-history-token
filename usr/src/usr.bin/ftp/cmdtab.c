@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	4.4 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +123,9 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ls
+argument_list|()
+decl_stmt|,
+name|mls
 argument_list|()
 decl_stmt|,
 name|get
@@ -339,6 +342,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|mdirhelp
+index|[]
+init|=
+literal|"list contents of multiple remote directories"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|mgethelp
 index|[]
 init|=
@@ -352,6 +364,15 @@ name|mkdirhelp
 index|[]
 init|=
 literal|"make directory on the remote machine"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|mlshelp
+index|[]
+init|=
+literal|"nlist contents of multiple remote directories"
 decl_stmt|;
 end_decl_stmt
 
@@ -563,7 +584,7 @@ literal|1
 block|,
 literal|1
 block|,
-name|append
+name|put
 block|}
 block|,
 block|{
@@ -771,6 +792,18 @@ name|mdelete
 block|}
 block|,
 block|{
+literal|"mdir"
+block|,
+name|mdirhelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|mls
+block|}
+block|,
+block|{
 literal|"mget"
 block|,
 name|mgethelp
@@ -792,6 +825,18 @@ block|,
 literal|1
 block|,
 name|makedir
+block|}
+block|,
+block|{
+literal|"mls"
+block|,
+name|mlshelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|mls
 block|}
 block|,
 block|{
