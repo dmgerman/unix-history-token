@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -173,7 +173,7 @@ comment|/* T_KSPNOTVAL */
 literal|"Bus error"
 block|,
 comment|/* T_BUSERR */
-literal|"Kernel debugger trap"
+literal|"Kernel debugger request"
 block|,
 comment|/* T_KDBTRAP */
 block|}
@@ -238,6 +238,10 @@ name|code
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* kdb assumes these are *not* registers */
+end_comment
+
 begin_block
 block|{
 name|int
@@ -265,6 +269,11 @@ decl_stmt|;
 specifier|register
 name|int
 name|i
+decl_stmt|;
+name|unsigned
+name|ucode
+init|=
+name|code
 decl_stmt|;
 specifier|register
 name|struct
@@ -424,9 +433,7 @@ operator|+
 name|USER
 case|:
 comment|/* unaligned data fault */
-name|u
-operator|.
-name|u_code
+name|ucode
 operator|=
 name|type
 operator|&
@@ -499,12 +506,6 @@ name|T_ARITHTRAP
 operator|+
 name|USER
 case|:
-name|u
-operator|.
-name|u_code
-operator|=
-name|code
-expr_stmt|;
 name|i
 operator|=
 name|SIGFPE
@@ -621,6 +622,10 @@ operator|=
 name|SIGTRAP
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* THIS CODE IS BOGUS- delete? (KSP not valid is unrecoverable) 	   And what does KSPNOTVAL in user-mode mean? */
 comment|/* 	 * For T_KSPNOTVAL and T_BUSERR, can not allow spl to 	 * drop to 0 as clock could go off and we would end up 	 * doing an rei to the interrupt stack at ipl 0 (a 	 * reserved operand fault).  Instead, we allow psignal 	 * to post an ast, then return to user mode where we 	 * will reenter the kernel on the kernel's stack and 	 * can then service the signal. 	 */
 case|case
 name|T_KSPNOTVAL
@@ -651,6 +656,11 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"ksp not valid - 2"
+argument_list|)
+expr_stmt|;
 comment|/* must insure valid kernel stack pointer? */
 name|psignal
 argument_list|(
@@ -662,35 +672,24 @@ name|SIGKILL
 argument_list|)
 expr_stmt|;
 return|return;
+endif|#
+directive|endif
 case|case
 name|T_BUSERR
 operator|+
 name|USER
 case|:
-name|u
-operator|.
-name|u_code
-operator|=
-name|code
-expr_stmt|;
-name|psignal
-argument_list|(
-name|u
-operator|.
-name|u_procp
-argument_list|,
-name|SIGBUS
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|psignal
-argument_list|(
-name|u
-operator|.
-name|u_procp
-argument_list|,
 name|i
+operator|=
+name|SIGBUS
+expr_stmt|;
+break|break;
+block|}
+name|trapsignal
+argument_list|(
+name|i
+argument_list|,
+name|ucode
 argument_list|)
 expr_stmt|;
 name|out
@@ -703,10 +702,6 @@ name|u_procp
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|->
-name|p_cursig
-operator|||
 name|ISSIG
 argument_list|(
 name|p
@@ -748,6 +743,16 @@ name|ru_nivcsw
 operator|++
 expr_stmt|;
 name|swtch
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ISSIG
+argument_list|(
+name|p
+argument_list|)
+condition|)
+name|psig
 argument_list|()
 expr_stmt|;
 block|}
@@ -1533,79 +1538,6 @@ name|p_pri
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * nonexistent system call-- signal process (may want to handle it)  * flag error if process won't see signal immediately  * Q: should we do that all the time ??  */
-end_comment
-
-begin_macro
-name|nosys
-argument_list|()
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|u
-operator|.
-name|u_signal
-index|[
-name|SIGSYS
-index|]
-operator|==
-name|SIG_IGN
-operator|||
-name|u
-operator|.
-name|u_signal
-index|[
-name|SIGSYS
-index|]
-operator|==
-name|SIG_HOLD
-condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|EINVAL
-expr_stmt|;
-name|psignal
-argument_list|(
-name|u
-operator|.
-name|u_procp
-argument_list|,
-name|SIGSYS
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_comment
-comment|/*  * Ignored system call  */
-end_comment
-
-begin_macro
-name|nullsys
-argument_list|()
-end_macro
-
-begin_block
-block|{  }
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
