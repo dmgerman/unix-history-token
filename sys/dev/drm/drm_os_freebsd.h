@@ -839,7 +839,7 @@ parameter_list|,
 name|condition
 parameter_list|)
 define|\
-value|while (!condition) {							\ 	ret = tsleep(&(queue), PZERO | PCATCH, "drmwtq", (timeout) );	\ 	if ( ret )							\ 		return ret;						\ }
+value|for ( ret = 0 ; !ret&& !(condition) ; ) {		\         int s = spldrm();				\ 	if (!(condition))				\ 	   ret = tsleep(&(queue), PZERO | PCATCH, 	\ 			 "drmwtq", (timeout) );		\ 	splx(s);					\ }
 end_define
 
 begin_define
