@@ -87,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_CPP_PREDEFINES
-value|" -Dunix -D__FreeBSD__=4 -D__FreeBSD_cc_version=400005 -Asystem(unix) -Asystem(FreeBSD) "
+value|" -Dunix -D__FreeBSD__=4 -D__FreeBSD_cc_version=410000 -Asystem(unix) -Asystem(FreeBSD) "
 end_define
 
 begin_define
