@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cat.c,v 1.10 1998/05/06 06:49:16 charnier Exp $"
+literal|"$Id: cat.c,v 1.11 1998/05/13 07:16:37 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,6 +144,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -209,23 +210,15 @@ begin_function
 name|int
 name|main
 parameter_list|(
+name|int
 name|argc
 parameter_list|,
-name|argv
-parameter_list|)
-name|int
-name|argc
-decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
@@ -1002,16 +995,17 @@ decl_stmt|;
 block|{
 specifier|register
 name|int
-name|nr
-decl_stmt|,
-name|nw
-decl_stmt|,
 name|off
 decl_stmt|,
 name|wfd
 decl_stmt|;
+name|ssize_t
+name|nr
+decl_stmt|,
+name|nw
+decl_stmt|;
 specifier|static
-name|int
+name|size_t
 name|bsize
 decl_stmt|;
 specifier|static
@@ -1137,6 +1131,9 @@ name|buf
 operator|+
 name|off
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|nr
 argument_list|)
 operator|)
