@@ -1796,6 +1796,17 @@ name|com
 operator|->
 name|tp
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* 	 * set the initial and lock rates for /dev/ttydXX and /dev/cuaXX 	 * (note, the lock rates really are boolean -- if non-zero, disallow 	 *  speed changes) 	 */
 name|tp
 operator|->
@@ -1851,14 +1862,10 @@ comment|/* 	 * if we're open, change the running rate too 	 */
 if|if
 condition|(
 name|tp
-operator|&&
-operator|(
-name|tp
 operator|->
 name|t_state
 operator|&
 name|TS_ISOPEN
-operator|)
 condition|)
 block|{
 name|tp
@@ -6360,9 +6367,6 @@ modifier|*
 name|com
 decl_stmt|;
 name|int
-name|mynor
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
 name|struct
@@ -6370,13 +6374,6 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-name|mynor
-operator|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|com
 operator|=
 name|dev
