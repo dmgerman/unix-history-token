@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.22 81/12/03 */
+comment|/* ip_input.c 1.23 81/12/09 */
 end_comment
 
 begin_include
@@ -268,6 +268,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m0
+decl_stmt|,
+modifier|*
+name|mopt
 decl_stmt|;
 specifier|register
 name|int
@@ -284,6 +287,11 @@ name|hlen
 decl_stmt|,
 name|s
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"ipintr\n"
+argument_list|)
+expr_stmt|;
 name|COUNT
 argument_list|(
 name|IPINTR
@@ -316,7 +324,21 @@ name|m
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ipintr returns\n"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
+name|printf
+argument_list|(
+literal|"ipintr dequeued %x\n"
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -342,9 +364,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ipintr pullup drop\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|ip
 operator|=
 name|mtod
@@ -354,6 +383,15 @@ argument_list|,
 expr|struct
 name|ip
 operator|*
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ipintr ip->ip_hl %d\n"
+argument_list|,
+name|ip
+operator|->
+name|ip_hl
 argument_list|)
 expr_stmt|;
 if|if
@@ -405,7 +443,6 @@ name|ipcksum
 condition|)
 if|if
 condition|(
-operator|(
 name|ip
 operator|->
 name|ip_sum
@@ -416,9 +453,6 @@ name|m
 argument_list|,
 name|hlen
 argument_list|)
-operator|)
-operator|!=
-literal|0xffff
 condition|)
 block|{
 name|printf
@@ -440,6 +474,14 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|printf
+argument_list|(
+literal|"cksum passed\n"
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|vax
 comment|/* 	 * Convert fields to host representation. 	 */
 name|ip
 operator|->
@@ -480,6 +522,8 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Check that the amount of data in the buffers 	 * is as at least much as the IP header would have us expect. 	 * Trim mbufs if longer than we expect. 	 * Drop packet if shorter than we expect. 	 */
 name|i
 operator|=
@@ -511,6 +555,17 @@ expr_stmt|;
 name|m
 operator|=
 name|m0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ip->ip_len %d, i %d\n"
+argument_list|,
+name|ip
+operator|->
+name|ip_len
+argument_list|,
+name|i
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -552,6 +607,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Process options and, if not destined for us, 	 * ship it on. 	 */
+name|printf
+argument_list|(
+literal|"ipintr at option code\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hlen
@@ -616,22 +676,37 @@ goto|goto
 name|next
 goto|;
 block|}
+name|mopt
+operator|=
+name|m_get
+argument_list|(
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mopt
+operator|==
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
+name|ip_stripoptions
+argument_list|(
+name|ip
+argument_list|,
+name|mopt
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|ip_output
 argument_list|(
-name|dtom
-argument_list|(
-name|ip
-argument_list|)
+name|m0
 argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
+name|mopt
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -828,6 +903,15 @@ name|fp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Switch out to protocol's input routine. 	 */
+name|printf
+argument_list|(
+literal|"ipintr switching out to protocol %d\n"
+argument_list|,
+name|ip
+operator|->
+name|ip_p
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|protosw
@@ -2307,7 +2391,7 @@ name|ip_stripoptions
 argument_list|(
 argument|ip
 argument_list|,
-argument|cp
+argument|mopt
 argument_list|)
 end_macro
 
@@ -2320,9 +2404,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|struct
+name|mbuf
 modifier|*
-name|cp
+name|mopt
 decl_stmt|;
 end_decl_stmt
 
@@ -2374,8 +2459,21 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|cp
+name|mopt
 condition|)
+block|{
+name|mopt
+operator|->
+name|m_len
+operator|=
+name|olen
+expr_stmt|;
+name|mopt
+operator|->
+name|m_off
+operator|=
+name|MMINOFF
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(
@@ -2383,7 +2481,12 @@ name|caddr_t
 operator|)
 name|ip
 argument_list|,
-name|cp
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|caddr_t
+argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -2391,6 +2494,7 @@ operator|)
 name|olen
 argument_list|)
 expr_stmt|;
+block|}
 name|i
 operator|=
 name|m
