@@ -1481,7 +1481,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|do { \ 	bzero((idx), sizeof(struct secpolicyindex));                             \ 	(idx)->dir = (_dir);                                                 \ 	(idx)->prefs = (ps);                                                 \ 	(idx)->prefd = (pd);                                                 \ 	(idx)->ul_proto = (ulp);                                             \ 	bcopy((s),&(idx)->src, ((struct sockaddr *)(s))->sa_len);           \ 	bcopy((d),&(idx)->dst, ((struct sockaddr *)(d))->sa_len);           \ } while (0)
+value|do { \ 	bzero((idx), sizeof(struct secpolicyindex));                             \ 	(idx)->dir = (_dir);                                                 \ 	(idx)->prefs = (ps);                                                 \ 	(idx)->prefd = (pd);                                                 \ 	(idx)->ul_proto = (ulp);                                             \ 	bcopy((s),&(idx)->src, ((const struct sockaddr *)(s))->sa_len);     \ 	bcopy((d),&(idx)->dst, ((const struct sockaddr *)(d))->sa_len);     \ } while (0)
 end_define
 
 begin_comment
@@ -1506,7 +1506,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|do { \ 	bzero((idx), sizeof(struct secasindex));                             \ 	(idx)->proto = (p);                                                  \ 	(idx)->mode = (m);                                                   \ 	(idx)->reqid = (r);                                                  \ 	bcopy((s),&(idx)->src, ((struct sockaddr *)(s))->sa_len);           \ 	bcopy((d),&(idx)->dst, ((struct sockaddr *)(d))->sa_len);           \ } while (0)
+value|do { \ 	bzero((idx), sizeof(struct secasindex));                             \ 	(idx)->proto = (p);                                                  \ 	(idx)->mode = (m);                                                   \ 	(idx)->reqid = (r);                                                  \ 	bcopy((s),&(idx)->src, ((const struct sockaddr *)(s))->sa_len);     \ 	bcopy((d),&(idx)->dst, ((const struct sockaddr *)(d))->sa_len);     \ } while (0)
 end_define
 
 begin_comment
@@ -32138,6 +32138,7 @@ name|int
 name|len
 decl_stmt|;
 block|{
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -32315,6 +32316,7 @@ if|if
 condition|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|sadb_ident
 operator|*
@@ -32377,7 +32379,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|caddr_t
+name|uintptr_t
 operator|)
 name|ext
 operator|+

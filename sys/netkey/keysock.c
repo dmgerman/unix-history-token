@@ -2418,6 +2418,10 @@ name|PR_ADDR
 block|,
 literal|0
 block|,
+operator|(
+name|pr_output_t
+operator|*
+operator|)
 name|key_output
 block|,
 name|raw_ctlinput
