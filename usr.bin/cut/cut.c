@@ -628,7 +628,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-comment|/* 	 * set a byte in the positions array to indicate if a field or 	 * column is to be selected; use +1, it's 1-based, not 0-based. 	 * This parser is less restrictive than the Draft 9 POSIX spec. 	 * POSIX doesn't allow lists that aren't in increasing order or 	 * overlapping lists.  We also handle "-3-5" although there's no 	 * real reason too. 	 */
+comment|/* 	 * set a byte in the positions array to indicate if a field or 	 * column is to be selected; use +1, it's 1-based, not 0-based. 	 * Numbers and number ranges may be overlapping, repeated, and in 	 * any order. We handle "-3-5" although there's no real reason too. 	 */
 for|for
 control|(
 init|;
