@@ -4132,11 +4132,13 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
-literal|"ieee80211_ref_node (%s:%u) %s refcnt %d\n"
+literal|"ieee80211_ref_node (%s:%u) %p<%s> refcnt %d\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|__LINE__
+argument_list|,
+name|ni
 argument_list|,
 name|ether_sprintf
 argument_list|(

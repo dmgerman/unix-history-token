@@ -3822,9 +3822,11 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
-literal|"%s %s in %s table\n"
+literal|"%s %p<%s> in %s table\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|ni
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -4277,13 +4279,15 @@ name|nt_ic
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
-literal|"%s (%s:%u) %s refcnt %d\n"
+literal|"%s (%s:%u) %p<%s> refcnt %d\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|func
 argument_list|,
 name|line
+argument_list|,
+name|ni
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -5002,7 +5006,7 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|IEEE80211_DEBUG_REFCNT
-literal|"%s (%s:%u) %s refcnt %d\n"
+literal|"%s (%s:%u) %p<%s> refcnt %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5012,12 +5016,14 @@ name|line
 argument_list|,
 else|#
 directive|else
-literal|"%s %s refcnt %d\n"
+literal|"%s %p<%s> refcnt %d\n"
 argument_list|,
 name|__func__
 argument_list|,
 endif|#
 directive|endif
+name|ni
+argument_list|,
 name|ether_sprintf
 argument_list|(
 name|ni
@@ -5199,7 +5205,7 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|IEEE80211_DEBUG_REFCNT
-literal|"%s (%s:%u) %s refcnt %d\n"
+literal|"%s (%s:%u) %p<%s> refcnt %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5209,12 +5215,14 @@ name|line
 argument_list|,
 else|#
 directive|else
-literal|"%s %s refcnt %d\n"
+literal|"%s %p<%s> refcnt %d\n"
 argument_list|,
 name|__func__
 argument_list|,
 endif|#
 directive|endif
+name|ni
+argument_list|,
 name|ether_sprintf
 argument_list|(
 name|ni
@@ -5277,9 +5285,11 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
-literal|"%s %s in %s table\n"
+literal|"%s %p<%s> in %s table\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|ni
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -5399,13 +5409,15 @@ name|ni_ic
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
-literal|"%s (%s:%u) %s refcnt %d\n"
+literal|"%s (%s:%u) %p<%s> refcnt %d\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|func
 argument_list|,
 name|line
+argument_list|,
+name|ni
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -5488,6 +5500,39 @@ modifier|*
 name|ni
 parameter_list|)
 block|{
+name|IEEE80211_DPRINTF
+argument_list|(
+name|ni
+operator|->
+name|ni_ic
+argument_list|,
+name|IEEE80211_MSG_NODE
+argument_list|,
+literal|"%s: remove %p<%s> from %s table, refcnt %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ni
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|)
+argument_list|,
+name|nt
+operator|->
+name|nt_name
+argument_list|,
+name|ieee80211_node_refcnt
+argument_list|(
+name|ni
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -5807,8 +5852,6 @@ name|ieee80211_node_refcnt
 argument_list|(
 name|ni
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|node_reclaim
@@ -5884,9 +5927,13 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
-literal|"%s: sta scangen %u\n"
+literal|"%s: %s scangen %u\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|nt
+operator|->
+name|nt_name
 argument_list|,
 name|gen
 argument_list|)
