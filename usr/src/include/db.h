@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.19 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -135,23 +135,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_APPEND
+name|R_CURSOR
 value|1
 end_define
 
 begin_comment
-comment|/* put (RECNO) */
+comment|/* del, put, seq */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_CURSOR
+name|R_CURSORLOG
 value|2
 end_define
 
 begin_comment
-comment|/* del, put, seq */
+comment|/* put (RECNO) */
 end_comment
 
 begin_define
@@ -229,6 +229,17 @@ end_define
 
 begin_comment
 comment|/* seq (BTREE, RECNO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_SETCURSOR
+value|10
+end_define
+
+begin_comment
+comment|/* put (RECNO) */
 end_comment
 
 begin_typedef
@@ -326,7 +337,6 @@ expr|struct
 name|__db
 operator|*
 operator|,
-specifier|const
 name|DBT
 operator|*
 operator|,
