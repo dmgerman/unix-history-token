@@ -80,6 +80,11 @@ typedef|typedef
 struct|struct
 name|varent
 block|{
+specifier|const
+name|char
+modifier|*
+name|header
+decl_stmt|;
 name|struct
 name|varent
 modifier|*

@@ -228,8 +228,6 @@ condition|(
 operator|*
 name|vent
 operator|->
-name|var
-operator|->
 name|header
 operator|!=
 literal|'\0'
@@ -292,7 +290,7 @@ name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|v
+name|vent
 operator|->
 name|header
 argument_list|)
@@ -309,7 +307,7 @@ name|v
 operator|->
 name|width
 argument_list|,
-name|v
+name|vent
 operator|->
 name|header
 argument_list|)
@@ -327,7 +325,7 @@ name|v
 operator|->
 name|width
 argument_list|,
-name|v
+name|vent
 operator|->
 name|header
 argument_list|)
