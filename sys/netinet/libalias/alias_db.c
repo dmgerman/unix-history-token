@@ -1506,6 +1506,9 @@ return|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1520,6 +1523,8 @@ argument_list|,
 literal|"input parameter error\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
@@ -1700,6 +1705,9 @@ name|port_sys
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1714,6 +1722,8 @@ argument_list|,
 literal|"could not find free port\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
@@ -1786,6 +1796,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1800,6 +1813,8 @@ argument_list|,
 literal|"incorrect link type\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1813,6 +1828,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -1830,6 +1848,8 @@ operator|*
 name|sockfd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -2953,6 +2973,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -2967,6 +2990,8 @@ argument_list|,
 literal|" cannot allocate auxiliary TCP data\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 break|break;
 case|case
@@ -2987,6 +3012,9 @@ block|}
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -3001,6 +3029,8 @@ argument_list|,
 literal|"malloc() call failed.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -5799,6 +5829,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -5813,6 +5846,8 @@ argument_list|,
 literal|"error in expire parameter\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -5984,6 +6019,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -5998,6 +6036,8 @@ argument_list|,
 literal|"something unexpected in time values\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|lastCleanupTime
 operator|=
 name|timeStamp
@@ -6162,6 +6202,9 @@ name|LINK_TCP
 expr_stmt|;
 break|break;
 default|default:
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -6176,6 +6219,8 @@ argument_list|,
 literal|"only TCP and UDP protocols allowed\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|NULL
 return|;
@@ -6213,6 +6258,9 @@ operator||=
 name|LINK_PERMANENT
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 else|else
 block|{
 name|fprintf
@@ -6224,6 +6272,8 @@ literal|"call to AddLink() failed\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 name|link
 return|;
@@ -6344,6 +6394,9 @@ operator||=
 name|LINK_PERMANENT
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 else|else
 block|{
 name|fprintf
@@ -6355,6 +6408,8 @@ literal|"call to AddLink() failed\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 name|link
 return|;
@@ -7185,6 +7240,9 @@ name|fireWallActiveNum
 operator|=
 name|fireWallBaseNum
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
@@ -7192,6 +7250,8 @@ argument_list|,
 literal|"libalias: Unable to create firewall hole!\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 block|}
@@ -7340,6 +7400,9 @@ sizeof|sizeof
 name|rule
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|r
@@ -7351,6 +7414,8 @@ argument_list|,
 literal|"alias punch inbound(1) setsockopt(IP_FW_ADD)"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|rule
 operator|.
 name|fw_src
@@ -7420,6 +7485,9 @@ sizeof|sizeof
 name|rule
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|r
@@ -7431,6 +7499,8 @@ argument_list|,
 literal|"alias punch inbound(2) setsockopt(IP_FW_ADD)"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* Indicate hole applied */
 name|link

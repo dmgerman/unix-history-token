@@ -1199,6 +1199,9 @@ index|[
 name|OPTION_LEN_BYTES
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stdout
@@ -1229,6 +1232,8 @@ name|pip
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Check to see that there is room to add an IP option */
 if|if
 condition|(
@@ -1488,6 +1493,9 @@ name|OPTION_LEN_INT16
 undef|#
 directive|undef
 name|OPTION_LEN_INT32
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|stdout
@@ -1518,6 +1526,8 @@ name|pip
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

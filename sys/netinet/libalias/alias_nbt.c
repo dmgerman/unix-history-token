@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Atsushi Murai<amurai@spec.co.jp>  *  * Copyright (C) 1998, System Planning and Engineering Co. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the System Planning and Engineering Co.  The name of the  * SPEC may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: alias_nbt.c,v 1.1 1998/05/24 03:03:10 amurai Exp $  *  *  TODO:  *       oClean up.   *       oConsidering for word alignment for other platform.  */
+comment|/*  * Written by Atsushi Murai<amurai@spec.co.jp>  *  * Copyright (C) 1998, System Planning and Engineering Co. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the System Planning and Engineering Co.  The name of the  * SPEC may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: alias_nbt.c,v 1.2 1998/12/14 02:25:32 dillon Exp $  *  *  TODO:  *       oClean up.   *       oConsidering for word alignment for other platform.  */
 end_comment
 
 begin_comment
@@ -274,36 +274,14 @@ name|CFT_ERR
 value|0x7
 end_define
 
-begin_comment
-comment|/*******************************************************************  * copy an IP address from one buffer to another                   *  *******************************************************************/
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
 
 begin_function
-name|void
-name|putip
-parameter_list|(
-name|void
-modifier|*
-name|dest
-parameter_list|,
-name|void
-modifier|*
-name|src
-parameter_list|)
-block|{
-name|memcpy
-argument_list|(
-name|dest
-argument_list|,
-name|src
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
+specifier|static
 name|void
 name|PrintRcode
 parameter_list|(
@@ -376,11 +354,17 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Handling Name field */
 end_comment
 
 begin_function
+specifier|static
 name|u_char
 modifier|*
 name|AliasHandleName
@@ -1200,6 +1184,7 @@ typedef|;
 end_typedef
 
 begin_function
+specifier|static
 name|u_char
 modifier|*
 name|AliasHandleQuestion
@@ -1295,6 +1280,9 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"\nUnknown Type on Question %0x\n"
@@ -1307,6 +1295,8 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 name|count
@@ -1435,6 +1425,7 @@ typedef|;
 end_typedef
 
 begin_function
+specifier|static
 name|u_char
 modifier|*
 name|AliasHandleResourceNB
@@ -1795,6 +1786,7 @@ typedef|;
 end_typedef
 
 begin_function
+specifier|static
 name|u_char
 modifier|*
 name|AliasHandleResourceA
@@ -2119,6 +2111,7 @@ typedef|;
 end_typedef
 
 begin_function
+specifier|static
 name|u_char
 modifier|*
 name|AliasHandleResourceNULL
@@ -2267,6 +2260,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_char
 modifier|*
 name|AliasHandleResourceNS
@@ -2418,6 +2412,7 @@ typedef|;
 end_typedef
 
 begin_function
+specifier|static
 name|u_char
 modifier|*
 name|AliasHandleResourceNBSTAT
@@ -2538,6 +2533,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_char
 modifier|*
 name|AliasHandleResource
@@ -2728,6 +2724,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"\nUnknown Type of Resource %0x\n"
@@ -2740,6 +2739,8 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 name|count
