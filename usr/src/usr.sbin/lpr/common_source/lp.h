@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.h	4.4	83/06/22	*/
+comment|/*	lp.h	4.5	83/06/29	*/
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_include

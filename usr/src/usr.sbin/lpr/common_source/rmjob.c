@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rmjob.c	4.5	83/06/15	*/
+comment|/*	rmjob.c	4.6	83/06/29	*/
 end_comment
 
 begin_comment
@@ -544,20 +544,6 @@ name|getline
 argument_list|(
 name|fp
 argument_list|)
-operator|||
-name|flock
-argument_list|(
-name|fileno
-argument_list|(
-name|fp
-argument_list|)
-argument_list|,
-name|LOCK_SH
-operator||
-name|LOCK_NB
-argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 operator|(
@@ -582,6 +568,33 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|kill
+argument_list|(
+name|cur_daemon
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* no daemon present */
+block|}
 for|for
 control|(
 name|i

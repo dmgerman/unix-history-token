@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	printjob.c	4.9	83/06/22	*/
+comment|/*	printjob.c	4.10	83/06/29	*/
 end_comment
 
 begin_comment
@@ -327,6 +327,19 @@ name|init
 argument_list|()
 expr_stmt|;
 comment|/* set up capabilities */
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+literal|1
+argument_list|,
+literal|""
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* ack that daemon is started */
 operator|(
 name|void
 operator|)
