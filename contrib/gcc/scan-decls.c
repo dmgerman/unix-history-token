@@ -77,11 +77,22 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* 20 is not enough anymore on Solaris 9.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_EXTERN_C_BRACES
+value|200
+end_define
+
 begin_decl_stmt
 name|char
 name|extern_C_braces
 index|[
-literal|20
+name|MAX_EXTERN_C_BRACES
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -728,6 +739,26 @@ index|]
 operator|=
 name|brace_nesting
 expr_stmt|;
+if|if
+condition|(
+name|extern_C_braces_length
+operator|>=
+name|MAX_EXTERN_C_BRACES
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Internal error: out-of-bounds index\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|FATAL_EXIT_CODE
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|new_statement
 goto|;

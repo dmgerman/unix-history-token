@@ -372,6 +372,14 @@ name|LINK_SHLIB_SPEC
 value|"%{shared:-shared} %{!shared: %{static:-static}}"
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINK_GCC_C_SEQUENCE_SPEC
+define|\
+value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
+end_define
+
 begin_undef
 undef|#
 directive|undef

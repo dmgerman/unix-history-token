@@ -1024,7 +1024,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|pexecute_pid
+name|pid
 decl_stmt|;
 end_decl_stmt
 
@@ -7106,7 +7106,7 @@ name|status
 decl_stmt|;
 name|pwait
 argument_list|(
-name|pexecute_pid
+name|pid
 argument_list|,
 operator|&
 name|status
@@ -7481,7 +7481,7 @@ name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
 block|}
-name|pexecute_pid
+name|pid
 operator|=
 name|pexecute
 argument_list|(
@@ -7543,7 +7543,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|pexecute_pid
+name|pid
 operator|==
 operator|-
 literal|1
@@ -9561,9 +9561,6 @@ operator|*
 operator|*
 operator|)
 name|real_nm_argv
-decl_stmt|;
-name|int
-name|pid
 decl_stmt|;
 name|int
 name|argc
@@ -11802,9 +11799,6 @@ operator|*
 operator|*
 operator|)
 name|real_ldd_argv
-decl_stmt|;
-name|int
-name|pid
 decl_stmt|;
 name|int
 name|argc

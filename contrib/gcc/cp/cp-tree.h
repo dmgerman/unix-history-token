@@ -9360,7 +9360,15 @@ init|=
 literal|1
 operator|<<
 literal|6
+block|,
 comment|/* called from parser 				(make_typename_type use) */
+name|tf_conv
+init|=
+literal|1
+operator|<<
+literal|8
+block|,
+comment|/* We are determining what kind of 				conversion might be permissible, not 				actually performing the 				conversion.  */
 block|}
 name|tsubst_flags_t
 typedef|;
@@ -11524,6 +11532,9 @@ operator|,
 name|tree
 operator|,
 name|tree
+operator|,
+name|tree
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -12493,6 +12504,16 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|bool
+name|innermost_scope_is_class_p
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -20585,19 +20606,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|tree
-name|break_out_calls
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|tree
 name|build_cplus_method_type
 name|PARAMS
 argument_list|(
@@ -21867,8 +21875,6 @@ operator|(
 name|tree
 operator|,
 name|tree
-operator|,
-name|int
 operator|,
 name|int
 operator|)

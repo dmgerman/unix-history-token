@@ -431,8 +431,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MASK_3DNOW
+name|MASK_PNI
 value|0x00010000
+end_define
+
+begin_comment
+comment|/* Support PNI builtins */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_3DNOW
+value|0x00020000
 end_define
 
 begin_comment
@@ -443,7 +454,7 @@ begin_define
 define|#
 directive|define
 name|MASK_3DNOW_A
-value|0x00020000
+value|0x00040000
 end_define
 
 begin_comment
@@ -454,7 +465,7 @@ begin_define
 define|#
 directive|define
 name|MASK_128BIT_LONG_DOUBLE
-value|0x00040000
+value|0x00080000
 end_define
 
 begin_comment
@@ -465,7 +476,7 @@ begin_define
 define|#
 directive|define
 name|MASK_64BIT
-value|0x00080000
+value|0x00100000
 end_define
 
 begin_comment
@@ -1270,7 +1281,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_SSE
-value|((target_flags& (MASK_SSE | MASK_SSE2)) != 0)
+value|((target_flags& MASK_SSE) != 0)
 end_define
 
 begin_define
@@ -1278,6 +1289,13 @@ define|#
 directive|define
 name|TARGET_SSE2
 value|((target_flags& MASK_SSE2) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_PNI
+value|((target_flags& MASK_PNI) != 0)
 end_define
 
 begin_define
@@ -1361,7 +1379,7 @@ value|},	 	      \   { "rtd",			 MASK_RTD,				      \     N_("Alternate calling 
 comment|/* undocumented */
 value|},		      \   { "dll",			0,  0
 comment|/* undocumented */
-value|},		      \   { "align-stringops",		-MASK_NO_ALIGN_STROPS,			      \     N_("Align destination of the string operations") },			      \   { "no-align-stringops",	 MASK_NO_ALIGN_STROPS,			      \     N_("Do not align destination of the string operations") },		      \   { "inline-all-stringops",	 MASK_INLINE_ALL_STROPS,		      \     N_("Inline all known string operations") },				      \   { "no-inline-all-stringops",	-MASK_INLINE_ALL_STROPS,		      \     N_("Do not inline all known string operations") },			      \   { "push-args",		-MASK_NO_PUSH_ARGS,			      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-push-args",		MASK_NO_PUSH_ARGS,			      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "accumulate-outgoing-args",	MASK_ACCUMULATE_OUTGOING_ARGS,		      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-accumulate-outgoing-args",-MASK_ACCUMULATE_OUTGOING_ARGS,	      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "mmx",			 MASK_MMX,				      \     N_("Support MMX built-in functions") },				      \   { "no-mmx",			 -MASK_MMX,				      \     N_("Do not support MMX built-in functions") },			      \   { "3dnow",                     MASK_3DNOW,				      \     N_("Support 3DNow! built-in functions") },				      \   { "no-3dnow",                  -MASK_3DNOW,				      \     N_("Do not support 3DNow! built-in functions") },			      \   { "sse",			 MASK_SSE,				      \     N_("Support MMX and SSE built-in functions and code generation") },	      \   { "no-sse",			 -MASK_SSE,				      \     N_("Do not support MMX and SSE built-in functions and code generation") },\   { "sse2",			 MASK_SSE2,				      \     N_("Support MMX, SSE and SSE2 built-in functions and code generation") }, \   { "no-sse2",			 -MASK_SSE2,				      \     N_("Do not support MMX, SSE and SSE2 built-in functions and code generation") },    \   { "128bit-long-double",	 MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 16") },					      \   { "96bit-long-double",	-MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 12") },					      \   { "64",			MASK_64BIT,				      \     N_("Generate 64bit x86-64 code") },					      \   { "32",			-MASK_64BIT,				      \     N_("Generate 32bit i386 code") },					      \   { "red-zone",			-MASK_NO_RED_ZONE,			      \     N_("Use red-zone in the x86-64 code") },				      \   { "no-red-zone",		MASK_NO_RED_ZONE,			      \     N_("Do not use red-zone in the x86-64 code") },			      \   SUBTARGET_SWITCHES							      \   { "", TARGET_DEFAULT | TARGET_64BIT_DEFAULT | TARGET_SUBTARGET_DEFAULT, 0 }}
+value|},		      \   { "align-stringops",		-MASK_NO_ALIGN_STROPS,			      \     N_("Align destination of the string operations") },			      \   { "no-align-stringops",	 MASK_NO_ALIGN_STROPS,			      \     N_("Do not align destination of the string operations") },		      \   { "inline-all-stringops",	 MASK_INLINE_ALL_STROPS,		      \     N_("Inline all known string operations") },				      \   { "no-inline-all-stringops",	-MASK_INLINE_ALL_STROPS,		      \     N_("Do not inline all known string operations") },			      \   { "push-args",		-MASK_NO_PUSH_ARGS,			      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-push-args",		MASK_NO_PUSH_ARGS,			      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "accumulate-outgoing-args",	MASK_ACCUMULATE_OUTGOING_ARGS,		      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-accumulate-outgoing-args",-MASK_ACCUMULATE_OUTGOING_ARGS,	      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "mmx",			 MASK_MMX,				      \     N_("Support MMX built-in functions") },				      \   { "no-mmx",			 -MASK_MMX,				      \     N_("Do not support MMX built-in functions") },			      \   { "3dnow",                     MASK_3DNOW,				      \     N_("Support 3DNow! built-in functions") },				      \   { "no-3dnow",                  -MASK_3DNOW,				      \     N_("Do not support 3DNow! built-in functions") },			      \   { "sse",			 MASK_SSE,				      \     N_("Support MMX and SSE built-in functions and code generation") },	      \   { "no-sse",			 -MASK_SSE,				      \     N_("Do not support MMX and SSE built-in functions and code generation") },\   { "sse2",			 MASK_SSE2,				      \     N_("Support MMX, SSE and SSE2 built-in functions and code generation") }, \   { "no-sse2",			 -MASK_SSE2,				      \     N_("Do not support MMX, SSE and SSE2 built-in functions and code generation") },    \   { "pni",			 MASK_PNI,				      \     N_("Support MMX, SSE, SSE2 and PNI built-in functions and code generation") }, \   { "no-pni",			 -MASK_PNI,				      \     N_("Do not support MMX, SSE, SSE2 and PNI built-in functions and code generation") }, \   { "128bit-long-double",	 MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 16") },					      \   { "96bit-long-double",	-MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 12") },					      \   { "64",			MASK_64BIT,				      \     N_("Generate 64bit x86-64 code") },					      \   { "32",			-MASK_64BIT,				      \     N_("Generate 32bit i386 code") },					      \   { "red-zone",			-MASK_NO_RED_ZONE,			      \     N_("Use red-zone in the x86-64 code") },				      \   { "no-red-zone",		MASK_NO_RED_ZONE,			      \     N_("Do not use red-zone in the x86-64 code") },			      \   SUBTARGET_SWITCHES							      \   { "", TARGET_DEFAULT | TARGET_64BIT_DEFAULT | TARGET_SUBTARGET_DEFAULT, 0 }}
 end_define
 
 begin_ifndef
@@ -1505,7 +1523,7 @@ value|\       if (TARGET_386)						\ 	builtin_define ("__tune_i386__");			\     
 comment|/* FALLTHRU */
 value|\ 	    case '2':						\ 	      builtin_define ("__tune_pentium2__");		\ 	      break;						\ 	    }							\ 	}							\       else if (TARGET_K6)					\ 	{							\ 	  builtin_define ("__tune_k6__");			\ 	  if (last_cpu_char == '2')				\ 	    builtin_define ("__tune_k6_2__");			\ 	  else if (last_cpu_char == '3')			\ 	    builtin_define ("__tune_k6_3__");			\ 	}							\       else if (TARGET_ATHLON)					\ 	{							\ 	  builtin_define ("__tune_athlon__");			\
 comment|/* Only plain "athlon" lacks SSE.  */
-value|\ 	  if (last_cpu_char != 'n')				\ 	    builtin_define ("__tune_athlon_sse__");		\ 	}							\       else if (TARGET_PENTIUM4)					\ 	builtin_define ("__tune_pentium4__");			\ 								\       if (TARGET_MMX)						\ 	builtin_define ("__MMX__");				\       if (TARGET_3DNOW)						\ 	builtin_define ("__3dNOW__");				\       if (TARGET_3DNOW_A)					\ 	builtin_define ("__3dNOW_A__");				\       if (TARGET_SSE)						\ 	builtin_define ("__SSE__");				\       if (TARGET_SSE2)						\ 	builtin_define ("__SSE2__");				\       if (TARGET_SSE_MATH&& TARGET_SSE)			\ 	builtin_define ("__SSE_MATH__");			\       if (TARGET_SSE_MATH&& TARGET_SSE2)			\ 	builtin_define ("__SSE2_MATH__");			\ 								\
+value|\ 	  if (last_cpu_char != 'n')				\ 	    builtin_define ("__tune_athlon_sse__");		\ 	}							\       else if (TARGET_PENTIUM4)					\ 	builtin_define ("__tune_pentium4__");			\ 								\       if (TARGET_MMX)						\ 	builtin_define ("__MMX__");				\       if (TARGET_3DNOW)						\ 	builtin_define ("__3dNOW__");				\       if (TARGET_3DNOW_A)					\ 	builtin_define ("__3dNOW_A__");				\       if (TARGET_SSE)						\ 	builtin_define ("__SSE__");				\       if (TARGET_SSE2)						\ 	builtin_define ("__SSE2__");				\       if (TARGET_PNI)						\ 	builtin_define ("__PNI__");				\       if (TARGET_SSE_MATH&& TARGET_SSE)			\ 	builtin_define ("__SSE_MATH__");			\       if (TARGET_SSE_MATH&& TARGET_SSE2)			\ 	builtin_define ("__SSE2_MATH__");			\ 								\
 comment|/* Built-ins based on -march=.  */
 value|\       if (ix86_arch == PROCESSOR_I486)				\ 	{							\ 	  builtin_define ("__i486");				\ 	  builtin_define ("__i486__");				\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUM)			\ 	{							\ 	  builtin_define ("__i586");				\ 	  builtin_define ("__i586__");				\ 	  builtin_define ("__pentium");				\ 	  builtin_define ("__pentium__");			\ 	  if (last_arch_char == 'x')				\ 	    builtin_define ("__pentium_mmx__");			\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUMPRO)		\ 	{							\ 	  builtin_define ("__i686");				\ 	  builtin_define ("__i686__");				\ 	  builtin_define ("__pentiumpro");			\ 	  builtin_define ("__pentiumpro__");			\ 	}							\       else if (ix86_arch == PROCESSOR_K6)			\ 	{							\ 								\ 	  builtin_define ("__k6");				\ 	  builtin_define ("__k6__");				\ 	  if (last_arch_char == '2')				\ 	    builtin_define ("__k6_2__");			\ 	  else if (last_arch_char == '3')			\ 	    builtin_define ("__k6_3__");			\ 	}							\       else if (ix86_arch == PROCESSOR_ATHLON)			\ 	{							\ 	  builtin_define ("__athlon");				\ 	  builtin_define ("__athlon__");			\
 comment|/* Only plain "athlon" lacks SSE.  */
@@ -5212,6 +5230,33 @@ block|,
 name|IX86_BUILTIN_MFENCE
 block|,
 name|IX86_BUILTIN_LFENCE
+block|,
+comment|/* Prescott New Instructions.  */
+name|IX86_BUILTIN_ADDSUBPS
+block|,
+name|IX86_BUILTIN_HADDPS
+block|,
+name|IX86_BUILTIN_HSUBPS
+block|,
+name|IX86_BUILTIN_MOVSHDUP
+block|,
+name|IX86_BUILTIN_MOVSLDUP
+block|,
+name|IX86_BUILTIN_ADDSUBPD
+block|,
+name|IX86_BUILTIN_HADDPD
+block|,
+name|IX86_BUILTIN_HSUBPD
+block|,
+name|IX86_BUILTIN_LOADDDUP
+block|,
+name|IX86_BUILTIN_MOVDDUP
+block|,
+name|IX86_BUILTIN_LDDQU
+block|,
+name|IX86_BUILTIN_MONITOR
+block|,
+name|IX86_BUILTIN_MWAIT
 block|,
 name|IX86_BUILTIN_MAX
 block|}

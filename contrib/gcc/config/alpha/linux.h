@@ -121,6 +121,14 @@ directive|define
 name|TARGET_HAS_F_SETLKW
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINK_GCC_C_SEQUENCE_SPEC
+define|\
+value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
+end_define
+
 begin_comment
 comment|/* Do code reading to identify a signal frame, and set the frame    state data appropriately.  See unwind-dw2.c for the structs.  */
 end_comment
@@ -164,11 +172,11 @@ value|do {									\     unsigned int *pc_ = (CONTEXT)->ra;					\     struct sig
 comment|/* mov $30,$16 */
 value|\         || pc_[2] != 0x00000083
 comment|/* callsys */
-value|)			\       break;								\     if (pc_[1] == 0x201f0067)
+value|)			\       break;								\     if ((CONTEXT)->cfa == 0)						\       break;								\     if (pc_[1] == 0x201f0067)
 comment|/* lda $0,NR_sigreturn */
 value|\       sc_ = (CONTEXT)->cfa;						\     else if (pc_[1] == 0x201f015f)
 comment|/* lda $0,NR_rt_sigreturn */
-value|\       {									\ 	struct rt_sigframe {						\ 	  struct siginfo info;						\ 	  struct ucontext uc;						\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->uc.uc_mcontext;					\       }									\     else								\       break;								\     new_cfa_ = sc_->sc_regs[30];					\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = 30;							\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\     for (i_ = 0; i_< 30; ++i_)						\       {									\ 	(FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_].loc.offset					\ 	  = (long)&sc_->sc_regs[i_] - new_cfa_;				\       }									\     for (i_ = 0; i_< 31; ++i_)						\       {									\ 	(FS)->regs.reg[i_+32].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_+32].loc.offset				\ 	  = (long)&sc_->sc_fpregs[i_] - new_cfa_;			\       }									\     (FS)->regs.reg[31].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[31].loc.offset = (long)&sc_->sc_pc - new_cfa_;	\     (FS)->retaddr_column = 31;						\     goto SUCCESS;							\   } while (0)
+value|\       {									\ 	struct rt_sigframe {						\ 	  struct siginfo info;						\ 	  struct ucontext uc;						\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->uc.uc_mcontext;					\       }									\     else								\       break;								\     new_cfa_ = sc_->sc_regs[30];					\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = 30;							\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\     for (i_ = 0; i_< 30; ++i_)						\       {									\ 	(FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_].loc.offset					\ 	  = (long)&sc_->sc_regs[i_] - new_cfa_;				\       }									\     for (i_ = 0; i_< 31; ++i_)						\       {									\ 	(FS)->regs.reg[i_+32].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_+32].loc.offset				\ 	  = (long)&sc_->sc_fpregs[i_] - new_cfa_;			\       }									\     (FS)->regs.reg[64].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[64].loc.offset = (long)&sc_->sc_pc - new_cfa_;	\     (FS)->retaddr_column = 64;						\     goto SUCCESS;							\   } while (0)
 end_define
 
 end_unit

@@ -905,6 +905,17 @@ condition|)
 return|return
 literal|1
 return|;
+comment|/* If the insn can throw an exception that is caught within the function,      it may effectively perform a jump from the viewpoint of the function.      Therefore act like for a jump.  */
+if|if
+condition|(
+name|can_throw_internal
+argument_list|(
+name|insn
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
 switch|switch
 condition|(
 name|GET_CODE

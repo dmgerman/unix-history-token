@@ -1991,7 +1991,7 @@ argument_list|)
 operator|==
 name|TYPE_DECL
 operator|&&
-name|COMPLETE_TYPE_P
+name|COMPLETE_OR_VOID_TYPE_P
 argument_list|(
 name|type
 argument_list|)

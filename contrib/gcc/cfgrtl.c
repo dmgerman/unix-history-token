@@ -9323,8 +9323,16 @@ argument_list|(
 name|insn
 argument_list|)
 condition|)
-comment|/* Keep the edges that correspond to exceptions thrown by 	       this instruction.  */
+comment|/* Keep the edges that correspond to exceptions thrown by 	       this instruction and rematerialize the EDGE_ABNORMAL flag 	       we just cleared above.  */
+block|{
+name|e
+operator|->
+name|flags
+operator||=
+name|EDGE_ABNORMAL
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* We do not need this edge.  */
 name|bb
 operator|->

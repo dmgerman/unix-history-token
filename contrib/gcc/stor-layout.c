@@ -2714,6 +2714,25 @@ name|field
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|DECL_BIT_FIELD_TYPE
+argument_list|(
+name|field
+argument_list|)
+condition|)
+comment|/* Even packed non-bit-fields get byte alignment.  */
+name|desired_align
+operator|=
+name|MAX
+argument_list|(
+name|desired_align
+argument_list|,
+name|BITS_PER_UNIT
+argument_list|)
+expr_stmt|;
 comment|/* Some targets (i.e. i386, VMS) limit struct field alignment      to a lower boundary than alignment of variables unless      it was overridden by attribute aligned.  */
 ifdef|#
 directive|ifdef

@@ -1006,7 +1006,7 @@ begin_define
 define|#
 directive|define
 name|FIRST_PSEUDO_REGISTER
-value|335
+value|334
 end_define
 
 begin_comment
@@ -1071,7 +1071,7 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 define|\
-value|(GR_REGNO_P (REGNO)							\    || (REGNO) == FRAME_POINTER_REGNUM					\    || (REGNO) == RETURN_ADDRESS_POINTER_REGNUM)
+value|(GR_REGNO_P (REGNO) || (REGNO) == FRAME_POINTER_REGNUM)
 end_define
 
 begin_define
@@ -1148,35 +1148,35 @@ begin_define
 define|#
 directive|define
 name|AR_CCV_REGNUM
-value|330
+value|329
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR_UNAT_REGNUM
-value|331
+value|330
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR_PFS_REGNUM
-value|332
+value|331
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR_LC_REGNUM
-value|333
+value|332
 end_define
 
 begin_define
 define|#
 directive|define
 name|AR_EC_REGNUM
-value|334
+value|333
 end_define
 
 begin_define
@@ -1305,8 +1305,8 @@ comment|/* Predicate registers.  */
 value|\   1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	\   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	\   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	\   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	\
 comment|/* Branch registers.  */
 value|\   0, 0, 0, 0, 0, 0, 0, 0,				\
-comment|/*FP RA CCV UNAT PFS LC EC */
-value|\      1, 1,  1,   1,  1, 0, 1				\  }
+comment|/*FP CCV UNAT PFS LC EC */
+value|\      1,  1,   1,  1, 0, 1				\  }
 end_define
 
 begin_comment
@@ -1327,8 +1327,8 @@ comment|/* Predicate registers.  */
 value|\   1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,	\   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	\   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	\   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	\
 comment|/* Branch registers.  */
 value|\   1, 0, 0, 0, 0, 0, 1, 1,				\
-comment|/*FP RA CCV UNAT PFS LC EC */
-value|\      1, 1,  1,   1,  1, 0, 1				\ }
+comment|/*FP CCV UNAT PFS LC EC */
+value|\      1,  1,   1,  1, 0, 1				\ }
 end_define
 
 begin_comment
@@ -1349,8 +1349,8 @@ comment|/* Predicate registers.  */
 value|\   1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,	\   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	\   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	\   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	\
 comment|/* Branch registers.  */
 value|\   1, 0, 0, 0, 0, 0, 1, 1,				\
-comment|/*FP RA CCV UNAT PFS LC EC */
-value|\      0, 0,  1,   0,  1, 0, 0				\ }
+comment|/*FP CCV UNAT PFS LC EC */
+value|\      0,  1,   0,  1, 0, 0				\ }
 end_define
 
 begin_comment
@@ -1480,7 +1480,7 @@ value|\   R_PR (0),								   \
 comment|/* Special branch registers.  */
 value|\   R_BR (0),								   \
 comment|/* Other fixed registers.  */
-value|\   FRAME_POINTER_REGNUM, RETURN_ADDRESS_POINTER_REGNUM,			   \   AR_CCV_REGNUM, AR_UNAT_REGNUM, AR_PFS_REGNUM, AR_LC_REGNUM,		   \   AR_EC_REGNUM		  						   \ }
+value|\   FRAME_POINTER_REGNUM, 						   \   AR_CCV_REGNUM, AR_UNAT_REGNUM, AR_PFS_REGNUM, AR_LC_REGNUM,		   \   AR_EC_REGNUM		  						   \ }
 end_define
 
 begin_escape
@@ -1673,21 +1673,21 @@ value|\   { 0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x
 comment|/* BR_REGS.  */
 value|\   { 0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x00FF },			\
 comment|/* AR_M_REGS.  */
-value|\   { 0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x0C00 },			\
+value|\   { 0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x0600 },			\
 comment|/* AR_I_REGS.  */
-value|\   { 0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x7000 },			\
+value|\   { 0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x3800 },			\
 comment|/* ADDL_REGS.  */
 value|\   { 0x0000000F, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x0000 },			\
 comment|/* GR_REGS.  */
-value|\   { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x0300 },			\
+value|\   { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x0100 },			\
 comment|/* FR_REGS.  */
 value|\   { 0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0x00000000, 0x00000000, 0x0000 },			\
 comment|/* GR_AND_BR_REGS.  */
-value|\   { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x03FF },			\
+value|\   { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0x00000000, 0x00000000, 0x00000000, 0x00000000,	\     0x00000000, 0x00000000, 0x01FF },			\
 comment|/* GR_AND_FR_REGS.  */
-value|\   { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0x00000000, 0x00000000, 0x0300 },			\
+value|\   { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0x00000000, 0x00000000, 0x0100 },			\
 comment|/* ALL_REGS.  */
-value|\   { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0xFFFFFFFF, 0xFFFFFFFF, 0x7FFF },			\ }
+value|\   { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,	\     0xFFFFFFFF, 0xFFFFFFFF, 0x3FFF },			\ }
 end_define
 
 begin_comment
@@ -2194,7 +2194,7 @@ parameter_list|,
 name|FRAME
 parameter_list|)
 define|\
-value|((COUNT) == 0 ? return_address_pointer_rtx : const0_rtx)
+value|ia64_return_addr_rtx (COUNT, FRAME)
 end_define
 
 begin_comment
@@ -2297,17 +2297,6 @@ value|do {							\     if (cfun&& cfun->emit->regno_pointer_align)	\       REGNO
 end_define
 
 begin_comment
-comment|/* The register number for the return address register.  For IA-64, this    is not actually a pointer as the name suggests, but that's a name that    gen_rtx_REG already takes care to keep unique.  We modify    return_address_pointer_rtx in ia64_expand_prologue to reference the    final output regnum.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RETURN_ADDRESS_POINTER_REGNUM
-value|329
-end_define
-
-begin_comment
 comment|/* Register numbers used for passing a function's static chain pointer.  */
 end_comment
 
@@ -2359,7 +2348,7 @@ define|#
 directive|define
 name|ELIMINABLE_REGS
 define|\
-value|{									\   {ARG_POINTER_REGNUM,	 STACK_POINTER_REGNUM},				\   {ARG_POINTER_REGNUM,	 HARD_FRAME_POINTER_REGNUM},			\   {FRAME_POINTER_REGNUM, STACK_POINTER_REGNUM},				\   {FRAME_POINTER_REGNUM, HARD_FRAME_POINTER_REGNUM},			\   {RETURN_ADDRESS_POINTER_REGNUM, BR_REG (0)},				\ }
+value|{									\   {ARG_POINTER_REGNUM,	 STACK_POINTER_REGNUM},				\   {ARG_POINTER_REGNUM,	 HARD_FRAME_POINTER_REGNUM},			\   {FRAME_POINTER_REGNUM, STACK_POINTER_REGNUM},				\   {FRAME_POINTER_REGNUM, HARD_FRAME_POINTER_REGNUM},			\ }
 end_define
 
 begin_comment
@@ -3782,8 +3771,8 @@ comment|/* Predicate registers.  */
 value|\   "p0", "p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9",		\   "p10", "p11", "p12", "p13", "p14", "p15", "p16", "p17", "p18", "p19",	\   "p20", "p21", "p22", "p23", "p24", "p25", "p26", "p27", "p28", "p29",	\   "p30", "p31", "p32", "p33", "p34", "p35", "p36", "p37", "p38", "p39",	\   "p40", "p41", "p42", "p43", "p44", "p45", "p46", "p47", "p48", "p49",	\   "p50", "p51", "p52", "p53", "p54", "p55", "p56", "p57", "p58", "p59",	\   "p60", "p61", "p62", "p63",						\
 comment|/* Branch registers.  */
 value|\   "b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7",			\
-comment|/* Frame pointer.  Return address.  */
-value|\   "sfp", "retaddr", "ar.ccv", "ar.unat", "ar.pfs", "ar.lc", "ar.ec",	\ }
+comment|/* Frame pointer.  Application registers.  */
+value|\   "sfp", "ar.ccv", "ar.unat", "ar.pfs", "ar.lc", "ar.ec",	\ }
 end_define
 
 begin_comment

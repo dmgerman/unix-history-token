@@ -6256,8 +6256,7 @@ else|else
 block|{
 name|warning
 argument_list|(
-literal|"use of memory input without lvalue in "
-literal|"asm operand %d is deprecated"
+literal|"use of memory input without lvalue in asm operand %d is deprecated"
 argument_list|,
 name|i
 operator|+

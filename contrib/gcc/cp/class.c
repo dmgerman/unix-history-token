@@ -584,7 +584,7 @@ name|tree
 operator|,
 name|tree
 operator|,
-name|int
+name|tsubst_flags_t
 operator|,
 name|int
 operator|,
@@ -19046,6 +19046,48 @@ argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
+comment|/* We must also reset the DECL_MODE of the field.  */
+if|if
+condition|(
+name|abi_version_at_least
+argument_list|(
+literal|2
+argument_list|)
+condition|)
+name|DECL_MODE
+argument_list|(
+name|field
+argument_list|)
+operator|=
+name|TYPE_MODE
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|warn_abi
+operator|&&
+name|DECL_MODE
+argument_list|(
+name|field
+argument_list|)
+operator|!=
+name|TYPE_MODE
+argument_list|(
+name|type
+argument_list|)
+condition|)
+comment|/* Versions of G++ before G++ 3.4 did not reset the 	       DECL_MODE.  */
+name|warning
+argument_list|(
+literal|"the offset of `%D' may not be ABI-compliant and may "
+literal|"change in a future version of GCC"
+argument_list|,
+name|field
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -22502,7 +22544,7 @@ name|target_type
 parameter_list|,
 name|overload
 parameter_list|,
-name|complain
+name|flags
 parameter_list|,
 name|ptrmem
 parameter_list|,
@@ -22516,8 +22558,8 @@ decl_stmt|;
 name|tree
 name|overload
 decl_stmt|;
-name|int
-name|complain
+name|tsubst_flags_t
+name|flags
 decl_stmt|;
 name|int
 name|ptrmem
@@ -22646,7 +22688,9 @@ else|else
 block|{
 if|if
 condition|(
-name|complain
+name|flags
+operator|&
+name|tf_error
 condition|)
 name|error
 argument_list|(
@@ -22732,6 +22776,15 @@ operator|!=
 name|is_ptrmem
 condition|)
 comment|/* We're looking for a non-static member, and this isn't 	       one, or vice versa.  */
+continue|continue;
+comment|/* Ignore anticipated decls of undeclared builtins.  */
+if|if
+condition|(
+name|DECL_ANTICIPATED
+argument_list|(
+name|fn
+argument_list|)
+condition|)
 continue|continue;
 comment|/* See if there's a match.  */
 name|fntype
@@ -23081,7 +23134,9 @@ block|{
 comment|/* There were *no* matches.  */
 if|if
 condition|(
-name|complain
+name|flags
+operator|&
+name|tf_error
 condition|)
 block|{
 name|error
@@ -23148,7 +23203,9 @@ block|{
 comment|/* There were too many matches.  */
 if|if
 condition|(
-name|complain
+name|flags
+operator|&
+name|tf_error
 condition|)
 block|{
 name|tree
@@ -23234,7 +23291,11 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|complain
+operator|(
+name|flags
+operator|&
+name|tf_error
+operator|)
 condition|)
 return|return
 name|error_mark_node
@@ -23265,6 +23326,16 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+comment|/* If we're doing overload resolution purely for the purpose of      determining conversion sequences, we should not consider the      function used.  If this conversion sequence is selected, the      function will be marked as used at this point.  */
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|tf_conv
+operator|)
+condition|)
 name|mark_used
 argument_list|(
 name|fn
@@ -23330,6 +23401,11 @@ name|tsubst_flags_t
 name|flags
 decl_stmt|;
 block|{
+name|tsubst_flags_t
+name|flags_in
+init|=
+name|flags
+decl_stmt|;
 name|int
 name|complain
 init|=
@@ -23692,7 +23768,7 @@ name|lhstype
 argument_list|,
 name|fns
 argument_list|,
-name|complain
+name|flags_in
 argument_list|,
 name|allow_ptrmem
 argument_list|,
@@ -23713,7 +23789,7 @@ name|lhstype
 argument_list|,
 name|rhs
 argument_list|,
-name|complain
+name|flags_in
 argument_list|,
 name|allow_ptrmem
 argument_list|,
@@ -24861,13 +24937,8 @@ comment|/* If we're not defining a class, there's nothing to do.  */
 if|if
 condition|(
 operator|!
-name|current_class_type
-operator|||
-operator|!
-name|TYPE_BEING_DEFINED
-argument_list|(
-name|current_class_type
-argument_list|)
+name|innermost_scope_is_class_p
+argument_list|()
 condition|)
 return|return;
 comment|/* If there's already a binding for this NAME, then we don't have      anything to worry about.  */

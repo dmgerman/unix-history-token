@@ -11078,6 +11078,14 @@ name|sig
 decl_stmt|,
 name|exp
 decl_stmt|;
+name|unsigned
+name|long
+name|sign
+init|=
+name|r
+operator|->
+name|sign
+decl_stmt|;
 name|bool
 name|denormal
 init|=
@@ -11098,8 +11106,6 @@ literal|0
 decl_stmt|;
 name|image
 operator|=
-name|r
-operator|->
 name|sign
 operator|<<
 literal|31

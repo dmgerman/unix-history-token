@@ -335,7 +335,7 @@ name|induction
 modifier|*
 name|same
 decl_stmt|;
-comment|/* If this giv has been combined with another 				   giv, this points to the base giv.  The base 				   giv will have COMBINED_WITH nonzero.  */
+comment|/* For givs, if the giv has been combined with 				   another giv, this points to the base giv. 				   The base giv will have COMBINED_WITH nonzero. 				   For bivs, if the biv has the same LOCATION 				   than another biv, this points to the base 				   biv.  */
 name|HOST_WIDE_INT
 name|const_adjust
 decl_stmt|;

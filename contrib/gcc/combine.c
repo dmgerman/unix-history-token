@@ -1701,6 +1701,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|adjust_for_new_dest
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -6137,6 +6150,100 @@ block|}
 end_function
 
 begin_comment
+comment|/* Adjust INSN after we made a change to its destination.     Changing the destination can invalidate notes that say something about    the results of the insn and a LOG_LINK pointing to the insn.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|adjust_for_new_dest
+parameter_list|(
+name|insn
+parameter_list|)
+name|rtx
+name|insn
+decl_stmt|;
+block|{
+name|rtx
+modifier|*
+name|loc
+decl_stmt|;
+comment|/* For notes, be conservative and simply remove them.  */
+name|loc
+operator|=
+operator|&
+name|REG_NOTES
+argument_list|(
+name|insn
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|loc
+condition|)
+block|{
+name|enum
+name|reg_note
+name|kind
+init|=
+name|REG_NOTE_KIND
+argument_list|(
+operator|*
+name|loc
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|kind
+operator|==
+name|REG_EQUAL
+operator|||
+name|kind
+operator|==
+name|REG_EQUIV
+condition|)
+operator|*
+name|loc
+operator|=
+name|XEXP
+argument_list|(
+operator|*
+name|loc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|loc
+operator|=
+operator|&
+name|XEXP
+argument_list|(
+operator|*
+name|loc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* The new insn will have a destination that was previously the destination      of an insn just above it.  Call distribute_links to make a LOG_LINK from      the next use of that destination.  */
+name|distribute_links
+argument_list|(
+name|gen_rtx_INSN_LIST
+argument_list|(
+name|VOIDmode
+argument_list|,
+name|insn
+argument_list|,
+name|NULL_RTX
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Try to combine the insns I1 and I2 into I3.    Here I1 and I2 appear earlier than I3.    I1 can be zero; then we combine just I2 into I3.     If we are combining three insns and the resulting insn is not recognized,    try splitting it into two insns.  If that happens, I2 and I3 are retained    and I1 is pseudo-deleted by turning it into a NOTE.  Otherwise, I1 and I2    are pseudo-deleted.     Return 0 if the combination does not work.  Then nothing is changed.    If we did the combination, return the insn at which combine should    resume scanning.     Set NEW_DIRECT_JUMP_P to a nonzero value if try_combine creates a    new direct jump instruction.  */
 end_comment
 
@@ -8973,6 +9080,27 @@ operator|&
 name|new_i3_notes
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|insn_code_number
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* If we will be able to accept this, we have made a change to the 	     destination of I3.  This requires us to do a few adjustments.  */
+name|PATTERN
+argument_list|(
+name|i3
+argument_list|)
+operator|=
+name|newpat
+expr_stmt|;
+name|adjust_for_new_dest
+argument_list|(
+name|i3
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* If we were combining three insns and the result is a simple SET      with no ASM_OPERANDS that wasn't recognized, try to split it into two      insns.  There are two ways to do this.  It can be split using a      machine-specific method (like when you have an addition of a large      constant) or by combine in the function find_split_point.  */
 if|if
@@ -10464,7 +10592,7 @@ decl_stmt|;
 name|rtx
 name|link
 decl_stmt|;
-comment|/* If we will be able to accept this, we have made a change to the 	     destination of I3.  This can invalidate a LOG_LINKS pointing 	     to I3.  No other part of combine.c makes such a transformation.  	     The new I3 will have a destination that was previously the 	     destination of I1 or I2 and which was used in i2 or I3.  Call 	     distribute_links to make a LOG_LINK from the next use of 	     that destination.  */
+comment|/* If we will be able to accept this, we have made a change to the 	     destination of I3.  This requires us to do a few adjustments.  */
 name|PATTERN
 argument_list|(
 name|i3
@@ -10472,16 +10600,9 @@ argument_list|)
 operator|=
 name|newpat
 expr_stmt|;
-name|distribute_links
+name|adjust_for_new_dest
 argument_list|(
-name|gen_rtx_INSN_LIST
-argument_list|(
-name|VOIDmode
-argument_list|,
 name|i3
-argument_list|,
-name|NULL_RTX
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* I3 now uses what used to be its destination and which is 	     now I2's destination.  That means we need a LOG_LINK from 	     I3 to I2.  But we used to have one, so we still will.  	     However, some later insn might be using I2's dest and have 	     a LOG_LINK pointing at I3.  We must remove this link. 	     The simplest way to remove the link is to point it at I1, 	     which we know will be a NOTE.  */
@@ -40752,6 +40873,26 @@ argument_list|)
 operator|==
 name|ROTATE
 operator|&&
+name|GET_CODE
+argument_list|(
+name|XEXP
+argument_list|(
+name|SUBREG_REG
+argument_list|(
+name|XEXP
+argument_list|(
+name|src
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|==
+name|CONST_INT
+operator|&&
 name|INTVAL
 argument_list|(
 name|XEXP
@@ -52018,6 +52159,31 @@ name|tem
 decl_stmt|;
 if|if
 condition|(
+name|GET_CODE
+argument_list|(
+name|op0
+argument_list|)
+operator|==
+name|CLOBBER
+condition|)
+return|return
+name|op0
+return|;
+elseif|else
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|op1
+argument_list|)
+operator|==
+name|CLOBBER
+condition|)
+return|return
+name|op1
+return|;
+if|if
+condition|(
 name|GET_RTX_CLASS
 argument_list|(
 name|code
@@ -63215,6 +63381,9 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
+name|REG_ALWAYS_RETURN
+case|:
+case|case
 name|REG_NORETURN
 case|:
 case|case
@@ -65303,7 +65472,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Similarly to above, distribute the LOG_LINKS that used to be present on    I3, I2, and I1 to new locations.  This is also called in one case to    add a link pointing at I3 when I3's destination is changed.  */
+comment|/* Similarly to above, distribute the LOG_LINKS that used to be present on    I3, I2, and I1 to new locations.  This is also called to add a link    pointing at I3 when I3's destination is changed.  */
 end_comment
 
 begin_function

@@ -28039,6 +28039,26 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|control_flow_insn_p
+argument_list|(
+name|p
+argument_list|)
+condition|)
+comment|/* p can cause a control flow transfer so it 				 is the last insn of a basic block.  We can't 				 therefore use emit_insn_after.  */
+name|emit_insn_before
+argument_list|(
+name|move
+argument_list|,
+name|next_nonnote_insn
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|emit_insn_after
 argument_list|(
 name|move
@@ -28046,6 +28066,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 block|}

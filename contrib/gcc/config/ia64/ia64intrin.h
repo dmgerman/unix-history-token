@@ -83,7 +83,7 @@ name|int
 parameter_list|)
 function_decl|;
 specifier|extern
-name|long
+name|int
 name|__sync_bool_compare_and_swap_di
 parameter_list|(
 name|long
@@ -105,7 +105,7 @@ parameter_list|,
 name|NEW
 parameter_list|)
 define|\
-value|((sizeof (*(PTR)) == sizeof(int))					\   ? (__typeof__(*(PTR)))						\     __sync_bool_compare_and_swap_si((int *)(PTR),(int)(OLD),(int)(NEW))	\   : (__typeof__(*(PTR)))						\     __sync_bool_compare_and_swap_di((long *)(PTR),(long)(OLD),(long)(NEW)))
+value|((sizeof (*(PTR)) == sizeof(int))					\   ? __sync_bool_compare_and_swap_si((int *)(PTR),(int)(OLD),(int)(NEW))	\   : __sync_bool_compare_and_swap_di((long *)(PTR),(long)(OLD),(long)(NEW)))
 specifier|extern
 name|void
 name|__sync_lock_release_si

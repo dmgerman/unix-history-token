@@ -2529,6 +2529,13 @@ name|DWARF_FRAME_RETURN_COLUMN
 value|DWARF_FRAME_REGNUM (26)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DWARF_ALT_FRAME_RETURN_COLUMN
+value|DWARF_FRAME_REGNUM (64)
+end_define
+
 begin_comment
 comment|/* Describe how we implement __builtin_eh_return.  */
 end_comment

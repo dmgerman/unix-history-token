@@ -346,6 +346,12 @@ case|:
 case|case
 name|BUILT_IN_STDARG_START
 case|:
+case|case
+name|BUILT_IN_NEXT_ARG
+case|:
+case|case
+name|BUILT_IN_VA_END
+case|:
 if|#
 directive|if
 literal|0
