@@ -4692,11 +4692,9 @@ name|td_kse
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ke
 operator|->
 name|ke_mailbox
-operator|)
 operator|!=
 name|NULL
 condition|)
