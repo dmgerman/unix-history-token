@@ -70,13 +70,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<sys/mman.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mman.h>
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -88,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -302,20 +302,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|backup_suffix
-index|[]
-init|=
-name|BACKUP_SUFFIX
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|suffix
 init|=
-name|backup_suffix
+name|BACKUP_SUFFIX
 decl_stmt|;
 end_decl_stmt
 
@@ -327,11 +319,13 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -373,6 +367,7 @@ name|create_newfile
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -392,6 +387,7 @@ name|create_tempfile
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -410,9 +406,11 @@ name|install
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -443,6 +441,7 @@ name|numeric_id
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -460,6 +459,7 @@ name|strip
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -532,7 +532,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|flags
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|group
 decl_stmt|,
@@ -1124,15 +1126,17 @@ name|name
 parameter_list|,
 name|type
 parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|name
+decl_stmt|,
+decl|*
 name|type
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 name|u_long
 name|val
@@ -1195,7 +1199,7 @@ name|val
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * install --  *	build a path name and install the file  */
@@ -1213,6 +1217,7 @@ name|fset
 parameter_list|,
 name|flags
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|from_name
@@ -1950,6 +1955,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|snprintf
 argument_list|(
 name|backup
@@ -1963,10 +1971,6 @@ argument_list|,
 name|suffix
 argument_list|)
 operator|!=
-call|(
-name|int
-call|)
-argument_list|(
 name|strlen
 argument_list|(
 name|to_name
@@ -1975,7 +1979,6 @@ operator|+
 name|strlen
 argument_list|(
 name|suffix
-argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -2868,6 +2871,7 @@ name|temp
 parameter_list|,
 name|tsize
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|path
@@ -2982,6 +2986,7 @@ name|target
 parameter_list|,
 name|sbp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|path
@@ -3037,6 +3042,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|snprintf
 argument_list|(
 name|backup
@@ -3050,10 +3058,6 @@ argument_list|,
 name|suffix
 argument_list|)
 operator|!=
-call|(
-name|int
-call|)
-argument_list|(
 name|strlen
 argument_list|(
 name|path
@@ -3062,7 +3066,6 @@ operator|+
 name|strlen
 argument_list|(
 name|suffix
-argument_list|)
 argument_list|)
 condition|)
 name|errx
@@ -3184,6 +3187,7 @@ name|from_fd
 decl_stmt|,
 name|to_fd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|from_name
@@ -3509,6 +3513,7 @@ name|strip
 parameter_list|(
 name|to_name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|to_name
