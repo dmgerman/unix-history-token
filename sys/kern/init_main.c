@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1412,6 +1424,18 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Don't jail it. */
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_proc0
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|td
 operator|->
 name|td_ucred
@@ -2859,6 +2883,16 @@ argument_list|,
 name|oldcred
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_proc1
+argument_list|(
+name|newcred
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|initproc
 operator|->
 name|p_ucred

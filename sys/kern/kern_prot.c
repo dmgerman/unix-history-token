@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -47,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -7179,6 +7191,16 @@ argument_list|(
 name|cr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_init_cred
+argument_list|(
+name|cr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|cr
@@ -7342,6 +7364,16 @@ operator|->
 name|cr_prison
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_destroy_cred
+argument_list|(
+name|cr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|FREE
 argument_list|(
 name|cr
@@ -7511,6 +7543,18 @@ operator|->
 name|cr_prison
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_cred
+argument_list|(
+name|src
+argument_list|,
+name|dest
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
