@@ -429,7 +429,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Guarantee that there are pages already in this object before 	 * calling vm_map_pageable.  This is to prevent the following 	 * scenario: 	 * 	 * 1) Threads have swapped out, so that there is a pager for the 	 * kernel_object. 2) The kmsg zone is empty, and so we are 	 * kmem_allocing a new page for it. 3) vm_map_pageable calls vm_fault; 	 * there is no page, but there is a pager, so we call 	 * pager_data_request.  But the kmsg zone is empty, so we must 	 * kmem_alloc. 4) goto 1 5) Even if the kmsg zone is not empty: when 	 * we get the data back from the pager, it will be (very stale) 	 * non-zero data.  kmem_alloc is defined to return zero-filled memory. 	 * 	 * We're intentionally not activating the pages we allocate to prevent a 	 * race with page-out.  vm_map_pageable will wire the pages. 	 */
+comment|/* 	 * Guarantee that there are pages already in this object before 	 * calling vm_map_wire.  This is to prevent the following 	 * scenario: 	 * 	 * 1) Threads have swapped out, so that there is a pager for the 	 * kernel_object. 2) The kmsg zone is empty, and so we are 	 * kmem_allocing a new page for it. 3) vm_map_wire calls vm_fault; 	 * there is no page, but there is a pager, so we call 	 * pager_data_request.  But the kmsg zone is empty, so we must 	 * kmem_alloc. 4) goto 1 5) Even if the kmsg zone is not empty: when 	 * we get the data back from the pager, it will be (very stale) 	 * non-zero data.  kmem_alloc is defined to return zero-filled memory. 	 * 	 * We're intentionally not activating the pages we allocate to prevent a 	 * race with page-out.  vm_map_wire will wire the pages. 	 */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|kernel_object
