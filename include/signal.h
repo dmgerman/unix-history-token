@@ -81,8 +81,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__POSIX_VISIBLE
 operator|>=
 literal|200112
@@ -141,8 +139,6 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__POSIX_VISIBLE
 operator|||
 name|__XSI_VISIBLE
@@ -299,8 +295,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__POSIX_VISIBLE
 operator|>=
 literal|199506
@@ -371,12 +365,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
-name|__POSIX_VISIBLE
-operator|>=
-literal|200112
-operator|||
 name|__XSI_VISIBLE
 end_if
 
@@ -409,19 +397,32 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|siginterrupt
+name|sigpause
 parameter_list|(
-name|int
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
 begin_function_decl
 name|int
-name|sigpause
+name|siginterrupt
 parameter_list|(
+name|int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
