@@ -9285,7 +9285,7 @@ operator|&
 name|tm
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check for invalid times, including things like the missing 	 * hour when switching from "daylight savings" to "standard". 	 */
+comment|/* 	 * Check for invalid times, including things like the missing 	 * hour when switching from "standard time" to "daylight saving". 	 */
 if|if
 condition|(
 name|tsecs
@@ -9810,7 +9810,7 @@ operator|&
 name|tm
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check for invalid times, including things like the missing 	 * hour when switching from "daylight savings" to "standard". 	 */
+comment|/* 	 * Check for invalid times, including things like the missing 	 * hour when switching from "standard time" to "daylight saving". 	 */
 if|if
 condition|(
 name|tsecs
