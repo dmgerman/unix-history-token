@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      Buslogic BT-54X and BT-445 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bt_isa.c,v 1.7 1999/04/06 21:15:18 phk Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      Buslogic BT-54X and BT-445 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bt_isa.c,v 1.8 1999/04/18 15:50:35 peter Exp $  */
 end_comment
 
 begin_include
@@ -377,7 +377,7 @@ name|bus_release_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_IRQ
 argument_list|,
 literal|0
 argument_list|,
@@ -396,7 +396,7 @@ name|bus_release_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_DRQ
 argument_list|,
 literal|0
 argument_list|,
@@ -569,6 +569,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|isa_set_port
+argument_list|(
+name|dev
+argument_list|,
+name|ioport
+argument_list|)
+expr_stmt|;
 name|isa_set_drq
 argument_list|(
 name|dev
@@ -637,6 +644,8 @@ name|lowaddr
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|drq
 decl_stmt|;
 comment|/* Initialise softc */
 name|error
@@ -662,6 +671,26 @@ return|return
 name|error
 return|;
 block|}
+comment|/* Program the DMA channel for external control */
+if|if
+condition|(
+operator|(
+name|drq
+operator|=
+name|isa_get_drq
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|isa_dmacascade
+argument_list|(
+name|drq
+argument_list|)
+expr_stmt|;
 comment|/* Allocate our parent dmatag */
 name|filter
 operator|=
@@ -791,12 +820,16 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|error
+operator|=
 name|bt_init
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|bt_isa_release_resources
