@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for ARM COFF files.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for ARM COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -3469,6 +3469,13 @@ argument_list|,
 name|ARM_THUMB23
 argument_list|)
 expr_stmt|;
+name|ASTD
+argument_list|(
+name|BFD_RELOC_THUMB_PCREL_BLX
+argument_list|,
+name|ARM_THUMB23
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 default|default:
@@ -4705,11 +4712,29 @@ operator|->
 name|relocateable
 condition|)
 continue|continue;
-if|#
-directive|if
+comment|/* FIXME - it is not clear which targets need this next test 	     and which do not.  It is known that it is needed for the 	     VXworks target (hence the #ifdef), but it is also known 	     that it was supressed for other (arm) targets.  This ought 	     to be sorted out one day.  */
+ifdef|#
+directive|ifdef
+name|VXWORKS
+comment|/* We must not ignore the symbol value.  If the symbol is 	     within the same section, the relocation should have already 	     been fixed, but if it is not, we'll be handed a reloc into 	     the beginning of the symbol's section, so we must not cancel 	     out the symbol's value, otherwise we'll be adding it in 	     twice.  */
+if|if
+condition|(
+name|sym
+operator|!=
+name|NULL
+operator|&&
+name|sym
+operator|->
+name|n_scnum
+operator|!=
 literal|0
-comment|/* We must not ignore the symbol value.  If the symbol is 	  within the same section, the relocation should have already 	  been fixed, but if it is not, we'll be handed a reloc into 	  the beginning of the symbol's section, so we must not cancel 	  out the symbol's value, otherwise we'll be adding it in 	  twice.  */
-block|if (sym != NULL&& sym->n_scnum != 0)             addend += sym->n_value;
+condition|)
+name|addend
+operator|+=
+name|sym
+operator|->
+name|n_value
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -6119,7 +6144,7 @@ operator|==
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* howto->pc_relative should be TRUE for type 14 BRANCH23 */
+comment|/* howto->pc_relative should be TRUE for type 14 BRANCH23.  */
 name|relocation
 operator|-=
 operator|(
@@ -6134,7 +6159,7 @@ operator|->
 name|output_offset
 operator|)
 expr_stmt|;
-comment|/* howto->pcrel_offset should be TRUE for type 14 BRANCH23 */
+comment|/* howto->pcrel_offset should be TRUE for type 14 BRANCH23.  */
 name|relocation
 operator|-=
 name|address
@@ -6201,7 +6226,6 @@ argument_list|(
 name|input_bfd
 argument_list|)
 condition|)
-block|{
 name|add
 operator|=
 operator|(
@@ -6228,9 +6252,7 @@ operator|<<
 literal|1
 operator|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|add
 operator|=
 operator|(
@@ -6259,7 +6281,6 @@ literal|15
 operator|)
 operator|)
 expr_stmt|;
-block|}
 comment|/* Get the value from the object file with an appropriate sign. 		 The expression involving howto->src_mask isolates the upper 		 bit of src_mask.  If that bit is set in the value we are 		 adding, it is negative, and we subtract out that number times 		 two.  If src_mask includes the highest possible bit, then we 		 can not get the upper bit, but that does not matter since 		 signed_add needs no adjustment to become negative in that 		 case.  */
 name|signed_add
 operator|=
@@ -6303,8 +6324,8 @@ operator|)
 operator|<<
 literal|1
 expr_stmt|;
-comment|/* Add the value from the object file, shifted so that it is a 		 straight number.  */
 comment|/* howto->bitpos == 0 */
+comment|/* Add the value from the object file, shifted so that it is a 		 straight number.  */
 name|signed_check
 operator|+=
 name|signed_add
@@ -6337,7 +6358,23 @@ name|overflow
 operator|=
 name|true
 expr_stmt|;
-comment|/* Put RELOCATION into the correct bits:  */
+comment|/* For the BLX(1) instruction remove bit 0 of the adjusted offset. 		 Bit 0 can only be set if the upper insn is at a half-word boundary, 		 since the destination address, an ARM instruction, must always be 		 on a word boundary.  The semantics of the BLX (1) instruction, 		 however, are that bit 0 in the offset must always be 0, and the 		 corresponding bit 1 in the target address will be set from bit 		 1 of the source address.  */
+if|if
+condition|(
+operator|(
+name|x
+operator|&
+literal|0x18000000
+operator|)
+operator|==
+literal|0x08000000
+condition|)
+name|relocation
+operator|&=
+operator|~
+literal|0x2
+expr_stmt|;
+comment|/* Put the relocation into the correct bits.  */
 if|if
 condition|(
 name|bfd_big_endian
@@ -6345,7 +6382,6 @@ argument_list|(
 name|input_bfd
 argument_list|)
 condition|)
-block|{
 name|relocation
 operator|=
 operator|(
@@ -6370,9 +6406,7 @@ literal|0x07ff0000
 operator|)
 operator|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|relocation
 operator|=
 operator|(
@@ -6397,8 +6431,7 @@ literal|0x7ff
 operator|)
 operator|)
 expr_stmt|;
-block|}
-comment|/* Add RELOCATION to the correct bits of X:  */
+comment|/* Add the relocation to the correct bits of X.  */
 name|x
 operator|=
 operator|(
@@ -6414,7 +6447,7 @@ operator||
 name|relocation
 operator|)
 expr_stmt|;
-comment|/* Put the relocated value back in the object file:  */
+comment|/* Put the relocated value back in the object file.  */
 name|bfd_put_32
 argument_list|(
 name|input_bfd

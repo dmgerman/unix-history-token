@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libbfd.h is a GENERATED file.  Don't change it; instead, ** change libbfd-in.h or the other BFD source files processed to ** generate this file.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libbfd.h is a GENERATED file.  Don't change it; instead, ** change libbfd-in.h or the other BFD source files processed to ** generate this file.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -2642,8 +2642,8 @@ specifier|const
 name|bfd_target
 modifier|*
 specifier|const
+modifier|*
 name|bfd_target_vector
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -3138,7 +3138,11 @@ literal|"BFD_RELOC_SPARC_JMP_SLOT"
 block|,
 literal|"BFD_RELOC_SPARC_RELATIVE"
 block|,
+literal|"BFD_RELOC_SPARC_UA16"
+block|,
 literal|"BFD_RELOC_SPARC_UA32"
+block|,
+literal|"BFD_RELOC_SPARC_UA64"
 block|,
 literal|"BFD_RELOC_SPARC_BASE13"
 block|,
@@ -3257,6 +3261,28 @@ block|,
 literal|"BFD_RELOC_MIPS_GOT_OFST"
 block|,
 literal|"BFD_RELOC_MIPS_GOT_DISP"
+block|,
+literal|"BFD_RELOC_MIPS_SHIFT5"
+block|,
+literal|"BFD_RELOC_MIPS_SHIFT6"
+block|,
+literal|"BFD_RELOC_MIPS_INSERT_A"
+block|,
+literal|"BFD_RELOC_MIPS_INSERT_B"
+block|,
+literal|"BFD_RELOC_MIPS_DELETE"
+block|,
+literal|"BFD_RELOC_MIPS_HIGHEST"
+block|,
+literal|"BFD_RELOC_MIPS_HIGHER"
+block|,
+literal|"BFD_RELOC_MIPS_SCN_DISP"
+block|,
+literal|"BFD_RELOC_MIPS_REL16"
+block|,
+literal|"BFD_RELOC_MIPS_RELGOT"
+block|,
+literal|"BFD_RELOC_MIPS_JALR"
 block|,
 literal|"BFD_RELOC_386_GOT32"
 block|,

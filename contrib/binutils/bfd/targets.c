@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic target-file-type support for the BFD library.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic target-file-type support for the BFD library.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -652,6 +652,22 @@ specifier|extern
 specifier|const
 name|bfd_target
 name|bfd_elf64_littlemips_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf64_tradbigmips_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf64_tradlittlemips_vec
 decl_stmt|;
 end_decl_stmt
 
@@ -1576,11 +1592,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|bfd_target
 modifier|*
 specifier|const
-name|bfd_target_vector
+name|_bfd_target_vector
 index|[]
 init|=
 block|{
@@ -1767,9 +1784,6 @@ operator|&
 name|bfd_elf32_m88k_vec
 block|,
 operator|&
-name|bfd_elf32_sparc_vec
-block|,
-operator|&
 name|bfd_elf32_pj_vec
 block|,
 operator|&
@@ -1780,6 +1794,9 @@ name|bfd_elf32_powerpc_vec
 block|,
 operator|&
 name|bfd_elf32_powerpcle_vec
+block|,
+operator|&
+name|bfd_elf32_sparc_vec
 block|,
 operator|&
 name|bfd_elf32_v850_vec
@@ -1802,6 +1819,12 @@ block|,
 ifdef|#
 directive|ifdef
 name|BFD64
+operator|&
+name|bfd_elf64_tradbigmips_vec
+block|,
+operator|&
+name|bfd_elf64_tradlittlemips_vec
+block|,
 comment|/* No one seems to use this.  */
 operator|&
 name|bfd_elf64_big_generic_vec
@@ -2286,6 +2309,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|const
+name|bfd_target
+modifier|*
+specifier|const
+modifier|*
+name|bfd_target_vector
+init|=
+name|_bfd_target_vector
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* bfd_default_vector[0] contains either the address of the default vector,    if there is one, or zero if there isn't.  */
 end_comment
@@ -2322,13 +2357,13 @@ name|_bfd_target_vector_entries
 init|=
 sizeof|sizeof
 argument_list|(
-name|bfd_target_vector
+name|_bfd_target_vector
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
 operator|*
-name|bfd_target_vector
+name|_bfd_target_vector
 argument_list|)
 decl_stmt|;
 end_decl_stmt

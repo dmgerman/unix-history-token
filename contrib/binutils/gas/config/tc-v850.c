@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-v850.c -- Assembler code for the NEC V850    Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-v850.c -- Assembler code for the NEC V850    Copyright 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -2189,12 +2189,16 @@ block|{
 literal|"file"
 block|,
 name|dwarf2_directive_file
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"loc"
 block|,
 name|dwarf2_directive_loc
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4970,12 +4974,6 @@ argument_list|)
 expr_stmt|;
 name|fragP
 operator|->
-name|fr_var
-operator|=
-literal|0
-expr_stmt|;
-name|fragP
-operator|->
 name|fr_fix
 operator|+=
 literal|2
@@ -5091,12 +5089,6 @@ argument_list|)
 expr_stmt|;
 name|fragP
 operator|->
-name|fr_var
-operator|=
-literal|0
-expr_stmt|;
-name|fragP
-operator|->
 name|fr_fix
 operator|+=
 literal|6
@@ -5159,12 +5151,6 @@ name|fr_opcode
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
-name|fragP
-operator|->
-name|fr_var
-operator|=
-literal|0
 expr_stmt|;
 name|fragP
 operator|->
@@ -6584,12 +6570,6 @@ decl_stmt|;
 name|unsigned
 name|long
 name|insn_size
-decl_stmt|;
-name|unsigned
-name|long
-name|total_insn_size
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -8313,6 +8293,12 @@ name|input_line_pointer
 operator|=
 name|str
 expr_stmt|;
+comment|/* Tie dwarf2 debug info to the address at the start of the insn.      We can't do this after the insn has been output as the current      frag may have been closed off.  eg. by frag_var.  */
+name|dwarf2_emit_insn
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Write out the instruction.  */
 if|if
 condition|(
@@ -8472,10 +8458,6 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-name|total_insn_size
-operator|=
-name|insn_size
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -8521,10 +8503,6 @@ argument_list|(
 name|insn_size
 argument_list|)
 expr_stmt|;
-name|total_insn_size
-operator|=
-name|insn_size
-expr_stmt|;
 name|md_number_to_chars
 argument_list|(
 name|f
@@ -8545,10 +8523,6 @@ name|frag_more
 argument_list|(
 name|extra_data_len
 argument_list|)
-expr_stmt|;
-name|total_insn_size
-operator|+=
-name|extra_data_len
 expr_stmt|;
 name|md_number_to_chars
 argument_list|(
@@ -8791,11 +8765,6 @@ name|input_line_pointer
 operator|=
 name|saved_input_line_pointer
 expr_stmt|;
-name|dwarf2_emit_insn
-argument_list|(
-name|total_insn_size
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -8981,7 +8950,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Assume everything will fit in two bytes, then expand as necessary.  */
+comment|/* Return current size of variable part of frag.  */
 end_comment
 
 begin_function
@@ -9007,36 +8976,32 @@ condition|(
 name|fragp
 operator|->
 name|fr_subtype
-operator|==
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|md_relax_table
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|md_relax_table
+index|[
 literal|0
+index|]
+argument_list|)
 condition|)
-name|fragp
-operator|->
-name|fr_var
-operator|=
-literal|4
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|fragp
-operator|->
-name|fr_subtype
-operator|==
-literal|2
-condition|)
-name|fragp
-operator|->
-name|fr_var
-operator|=
-literal|2
-expr_stmt|;
-else|else
 name|abort
 argument_list|()
 expr_stmt|;
 return|return
-literal|2
+name|md_relax_table
+index|[
+name|fragp
+operator|->
+name|fr_subtype
+index|]
+operator|.
+name|rlx_length
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dwarf2dbg.c - DWARF2 debug support    Copyright (C) 1999, 2000 Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* dwarf2dbg.c - DWARF2 debug support    Copyright 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1494,7 +1494,6 @@ block|{
 name|offsetT
 name|num
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|filename
@@ -1574,9 +1573,12 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"File number %d already allocated"
+literal|"File number %ld already allocated"
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|num
 argument_list|)
 expr_stmt|;
@@ -3498,17 +3500,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* Don't try to optimize away redundant entries; gdb wants two 	 entries for a function where the code starts on the same line as 	 the {, and there's no way to identify that case here.  Trust gcc 	 to optimize appropriately.  */
 if|if
 condition|(
-name|line
-operator|!=
-name|e
-operator|->
-name|loc
-operator|.
-name|line
-operator|||
-name|changed
+literal|1
+comment|/* line != e->loc.line || changed */
 condition|)
 block|{
 name|int
@@ -5265,12 +5261,9 @@ name|dummy
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-name|as_fatal
+name|s_app_file
 argument_list|(
-name|_
-argument_list|(
-literal|"dwarf2 is not supported for this object file format"
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

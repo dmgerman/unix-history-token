@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* atof_ieee.c - turn a Flonum into an IEEE floating point number    Copyright (C) 1987, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* atof_ieee.c - turn a Flonum into an IEEE floating point number    Copyright 1987, 1992, 1994, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+end_comment
+
+begin_comment
+comment|/* Some float formats are based on the IEEE standard, but use the    largest exponent for normal numbers instead of NaNs and infinites.    The macro TC_LARGEST_EXPONENT_IS_NORMAL should evaluate to true    if the target machine uses such a format.  The macro can depend on    command line flags if necessary.  There is no need to define the    macro if it would always be 0.  */
 end_comment
 
 begin_include
@@ -122,6 +126,24 @@ directive|define
 name|GUARD
 value|(2)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TC_LARGEST_EXPONENT_IS_NORMAL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TC_LARGEST_EXPONENT_IS_NORMAL
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -929,6 +951,15 @@ condition|)
 block|{
 if|if
 condition|(
+name|TC_LARGEST_EXPONENT_IS_NORMAL
+condition|)
+name|as_warn
+argument_list|(
+literal|"NaNs are not supported by this target\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|precision
 operator|==
 name|F_PRECISION
@@ -1101,6 +1132,15 @@ operator|==
 literal|'P'
 condition|)
 block|{
+if|if
+condition|(
+name|TC_LARGEST_EXPONENT_IS_NORMAL
+condition|)
+name|as_warn
+argument_list|(
+literal|"Infinities are not supported by this target\n"
+argument_list|)
+expr_stmt|;
 comment|/* +INF:  Do the right thing.  */
 if|if
 condition|(
@@ -1276,6 +1316,15 @@ operator|==
 literal|'N'
 condition|)
 block|{
+if|if
+condition|(
+name|TC_LARGEST_EXPONENT_IS_NORMAL
+condition|)
+name|as_warn
+argument_list|(
+literal|"Infinities are not supported by this target\n"
+argument_list|)
+expr_stmt|;
 comment|/* Negative INF.  */
 if|if
 condition|(
@@ -2096,11 +2145,27 @@ name|unsigned
 name|long
 operator|)
 name|exponent_4
-operator|>=
+operator|>
 name|mask
 index|[
 name|exponent_bits
 index|]
+operator|||
+operator|(
+operator|!
+name|TC_LARGEST_EXPONENT_IS_NORMAL
+operator|&&
+operator|(
+name|unsigned
+name|long
+operator|)
+name|exponent_4
+operator|==
+name|mask
+index|[
+name|exponent_bits
+index|]
+operator|)
 condition|)
 block|{
 comment|/* Exponent overflow.  Lose immediately.  */

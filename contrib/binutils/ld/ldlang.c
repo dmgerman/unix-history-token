@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Linker command language support.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 2001    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Linker command language support.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1591,7 +1591,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Don't beautify the line below with "innocent" whitespace, it breaks the K&R C preprocessor!  */
+comment|/* Don't beautify the line below with "innocent" whitespace, it breaks    the K&R C preprocessor!  */
 end_comment
 
 begin_define
@@ -1603,6 +1603,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
+define|\
 value|(cat (x,_type)*) new_statement (cat (x,_enum), sizeof (cat (x,_type)), y)
 end_define
 
@@ -1613,6 +1614,7 @@ name|outside_section_address
 parameter_list|(
 name|q
 parameter_list|)
+define|\
 value|((q)->output_offset + (q)->output_section->vma)
 end_define
 
@@ -1623,6 +1625,7 @@ name|outside_symbol_address
 parameter_list|(
 name|q
 parameter_list|)
+define|\
 value|((q)->value + outside_section_address (q->section))
 end_define
 
@@ -1829,10 +1832,6 @@ literal|0
 argument_list|)
 operator|==
 literal|0
-condition|?
-name|true
-else|:
-name|false
 expr_stmt|;
 else|else
 name|match
@@ -1849,10 +1848,6 @@ name|filename
 argument_list|)
 operator|==
 literal|0
-condition|?
-name|true
-else|:
-name|false
 expr_stmt|;
 if|if
 condition|(
@@ -1958,10 +1953,6 @@ literal|0
 argument_list|)
 operator|==
 literal|0
-condition|?
-name|true
-else|:
-name|false
 expr_stmt|;
 else|else
 name|match
@@ -1974,10 +1965,6 @@ name|sname
 argument_list|)
 operator|==
 literal|0
-condition|?
-name|true
-else|:
-name|false
 expr_stmt|;
 comment|/* If this is a wild-card output section statement, exclude 	     sections that match UNIQUE_SECTION_LIST.  */
 if|if
@@ -2638,7 +2625,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Build a new input file node for the language.  There are several    ways in which we treat an input file, eg, we only look at symbols,    or prefix it with a -l etc.     We can be supplied with requests for input files more than once;    they may, for example be split over serveral lines like foo.o(.text)    foo.o(.data) etc, so when asked for a file we check that we havn't    got it already so we don't duplicate the bfd.  */
+comment|/* Build a new input file node for the language.  There are several    ways in which we treat an input file, eg, we only look at symbols,    or prefix it with a -l etc.     We can be supplied with requests for input files more than once;    they may, for example be split over serveral lines like foo.o(.text)    foo.o(.data) etc, so when asked for a file we check that we haven't    got it already so we don't duplicate the bfd.  */
 end_comment
 
 begin_function
@@ -3312,7 +3299,7 @@ name|new
 operator|->
 name|name
 operator|=
-name|buystring
+name|xstrdup
 argument_list|(
 name|name
 argument_list|)
@@ -5176,7 +5163,6 @@ name|bfd_section
 operator|==
 name|NULL
 condition|)
-block|{
 name|init_os
 argument_list|(
 name|output
@@ -5184,13 +5170,20 @@ argument_list|)
 expr_stmt|;
 name|first
 operator|=
-name|true
+operator|!
+name|output
+operator|->
+name|bfd_section
+operator|->
+name|linker_has_input
 expr_stmt|;
-block|}
-else|else
-name|first
+name|output
+operator|->
+name|bfd_section
+operator|->
+name|linker_has_input
 operator|=
-name|false
+literal|1
 expr_stmt|;
 comment|/* Add a section reference to the list.  */
 name|new
@@ -6247,6 +6240,15 @@ operator|=
 name|bfd_get_error
 argument_list|()
 expr_stmt|;
+comment|/* See if the emulation has some special knowledge.  */
+if|if
+condition|(
+name|ldemul_unrecognized_file
+argument_list|(
+name|entry
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|err
@@ -6347,15 +6349,6 @@ name|the_bfd
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* See if the emulation has some special knowledge.  */
-if|if
-condition|(
-name|ldemul_unrecognized_file
-argument_list|(
-name|entry
-argument_list|)
-condition|)
-return|return;
 comment|/* Try to interpret the file as a linker script.  */
 name|ldfile_open_command_file
 argument_list|(
@@ -8136,7 +8129,7 @@ name|new
 operator|->
 name|name
 operator|=
-name|buystring
+name|xstrdup
 argument_list|(
 name|name
 argument_list|)
@@ -10868,7 +10861,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|(((bfd_get_section_flags (bfd, s)& (SEC_ALLOC | SEC_LOAD)) != (SEC_ALLOC | SEC_LOAD)) \    || bfd_section_size (bfd, s) == 0)
+value|(((bfd_get_section_flags (bfd, s)& (SEC_ALLOC | SEC_LOAD))	\     != (SEC_ALLOC | SEC_LOAD))					\    || bfd_section_size (bfd, s) == 0)
 end_define
 
 begin_comment
@@ -11330,12 +11323,14 @@ decl_stmt|;
 name|lang_output_section_statement_type
 modifier|*
 name|os
-init|=
+decl_stmt|;
+name|os
+operator|=
 operator|&
 name|s
 operator|->
 name|output_section_statement
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|os
@@ -12897,14 +12892,16 @@ block|{
 name|lang_output_section_statement_type
 modifier|*
 name|os
-init|=
+decl_stmt|;
+name|os
+operator|=
 operator|&
 operator|(
 name|s
 operator|->
 name|output_section_statement
 operator|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|os
@@ -13552,14 +13549,16 @@ condition|)
 block|{
 name|unsigned
 name|opb
-init|=
+decl_stmt|;
+name|opb
+operator|=
 name|bfd_arch_mach_octets_per_byte
 argument_list|(
 name|ldfile_output_architecture
 argument_list|,
 name|ldfile_output_machine
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|h
 operator|->
 name|type
@@ -16425,14 +16424,16 @@ block|{
 name|lang_address_statement_type
 modifier|*
 name|ad
-init|=
+decl_stmt|;
+name|ad
+operator|=
 name|new_stat
 argument_list|(
 name|lang_address_statement
 argument_list|,
 name|stat_ptr
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|ad
 operator|->
 name|section_name
@@ -17965,24 +17966,16 @@ argument_list|,
 name|l
 operator|->
 name|flags
-operator|==
+operator|!=
 name|NULL
-condition|?
-name|false
-else|:
-name|true
 argument_list|,
 name|flags
 argument_list|,
 name|l
 operator|->
 name|at
-operator|==
+operator|!=
 name|NULL
-condition|?
-name|false
-else|:
-name|true
 argument_list|,
 name|at
 argument_list|,
