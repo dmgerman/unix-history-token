@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)getpwent.c	4.2 (Berkeley) %G% */
+comment|/* @(#)getpwent.c	4.3 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -24,8 +24,8 @@ end_include
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|PASSWD
-index|[]
 init|=
 literal|"/etc/passwd"
 decl_stmt|;
@@ -409,6 +409,29 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|setpwfile
+argument_list|(
+argument|file
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|file
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|PASSWD
+operator|=
+name|file
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
