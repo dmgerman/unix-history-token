@@ -4,7 +4,7 @@ comment|/*  * Ported to boot 386BSD by Julian Elischer (julian@tfs.com) Sept 199
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log:	sys.c,v $  * Revision 2.2  92/04/04  11:36:34  rpd  * 	Fabricated from 3.0 bootstrap and scratch.  * 	[92/03/30            mg32]  *   */
+comment|/*  * HISTORY  * $Log: sys.c,v $  * Revision 1.1  1993/03/21  18:08:45  cgd  * after 0.2.2 "stable" patches applied  *  * Revision 2.2  92/04/04  11:36:34  rpd  * 	Fabricated from 3.0 bootstrap and scratch.  * 	[92/03/30            mg32]  *   */
 end_comment
 
 begin_include
