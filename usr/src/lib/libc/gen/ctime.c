@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* @(#)ctime.c	4.2 (Berkeley) %G% */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)ctime.c	4.3 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This routine converts time as follows.  * The epoch is 0000 Jan 1 1970 GMT.  * The argument time is in seconds since then.  * The localtime(t) entry returns a pointer to an array  * containing  *  seconds (0-59)  *  minutes (0-59)  *  hours (0-23)  *  day of month (1-31)  *  month (0-11)  *  year-1970  *  weekday (0-6, Sun is 0)  *  day of the year  *  daylight savings flag  *  * The routine calls the system to determine the local  * timezone and whether Daylight Saving Time is permitted locally.  * (DST is then determined by the current US standard rules)  * There is a table that accounts for the peculiarities  * undergone by daylight time in 1974-1975.  *  * The routine does not work  * in Saudi Arabia which runs on Solar time.  *  * asctime(tvec))  * where tvec is produced by localtime  * returns a ptr to a character string  * that has the ascii time in the form  *	Thu Jan 01 00:00:00 1970n0
@@ -11,7 +28,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_include
