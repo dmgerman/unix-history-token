@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.9 (Berkeley) %G%"
+literal|"@(#)conf.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4591,6 +4591,11 @@ name|defined
 argument_list|(
 name|apollo
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_SCO_unix_
+argument_list|)
 end_if
 
 begin_include
@@ -4736,6 +4741,18 @@ define|#
 directive|define
 name|FSBLOCKSIZE
 value|fs.f_bsize
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_SCO_UNIX_
+argument_list|)
+define|#
+directive|define
+name|f_bavail
+value|f_bfree
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
