@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.24 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.24.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +183,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RESTART
+end_ifdef
+
 begin_decl_stmt
 name|off_t
 name|restart_point
@@ -190,6 +196,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|FILE
@@ -2213,6 +2224,9 @@ name|buf
 index|[
 name|BUFSIZ
 index|]
+decl_stmt|,
+modifier|*
+name|bufp
 decl_stmt|;
 name|long
 name|bytes
@@ -2615,8 +2629,14 @@ condition|)
 goto|goto
 name|abort
 goto|;
+ifdef|#
+directive|ifdef
+name|RESTART
 if|if
 condition|(
+name|restart_point
+operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|cmd
@@ -2634,11 +2654,7 @@ literal|"APPE"
 argument_list|)
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|restart_point
+operator|)
 condition|)
 block|{
 if|if
@@ -2727,7 +2743,8 @@ operator|=
 literal|"r+w"
 expr_stmt|;
 block|}
-block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|remote
@@ -2923,6 +2940,28 @@ operator|>
 literal|0
 condition|)
 block|{
+name|bytes
+operator|+=
+name|c
+expr_stmt|;
+for|for
+control|(
+name|bufp
+operator|=
+name|buf
+init|;
+name|c
+operator|>
+literal|0
+condition|;
+name|c
+operator|-=
+name|d
+operator|,
+name|bufp
+operator|+=
+name|d
+control|)
 if|if
 condition|(
 operator|(
@@ -2935,19 +2974,15 @@ argument_list|(
 name|dout
 argument_list|)
 argument_list|,
-name|buf
+name|bufp
 argument_list|,
 name|c
 argument_list|)
 operator|)
-operator|!=
-name|c
+operator|<=
+literal|0
 condition|)
 break|break;
-name|bytes
-operator|+=
-name|c
-expr_stmt|;
 if|if
 condition|(
 name|hash
@@ -3037,10 +3072,24 @@ expr_stmt|;
 if|if
 condition|(
 name|d
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|d
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"netout: write returned 0?\n"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|errno
@@ -3603,6 +3652,9 @@ modifier|*
 name|buf
 decl_stmt|,
 modifier|*
+name|bufp
+decl_stmt|,
+modifier|*
 name|gunique
 argument_list|()
 decl_stmt|,
@@ -4088,6 +4140,9 @@ operator|=
 name|oldverbose
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|RESTART
 block|}
 elseif|else
 if|if
@@ -4110,6 +4165,8 @@ operator|!=
 name|CONTINUE
 condition|)
 return|return;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -4484,6 +4541,9 @@ case|:
 case|case
 name|TYPE_L
 case|:
+ifdef|#
+directive|ifdef
+name|RESTART
 if|if
 condition|(
 name|restart_point
@@ -4527,6 +4587,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 name|errno
 operator|=
 name|d
@@ -4566,7 +4628,7 @@ argument_list|(
 name|fout
 argument_list|)
 argument_list|,
-name|buf
+name|bufp
 argument_list|,
 name|c
 argument_list|)
@@ -4682,6 +4744,13 @@ if|if
 condition|(
 name|d
 operator|<
+name|c
+condition|)
+block|{
+if|if
+condition|(
+name|d
+operator|<
 literal|0
 condition|)
 name|perror
@@ -4689,10 +4758,24 @@ argument_list|(
 name|local
 argument_list|)
 expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: short write\n"
+argument_list|,
+name|local
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|TYPE_A
 case|:
+ifdef|#
+directive|ifdef
+name|RESTART
 if|if
 condition|(
 name|restart_point
@@ -4802,6 +4885,8 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
@@ -4899,7 +4984,17 @@ condition|(
 name|c
 operator|==
 literal|'\0'
-operator|||
+condition|)
+block|{
+name|bytes
+operator|++
+expr_stmt|;
+goto|goto
+name|contin2
+goto|;
+block|}
+if|if
+condition|(
 name|c
 operator|==
 name|EOF
