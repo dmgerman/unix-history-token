@@ -170,7 +170,7 @@ name|_t
 parameter_list|,
 name|_errcase
 parameter_list|)
-value|do {		\ 	struct m_tag *mtag;					\ 	mtag = m_tag_alloc(MTAG_VLAN, MTAG_VLAN_TAG,		\ 			   sizeof (u_int), M_NOWAIT);		\ 	if (mtag == NULL) {					\ 		(_ifp)->if_ierrors++;				\ 		m_freem(_m);					\ 		_errcase;					\ 	}							\ 	*(u_int *)(mtag+1) = (_t);				\ 	m_tag_prepend((_m), mtag);				\ } while (0)
+value|do {		\ 	struct m_tag *mtag;					\ 	mtag = vlan_tag_alloc(M_NOWAIT);			\ 	if (mtag == NULL) {					\ 		(_ifp)->if_ierrors++;				\ 		m_freem(_m);					\ 		_errcase;					\ 	}							\ 	*(u_int *)(mtag+1) = (_t);				\ 	m_tag_prepend((_m), mtag);				\ } while (0)
 end_define
 
 begin_define
@@ -195,6 +195,19 @@ name|_mt
 parameter_list|)
 value|(*(u_int *)((_mt)+1))
 end_define
+
+begin_function_decl
+specifier|extern
+name|struct
+name|m_tag
+modifier|*
+name|vlan_tag_alloc
+parameter_list|(
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
