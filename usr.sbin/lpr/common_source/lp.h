@@ -810,6 +810,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SQS_QCHANGED
+value|0x80
+end_define
+
+begin_comment
+comment|/* The queue has changed (new jobs, etc) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SQS_PARMERR
 value|-9
 end_define
