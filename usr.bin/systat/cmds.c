@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)cmds.c	8.2 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -776,7 +776,7 @@ block|}
 if|if
 condition|(
 name|nmatches
-operator|>
+operator|!=
 literal|1
 condition|)
 return|return
