@@ -359,7 +359,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * See if the vnode is in the cache.   	 * XXX linear search is not very efficient. 	 */
+comment|/* 	 * See if the vnode is in the cache. 	 * XXX linear search is not very efficient. 	 */
 name|mtx_lock
 argument_list|(
 operator|&

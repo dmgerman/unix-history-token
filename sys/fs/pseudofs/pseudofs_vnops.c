@@ -1856,7 +1856,7 @@ name|mode
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * check if the file is visible to the caller 	 * 	 * XXX Not sure if this is necessary, as the VFS system calls          * XXX pfs_lookup() and pfs_access() first, and pfs_lookup()          * XXX calls pfs_visible().  There's a race condition here, but 	 * XXX calling pfs_visible() from here doesn't really close it, 	 * XXX and the only consequence of that race is an EIO further 	 * XXX down the line. 	 */
+comment|/* 	 * check if the file is visible to the caller 	 * 	 * XXX Not sure if this is necessary, as the VFS system calls 	 * XXX pfs_lookup() and pfs_access() first, and pfs_lookup() 	 * XXX calls pfs_visible().  There's a race condition here, but 	 * XXX calling pfs_visible() from here doesn't really close it, 	 * XXX and the only consequence of that race is an EIO further 	 * XXX down the line. 	 */
 if|if
 condition|(
 operator|!
