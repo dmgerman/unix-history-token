@@ -1591,7 +1591,9 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-operator|&&
+operator|==
+name|NULL
+operator|||
 operator|!
 name|suser
 argument_list|(
