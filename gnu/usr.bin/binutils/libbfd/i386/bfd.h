@@ -35,6 +35,11 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/* FreeBSD does not adhere to the Intel386 System V ABI.  */
+define|#
+directive|define
+name|ELF_DYNAMIC_INTERPRETER
+value|"/usr/libexec/ld-elf.so.1"
 include|#
 directive|include
 file|"ansidecl.h"
