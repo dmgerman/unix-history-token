@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kpasswdd.c	1.2 (Berkeley) %G%"
+literal|"@(#)kpasswdd.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,13 +59,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberos/krb.h>
+file|<krb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<kerberos/krb_db.h>
+file|<krb_db.h>
 end_include
 
 begin_include
