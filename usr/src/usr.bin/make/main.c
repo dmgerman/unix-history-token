@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.19 (Berkeley) %G%"
+literal|"@(#)main.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -388,6 +388,8 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
+name|rearg
+label|:
 while|while
 condition|(
 operator|(
@@ -900,12 +902,19 @@ control|(
 name|argv
 operator|+=
 name|optind
+operator|,
+name|argc
+operator|-=
+name|optind
 init|;
 operator|*
 name|argv
 condition|;
 operator|++
 name|argv
+operator|,
+operator|--
+name|argc
 control|)
 if|if
 condition|(
@@ -937,6 +946,23 @@ argument_list|(
 literal|"illegal (null) argument."
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|*
+name|argv
+operator|==
+literal|'-'
+condition|)
+block|{
+name|optind
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|rearg
+goto|;
+block|}
 operator|(
 name|void
 operator|)
