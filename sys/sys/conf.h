@@ -104,6 +104,10 @@ modifier|*
 name|si_bdevfs
 decl_stmt|;
 comment|/* XXX block device (should go away) */
+name|int
+name|si_iosize_max
+decl_stmt|;
+comment|/* maximum I/O size (for physio&al) */
 union|union
 block|{
 struct|struct
@@ -136,10 +140,6 @@ name|int
 name|__sid_bsize_best
 decl_stmt|;
 comment|/* optimal block size */
-name|int
-name|__sid_iosize_max
-decl_stmt|;
-comment|/* maximum I/O size */
 block|}
 name|__si_disk
 struct|;
@@ -183,13 +183,6 @@ define|#
 directive|define
 name|si_bsize_best
 value|__si_u.__si_disk.__sid_bsize_best
-end_define
-
-begin_define
-define|#
-directive|define
-name|si_iosize_max
-value|__si_u.__si_disk.__sid_iosize_max
 end_define
 
 begin_comment
@@ -840,8 +833,9 @@ name|u_int
 name|d_flags
 decl_stmt|;
 name|int
-name|d_maxio
+name|d_bogomaxio
 decl_stmt|;
+comment|/* XXX not used */
 name|int
 name|d_bmaj
 decl_stmt|;

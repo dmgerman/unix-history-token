@@ -920,6 +920,20 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* Make this field valid before any I/O in ->d_open */
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|si_iosize_max
+condition|)
+name|dev
+operator|->
+name|si_iosize_max
+operator|=
+name|DFLTPHYS
+expr_stmt|;
 switch|switch
 condition|(
 name|vp
@@ -1257,27 +1271,13 @@ name|si_bsize_phys
 operator|=
 name|DEV_BSIZE
 expr_stmt|;
+block|}
 name|maxio
 operator|=
 name|dev
 operator|->
 name|si_iosize_max
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|maxio
-condition|)
-name|maxio
-operator|=
-name|devsw
-argument_list|(
-name|dev
-argument_list|)
-operator|->
-name|d_maxio
-expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 operator|!
@@ -1303,7 +1303,6 @@ name|v_maxio
 operator|=
 name|maxio
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
