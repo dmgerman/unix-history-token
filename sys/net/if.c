@@ -2333,7 +2333,7 @@ name|ifp
 operator|->
 name|if_broadcastaddr
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* reliably crash if used uninitialized */
 name|ifp
@@ -2520,6 +2520,15 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"if_attachdomain called more than once on %s\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 return|return;
