@@ -1094,11 +1094,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|warn
 argument_list|(
-literal|1
-argument_list|,
-literal|"%s"
+literal|"warning: %s"
 argument_list|,
 name|argv
 index|[
@@ -1106,6 +1104,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|S_ISREG
