@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1993 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - QIC-40/80 floppy tape driver  *  $Id: ft.c,v 1.8 1994/08/13 03:50:00 wollman Exp $  *  *  *  01/26/94 v0.3b - Jim Babb  *  Got rid of the hard coded device selection.  Moved (some of) the  *  static variables into a structure for support of multiple devices.  *  ( still has a way to go for 2 controllers - but closer )  *  Changed the interface with fd.c so we no longer 'steal' it's   *  driver routine vectors.  *   *  10/30/93 v0.3  *  Fixed a couple more bugs.  Reading was sometimes looping when an  *  an error such as address-mark-missing was encountered.  Both  *  reading and writing was having more backup-and-retries than was  *  necessary.  Added support to get hardware info.  Updated for use  *  with FreeBSD.  *  *  09/15/93 v0.2 pl01  *  Fixed a bunch of bugs:  extra isa_dmadone() in async_write() (shouldn't  *  matter), fixed double buffering in async_req(), changed tape_end() in  *  set_fdcmode() to reduce unexpected interrupts, changed end of track  *  processing in async_req(), protected more of ftreq_rw() with an  *  splbio().  Changed some of the ftreq_*() functions so that they wait  *  for inactivity and then go, instead of aborting immediately.  *  *  08/07/93 v0.2 release  *  Shifted from ftstrat to ioctl support for I/O.  Streaming is now much  *  more reliable.  Added internal support for error correction, QIC-40,  *  and variable length tapes.  Random access of segments greatly  *  improved.  Formatting and verification support is close but still  *  incomplete.  *  *  06/03/93 v0.1 Alpha release  *  Hopefully the last re-write.  Many bugs fixed, many remain.  *  * $Id: ft.c,v 1.8 1994/08/13 03:50:00 wollman Exp $  */
+comment|/*  * Copyright (c) 1993 Steve Gerakines  *   * This is freely redistributable software.  You may do anything you wish with  * it, so long as the above notice stays intact.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *   * ft.c - QIC-40/80 floppy tape driver $Id: ft.c,v 1.9 1994/08/21 20:16:14 paul  * Exp $  *   *   * 01/26/94 v0.3b - Jim Babb Got rid of the hard coded device selection.  Moved  * (some of) the static variables into a structure for support of multiple  * devices. ( still has a way to go for 2 controllers - but closer ) Changed  * the interface with fd.c so we no longer 'steal' it's driver routine  * vectors.  *   * 10/30/93 v0.3 Fixed a couple more bugs.  Reading was sometimes looping when  * an an error such as address-mark-missing was encountered.  Both reading  * and writing was having more backup-and-retries than was necessary.  Added  * support to get hardware info.  Updated for use with FreeBSD.  *   * 09/15/93 v0.2 pl01 Fixed a bunch of bugs:  extra isa_dmadone() in  * async_write() (shouldn't matter), fixed double buffering in async_req(),  * changed tape_end() in set_fdcmode() to reduce unexpected interrupts,  * changed end of track processing in async_req(), protected more of  * ftreq_rw() with an splbio().  Changed some of the ftreq_*() functions so  * that they wait for inactivity and then go, instead of aborting  * immediately.  *   * 08/07/93 v0.2 release Shifted from ftstrat to ioctl support for I/O.  * Streaming is now much more reliable.  Added internal support for error  * correction, QIC-40, and variable length tapes.  Random access of segments  * greatly improved.  Formatting and verification support is close but still  * incomplete.  *   * 06/03/93 v0.1 Alpha release Hopefully the last re-write.  Many bugs fixed,  * many remain.  *   * $Id: ft.c,v 1.9 1994/08/21 20:16:14 paul Exp $  */
 end_comment
 
 begin_include
@@ -141,7 +141,7 @@ comment|/* everything */
 end_comment
 
 begin_comment
-comment|/* #define DPRT(a) printf a		*/
+comment|/* #define DPRT(a) printf a		 */
 end_comment
 
 begin_define
@@ -724,7 +724,7 @@ comment|/* Current tape's geometry */
 end_comment
 
 begin_comment
-comment|/*  *  things relating to asynchronous commands  */
+comment|/*  * things relating to asynchronous commands  */
 end_comment
 
 begin_decl_stmt
@@ -975,7 +975,7 @@ name|int
 name|type
 decl_stmt|;
 comment|/* Drive type (Mountain, Colorado) */
-comment|/*	QIC_Geom *ftg;	*/
+comment|/* QIC_Geom *ftg;	 */
 comment|/* pointer to Current tape's geometry */
 name|int
 name|flags
@@ -983,11 +983,11 @@ decl_stmt|;
 name|int
 name|cmd_wait
 decl_stmt|;
-comment|/* Command we are awaiting completion of */
+comment|/* Command we are awaiting completion 					 * of */
 name|int
 name|sts_wait
 decl_stmt|;
-comment|/* Tape interrupt status of current request */
+comment|/* Tape interrupt status of current 					 * request */
 name|int
 name|io_sts
 decl_stmt|;
@@ -1187,16 +1187,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
+name|timeout_t
 name|ft_timeout
-parameter_list|(
-name|caddr_t
-name|arg1
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -1268,7 +1264,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *  Probe/attach floppy tapes.  */
+comment|/*  * Probe/attach floppy tapes.  */
 end_comment
 
 begin_function
@@ -1306,7 +1302,7 @@ name|fdc_data
 operator|+
 name|fdcu
 decl_stmt|;
-comment|/* pointer to controller structure */
+comment|/* pointer to controller 						 * structure */
 name|ftu_t
 name|ftu
 init|=
@@ -1522,7 +1518,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *  Perform common commands asynchronously.  */
+comment|/*  * Perform common commands asynchronously.  */
 end_comment
 
 begin_function
@@ -1650,7 +1646,7 @@ block|{
 case|case
 name|ACMD_SEEK
 case|:
-comment|/* 	 *  Arguments: 	 *     0 - command to perform 	 */
+comment|/* 		 * Arguments: 0 - command to perform 		 */
 switch|switch
 condition|(
 name|async_state
@@ -1884,9 +1880,6 @@ literal|0
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -1951,9 +1944,6 @@ literal|2
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -1979,7 +1969,7 @@ break|break;
 case|case
 name|ACMD_STATUS
 case|:
-comment|/* 	 *  Arguments: 	 *     0 - command to issue report from 	 *     1 - number of bits 	 *  modifies: bitn, retval, st3 	 */
+comment|/* 		 * Arguments: 0 - command to issue report from 1 - number of 		 * bits modifies: bitn, retval, st3 		 */
 switch|switch
 condition|(
 name|async_state
@@ -2465,7 +2455,7 @@ break|break;
 case|case
 name|ACMD_STATE
 case|:
-comment|/* 	 *  Arguments: 	 *     0 - status bits to check 	 */
+comment|/* 		 * Arguments: 0 - status bits to check 		 */
 switch|switch
 condition|(
 name|async_state
@@ -2538,9 +2528,6 @@ goto|;
 block|}
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -2559,7 +2546,7 @@ break|break;
 case|case
 name|ACMD_SEEKSTS
 case|:
-comment|/* 	 *  Arguments: 	 *     0 - command to perform 	 *     1 - status bits to check 	 *     2 - (optional) seconds to wait until completion 	 */
+comment|/* 		 * Arguments: 0 - command to perform 1 - status bits to check 		 * 2 - (optional) seconds to wait until completion 		 */
 switch|switch
 condition|(
 name|async_state
@@ -2678,9 +2665,6 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -2699,7 +2683,7 @@ break|break;
 case|case
 name|ACMD_READID
 case|:
-comment|/* 	 *  Arguments: (none) 	 */
+comment|/* 		 * Arguments: (none) 		 */
 switch|switch
 condition|(
 name|async_state
@@ -3102,9 +3086,6 @@ literal|0
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -3124,7 +3105,7 @@ break|break;
 case|case
 name|ACMD_RUNBLK
 case|:
-comment|/* 	 *  Arguments: 	 *     0 - block number I/O will be performed on 	 * 	 *  modifies: curpos 	 */
+comment|/* 		 * Arguments: 0 - block number I/O will be performed on 		 *  		 * modifies: curpos 		 */
 switch|switch
 condition|(
 name|async_state
@@ -3669,9 +3650,6 @@ literal|9
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -4109,7 +4087,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Entry point for the async request processor.  */
+comment|/*  * Entry point for the async request processor.  */
 end_comment
 
 begin_function
@@ -4695,9 +4673,6 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -4766,14 +4741,14 @@ operator|.
 name|iosts_change
 argument_list|)
 expr_stmt|;
-comment|/* wakeup those who want an i/o chg */
+comment|/* wakeup those who want 							 * an i/o chg */
 break|break;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  *  Entry for async read.  */
+comment|/*  * Entry for async read.  */
 end_comment
 
 begin_function
@@ -5398,9 +5373,6 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -5433,7 +5405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Entry for async write.  If from is 0, this came from the interrupt  *  routine, if it's 1 then it was a timeout, if it's 2, then an  *  async_cmd completed.  */
+comment|/*  * Entry for async write.  If from is 0, this came from the interrupt  * routine, if it's 1 then it was a timeout, if it's 2, then an async_cmd  * completed.  */
 end_comment
 
 begin_function
@@ -5956,7 +5928,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 			 *  Retries failed.  Note the unrecoverable error. 			 *  Marking the block as bad is fairly useless. 			 */
+comment|/* 				 * Retries failed.  Note the unrecoverable 				 * error. Marking the block as bad is fairly 				 * useless. 				 */
 name|printf
 argument_list|(
 literal|"ft%d: unrecoverable write error on block %d\n"
@@ -6086,9 +6058,6 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -6121,7 +6090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Interrupt handler for active tape.  Bounced off of fdintr().  */
+comment|/*  * Interrupt handler for active tape.  Bounced off of fdintr().  */
 end_comment
 
 begin_function
@@ -6429,7 +6398,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Interrupt timeout routine.  */
+comment|/*  * Interrupt timeout routine.  */
 end_comment
 
 begin_function
@@ -6437,7 +6406,8 @@ specifier|static
 name|void
 name|ft_timeout
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 name|arg1
 parameter_list|)
 block|{
@@ -6529,7 +6499,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Wait for a particular interrupt to occur.  ftintr() will wake us up  *  if it sees what we want.  Otherwise, time out and return error.  *  Should always disable ints before trigger is sent and calling here.  */
+comment|/*  * Wait for a particular interrupt to occur.  ftintr() will wake us up if it  * sees what we want.  Otherwise, time out and return error. Should always  * disable ints before trigger is sent and calling here.  */
 end_comment
 
 begin_function
@@ -6702,9 +6672,6 @@ name|ticks
 condition|)
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -6796,9 +6763,6 @@ name|ticks
 condition|)
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -6828,7 +6792,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Recalibrate tape drive.  Parameter totape is true, if we should  *  recalibrate to tape drive settings.  */
+comment|/*  * Recalibrate tape drive.  Parameter totape is true, if we should  * recalibrate to tape drive settings.  */
 end_comment
 
 begin_function
@@ -7001,11 +6965,9 @@ specifier|static
 name|void
 name|state_timeout
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 name|arg1
-parameter_list|,
-name|int
-name|arg2
 parameter_list|)
 block|{
 name|ftu_t
@@ -7031,7 +6993,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Wait for a particular tape status to be met.  If all is TRUE, then  *  all states must be met, otherwise any state can be met.  */
+comment|/*  * Wait for a particular tape status to be met.  If all is TRUE, then all  * states must be met, otherwise any state can be met.  */
 end_comment
 
 begin_function
@@ -7140,9 +7102,6 @@ condition|)
 block|{
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|state_timeout
 argument_list|,
 operator|(
@@ -7197,7 +7156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Send a QIC command to tape drive, wait for completion.  */
+comment|/*  * Send a QIC command to tape drive, wait for completion.  */
 end_comment
 
 begin_function
@@ -7401,7 +7360,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Return status of tape drive  */
+comment|/*  * Return status of tape drive  */
 end_comment
 
 begin_function
@@ -7613,7 +7572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Transfer control to tape drive.  */
+comment|/*  * Transfer control to tape drive.  */
 end_comment
 
 begin_function
@@ -7749,7 +7708,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Transfer control back to floppy disks.  */
+comment|/*  * Transfer control back to floppy disks.  */
 end_comment
 
 begin_function
@@ -7892,7 +7851,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Wait for the driver to go inactive, cancel readahead if necessary.  */
+comment|/*  * Wait for the driver to go inactive, cancel readahead if necessary.  */
 end_comment
 
 begin_function
@@ -7983,7 +7942,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Get the geometry of the tape currently in the drive.  */
+comment|/*  * Get the geometry of the tape currently in the drive.  */
 end_comment
 
 begin_function
@@ -8162,15 +8121,15 @@ name|cfg
 operator|&
 name|QCF_EXTRA
 expr_stmt|;
-comment|/*  *  XXX - This doesn't seem to work on my Colorado Jumbo 250...  *  if it works on your drive, I'd sure like to hear about it.  */
+comment|/* 	 * XXX - This doesn't seem to work on my Colorado Jumbo 250... if it 	 * works on your drive, I'd sure like to hear about it. 	 */
 if|#
 directive|if
 literal|0
 comment|/* Report drive status */
-block|for (sts = -1, tries = 0; sts< 0&& tries< 3; tries++) 	sts = qic_status(ftu, QC_TSTATUS, 8);   if (tries == 3) { 	DPRT(("ftgetgeom report tape status failed\n")); 	ftg = NULL; 	return(-1);   }   DPRT(("ftgetgeom report tape status got $%04x\n", sts));
+block|for (sts = -1, tries = 0; sts< 0&& tries< 3; tries++) 		sts = qic_status(ftu, QC_TSTATUS, 8); 	if (tries == 3) { 		DPRT(("ftgetgeom report tape status failed\n")); 		ftg = NULL; 		return (-1); 	} 	DPRT(("ftgetgeom report tape status got $%04x\n", sts));
 else|#
 directive|else
-comment|/*    *  XXX - Forge a fake tape status based upon the returned    *  configuration, since the above command or code is broken    *  for my drive and probably other older drives.    */
+comment|/* 	 * XXX - Forge a fake tape status based upon the returned 	 * configuration, since the above command or code is broken for my 	 * drive and probably other older drives. 	 */
 name|sts
 operator|=
 literal|0
@@ -8395,7 +8354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Switch between tape/floppy.  This will send the tape enable/disable  *  codes for this drive's manufacturer.  */
+comment|/*  * Switch between tape/floppy.  This will send the tape enable/disable codes  * for this drive's manufacturer.  */
 end_comment
 
 begin_function
@@ -8851,7 +8810,7 @@ argument_list|,
 name|QC_PRIMARY
 argument_list|)
 expr_stmt|;
-comment|/* Make sure we're in primary mode */
+comment|/* Make sure we're in primary 						 * mode */
 name|tape_state
 argument_list|(
 name|ftu
@@ -8944,7 +8903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Perform a QIC status function.  */
+comment|/*  * Perform a QIC status function.  */
 end_comment
 
 begin_function
@@ -9236,7 +9195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Open tape drive for use.  Bounced off of Fdopen if tape minor is  *  detected.  */
+comment|/*  * Open tape drive for use.  Bounced off of Fdopen if tape minor is detected.  */
 end_comment
 
 begin_function
@@ -9354,7 +9313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Close tape and return floppy controller to disk mode.  */
+comment|/*  * Close tape and return floppy controller to disk mode.  */
 end_comment
 
 begin_function
@@ -9481,7 +9440,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Perform strategy on a given buffer (not!).  The driver was not  *  performing very efficiently using the buffering routines.  After  *  support for error correction was added, this routine became  *  obsolete in favor of doing ioctl's.  Ugly, yes.  */
+comment|/*  * Perform strategy on a given buffer (not!).  The driver was not performing  * very efficiently using the buffering routines.  After support for error  * correction was added, this routine became obsolete in favor of doing  * ioctl's.  Ugly, yes.  */
 end_comment
 
 begin_function
@@ -9940,9 +9899,6 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -10273,9 +10229,6 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|ft_timeout
 argument_list|,
 operator|(
@@ -11406,7 +11359,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  I/O functions.  */
+comment|/*  * I/O functions.  */
 end_comment
 
 begin_function
@@ -11459,11 +11412,11 @@ block|{
 case|case
 name|QIOREAD
 case|:
-comment|/* Request reading a segment from tape.		*/
+comment|/* Request reading a segment from tape.		 */
 case|case
 name|QIOWRITE
 case|:
-comment|/* Request writing a segment to tape.		*/
+comment|/* Request writing a segment to tape.		 */
 return|return
 operator|(
 name|ftreq_rw
@@ -11485,7 +11438,7 @@ return|;
 case|case
 name|QIOREWIND
 case|:
-comment|/* Rewind tape.					*/
+comment|/* Rewind tape.					 */
 return|return
 operator|(
 name|ftreq_rewind
@@ -11497,11 +11450,11 @@ return|;
 case|case
 name|QIOBOT
 case|:
-comment|/* Seek to logical beginning of track.		*/
+comment|/* Seek to logical beginning of track.		 */
 case|case
 name|QIOEOT
 case|:
-comment|/* Seek to logical end of track.		*/
+comment|/* Seek to logical end of track.		 */
 return|return
 operator|(
 name|ftreq_trkpos
@@ -11515,7 +11468,7 @@ return|;
 case|case
 name|QIOTRACK
 case|:
-comment|/* Seek tape head to specified track.		*/
+comment|/* Seek tape head to specified track.		 */
 return|return
 operator|(
 name|ftreq_trkset
@@ -11533,14 +11486,14 @@ return|;
 case|case
 name|QIOSEEKLP
 case|:
-comment|/* Seek load point.				*/
+comment|/* Seek load point.				 */
 goto|goto
 name|badreq
 goto|;
 case|case
 name|QIOFORWARD
 case|:
-comment|/* Move tape in logical forward direction.	*/
+comment|/* Move tape in logical forward direction.	 */
 return|return
 operator|(
 name|ftreq_lfwd
@@ -11552,7 +11505,7 @@ return|;
 case|case
 name|QIOSTOP
 case|:
-comment|/* Causes tape to stop.				*/
+comment|/* Causes tape to stop.				 */
 return|return
 operator|(
 name|ftreq_stop
@@ -11564,15 +11517,15 @@ return|;
 case|case
 name|QIOPRIMARY
 case|:
-comment|/* Enter primary mode.				*/
+comment|/* Enter primary mode.				 */
 case|case
 name|QIOFORMAT
 case|:
-comment|/* Enter format mode.				*/
+comment|/* Enter format mode.				 */
 case|case
 name|QIOVERIFY
 case|:
-comment|/* Enter verify mode.				*/
+comment|/* Enter verify mode.				 */
 return|return
 operator|(
 name|ftreq_setmode
@@ -11586,14 +11539,14 @@ return|;
 case|case
 name|QIOWRREF
 case|:
-comment|/* Write reference burst.			*/
+comment|/* Write reference burst.			 */
 goto|goto
 name|badreq
 goto|;
 case|case
 name|QIOSTATUS
 case|:
-comment|/* Get drive status.				*/
+comment|/* Get drive status.				 */
 return|return
 operator|(
 name|ftreq_status
@@ -11615,7 +11568,7 @@ return|;
 case|case
 name|QIOCONFIG
 case|:
-comment|/* Get tape configuration.			*/
+comment|/* Get tape configuration.			 */
 return|return
 operator|(
 name|ftreq_config
