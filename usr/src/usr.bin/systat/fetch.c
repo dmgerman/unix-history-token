@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fetch.c	5.2 (Berkeley) %G%"
+literal|"@(#)fetch.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ end_include
 
 begin_function
 name|long
-name|getw
+name|getword
 parameter_list|(
 name|loc
 parameter_list|)
@@ -198,13 +198,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|j
-operator|<
-literal|0
-condition|)
-block|{
-if|if
-condition|(
 name|numprocs
 operator|<
 literal|200
@@ -265,7 +258,6 @@ argument_list|,
 name|mproc
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|namp

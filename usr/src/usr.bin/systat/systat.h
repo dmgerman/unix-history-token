@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systat.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systat.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -484,7 +484,7 @@ end_decl_stmt
 
 begin_function_decl
 name|long
-name|getw
+name|getword
 parameter_list|()
 function_decl|;
 end_function_decl

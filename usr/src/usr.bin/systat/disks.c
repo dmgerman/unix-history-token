@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disks.c	5.6 (Berkeley) %G%"
+literal|"@(#)disks.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,7 +197,7 @@ return|;
 block|}
 name|dk_ndrive
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[

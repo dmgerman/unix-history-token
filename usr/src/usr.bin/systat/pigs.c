@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pigs.c	5.7 (Berkeley) %G%"
+literal|"@(#)pigs.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,15 +152,6 @@ name|float
 name|total
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|char
@@ -882,7 +873,7 @@ condition|)
 block|{
 name|procp
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[
@@ -894,7 +885,7 @@ argument_list|)
 expr_stmt|;
 name|nproc
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[

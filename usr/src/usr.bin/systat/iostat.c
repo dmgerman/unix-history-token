@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.5 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,6 +290,28 @@ begin_comment
 comment|/* default ms/seek shown */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|numlabels
+argument_list|()
+decl_stmt|,
+name|barlabels
+argument_list|()
+decl_stmt|,
+name|stats
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|stat1
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_macro
 name|initiostat
 argument_list|()
@@ -433,7 +455,7 @@ name|s
 operator|.
 name|dk_busy
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[
@@ -749,22 +771,26 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|numlabels
-argument_list|(
-argument|row
-argument_list|)
+parameter_list|(
+name|row
+parameter_list|)
+name|int
+name|row
+decl_stmt|;
 block|{
 name|int
 name|i
-block|,
+decl_stmt|,
 name|col
-block|,
+decl_stmt|,
 name|regions
-block|,
+decl_stmt|,
 name|ndrives
-block|;
+decl_stmt|;
 define|#
 directive|define
 name|COLWIDTH
@@ -809,13 +835,7 @@ argument_list|,
 name|DRIVESPERLINE
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Deduct -regions for blank line after each scrolling region. 	 */
-end_comment
-
-begin_expr_stmt
 name|linesperregion
 operator|=
 operator|(
@@ -830,13 +850,7 @@ operator|)
 operator|/
 name|regions
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Minimum region contains space for two 	 * label lines and one line of statistics. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|linesperregion
@@ -847,16 +861,10 @@ name|linesperregion
 operator|=
 literal|3
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|col
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|i
@@ -958,9 +966,6 @@ operator|+=
 name|COLWIDTH
 expr_stmt|;
 block|}
-end_for
-
-begin_if
 if|if
 condition|(
 name|col
@@ -971,31 +976,24 @@ name|linesperregion
 operator|+
 literal|1
 expr_stmt|;
-end_if
-
-begin_return
 return|return
 operator|(
 name|row
 operator|)
 return|;
-end_return
+block|}
+end_function
 
-begin_macro
-unit|}  static
+begin_function
+specifier|static
+name|int
 name|barlabels
-argument_list|(
-argument|row
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|row
+parameter_list|)
 name|int
 name|row
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -1109,7 +1107,7 @@ name|row
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|showiostat
@@ -1477,24 +1475,24 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|stats
-argument_list|(
-argument|row
-argument_list|,
-argument|col
-argument_list|,
-argument|dn
-argument_list|)
+parameter_list|(
+name|row
+parameter_list|,
+name|col
+parameter_list|,
+name|dn
+parameter_list|)
 name|int
 name|row
-operator|,
+decl_stmt|,
+name|col
+decl_stmt|,
 name|dn
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|double
 name|atime
@@ -1733,24 +1731,22 @@ name|row
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|stat1
-argument_list|(
-argument|row
-argument_list|,
-argument|o
-argument_list|)
+parameter_list|(
+name|row
+parameter_list|,
+name|o
+parameter_list|)
 name|int
 name|row
-operator|,
+decl_stmt|,
 name|o
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|i
@@ -1826,7 +1822,7 @@ name|CPUSCALE
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|histogram

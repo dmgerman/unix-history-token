@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swap.c	5.7 (Berkeley) %G%"
+literal|"@(#)swap.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1135,7 +1135,7 @@ condition|)
 block|{
 name|dmmin
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[
@@ -1147,7 +1147,7 @@ argument_list|)
 expr_stmt|;
 name|dmmax
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[
@@ -1159,7 +1159,7 @@ argument_list|)
 expr_stmt|;
 name|dmtext
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[
@@ -1171,7 +1171,7 @@ argument_list|)
 expr_stmt|;
 name|nswdev
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[
@@ -1240,7 +1240,7 @@ argument_list|)
 expr_stmt|;
 name|ntext
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[
@@ -1252,7 +1252,7 @@ argument_list|)
 expr_stmt|;
 name|textp
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[
@@ -1272,7 +1272,7 @@ condition|)
 block|{
 name|procp
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[
@@ -1284,7 +1284,7 @@ argument_list|)
 expr_stmt|;
 name|nproc
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|nlst
 index|[
