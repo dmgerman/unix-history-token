@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_usrreq.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_usrreq.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -90,12 +90,6 @@ name|rcb_prev
 operator|=
 operator|&
 name|rawcb
-expr_stmt|;
-name|rawintrq
-operator|.
-name|ifq_maxlen
-operator|=
-name|IFQ_MAXLEN
 expr_stmt|;
 block|}
 end_block
@@ -1036,19 +1030,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_macro
-name|rawintr
-argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
-
-begin_comment
-comment|/* XXX - referenced by locore.  will soon go away */
-end_comment
 
 end_unit
 
