@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)vsio.h	7.1 (MIT) %G% */
+comment|/* @(#)vsio.h	7.2 (MIT) %G% */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|VSIOINIT
-value|_IO(V, 0)
+value|_IO('V', 0)
 end_define
 
 begin_comment
@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|VSIOSTART
-value|_IOW(V, 1, int)
+value|_IOW('V', 1, int)
 end_define
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|VSIOABORT
-value|_IO(V, 2)
+value|_IO('V', 2)
 end_define
 
 begin_comment
@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|VSIOPWRUP
-value|_IO(V, 3)
+value|_IO('V', 3)
 end_define
 
 begin_comment
@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|VSIOGETVER
-value|_IOR(V, 4, int)
+value|_IOR('V', 4, int)
 end_define
 
 begin_comment
@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|VSIOSYNC
-value|_IO(V, 6)
+value|_IO('V', 6)
 end_define
 
 begin_comment
@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|VSIOBBACTL
-value|_IOW(V, 8, int)
+value|_IOW('V', 8, int)
 end_define
 
 begin_comment
@@ -96,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|VSIOFIBCTL
-value|_IOW(V, 9, int)
+value|_IOW('V', 9, int)
 end_define
 
 begin_comment
@@ -107,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|VSIOFIBRETRY
-value|_IOW(V,10, int)
+value|_IOW('V',10, int)
 end_define
 
 begin_comment
@@ -118,7 +118,7 @@ begin_define
 define|#
 directive|define
 name|VSIOGETSTATS
-value|_IOR(V,11, vsStats)
+value|_IOR('V',11, vsStats)
 end_define
 
 begin_comment
@@ -129,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|VSIOGETIOA
-value|_IOR(V,13, vsIoAddrAddr)
+value|_IOR('V',13, vsIoAddrAddr)
 end_define
 
 begin_comment
@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|VSIOUSERWAIT
-value|_IO(V, 15)
+value|_IO('V', 15)
 end_define
 
 begin_comment
@@ -151,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|VSIOWAITGO
-value|_IOW(V, 16, caddr_t)
+value|_IOW('V', 16, caddr_t)
 end_define
 
 begin_comment
