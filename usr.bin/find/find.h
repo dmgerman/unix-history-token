@@ -26,6 +26,8 @@ name|N_DEPTH
 block|,
 name|N_EXEC
 block|,
+name|N_EXECDIR
+block|,
 name|N_EXPR
 block|,
 name|N_FOLLOW
@@ -382,7 +384,7 @@ define|#
 directive|define
 name|O_ARGVP
 value|0x08
-comment|/* pass: *argv, N_OK || N_EXEC */
+comment|/* pass: *argv, N_OK || N_EXEC || N_EXECDIR */
 name|int
 name|flags
 decl_stmt|;

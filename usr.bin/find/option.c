@@ -204,6 +204,16 @@ name|O_ARGVP
 block|}
 block|,
 block|{
+literal|"-execdir"
+block|,
+name|N_EXECDIR
+block|,
+name|c_execdir
+block|,
+name|O_ARGVP
+block|}
+block|,
+block|{
 literal|"-follow"
 block|,
 name|N_FOLLOW
