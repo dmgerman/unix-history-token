@@ -12,7 +12,7 @@ comment|/*  * Limited emulation 27.12.91 - mostly loads/stores, which gcc wants 
 end_comment
 
 begin_comment
-comment|/*  * This file is full of ugly macros etc: one problem was that gcc simply  * didn't want to make the structures as they should be: it has to try to  * align them. Sickening code, but at least I've hidden the ugly things  * in this one file: the other files don't need to know about these things.  *  * The other files also don't care about ST(x) etc - they just get addresses  * to 80-bit temporary reals, and do with them as they please. I wanted to  * hide most of the 387-specific things here.  */
+comment|/*  * This file is full of ugly macros etc: one problem was that gcc simply  * didn't want to make the structures as they should be: it has to try to  * align them. Sickening code, but at least I've hidden the ugly things  * in this one file: the other files don't need to know about these things.  *  * The other files also don't care about ST(x) etc - they just get addresses  * to 80-bit temporary reals, and do with them as they please. I wanted to  * hide most of the 387-specific things here.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00046  * --------------------         -----   ----------------------  *  * 19 Sep 92	Ishii Masahiro		Fix 0x1fd instruction  *		kym@bingsuns.cc.binghamton.edu		Fix fscale  */
 end_comment
 
 begin_include
@@ -890,7 +890,12 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* fall into .. */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* 19 Sep 92*/
 case|case
 literal|0x1fc
 case|:
@@ -7578,6 +7583,28 @@ operator|=
 operator|*
 name|a
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|c
+operator|->
+name|a
+operator|&&
+operator|!
+name|c
+operator|->
+name|b
+condition|)
+block|{
+comment|/* 19 Sep 92*/
+name|c
+operator|->
+name|exponent
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
 name|real_to_int
 argument_list|(
 name|b
