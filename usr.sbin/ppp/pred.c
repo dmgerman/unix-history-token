@@ -24,7 +24,7 @@ file|"ccp.h"
 end_include
 
 begin_comment
-comment|/*  *  * $Id: pred.c,v 1.9 1997/02/22 16:10:47 peter Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
+comment|/*  *  * $Id: pred.c,v 1.10 1997/05/10 01:22:18 brian Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
 end_comment
 
 begin_comment
@@ -451,13 +451,6 @@ return|;
 block|}
 end_block
 
-begin_define
-define|#
-directive|define
-name|SIZ1
-value|2048
-end_define
-
 begin_function
 name|void
 name|Pred1Init
@@ -556,7 +549,7 @@ decl_stmt|;
 name|u_char
 name|bufp
 index|[
-name|SIZ1
+name|MAX_MTU
 index|]
 decl_stmt|;
 name|u_short
@@ -836,7 +829,7 @@ name|wp
 operator|=
 name|mballoc
 argument_list|(
-name|SIZ1
+name|MAX_MTU
 argument_list|,
 name|MB_IPIN
 argument_list|)
