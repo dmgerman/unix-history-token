@@ -242,7 +242,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|gv_kill_thread
+name|gv_kill_plex_thread
 argument_list|(
 name|p
 argument_list|)
@@ -1940,7 +1940,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If this is a RAID5 plex, check if its worker thread is still active 	 * and signal it to self destruct. 	 */
-name|gv_kill_thread
+name|gv_kill_plex_thread
 argument_list|(
 name|p
 argument_list|)

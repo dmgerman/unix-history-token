@@ -1068,7 +1068,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|gv_kill_thread
+name|gv_kill_plex_thread
 argument_list|(
 name|p
 argument_list|)

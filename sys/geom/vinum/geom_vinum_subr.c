@@ -3359,7 +3359,7 @@ end_function
 
 begin_function
 name|void
-name|gv_kill_thread
+name|gv_kill_plex_thread
 parameter_list|(
 name|struct
 name|gv_plex
