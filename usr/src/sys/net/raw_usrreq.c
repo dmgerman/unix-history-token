@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.6	82/02/01	*/
+comment|/*	raw_usrreq.c	4.7	82/02/02	*/
 end_comment
 
 begin_include
@@ -127,6 +127,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|sockproto
+modifier|*
 name|pf
 decl_stmt|;
 end_decl_stmt
@@ -134,8 +135,10 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|sockaddr
+modifier|*
 name|daf
 decl_stmt|,
+modifier|*
 name|saf
 decl_stmt|;
 end_decl_stmt
@@ -156,6 +159,11 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|RAW_INPUT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Rip off an mbuf for a generic header. 	 */
 name|m
 operator|=
@@ -215,18 +223,21 @@ name|rh
 operator|->
 name|raw_dst
 operator|=
+operator|*
 name|daf
 expr_stmt|;
 name|rh
 operator|->
 name|raw_src
 operator|=
+operator|*
 name|saf
 expr_stmt|;
 name|rh
 operator|->
 name|raw_protocol
 operator|=
+operator|*
 name|pf
 expr_stmt|;
 comment|/* 	 * Header now contains enough info to decide 	 * which socket to place packet in (if any). 	 * Queue it up for the raw protocol process 	 * running at software interrupt level. 	 */
@@ -439,7 +450,7 @@ operator|.
 name|sa_family
 condition|)
 continue|continue;
-comment|/* 		 * We assume the lower level routines have 		 * placed the address in a canonical format 		 * suitable for a structure comparison. Packets 		 * are duplicated for each receiving socket. 		 */
+comment|/* 		 * We assume the lower level routines have 		 * placed the address in a canonical format 		 * suitable for a structure comparison. Packets 		 * are duplicated for each receiving socket. 		 * 		 * SHOULD HAVE A NUMBER OF MECHANISMS FOR 		 * MATCHING BASED ON rcb_flags 		 */
 if|if
 condition|(
 operator|(
