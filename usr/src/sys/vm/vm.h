@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -172,7 +172,7 @@ name|queue_first
 parameter_list|(
 name|head
 parameter_list|)
-value|((head)->next)
+value|((head)->qe_next)
 end_define
 
 begin_define
@@ -182,7 +182,7 @@ name|queue_next
 parameter_list|(
 name|elm
 parameter_list|)
-value|((elm)->next)
+value|((elm)->qe_next)
 end_define
 
 begin_define
@@ -192,7 +192,7 @@ name|queue_empty
 parameter_list|(
 name|head
 parameter_list|)
-value|((head)->next == 0)
+value|((head)->qe_next == 0)
 end_define
 
 begin_define
@@ -200,9 +200,9 @@ define|#
 directive|define
 name|queue_end
 parameter_list|(
-name|elm
-parameter_list|,
 name|head
+parameter_list|,
+name|elm
 parameter_list|)
 value|((elm) == 0)
 end_define
