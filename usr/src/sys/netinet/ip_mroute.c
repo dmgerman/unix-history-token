@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Stephen Deering  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * %sccs.include.redist.c%  *  *	@(#)ip_mroute.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Stephen Deering  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * %sccs.include.redist.c%  *  *	@(#)ip_mroute.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1434,10 +1434,6 @@ operator|*
 name|vifip
 decl_stmt|;
 specifier|register
-name|vifi_t
-name|vifi
-decl_stmt|;
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -1445,6 +1441,8 @@ name|ifp
 decl_stmt|;
 specifier|register
 name|int
+name|i
+decl_stmt|,
 name|s
 decl_stmt|;
 name|struct
@@ -1578,24 +1576,24 @@ expr_stmt|;
 comment|/* Adjust numvifs down */
 for|for
 control|(
-name|vifi
+name|i
 operator|=
 name|numvifs
 operator|-
 literal|1
 init|;
-name|vifi
+name|i
 operator|>=
 literal|0
 condition|;
-name|vifi
+name|i
 operator|--
 control|)
 if|if
 condition|(
 name|viftable
 index|[
-name|vifi
+name|i
 index|]
 operator|.
 name|v_lcl_addr
@@ -1607,7 +1605,7 @@ condition|)
 break|break;
 name|numvifs
 operator|=
-name|vifi
+name|i
 operator|+
 literal|1
 expr_stmt|;
