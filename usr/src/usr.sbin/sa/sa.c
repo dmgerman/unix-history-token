@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sa.c	4.6 (Berkeley) 84/07/14"
+literal|"@(#)sa.c	4.7 (Berkeley) 84/07/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -2742,6 +2742,8 @@ name|fbuf
 operator|.
 name|ac_io
 argument_list|)
+operator|>>
+literal|6
 expr_stmt|;
 if|if
 condition|(
