@@ -300,6 +300,27 @@ comment|/* 78 - ENOSYS */
 literal|"Inappropriate file type or format"
 block|,
 comment|/* 79 - EFTYPE */
+literal|"Authentication error"
+block|,
+comment|/* 80 - EAUTH */
+literal|"Need authenticator"
+block|,
+comment|/* 81 - ENEEDAUTH */
+literal|"Identifier removed"
+block|,
+comment|/* 82 - EIDRM */
+literal|"No message of desired type"
+block|,
+comment|/* 83 - ENOMSG */
+literal|"Value too large to be stored in data type"
+block|,
+comment|/* 84 - EOVERFLOW */
+literal|"Operation canceled"
+block|,
+comment|/* 85 - ECANCELED */
+literal|"Illegal byte sequence"
+block|,
+comment|/* 86 - EILSEQ */
 block|}
 decl_stmt|;
 end_decl_stmt
