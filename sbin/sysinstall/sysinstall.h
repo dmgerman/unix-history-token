@@ -198,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|HELPME_FILE
-value|"/HELPME"
+value|"/DISKSPACE.FAQ"
 end_define
 
 begin_ifndef
