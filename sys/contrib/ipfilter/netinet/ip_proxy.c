@@ -599,16 +599,16 @@ directive|include
 file|"netinet/ip_netbios_pxy.c"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|"netinet/ip_ipsec_pxy.c"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|ap_session_t
