@@ -213,6 +213,17 @@ begin_comment
 comment|/* Prisoned roots can fiddle */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CTLFLAG_DYN
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Dynamic oid - can be freed */
+end_comment
+
 begin_comment
 comment|/*  * USE THIS instead of a hardwired number from the categories below  * to get dynamically assigned sysctl entries using the linker-set  * technology. This is the way nearly all new sysctl variables should  * be implemented.  * e.g. SYSCTL_INT(_parent, OID_AUTO, name, CTLFLAG_RW,&variable, 0, "");  */
 end_comment
@@ -371,6 +382,9 @@ name|char
 modifier|*
 name|oid_fmt
 decl_stmt|;
+name|int
+name|oid_refcnt
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -477,7 +491,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Declare an oid to allow child oids to be added to it. */
+comment|/* Declare a static oid to allow child oids to be added to it. */
 end_comment
 
 begin_define
@@ -490,6 +504,68 @@ parameter_list|)
 define|\
 value|extern struct sysctl_oid_list sysctl_##name##_children
 end_define
+
+begin_comment
+comment|/* Hide these in macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_CHILDREN
+parameter_list|(
+name|oid_ptr
+parameter_list|)
+value|(struct sysctl_oid_list *) \ 	(oid_ptr)->oid_arg1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_STATIC_CHILDREN
+parameter_list|(
+name|oid_name
+parameter_list|)
+define|\
+value|(&sysctl_##oid_name##_children)
+end_define
+
+begin_comment
+comment|/* === Structs and macros related to context handling === */
+end_comment
+
+begin_comment
+comment|/* All dynamically created sysctls can be tracked in a context list. */
+end_comment
+
+begin_struct
+struct|struct
+name|sysctl_ctx_entry
+block|{
+name|struct
+name|sysctl_oid
+modifier|*
+name|entry
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|sysctl_ctx_entry
+argument_list|)
+name|link
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|sysctl_ctx_list
+argument_list|,
+name|sysctl_ctx_entry
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* This constructs a "raw" MIB oid. */
@@ -522,6 +598,35 @@ define|\
 value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { 0 },			 \ 		nbr, kind, a1, a2, #name, handler, fmt };		 \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name);
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_OID
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|kind
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|,
+name|handler
+parameter_list|,
+name|fmt
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, #name, kind, a1, a2, handler, fmt, descr);
+end_define
+
 begin_comment
 comment|/* This constructs a node from which other oids can hang. */
 end_comment
@@ -545,6 +650,29 @@ name|descr
 parameter_list|)
 define|\
 value|struct sysctl_oid_list sysctl_##parent##_##name##_children;	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|access,		    \ 		   (void*)&sysctl_##parent##_##name##_children, 0, handler, \ 		   "N", descr);
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_NODE
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|handler
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, #name, CTLTYPE_NODE|access,	    \ 	0, 0, handler, "N", descr);
 end_define
 
 begin_comment
@@ -574,6 +702,31 @@ define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_STRING|access, \ 		arg, len, sysctl_handle_string, "A", descr)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_STRING
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|arg
+parameter_list|,
+name|len
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, #name, CTLTYPE_STRING|access,	    \ 	arg, len, sysctl_handle_string, "A", descr);
+end_define
+
 begin_comment
 comment|/* Oid for an int.  If ptr is NULL, val is returned. */
 end_comment
@@ -599,6 +752,31 @@ name|descr
 parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_int, "I", descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_INT
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, #name, CTLTYPE_INT|access,	    \ 	ptr, val, sysctl_handle_int, "I", descr);
 end_define
 
 begin_comment
@@ -628,6 +806,31 @@ define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_int, "IU", descr)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_UINT
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, #name, CTLTYPE_INT|access,	    \ 	ptr, val, sysctl_handle_int, "IU", descr);
+end_define
+
 begin_comment
 comment|/* Oid for a long.  The pointer must be non NULL. */
 end_comment
@@ -655,6 +858,29 @@ define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_long, "L", descr)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_LONG
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, #name, CTLTYPE_INT|access,	    \ 	ptr, 0, sysctl_handle_long, "L", descr);
+end_define
+
 begin_comment
 comment|/* Oid for a long.  The pointer must be non NULL. */
 end_comment
@@ -680,6 +906,29 @@ name|descr
 parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_long, "LU", descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_ULONG
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, #name, CTLTYPE_INT|access,	    \ 	ptr, 0, sysctl_handle_long, "LU", descr);
 end_define
 
 begin_comment
@@ -711,6 +960,33 @@ define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|access, \ 		ptr, len, sysctl_handle_opaque, fmt, descr)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_OPAQUE
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|len
+parameter_list|,
+name|fmt
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, #name, CTLTYPE_OPAQUE|access,	    \ 	ptr, len, sysctl_handle_opaque, fmt, descr);
+end_define
+
 begin_comment
 comment|/* Oid for a struct.  Specified by a pointer and a type. */
 end_comment
@@ -736,6 +1012,31 @@ name|descr
 parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|access, \ 		ptr, sizeof(struct type), sysctl_handle_opaque, \ 		"S," #type, descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_STRUCT
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|type
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, #name, CTLTYPE_OPAQUE|access,	    \ 	ptr, sizeof(struct type), sysctl_handle_opaque, "S," #type, descr);
 end_define
 
 begin_comment
@@ -767,6 +1068,35 @@ name|descr
 parameter_list|)
 define|\
 value|SYSCTL_OID(parent, nbr, name, access, \ 		ptr, arg, handler, fmt, descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_PROC
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|arg
+parameter_list|,
+name|handler
+parameter_list|,
+name|fmt
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, #name, access,			    \ 	ptr, arg, handler, fmt, descr);
 end_define
 
 begin_endif
@@ -2315,6 +2645,164 @@ struct_decl|struct
 name|linker_set
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/* Dynamic oid handling */
+end_comment
+
+begin_function_decl
+name|struct
+name|sysctl_oid
+modifier|*
+name|sysctl_add_oid
+parameter_list|(
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|clist
+parameter_list|,
+name|struct
+name|sysctl_oid_list
+modifier|*
+name|parent
+parameter_list|,
+name|int
+name|nbr
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|kind
+parameter_list|,
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|int
+name|arg2
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|handler
+function_decl|)
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+parameter_list|,
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|char
+modifier|*
+name|descr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sysctl_remove_oid
+parameter_list|(
+name|struct
+name|sysctl_oid
+modifier|*
+name|oidp
+parameter_list|,
+name|int
+name|del
+parameter_list|,
+name|int
+name|recurse
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sysctl_ctx_init
+parameter_list|(
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|clist
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sysctl_ctx_free
+parameter_list|(
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|clist
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|sysctl_ctx_entry
+modifier|*
+name|sysctl_ctx_entry_add
+parameter_list|(
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|clist
+parameter_list|,
+name|struct
+name|sysctl_oid
+modifier|*
+name|oidp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|sysctl_ctx_entry
+modifier|*
+name|sysctl_ctx_entry_find
+parameter_list|(
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|clist
+parameter_list|,
+name|struct
+name|sysctl_oid
+modifier|*
+name|oidp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sysctl_ctx_entry_del
+parameter_list|(
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|clist
+parameter_list|,
+name|struct
+name|sysctl_oid
+modifier|*
+name|oidp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Linker set based oid handling */
+end_comment
 
 begin_function_decl
 name|void
