@@ -254,6 +254,7 @@ struct|;
 endif|#
 directive|endif
 block|}
+name|peer
 union|;
 block|}
 struct|;
