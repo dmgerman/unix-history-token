@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vpr.c	1.3	(Berkeley)	%G%"
+literal|"@(#)vpr.c	1.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -857,6 +857,10 @@ name|VPD
 argument_list|,
 literal|"vpd"
 argument_list|,
+literal|"-n"
+argument_list|,
+literal|"-3"
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -866,6 +870,10 @@ argument_list|(
 name|VAD
 argument_list|,
 literal|"vad"
+argument_list|,
+literal|"-n"
+argument_list|,
+literal|"-3"
 argument_list|,
 literal|0
 argument_list|)
