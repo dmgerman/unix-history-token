@@ -121,13 +121,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IS_BASE
-value|(is->id_iobase)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BASE
 value|(sc->ep_io_addr)
 end_define
