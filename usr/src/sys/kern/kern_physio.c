@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	3.5	%H%	*/
+comment|/*	kern_physio.c	3.6	%H%	*/
 end_comment
 
 begin_include
@@ -1778,15 +1778,6 @@ name|bp
 decl_stmt|,
 modifier|*
 name|dp
-decl_stmt|,
-modifier|*
-name|ep
-decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|,
-name|x
 decl_stmt|;
 name|loop
 label|:
