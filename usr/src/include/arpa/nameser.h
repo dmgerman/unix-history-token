@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -572,9 +572,22 @@ name|u_short
 name|id
 decl_stmt|;
 comment|/* query identification number */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|gould
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|BIT_ZERO_ON_LEFT
+argument_list|)
 comment|/* Bit zero on left:  Gould and similar architectures */
 comment|/* fields in third byte */
 name|u_char
@@ -607,7 +620,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* recursion desired */
-comment|/* fields in forth byte */
+comment|/* fields in fourth byte */
 name|u_char
 name|ra
 range|:
@@ -634,7 +647,18 @@ decl_stmt|;
 comment|/* response code */
 else|#
 directive|else
-comment|/* Bit zero on right:  VAX, PDP-11, etc */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BIT_ZERO_ON_RIGHT
+argument_list|)
+comment|/* Bit zero on right:  VAX */
 comment|/* fields in third byte */
 name|u_char
 name|rd
@@ -666,7 +690,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* response flag */
-comment|/* fields in forth byte */
+comment|/* fields in fourth byte */
 name|u_char
 name|rcode
 range|:
@@ -691,6 +715,13 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* recursion available */
+else|#
+directive|else
+comment|/* you must determine what the correct bit order is for your compiler */
+name|UNDEFINED_BIT_ORDER
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* remaining bytes */
