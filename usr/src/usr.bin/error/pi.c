@@ -581,6 +581,17 @@ name|nwordv
 decl_stmt|;
 if|if
 condition|(
+name|wordc
+operator|<
+literal|2
+condition|)
+return|return
+operator|(
+name|C_UNKNOWN
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|strlen
 argument_list|(
