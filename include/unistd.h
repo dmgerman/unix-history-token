@@ -1335,6 +1335,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|getpeereid
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|uid_t
+operator|*
+operator|,
+name|gid_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|getpgid
 name|__P
 argument_list|(
