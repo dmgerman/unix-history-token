@@ -12115,13 +12115,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|PGRP_UNLOCK
-argument_list|(
-name|tp
-operator|->
-name|t_pgrp
-argument_list|)
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -12160,6 +12153,13 @@ condition|)
 name|pick
 operator|=
 name|p
+expr_stmt|;
+name|PGRP_UNLOCK
+argument_list|(
+name|tp
+operator|->
+name|t_pgrp
+argument_list|)
 expr_stmt|;
 name|td
 operator|=

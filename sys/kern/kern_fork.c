@@ -2219,6 +2219,16 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
+name|PGRPSESS_XLOCK
+argument_list|()
+expr_stmt|;
+name|PGRP_LOCK
+argument_list|(
+name|p1
+operator|->
+name|p_pgrp
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p2
@@ -2356,6 +2366,16 @@ name|PROC_UNLOCK
 argument_list|(
 name|p2
 argument_list|)
+expr_stmt|;
+name|PGRP_UNLOCK
+argument_list|(
+name|p1
+operator|->
+name|p_pgrp
+argument_list|)
+expr_stmt|;
+name|PGRPSESS_XUNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Attach the new process to its parent. 	 * 	 * If RFNOWAIT is set, the newly created process becomes a child 	 * of init.  This effectively disassociates the child from the 	 * parent. 	 */
 if|if
