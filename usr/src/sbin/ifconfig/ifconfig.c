@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	5.5 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -828,7 +828,7 @@ literal|"\t[ trailers | -trailers ]\n"
 argument_list|,
 literal|"\t[ arp | -arp ]\n"
 argument_list|,
-literal|"\t[ llc0 | -llc0 ] [ llc1 | -llc1 ] [ llc2 | -llc2 ] \n"
+literal|"\t[ link0 | -link0 ] [ link1 | -link1 ] [ link2 | -link2 ] \n"
 argument_list|)
 expr_stmt|;
 name|exit
