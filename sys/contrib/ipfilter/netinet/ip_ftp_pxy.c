@@ -1556,7 +1556,10 @@ name|swip
 expr_stmt|;
 block|}
 return|return
+name|APR_INC
+argument_list|(
 name|inc
+argument_list|)
 return|;
 block|}
 end_function
@@ -3734,7 +3737,10 @@ operator|=
 name|wptr
 expr_stmt|;
 return|return
+name|APR_INC
+argument_list|(
 name|inc
+argument_list|)
 return|;
 block|}
 end_function
