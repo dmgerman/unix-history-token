@@ -1014,6 +1014,12 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|ih
+operator|=
+name|NULL
+expr_stmt|;
 name|ohci_pci_detach
 argument_list|(
 name|self
@@ -1123,6 +1129,10 @@ condition|(
 name|sc
 operator|->
 name|irq_res
+operator|&&
+name|sc
+operator|->
+name|ih
 condition|)
 block|{
 name|int
@@ -1157,7 +1167,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|irq_res
+name|ih
 operator|=
 name|NULL
 expr_stmt|;
@@ -1202,7 +1212,7 @@ name|bus_release_resource
 argument_list|(
 name|self
 argument_list|,
-name|SYS_RES_IOPORT
+name|SYS_RES_IRQ
 argument_list|,
 literal|0
 argument_list|,
