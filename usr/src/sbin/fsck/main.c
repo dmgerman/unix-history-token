@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.27 (Berkeley) %G%"
+literal|"@(#)main.c	1.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9966,13 +9966,23 @@ block|{
 if|if
 condition|(
 operator|(
+name|inblk
+operator|&
 operator|(
 literal|1
 operator|<<
+operator|(
 name|siz
+operator|+
+operator|(
+name|fs
+operator|->
+name|fs_frag
+operator|%
+name|NBBY
 operator|)
-operator|&
-name|inblk
+operator|)
+operator|)
 operator|)
 operator|==
 literal|0

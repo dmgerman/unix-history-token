@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)ffs_alloc.c 1.19 %G%"
+literal|"@(#)ffs_alloc.c 1.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4252,6 +4252,14 @@ operator|(
 name|allocsiz
 operator|-
 literal|1
+operator|+
+operator|(
+name|fs
+operator|->
+name|fs_frag
+operator|%
+name|NBBY
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4309,6 +4317,14 @@ operator|(
 name|allocsiz
 operator|-
 literal|1
+operator|+
+operator|(
+name|fs
+operator|->
+name|fs_frag
+operator|%
+name|NBBY
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4575,13 +4591,23 @@ block|{
 if|if
 condition|(
 operator|(
+name|inblk
+operator|&
 operator|(
 literal|1
 operator|<<
+operator|(
 name|siz
+operator|+
+operator|(
+name|fs
+operator|->
+name|fs_frag
+operator|%
+name|NBBY
 operator|)
-operator|&
-name|inblk
+operator|)
+operator|)
 operator|)
 operator|==
 literal|0
