@@ -4652,7 +4652,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-name|PCI_COMMAND_STATUS_REG
+name|PCIR_COMMAND
 argument_list|,
 literal|4
 argument_list|)
@@ -4671,7 +4671,7 @@ name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-name|PCI_COMMAND_STATUS_REG
+name|PCIR_COMMAND
 argument_list|,
 name|command
 argument_list|,
@@ -4684,7 +4684,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-name|PCI_COMMAND_STATUS_REG
+name|PCIR_COMMAND
 argument_list|,
 literal|4
 argument_list|)
