@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.30 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,8 +200,6 @@ end_decl_stmt
 
 begin_block
 block|{
-return|return
-operator|(
 name|vsyslog
 argument_list|(
 name|pri
@@ -211,8 +209,7 @@ argument_list|,
 operator|&
 name|args
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_block
 
@@ -307,18 +304,7 @@ name|LOG_FACMASK
 operator|)
 operator|)
 condition|)
-block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
+return|return;
 name|saved_errno
 operator|=
 name|errno
@@ -668,11 +654,7 @@ argument_list|)
 operator|>=
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 comment|/* see if should attempt the console */
 if|if
 condition|(
@@ -683,17 +665,8 @@ operator|&
 name|LOG_CONS
 operator|)
 condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 comment|/* 	 * Output the message to the console; don't worry about blocking, 	 * if console blocks everything will.  Make sure the error reported 	 * is the one from the syslogd failure. 	 */
-name|saved_errno
-operator|=
-name|errno
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -764,17 +737,6 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|errno
-operator|=
-name|saved_errno
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 block|}
 end_block
 
@@ -818,9 +780,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|saved_errno
-decl_stmt|;
 if|if
 condition|(
 name|ident
@@ -912,12 +871,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+return|return;
 operator|(
 name|void
 operator|)
@@ -961,10 +915,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|saved_errno
-operator|=
-name|errno
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -973,32 +923,17 @@ argument_list|(
 name|LogFile
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
-name|saved_errno
-expr_stmt|;
 name|LogFile
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 block|}
 else|else
 name|connected
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 
@@ -1009,11 +944,9 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|rval
-decl_stmt|;
-name|rval
-operator|=
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|LogFile
@@ -1028,11 +961,6 @@ name|connected
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-name|rval
-operator|)
-return|;
 block|}
 end_block
 
