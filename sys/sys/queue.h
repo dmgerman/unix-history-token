@@ -41,6 +41,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SLIST_HEAD_INITIALIZER
+parameter_list|(
+name|head
+parameter_list|)
+define|\
+value|{ NULL }
+end_define
+
+begin_define
+define|#
+directive|define
 name|SLIST_ENTRY
 parameter_list|(
 name|type
