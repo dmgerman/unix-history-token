@@ -3484,6 +3484,13 @@ block|}
 block|,
 comment|/* DAV0336 - DAVICOM 336PNP MODEM */
 block|{
+literal|0x01009416
+block|,
+name|NULL
+block|}
+block|,
+comment|/* ETT0001 - E-Tech Bullet 33k6 PnP */
+block|{
 literal|0x0000aa1a
 block|,
 name|NULL
