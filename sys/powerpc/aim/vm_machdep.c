@@ -415,17 +415,6 @@ comment|/* 	 * Arrange for a non-local goto when the new process 	 * is started,
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-if|if
-condition|(
-name|p1
-operator|!=
-name|curproc
-condition|)
-name|panic
-argument_list|(
-literal|"cpu_fork: curproc"
-argument_list|)
-expr_stmt|;
 name|alpha_fpstate_check
 argument_list|(
 name|p1
