@@ -244,6 +244,7 @@ comment|/* array of pointers to records */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|separator

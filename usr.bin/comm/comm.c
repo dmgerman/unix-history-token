@@ -123,6 +123,7 @@ value|(LINE_MAX + 1)
 end_define
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|tabs
@@ -161,6 +162,7 @@ operator|(
 name|FILE
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -250,6 +252,7 @@ decl_stmt|,
 modifier|*
 name|fp2
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|col1
@@ -261,10 +264,6 @@ modifier|*
 name|col3
 decl_stmt|;
 name|char
-modifier|*
-modifier|*
-name|p
-decl_stmt|,
 name|line1
 index|[
 name|MAXLINELEN
@@ -274,6 +273,12 @@ name|line2
 index|[
 name|MAXLINELEN
 index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|p
 decl_stmt|;
 name|flag1
 operator|=
@@ -678,16 +683,15 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|offset
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|char
+modifier|*
 name|buf
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 do|do
 block|{
@@ -717,7 +721,7 @@ argument_list|)
 condition|)
 do|;
 block|}
-end_block
+end_function
 
 begin_function
 name|FILE
