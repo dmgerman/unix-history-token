@@ -443,7 +443,7 @@ name|stderr
 argument_list|,
 literal|"Wrong module loaded: %s.  Please start %s.\n"
 argument_list|,
-name|WRONGMOD
+name|VINUMMOD
 argument_list|,
 name|WRONGMOD
 argument_list|)
