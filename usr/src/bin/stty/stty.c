@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.10 (Berkeley) %G%"
+literal|"@(#)stty.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -885,18 +885,6 @@ block|,
 literal|0
 block|,
 name|MDMBUF
-block|,
-literal|"nohang"
-block|,
-name|NOHANG
-block|,
-literal|0
-block|,
-literal|"-nohang"
-block|,
-literal|0
-block|,
-name|NOHANG
 block|,
 literal|"flusho"
 block|,
@@ -2997,15 +2985,6 @@ argument_list|(
 literal|"-mdmbuf "
 argument_list|,
 name|MDMBUF
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|lput
-argument_list|(
-literal|"-nohang "
-argument_list|,
-name|NOHANG
 argument_list|,
 literal|0
 argument_list|)
