@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)traverse.c	1.7 (Berkeley) %G%"
+literal|"@(#)traverse.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndir.h>
+file|<dir.h>
 end_include
 
 begin_macro

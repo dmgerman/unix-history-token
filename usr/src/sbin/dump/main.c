@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.6 (Berkeley) %G%"
+literal|"@(#)main.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,24 @@ end_decl_stmt
 begin_comment
 comment|/* density in 0.1" units */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RDUMP
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|host
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|main
@@ -161,6 +179,56 @@ name|arg
 operator|=
 literal|"u"
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RDUMP
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"usage: rdump machine "
+argument_list|)
+expr_stmt|;
+name|Exit
+argument_list|(
+name|X_ABORT
+argument_list|)
+expr_stmt|;
+block|}
+name|host
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|rmthost
+argument_list|(
+name|host
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|Exit
+argument_list|(
+name|X_ABORT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|argc
@@ -638,6 +706,25 @@ operator|->
 name|fs_file
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RDUMP
+name|msgtail
+argument_list|(
+literal|"to %s"
+argument_list|,
+name|tape
+argument_list|)
+expr_stmt|;
+name|msgtail
+argument_list|(
+literal|" on host %s\n"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|msgtail
 argument_list|(
 literal|"to %s\n"
@@ -645,6 +732,8 @@ argument_list|,
 name|tape
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fi
 operator|=
 name|open
@@ -965,6 +1054,9 @@ name|c_type
 operator|=
 name|TS_END
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|RDUMP
 for|for
 control|(
 name|i
@@ -981,6 +1073,8 @@ control|)
 name|spclrec
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|msg
 argument_list|(
 literal|"DUMP: %ld tape blocks on %d tape(s)\n"
@@ -1002,11 +1096,23 @@ expr_stmt|;
 name|putitime
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|RDUMP
 name|close
 argument_list|(
 name|to
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|tflush
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|rewind
 argument_list|()
 expr_stmt|;
