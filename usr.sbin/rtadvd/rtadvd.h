@@ -249,6 +249,18 @@ modifier|*
 name|prev
 decl_stmt|;
 comment|/* previous link */
+name|struct
+name|rainfo
+modifier|*
+name|rainfo
+decl_stmt|;
+comment|/* back pointer to the interface */
+name|struct
+name|rtadvd_timer
+modifier|*
+name|timer
+decl_stmt|;
+comment|/* expiration timer.  used when a prefix 				     * derived from the kernel is deleted. 				     */
 name|u_int32_t
 name|validlifetime
 decl_stmt|;
@@ -523,7 +535,9 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|void
+name|struct
+name|rtadvd_timer
+modifier|*
 name|ra_timeout
 name|__P
 argument_list|(

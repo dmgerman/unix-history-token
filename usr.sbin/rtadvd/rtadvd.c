@@ -2029,6 +2029,21 @@ condition|)
 block|{
 if|if
 condition|(
+name|prefix
+operator|->
+name|timer
+condition|)
+block|{
+comment|/* 					 * If the prefix has been invalidated, 					 * make it available again. 					 */
+name|update_prefix
+argument_list|(
+name|prefix
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|dflag
 operator|>
 literal|1
@@ -2210,10 +2225,8 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-name|delete_prefix
+name|invalidate_prefix
 argument_list|(
-name|rai
-argument_list|,
 name|prefix
 argument_list|)
 expr_stmt|;
@@ -6928,7 +6941,9 @@ comment|/* process RA timer */
 end_comment
 
 begin_function
-name|void
+name|struct
+name|rtadvd_timer
+modifier|*
 name|ra_timeout
 parameter_list|(
 name|void
@@ -6972,6 +6987,13 @@ argument_list|(
 name|rai
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rai
+operator|->
+name|timer
+operator|)
+return|;
 block|}
 end_function
 

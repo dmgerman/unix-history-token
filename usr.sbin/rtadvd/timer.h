@@ -66,9 +66,12 @@ name|struct
 name|timeval
 name|tm
 decl_stmt|;
-name|void
+name|struct
+name|rtadvd_timer
+modifier|*
 argument_list|(
-argument|*expire
+operator|*
+name|expire
 argument_list|)
 name|__P
 argument_list|(
@@ -77,7 +80,7 @@ name|void
 operator|*
 operator|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/* expiration function */
 name|void
 modifier|*
@@ -128,10 +131,12 @@ name|rtadvd_add_timer
 name|__P
 argument_list|(
 operator|(
-name|void
-argument_list|(
-argument|*
-argument_list|)
+expr|struct
+name|rtadvd_timer
+operator|*
+operator|(
+operator|*
+operator|)
 name|__P
 argument_list|(
 operator|(

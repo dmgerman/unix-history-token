@@ -157,10 +157,13 @@ name|rtadvd_timer
 modifier|*
 name|rtadvd_add_timer
 argument_list|(
-name|void
-argument_list|(
-argument|*timeout
-argument_list|)
+expr|struct
+name|rtadvd_timer
+operator|*
+operator|(
+operator|*
+name|timeout
+operator|)
 name|__P
 argument_list|(
 operator|(
@@ -257,28 +260,6 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"<%s> timeout function unspecfied"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|update
-operator|==
-name|NULL
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"<%s> update function unspecfied"
 argument_list|,
 name|__FUNCTION__
 argument_list|)
@@ -435,7 +416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check expiration for each timer. If a timer is expired,  * call the expire function for the timer and update the timer.  * Return the next interval for select() call.  */
+comment|/*  * Check expiration for each timer. If a timer expires,  * call the expire function for the timer and update the timer.  * Return the next interval for select() call.  */
 end_comment
 
 begin_function
@@ -462,6 +443,9 @@ init|=
 name|timer_head
 operator|.
 name|next
+decl_stmt|,
+modifier|*
+name|tm_next
 decl_stmt|;
 name|gettimeofday
 argument_list|(
@@ -477,14 +461,30 @@ name|tm
 operator|=
 name|tm_max
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|tm
+operator|=
+name|timer_head
+operator|.
+name|next
+init|;
 name|tm
 operator|!=
 operator|&
 name|timer_head
-condition|)
+condition|;
+name|tm
+operator|=
+name|tm_next
+control|)
 block|{
+name|tm_next
+operator|=
+name|tm
+operator|->
+name|next
+expr_stmt|;
 if|if
 condition|(
 name|TIMEVAL_LEQ
@@ -497,6 +497,9 @@ name|now
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 call|(
 modifier|*
 name|tm
@@ -508,7 +511,18 @@ name|tm
 operator|->
 name|expire_data
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+operator|)
+condition|)
+continue|continue;
+comment|/* the timer was removed */
+if|if
+condition|(
+name|tm
+operator|->
+name|update
+condition|)
 call|(
 modifier|*
 name|tm
@@ -563,12 +577,6 @@ operator|=
 name|tm
 operator|->
 name|tm
-expr_stmt|;
-name|tm
-operator|=
-name|tm
-operator|->
-name|next
 expr_stmt|;
 block|}
 if|if
