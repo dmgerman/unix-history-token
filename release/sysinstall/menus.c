@@ -8522,6 +8522,21 @@ literal|"inetd_enable=YES"
 block|}
 block|,
 block|{
+literal|" Mail"
+block|,
+literal|"This machine wants to run a Mail Transfer Agent"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuMTA
+block|}
+block|,
+block|{
 literal|" NFS client"
 block|,
 literal|"This machine will be an NFS client"
@@ -8629,21 +8644,6 @@ literal|"rwhod_enable=YES"
 block|}
 block|,
 block|{
-literal|" Sendmail"
-block|,
-literal|"This machine wants to run the sendmail daemon"
-block|,
-name|NULL
-block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuSendmail
-block|}
-block|,
-block|{
 literal|" Sshd"
 block|,
 literal|"This machine wants to run the ssh daemon"
@@ -8681,22 +8681,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|DMenu
-name|MenuSendmail
+name|MenuMTA
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"Sendmail Invocation Selection"
+literal|"Mail Transfer Agent Selection"
 block|,
-literal|"There are three options for invoking sendmail at startup.\n"
-literal|"Please select Yes if you want to use sendmail as your mail transfer\n"
-literal|"agent.  Selecting No disables sendmail's network socket for incoming\n"
-literal|"email, but still enables sendmail for local and outbound mail.\n"
-literal|"None disables sendmail completely at startup and disables inbound,\n"
-literal|"outbound, and local mail.  See /etc/mail/README for more\n"
-literal|"information.\n"
+literal|"You can choose which Mail Transfer Agent (MTA) you wish to install and run.\n"
+literal|"Selecting Sendmail local disables sendmail's network socket for\n"
+literal|"incoming mail, but still enables sendmail for local and outbound mail.\n"
+literal|"The Postfix option will install the Postfix MTA from the ports\n"
+literal|"collection.  The Exim option will install the Exim MTA from the ports\n"
+literal|"collection.  To return to the previous menu, select Exit."
 block|,
 name|NULL
 block|,
@@ -8704,9 +8703,9 @@ name|NULL
 block|,
 block|{
 block|{
-literal|" Yes"
+literal|"Sendmail"
 block|,
-literal|"Start sendmail"
+literal|"Use sendmail"
 block|,
 name|dmenuVarCheck
 block|,
@@ -8718,9 +8717,9 @@ literal|"sendmail_enable=YES"
 block|}
 block|,
 block|{
-literal|" No"
+literal|"Sendmail local"
 block|,
-literal|"Start sendmail, but don't listen from network"
+literal|"Use sendmail, but do not listen on the network"
 block|,
 name|dmenuVarCheck
 block|,
@@ -8732,9 +8731,37 @@ literal|"sendmail_enable=NO"
 block|}
 block|,
 block|{
-literal|" None"
+literal|"Postfix"
 block|,
-literal|"Don't start any sendmail processes"
+literal|"Use the Postfix MTA"
+block|,
+name|NULL
+block|,
+name|configMTAPostfix
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"Exim"
+block|,
+literal|"Use the Exim MTA"
+block|,
+name|NULL
+block|,
+name|configMTAExim
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"None"
+block|,
+literal|"Do not install an MTA"
 block|,
 name|dmenuVarCheck
 block|,
@@ -8743,6 +8770,26 @@ block|,
 name|NULL
 block|,
 literal|"sendmail_enable=NONE"
+block|}
+block|,
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
 block|}
 block|,
 block|{
