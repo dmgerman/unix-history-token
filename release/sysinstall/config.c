@@ -1853,6 +1853,9 @@ name|did_marker
 init|=
 literal|0
 decl_stmt|;
+name|time_t
+name|tp
+decl_stmt|;
 name|write_header
 operator|=
 operator|!
@@ -1965,11 +1968,24 @@ operator|!
 name|did_marker
 condition|)
 block|{
+name|time
+argument_list|(
+operator|&
+name|tp
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|rcSite
 argument_list|,
-literal|"# -- sysinstall generated deltas -- #\n"
+literal|"# -- sysinstall generated deltas -- # "
+literal|"%s"
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|tp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|did_marker
