@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.20 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.21 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.20 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.21 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,8 +194,7 @@ name|FILE
 modifier|*
 name|pidf
 decl_stmt|;
-name|struct
-name|sockaddr_in
+name|SOCKADDR
 name|srvraddr
 decl_stmt|;
 specifier|extern
@@ -231,11 +230,15 @@ goto|;
 block|}
 name|srvraddr
 operator|.
+name|sin
+operator|.
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
 name|srvraddr
+operator|.
+name|sin
 operator|.
 name|sin_addr
 operator|.
@@ -244,6 +247,8 @@ operator|=
 name|INADDR_ANY
 expr_stmt|;
 name|srvraddr
+operator|.
+name|sin
 operator|.
 name|sin_port
 operator|=
@@ -266,6 +271,8 @@ argument_list|(
 literal|"getrequests: port 0x%x\n"
 argument_list|,
 name|srvraddr
+operator|.
+name|sin
 operator|.
 name|sin_port
 argument_list|)
@@ -395,13 +402,10 @@ name|bind
 argument_list|(
 name|DaemonSocket
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
 operator|&
 name|srvraddr
+operator|.
+name|sa
 argument_list|,
 sizeof|sizeof
 name|srvraddr
@@ -729,22 +733,15 @@ return|;
 block|}
 name|addr
 operator|.
-name|sa_family
+name|sin
+operator|.
+name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
 name|addr
 operator|.
-name|sa_len
-operator|=
-sizeof|sizeof
-name|hid
-expr_stmt|;
-name|addr
-operator|.
-name|sa_u
-operator|.
-name|sa_inet
+name|sin
 operator|.
 name|sin_addr
 operator|.
@@ -813,28 +810,27 @@ return|;
 block|}
 name|addr
 operator|.
+name|sa
+operator|.
 name|sa_family
 operator|=
 name|hp
 operator|->
 name|h_addrtype
 expr_stmt|;
-name|addr
-operator|.
-name|sa_len
-operator|=
+switch|switch
+condition|(
 name|hp
 operator|->
-name|h_length
-expr_stmt|;
-if|if
-condition|(
-name|addr
-operator|.
-name|sa_family
-operator|==
-name|AF_INET
+name|h_addrtype
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|NETINET
+case|case
+name|AF_INET
+case|:
 name|bcopy
 argument_list|(
 name|hp
@@ -844,9 +840,7 @@ argument_list|,
 operator|&
 name|addr
 operator|.
-name|sa_u
-operator|.
-name|sa_inet
+name|sin
 operator|.
 name|sin_addr
 argument_list|,
@@ -855,7 +849,10 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+endif|#
+directive|endif
+default|default:
 name|bcopy
 argument_list|(
 name|hp
@@ -864,7 +861,7 @@ name|h_addr
 argument_list|,
 name|addr
 operator|.
-name|sa_u
+name|sa
 operator|.
 name|sa_data
 argument_list|,
@@ -873,6 +870,8 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|i
 operator|=
 literal|1
@@ -936,6 +935,8 @@ switch|switch
 condition|(
 name|addr
 operator|.
+name|sa
+operator|.
 name|sa_family
 condition|)
 block|{
@@ -944,9 +945,7 @@ name|AF_INET
 case|:
 name|addr
 operator|.
-name|sa_u
-operator|.
-name|sa_inet
+name|sin
 operator|.
 name|sin_port
 operator|=
@@ -1008,6 +1007,8 @@ argument_list|(
 literal|"Can't connect to address family %d"
 argument_list|,
 name|addr
+operator|.
+name|sa
 operator|.
 name|sa_family
 argument_list|)
@@ -1256,14 +1257,21 @@ name|sav_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|addr
 operator|.
+name|sa
+operator|.
 name|sa_family
-operator|==
-name|AF_INET
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|NETINET
+case|case
+name|AF_INET
+case|:
 name|bcopy
 argument_list|(
 name|hp
@@ -1277,9 +1285,7 @@ argument_list|,
 operator|&
 name|addr
 operator|.
-name|sa_u
-operator|.
-name|sa_inet
+name|sin
 operator|.
 name|sin_addr
 argument_list|,
@@ -1288,7 +1294,10 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+endif|#
+directive|endif
+default|default:
 name|bcopy
 argument_list|(
 name|hp
@@ -1301,7 +1310,7 @@ index|]
 argument_list|,
 name|addr
 operator|.
-name|sa_u
+name|sa
 operator|.
 name|sa_data
 argument_list|,
@@ -1310,6 +1319,8 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 continue|continue;
 block|}
 comment|/* failure, decide if temporary or not */
@@ -2011,10 +2022,15 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NETINET
 if|if
 condition|(
 name|sap
 operator|->
+name|sa
+operator|.
 name|sa_family
 operator|==
 name|AF_INET
@@ -2042,6 +2058,8 @@ name|sin_addr
 argument_list|)
 return|;
 block|}
+endif|#
+directive|endif
 comment|/* unknown family -- just dump bytes */
 operator|(
 name|void
@@ -2054,6 +2072,8 @@ literal|"Family %d: "
 argument_list|,
 name|sap
 operator|->
+name|sa
+operator|.
 name|sa_family
 argument_list|)
 expr_stmt|;
@@ -2072,7 +2092,7 @@ name|ap
 operator|=
 name|sap
 operator|->
-name|sa_u
+name|sa
 operator|.
 name|sa_data
 expr_stmt|;
@@ -2080,9 +2100,12 @@ for|for
 control|(
 name|l
 operator|=
+sizeof|sizeof
 name|sap
 operator|->
-name|sa_len
+name|sa
+operator|.
+name|sa_data
 init|;
 operator|--
 name|l

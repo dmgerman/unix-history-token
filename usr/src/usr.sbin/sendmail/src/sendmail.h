@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.33 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.32		%G%"
+literal|"@(#)sendmail.h	6.33		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +183,17 @@ directive|include
 file|<sys/socket.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETINET
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -194,9 +205,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* DAEMON */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETISO
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netiso/iso.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* **  Data structure for bit maps. ** **	Each bit in this map can be referenced by an ascii character. **	This is 128 possible bits, or 12 8-bit bytes. */
@@ -2862,53 +2886,44 @@ begin_comment
 comment|/* **  Regular UNIX sockaddrs are too small to handle ISO addresses, so **  we are forced to declare a supertype here. */
 end_comment
 
-begin_struct
-struct|struct
+begin_union
+union|union
 name|bigsockaddr
 block|{
-name|u_char
-name|sa_len
-decl_stmt|;
-comment|/* address length */
-name|u_char
-name|sa_family
-decl_stmt|;
-comment|/* address family */
-union|union
-block|{
-name|char
-name|sa_data
-index|[
-literal|256
-index|]
-decl_stmt|;
-comment|/* make sure there's plenty of space */
-struct|struct
-block|{
-name|u_short
-name|sin_port
-decl_stmt|;
-comment|/* INET port */
 name|struct
-name|in_addr
-name|sin_addr
+name|sockaddr
+name|sa
 decl_stmt|;
-comment|/* INET address */
+comment|/* general version */
+ifdef|#
+directive|ifdef
+name|NETINET
+name|struct
+name|sockaddr_in
+name|sin
+decl_stmt|;
+comment|/* INET family */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NETISO
+name|struct
+name|sockaddr_iso
+name|siso
+decl_stmt|;
+comment|/* ISO family */
+endif|#
+directive|endif
 block|}
-name|sa_inet
-struct|;
-block|}
-name|sa_u
 union|;
-block|}
-struct|;
-end_struct
+end_union
 
 begin_define
 define|#
 directive|define
 name|SOCKADDR
-value|struct bigsockaddr
+value|union bigsockaddr
 end_define
 
 begin_escape
