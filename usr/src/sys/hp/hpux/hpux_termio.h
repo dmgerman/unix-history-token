@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_termio.h 1.1 90/07/09$  *  *	@(#)hpux_termio.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_termio.h 1.1 90/07/09$  *  *	@(#)hpux_termio.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -72,6 +72,20 @@ define|#
 directive|define
 name|HPUXVTIME
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXVEOL2
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXVSWTCH
+value|7
 end_define
 
 begin_comment
@@ -1069,6 +1083,127 @@ define|#
 directive|define
 name|HPUXTCSETAF
 value|_IOW('T', 4, struct hpuxtermio)
+end_define
+
+begin_comment
+comment|/* HP-UX termios stuff */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPUXNCCS
+value|16
+end_define
+
+begin_comment
+comment|/* control characters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPUXVMINS
+value|11
+end_define
+
+begin_comment
+comment|/* different than termio */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPUXVTIMES
+value|12
+end_define
+
+begin_comment
+comment|/* different than termio */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPUXVSUSP
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXVSTART
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXVSTOP
+value|15
+end_define
+
+begin_struct
+struct|struct
+name|hpuxtermios
+block|{
+name|u_int
+name|c_iflag
+decl_stmt|;
+comment|/* input modes */
+name|u_int
+name|c_oflag
+decl_stmt|;
+comment|/* output modes */
+name|u_int
+name|c_cflag
+decl_stmt|;
+comment|/* control modes */
+name|u_int
+name|c_lflag
+decl_stmt|;
+comment|/* line discipline modes */
+name|u_int
+name|c_reserved
+decl_stmt|;
+comment|/* future use */
+name|u_char
+name|c_cc
+index|[
+name|HPUXNCCS
+index|]
+decl_stmt|;
+comment|/* control chars */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|HPUXTCGETATTR
+value|_IOR('T', 16, struct hpuxtermios)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXTCSETATTR
+value|_IOW('T', 17, struct hpuxtermios)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXTCSETATTRD
+value|_IOW('T', 18, struct hpuxtermios)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXTCSETATTRF
+value|_IOW('T', 19, struct hpuxtermios)
 end_define
 
 end_unit
