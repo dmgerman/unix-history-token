@@ -3887,6 +3887,17 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|len
+operator|>
+name|MAXLOGNAME
+condition|)
+name|len
+operator|=
+name|MAXLOGNAME
+expr_stmt|;
 name|gethostname
 argument_list|(
 name|pbuf
