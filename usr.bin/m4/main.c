@@ -167,6 +167,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mdef.h"
 end_include
 
@@ -951,6 +957,13 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|traceout
 operator|=
 name|stderr
