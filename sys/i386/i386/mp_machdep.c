@@ -1056,6 +1056,8 @@ block|{
 name|mp_maxid
 operator|=
 name|MAXCPU
+operator|-
+literal|1
 expr_stmt|;
 block|}
 end_function

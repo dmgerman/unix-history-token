@@ -349,30 +349,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Rather than #ifdef SMP all over, just give us a bogus definition for  * this on UP.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|mp_maxid
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * This is the handle used to schedule events that need to happen  * outside of the allocation fast path.  */
 end_comment
 
@@ -1477,7 +1453,7 @@ operator|=
 literal|0
 init|;
 name|cpu
-operator|<
+operator|<=
 name|mp_maxid
 condition|;
 name|cpu
@@ -2191,7 +2167,7 @@ operator|=
 literal|0
 init|;
 name|cpu
-operator|<
+operator|<=
 name|mp_maxid
 condition|;
 name|cpu
@@ -2371,7 +2347,7 @@ operator|=
 literal|0
 init|;
 name|cpu
-operator|<
+operator|<=
 name|mp_maxid
 condition|;
 name|cpu
@@ -4717,7 +4693,11 @@ expr|struct
 name|uma_cache
 argument_list|)
 operator|*
+operator|(
 name|mp_maxid
+operator|+
+literal|1
+operator|)
 operator|)
 expr_stmt|;
 name|args
@@ -4781,7 +4761,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|mp_maxid
 condition|;
 name|i
@@ -8225,7 +8205,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|mp_maxid
 condition|;
 name|i
@@ -8474,7 +8454,7 @@ operator|=
 literal|0
 init|;
 name|cpu
-operator|<
+operator|<=
 name|mp_maxid
 condition|;
 name|cpu
@@ -8524,7 +8504,7 @@ operator|=
 literal|0
 init|;
 name|cpu
-operator|<
+operator|<=
 name|mp_maxid
 condition|;
 name|cpu

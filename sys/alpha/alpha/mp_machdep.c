@@ -1228,9 +1228,6 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-name|mp_maxid
-operator|++
-expr_stmt|;
 block|}
 end_function
 

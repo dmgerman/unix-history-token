@@ -583,6 +583,8 @@ block|}
 name|mp_maxid
 operator|=
 name|cpus
+operator|-
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -598,7 +600,7 @@ return|return
 operator|(
 name|mp_maxid
 operator|>
-literal|1
+literal|0
 operator|)
 return|;
 block|}
