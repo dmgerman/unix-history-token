@@ -18,49 +18,56 @@ begin_define
 define|#
 directive|define
 name|SESIOC_GETNOBJ
-value|_IOR(SESIOC, 1, unsigned int)
+value|_IO(SESIOC, 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SESIOC_GETOBJMAP
-value|_IOW(SESIOC, 2, void *)
+value|_IO(SESIOC, 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SESIOC_GETENCSTAT
-value|_IOR(SESIOC, 3, ses_encstat)
+value|_IO(SESIOC, 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SESIOC_SETENCSTAT
-value|_IOW(SESIOC, 4, ses_encstat)
+value|_IO(SESIOC, 4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SESIOC_GETOBJSTAT
-value|_IOR(SESIOC, 5, ses_objstat)
+value|_IO(SESIOC, 5)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SESIOC_SETOBJSTAT
-value|_IOW(SESIOC, 6, ses_objstat)
+value|_IO(SESIOC, 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SESIOC_GETTEXT
+value|_IO(SESIOC, 7)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SESIOC_INIT
-value|_IO(SESIOC, 7)
+value|_IO(SESIOC, 8)
 end_define
 
 begin_comment
@@ -507,230 +514,27 @@ value|0x20
 end_define
 
 begin_comment
-comment|/*  * Platform Independent Driver Internal Definitions for SES devices.  */
+comment|/*  * Getting text for an object type is a little  * trickier because it's string data that can  * go up to 64 KBytes. Build this union and  * fill the obj_id with the id of the object who's  * help text you want, and if text is available,  * obj_text will be filled in, null terminated.  */
 end_comment
 
 begin_typedef
 typedef|typedef
-enum|enum
+union|union
 block|{
-name|SES_NONE
-block|,
-name|SES_SES_SCSI2
-block|,
-name|SES_SES
-block|,
-name|SES_SES_PASSTHROUGH
-block|,
-name|SES_SEN
-block|,
-name|SES_SAFT
-block|}
-name|enctyp
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|SES_DEVICE_TYPE
-value|0x0D
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEN_ID
-value|"UNISYS           SUN_SEN"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEN_ID_LEN
-value|24
-end_define
-
-begin_struct_decl
-struct_decl|struct
-name|ses_softc
-struct_decl|;
-end_struct_decl
-
-begin_typedef
-typedef|typedef
-name|struct
-name|ses_softc
-name|ses_softc_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
+name|unsigned
 name|int
-function_decl|(
-modifier|*
-name|softc_init
-function_decl|)
-parameter_list|(
-name|ses_softc_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|init_enc
-function_decl|)
-parameter_list|(
-name|ses_softc_t
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|get_encstat
-function_decl|)
-parameter_list|(
-name|ses_softc_t
-modifier|*
-parameter_list|,
-name|ses_encstat
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|set_encstat
-function_decl|)
-parameter_list|(
-name|ses_softc_t
-modifier|*
-parameter_list|,
-name|ses_encstat
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|get_objstat
-function_decl|)
-parameter_list|(
-name|ses_softc_t
-modifier|*
-parameter_list|,
-name|ses_objstat
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|set_objstat
-function_decl|)
-parameter_list|(
-name|ses_softc_t
-modifier|*
-parameter_list|,
-name|ses_objstat
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-block|}
-name|encvec
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ENCI_SVALID
-value|0x80
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_int32_t
-name|enctype
-range|:
-literal|8
-decl_stmt|,
-comment|/* enclosure type */
-name|subenclosure
-range|:
-literal|8
-decl_stmt|,
-comment|/* subenclosure id */
-name|svalid
-range|:
-literal|1
-decl_stmt|,
-comment|/* enclosure information valid */
-name|priv
-range|:
-literal|15
+name|obj_id
 decl_stmt|;
-comment|/* private data, per object */
-name|u_int8_t
-name|encstat
+name|char
+name|obj_text
 index|[
-literal|4
+literal|1
 index|]
 decl_stmt|;
-comment|/* state&& stats */
 block|}
-name|encobj
+name|ses_hlptxt
 typedef|;
 end_typedef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|enctyp
-name|ses_type
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
