@@ -238,7 +238,7 @@ name|sc
 parameter_list|,
 name|off
 parameter_list|)
-value|(bus_space_read_1((sc)->bsh, (sc)->bst, off))
+value|(bus_space_read_1((sc)->bst, (sc)->bsh, off))
 end_define
 
 begin_define
@@ -250,7 +250,7 @@ name|sc
 parameter_list|,
 name|off
 parameter_list|)
-value|(bus_space_read_2((sc)->bsh, (sc)->bst, off))
+value|(bus_space_read_2((sc)->bst, (sc)->bsh, off))
 end_define
 
 begin_define
@@ -265,7 +265,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(sc->bsh, sc->bst, off, val)
+value|bus_space_write_1(sc->bst, sc->bsh, off, val)
 end_define
 
 begin_define
@@ -280,7 +280,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2(sc->bsh, sc->bst, off, val)
+value|bus_space_write_2(sc->bst, sc->bsh, off, val)
 end_define
 
 begin_define
@@ -297,7 +297,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_1(sc->bsh, sc->bst, off, addr, count)
+value|bus_space_write_multi_1(sc->bst, sc->bsh, off, addr, count)
 end_define
 
 begin_define
@@ -314,7 +314,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_2(sc->bsh, sc->bst, off, addr, count)
+value|bus_space_write_multi_2(sc->bst, sc->bsh, off, addr, count)
 end_define
 
 begin_define
@@ -331,7 +331,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_4(sc->bsh, sc->bst, off, addr, count)
+value|bus_space_write_multi_4(sc->bst, sc->bsh, off, addr, count)
 end_define
 
 begin_define
@@ -348,7 +348,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_1(sc->bsh, sc->bst, off, addr, count)
+value|bus_space_read_multi_1(sc->bst, sc->bsh, off, addr, count)
 end_define
 
 begin_define
@@ -365,7 +365,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_2(sc->bsh, sc->bst, off, addr, count)
+value|bus_space_read_multi_2(sc->bst, sc->bsh, off, addr, count)
 end_define
 
 begin_define
@@ -382,7 +382,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_4(sc->bsh, sc->bst, off, addr, count)
+value|bus_space_read_multi_4(sc->bst, sc->bsh, off, addr, count)
 end_define
 
 end_unit
