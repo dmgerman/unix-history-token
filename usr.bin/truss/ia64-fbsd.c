@@ -30,7 +30,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * FreeBSD/386-specific system call handling.  This is probably the most  * complex part of the entire truss program, although I've got lots of  * it handled relatively cleanly now.  The system call names are generated  * automatically, thanks to /usr/src/sys/kern/syscalls.master.  The  * names used for the various structures are confusing, I sadly admit.  */
+comment|/*  * FreeBSD/ia64-specific system call handling.  This is probably the most  * complex part of the entire truss program, although I've got lots of  * it handled relatively cleanly now.  The system call names are generated  * automatically, thanks to /usr/src/sys/kern/syscalls.master.  The  * names used for the various structures are confusing, I sadly admit.  */
 end_comment
 
 begin_include
