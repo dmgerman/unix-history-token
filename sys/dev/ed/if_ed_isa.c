@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -285,6 +291,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ED_3C503
 name|error
 operator|=
 name|ed_probe_3Com
@@ -310,6 +319,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ED_SIC
 name|error
 operator|=
 name|ed_probe_SIC
@@ -335,6 +349,8 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|ed_probe_Novell
@@ -360,6 +376,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ED_HPP
 name|error
 operator|=
 name|ed_probe_HP_pclanp
@@ -385,6 +404,8 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|end
 label|:
 if|if
