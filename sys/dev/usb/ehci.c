@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ehci.c,v 1.46 2003/03/09 19:51:13 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  */
+comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  *	    up to  *	$NetBSD: ehci.c,v 1.64 2004/06/23 06:45:56 mycroft Exp $  */
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Copyright (c) 2001 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2004 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) and by Charles M. Hannum.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ comment|/*  * USB Enhanced Host Controller Driver, a.k.a. USB 2.0 controller.  *
 end_comment
 
 begin_comment
-comment|/*  * TODO:  * 1) hold off explorations by companion controllers until ehci has started.  *  * 2) The EHCI driver lacks support for interrupt isochronous transfers, so  *    devices using them don't work.  *    Interrupt transfers are not difficult, it's just not done.   *  * 3) There might also be some issues with the data toggle, it was not  *    completely tested to work properly under all condistions. If wrong  *    toggle would be sent/recvd, bulk data transfers would stop working.  *  * 4) The meaty part to implement is the support for USB 2.0 hubs.  *    They are quite compolicated since the need to be able to do  *    "transaction translation", i.e., converting to/from USB 2 and USB 1.  *    So the hub driver needs to handle and schedule these things, to  *    assign place in frame where different devices get to go. See chapter  *    on hubs in USB 2.0 for details.   *  * 5) command failures are not recovered correctly */
+comment|/*  * TODO:  * 1) hold off explorations by companion controllers until ehci has started.  *  * 2) The EHCI driver lacks support for interrupt isochronous transfers, so  *    devices using them don't work.  *    Interrupt transfers are not difficult, it's just not done.   *  * 3) The meaty part to implement is the support for USB 2.0 hubs.  *    They are quite compolicated since the need to be able to do  *    "transaction translation", i.e., converting to/from USB 2 and USB 1.  *    So the hub driver needs to handle and schedule these things, to  *    assign place in frame where different devices get to go. See chapter  *    on hubs in USB 2.0 for details.   *  * 4) command failures are not recovered correctly */
 end_comment
 
 begin_include
@@ -415,6 +415,9 @@ block|{
 name|struct
 name|usbd_pipe
 name|pipe
+decl_stmt|;
+name|int
+name|nexttoggle
 decl_stmt|;
 name|ehci_soft_qh_t
 modifier|*
@@ -3410,7 +3413,7 @@ goto|;
 comment|/* We want short packets, and it is short: it's done */
 if|if
 condition|(
-name|EHCI_QTD_SET_BYTES
+name|EHCI_QTD_GET_BYTES
 argument_list|(
 name|status
 argument_list|)
@@ -3490,9 +3493,6 @@ name|ex
 operator|->
 name|xfer
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|EHCI_DEBUG
 name|struct
 name|ehci_pipe
 modifier|*
@@ -3507,8 +3507,6 @@ name|xfer
 operator|->
 name|pipe
 decl_stmt|;
-endif|#
-directive|endif
 name|ehci_soft_qtd_t
 modifier|*
 name|sqtd
@@ -3753,28 +3751,30 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|xfer
-operator|->
-name|rqflags
-operator|&
-name|URQ_REQUEST
-operator|)
-condition|)
 name|printf
 argument_list|(
-literal|"ehci_idone: need toggle update\n"
+literal|"ehci_idone: need toggle update status=%08x nstatus=%08x\n"
+argument_list|,
+name|status
+argument_list|,
+name|nstatus
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
-block|epipe->nexttoggle = EHCI_TD_GET_DT(le32toh(std->td.td_token));
+block|ehci_dump_sqh(epipe->sqh); 		ehci_dump_sqtds(ex->sqtdstart);
 endif|#
 directive|endif
+name|epipe
+operator|->
+name|nexttoggle
+operator|=
+name|EHCI_QTD_GET_TOGGLE
+argument_list|(
+name|nstatus
+argument_list|)
+expr_stmt|;
 block|}
 name|status
 operator|&=
@@ -3827,8 +3827,8 @@ name|u_int32_t
 operator|)
 name|status
 argument_list|,
-literal|"\20\3MISSEDMICRO\4XACT\5BABBLE\6BABBLE"
-literal|"\7HALTED"
+literal|"\20\7HALTED\6BUFERR\5BABBLE\4XACTERR"
+literal|"\3MISSED"
 argument_list|,
 name|sbuf
 argument_list|,
@@ -5021,19 +5021,9 @@ endif|#
 directive|endif
 name|epipe
 operator|->
-name|sqh
-operator|->
-name|qh
-operator|.
-name|qh_qtd
-operator|.
-name|qtd_status
-operator|&=
-name|htole32
-argument_list|(
-operator|~
-name|EHCI_QTD_TOGGLE
-argument_list|)
+name|nexttoggle
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -5893,6 +5883,12 @@ operator|(
 name|USBD_IOERROR
 operator|)
 return|;
+name|epipe
+operator|->
+name|nexttoggle
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|addr
@@ -6026,9 +6022,12 @@ argument_list|)
 operator||
 name|EHCI_QH_SET_ENDPT
 argument_list|(
+name|UE_GET_ADDR
+argument_list|(
 name|ed
 operator|->
 name|bEndpointAddress
+argument_list|)
 argument_list|)
 operator||
 name|EHCI_QH_SET_EPS
@@ -6036,8 +6035,8 @@ argument_list|(
 name|speed
 argument_list|)
 operator||
-comment|/* XXX */
-comment|/* XXX EHCI_QH_DTC ? */
+name|EHCI_QH_DTC
+operator||
 name|EHCI_QH_SET_MPL
 argument_list|(
 name|UGETW
@@ -6539,7 +6538,7 @@ name|sqtd
 operator|=
 name|sqtd
 expr_stmt|;
-comment|/* Keep toggle, clear the rest, including length. */
+comment|/* Clear halt */
 name|sqh
 operator|->
 name|qh
@@ -6550,7 +6549,8 @@ name|qtd_status
 operator|&=
 name|htole32
 argument_list|(
-name|EHCI_QTD_TOGGLE
+operator|~
+name|EHCI_QTD_HALTED
 argument_list|)
 expr_stmt|;
 block|}
@@ -10103,10 +10103,14 @@ name|len
 decl_stmt|,
 name|curlen
 decl_stmt|,
+name|mps
+decl_stmt|,
 name|offset
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|tog
 decl_stmt|;
 name|usb_dma_t
 modifier|*
@@ -10163,6 +10167,12 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("status=%08x toggle=%d\n", epipe->sqh->qh.qh_qtd.qtd_status,     epipe->nexttoggle);
+endif|#
+directive|endif
 name|qtdstatus
 operator|=
 name|htole32
@@ -10184,7 +10194,34 @@ literal|3
 argument_list|)
 comment|/* IOC set below */
 comment|/* BYTES set below */
-comment|/* XXX Data toggle */
+argument_list|)
+expr_stmt|;
+name|mps
+operator|=
+name|UGETW
+argument_list|(
+name|epipe
+operator|->
+name|pipe
+operator|.
+name|endpoint
+operator|->
+name|edesc
+operator|->
+name|wMaxPacketSize
+argument_list|)
+expr_stmt|;
+name|tog
+operator|=
+name|epipe
+operator|->
+name|nexttoggle
+expr_stmt|;
+name|qtdstatus
+operator||=
+name|EHCI_QTD_SET_TOGGLE
+argument_list|(
+name|tog
 argument_list|)
 expr_stmt|;
 name|cur
@@ -10356,24 +10393,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* XXX true for EHCI? */
 comment|/* the length must be a multiple of the max size */
 name|curlen
 operator|-=
 name|curlen
 operator|%
-name|UGETW
-argument_list|(
-name|epipe
-operator|->
-name|pipe
-operator|.
-name|endpoint
-operator|->
-name|edesc
-operator|->
-name|wMaxPacketSize
-argument_list|)
+name|mps
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -10621,6 +10646,33 @@ name|curlen
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* adjust the toggle based on the number of packets in this 		   qtd */
+if|if
+condition|(
+operator|(
+operator|(
+name|curlen
+operator|+
+name|mps
+operator|-
+literal|1
+operator|)
+operator|/
+name|mps
+operator|)
+operator|&
+literal|1
+condition|)
+block|{
+name|tog
+operator|^=
+literal|1
+expr_stmt|;
+name|qtdstatus
+operator|^=
+name|EHCI_QTD_TOGGLE_MASK
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|len
@@ -10670,6 +10722,12 @@ operator|*
 name|ep
 operator|=
 name|cur
+expr_stmt|;
+name|epipe
+operator|->
+name|nexttoggle
+operator|=
+name|tog
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -12011,9 +12069,7 @@ name|length
 operator|=
 name|len
 expr_stmt|;
-comment|/* XXX 	 * Since we're messing with the QH we must know the HC is in sync. 	 * This needs to go away since it slows down control transfers. 	 * Removing it entails: 	 *  - fill the QH only once with addr& wMaxPacketSize 	 *  - put the correct data toggles in the qtds and set DTC 	 */
-comment|/* ehci_sync_hc(sc); */
-comment|/* Update device address and length since they may have changed. */
+comment|/* Update device address and length since they may have changed 	   during the setup of the control pipe in usbd_new_device(). */
 comment|/* XXX This only needs to be done once, but it's too early in open. */
 comment|/* XXXX Should not touch ED here! */
 name|sqh
@@ -12035,7 +12091,7 @@ operator|~
 operator|(
 name|EHCI_QH_ADDRMASK
 operator||
-name|EHCI_QG_MPLMASK
+name|EHCI_QH_MPLMASK
 operator|)
 argument_list|)
 operator|)
@@ -12047,7 +12103,6 @@ argument_list|(
 name|addr
 argument_list|)
 operator||
-comment|/* EHCI_QH_DTC | */
 name|EHCI_QH_SET_MPL
 argument_list|(
 name|UGETW
@@ -12065,21 +12120,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Clear toggle */
-name|sqh
-operator|->
-name|qh
-operator|.
-name|qh_qtd
-operator|.
-name|qtd_status
-operator|&=
-name|htole32
-argument_list|(
-operator|~
-name|EHCI_QTD_TOGGLE
-argument_list|)
-expr_stmt|;
 comment|/* Set up data transaction */
 if|if
 condition|(
@@ -12092,6 +12132,13 @@ name|ehci_soft_qtd_t
 modifier|*
 name|end
 decl_stmt|;
+comment|/* Start toggle at 1. */
+name|epipe
+operator|->
+name|nexttoggle
+operator|=
+literal|1
+expr_stmt|;
 name|err
 operator|=
 name|ehci_alloc_sqtd_chain
@@ -12145,8 +12192,6 @@ operator|->
 name|physaddr
 argument_list|)
 expr_stmt|;
-comment|/* Start toggle at 1. */
-comment|/*next->qtd.td_flags |= htole32(EHCI_QTD_TOGGLE);*/
 block|}
 else|else
 block|{
@@ -12178,6 +12223,7 @@ expr|*
 name|req
 argument_list|)
 expr_stmt|;
+comment|/* Clear toggle */
 name|setup
 operator|->
 name|qtd
@@ -12196,6 +12242,11 @@ operator||
 name|EHCI_QTD_SET_CERR
 argument_list|(
 literal|3
+argument_list|)
+operator||
+name|EHCI_QTD_SET_TOGGLE
+argument_list|(
+literal|0
 argument_list|)
 operator||
 name|EHCI_QTD_SET_BYTES
@@ -12304,6 +12355,11 @@ operator||
 name|EHCI_QTD_SET_CERR
 argument_list|(
 literal|3
+argument_list|)
+operator||
+name|EHCI_QTD_SET_TOGGLE
+argument_list|(
+literal|1
 argument_list|)
 operator||
 name|EHCI_QTD_IOC

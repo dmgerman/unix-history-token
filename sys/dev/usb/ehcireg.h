@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ehcireg.h,v 1.15 2004/06/12 16:02:42 mycroft Exp $	*/
+comment|/*	$NetBSD: ehcireg.h,v 1.17 2004/06/23 06:45:56 mycroft Exp $	*/
 end_comment
 
 begin_comment
@@ -1376,7 +1376,14 @@ parameter_list|)
 value|(((x)>> 31)&  0x1)
 define|#
 directive|define
-name|EHCI_QTD_TOGGLE
+name|EHCI_QTD_SET_TOGGLE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 31)
+define|#
+directive|define
+name|EHCI_QTD_TOGGLE_MASK
 value|0x80000000
 name|ehci_physaddr_t
 name|qtd_buffer
@@ -1530,7 +1537,7 @@ parameter_list|)
 value|((x)<< 16)
 define|#
 directive|define
-name|EHCI_QG_MPLMASK
+name|EHCI_QH_MPLMASK
 value|0x07ff0000
 define|#
 directive|define
