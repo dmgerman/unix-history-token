@@ -820,6 +820,10 @@ expr_stmt|;
 if|if
 condition|(
 name|i
+operator|<
+literal|0
+operator|||
+name|i
 operator|>=
 name|buf_len
 condition|)
@@ -886,6 +890,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|i
+operator|<
+literal|0
+operator|||
 name|i
 operator|>=
 name|buf_len
