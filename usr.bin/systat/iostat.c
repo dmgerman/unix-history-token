@@ -550,7 +550,12 @@ name|s
 operator|.
 name|dk_busy
 argument_list|,
-name|LONG
+sizeof|sizeof
+argument_list|(
+name|s
+operator|.
+name|dk_busy
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|NREAD

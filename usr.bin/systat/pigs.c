@@ -166,7 +166,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|fscale
 decl_stmt|;
 end_decl_stmt
@@ -710,7 +710,10 @@ argument_list|,
 operator|&
 name|ccpu
 argument_list|,
-name|LONG
+sizeof|sizeof
+argument_list|(
+name|ccpu
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|NREAD

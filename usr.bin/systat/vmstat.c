@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.24 1998/05/27 21:01:37 jhay Exp $"
+literal|"$Id: vmstat.c,v 1.25 1998/06/09 04:17:29 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,10 +238,10 @@ decl_stmt|;
 name|int
 name|desiredvnodes
 decl_stmt|;
-name|int
+name|long
 name|numvnodes
 decl_stmt|;
-name|int
+name|long
 name|freevnodes
 decl_stmt|;
 block|}
@@ -4242,7 +4242,12 @@ name|s
 operator|->
 name|bufspace
 argument_list|,
-name|LONG
+sizeof|sizeof
+argument_list|(
+name|s
+operator|->
+name|bufspace
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|NREAD
@@ -4254,7 +4259,12 @@ name|s
 operator|->
 name|desiredvnodes
 argument_list|,
-name|LONG
+sizeof|sizeof
+argument_list|(
+name|s
+operator|->
+name|desiredvnodes
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|NREAD
@@ -4290,7 +4300,12 @@ name|s
 operator|->
 name|dk_busy
 argument_list|,
-name|LONG
+sizeof|sizeof
+argument_list|(
+name|s
+operator|->
+name|dk_busy
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|NREAD

@@ -375,7 +375,10 @@ argument_list|,
 operator|&
 name|dk_ndrive
 argument_list|,
-name|LONG
+sizeof|sizeof
+argument_list|(
+name|dk_ndrive
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.7 1997/08/26 10:59:26 charnier Exp $"
+literal|"$Id: main.c,v 1.8 1998/06/09 04:17:19 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -614,7 +614,10 @@ argument_list|,
 operator|&
 name|hz
 argument_list|,
-name|LONG
+sizeof|sizeof
+argument_list|(
+name|hz
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|NREAD
@@ -624,7 +627,10 @@ argument_list|,
 operator|&
 name|stathz
 argument_list|,
-name|LONG
+sizeof|sizeof
+argument_list|(
+name|stathz
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hertz
