@@ -48,6 +48,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -130,12 +142,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ipl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/limits.h>
 end_include
 
@@ -143,12 +149,6 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_include
@@ -528,12 +528,13 @@ begin_comment
 comment|/* wall CMOS clock assumed if != 0 */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|mtx
+begin_expr_stmt
+name|MUTEX_DECLARE
+argument_list|(,
 name|clock_lock
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
