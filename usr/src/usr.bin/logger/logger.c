@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logger.c	6.8 (Berkeley) %G%"
+literal|"@(#)logger.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,6 +327,8 @@ name|syslog
 argument_list|(
 name|pri
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -350,6 +352,8 @@ block|{
 name|syslog
 argument_list|(
 name|pri
+argument_list|,
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
@@ -418,6 +422,8 @@ name|syslog
 argument_list|(
 name|pri
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -448,6 +454,8 @@ condition|)
 name|syslog
 argument_list|(
 name|pri
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buf
 argument_list|)
