@@ -19,6 +19,16 @@ directive|define
 name|SSH_LOG_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_comment
+comment|/* Needed for LOG_AUTHPRIV (if present) */
+end_comment
+
 begin_comment
 comment|/* Supported syslog facilities and levels. */
 end_comment
@@ -33,6 +43,13 @@ name|SYSLOG_FACILITY_USER
 block|,
 name|SYSLOG_FACILITY_AUTH
 block|,
+ifdef|#
+directive|ifdef
+name|LOG_AUTHPRIV
+name|SYSLOG_FACILITY_AUTHPRIV
+block|,
+endif|#
+directive|endif
 name|SYSLOG_FACILITY_LOCAL0
 block|,
 name|SYSLOG_FACILITY_LOCAL1

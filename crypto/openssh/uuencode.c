@@ -9,14 +9,6 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: uuencode.c,v 1.15 2002/03/04 17:27:39 stevesk Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
@@ -29,11 +21,13 @@ directive|include
 file|"uuencode.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<resolv.h>
-end_include
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$OpenBSD: uuencode.c,v 1.15 2002/03/04 17:27:39 stevesk Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int

@@ -817,6 +817,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ONLCR
+end_ifdef
+
 begin_macro
 name|TTYMODE
 argument_list|(
@@ -827,6 +833,11 @@ argument_list|,
 literal|72
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<readpassphrase.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xmalloc.h"
 end_include
 

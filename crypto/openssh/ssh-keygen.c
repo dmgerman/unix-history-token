@@ -271,6 +271,12 @@ begin_comment
 comment|/* argv0 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE___PROGNAME
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -278,6 +284,23 @@ modifier|*
 name|__progname
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
@@ -4059,6 +4082,16 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
+name|__progname
+operator|=
+name|get_progname
+argument_list|(
+name|av
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|SSLeay_add_all_algorithms
 argument_list|()
 expr_stmt|;
@@ -4391,15 +4424,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|change_comment
-condition|)
-name|do_change_comment
-argument_list|(
-name|pw
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|convert_to_ssh2
 condition|)
 name|do_convert_to_ssh2
@@ -4409,9 +4433,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|convert_from_ssh2
+name|change_comment
 condition|)
-name|do_convert_from_ssh2
+name|do_change_comment
 argument_list|(
 name|pw
 argument_list|)
@@ -4466,8 +4490,23 @@ endif|#
 directive|endif
 comment|/* SMARTCARD */
 block|}
+name|init_rng
+argument_list|()
+expr_stmt|;
+name|seed_rng
+argument_list|()
+expr_stmt|;
 name|arc4random_stir
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|convert_from_ssh2
+condition|)
+name|do_convert_from_ssh2
+argument_list|(
+name|pw
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

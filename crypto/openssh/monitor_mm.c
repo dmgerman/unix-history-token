@@ -17,11 +17,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_MMAN_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/mman.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -285,6 +296,17 @@ name|mmalloc
 operator|=
 name|mmalloc
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_MMAP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|MAP_ANON
+argument_list|)
 name|address
 operator|=
 name|mmap
@@ -328,6 +350,17 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fatal
+argument_list|(
+literal|"%s: UsePrivilegeSeparation=yes not supported"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mm
 operator|->
 name|address
@@ -503,6 +536,9 @@ operator|->
 name|rb_allocated
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_MMAP
 if|if
 condition|(
 name|munmap
@@ -540,6 +576,17 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fatal
+argument_list|(
+literal|"%s: UsePrivilegeSeparation=yes not supported"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|mm

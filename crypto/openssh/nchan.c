@@ -1896,6 +1896,7 @@ operator|-
 literal|1
 condition|)
 block|{
+comment|/* 		 * shutdown(sock, SHUT_READ) may return ENOTCONN if the 		 * write side has been closed already. (bug on Linux) 		 * HP-UX may return ENOTCONN also. 		 */
 if|if
 condition|(
 name|shutdown
@@ -1908,6 +1909,10 @@ name|SHUT_RD
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOTCONN
 condition|)
 name|error
 argument_list|(

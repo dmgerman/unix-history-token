@@ -33,9 +33,57 @@ begin_comment
 comment|/*  * Note: all these functions must work in all of the following cases:  *    1. euid=0, ruid=0  *    2. euid=0, ruid!=0  *    3. euid!=0, ruid!=0  * Additionally, they must work regardless of whether the system has  * POSIX saved uids or not.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_POSIX_SAVED_IDS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BROKEN_SAVED_UIDS
+argument_list|)
+end_if
+
 begin_comment
 comment|/* Lets assume that posix saved ids also work with seteuid, even though that    is not part of the posix specification. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SAVED_IDS_WORK_WITH_SETEUID
+end_define
+
+begin_comment
+comment|/* Saved effective uid. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|uid_t
+name|saved_euid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|gid_t
+name|saved_egid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Saved effective uid. */
@@ -56,22 +104,6 @@ name|int
 name|temporarily_use_uid_effective
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|uid_t
-name|saved_euid
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|gid_t
-name|saved_egid
 decl_stmt|;
 end_decl_stmt
 
@@ -120,9 +152,17 @@ name|pw
 parameter_list|)
 block|{
 comment|/* Save the current euid, and egroups. */
+ifdef|#
+directive|ifdef
+name|SAVED_IDS_WORK_WITH_SETEUID
 name|saved_euid
 operator|=
 name|geteuid
+argument_list|()
+expr_stmt|;
+name|saved_egid
+operator|=
+name|getegid
 argument_list|()
 expr_stmt|;
 name|debug
@@ -162,6 +202,25 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+else|#
+directive|else
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|privileged
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
+comment|/* SAVED_IDS_WORK_WITH_SETEUID */
 name|privileged
 operator|=
 literal|1
@@ -169,11 +228,6 @@ expr_stmt|;
 name|temporarily_use_uid_effective
 operator|=
 literal|1
-expr_stmt|;
-name|saved_egid
-operator|=
-name|getegid
-argument_list|()
 expr_stmt|;
 name|saved_egroupslen
 operator|=
@@ -286,6 +340,66 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SAVED_IDS_WORK_WITH_SETEUID
+comment|/* Propagate the privileged gid to all of our gids. */
+if|if
+condition|(
+name|setgid
+argument_list|(
+name|getegid
+argument_list|()
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|debug
+argument_list|(
+literal|"setgid %u: %.100s"
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|getegid
+argument_list|()
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Propagate the privileged uid to all of our uids. */
+if|if
+condition|(
+name|setuid
+argument_list|(
+name|geteuid
+argument_list|()
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|debug
+argument_list|(
+literal|"setuid %u: %.100s"
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|geteuid
+argument_list|()
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SAVED_IDS_WORK_WITH_SETEUID */
 if|if
 condition|(
 name|setegid
@@ -379,6 +493,9 @@ argument_list|(
 literal|"restore_uid: temporarily_use_uid not effective"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SAVED_IDS_WORK_WITH_SETEUID
 comment|/* Set the effective uid back to the saved privileged uid. */
 if|if
 condition|(
@@ -406,27 +523,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|setgroups
-argument_list|(
-name|saved_egroupslen
-argument_list|,
-name|saved_egroups
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"setgroups: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|setegid
 argument_list|(
 name|saved_egid
@@ -442,6 +538,46 @@ operator|(
 name|u_int
 operator|)
 name|saved_egid
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* SAVED_IDS_WORK_WITH_SETEUID */
+comment|/* 	 * We are unable to restore the real uid to its unprivileged value. 	 * Propagate the real uid (usually more privileged) to effective uid 	 * as well. 	 */
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SAVED_IDS_WORK_WITH_SETEUID */
+if|if
+condition|(
+name|setgroups
+argument_list|(
+name|saved_egroupslen
+argument_list|,
+name|saved_egroups
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"setgroups: %.100s"
 argument_list|,
 name|strerror
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: monitor_mm.h,v 1.2 2002/03/26 03:24:01 stevesk Exp $	*/
+comment|/*      $OpenBSD: monitor_mm.h,v 1.2 2002/03/26 03:24:01 stevesk Exp $  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/tree.h>
+file|"openbsd-compat/tree.h"
 end_include
 
 begin_struct

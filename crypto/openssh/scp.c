@@ -55,6 +55,37 @@ directive|include
 file|"misc.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE___PROGNAME
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* For progressmeter() -- number of seconds before xfer considered "stalled" */
 end_comment
@@ -787,6 +818,16 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
+name|__progname
+operator|=
+name|get_progname
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|args
 operator|.
 name|list
@@ -1012,6 +1053,18 @@ name|tflag
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_CYGWIN
+name|setmode
+argument_list|(
+literal|0
+argument_list|,
+name|O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|usage
@@ -2513,6 +2566,9 @@ define|#
 directive|define
 name|FILEMODEMASK
 value|(S_ISUID|S_ISGID|S_IRWXU|S_IRWXG|S_IRWXO)
+ifdef|#
+directive|ifdef
+name|HAVE_LONG_LONG_INT
 name|snprintf
 argument_list|(
 name|buf
@@ -2544,6 +2600,41 @@ argument_list|,
 name|last
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* XXX: Handle integer overflow? */
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"C%04o %lu %s\n"
+argument_list|,
+call|(
+name|u_int
+call|)
+argument_list|(
+name|stb
+operator|.
+name|st_mode
+operator|&
+name|FILEMODEMASK
+argument_list|)
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|stb
+operator|.
+name|st_size
+argument_list|,
+name|last
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|verbose_mode
@@ -4628,6 +4719,9 @@ name|omode
 operator|!=
 name|mode
 condition|)
+ifdef|#
+directive|ifdef
+name|HAVE_FCHMOD
 if|if
 condition|(
 name|fchmod
@@ -4637,6 +4731,21 @@ argument_list|,
 name|omode
 argument_list|)
 condition|)
+else|#
+directive|else
+comment|/* HAVE_FCHMOD */
+if|if
+condition|(
+name|chmod
+argument_list|(
+name|np
+argument_list|,
+name|omode
+argument_list|)
+condition|)
+endif|#
+directive|endif
+comment|/* HAVE_FCHMOD */
 name|run_err
 argument_list|(
 literal|"%s: set mode: %s"
@@ -4661,6 +4770,9 @@ name|omode
 operator|!=
 name|mode
 condition|)
+ifdef|#
+directive|ifdef
+name|HAVE_FCHMOD
 if|if
 condition|(
 name|fchmod
@@ -4673,6 +4785,24 @@ operator|~
 name|mask
 argument_list|)
 condition|)
+else|#
+directive|else
+comment|/* HAVE_FCHMOD */
+if|if
+condition|(
+name|chmod
+argument_list|(
+name|np
+argument_list|,
+name|omode
+operator|&
+operator|~
+name|mask
+argument_list|)
+condition|)
+endif|#
+directive|endif
+comment|/* HAVE_FCHMOD */
 name|run_err
 argument_list|(
 literal|"%s: set mode: %s"
@@ -5363,6 +5493,9 @@ block|{
 name|size_t
 name|size
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRUCT_STAT_ST_BLKSIZE
 name|struct
 name|stat
 name|stb
@@ -5429,6 +5562,16 @@ name|stb
 operator|.
 name|st_blksize
 expr_stmt|;
+else|#
+directive|else
+comment|/* HAVE_STRUCT_STAT_ST_BLKSIZE */
+name|size
+operator|=
+name|blksize
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_STRUCT_STAT_ST_BLKSIZE */
 if|if
 condition|(
 name|bp
@@ -5608,6 +5751,30 @@ operator|=
 name|getpgrp
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_TCGETPGRP
+return|return
+operator|(
+operator|(
+name|ctty_pgrp
+operator|=
+name|tcgetpgrp
+argument_list|(
+name|STDOUT_FILENO
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|ctty_pgrp
+operator|==
+name|pgrp
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 operator|(
@@ -5630,6 +5797,8 @@ name|pgrp
 operator|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5915,11 +6084,10 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|" %5llu %c%c "
+literal|" %5lu %c%c "
 argument_list|,
 operator|(
 name|unsigned
-name|long
 name|long
 operator|)
 name|abbrevsize
@@ -6263,7 +6431,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|signal
+name|mysignal
 argument_list|(
 name|SIGALRM
 argument_list|,
