@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	6.6	84/08/29	*/
+comment|/*	ip_output.c	6.7	85/03/18	*/
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"in_systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"in_var.h"
 end_include
 
 begin_include
@@ -235,18 +241,6 @@ operator|>>
 literal|2
 expr_stmt|;
 block|}
-else|else
-name|ip
-operator|->
-name|ip_id
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_id
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Route packet. 	 */
 if|if
 condition|(
@@ -318,9 +312,14 @@ operator|&
 name|IP_ROUTETOIF
 condition|)
 block|{
-name|ifp
+name|struct
+name|in_ifaddr
+modifier|*
+name|ia
+decl_stmt|;
+name|ia
 operator|=
-name|if_ifonnetof
+name|in_iaonnetof
 argument_list|(
 name|in_netof
 argument_list|(
@@ -332,7 +331,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifp
+name|ia
 operator|==
 literal|0
 condition|)
@@ -345,6 +344,12 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|ifp
+operator|=
+name|ia
+operator|->
+name|ia_ifp
+expr_stmt|;
 goto|goto
 name|gotif
 goto|;
@@ -378,6 +383,12 @@ name|ro
 operator|->
 name|ro_rt
 argument_list|)
+expr_stmt|;
+name|ro
+operator|->
+name|ro_rt
+operator|=
+name|NULL
 expr_stmt|;
 name|rtalloc
 argument_list|(
@@ -451,56 +462,15 @@ name|rt_gateway
 expr_stmt|;
 name|gotif
 label|:
-ifndef|#
-directive|ifndef
-name|notdef
-comment|/* 	 * If source address not specified yet, use address 	 * of outgoing interface. 	 */
-if|if
-condition|(
-name|in_lnaof
-argument_list|(
-name|ip
-operator|->
-name|ip_src
-argument_list|)
-operator|==
-name|INADDR_ANY
-condition|)
-name|ip
-operator|->
-name|ip_src
-operator|.
-name|s_addr
-operator|=
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ifp
-operator|->
-name|if_addr
-operator|)
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Look for broadcast address and 	 * and verify user is allowed to send 	 * such a packet. 	 */
 if|if
 condition|(
-name|in_lnaof
+name|in_broadcast
 argument_list|(
 name|dst
 operator|->
 name|sin_addr
 argument_list|)
-operator|==
-name|INADDR_ANY
 condition|)
 block|{
 if|if
@@ -1018,14 +988,6 @@ argument_list|)
 condition|)
 break|break;
 block|}
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-goto|goto
-name|done
-goto|;
 name|bad
 label|:
 name|m_freem
