@@ -2262,7 +2262,17 @@ directive|else
 block|sc->proto = PROTO_ATAPI | PROTO_CBI;
 endif|#
 directive|endif
-block|sc->quirks |= NO_TEST_UNIT_READY | NO_START_STOP; 		return(UMATCH_VENDOR_PRODUCT); 	}  	if (UGETW(dd->idVendor) == USB_VENDOR_INSYSTEM&& UGETW(dd->idProduct) == USB_PRODUCT_INSYSTEM_USBCABLE) { 		sc->drive = INSYSTEM_USBCABLE; 		sc->proto = PROTO_ATAPI | PROTO_CBI; 		sc->quirks |= NO_TEST_UNIT_READY | NO_START_STOP; 		return(UMATCH_VENDOR_PRODUCT); 	}  	if (UGETW(dd->idVendor) == USB_VENDOR_YANO&& UGETW(dd->idProduct) == USB_PRODUCT_YANO_U640MO) { 		sc->proto = PROTO_ATAPI | PROTO_CBI_I; 		sc->quirks |= FORCE_SHORT_INQUIRY; 		return(UMATCH_VENDOR_PRODUCT); 	}
+block|sc->quirks |= NO_TEST_UNIT_READY | NO_START_STOP; 		return(UMATCH_VENDOR_PRODUCT); 	}  	if (UGETW(dd->idVendor) == USB_VENDOR_INSYSTEM&& UGETW(dd->idProduct) == USB_PRODUCT_INSYSTEM_USBCABLE) { 		sc->drive = INSYSTEM_USBCABLE; 		sc->proto = PROTO_ATAPI | PROTO_CBI; 		sc->quirks |= NO_TEST_UNIT_READY | NO_START_STOP; 		return(UMATCH_VENDOR_PRODUCT); 	}  	if (UGETW(dd->idVendor) == USB_VENDOR_YANO&& UGETW(dd->idProduct) == USB_PRODUCT_YANO_U640MO) { 		sc->proto = PROTO_ATAPI | PROTO_CBI_I; 		sc->quirks |= FORCE_SHORT_INQUIRY; 		return(UMATCH_VENDOR_PRODUCT); 	}  	if (UGETW(dd->idVendor) == USB_VENDOR_HP&& UGETW(dd->idProduct) == USB_PRODUCT_HP_CDW8200) { 		sc->drive = SHUTTLE_EUSB;
+if|#
+directive|if
+name|CBI_I
+block|sc->proto = PROTO_ATAPI | PROTO_CBI_I;
+else|#
+directive|else
+block|sc->proto = PROTO_ATAPI | PROTO_CBI;
+endif|#
+directive|endif
+block|sc->quirks |= NO_TEST_UNIT_READY | NO_START_STOP; 		return(UMATCH_VENDOR_PRODUCT); 	}
 endif|#
 directive|endif
 if|if
