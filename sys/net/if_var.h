@@ -1605,7 +1605,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do {									\ 	(m)->m_nextpkt = (ifq)->ifq_drv_head;				\ 	if ((ifq)->ifq_tail == NULL)					\ 		(ifq)->ifq_tail = (m);					\ 	(ifq)->ifq_drv_head = (m);					\ 	(ifq)->ifq_drv_len++;						\ } while (0)
+value|do {									\ 	(m)->m_nextpkt = (ifq)->ifq_drv_head;				\ 	if ((ifq)->ifq_drv_tail == NULL)				\ 		(ifq)->ifq_drv_tail = (m);				\ 	(ifq)->ifq_drv_head = (m);					\ 	(ifq)->ifq_drv_len++;						\ } while (0)
 end_define
 
 begin_define
@@ -1627,7 +1627,7 @@ parameter_list|(
 name|ifq
 parameter_list|)
 define|\
-value|do {									\ 	struct mbuf *m = (ifq)->ifq_drv_head;				\ 	while(m != NULL) {						\ 		m = m->m_nextpkt;					\ 		m_freem(m);						\ 	}								\ 	(ifq)->ifq_drv_head = (ifq)->ifq_drv_tail = NULL;		\ 	(ifq)->ifq_drv_len = 0;						\ 	IFQ_PURGE(ifq);							\ } while (0)
+value|do {									\ 	struct mbuf *m, *n = (ifq)->ifq_drv_head;			\ 	while((m = n) != NULL) {					\ 		n = m->m_nextpkt;					\ 		m_freem(m);						\ 	}								\ 	(ifq)->ifq_drv_head = (ifq)->ifq_drv_tail = NULL;		\ 	(ifq)->ifq_drv_len = 0;						\ 	IFQ_PURGE(ifq);							\ } while (0)
 end_define
 
 begin_comment
