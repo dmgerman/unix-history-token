@@ -3522,6 +3522,14 @@ define|\
 value|CSR_WRITE_4(sc, name, CSR_READ_4(sc, name)& val)
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|500000
+end_if
+
 begin_define
 define|#
 directive|define
@@ -3542,17 +3550,35 @@ parameter_list|)
 value|mtx_unlock(&sc->bfe_mtx)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
-name|BFE_INC
+name|BFE_LOCK
 parameter_list|(
-name|x
-parameter_list|,
-name|y
+name|scp
 parameter_list|)
-value|(x) = ((x) == ((y)-1)) ? 0 : (x)+1
+value|s=splimp()
 end_define
+
+begin_define
+define|#
+directive|define
+name|BFE_UNLOCK
+parameter_list|(
+name|scp
+parameter_list|)
+value|splx(s)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -3814,10 +3840,17 @@ name|BFE_RX_LIST_CNT
 index|]
 decl_stmt|;
 comment|/* XXX */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|500000
 name|struct
 name|mtx
 name|bfe_mtx
 decl_stmt|;
+endif|#
+directive|endif
 name|u_int32_t
 name|bfe_flags
 decl_stmt|;
