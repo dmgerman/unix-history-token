@@ -4776,13 +4776,6 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX malloc() calls uma_large_malloc() for sizes larger 		 * than KMEM_ZMAX bytes. uma_large_malloc() requires Giant. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|newofile
 operator|=
 name|malloc
@@ -4794,12 +4787,6 @@ argument_list|,
 name|M_FILEDESC
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Deal with file-table extend race that might have 		 * occurred while filedesc was unlocked. 		 */
