@@ -309,6 +309,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CE_NODUMP
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Set 'nodump' on newly created log file. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MIN_PID
 value|5
 end_define
@@ -5442,6 +5453,16 @@ name|CE_CREATE
 expr_stmt|;
 break|break;
 case|case
+literal|'d'
+case|:
+name|working
+operator|->
+name|flags
+operator||=
+name|CE_NODUMP
+expr_stmt|;
+break|break;
+case|case
 literal|'g'
 case|:
 name|working
@@ -6635,6 +6656,21 @@ argument_list|,
 name|zfile2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ent
+operator|->
+name|flags
+operator|&
+name|CE_NODUMP
+condition|)
+name|printf
+argument_list|(
+literal|"\tchflags nodump %s\n"
+argument_list|,
+name|zfile2
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6706,6 +6742,30 @@ condition|)
 name|warn
 argument_list|(
 literal|"can't chown %s"
+argument_list|,
+name|zfile2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ent
+operator|->
+name|flags
+operator|&
+name|CE_NODUMP
+condition|)
+if|if
+condition|(
+name|chflags
+argument_list|(
+name|zfile2
+argument_list|,
+name|UF_NODUMP
+argument_list|)
+condition|)
+name|warn
+argument_list|(
+literal|"can't chflags %s NODUMP"
 argument_list|,
 name|zfile2
 argument_list|)
@@ -6802,6 +6862,21 @@ argument_list|,
 name|file1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ent
+operator|->
+name|flags
+operator|&
+name|CE_NODUMP
+condition|)
+name|printf
+argument_list|(
+literal|"\tchflags nodump %s\n"
+argument_list|,
+name|file1
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6893,6 +6968,30 @@ condition|)
 name|warn
 argument_list|(
 literal|"can't chown %s"
+argument_list|,
+name|file1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ent
+operator|->
+name|flags
+operator|&
+name|CE_NODUMP
+condition|)
+if|if
+condition|(
+name|chflags
+argument_list|(
+name|file1
+argument_list|,
+name|UF_NODUMP
+argument_list|)
+condition|)
+name|warn
+argument_list|(
+literal|"can't chflags %s NODUMP"
 argument_list|,
 name|file1
 argument_list|)
@@ -7304,6 +7403,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * XXX - Note that both compress_log and bzcompress_log will lose the  *	NODUMP flag if it was set on somelog.0.  Fixing that in newsyslog  *	(as opposed to fixing gzip/bzip2) will require some restructuring  *	of the code.  That restructuring is planned for a later update...  */
+end_comment
 
 begin_comment
 comment|/* Fork of gzip to compress the old log file */
@@ -8726,6 +8829,51 @@ argument_list|,
 name|tempfile
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+comment|/* Turn on NODUMP if it was requested in the config-file. */
+if|if
+condition|(
+name|ent
+operator|->
+name|flags
+operator|&
+name|CE_NODUMP
+condition|)
+block|{
+if|if
+condition|(
+name|noaction
+condition|)
+name|printf
+argument_list|(
+literal|"\tchflags nodump %s\n"
+argument_list|,
+name|tempfile
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|failed
+operator|=
+name|fchflags
+argument_list|(
+name|fd
+argument_list|,
+name|UF_NODUMP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|failed
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"log_trim: fchflags(NODUMP)"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 	 * Note that if the real logfile still exists, and if the call 	 * to rename() fails, then "neither the old file nor the new 	 * file shall be changed or created" (to quote the standard). 	 * If the call succeeds, then the file will be replaced without 	 * any window where some other process might find that the file 	 * did not exist. 	 * XXX - ? It may be that for some error conditions, we could 	 *	retry by first removing the realfile and then renaming. 	 */
