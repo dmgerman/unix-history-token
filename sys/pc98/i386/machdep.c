@@ -1214,7 +1214,9 @@ block|{
 name|unsigned
 name|int
 name|size1
-init|=
+decl_stmt|;
+name|size1
+operator|=
 name|phys_avail
 index|[
 name|indx
@@ -1226,7 +1228,7 @@ name|phys_avail
 index|[
 name|indx
 index|]
-decl_stmt|;
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"0x%08x - 0x%08x, %u bytes (%u pages)\n"
@@ -1298,7 +1300,7 @@ block|valloc(callout, struct callout, ncallout); 	valloc(callwheel, struct callo
 comment|/* 	 * Discount the physical memory larger than the size of kernel_map 	 * to avoid eating up all of KVA space. 	 */
 block|if (kernel_map->first_free == NULL) { 		printf("Warning: no free entries in kernel_map.\n"); 		physmem_est = physmem; 	} else { 		physmem_est = min(physmem, btoc(kernel_map->max_offset - 		    kernel_map->min_offset)); 	}
 comment|/* 	 * The nominal buffer size (and minimum KVA allocation) is BKVASIZE. 	 * For the first 64MB of ram nominally allocate sufficient buffers to 	 * cover 1/4 of our ram.  Beyond the first 64MB allocate additional 	 * buffers to cover 1/20 of our ram over 64MB.  When auto-sizing 	 * the buffer cache we limit the eventual kva reservation to 	 * maxbcache bytes. 	 * 	 * factor represents the 1/4 x ram conversion. 	 */
-block|if (nbuf == 0) { 		int factor = 4 * BKVASIZE / PAGE_SIZE;  		nbuf = 50; 		if (physmem_est> 1024) 			nbuf += min((physmem_est - 1024) / factor, 16384 / factor); 		if (physmem_est> 16384) 			nbuf += (physmem_est - 16384) * 2 / (factor * 5);  		if (maxbcache&& nbuf> maxbcache / BKVASIZE) 			nbuf = maxbcache / BKVASIZE; 	}
+block|if (nbuf == 0) { 		int factor = 4 * BKVASIZE / PAGE_SIZE;  		nbuf = 50; 		if (physmem_est> 1024) 			nbuf += min((physmem_est - 1024) / factor, 			    16384 / factor); 		if (physmem_est> 16384) 			nbuf += (physmem_est - 16384) * 2 / (factor * 5);  		if (maxbcache&& nbuf> maxbcache / BKVASIZE) 			nbuf = maxbcache / BKVASIZE; 	}
 comment|/* 	 * Do not allow the buffer_map to be more then 1/2 the size of the 	 * kernel_map. 	 */
 block|if (nbuf> (kernel_map->max_offset - kernel_map->min_offset) /  	    (BKVASIZE * 2)) { 		nbuf = (kernel_map->max_offset - kernel_map->min_offset) /  		    (BKVASIZE * 2); 		printf("Warning: nbufs capped at %d\n", nbuf); 	}  	nswbuf = max(min(nbuf/4, 256), 16);  	valloc(swbuf, struct buf, nswbuf); 	valloc(buf, struct buf, nbuf); 	v = bufhashinit(v);
 comment|/* 	 * End of first pass, size has been calculated so allocate memory 	 */
