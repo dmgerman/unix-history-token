@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.59 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.60 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2970,6 +2970,9 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|vp
@@ -2981,6 +2984,8 @@ argument_list|(
 literal|"vrele: null vp"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|vp
 operator|->
 name|v_usecount
@@ -2991,9 +2996,28 @@ condition|(
 name|vp
 operator|->
 name|v_usecount
-operator|<
+operator|>
 literal|0
 condition|)
+return|return;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|vp
+operator|->
+name|v_usecount
+operator|!=
+literal|0
+operator|||
+name|vp
+operator|->
+name|v_writecount
+operator|!=
+literal|0
+condition|)
+block|{
 name|vprint
 argument_list|(
 literal|"vrele: bad ref count"
@@ -3001,15 +3025,14 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_usecount
-operator|>
-literal|0
-condition|)
-return|return;
+name|panic
+argument_list|(
+literal|"vrele: ref cnt"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|vfreeh
@@ -4444,7 +4467,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"type %s, usecount %d, refcount %d,"
+literal|"type %s, usecount %d, writecount %d, refcount %d,"
 argument_list|,
 name|typename
 index|[
@@ -4456,6 +4479,10 @@ argument_list|,
 name|vp
 operator|->
 name|v_usecount
+argument_list|,
+name|vp
+operator|->
+name|v_writecount
 argument_list|,
 name|vp
 operator|->
