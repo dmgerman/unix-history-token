@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: route6d.c,v 1.30 2000/06/04 06:48:03 itojun Exp $	*/
+comment|/*	$KAME: route6d.c,v 1.35 2000/08/13 00:39:44 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|_rcsid
 index|[]
 init|=
-literal|"$KAME: route6d.c,v 1.30 2000/06/04 06:48:03 itojun Exp $"
+literal|"$KAME: route6d.c,v 1.35 2000/08/13 00:39:44 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -12652,9 +12652,12 @@ name|rtmp
 expr_stmt|;
 name|rtmp
 operator|+=
+name|ROUNDUP
+argument_list|(
 name|sin6_dst
 operator|->
 name|sin6_len
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -15581,10 +15584,12 @@ name|riprt
 modifier|*
 name|rrt
 decl_stmt|;
-name|struct
-name|in6_addr
-name|gw
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct	in6_addr gw;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -16013,6 +16018,24 @@ name|rrt_index
 operator|=
 name|loopifindex
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (getroute(&rrt->rrt_info,&gw)) {
+if|#
+directive|if
+literal|0
+comment|/* 			 * When the address has already been registered in the 			 * kernel routing table, it should be removed  			 */
+block|delroute(&rrt->rrt_info,&gw);
+else|#
+directive|else
+comment|/* it is more safe behavior */
+block|errno = EINVAL; 			fatal("%s/%u already in routing table, " 			    "cannot aggregate", 			    inet6_n2p(&rrt->rrt_info.rip6_dest), 			    rrt->rrt_info.rip6_plen);
+endif|#
+directive|endif
+block|}
+endif|#
+directive|endif
 comment|/* Put the route to the list */
 name|rrt
 operator|->
@@ -16054,33 +16077,6 @@ name|nflag
 condition|)
 comment|/* do not modify kernel routing table */
 continue|continue;
-if|if
-condition|(
-name|getroute
-argument_list|(
-operator|&
-name|rrt
-operator|->
-name|rrt_info
-argument_list|,
-operator|&
-name|gw
-argument_list|)
-condition|)
-block|{
-comment|/* 			 * When the address has already been registered in the 			 * kernel routing table, it should be removed  			 */
-name|delroute
-argument_list|(
-operator|&
-name|rrt
-operator|->
-name|rrt_info
-argument_list|,
-operator|&
-name|gw
-argument_list|)
-expr_stmt|;
-block|}
 name|addroute
 argument_list|(
 name|rrt
