@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_proc.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_proc.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -130,15 +130,13 @@ file|"mbuf.h"
 end_include
 
 begin_comment
-comment|/*  * Change the process group of top and all descendents to npgrp.  * If npgrp is -1, instead clear any pending stops.  */
+comment|/*  * Clear any pending stops for top and all descendents.  */
 end_comment
 
 begin_macro
 name|spgrp
 argument_list|(
 argument|top
-argument_list|,
-argument|npgrp
 argument_list|)
 end_macro
 
@@ -173,13 +171,6 @@ init|;
 condition|;
 control|)
 block|{
-if|if
-condition|(
-name|npgrp
-operator|==
-operator|-
-literal|1
-condition|)
 name|p
 operator|->
 name|p_sig
@@ -201,13 +192,6 @@ argument_list|(
 name|SIGTTOU
 argument_list|)
 operator|)
-expr_stmt|;
-else|else
-name|p
-operator|->
-name|p_pgrp
-operator|=
-name|npgrp
 expr_stmt|;
 name|f
 operator|++
@@ -274,21 +258,6 @@ operator|(
 name|f
 operator|)
 return|;
-if|if
-condition|(
-name|p
-operator|==
-operator|&
-name|proc
-index|[
-literal|1
-index|]
-condition|)
-name|panic
-argument_list|(
-literal|"spgrp"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
