@@ -744,6 +744,30 @@ name|MBOX_NOT_LOGGED_IN
 value|0x400A
 end_define
 
+begin_define
+define|#
+directive|define
+name|MBLOGALL
+value|0x000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBLOGNONE
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBLOGMASK
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xf)
+end_define
+
 begin_comment
 comment|/*  * Asynchronous event status codes  */
 end_comment
