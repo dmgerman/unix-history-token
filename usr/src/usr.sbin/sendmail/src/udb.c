@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.13 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.14 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.13 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.14 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4002,11 +4002,26 @@ modifier|*
 modifier|*
 name|hp
 decl_stmt|;
-name|name
-operator|=
+name|char
+name|kbuf
+index|[
+name|MAXKEY
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|strcpy
+argument_list|(
+name|kbuf
+argument_list|,
 name|key
 operator|->
 name|data
+argument_list|)
+expr_stmt|;
+name|name
+operator|=
+name|kbuf
 expr_stmt|;
 name|type
 operator|=
@@ -4022,6 +4037,10 @@ condition|(
 name|type
 operator|==
 name|NULL
+operator|||
+name|type
+operator|==
+name|name
 condition|)
 return|return
 literal|1
