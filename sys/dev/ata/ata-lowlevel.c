@@ -102,7 +102,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|ata_generic_transaction
+name|ata_begin_transaction
 parameter_list|(
 name|struct
 name|ata_request
@@ -113,10 +113,11 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|ata_generic_interrupt
+name|int
+name|ata_end_transaction
 parameter_list|(
-name|void
+name|struct
+name|ata_request
 modifier|*
 parameter_list|)
 function_decl|;
@@ -147,10 +148,6 @@ name|u_int8_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*static int ata_command(struct ata_device *, u_int8_t, u_int64_t, u_int16_t, u_int16_t);*/
-end_comment
 
 begin_function_decl
 specifier|static
@@ -211,25 +208,25 @@ name|ch
 operator|->
 name|hw
 operator|.
+name|begin_transaction
+operator|=
+name|ata_begin_transaction
+expr_stmt|;
+name|ch
+operator|->
+name|hw
+operator|.
+name|end_transaction
+operator|=
+name|ata_end_transaction
+expr_stmt|;
+name|ch
+operator|->
+name|hw
+operator|.
 name|reset
 operator|=
 name|ata_generic_reset
-expr_stmt|;
-name|ch
-operator|->
-name|hw
-operator|.
-name|transaction
-operator|=
-name|ata_generic_transaction
-expr_stmt|;
-name|ch
-operator|->
-name|hw
-operator|.
-name|interrupt
-operator|=
-name|ata_generic_interrupt
 expr_stmt|;
 name|ch
 operator|->
@@ -249,7 +246,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ata_generic_transaction
+name|ata_begin_transaction
 parameter_list|(
 name|struct
 name|ata_request
@@ -309,7 +306,7 @@ name|ATA_DEBUG_RQ
 argument_list|(
 name|request
 argument_list|,
-literal|"transaction"
+literal|"begin transaction"
 argument_list|)
 expr_stmt|;
 comment|/* disable ATAPI DMA writes if HW doesn't support it */
@@ -503,29 +500,6 @@ condition|)
 do|;
 if|if
 condition|(
-name|timeout
-condition|)
-name|printf
-argument_list|(
-literal|"ATAPI_RESET time = %dus\n"
-argument_list|,
-operator|(
-literal|1000000
-operator|-
-name|timeout
-operator|)
-operator|*
-literal|10
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"ATAPI_RESET timeout\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|request
 operator|->
 name|status
@@ -599,13 +573,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* record the request as running and return for interrupt */
-name|ch
-operator|->
-name|running
-operator|=
-name|request
-expr_stmt|;
 return|return
 name|ATA_OP_CONTINUES
 return|;
@@ -758,13 +725,6 @@ name|EIO
 expr_stmt|;
 break|break;
 block|}
-comment|/* record the request as running and return for interrupt */
-name|ch
-operator|->
-name|running
-operator|=
-name|request
-expr_stmt|;
 return|return
 name|ATA_OP_CONTINUES
 return|;
@@ -892,17 +852,9 @@ operator|)
 operator|==
 name|ATA_DRQ_INTR
 condition|)
-block|{
-name|ch
-operator|->
-name|running
-operator|=
-name|request
-expr_stmt|;
 return|return
 name|ATA_OP_CONTINUES
 return|;
-block|}
 comment|/* wait for ready to write ATAPI command block */
 block|{
 name|int
@@ -1038,13 +990,6 @@ literal|6
 else|:
 literal|8
 argument_list|)
-expr_stmt|;
-comment|/* record the request as running and return for interrupt */
-name|ch
-operator|->
-name|running
-operator|=
-name|request
 expr_stmt|;
 return|return
 name|ATA_OP_CONTINUES
@@ -1356,13 +1301,6 @@ name|EIO
 expr_stmt|;
 break|break;
 block|}
-comment|/* record the request as running and return for interrupt */
-name|ch
-operator|->
-name|running
-operator|=
-name|request
-expr_stmt|;
 return|return
 name|ATA_OP_CONTINUES
 return|;
@@ -1399,12 +1337,13 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|ata_generic_interrupt
+name|int
+name|ata_end_transaction
 parameter_list|(
-name|void
+name|struct
+name|ata_request
 modifier|*
-name|data
+name|request
 parameter_list|)
 block|{
 name|struct
@@ -1412,87 +1351,20 @@ name|ata_channel
 modifier|*
 name|ch
 init|=
-operator|(
-expr|struct
-name|ata_channel
-operator|*
-operator|)
-name|data
-decl_stmt|;
-name|struct
-name|ata_request
-modifier|*
 name|request
-init|=
-name|ch
 operator|->
-name|running
+name|device
+operator|->
+name|channel
 decl_stmt|;
 name|int
 name|length
 decl_stmt|;
-comment|/* ignore this interrupt if there is no running request */
-if|if
-condition|(
-operator|!
-name|request
-condition|)
-return|return;
 name|ATA_DEBUG_RQ
 argument_list|(
 name|request
 argument_list|,
-literal|"interrupt"
-argument_list|)
-expr_stmt|;
-comment|/* ignore interrupt if device is busy */
-if|if
-condition|(
-operator|!
-operator|(
-name|request
-operator|->
-name|flags
-operator|&
-name|ATA_R_TIMEOUT
-operator|)
-operator|&&
-name|ATA_IDX_INB
-argument_list|(
-name|ch
-argument_list|,
-name|ATA_ALTSTAT
-argument_list|)
-operator|&
-name|ATA_S_BUSY
-condition|)
-block|{
-name|DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|ATA_IDX_INB
-argument_list|(
-name|ch
-argument_list|,
-name|ATA_ALTSTAT
-argument_list|)
-operator|&
-name|ATA_S_DRQ
-operator|)
-condition|)
-return|return;
-block|}
-name|ATA_DEBUG_RQ
-argument_list|(
-name|request
-argument_list|,
-literal|"interrupt accepted"
+literal|"end transaction"
 argument_list|)
 expr_stmt|;
 comment|/* clear interrupt and get status */
@@ -1506,24 +1378,6 @@ name|ch
 argument_list|,
 name|ATA_STATUS
 argument_list|)
-expr_stmt|;
-comment|/* register interrupt */
-if|if
-condition|(
-operator|!
-operator|(
-name|request
-operator|->
-name|flags
-operator|&
-name|ATA_R_TIMEOUT
-operator|)
-condition|)
-name|request
-operator|->
-name|flags
-operator||=
-name|ATA_R_INTR_SEEN
 expr_stmt|;
 switch|switch
 condition|(
@@ -1626,7 +1480,9 @@ argument_list|,
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|ATA_OP_FINISHED
+return|;
 block|}
 comment|/* are we moving data ? */
 if|if
@@ -1762,7 +1618,9 @@ argument_list|,
 name|ATA_STATUS
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|ATA_OP_FINISHED
+return|;
 block|}
 comment|/* output data and return waiting for new interrupt */
 name|ata_pio_write
@@ -1774,7 +1632,9 @@ operator|->
 name|transfersize
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|ATA_OP_CONTINUES
+return|;
 block|}
 comment|/* if data read command, return& wait for interrupt */
 if|if
@@ -1785,11 +1645,15 @@ name|flags
 operator|&
 name|ATA_R_READ
 condition|)
-return|return;
+return|return
+name|ATA_OP_CONTINUES
+return|;
 block|}
 block|}
 comment|/* done with HW */
-break|break;
+return|return
+name|ATA_OP_FINISHED
+return|;
 comment|/* ATA DMA data transfer commands */
 case|case
 name|ATA_R_DMA
@@ -1871,7 +1735,9 @@ name|ch
 argument_list|)
 expr_stmt|;
 comment|/* done with HW */
-break|break;
+return|return
+name|ATA_OP_FINISHED
+return|;
 comment|/* ATAPI PIO commands */
 case|case
 name|ATA_R_ATAPI
@@ -1958,7 +1824,9 @@ name|status
 operator|=
 name|ATA_S_ERROR
 expr_stmt|;
-break|break;
+return|return
+name|ATA_OP_FINISHED
+return|;
 block|}
 name|ATA_IDX_OUTSW_STRM
 argument_list|(
@@ -1998,7 +1866,9 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* return wait for interrupt */
-return|return;
+return|return
+name|ATA_OP_CONTINUES
+return|;
 case|case
 name|ATAPI_P_WRITE
 case|:
@@ -2031,7 +1901,9 @@ name|request
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|ATA_OP_FINISHED
+return|;
 block|}
 name|ata_pio_write
 argument_list|(
@@ -2069,7 +1941,9 @@ name|transfersize
 argument_list|)
 expr_stmt|;
 comment|/* return wait for interrupt */
-return|return;
+return|return
+name|ATA_OP_CONTINUES
+return|;
 case|case
 name|ATAPI_P_READ
 case|:
@@ -2102,7 +1976,9 @@ name|request
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|ATA_OP_FINISHED
+return|;
 block|}
 name|ata_pio_read
 argument_list|(
@@ -2140,7 +2016,9 @@ name|transfersize
 argument_list|)
 expr_stmt|;
 comment|/* return wait for interrupt */
-return|return;
+return|return
+name|ATA_OP_CONTINUES
+return|;
 case|case
 name|ATAPI_P_DONEDRQ
 case|:
@@ -2242,7 +2120,9 @@ argument_list|,
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|ATA_OP_FINISHED
+return|;
 default|default:
 name|ata_prtdev
 argument_list|(
@@ -2261,7 +2141,9 @@ name|ATA_S_ERROR
 expr_stmt|;
 block|}
 comment|/* done with HW */
-break|break;
+return|return
+name|ATA_OP_FINISHED
+return|;
 comment|/* ATAPI DMA commands */
 case|case
 name|ATA_R_ATAPI
@@ -2349,20 +2231,10 @@ name|ch
 argument_list|)
 expr_stmt|;
 comment|/* done with HW */
-break|break;
+return|return
+name|ATA_OP_FINISHED
+return|;
 block|}
-comment|/* finished running this request schedule completition */
-name|ch
-operator|->
-name|running
-operator|=
-name|NULL
-expr_stmt|;
-name|ata_finish
-argument_list|(
-name|request
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -1290,10 +1290,10 @@ name|timeout
 decl_stmt|;
 comment|/* timeout for this cmd */
 name|struct
-name|callout_handle
-name|timeout_handle
+name|callout
+name|callout
 decl_stmt|;
-comment|/* handle for untimeout */
+comment|/* callout management */
 name|int
 name|result
 decl_stmt|;
@@ -1347,7 +1347,7 @@ parameter_list|,
 name|string
 parameter_list|)
 define|\
-value|{ \     if (request->flags& ATA_R_DEBUG) \         ata_prtdev(request->device, "req=%08x %s " string "\n", \                    (u_int)request, ata_cmd2str(request)); \     }
+value|{ \     if (request->flags& ATA_R_DEBUG) \         ata_prtdev(request->device, "req=%p %s " string "\n", \                    request, ata_cmd2str(request)); \     }
 end_define
 
 begin_else
@@ -1745,16 +1745,28 @@ begin_struct
 struct|struct
 name|ata_lowlevel
 block|{
-name|void
+name|int
 function_decl|(
 modifier|*
-name|reset
+name|begin_transaction
 function_decl|)
 parameter_list|(
 name|struct
-name|ata_channel
+name|ata_request
 modifier|*
-name|ch
+name|request
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|end_transaction
+function_decl|)
+parameter_list|(
+name|struct
+name|ata_request
+modifier|*
+name|request
 parameter_list|)
 function_decl|;
 name|void
@@ -1768,16 +1780,16 @@ modifier|*
 name|channel
 parameter_list|)
 function_decl|;
-name|int
+name|void
 function_decl|(
 modifier|*
-name|transaction
+name|reset
 function_decl|)
 parameter_list|(
 name|struct
-name|ata_request
+name|ata_channel
 modifier|*
-name|request
+name|ch
 parameter_list|)
 function_decl|;
 name|int
@@ -1944,10 +1956,15 @@ define|#
 directive|define
 name|ATA_ATAPI_SLAVE
 value|0x08
-name|int
-name|lock
+name|struct
+name|mtx
+name|state_mtx
 decl_stmt|;
-comment|/* ATA channel lock */
+comment|/* state lock */
+name|int
+name|state
+decl_stmt|;
+comment|/* ATA channel state */
 define|#
 directive|define
 name|ATA_IDLE
@@ -1956,6 +1973,14 @@ define|#
 directive|define
 name|ATA_ACTIVE
 value|0x0001
+define|#
+directive|define
+name|ATA_INTERRUPT
+value|0x0002
+define|#
+directive|define
+name|ATA_TIMEOUT
+value|0x0004
 name|void
 function_decl|(
 modifier|*
@@ -2631,54 +2656,6 @@ parameter_list|(
 name|request
 parameter_list|)
 value|uma_zfree(ata_zone, request)
-end_define
-
-begin_comment
-comment|/* macros for locking a channel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_LOCK_CH
-parameter_list|(
-name|ch
-parameter_list|)
-define|\
-value|atomic_cmpset_acq_int(&(ch)->lock, ATA_IDLE, ATA_ACTIVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_SLEEPLOCK_CH
-parameter_list|(
-name|ch
-parameter_list|)
-define|\
-value|while (!ATA_LOCK_CH(ch)) tsleep((caddr_t)&(ch), PRIBIO, "atalck", 1);
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_FORCELOCK_CH
-parameter_list|(
-name|ch
-parameter_list|)
-define|\
-value|atomic_store_rel_int(&(ch)->lock, ATA_ACTIVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_UNLOCK_CH
-parameter_list|(
-name|ch
-parameter_list|)
-define|\
-value|atomic_store_rel_int(&(ch)->lock, ATA_IDLE)
 end_define
 
 begin_comment
