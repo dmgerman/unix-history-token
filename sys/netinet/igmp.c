@@ -16,79 +16,85 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/protosw.h>
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|"net/if.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/route.h>
+file|"net/route.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|"in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in_var.h>
+file|"in_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
+file|"in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ip.h>
+file|"ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ip_var.h>
+file|"ip_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/igmp.h>
+file|"igmp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/igmp_var.h>
+file|"igmp_var.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/cpufunc.h"
 end_include
 
 begin_decl_stmt

@@ -31,55 +31,55 @@ end_else
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|"errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|"malloc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/protosw.h>
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socketvar.h>
+file|"socketvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|"time.h"
 end_include
 
 begin_ifndef
@@ -91,7 +91,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|<net/af.h>
+file|"net/af.h"
 end_include
 
 begin_else
@@ -102,7 +102,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|"systm.h"
 end_include
 
 begin_endif
@@ -113,73 +113,73 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|"net/if.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/route.h>
+file|"net/route.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/raw_cb.h>
+file|"net/raw_cb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|"in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
+file|"in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ip.h>
+file|"ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in_pcb.h>
+file|"in_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in_var.h>
+file|"in_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ip_var.h>
+file|"ip_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/igmp.h>
+file|"igmp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/igmp_var.h>
+file|"igmp_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ip_mroute.h>
+file|"ip_mroute.h"
 end_include
 
 begin_comment
