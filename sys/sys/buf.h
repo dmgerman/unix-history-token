@@ -860,7 +860,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|lockinit(&(bp)->b_lock, PRIBIO + 4, buf_wmesg, 0, LK_CANRECURSE)
+value|lockinit(&(bp)->b_lock, PRIBIO + 4, buf_wmesg, 0, 0)
 end_define
 
 begin_comment
