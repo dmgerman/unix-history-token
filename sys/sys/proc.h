@@ -653,6 +653,10 @@ name|int
 name|td_kflags
 decl_stmt|;
 comment|/* (c) Flags for KSE threading. */
+name|int
+name|td_xsig
+decl_stmt|;
+comment|/* (c) Signal for ptrace */
 define|#
 directive|define
 name|td_endzero
@@ -934,6 +938,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_XSIG
+value|0x040000
+end_define
+
+begin_comment
+comment|/* Thread is exchanging signal under traced */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_UMTXWAKEUP
 value|0x080000
 end_define
@@ -951,6 +966,17 @@ end_define
 
 begin_comment
 comment|/* Libthr thread must not suspend itself. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_DBSUSPEND
+value|0x200000
+end_define
+
+begin_comment
+comment|/* Thread is suspended by debugger */
 end_comment
 
 begin_comment
@@ -2117,6 +2143,12 @@ name|int
 name|p_suspcount
 decl_stmt|;
 comment|/* (c) # threads in suspended mode */
+name|struct
+name|thread
+modifier|*
+name|p_xthread
+decl_stmt|;
+comment|/* (c) Trap thread */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -2176,10 +2208,6 @@ name|u_short
 name|p_xstat
 decl_stmt|;
 comment|/* (c) Exit status; also stop sig. */
-name|lwpid_t
-name|p_xlwpid
-decl_stmt|;
-comment|/* (c) Thread corresponding p_xstat. */
 name|int
 name|p_numthreads
 decl_stmt|;
@@ -4942,6 +4970,18 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_continued
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl

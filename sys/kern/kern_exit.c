@@ -1512,11 +1512,9 @@ name|rv
 expr_stmt|;
 name|p
 operator|->
-name|p_xlwpid
+name|p_xthread
 operator|=
 name|td
-operator|->
-name|td_tid
 expr_stmt|;
 operator|*
 name|p

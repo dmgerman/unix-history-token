@@ -67,8 +67,7 @@ name|ucontext_t
 name|tm_context
 decl_stmt|;
 comment|/* User and machine context */
-name|unsigned
-name|int
+name|uint32_t
 name|tm_flags
 decl_stmt|;
 comment|/* Thread flags */
@@ -86,16 +85,26 @@ comment|/* For use by the UTS */
 name|uint32_t
 name|tm_uticks
 decl_stmt|;
+comment|/* Time in userland */
 name|uint32_t
 name|tm_sticks
 decl_stmt|;
+comment|/* Time in kernel */
 name|siginfo_t
 name|tm_syncsig
 decl_stmt|;
-name|int
-name|tm_spare
+name|uint32_t
+name|tm_dflags
+decl_stmt|;
+comment|/* Debug flags */
+name|lwpid_t
+name|tm_lwp
+decl_stmt|;
+comment|/* kernel thread UTS runs on */
+name|uint32_t
+name|__spare__
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
 block|}
@@ -110,7 +119,7 @@ begin_struct
 struct|struct
 name|kse_mailbox
 block|{
-name|int
+name|uint32_t
 name|km_version
 decl_stmt|;
 comment|/* Mailbox version */
@@ -133,7 +142,7 @@ comment|/* Caught signals */
 name|uint32_t
 name|km_flags
 decl_stmt|;
-comment|/* KSE flags */
+comment|/* Mailbox flags */
 name|kse_func_t
 modifier|*
 name|km_func
@@ -142,7 +151,7 @@ comment|/* UTS function */
 name|stack_t
 name|km_stack
 decl_stmt|;
-comment|/* UTS context */
+comment|/* UTS stack */
 name|void
 modifier|*
 name|km_udata
@@ -153,14 +162,18 @@ name|timespec
 name|km_timeofday
 decl_stmt|;
 comment|/* Time of day */
-name|int
+name|uint32_t
 name|km_quantum
 decl_stmt|;
 comment|/* Upcall quantum in msecs */
-name|int
-name|km_spare
+name|lwpid_t
+name|km_lwp
+decl_stmt|;
+comment|/* kernel thread UTS runs on */
+name|uint32_t
+name|__spare2__
 index|[
-literal|8
+literal|7
 index|]
 decl_stmt|;
 block|}
@@ -228,6 +241,35 @@ begin_define
 define|#
 directive|define
 name|TMF_NOUPCALL
+value|0x01
+end_define
+
+begin_comment
+comment|/* These flags are kept in tm_dlfags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMDF_SSTEP
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMDF_DONOTRUNUSER
+value|0x02
+end_define
+
+begin_comment
+comment|/* Flags for kse_switchin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KSE_SWITCHIN_SETTMBX
 value|0x01
 end_define
 
