@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -507,64 +507,47 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_function_decl
+begin_expr_stmt
+name|__BEGIN_DECLS
 specifier|extern
-name|struct
+expr|struct
 name|ns_addr
 name|ns_addr
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 specifier|const
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|ns_ntoa
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|ns_addr
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|struct
-name|ns_addr
-name|ns_addr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|ns_ntoa
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
