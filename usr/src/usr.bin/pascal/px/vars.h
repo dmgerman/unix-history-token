@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vars.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vars.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -363,48 +363,6 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
-specifier|extern
-name|short
-name|pop2
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|long
-name|pop4
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|double
-name|pop8
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|sze8
-name|popsze8
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|pushsp
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * emulated pc types  */
 end_comment
@@ -443,6 +401,11 @@ name|struct
 name|hdr
 modifier|*
 name|hdrp
+decl_stmt|;
+name|struct
+name|sze8
+modifier|*
+name|s8p
 decl_stmt|;
 block|}
 union|;

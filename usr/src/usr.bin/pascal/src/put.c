@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c	5.2 (Berkeley) %G%"
+literal|"@(#)put.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +107,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|char
+name|showit
+index|[]
+init|=
+literal|"'x'"
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -114,7 +123,7 @@ name|OBJ
 end_ifdef
 
 begin_comment
-comment|/*  * Put is responsible for the interpreter equivalent of code  * generation.  Since the interpreter is specifically designed  * for Pascal, little work is required here.  */
+comment|/*  * Put is responsible for the interpreter equivalent of code  * generation.  Since the interpreter is specifically designed  * for Pascal, little work is required here.  *  * FIXME, this should be converted to use<varargs.h> or<stdarg.h>.  */
 end_comment
 
 begin_comment
@@ -825,7 +834,7 @@ name|DEBUG
 operator|(
 name|string
 operator|=
-literal|"'x'"
+name|showit
 operator|)
 index|[
 literal|1
@@ -878,7 +887,7 @@ name|DEBUG
 operator|(
 name|string
 operator|=
-literal|"'x'"
+name|showit
 operator|)
 index|[
 literal|1

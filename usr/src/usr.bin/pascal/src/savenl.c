@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savenl.c	5.1 (Berkeley) %G%"
+literal|"@(#)savenl.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,40 +100,40 @@ end_include
 begin_decl_stmt
 name|LOCAL
 name|char
-modifier|*
 name|symname
+index|[]
 init|=
-literal|"/tmp/obj.symXXXX"
+literal|"/tmp/obj.symXXXXXX"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|LOCAL
 name|char
-modifier|*
 name|strname
+index|[]
 init|=
-literal|"/tmp/obj.strXXXX"
+literal|"/tmp/obj.strXXXXXX"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|LOCAL
 name|char
-modifier|*
 name|filesname
+index|[]
 init|=
-literal|"/tmp/obj.filesXXXX"
+literal|"/tmp/obj.filesXXXXXX"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|LOCAL
 name|char
-modifier|*
 name|linesname
+index|[]
 init|=
-literal|"/tmp/obj.linesXXXX"
+literal|"/tmp/obj.linesXXXXXX"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,6 +181,20 @@ specifier|extern
 name|FILE
 modifier|*
 name|fopen
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|LOCAL
+name|putblock
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|LOCAL
+name|putstring
 parameter_list|()
 function_decl|;
 end_function_decl

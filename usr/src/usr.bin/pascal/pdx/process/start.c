@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c	5.2 (Berkeley) %G%"
+literal|"@(#)start.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,7 +141,7 @@ argument_list|()
 expr_stmt|;
 name|cmd
 operator|=
-literal|"/usr/ucb/px"
+literal|"px"
 expr_stmt|;
 name|pstart
 argument_list|(
@@ -390,11 +390,11 @@ name|t
 operator|.
 name|objstart
 expr_stmt|;
-name|PCADDRP
+name|PCADDR
 operator|=
 name|t
 operator|.
-name|pcaddrp
+name|pcaddr
 expr_stmt|;
 name|LOOPADDR
 operator|=

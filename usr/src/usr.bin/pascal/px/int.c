@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)int.c	5.1 (Berkeley) %G%"
+literal|"@(#)int.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,16 +102,24 @@ empty_stmt|;
 end_empty_stmt
 
 begin_decl_stmt
+specifier|extern
 name|union
 name|progcntr
-modifier|*
-name|pcaddrp
+name|pdx_pc
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* address of interpreter frame address */
+comment|/* address of interpreter program cntr */
 end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|inittrap
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|main
@@ -735,7 +743,7 @@ argument_list|,
 name|objprog
 argument_list|,
 operator|&
-name|pcaddrp
+name|pdx_pc
 argument_list|,
 name|loopaddr
 argument_list|)
@@ -812,60 +820,45 @@ begin_comment
 comment|/*  * Generate an IOT trap to tell the debugger that the object code  * has been read in.  Parameters are there for debugger to look at,  * not the procedure.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|inittrap
-argument_list|(
-argument|dispaddr
-argument_list|,
-argument|dpaddr
-argument_list|,
-argument|endaddr
-argument_list|,
-argument|pcaddrp
-argument_list|,
-argument|loopaddrp
-argument_list|)
-expr|union
-name|disply
-operator|*
+parameter_list|(
 name|dispaddr
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|dpaddr
+parameter_list|,
+name|endaddr
+parameter_list|,
+name|pcaddr
+parameter_list|,
+name|loopaddrp
+parameter_list|)
+name|union
+name|disply
+modifier|*
+name|dispaddr
+decl_stmt|;
 name|struct
 name|disp
 modifier|*
 name|dpaddr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|endaddr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|union
 name|progcntr
 modifier|*
-modifier|*
-name|pcaddrp
+name|pcaddr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|loopaddrp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|kill
 argument_list|(
@@ -876,7 +869,7 @@ name|SIGIOT
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
