@@ -424,40 +424,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
+begin_struct_decl
+struct_decl|struct
 name|vfsoptlist
-argument_list|,
-name|vfsopt
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+struct_decl|;
+end_struct_decl
 
-begin_struct
-struct|struct
+begin_struct_decl
+struct_decl|struct
 name|vfsopt
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|vfsopt
-argument_list|)
-name|link
-expr_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|void
-modifier|*
-name|value
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|}
-struct|;
-end_struct
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  */
