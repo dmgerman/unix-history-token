@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -144,17 +144,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|USER
-value|040
-end_define
-
-begin_comment
-comment|/* user-mode flag added to type */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -300,7 +289,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Called from the trap handler when a processor trap occurs.  */
+comment|/*  * Trap is called from locore to handle most types of processor traps,  * including events such as simulated software interrupts/AST's.  * System calls are broken out for efficiency.  */
 end_comment
 
 begin_comment
@@ -395,7 +384,7 @@ condition|)
 block|{
 name|type
 operator||=
-name|USER
+name|T_USER
 expr_stmt|;
 name|p
 operator|->
@@ -437,7 +426,7 @@ expr_stmt|;
 name|type
 operator|&=
 operator|~
-name|USER
+name|T_USER
 expr_stmt|;
 if|if
 condition|(
@@ -521,14 +510,14 @@ expr_stmt|;
 return|return;
 case|case
 name|T_BUSERR
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* bus error */
 case|case
 name|T_ADDRERR
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* address error */
 name|i
@@ -552,7 +541,7 @@ comment|/* kernel format error */
 comment|/* 	 * The user has most likely trashed the RTE or FP state info 	 * in the stack frame of a signal handler. 	 */
 name|type
 operator||=
-name|USER
+name|T_USER
 expr_stmt|;
 name|printf
 argument_list|(
@@ -627,8 +616,8 @@ directive|ifdef
 name|FPCOPROC
 case|case
 name|T_COPERR
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* user coprocessor violation */
 comment|/* What is a proper response here? */
@@ -643,8 +632,8 @@ expr_stmt|;
 break|break;
 case|case
 name|T_FPERR
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* 68881 exceptions */
 comment|/* 	 * We pass along the 68881 status register which locore stashed 	 * in code for us.  Note that there is a possibility that the 	 * bit pattern of this register will conflict with one of the 	 * FPE_* codes defined in signal.h.  Fortunately for us, the 	 * only such codes we use are all in the range 1-7 and the low 	 * 3 bits of the status register are defined as 0 so there is 	 * no clash. 	 */
@@ -661,8 +650,8 @@ endif|#
 directive|endif
 case|case
 name|T_ILLINST
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* illegal instruction fault */
 ifdef|#
@@ -692,8 +681,8 @@ endif|#
 directive|endif
 case|case
 name|T_PRIVINST
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* privileged instruction fault */
 ifdef|#
@@ -728,8 +717,8 @@ expr_stmt|;
 break|break;
 case|case
 name|T_ZERODIV
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* Divide by zero */
 ifdef|#
@@ -764,8 +753,8 @@ expr_stmt|;
 break|break;
 case|case
 name|T_CHKINST
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* CHK instruction trap */
 ifdef|#
@@ -807,8 +796,8 @@ expr_stmt|;
 break|break;
 case|case
 name|T_TRAPVINST
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* TRAPV instruction trap */
 ifdef|#
@@ -871,14 +860,14 @@ expr_stmt|;
 break|break;
 case|case
 name|T_TRACE
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* user trace trap */
 case|case
 name|T_TRAP15
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* SUN user trace trap */
 name|frame
@@ -902,8 +891,8 @@ name|dopanic
 goto|;
 case|case
 name|T_ASTFLT
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* user async trap */
 name|astpending
@@ -921,8 +910,8 @@ case|:
 comment|/* software interrupt */
 case|case
 name|T_SSIR
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 if|if
 condition|(
@@ -986,8 +975,8 @@ condition|(
 name|type
 operator|!=
 name|T_ASTFLT
-operator|+
-name|USER
+operator||
+name|T_USER
 condition|)
 block|{
 name|cnt
@@ -1058,8 +1047,8 @@ comment|/* kernel mode page fault */
 comment|/* fall into ... */
 case|case
 name|T_MMUFLT
-operator|+
-name|USER
+operator||
+name|T_USER
 case|:
 comment|/* page fault */
 block|{
@@ -1091,7 +1080,7 @@ specifier|extern
 name|vm_map_t
 name|kernel_map
 decl_stmt|;
-comment|/* 		 * It is only a kernel address space fault iff: 		 * 	1. (type& USER) == 0  and 		 * 	2. pcb_onfault not set or 		 *	3. pcb_onfault set but supervisor space data fault 		 * The last can occur during an exec() copyin where the 		 * argument space is lazy-allocated. 		 */
+comment|/* 		 * It is only a kernel address space fault iff: 		 * 	1. (type& T_USER) == 0  and 		 * 	2. pcb_onfault not set or 		 *	3. pcb_onfault set but supervisor space data fault 		 * The last can occur during an exec() copyin where the 		 * argument space is lazy-allocated. 		 */
 if|if
 condition|(
 name|type
@@ -1379,7 +1368,7 @@ condition|(
 operator|(
 name|type
 operator|&
-name|USER
+name|T_USER
 operator|)
 operator|==
 literal|0
@@ -1573,11 +1562,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Called from the trap handler when a system call occurs  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
+comment|/*  * Proces a system call.  */
 end_comment
 
 begin_expr_stmt
@@ -1761,7 +1746,10 @@ index|[
 name|SP
 index|]
 operator|+
-name|NBPW
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1780,7 +1768,10 @@ argument_list|)
 expr_stmt|;
 name|params
 operator|+=
-name|NBPW
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 expr_stmt|;
 block|}
 if|if
