@@ -561,12 +561,19 @@ operator|*
 name|argv
 condition|)
 block|{
-comment|/* Don't try to apply heuristics if arguments are regexs */
+comment|/*  	 * Don't try to apply heuristics if arguments are regexs or if 	 * the argument refers to an existing file. 	 */
 if|if
 condition|(
 name|MatchType
 operator|!=
 name|MATCH_REGEX
+operator|&&
+operator|!
+name|isfile
+argument_list|(
+operator|*
+name|argv
+argument_list|)
 condition|)
 while|while
 condition|(
