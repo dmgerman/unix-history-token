@@ -73,6 +73,11 @@ modifier|*
 name|next
 decl_stmt|;
 name|struct
+name|ehci_soft_qh
+modifier|*
+name|prev
+decl_stmt|;
+name|struct
 name|ehci_soft_qtd
 modifier|*
 name|sqtd
