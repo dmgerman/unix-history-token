@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whois.c	4.1 82/12/31"
+literal|"@(#)whois.c	4.2 83/06/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,25 +119,7 @@ condition|(
 name|argc
 operator|>
 literal|2
-condition|)
-block|{
-name|usage
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: whois [ -h host ] name\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
+operator|&&
 name|strcmp
 argument_list|(
 operator|*
@@ -171,9 +153,20 @@ name|argc
 operator|!=
 literal|1
 condition|)
-goto|goto
-name|usage
-goto|;
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: whois [ -h host ] name\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|hp
 operator|=
 name|gethostbyname
