@@ -4561,7 +4561,7 @@ operator|(
 operator|(
 name|tgtmedia
 operator|&
-name|ITM_GMASK
+name|IFM_GMASK
 operator|)
 operator|==
 name|IFM_FDX
