@@ -111,6 +111,8 @@ literal|" -out arg        - output file - default stdout\n"
 block|,
 literal|" -hash           - print hash value\n"
 block|,
+literal|" -fingerprint    - print the crl fingerprint\n"
+block|,
 literal|" -issuer         - print issuer DN\n"
 block|,
 literal|" -lastupdate     - lastUpdate field\n"

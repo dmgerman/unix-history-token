@@ -347,7 +347,7 @@ name|key
 parameter_list|,
 name|unsigned
 name|char
-name|counter
+name|ivec
 index|[
 name|AES_BLOCK_SIZE
 index|]

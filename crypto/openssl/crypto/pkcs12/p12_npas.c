@@ -278,10 +278,16 @@ decl_stmt|,
 name|bagnid
 decl_stmt|,
 name|pbe_nid
+init|=
+literal|0
 decl_stmt|,
 name|pbe_iter
+init|=
+literal|0
 decl_stmt|,
 name|pbe_saltlen
+init|=
+literal|0
 decl_stmt|;
 name|PKCS7
 modifier|*

@@ -289,7 +289,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Parse the HTTP response. This will look like this: 	 * "HTTP/1.0 200 OK". We need to obtain the numeric code and          * informational message. 	 */
+comment|/* Parse the HTTP response. This will look like this: 	 * "HTTP/1.0 200 OK". We need to obtain the numeric code and          * (optional) informational message. 	 */
 comment|/* Skip to first white space (passed protocol info) */
 for|for
 control|(
@@ -462,13 +462,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|*
 name|q
 condition|)
-goto|goto
-name|err
-goto|;
+block|{
 comment|/* Finally zap any trailing white space in message (include CRLF) */
 comment|/* We know q has a non white space character so this is OK */
 for|for
@@ -502,6 +499,7 @@ name|r
 operator|=
 literal|0
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|retcode
@@ -516,6 +514,25 @@ argument_list|,
 name|OCSP_R_SERVER_RESPONSE_ERROR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|q
+condition|)
+block|{
+name|ERR_add_error_data
+argument_list|(
+literal|2
+argument_list|,
+literal|"Code="
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ERR_add_error_data
 argument_list|(
 literal|4
@@ -529,6 +546,7 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
+block|}
 goto|goto
 name|err
 goto|;

@@ -297,6 +297,20 @@ name|BOOL
 function_decl|(
 name|WINAPI
 modifier|*
+name|CLOSETOOLHELP32SNAPSHOT
+function_decl|)
+parameter_list|(
+name|HANDLE
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|BOOL
+function_decl|(
+name|WINAPI
+modifier|*
 name|HEAP32FIRST
 function_decl|)
 parameter_list|(
@@ -1250,7 +1264,7 @@ name|user
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Toolhelp32 snapshot: enumerate processes, threads, modules and heap 	 * http://msdn.microsoft.com/library/psdk/winbase/toolhelp_5pfd.htm 	 * (Win 9x and 2000 only, not available on NT) 	 * 	 * This seeding method was proposed in Peter Gutmann, Software 	 * Generation of Practically Strong Random Numbers, 	 * http://www.usenix.org/publications/library/proceedings/sec98/gutmann.html      * revised version at http://www.cryptoengines.com/~peter/06_random.pdf 	 * (The assignment of entropy estimates below is arbitrary, but based 	 * on Peter's analysis the full poll appears to be safe. Additional 	 * interactive seeding is encouraged.) 	 */
+comment|/* Toolhelp32 snapshot: enumerate processes, threads, modules and heap 	 * http://msdn.microsoft.com/library/psdk/winbase/toolhelp_5pfd.htm 	 * (Win 9x and 2000 only, not available on NT) 	 * 	 * This seeding method was proposed in Peter Gutmann, Software 	 * Generation of Practically Strong Random Numbers, 	 * http://www.usenix.org/publications/library/proceedings/sec98/gutmann.html 	 * revised version at http://www.cryptoengines.com/~peter/06_random.pdf 	 * (The assignment of entropy estimates below is arbitrary, but based 	 * on Peter's analysis the full poll appears to be safe. Additional 	 * interactive seeding is encouraged.) 	 */
 if|if
 condition|(
 name|kernel
@@ -1258,6 +1272,9 @@ condition|)
 block|{
 name|CREATETOOLHELP32SNAPSHOT
 name|snap
+decl_stmt|;
+name|CLOSETOOLHELP32SNAPSHOT
+name|close_snap
 decl_stmt|;
 name|HANDLE
 name|handle
@@ -1315,6 +1332,21 @@ argument_list|,
 name|TEXT
 argument_list|(
 literal|"CreateToolhelp32Snapshot"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close_snap
+operator|=
+operator|(
+name|CLOSETOOLHELP32SNAPSHOT
+operator|)
+name|GetProcAddress
+argument_list|(
+name|kernel
+argument_list|,
+name|TEXT
+argument_list|(
+literal|"CloseToolhelp32Snapshot"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1503,7 +1535,7 @@ literal|0
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+name|INVALID_HANDLE_VALUE
 condition|)
 block|{
 comment|/* heap list and heap walking */
@@ -1747,6 +1779,16 @@ name|m
 argument_list|)
 condition|)
 do|;
+if|if
+condition|(
+name|close_snap
+condition|)
+name|close_snap
+argument_list|(
+name|handle
+argument_list|)
+expr_stmt|;
+else|else
 name|CloseHandle
 argument_list|(
 name|handle

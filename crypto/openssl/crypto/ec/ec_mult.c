@@ -474,7 +474,7 @@ parameter_list|(
 name|b
 parameter_list|)
 define|\
-value|((b)>= 2000 ? 6 : \ 		 (b)>=  800 ? 5 : \ 		 (b)>=  300 ? 4 : \ 		 (b)>=   70 ? 3 : \ 		 (b)>=   20 ? 2 : \ 		  1)
+value|((size_t) \ 		 ((b)>= 2000 ? 6 : \ 		  (b)>=  800 ? 5 : \ 		  (b)>=  300 ? 4 : \ 		  (b)>=   70 ? 3 : \ 		  (b)>=   20 ? 2 : \ 		   1))
 end_define
 
 begin_comment

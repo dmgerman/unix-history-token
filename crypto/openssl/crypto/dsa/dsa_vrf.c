@@ -53,23 +53,6 @@ directive|include
 file|<openssl/asn1_mac.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<openssl/engine.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|DSA_do_verify

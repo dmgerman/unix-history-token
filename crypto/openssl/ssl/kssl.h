@@ -281,6 +281,9 @@ parameter_list|,
 name|krb5_data
 modifier|*
 name|entity
+parameter_list|,
+name|int
+name|nentities
 parameter_list|)
 function_decl|;
 name|krb5_error_code

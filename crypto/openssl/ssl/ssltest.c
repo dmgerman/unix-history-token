@@ -158,12 +158,6 @@ directive|include
 file|<winsock.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../crypto/bio/bss_file.c"
-end_include
-
 begin_else
 else|#
 directive|else
@@ -1047,7 +1041,7 @@ operator|<
 literal|0
 operator|||
 name|type
-operator|>
+operator|>=
 name|CRYPTO_NUM_LOCKS
 condition|)
 block|{

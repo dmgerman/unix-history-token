@@ -55,23 +55,6 @@ directive|include
 file|<openssl/err.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_SYS_WINDOWS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../bio/bss_file.c"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define

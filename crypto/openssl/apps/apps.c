@@ -180,23 +180,6 @@ directive|undef
 name|NON_MAIN
 end_undef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENSSL_SYS_WINDOWS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"bss_file.c"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 struct|struct

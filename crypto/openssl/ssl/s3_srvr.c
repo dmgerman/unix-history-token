@@ -1485,7 +1485,17 @@ name|SSL3_ST_SR_CLNT_HELLO_C
 expr_stmt|;
 else|else
 block|{
-comment|/* could be sent for a DH cert, even if we 				 * have not asked for it :-) */
+if|if
+condition|(
+name|s
+operator|->
+name|s3
+operator|->
+name|tmp
+operator|.
+name|cert_request
+condition|)
+block|{
 name|ret
 operator|=
 name|ssl3_get_client_certificate
@@ -1502,6 +1512,7 @@ condition|)
 goto|goto
 name|end
 goto|;
+block|}
 name|s
 operator|->
 name|init_num
@@ -3207,43 +3218,15 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* TLS does not mind if there is extra stuff */
-if|if
-condition|(
-name|s
-operator|->
-name|version
-operator|==
-name|SSL3_VERSION
-condition|)
-block|{
-if|if
-condition|(
-name|p
-operator|<
-operator|(
-name|d
-operator|+
-name|n
-operator|)
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+comment|/* SSL 3.0 does not mind either, so we should disable this test          * (was enabled in 0.9.6d through 0.9.6j and 0.9.7 through 0.9.7b,          * in earlier SSLeay/OpenSSL releases this test existed but was buggy) */
+block|if (s->version == SSL3_VERSION) 		{ 		if (p< (d+n)) 			{
 comment|/* wrong number of bytes, 			 * there could be more to follow */
-name|al
-operator|=
-name|SSL_AD_DECODE_ERROR
-expr_stmt|;
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL3_GET_CLIENT_HELLO
-argument_list|,
-name|SSL_R_LENGTH_MISMATCH
-argument_list|)
-expr_stmt|;
-goto|goto
-name|f_err
-goto|;
-block|}
-block|}
+block|al=SSL_AD_DECODE_ERROR; 			SSLerr(SSL_F_SSL3_GET_CLIENT_HELLO,SSL_R_LENGTH_MISMATCH); 			goto f_err; 			} 		}
+endif|#
+directive|endif
 comment|/* Given s->session->ciphers and SSL_get_ciphers, we must 	 * pick a cipher */
 if|if
 condition|(
@@ -5735,6 +5718,12 @@ literal|4
 expr_stmt|;
 endif|#
 directive|endif
+name|s
+operator|->
+name|state
+operator|=
+name|SSL3_ST_SW_CERT_REQ_B
+expr_stmt|;
 block|}
 comment|/* SSL3_ST_SW_CERT_REQ_B */
 return|return
@@ -6214,19 +6203,6 @@ name|SSL_AD_DECODE_ERROR
 expr_stmt|;
 comment|/* SSLerr(SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE,SSL_R_BAD_PROTOCOL_VERSION_NUMBER); */
 comment|/* The Klima-Pokorny-Rosa extension of Bleichenbacher's attack 				 * (http://eprint.iacr.org/2003/052/) exploits the version 				 * number check as a "bad version oracle" -- an alert would 				 * reveal that the plaintext corresponding to some ciphertext 				 * made up by the adversary is properly formatted except 				 * that the version number is wrong.  To avoid such attacks, 				 * we should treat this just like any other decryption error. */
-name|p
-index|[
-literal|0
-index|]
-operator|=
-call|(
-name|char
-call|)
-argument_list|(
-name|int
-argument_list|)
-literal|"CAN-2003-0131 patch 2003-03-19"
-expr_stmt|;
 block|}
 block|}
 if|if
