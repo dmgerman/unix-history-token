@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tttermcap.c	3.6 %G%"
+literal|"@(#)tttermcap.c	3.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
