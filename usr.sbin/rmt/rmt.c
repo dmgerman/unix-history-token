@@ -530,9 +530,13 @@ argument_list|,
 operator|(
 name|off_t
 operator|)
-name|atol
+name|strtoll
 argument_list|(
 name|count
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
 argument_list|)
 argument_list|,
 name|atoi
