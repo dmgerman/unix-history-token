@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.5 1994/04/05 14:05:38 jkh Exp $"
+literal|"$Id: main.c,v 1.6 1994/04/16 21:50:53 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,14 @@ modifier|*
 name|ExcludeFrom
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Dereference
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -289,6 +297,11 @@ break|break;
 case|case
 literal|'h'
 case|:
+name|Dereference
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'?'
 case|:
@@ -491,6 +504,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-f file    get list of files from file (- for stdin)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-h         follow symbolic links\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.6 1993/09/12 20:56:40 jkh Exp $"
+literal|"$Id: perform.c,v 1.7 1993/09/18 03:39:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -663,6 +663,17 @@ argument_list|(
 name|args
 argument_list|,
 literal|"z"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Dereference
+condition|)
+name|strcat
+argument_list|(
+name|args
+argument_list|,
+literal|"h"
 argument_list|)
 expr_stmt|;
 if|if
