@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	manifest.h	4.1	85/03/19	*/
+comment|/*	manifest.h	4.2	87/12/09	*/
 end_comment
 
 begin_ifndef
@@ -100,11 +100,11 @@ begin_define
 define|#
 directive|define
 name|TNULL
-value|PTR
+value|INCREF(MOETY)
 end_define
 
 begin_comment
-comment|/* pointer to UNDEF */
+comment|/* pointer to MOETY -- impossible type */
 end_comment
 
 begin_define
