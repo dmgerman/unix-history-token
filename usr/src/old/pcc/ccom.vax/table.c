@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.29 (Berkeley) %G%"
+literal|"@(#)table.c	1.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2933,6 +2933,72 @@ operator||
 name|RESCC
 block|,
 literal|"	OF3	AR,AL,TA1\n"
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|FORT
+comment|/* perform some implicit conversions XXX SHOULD FIX f77 FRONT END */
+name|OPFLOAT
+block|,
+name|INAREG
+operator||
+name|INTAREG
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TFLOAT
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TDOUBLE
+block|,
+name|NAREG
+operator||
+name|NASL
+block|,
+name|RESC1
+operator||
+name|RESCC
+block|,
+literal|"	cvtfd	AL,A1\n	OD2	AR,A1\n"
+block|,
+name|OPFLOAT
+block|,
+name|INAREG
+operator||
+name|INTAREG
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TDOUBLE
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TFLOAT
+block|,
+name|NAREG
+operator||
+name|NASR
+block|,
+name|RESC1
+operator||
+name|RESCC
+block|,
+literal|"	cvtfd	AR,A1\n	OD3	A1,AL,A1\n"
 block|,
 endif|#
 directive|endif
