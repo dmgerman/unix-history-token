@@ -11142,6 +11142,48 @@ literal|"keymap=german.iso"
 block|}
 block|,
 block|{
+literal|" Greek 101"
+block|,
+literal|"Greek ISO keymap (101 keys)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=gr.us101.acc"
+block|}
+block|,
+block|{
+literal|" Greek 104"
+block|,
+literal|"Greek ISO keymap (104 keys)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=el.iso07"
+block|}
+block|,
+block|{
+literal|" Greek ELOT"
+block|,
+literal|"Greek ISO keymap (ELOT 1000)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=gr.elot.acc"
+block|}
+block|,
+block|{
 literal|"Hungarian 101"
 block|,
 literal|"Hungarian ISO keymap (101 key)"
