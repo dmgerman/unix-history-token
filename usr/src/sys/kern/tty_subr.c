@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)tty_subr.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)tty_subr.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -106,12 +106,10 @@ begin_comment
 comment|/*  * Initialize clist by freeing all character blocks.  */
 end_comment
 
-begin_macro
-name|cinit
-argument_list|()
-end_macro
-
-begin_block
+begin_function
+name|void
+name|clist_init
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -182,7 +180,7 @@ name|CBSIZE
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Character list get/put  */
@@ -972,29 +970,24 @@ begin_comment
 comment|/*  * Flush cc bytes from q.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ndflush
-argument_list|(
+parameter_list|(
 name|q
-argument_list|,
+parameter_list|,
 name|cc
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|clist
-operator|*
+modifier|*
 name|q
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|cc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1263,7 +1256,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|putc
@@ -2208,25 +2201,23 @@ begin_comment
 comment|/*  * Put the chars in the from que  * on the end of the to que.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|catq
-argument_list|(
-argument|from
-argument_list|,
-argument|to
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|from
+parameter_list|,
+name|to
+parameter_list|)
 name|struct
 name|clist
 modifier|*
 name|from
 decl_stmt|,
-modifier|*
+decl|*
 name|to
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -95,14 +95,14 @@ struct|struct
 name|read_args
 block|{
 name|int
-name|fdes
+name|fd
 decl_stmt|;
 name|char
 modifier|*
-name|cbuf
+name|buf
 decl_stmt|;
-name|unsigned
-name|count
+name|u_int
+name|nbyte
 decl_stmt|;
 block|}
 struct|;
@@ -193,11 +193,11 @@ if|if
 condition|(
 operator|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|uap
 operator|->
-name|fdes
+name|fd
 operator|)
 operator|>=
 name|fdp
@@ -213,7 +213,7 @@ name|fd_ofiles
 index|[
 name|uap
 operator|->
-name|fdes
+name|fd
 index|]
 operator|)
 operator|==
@@ -243,7 +243,7 @@ name|caddr_t
 operator|)
 name|uap
 operator|->
-name|cbuf
+name|buf
 expr_stmt|;
 name|aiov
 operator|.
@@ -251,7 +251,7 @@ name|iov_len
 operator|=
 name|uap
 operator|->
-name|count
+name|nbyte
 expr_stmt|;
 name|auio
 operator|.
@@ -272,7 +272,7 @@ name|uio_resid
 operator|=
 name|uap
 operator|->
-name|count
+name|nbyte
 expr_stmt|;
 name|auio
 operator|.
@@ -315,7 +315,7 @@ name|cnt
 operator|=
 name|uap
 operator|->
-name|count
+name|nbyte
 expr_stmt|;
 if|if
 condition|(
@@ -396,7 +396,7 @@ name|p_tracep
 argument_list|,
 name|uap
 operator|->
-name|fdes
+name|fd
 argument_list|,
 name|UIO_READ
 argument_list|,
@@ -439,7 +439,7 @@ name|iovec
 modifier|*
 name|iovp
 decl_stmt|;
-name|unsigned
+name|u_int
 name|iovcnt
 decl_stmt|;
 block|}
@@ -530,7 +530,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
+name|u_int
 name|iovlen
 decl_stmt|;
 ifdef|#
@@ -549,7 +549,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|uap
 operator|->
@@ -970,14 +970,14 @@ struct|struct
 name|write_args
 block|{
 name|int
-name|fdes
+name|fd
 decl_stmt|;
 name|char
 modifier|*
-name|cbuf
+name|buf
 decl_stmt|;
-name|unsigned
-name|count
+name|u_int
+name|nbyte
 decl_stmt|;
 block|}
 struct|;
@@ -1064,11 +1064,11 @@ if|if
 condition|(
 operator|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|uap
 operator|->
-name|fdes
+name|fd
 operator|)
 operator|>=
 name|fdp
@@ -1084,7 +1084,7 @@ name|fd_ofiles
 index|[
 name|uap
 operator|->
-name|fdes
+name|fd
 index|]
 operator|)
 operator|==
@@ -1114,7 +1114,7 @@ name|caddr_t
 operator|)
 name|uap
 operator|->
-name|cbuf
+name|buf
 expr_stmt|;
 name|aiov
 operator|.
@@ -1122,7 +1122,7 @@ name|iov_len
 operator|=
 name|uap
 operator|->
-name|count
+name|nbyte
 expr_stmt|;
 name|auio
 operator|.
@@ -1143,7 +1143,7 @@ name|uio_resid
 operator|=
 name|uap
 operator|->
-name|count
+name|nbyte
 expr_stmt|;
 name|auio
 operator|.
@@ -1186,7 +1186,7 @@ name|cnt
 operator|=
 name|uap
 operator|->
-name|count
+name|nbyte
 expr_stmt|;
 if|if
 condition|(
@@ -1282,7 +1282,7 @@ name|p_tracep
 argument_list|,
 name|uap
 operator|->
-name|fdes
+name|fd
 argument_list|,
 name|UIO_WRITE
 argument_list|,
@@ -1318,14 +1318,14 @@ struct|struct
 name|writev_args
 block|{
 name|int
-name|fdes
+name|fd
 decl_stmt|;
 name|struct
 name|iovec
 modifier|*
 name|iovp
 decl_stmt|;
-name|unsigned
+name|u_int
 name|iovcnt
 decl_stmt|;
 block|}
@@ -1416,7 +1416,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
+name|u_int
 name|iovlen
 decl_stmt|;
 ifdef|#
@@ -1435,11 +1435,11 @@ if|if
 condition|(
 operator|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|uap
 operator|->
-name|fdes
+name|fd
 operator|)
 operator|>=
 name|fdp
@@ -1455,7 +1455,7 @@ name|fd_ofiles
 index|[
 name|uap
 operator|->
-name|fdes
+name|fd
 index|]
 operator|)
 operator|==
@@ -1815,7 +1815,7 @@ name|p_tracep
 argument_list|,
 name|uap
 operator|->
-name|fdes
+name|fd
 argument_list|,
 name|UIO_WRITE
 argument_list|,
@@ -1871,13 +1871,13 @@ struct|struct
 name|ioctl_args
 block|{
 name|int
-name|fdes
+name|fd
 decl_stmt|;
 name|int
-name|cmd
+name|com
 decl_stmt|;
 name|caddr_t
-name|cmarg
+name|data
 decl_stmt|;
 block|}
 struct|;
@@ -1976,11 +1976,11 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|uap
 operator|->
-name|fdes
+name|fd
 operator|>=
 name|fdp
 operator|->
@@ -1995,7 +1995,7 @@ name|fd_ofiles
 index|[
 name|uap
 operator|->
-name|fdes
+name|fd
 index|]
 operator|)
 operator|==
@@ -2031,7 +2031,7 @@ name|com
 operator|=
 name|uap
 operator|->
-name|cmd
+name|com
 expr_stmt|;
 if|if
 condition|(
@@ -2046,7 +2046,7 @@ name|fd_ofileflags
 index|[
 name|uap
 operator|->
-name|fdes
+name|fd
 index|]
 operator||=
 name|UF_EXCLOSE
@@ -2070,7 +2070,7 @@ name|fd_ofileflags
 index|[
 name|uap
 operator|->
-name|fdes
+name|fd
 index|]
 operator|&=
 operator|~
@@ -2151,7 +2151,7 @@ name|copyin
 argument_list|(
 name|uap
 operator|->
-name|cmarg
+name|data
 argument_list|,
 name|data
 argument_list|,
@@ -2194,7 +2194,7 @@ name|data
 operator|=
 name|uap
 operator|->
-name|cmarg
+name|data
 expr_stmt|;
 block|}
 elseif|else
@@ -2232,7 +2232,7 @@ name|data
 operator|=
 name|uap
 operator|->
-name|cmarg
+name|data
 expr_stmt|;
 switch|switch
 condition|(
@@ -2583,7 +2583,7 @@ name|data
 argument_list|,
 name|uap
 operator|->
-name|cmarg
+name|data
 argument_list|,
 operator|(
 name|u_int

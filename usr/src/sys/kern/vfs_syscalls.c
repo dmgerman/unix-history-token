@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -93,6 +93,27 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|change_dir
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nameidata
+operator|*
+name|ndp
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -153,7 +174,7 @@ comment|/*  * Virtual File System System Calls  */
 end_comment
 
 begin_comment
-comment|/*  * Mount system call.  */
+comment|/*  * Mount a file system.  */
 end_comment
 
 begin_struct
@@ -165,7 +186,7 @@ name|type
 decl_stmt|;
 name|char
 modifier|*
-name|dir
+name|path
 decl_stmt|;
 name|int
 name|flags
@@ -277,7 +298,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|dir
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -488,8 +509,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|unsigned
-name|long
+name|u_long
 operator|)
 name|uap
 operator|->
@@ -504,12 +524,7 @@ operator|->
 name|type
 index|]
 operator|==
-operator|(
-expr|struct
-name|vfsops
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 name|vput
@@ -613,12 +628,7 @@ name|vp
 operator|->
 name|v_mountedhere
 operator|!=
-operator|(
-expr|struct
-name|mount
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 name|vfs_unlock
@@ -737,7 +747,7 @@ name|mp
 argument_list|,
 name|uap
 operator|->
-name|dir
+name|path
 argument_list|,
 name|uap
 operator|->
@@ -903,7 +913,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Unmount system call.  *  * Note: unmount takes a path to the vnode mounted on as argument,  * not special file (as before).  */
+comment|/*  * Unmount a file system.  *  * Note: unmount takes a path to the vnode mounted on as argument,  * not special file (as before).  */
 end_comment
 
 begin_struct
@@ -912,7 +922,7 @@ name|unmount_args
 block|{
 name|char
 modifier|*
-name|pathp
+name|path
 decl_stmt|;
 name|int
 name|flags
@@ -1017,7 +1027,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|pathp
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -1097,7 +1107,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Do an unmount.  */
+comment|/*  * Do the actual file system unmount.  */
 end_comment
 
 begin_expr_stmt
@@ -1297,7 +1307,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Sync system call.  * Sync each mounted filesystem.  */
+comment|/*  * Sync each mounted filesystem.  */
 end_comment
 
 begin_ifdef
@@ -1491,7 +1501,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Operate on filesystem quotas.  */
+comment|/*  * Change filesystem quotas.  */
 end_comment
 
 begin_struct
@@ -2481,7 +2491,7 @@ name|chdir_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 block|}
 struct|;
@@ -2559,7 +2569,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -2568,7 +2578,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|chdirec
+name|change_dir
 argument_list|(
 operator|&
 name|nd
@@ -2614,7 +2624,7 @@ name|chroot_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 block|}
 struct|;
@@ -2713,7 +2723,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -2722,7 +2732,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|chdirec
+name|change_dir
 argument_list|(
 operator|&
 name|nd
@@ -2770,30 +2780,26 @@ begin_comment
 comment|/*  * Common routine for chroot and chdir.  */
 end_comment
 
-begin_expr_stmt
-name|chdirec
-argument_list|(
+begin_function
+specifier|static
+name|int
+name|change_dir
+parameter_list|(
 name|ndp
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|nameidata
-operator|*
+modifier|*
 name|ndp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|vnode
@@ -2871,10 +2877,10 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * Open system call.  * Check permissions, allocate an open file structure,  * and call the device open routine if any.  */
+comment|/*  * Check permissions, allocate an open file structure,  * and call the device open routine if any.  */
 end_comment
 
 begin_struct
@@ -2883,13 +2889,13 @@ name|open_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 name|int
 name|mode
-decl_stmt|;
-name|int
-name|crtmode
 decl_stmt|;
 block|}
 struct|;
@@ -2955,7 +2961,7 @@ modifier|*
 name|vp
 decl_stmt|;
 name|int
-name|fmode
+name|flags
 decl_stmt|,
 name|cmode
 decl_stmt|;
@@ -3008,13 +3014,13 @@ name|fp
 operator|=
 name|nfp
 expr_stmt|;
-name|fmode
+name|flags
 operator|=
 name|FFLAGS
 argument_list|(
 name|uap
 operator|->
-name|mode
+name|flags
 argument_list|)
 expr_stmt|;
 name|cmode
@@ -3023,7 +3029,7 @@ operator|(
 operator|(
 name|uap
 operator|->
-name|crtmode
+name|mode
 operator|&
 operator|~
 name|fdp
@@ -3031,11 +3037,11 @@ operator|->
 name|fd_cmask
 operator|)
 operator|&
-literal|07777
+name|ALLPERMS
 operator|)
 operator|&
 operator|~
-name|S_ISVTX
+name|S_ISTXT
 expr_stmt|;
 name|NDINIT
 argument_list|(
@@ -3050,7 +3056,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -3074,7 +3080,7 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
-name|fmode
+name|flags
 argument_list|,
 name|cmode
 argument_list|)
@@ -3117,7 +3123,7 @@ name|p
 operator|->
 name|p_dupfd
 argument_list|,
-name|fmode
+name|flags
 argument_list|,
 name|error
 argument_list|)
@@ -3178,7 +3184,7 @@ name|fp
 operator|->
 name|f_flag
 operator|=
-name|fmode
+name|flags
 operator|&
 name|FMASK
 expr_stmt|;
@@ -3206,7 +3212,7 @@ name|vp
 expr_stmt|;
 if|if
 condition|(
-name|fmode
+name|flags
 operator|&
 operator|(
 name|O_EXLOCK
@@ -3235,7 +3241,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|fmode
+name|flags
 operator|&
 name|O_EXLOCK
 condition|)
@@ -3259,7 +3265,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|fmode
+name|flags
 operator|&
 name|FNONBLOCK
 operator|)
@@ -3367,7 +3373,7 @@ name|COMPAT_43
 end_ifdef
 
 begin_comment
-comment|/*  * Creat system call.  */
+comment|/*  * Create a file.  */
 end_comment
 
 begin_struct
@@ -3376,10 +3382,10 @@ name|ocreat_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|int
-name|fmode
+name|mode
 decl_stmt|;
 block|}
 struct|;
@@ -3428,23 +3434,23 @@ name|openuap
 decl_stmt|;
 name|openuap
 operator|.
-name|fname
+name|path
 operator|=
 name|uap
 operator|->
-name|fname
-expr_stmt|;
-name|openuap
-operator|.
-name|crtmode
-operator|=
-name|uap
-operator|->
-name|fmode
+name|path
 expr_stmt|;
 name|openuap
 operator|.
 name|mode
+operator|=
+name|uap
+operator|->
+name|mode
+expr_stmt|;
+name|openuap
+operator|.
+name|flags
 operator|=
 name|O_WRONLY
 operator||
@@ -3478,7 +3484,7 @@ comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
-comment|/*  * Mknod system call.  */
+comment|/*  * Create a special file.  */
 end_comment
 
 begin_struct
@@ -3487,10 +3493,10 @@ name|mknod_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|int
-name|fmode
+name|mode
 decl_stmt|;
 name|int
 name|dev
@@ -3593,7 +3599,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -3644,7 +3650,7 @@ switch|switch
 condition|(
 name|uap
 operator|->
-name|fmode
+name|mode
 operator|&
 name|S_IFMT
 condition|)
@@ -3696,9 +3702,9 @@ operator|=
 operator|(
 name|uap
 operator|->
-name|fmode
+name|mode
 operator|&
-literal|07777
+name|ALLPERMS
 operator|)
 operator|&
 operator|~
@@ -3823,7 +3829,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Mkfifo system call.  */
+comment|/*  * Create named pipe.  */
 end_comment
 
 begin_struct
@@ -3832,10 +3838,10 @@ name|mkfifo_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|int
-name|fmode
+name|mode
 decl_stmt|;
 block|}
 struct|;
@@ -3916,7 +3922,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -4014,9 +4020,9 @@ operator|=
 operator|(
 name|uap
 operator|->
-name|fmode
+name|mode
 operator|&
-literal|07777
+name|ALLPERMS
 operator|)
 operator|&
 operator|~
@@ -4071,7 +4077,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Link system call.  */
+comment|/*  * Make a hard file link.  */
 end_comment
 
 begin_struct
@@ -4080,11 +4086,11 @@ name|link_args
 block|{
 name|char
 modifier|*
-name|target
+name|path
 decl_stmt|;
 name|char
 modifier|*
-name|linkname
+name|link
 decl_stmt|;
 block|}
 struct|;
@@ -4136,16 +4142,13 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-decl_stmt|,
-modifier|*
-name|xp
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|struct
 name|nameidata
 name|nd
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|CHECKPOINTREF
 expr_stmt|;
@@ -4162,7 +4165,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|target
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -4213,7 +4216,7 @@ argument_list|)
 operator|)
 condition|)
 goto|goto
-name|out1
+name|out
 goto|;
 name|nd
 operator|.
@@ -4235,12 +4238,9 @@ name|nd
 operator|.
 name|ni_dirp
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|uap
 operator|->
-name|linkname
+name|link
 expr_stmt|;
 if|if
 condition|(
@@ -4253,37 +4253,20 @@ name|nd
 argument_list|)
 condition|)
 goto|goto
-name|out1
+name|out
 goto|;
-name|xp
-operator|=
+if|if
+condition|(
 name|nd
 operator|.
 name|ni_vp
-expr_stmt|;
-if|if
-condition|(
-name|xp
 operator|!=
 name|NULL
 condition|)
-block|{
 name|error
 operator|=
 name|EEXIST
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|xp
-operator|=
-name|nd
-operator|.
-name|ni_dvp
-expr_stmt|;
-name|out
-label|:
 if|if
 condition|(
 operator|!
@@ -4292,7 +4275,9 @@ condition|)
 block|{
 name|LEASE_CHECK
 argument_list|(
-name|xp
+name|nd
+operator|.
+name|ni_dvp
 argument_list|,
 name|p
 argument_list|,
@@ -4386,7 +4371,7 @@ name|ni_vp
 argument_list|)
 expr_stmt|;
 block|}
-name|out1
+name|out
 label|:
 name|vrele
 argument_list|(
@@ -4416,11 +4401,11 @@ name|symlink_args
 block|{
 name|char
 modifier|*
-name|target
+name|path
 decl_stmt|;
 name|char
 modifier|*
-name|linkname
+name|link
 decl_stmt|;
 block|}
 struct|;
@@ -4473,7 +4458,7 @@ name|vattr
 decl_stmt|;
 name|char
 modifier|*
-name|target
+name|path
 decl_stmt|;
 name|int
 name|error
@@ -4486,7 +4471,7 @@ name|CHECKPOINTREF
 expr_stmt|;
 name|MALLOC
 argument_list|(
-name|target
+name|path
 argument_list|,
 name|char
 operator|*
@@ -4506,17 +4491,13 @@ name|copyinstr
 argument_list|(
 name|uap
 operator|->
-name|target
+name|path
 argument_list|,
-name|target
+name|path
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
-operator|(
-name|u_int
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 condition|)
 goto|goto
@@ -4535,7 +4516,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|linkname
+name|link
 argument_list|,
 name|p
 argument_list|)
@@ -4622,7 +4603,7 @@ name|vattr
 operator|.
 name|va_mode
 operator|=
-literal|0777
+name|ACCESSPERMS
 operator|&
 operator|~
 name|p
@@ -4667,14 +4648,14 @@ argument_list|,
 operator|&
 name|vattr
 argument_list|,
-name|target
+name|path
 argument_list|)
 expr_stmt|;
 name|out
 label|:
 name|FREE
 argument_list|(
-name|target
+name|path
 argument_list|,
 name|M_NAMEI
 argument_list|)
@@ -4702,7 +4683,7 @@ name|unlink_args
 block|{
 name|char
 modifier|*
-name|name
+name|path
 decl_stmt|;
 block|}
 struct|;
@@ -4776,7 +4757,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|name
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -4856,15 +4837,11 @@ name|v_flag
 operator|&
 name|VROOT
 condition|)
-block|{
 name|error
 operator|=
 name|EBUSY
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+else|else
 operator|(
 name|void
 operator|)
@@ -4971,29 +4948,29 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Reposition read/write file offset.  */
+end_comment
+
 begin_struct
 struct|struct
 name|lseek_args
 block|{
 name|int
-name|fdes
+name|fd
 decl_stmt|;
 name|int
 name|pad
 decl_stmt|;
 name|off_t
-name|off
+name|offset
 decl_stmt|;
 name|int
-name|sbase
+name|whence
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Seek system call.  */
-end_comment
 
 begin_macro
 name|lseek
@@ -5067,11 +5044,11 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|uap
 operator|->
-name|fdes
+name|fd
 operator|>=
 name|fdp
 operator|->
@@ -5086,7 +5063,7 @@ name|fd_ofiles
 index|[
 name|uap
 operator|->
-name|fdes
+name|fd
 index|]
 operator|)
 operator|==
@@ -5114,7 +5091,7 @@ switch|switch
 condition|(
 name|uap
 operator|->
-name|sbase
+name|whence
 condition|)
 block|{
 case|case
@@ -5126,7 +5103,7 @@ name|f_offset
 operator|+=
 name|uap
 operator|->
-name|off
+name|offset
 expr_stmt|;
 break|break;
 case|case
@@ -5166,7 +5143,7 @@ name|f_offset
 operator|=
 name|uap
 operator|->
-name|off
+name|offset
 operator|+
 name|vattr
 operator|.
@@ -5182,7 +5159,7 @@ name|f_offset
 operator|=
 name|uap
 operator|->
-name|off
+name|offset
 expr_stmt|;
 break|break;
 default|default:
@@ -5226,7 +5203,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Old lseek system call.  */
+comment|/*  * Reposition read/write file offset.  */
 end_comment
 
 begin_struct
@@ -5234,13 +5211,13 @@ struct|struct
 name|olseek_args
 block|{
 name|int
-name|fdes
+name|fd
 decl_stmt|;
 name|long
-name|off
+name|offset
 decl_stmt|;
 name|int
-name|sbase
+name|whence
 decl_stmt|;
 block|}
 struct|;
@@ -5295,27 +5272,27 @@ name|error
 decl_stmt|;
 name|nuap
 operator|.
-name|fdes
+name|fd
 operator|=
 name|uap
 operator|->
-name|fdes
+name|fd
 expr_stmt|;
 name|nuap
 operator|.
-name|off
+name|offset
 operator|=
 name|uap
 operator|->
-name|off
+name|offset
 expr_stmt|;
 name|nuap
 operator|.
-name|sbase
+name|whence
 operator|=
 name|uap
 operator|->
-name|sbase
+name|whence
 expr_stmt|;
 name|error
 operator|=
@@ -5366,10 +5343,10 @@ name|access_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|int
-name|fmode
+name|flags
 decl_stmt|;
 block|}
 struct|;
@@ -5431,23 +5408,23 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|mode
+name|flags
 decl_stmt|,
-name|svuid
+name|saved_uid
 decl_stmt|,
-name|svgid
+name|saved_gid
 decl_stmt|;
 name|struct
 name|nameidata
 name|nd
 decl_stmt|;
-name|svuid
+name|saved_uid
 operator|=
 name|cred
 operator|->
 name|cr_uid
 expr_stmt|;
-name|svgid
+name|saved_gid
 operator|=
 name|cred
 operator|->
@@ -5494,7 +5471,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -5518,15 +5495,15 @@ name|nd
 operator|.
 name|ni_vp
 expr_stmt|;
-comment|/* 	 * fmode == 0 means only check for exist 	 */
+comment|/* Flags == 0 means only check for existence. */
 if|if
 condition|(
 name|uap
 operator|->
-name|fmode
+name|flags
 condition|)
 block|{
-name|mode
+name|flags
 operator|=
 literal|0
 expr_stmt|;
@@ -5534,11 +5511,11 @@ if|if
 condition|(
 name|uap
 operator|->
-name|fmode
+name|flags
 operator|&
 name|R_OK
 condition|)
-name|mode
+name|flags
 operator||=
 name|VREAD
 expr_stmt|;
@@ -5546,11 +5523,11 @@ if|if
 condition|(
 name|uap
 operator|->
-name|fmode
+name|flags
 operator|&
 name|W_OK
 condition|)
-name|mode
+name|flags
 operator||=
 name|VWRITE
 expr_stmt|;
@@ -5558,18 +5535,18 @@ if|if
 condition|(
 name|uap
 operator|->
-name|fmode
+name|flags
 operator|&
 name|X_OK
 condition|)
-name|mode
+name|flags
 operator||=
 name|VEXEC
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|mode
+name|flags
 operator|&
 name|VWRITE
 operator|)
@@ -5593,7 +5570,7 @@ name|VOP_ACCESS
 argument_list|(
 name|vp
 argument_list|,
-name|mode
+name|flags
 argument_list|,
 name|cred
 argument_list|,
@@ -5612,7 +5589,7 @@ name|cred
 operator|->
 name|cr_uid
 operator|=
-name|svuid
+name|saved_uid
 expr_stmt|;
 name|cred
 operator|->
@@ -5621,7 +5598,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|svgid
+name|saved_gid
 expr_stmt|;
 return|return
 operator|(
@@ -5646,7 +5623,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Stat system call.  * This version follows links.  */
+comment|/*  * Get file status; this version follows links.  */
 end_comment
 
 begin_struct
@@ -5655,7 +5632,7 @@ name|ostat_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|struct
 name|ostat
@@ -5737,7 +5714,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -5828,7 +5805,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Lstat system call.  * This version does not follow links.  */
+comment|/*  * Get file status; this version does not follow links.  */
 end_comment
 
 begin_struct
@@ -5837,7 +5814,7 @@ name|olstat_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|struct
 name|ostat
@@ -5919,7 +5896,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -6010,7 +5987,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * convert from an old to a new stat structure.  */
+comment|/*  * Convert from an old to a new stat structure.  */
 end_comment
 
 begin_macro
@@ -6194,7 +6171,7 @@ comment|/* COMPAT_43 || COMPAT_SUNOS */
 end_comment
 
 begin_comment
-comment|/*  * Stat system call.  * This version follows links.  */
+comment|/*  * Get file status; this version follows links.  */
 end_comment
 
 begin_struct
@@ -6203,7 +6180,7 @@ name|stat_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|struct
 name|stat
@@ -6281,7 +6258,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -6363,7 +6340,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Lstat system call.  * This version does not follow links.  */
+comment|/*  * Get file status; this version does not follow links.  */
 end_comment
 
 begin_struct
@@ -6372,7 +6349,7 @@ name|lstat_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|struct
 name|stat
@@ -6462,7 +6439,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -6679,7 +6656,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Pathconf system call.  */
+comment|/*  * Get configurable pathname variables.  */
 end_comment
 
 begin_struct
@@ -6688,7 +6665,7 @@ name|pathconf_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|int
 name|name
@@ -6760,7 +6737,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -6820,7 +6797,7 @@ name|readlink_args
 block|{
 name|char
 modifier|*
-name|name
+name|path
 decl_stmt|;
 name|char
 modifier|*
@@ -6912,7 +6889,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|name
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -6946,15 +6923,12 @@ name|v_type
 operator|!=
 name|VLNK
 condition|)
-block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+else|else
+block|{
 name|aiov
 operator|.
 name|iov_base
@@ -7030,8 +7004,7 @@ operator|->
 name|p_ucred
 argument_list|)
 expr_stmt|;
-name|out
-label|:
+block|}
 name|vput
 argument_list|(
 name|vp
@@ -7062,7 +7035,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Change flags of a file given path name.  */
+comment|/*  * Change flags of a file given a path name.  */
 end_comment
 
 begin_struct
@@ -7071,7 +7044,7 @@ name|chflags_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|int
 name|flags
@@ -7151,7 +7124,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -7205,15 +7178,12 @@ name|mnt_flag
 operator|&
 name|MNT_RDONLY
 condition|)
-block|{
 name|error
 operator|=
 name|EROFS
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+else|else
+block|{
 name|VATTR_NULL
 argument_list|(
 operator|&
@@ -7244,8 +7214,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|out
-label|:
+block|}
 name|vput
 argument_list|(
 name|vp
@@ -7397,15 +7366,12 @@ name|mnt_flag
 operator|&
 name|MNT_RDONLY
 condition|)
-block|{
 name|error
 operator|=
 name|EROFS
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+else|else
+block|{
 name|VATTR_NULL
 argument_list|(
 operator|&
@@ -7436,8 +7402,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|out
-label|:
+block|}
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -7461,10 +7426,10 @@ name|chmod_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|int
-name|fmode
+name|mode
 decl_stmt|;
 block|}
 struct|;
@@ -7541,7 +7506,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -7595,15 +7560,12 @@ name|mnt_flag
 operator|&
 name|MNT_RDONLY
 condition|)
-block|{
 name|error
 operator|=
 name|EROFS
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+else|else
+block|{
 name|VATTR_NULL
 argument_list|(
 operator|&
@@ -7616,9 +7578,9 @@ name|va_mode
 operator|=
 name|uap
 operator|->
-name|fmode
+name|mode
 operator|&
-literal|07777
+name|ALLPERMS
 expr_stmt|;
 name|error
 operator|=
@@ -7636,8 +7598,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|out
-label|:
+block|}
 name|vput
 argument_list|(
 name|vp
@@ -7663,7 +7624,7 @@ name|int
 name|fd
 decl_stmt|;
 name|int
-name|fmode
+name|mode
 decl_stmt|;
 block|}
 struct|;
@@ -7789,15 +7750,12 @@ name|mnt_flag
 operator|&
 name|MNT_RDONLY
 condition|)
-block|{
 name|error
 operator|=
 name|EROFS
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+else|else
+block|{
 name|VATTR_NULL
 argument_list|(
 operator|&
@@ -7810,9 +7768,9 @@ name|va_mode
 operator|=
 name|uap
 operator|->
-name|fmode
+name|mode
 operator|&
-literal|07777
+name|ALLPERMS
 expr_stmt|;
 name|error
 operator|=
@@ -7830,8 +7788,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|out
-label|:
+block|}
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -7855,7 +7812,7 @@ name|chown_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|int
 name|uid
@@ -7938,7 +7895,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -7992,15 +7949,12 @@ name|mnt_flag
 operator|&
 name|MNT_RDONLY
 condition|)
-block|{
 name|error
 operator|=
 name|EROFS
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+else|else
+block|{
 name|VATTR_NULL
 argument_list|(
 operator|&
@@ -8039,8 +7993,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|out
-label|:
+block|}
 name|vput
 argument_list|(
 name|vp
@@ -8195,15 +8148,12 @@ name|mnt_flag
 operator|&
 name|MNT_RDONLY
 condition|)
-block|{
 name|error
 operator|=
 name|EROFS
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+else|else
+block|{
 name|VATTR_NULL
 argument_list|(
 operator|&
@@ -8242,8 +8192,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|out
-label|:
+block|}
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -8267,7 +8216,7 @@ name|utimes_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|struct
 name|timeval
@@ -8427,7 +8376,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -8481,15 +8430,12 @@ name|mnt_flag
 operator|&
 name|MNT_RDONLY
 condition|)
-block|{
 name|error
 operator|=
 name|EROFS
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+else|else
+block|{
 name|vattr
 operator|.
 name|va_atime
@@ -8562,8 +8508,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|out
-label|:
+block|}
 name|vput
 argument_list|(
 name|vp
@@ -8577,13 +8522,17 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Truncate a file given its path name.  */
+end_comment
+
 begin_struct
 struct|struct
 name|truncate_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|int
 name|pad
@@ -8594,10 +8543,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Truncate a file given its path name.  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -8670,7 +8615,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -8722,15 +8667,11 @@ name|v_type
 operator|==
 name|VDIR
 condition|)
-block|{
 name|error
 operator|=
 name|EISDIR
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -8741,7 +8682,9 @@ argument_list|(
 name|vp
 argument_list|)
 operator|)
-operator|||
+operator|==
+literal|0
+operator|&&
 operator|(
 name|error
 operator|=
@@ -8758,10 +8701,10 @@ argument_list|,
 name|p
 argument_list|)
 operator|)
+operator|==
+literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+block|{
 name|VATTR_NULL
 argument_list|(
 operator|&
@@ -8792,8 +8735,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|out
-label|:
+block|}
 name|vput
 argument_list|(
 name|vp
@@ -8806,6 +8748,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Truncate a file given a file descriptor.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -8823,10 +8769,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Truncate a file given a file descriptor.  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -8963,27 +8905,25 @@ name|v_type
 operator|==
 name|VDIR
 condition|)
-block|{
 name|error
 operator|=
 name|EISDIR
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+elseif|else
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vn_writechk
 argument_list|(
 name|vp
 argument_list|)
+operator|)
+operator|==
+literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+block|{
 name|VATTR_NULL
 argument_list|(
 operator|&
@@ -9014,8 +8954,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|out
-label|:
+block|}
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -9053,7 +8992,7 @@ name|otruncate_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 name|long
 name|length
@@ -9109,11 +9048,11 @@ name|nuap
 decl_stmt|;
 name|nuap
 operator|.
-name|fname
+name|path
 operator|=
 name|uap
 operator|->
-name|fname
+name|path
 expr_stmt|;
 name|nuap
 operator|.
@@ -9244,7 +9183,7 @@ comment|/* COMPAT_43 || COMPAT_SUNOS */
 end_comment
 
 begin_comment
-comment|/*  * Synch an open file.  */
+comment|/*  * Sync an open file.  */
 end_comment
 
 begin_struct
@@ -9380,7 +9319,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Rename system call.  *  * Source and destination must either both be directories, or both  * not be directories.  If target is a directory, it must be empty.  */
+comment|/*  * Rename files.  Source and destination must either both be directories,  * or both not be directories.  If target is a directory, it must be empty.  */
 end_comment
 
 begin_struct
@@ -9934,7 +9873,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Mkdir system call.  */
+comment|/*  * Make a directory file.  */
 end_comment
 
 begin_struct
@@ -9943,10 +9882,10 @@ name|mkdir_args
 block|{
 name|char
 modifier|*
-name|name
+name|path
 decl_stmt|;
 name|int
-name|dmode
+name|mode
 decl_stmt|;
 block|}
 struct|;
@@ -10025,7 +9964,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|name
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -10128,9 +10067,9 @@ operator|=
 operator|(
 name|uap
 operator|->
-name|dmode
+name|mode
 operator|&
-literal|0777
+name|ACCESSPERMS
 operator|)
 operator|&
 operator|~
@@ -10203,7 +10142,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Rmdir system call.  */
+comment|/*  * Remove a directory file.  */
 end_comment
 
 begin_struct
@@ -10212,7 +10151,7 @@ name|rmdir_args
 block|{
 name|char
 modifier|*
-name|name
+name|path
 decl_stmt|;
 block|}
 struct|;
@@ -10288,7 +10227,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|name
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -10494,7 +10433,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|unsigned
+name|u_int
 name|count
 decl_stmt|;
 name|long
@@ -11052,7 +10991,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|unsigned
+name|u_int
 name|count
 decl_stmt|;
 name|long
@@ -11423,7 +11362,7 @@ struct|struct
 name|umask_args
 block|{
 name|int
-name|mask
+name|newmask
 decl_stmt|;
 block|}
 struct|;
@@ -11460,11 +11399,13 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
-init|=
+decl_stmt|;
+name|fdp
+operator|=
 name|p
 operator|->
 name|p_fd
-decl_stmt|;
+expr_stmt|;
 operator|*
 name|retval
 operator|=
@@ -11478,9 +11419,9 @@ name|fd_cmask
 operator|=
 name|uap
 operator|->
-name|mask
+name|newmask
 operator|&
-literal|07777
+name|ALLPERMS
 expr_stmt|;
 return|return
 operator|(
@@ -11500,7 +11441,7 @@ name|revoke_args
 block|{
 name|char
 modifier|*
-name|fname
+name|path
 decl_stmt|;
 block|}
 struct|;
@@ -11577,7 +11518,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|fname
+name|path
 argument_list|,
 name|p
 argument_list|)
@@ -11723,7 +11664,7 @@ name|getvnode
 argument_list|(
 argument|fdp
 argument_list|,
-argument|fdes
+argument|fd
 argument_list|,
 argument|fpp
 argument_list|)
@@ -11748,7 +11689,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|fdes
+name|fd
 decl_stmt|;
 end_decl_stmt
 
@@ -11762,9 +11703,9 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
-name|fdes
+name|fd
 operator|>=
 name|fdp
 operator|->
@@ -11777,7 +11718,7 @@ name|fdp
 operator|->
 name|fd_ofiles
 index|[
-name|fdes
+name|fd
 index|]
 operator|)
 operator|==
