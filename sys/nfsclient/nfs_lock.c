@@ -578,7 +578,7 @@ operator|->
 name|p_ucred
 operator|)
 expr_stmt|;
-comment|/* 	 * Open the lock fifo.  If for any reason we don't find the fifo, it 	 * means that the lock daemon isn't running.  Translate any missing 	 * file error message for the user, otherwise the application will 	 * complain that the user's file is missing, which isn't the case. 	 * Note that we use proc0's cred, so the fifo is opened as root. 	 */
+comment|/* 	 * Open the lock fifo.  If for any reason we don't find the fifo, it 	 * means that the lock daemon isn't running.  Translate any missing 	 * file error message for the user, otherwise the application will 	 * complain that the user's file is missing, which isn't the case. 	 * Note that we use proc0's cred, so the fifo is opened as root. 	 * 	 * XXX: Note that this behavior is relative to the root directory 	 * of the current process, and this may result in a variety of 	 * {functional, security} problems in chroot() environments. 	 */
 name|NDINIT
 argument_list|(
 operator|&
@@ -595,7 +595,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX Hack to temporarily allow this process (regardless of it's creds) 	 * to open the fifo we need to write to. vn_open() really should 	 * take a ucred (and once it does, this code should be fixed to use 	 * proc0's ucred. 	 */
+comment|/* 	 * XXX Hack to temporarily allow this process (regardless of it's creds) 	 * to open the fifo we need to write to. vn_open() really should 	 * take a ucred (and once it does, this code should be fixed to use 	 * proc0's ucred. 	 * 	 * XXX: This introduces an exploitable race condition allowing 	 * a local attacker to gain root privilege. 	 */
 name|saved_uid
 operator|=
 name|p
