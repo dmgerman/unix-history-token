@@ -4053,7 +4053,7 @@ literal|"type of system in question.  If you would prefer to pick and choose the
 literal|"list of distributions yourself, simply select \"Custom\".  You can also\n"
 literal|"pick a canned distribution set and then fine-tune it with the Custom item.\n\n"
 literal|"Choose an item by pressing [SPACE] or [ENTER].  When finished, choose the\n"
-literal|"Exit item or move to the Exit button with [TAB]."
+literal|"Exit item or move to the OK button with [TAB]."
 block|,
 literal|"Press F1 for more information on these options."
 block|,
