@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.77.2.3 1999/08/24 15:53:53 iwasaki Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.77.2.4 1999/08/24 15:56:44 iwasaki Exp $  */
 end_comment
 
 begin_include
@@ -4663,6 +4663,38 @@ name|cs_entry
 operator|=
 name|apm_cs_entry
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|dvp
+operator|->
+name|id_flags
+operator|&
+literal|0x40
+operator|)
+condition|)
+block|{
+comment|/* Don't trust the segment limits that the BIOS reports. */
+name|sc
+operator|->
+name|cs32_limit
+operator|=
+literal|0xffff
+expr_stmt|;
+name|sc
+operator|->
+name|cs16_limit
+operator|=
+literal|0xffff
+expr_stmt|;
+name|sc
+operator|->
+name|ds_limit
+operator|=
+literal|0xffff
+expr_stmt|;
+block|}
 comment|/* Always call HLT in idle loop */
 name|sc
 operator|->
@@ -5217,9 +5249,6 @@ name|sc
 operator|->
 name|sc_resume
 argument_list|)
-expr_stmt|;
-name|apm_event_enable
-argument_list|()
 expr_stmt|;
 comment|/* Power the system off using APM */
 name|at_shutdown_pri
