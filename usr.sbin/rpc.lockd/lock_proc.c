@@ -2968,6 +2968,9 @@ argument_list|)
 expr_stmt|;
 name|lock_answer
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 operator|&
 name|arg
 operator|->
@@ -2978,6 +2981,8 @@ operator|->
 name|stat
 operator|.
 name|stat
+argument_list|,
+name|NULL
 argument_list|,
 name|NLM_VERS
 argument_list|)
