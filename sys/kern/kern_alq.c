@@ -124,11 +124,11 @@ name|aq_vp
 decl_stmt|;
 comment|/* Open vnode handle */
 name|struct
-name|thread
+name|ucred
 modifier|*
-name|aq_td
+name|aq_cred
 decl_stmt|;
-comment|/* Thread that opened the vnode */
+comment|/* Credentials of the opening thread */
 name|struct
 name|ale
 modifier|*
@@ -903,13 +903,16 @@ name|FWRITE
 argument_list|,
 name|alq
 operator|->
-name|aq_td
-operator|->
-name|td_ucred
+name|aq_cred
 argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
+name|crfree
+argument_list|(
 name|alq
 operator|->
-name|aq_td
+name|aq_cred
 argument_list|)
 expr_stmt|;
 block|}
@@ -1215,9 +1218,9 @@ name|vp
 argument_list|,
 name|td
 argument_list|,
-name|td
+name|alq
 operator|->
-name|td_ucred
+name|aq_cred
 argument_list|,
 name|LEASE_WRITE
 argument_list|)
@@ -1234,9 +1237,9 @@ name|IO_UNIT
 operator||
 name|IO_APPEND
 argument_list|,
-name|td
+name|alq
 operator|->
-name|td_ucred
+name|aq_cred
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -1565,9 +1568,14 @@ name|ni_vp
 expr_stmt|;
 name|alq
 operator|->
-name|aq_td
+name|aq_cred
 operator|=
+name|crhold
+argument_list|(
 name|td
+operator|->
+name|td_ucred
+argument_list|)
 expr_stmt|;
 name|alq
 operator|->
