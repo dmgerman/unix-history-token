@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -17,92 +17,6 @@ end_comment
 
 begin_comment
 comment|/* $Source: /big/BSD4.4/isis-usr/src/sys/netiso/RCS/clnp.h,v $ */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BYTE_ORDER
-end_ifndef
-
-begin_comment
-comment|/*  * Definitions for byte order,  * according to byte significance from low address to high.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LITTLE_ENDIAN
-value|1234
-end_define
-
-begin_comment
-comment|/* least-significant byte first (vax) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BIG_ENDIAN
-value|4321
-end_define
-
-begin_comment
-comment|/* most-significant byte first (IBM, net) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PDP_ENDIAN
-value|3412
-end_define
-
-begin_comment
-comment|/* LSB first in word, MSW first in long (pdp) */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BYTE_ORDER
-value|LITTLE_ENDIAN
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BYTE_ORDER
-value|BIG_ENDIAN
-end_define
-
-begin_comment
-comment|/* mc68000, tahoe, most others */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BYTE_ORDER */
 end_comment
 
 begin_comment
