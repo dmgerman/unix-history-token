@@ -21,6 +21,38 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/ipsec.h>
+end_include
+
+begin_comment
+comment|/* for IPSEC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|in6pcb
+value|inpcb
+end_define
+
+begin_comment
+comment|/* for KAME src sync over BSD*'s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|in6p_sp
+value|inp_sp
+end_define
+
+begin_comment
+comment|/* for KAME src sync over BSD*'s */
+end_comment
+
 begin_comment
 comment|/*  * Common structure pcb for internet protocol implementation.  * Here are stored pointers to local and foreign host table  * entries, local and foreign socket numbers, and pointers  * up (to a socket structure) and down (to a protocol-specific)  * control block.  */
 end_comment
@@ -53,8 +85,36 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * PCB with AF_INET6 null bind'ed laddr can receive AF_INET input packet.  * So, AF_INET6 null laddr is also used as AF_INET null laddr,  * by utilize following structure. (At last, same as INRIA)  */
+end_comment
+
+begin_struct
+struct|struct
+name|in_addr_4in6
+block|{
+name|u_int32_t
+name|ia46_pad32
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|struct
+name|in_addr
+name|ia46_addr4
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * NB: the zone allocator is type-stable EXCEPT FOR THE FIRST TWO LONGS  * of the structure.  Therefore, it is important that the members in  * that position not contain any information which is required to be  * stable.  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|icmp6_filter
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -67,16 +127,6 @@ argument_list|)
 name|inp_hash
 expr_stmt|;
 comment|/* hash list */
-name|struct
-name|in_addr
-name|inp_faddr
-decl_stmt|;
-comment|/* foreign host table entry */
-name|struct
-name|in_addr
-name|inp_laddr
-decl_stmt|;
-comment|/* local host table entry */
 name|u_short
 name|inp_fport
 decl_stmt|;
@@ -92,6 +142,38 @@ argument_list|)
 name|inp_list
 expr_stmt|;
 comment|/* list for all PCBs of this proto */
+name|u_int32_t
+name|inp_flow
+decl_stmt|;
+comment|/* protocol dependent part, local and foreign addr */
+union|union
+block|{
+comment|/* foreign host table entry */
+name|struct
+name|in_addr_4in6
+name|inp46_foreign
+decl_stmt|;
+name|struct
+name|in6_addr
+name|inp6_foreign
+decl_stmt|;
+block|}
+name|inp_dependfaddr
+union|;
+union|union
+block|{
+comment|/* local host table entry */
+name|struct
+name|in_addr_4in6
+name|inp46_local
+decl_stmt|;
+name|struct
+name|in6_addr
+name|inp6_local
+decl_stmt|;
+block|}
+name|inp_dependladdr
+union|;
 name|caddr_t
 name|inp_ppcb
 decl_stmt|;
@@ -108,25 +190,43 @@ modifier|*
 name|inp_socket
 decl_stmt|;
 comment|/* back pointer to socket */
-name|struct
-name|mbuf
-modifier|*
-name|inp_options
-decl_stmt|;
-comment|/* IP options */
-name|struct
-name|route
-name|inp_route
-decl_stmt|;
-comment|/* placeholder for routing entry */
+comment|/* list for this PCB's local port */
 name|int
 name|inp_flags
 decl_stmt|;
 comment|/* generic IP/datagram flags */
-name|u_char
-name|inp_ip_tos
+comment|/* protocol dependent part; cached route */
+union|union
+block|{
+comment|/* placeholder for routing entry */
+name|struct
+name|route
+name|inp4_route
 decl_stmt|;
-comment|/* type of service proto */
+name|struct
+name|route_in6
+name|inp6_route
+decl_stmt|;
+block|}
+name|inp_dependroute
+union|;
+name|struct
+name|inpcbpolicy
+modifier|*
+name|inp_sp
+decl_stmt|;
+comment|/* for IPSEC */
+name|u_char
+name|inp_vflag
+decl_stmt|;
+define|#
+directive|define
+name|INP_IPV4
+value|0x1
+define|#
+directive|define
+name|INP_IPV6
+value|0x2
 name|u_char
 name|inp_ip_ttl
 decl_stmt|;
@@ -135,26 +235,100 @@ name|u_char
 name|inp_ip_p
 decl_stmt|;
 comment|/* protocol proto */
+comment|/* protocol dependent part; options */
+struct|struct
+block|{
 name|u_char
-name|pad
-index|[
-literal|1
-index|]
+name|inp4_ip_tos
 decl_stmt|;
-comment|/* alignment */
+comment|/* type of service proto */
+name|struct
+name|mbuf
+modifier|*
+name|inp4_options
+decl_stmt|;
+comment|/* IP options */
 name|struct
 name|ip_moptions
 modifier|*
-name|inp_moptions
+name|inp4_moptions
 decl_stmt|;
 comment|/* IP multicast options */
+block|}
+name|inp_depend4
+struct|;
+define|#
+directive|define
+name|inp_faddr
+value|inp_dependfaddr.inp46_foreign.ia46_addr4
+define|#
+directive|define
+name|inp_laddr
+value|inp_dependladdr.inp46_local.ia46_addr4
+define|#
+directive|define
+name|inp_route
+value|inp_dependroute.inp4_route
+define|#
+directive|define
+name|inp_ip_tos
+value|inp_depend4.inp4_ip_tos
+define|#
+directive|define
+name|inp_options
+value|inp_depend4.inp4_options
+define|#
+directive|define
+name|inp_moptions
+value|inp_depend4.inp4_moptions
+struct|struct
+block|{
+comment|/* IP options */
+name|struct
+name|mbuf
+modifier|*
+name|inp6_options
+decl_stmt|;
+comment|/* IP6 options for outgoing packets */
+name|struct
+name|ip6_pktopts
+modifier|*
+name|inp6_outputopts
+decl_stmt|;
+comment|/* IP multicast options */
+name|struct
+name|ip6_moptions
+modifier|*
+name|inp6_moptions
+decl_stmt|;
+comment|/* ICMPv6 code type filter */
+name|struct
+name|icmp6_filter
+modifier|*
+name|inp6_icmp6filt
+decl_stmt|;
+comment|/* IPV6_CHECKSUM setsockopt */
+name|int
+name|inp6_cksum
+decl_stmt|;
+name|u_short
+name|inp6_ifindex
+decl_stmt|;
+name|short
+name|inp6_hops
+decl_stmt|;
+name|u_int8_t
+name|inp6_hlim
+decl_stmt|;
+block|}
+name|inp_depend6
+struct|;
 name|LIST_ENTRY
 argument_list|(
 argument|inpcb
 argument_list|)
 name|inp_portlist
 expr_stmt|;
-comment|/* list for this PCB's local port */
 name|struct
 name|inpcbport
 modifier|*
@@ -165,6 +339,88 @@ name|inp_gen_t
 name|inp_gencnt
 decl_stmt|;
 comment|/* generation count of this instance */
+define|#
+directive|define
+name|in6p_faddr
+value|inp_dependfaddr.inp6_foreign
+define|#
+directive|define
+name|in6p_laddr
+value|inp_dependladdr.inp6_local
+define|#
+directive|define
+name|in6p_route
+value|inp_dependroute.inp6_route
+define|#
+directive|define
+name|in6p_ip6_hlim
+value|inp_depend6.inp6_hlim
+define|#
+directive|define
+name|in6p_hops
+value|inp_depend6.inp6_hops
+comment|/* default hop limit */
+define|#
+directive|define
+name|in6p_ip6_nxt
+value|inp_ip_p
+define|#
+directive|define
+name|in6p_flowinfo
+value|inp_flow
+define|#
+directive|define
+name|in6p_vflag
+value|inp_vflag
+define|#
+directive|define
+name|in6p_options
+value|inp_depend6.inp6_options
+define|#
+directive|define
+name|in6p_outputopts
+value|inp_depend6.inp6_outputopts
+define|#
+directive|define
+name|in6p_moptions
+value|inp_depend6.inp6_moptions
+define|#
+directive|define
+name|in6p_icmp6filt
+value|inp_depend6.inp6_icmp6filt
+define|#
+directive|define
+name|in6p_cksum
+value|inp_depend6.inp6_cksum
+define|#
+directive|define
+name|inp6_ifindex
+value|inp_depend6.inp6_ifindex
+define|#
+directive|define
+name|in6p_flags
+value|inp_flags
+comment|/* for KAME src sync over BSD*'s */
+define|#
+directive|define
+name|in6p_socket
+value|inp_socket
+comment|/* for KAME src sync over BSD*'s */
+define|#
+directive|define
+name|in6p_lport
+value|inp_lport
+comment|/* for KAME src sync over BSD*'s */
+define|#
+directive|define
+name|in6p_fport
+value|inp_fport
+comment|/* for KAME src sync over BSD*'s */
+define|#
+directive|define
+name|in6p_ppcb
+value|inp_ppcb
+comment|/* for KAME src sync over BSD*'s */
 block|}
 struct|;
 end_struct
@@ -449,9 +705,161 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INP_CONTROLOPTS
-value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 					INP_RECVIF)
+name|INP_FAITH
+value|0x200
 end_define
+
+begin_comment
+comment|/* accept FAITH'ed connections */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6P_PKTINFO
+value|0x010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_HOPLIMIT
+value|0x020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_NEXTHOP
+value|0x040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_HOPOPTS
+value|0x080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_DSTOPTS
+value|0x100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_RTHDR
+value|0x200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_BINDV6ONLY
+value|0x400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_CONTROLOPTS
+value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 					INP_RECVIF|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_NEXTHOP|\ 				 IN6P_HOPOPTS|IN6P_DSTOPTS|IN6P_RTHDR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_UNMAPPABLEOPTS
+value|(IN6P_HOPOPTS|IN6P_DSTOPTS|IN6P_RTHDR)
+end_define
+
+begin_comment
+comment|/* for KAME src sync over BSD*'s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6P_RECVOPTS
+value|INP_RECVOPTS
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_RECVRETOPTS
+value|INP_RECVRETOPTS
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_RECVDSTADDR
+value|INP_RECVDSTADDR
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_HDRINCL
+value|INP_HDRINCL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_HIGHPORT
+value|INP_HIGHPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_LOWPORT
+value|INP_LOWPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_ANONPORT
+value|INP_ANONPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_RECVIF
+value|INP_RECVIF
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_MTUDISC
+value|INP_MTUDISC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_FAITH
+value|INP_FAITH
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6P_CONTROLOPTS
+value|INP_CONTROLOPTS
+end_define
+
+begin_comment
+comment|/* 	 * socket AF version is {newer than,or include} 	 * actual datagram AF version 	 */
+end_comment
 
 begin_define
 define|#
@@ -470,11 +878,89 @@ parameter_list|)
 value|((struct inpcb *)(so)->so_pcb)
 end_define
 
+begin_define
+define|#
+directive|define
+name|sotoin6pcb
+parameter_list|(
+name|so
+parameter_list|)
+value|sotoinpcb(so)
+end_define
+
+begin_comment
+comment|/* for KAME src sync over BSD*'s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_SOCKAF
+parameter_list|(
+name|so
+parameter_list|)
+value|so->so_proto->pr_domain->dom_family
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_CHECK_SOCKAF
+parameter_list|(
+name|so
+parameter_list|,
+name|af
+parameter_list|)
+value|(INP_SOCKAF(so) == af)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipport_lowfirstauto
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipport_lowlastauto
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipport_firstauto
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipport_lastauto
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipport_hifirstauto
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipport_hilastauto
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void

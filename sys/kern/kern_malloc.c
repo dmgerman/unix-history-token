@@ -148,6 +148,30 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_IP6OPT
+argument_list|,
+literal|"ip6opt"
+argument_list|,
+literal|"IPv6 options"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_IP6NDP
+argument_list|,
+literal|"ip6ndp"
+argument_list|,
+literal|"IPv6 Neighbor Discovery"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|void

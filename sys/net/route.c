@@ -370,6 +370,66 @@ block|}
 end_function
 
 begin_comment
+comment|/* for INET6 */
+end_comment
+
+begin_function
+name|void
+name|rtcalloc
+parameter_list|(
+name|ro
+parameter_list|)
+specifier|register
+name|struct
+name|route
+modifier|*
+name|ro
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_rt
+operator|&&
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_ifp
+operator|&&
+operator|(
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_UP
+operator|)
+condition|)
+return|return;
+comment|/* XXX */
+name|ro
+operator|->
+name|ro_rt
+operator|=
+name|rtalloc1
+argument_list|(
+operator|&
+name|ro
+operator|->
+name|ro_dst
+argument_list|,
+name|RTF_CLONING
+argument_list|,
+literal|0UL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Look up the route that matches the address given  * Or, at least try.. Create a cloned route if needed.  */
 end_comment
 
@@ -451,7 +511,7 @@ name|msgtype
 init|=
 name|RTM_MISS
 decl_stmt|;
-comment|/*  	 * Look up the address in the table for that Address Family 	 */
+comment|/* 	 * Look up the address in the table for that Address Family 	 */
 if|if
 condition|(
 name|rnh
@@ -582,7 +642,7 @@ name|RTF_XRESOLVE
 operator|)
 condition|)
 block|{
-comment|/* 				 * If the new route specifies it be  				 * externally resolved, then go do that. 				 */
+comment|/* 				 * If the new route specifies it be 				 * externally resolved, then go do that. 				 */
 name|msgtype
 operator|=
 name|RTM_RESOLVE
@@ -793,7 +853,7 @@ argument_list|(
 literal|"rtfree 2"
 argument_list|)
 expr_stmt|;
-comment|/*  		 * the rtentry must have been removed from the routing table 		 * so it is represented in rttrash.. remove that now. 		 */
+comment|/* 		 * the rtentry must have been removed from the routing table 		 * so it is represented in rttrash.. remove that now. 		 */
 name|rttrash
 operator|--
 expr_stmt|;
@@ -820,7 +880,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/*  		 * release references on items we hold them on.. 		 * e.g other routes and ifaddrs. 		 */
+comment|/* 		 * release references on items we hold them on.. 		 * e.g other routes and ifaddrs. 		 */
 if|if
 condition|(
 operator|(
@@ -1947,7 +2007,7 @@ operator|&=
 operator|~
 name|RTF_UP
 expr_stmt|;
-comment|/*  		 * give the protocol a chance to keep things in sync. 		 */
+comment|/* 		 * give the protocol a chance to keep things in sync. 		 */
 if|if
 condition|(
 operator|(
@@ -2260,6 +2320,7 @@ name|ifa
 operator|->
 name|ifa_ifp
 expr_stmt|;
+comment|/* XXX mtu manipulation will be done in rnh_addaddr -- itojun */
 name|rn
 operator|=
 name|rnh
@@ -2450,7 +2511,7 @@ name|rt_parent
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  		 * If we got here from RESOLVE, then we are cloning 		 * so clone the rest, and note that we  		 * are a clone (and increment the parent's references) 		 */
+comment|/* 		 * If we got here from RESOLVE, then we are cloning 		 * so clone the rest, and note that we 		 * are a clone (and increment the parent's references) 		 */
 if|if
 condition|(
 name|req
@@ -3370,7 +3431,7 @@ argument_list|,
 name|glen
 argument_list|)
 expr_stmt|;
-comment|/*  	 * if we are replacing the chunk (or it's new) we need to  	 * replace the dst as well 	 */
+comment|/* 	 * if we are replacing the chunk (or it's new) we need to 	 * replace the dst as well 	 */
 if|if
 condition|(
 name|old
@@ -3772,7 +3833,7 @@ operator|==
 name|RTM_DELETE
 condition|)
 block|{
-comment|/*  		 * It's a delete, so it should already exist.. 		 * If it's a net, mask off the host bits 		 * (Assuming we have a mask) 		 */
+comment|/* 		 * It's a delete, so it should already exist.. 		 * If it's a net, mask off the host bits 		 * (Assuming we have a mask) 		 */
 if|if
 condition|(
 operator|(
@@ -3792,11 +3853,22 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_SONAME
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 name|deldst
 operator|=
 name|mtod
@@ -3856,7 +3928,7 @@ operator|!=
 name|ifa
 condition|)
 block|{
-comment|/* 				 * If the interface in the rtentry doesn't match 				 * the interface we are using, then we don't 				 * want to delete it, so return an error. 				 * This seems to be the only point of  				 * this whole RTM_DELETE clause. 				 */
+comment|/* 				 * If the interface in the rtentry doesn't match 				 * the interface we are using, then we don't 				 * want to delete it, so return an error. 				 * This seems to be the only point of 				 * this whole RTM_DELETE clause. 				 */
 if|if
 condition|(
 name|m
@@ -3887,7 +3959,7 @@ if|#
 directive|if
 literal|0
 block|else {
-comment|/*  			 * One would think that as we are deleting, and we know 			 * it doesn't exist, we could just return at this point 			 * with an "ELSE" clause, but apparently not.. 			 */
+comment|/* 			 * One would think that as we are deleting, and we know 			 * it doesn't exist, we could just return at this point 			 * with an "ELSE" clause, but apparently not.. 			 */
 block|return (flags& RTF_HOST ? EHOSTUNREACH 							: ENETUNREACH); 		}
 endif|#
 directive|endif
@@ -4007,7 +4079,7 @@ operator|->
 name|rt_refcnt
 operator|--
 expr_stmt|;
-comment|/* 		 * If it came back with an unexpected interface, then it must  		 * have already existed or something. (XXX) 		 */
+comment|/* 		 * If it came back with an unexpected interface, then it must 		 * have already existed or something. (XXX) 		 */
 if|if
 condition|(
 name|rt
@@ -4053,7 +4125,7 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  			 * Remove the referenve to the it's ifaddr. 			 */
+comment|/* 			 * Remove the referenve to the it's ifaddr. 			 */
 name|IFAFREE
 argument_list|(
 name|rt
@@ -4076,6 +4148,19 @@ name|ifa
 operator|->
 name|ifa_ifp
 expr_stmt|;
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+operator|=
+name|ifa
+operator|->
+name|ifa_ifp
+operator|->
+name|if_mtu
+expr_stmt|;
+comment|/*XXX*/
 name|ifa
 operator|->
 name|ifa_refcnt

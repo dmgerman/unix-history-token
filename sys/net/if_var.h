@@ -612,6 +612,24 @@ define|if, m, sa) if_output(if, m, sa, (struct rtentry *)0)
 end_define
 
 begin_comment
+comment|/* for compatibility with other BSDs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|if_addrlist
+value|if_addrhead
+end_define
+
+begin_define
+define|#
+directive|define
+name|if_list
+value|if_link
+end_define
+
+begin_comment
 comment|/*  * Bit values in if_ipending  */
 end_comment
 
@@ -992,7 +1010,18 @@ comment|/* route installed */
 end_comment
 
 begin_comment
-comment|/*  * The prefix structure contains information about one prefix  * of an interface.  They are maintained by the different address families,  * are allocated and attached when an prefix or an address is set,  * and are linked together so all prfefixes for an interface can be located.  */
+comment|/* for compatibility with other BSDs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ifa_list
+value|ifa_link
+end_define
+
+begin_comment
+comment|/*  * The prefix structure contains information about one prefix  * of an interface.  They are maintained by the different address families,  * are allocated and attached when an prefix or an address is set,  * and are linked together so all prefixes for an interface can be located.  */
 end_comment
 
 begin_struct
@@ -1013,9 +1042,8 @@ decl_stmt|;
 comment|/* back-pointer to interface */
 name|TAILQ_ENTRY
 argument_list|(
-name|ifprefix
+argument|ifprefix
 argument_list|)
-operator|*
 name|ifpr_list
 expr_stmt|;
 comment|/* queue macro glue */

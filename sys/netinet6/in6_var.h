@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -98,30 +98,6 @@ modifier|*
 name|ia_next
 decl_stmt|;
 comment|/* next in6 list of IP6 addresses */
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-operator|)
-name|LIST_HEAD
-argument_list|(
-argument|in6_multihead
-argument_list|,
-argument|in6_multi
-argument_list|)
-name|ia6_multiaddrs
-expr_stmt|;
-comment|/* list of multicast addresses */
-endif|#
-directive|endif
 name|int
 name|ia6_flags
 decl_stmt|;
@@ -320,7 +296,7 @@ comment|/* ipv6IfIcmpInGroupMembReductions, # of input MLD done */
 name|u_int64_t
 name|ifs6_in_mlddone
 decl_stmt|;
-comment|/* 	 * Output statistics. We should solve unresolved routing problem...   	 */
+comment|/* 	 * Output statistics. We should solve unresolved routing problem... 	 */
 comment|/* ipv6IfIcmpOutMsgs, total # of output messages */
 name|u_int64_t
 name|ifs6_out_msg
@@ -1327,19 +1303,6 @@ name|in6_maxmtu
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1363,56 +1326,9 @@ begin_comment
 comment|/* MALLOC_DECLARE */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Macro for finding the internet address structure (in6_ifaddr) corresponding  * to a given interface (ifnet structure).  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|<
-literal|3
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|IFP_TO_IA6
-parameter_list|(
-name|ifp
-parameter_list|,
-name|ia
-parameter_list|)
-define|\
-comment|/* struct ifnet *ifp; */
-define|\
-comment|/* struct in6_ifaddr *ia; */
-define|\
-value|do {									\ 	struct ifaddr *ifa;						\ 	for (ifa = (ifp)->if_addrlist; ifa; ifa = ifa->ifa_next) {	\ 		if (!ifa->ifa_addr)					\ 			continue;					\ 		if (ifa->ifa_addr->sa_family == AF_INET6)		\ 			break;						\ 	}								\ 	(ia) = (struct in6_ifaddr *)ifa;				\ } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -1439,11 +1355,6 @@ end_endif
 begin_comment
 comment|/* _KERNEL */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Multi-cast membership entry.  One for each group/ifp that a PCB  * belongs to.  */
@@ -1492,35 +1403,12 @@ modifier|*
 name|in6m_ifp
 decl_stmt|;
 comment|/* back pointer to ifnet */
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-operator|)
-name|struct
-name|in6_ifaddr
-modifier|*
-name|in6m_ia
-decl_stmt|;
-comment|/* back pointer to in6_ifaddr */
-else|#
-directive|else
 name|struct
 name|ifmultiaddr
 modifier|*
 name|in6m_ifma
 decl_stmt|;
 comment|/* back pointer to ifmultiaddr */
-endif|#
-directive|endif
 name|u_int
 name|in6m_refcount
 decl_stmt|;
@@ -1543,19 +1431,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
-
 begin_extern
 extern|extern LIST_HEAD(in6_multihead
 operator|,
@@ -1567,11 +1442,6 @@ unit|)
 name|in6_multihead
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Structure used by macros below to remember position when stepping through  * all of eht in6_multi records.  */
@@ -1598,19 +1468,6 @@ end_struct
 begin_comment
 comment|/*  * Macros for looking up the in6_multi record for a given IP6 multicast  * address on a given interface. If no matching record is found, "in6m"  * returns NLL.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
 
 begin_define
 define|#
@@ -1670,83 +1527,6 @@ comment|/* struct in6_multi *in6m */
 define|\
 value|do { \ 	(step).i_in6m = in6_multihead.lh_first; \ 		IN6_NEXT_MULTI((step), (in6m)); \ } while(0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not FreeBSD3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN6_LOOKUP_MULTI
-parameter_list|(
-name|addr
-parameter_list|,
-name|ifp
-parameter_list|,
-name|in6m
-parameter_list|)
-define|\
-comment|/* struct in6_addr addr; */
-define|\
-comment|/* struct ifnet *ifp; */
-define|\
-comment|/* struct in6_multi *in6m; */
-define|\
-value|do {								\ 	register struct in6_ifaddr *ia;				\ 								\ 	IFP_TO_IA6((ifp), ia);					\ 	if (ia == NULL)						\ 	  	(in6m) = NULL;					\ 	else							\ 		for ((in6m) = ia->ia6_multiaddrs.lh_first;	\ 		     (in6m) != NULL&&				\ 		     !IN6_ARE_ADDR_EQUAL(&(in6m)->in6m_addr,&(addr));	\ 		     (in6m) = in6m->in6m_entry.le_next)		\ 			continue;				\ } while (0)
-end_define
-
-begin_comment
-comment|/*  * Macro to step through all of the in6_multi records, one at a time.  * The current position is remembered in "step", which the caller must  * provide.  IN6_FIRST_MULTI(), below, must be called to initialize "step"  * and get the first record.  Both macros return a NULL "in6m" when there  * are no remaining records.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN6_NEXT_MULTI
-parameter_list|(
-name|step
-parameter_list|,
-name|in6m
-parameter_list|)
-define|\
-comment|/* struct in6_multistep step; */
-define|\
-comment|/* struct in6_multi *in6m; */
-define|\
-value|do {									\ 	if (((in6m) = (step).i_in6m) != NULL)				\ 		(step).i_in6m = (in6m)->in6m_entry.le_next;		\ 	else								\ 		while ((step).i_ia != NULL) {				\ 			(in6m) = (step).i_ia->ia6_multiaddrs.lh_first;	\ 			(step).i_ia = (step).i_ia->ia_next;		\ 			if ((in6m) != NULL) {				\ 				(step).i_in6m = (in6m)->in6m_entry.le_next; \ 				break;					\ 			}						\ 		}							\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6_FIRST_MULTI
-parameter_list|(
-name|step
-parameter_list|,
-name|in6m
-parameter_list|)
-define|\
-comment|/* struct in6_multistep step; */
-define|\
-comment|/* struct in6_multi *in6m */
-define|\
-value|do {						\ 	(step).i_ia = in6_ifaddr;		\ 	(step).i_in6m = NULL;			\ 	IN6_NEXT_MULTI((step), (in6m));		\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not FreeBSD3 */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -1872,28 +1652,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|&&
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|<
-literal|3
-operator|)
-end_if
-
 begin_decl_stmt
 name|int
 name|in6_control
@@ -1919,38 +1677,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|in6_control
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|socket
-operator|*
-operator|,
-name|u_long
-operator|,
-name|caddr_t
-operator|,
-expr|struct
-name|ifnet
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|void

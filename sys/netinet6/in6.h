@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -1808,27 +1808,12 @@ begin_comment
 comment|/* walk timer for router renumbering */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAPPED_ADDR_ENABLED
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|IPV6CTL_MAPPED_ADDR
 value|23
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MAPPED_ADDR_ENABLED */
-end_comment
 
 begin_comment
 comment|/* New entries should be added here from current IPV6CTL_MAXID value. */
@@ -1841,84 +1826,18 @@ name|IPV6CTL_MAXID
 value|24
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAPPED_ADDR_ENABLED
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IPV6CTL_NAMES_MAPPED_ADDR
-value|"mapped_addr"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPV6CTL_TYPE_MAPPED_ADDR
-value|CTLTYPE_INT
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPV6CTL_VARS_MAPPED_ADDR
-value|&ip6_mapped_addr_on
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* MAPPED_ADDR_ENABLED */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6CTL_NAMES_MAPPED_ADDR
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPV6CTL_TYPE_MAPPED_ADDR
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPV6CTL_VARS_MAPPED_ADDR
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MAPPED_ADDR_ENABLED */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|IPV6CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "forwarding", CTLTYPE_INT }, \ 	{ "redirect", CTLTYPE_INT }, \ 	{ "hlim", CTLTYPE_INT }, \ 	{ "mtu", CTLTYPE_INT }, \ 	{ "forwsrcrt", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "mrtproto", CTLTYPE_INT }, \ 	{ "maxfragpackets", CTLTYPE_INT }, \ 	{ "sourcecheck", CTLTYPE_INT }, \ 	{ "sourcecheck_logint", CTLTYPE_INT }, \ 	{ "accept_rtadv", CTLTYPE_INT }, \ 	{ "keepfaith", CTLTYPE_INT }, \ 	{ "log_interval", CTLTYPE_INT }, \ 	{ "hdrnestlimit", CTLTYPE_INT }, \ 	{ "dad_count", CTLTYPE_INT }, \ 	{ "auto_flowlabel", CTLTYPE_INT }, \ 	{ "defmcasthlim", CTLTYPE_INT }, \ 	{ "gifhlim", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "use_deprecated", CTLTYPE_INT }, \ 	{ "rr_prune", CTLTYPE_INT }, \ 	{ IPV6CTL_NAMES_MAPPED_ADDR, IPV6CTL_TYPE_MAPPED_ADDR }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "forwarding", CTLTYPE_INT }, \ 	{ "redirect", CTLTYPE_INT }, \ 	{ "hlim", CTLTYPE_INT }, \ 	{ "mtu", CTLTYPE_INT }, \ 	{ "forwsrcrt", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "mrtproto", CTLTYPE_INT }, \ 	{ "maxfragpackets", CTLTYPE_INT }, \ 	{ "sourcecheck", CTLTYPE_INT }, \ 	{ "sourcecheck_logint", CTLTYPE_INT }, \ 	{ "accept_rtadv", CTLTYPE_INT }, \ 	{ "keepfaith", CTLTYPE_INT }, \ 	{ "log_interval", CTLTYPE_INT }, \ 	{ "hdrnestlimit", CTLTYPE_INT }, \ 	{ "dad_count", CTLTYPE_INT }, \ 	{ "auto_flowlabel", CTLTYPE_INT }, \ 	{ "defmcasthlim", CTLTYPE_INT }, \ 	{ "gifhlim", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "use_deprecated", CTLTYPE_INT }, \ 	{ "rr_prune", CTLTYPE_INT }, \ 	{ "mapped_addr", CTLTYPE_INT }, \ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPV6CTL_VARS
-value|{ \ 	0, \&ip6_forwarding, \&ip6_sendredirects, \&ip6_defhlim, \ 	0, \&ip6_forward_srcrt, \ 	0, \ 	0, \ 	0, \&ip6_maxfragpackets, \&ip6_sourcecheck, \&ip6_sourcecheck_interval, \&ip6_accept_rtadv, \&ip6_keepfaith, \&ip6_log_interval, \&ip6_hdrnestlimit, \&ip6_dad_count, \&ip6_auto_flowlabel, \&ip6_defmcasthlim, \&ip6_gif_hlim, \ 	0, \&ip6_use_deprecated, \&ip6_rr_prune, \ 	IPV6CTL_VARS_MAPPED_ADDR, \ }
+value|{ \ 	0, \&ip6_forwarding, \&ip6_sendredirects, \&ip6_defhlim, \ 	0, \&ip6_forward_srcrt, \ 	0, \ 	0, \ 	0, \&ip6_maxfragpackets, \&ip6_sourcecheck, \&ip6_sourcecheck_interval, \&ip6_accept_rtadv, \&ip6_keepfaith, \&ip6_log_interval, \&ip6_hdrnestlimit, \&ip6_dad_count, \&ip6_auto_flowlabel, \&ip6_defmcasthlim, \&ip6_gif_hlim, \ 	0, \&ip6_use_deprecated, \&ip6_rr_prune, \&ip6_mapped_addr_on, \ }
 end_define
 
 begin_endif
@@ -1930,6 +1849,45 @@ begin_comment
 comment|/* !_XOPEN_SOURCE */
 end_comment
 
+begin_comment
+comment|/*  * Redefinition of mbuf flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ANYCAST6
+value|M_PROTO1
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_AUTHIPHDR
+value|M_PROTO2
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_DECRYPTED
+value|M_PROTO3
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_LOOP
+value|M_PROTO4
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_AUTHIPDGM
+value|M_PROTO5
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1939,6 +1897,18 @@ end_ifdef
 begin_struct_decl
 struct_decl|struct
 name|cmsghdr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ifnet
 struct_decl|;
 end_struct_decl
 
@@ -2063,12 +2033,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAPPED_ADDR_ENABLED
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|sockaddr
@@ -2145,15 +2109,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MAPPED_ADDR_ENABLED */
-end_comment
 
 begin_define
 define|#

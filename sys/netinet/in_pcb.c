@@ -146,7 +146,6 @@ comment|/*  * These configure the range of local port addresses assigned to  * "
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ipport_lowfirstauto
 init|=
@@ -161,7 +160,6 @@ comment|/* 1023 */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ipport_lowlastauto
 init|=
@@ -174,7 +172,6 @@ comment|/* 600 */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ipport_firstauto
 init|=
@@ -187,7 +184,6 @@ comment|/* 1024 */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ipport_lastauto
 init|=
@@ -200,7 +196,6 @@ comment|/* 5000 */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ipport_hifirstauto
 init|=
@@ -213,7 +208,6 @@ comment|/* 49152 */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ipport_hilastauto
 init|=

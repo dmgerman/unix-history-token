@@ -159,7 +159,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|inpcbhead
 name|ripcb
@@ -167,7 +166,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|inpcbinfo
 name|ripcbinfo
@@ -1635,7 +1633,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|static
 name|u_long
 name|rip_sendspace
 init|=
@@ -1644,7 +1641,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|u_long
 name|rip_recvspace
 init|=
