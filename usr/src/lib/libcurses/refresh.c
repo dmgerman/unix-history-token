@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.36 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2358,6 +2358,18 @@ operator|&=
 operator|~
 name|__ISDIRTY
 expr_stmt|;
+comment|/* 	 * If we have a bottom unchanged region return.  Scrolling the 	 * bottom region up and then back down causes a screen jitter. 	 * This will increase the number of characters sent to the screen 	 * but it looks better. 	 */
+if|if
+condition|(
+name|bot
+operator|<
+name|win
+operator|->
+name|maxy
+operator|-
+literal|1
+condition|)
+return|return;
 comment|/* 	 * Search for the largest block of text not changed. 	 * Invariants of the loop: 	 * - Startw is the index of the beginning of the examined block in win.          * - Starts is the index of the beginning of the examined block in  	 *    curscr. 	 * - Curs is the index of one past the end of the exmined block in win. 	 * - Curw is the index of one past the end of the exmined block in  	 *   curscr. 	 * - bsize is the current size of the examined block.          */
 for|for
 control|(
