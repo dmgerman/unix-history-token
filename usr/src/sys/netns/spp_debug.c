@@ -195,6 +195,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|INET
+ifdef|#
+directive|ifdef
+name|TCPDEBUG
 name|u_short
 name|seq
 decl_stmt|,
@@ -773,6 +776,8 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
