@@ -13,6 +13,12 @@ directive|include
 file|<netatm/kern_include.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -253,6 +259,42 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net
+argument_list|,
+name|PF_ATM
+argument_list|,
+name|harp
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"HARP/ATM family"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_harp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|atm
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"ATM layer"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|#
