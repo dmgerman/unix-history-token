@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lexi.c	5.12 (Berkeley) %G%"
+literal|"@(#)lexi.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -480,12 +480,6 @@ name|int
 name|lexi
 parameter_list|()
 block|{
-specifier|register
-name|char
-modifier|*
-name|tok
-decl_stmt|;
-comment|/* local pointer to next char in token */
 name|int
 name|unary_delim
 decl_stmt|;
@@ -508,9 +502,9 @@ name|char
 name|qchar
 decl_stmt|;
 comment|/* the delimiter character for a string */
-name|tok
+name|e_token
 operator|=
-name|token
+name|s_token
 expr_stmt|;
 comment|/* point to start of place to save token */
 name|unary_delim
@@ -662,7 +656,7 @@ operator|)
 condition|)
 block|{
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -670,7 +664,7 @@ name|buf_ptr
 operator|++
 expr_stmt|;
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -685,14 +679,21 @@ operator|*
 name|buf_ptr
 argument_list|)
 condition|)
+block|{
+name|check_size
+argument_list|(
+name|token
+argument_list|)
+expr_stmt|;
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
 name|buf_ptr
 operator|++
 expr_stmt|;
+block|}
 block|}
 else|else
 while|while
@@ -716,8 +717,13 @@ else|else
 name|seendot
 operator|++
 expr_stmt|;
+name|check_size
+argument_list|(
+name|token
+argument_list|)
+expr_stmt|;
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -763,8 +769,13 @@ expr_stmt|;
 name|seendot
 operator|++
 expr_stmt|;
+name|check_size
+argument_list|(
+name|token
+argument_list|)
+expr_stmt|;
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -784,7 +795,7 @@ operator|==
 literal|'-'
 condition|)
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -806,7 +817,7 @@ operator|==
 literal|'l'
 condition|)
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -827,8 +838,13 @@ name|alphanum
 condition|)
 block|{
 comment|/* copy it over */
+name|check_size
+argument_list|(
+name|token
+argument_list|)
+expr_stmt|;
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -846,7 +862,7 @@ argument_list|()
 expr_stmt|;
 block|}
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 literal|'\0'
@@ -947,10 +963,13 @@ name|p
 operator|++
 control|)
 block|{
-name|tok
-operator|=
-name|token
-expr_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+init|=
+name|s_token
+decl_stmt|;
 comment|/* point at scanned token */
 if|if
 condition|(
@@ -959,7 +978,7 @@ name|j
 operator|++
 operator|!=
 operator|*
-name|tok
+name|p
 operator|++
 operator|||
 operator|*
@@ -967,14 +986,14 @@ name|j
 operator|++
 operator|!=
 operator|*
-name|tok
+name|p
 operator|++
 condition|)
 continue|continue;
 comment|/* This test depends on the fact that 				 * identifiers are always at least 1 character 				 * long (ie. the first two bytes of the 				 * identifier are always meaningful) */
 if|if
 condition|(
-name|tok
+name|p
 index|[
 operator|-
 literal|1
@@ -987,7 +1006,7 @@ comment|/* If its a one-character identifier */
 while|while
 condition|(
 operator|*
-name|tok
+name|p
 operator|++
 operator|==
 operator|*
@@ -1182,10 +1201,17 @@ operator|++
 operator|==
 literal|')'
 operator|&&
+operator|(
 operator|*
 name|tp
 operator|==
 literal|';'
+operator|||
+operator|*
+name|tp
+operator|==
+literal|','
+operator|)
 condition|)
 goto|goto
 name|not_proc
@@ -1209,6 +1235,10 @@ expr_stmt|;
 name|ps
 operator|.
 name|in_parameter_declaration
+operator|=
+literal|1
+expr_stmt|;
+name|rparen_count
 operator|=
 literal|1
 expr_stmt|;
@@ -1335,9 +1365,9 @@ return|;
 comment|/* the ident is not in the list */
 block|}
 comment|/* end of procesing for alpanum character */
-comment|/* l l l Scan a non-alphanumeric token */
+comment|/* Scan a non-alphanumeric token */
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -1345,7 +1375,7 @@ name|buf_ptr
 expr_stmt|;
 comment|/* if it is only a one-character token, it is 				 * moved here */
 operator|*
-name|tok
+name|e_token
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1411,7 +1441,7 @@ condition|(
 name|troff
 condition|)
 block|{
-name|tok
+name|e_token
 index|[
 operator|-
 literal|1
@@ -1426,12 +1456,12 @@ operator|==
 literal|'"'
 condition|)
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 literal|'`'
 expr_stmt|;
-name|tok
+name|e_token
 operator|=
 name|chfont
 argument_list|(
@@ -1441,7 +1471,7 @@ argument_list|,
 operator|&
 name|stringf
 argument_list|,
-name|tok
+name|e_token
 argument_list|)
 expr_stmt|;
 block|}
@@ -1473,8 +1503,14 @@ goto|goto
 name|stop_lit
 goto|;
 block|}
+name|check_size
+argument_list|(
+name|token
+argument_list|)
+expr_stmt|;
+comment|/* Only have to do this once in this loop, 					 * since check_size guarantees that there 					 * are at least 5 entries left */
 operator|*
-name|tok
+name|e_token
 operator|=
 operator|*
 name|buf_ptr
@@ -1491,40 +1527,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|had_eof
-operator|||
-operator|(
-operator|(
-name|tok
-operator|-
-name|token
-operator|)
-operator|>
-operator|(
-name|bufsize
-operator|-
-literal|2
-operator|)
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Unterminated literal\n"
-argument_list|)
-expr_stmt|;
-operator|++
-name|tok
-expr_stmt|;
-goto|goto
-name|stop_lit
-goto|;
-comment|/* get outof literal copying loop */
-block|}
-if|if
-condition|(
 operator|*
-name|tok
+name|e_token
 operator|==
 name|BACKSLASH
 condition|)
@@ -1548,7 +1552,7 @@ condition|)
 block|{
 operator|*
 operator|++
-name|tok
+name|e_token
 operator|=
 name|BACKSLASH
 expr_stmt|;
@@ -1561,21 +1565,21 @@ name|BACKSLASH
 condition|)
 operator|*
 operator|++
-name|tok
+name|e_token
 operator|=
 name|BACKSLASH
 expr_stmt|;
 block|}
 operator|*
 operator|++
-name|tok
+name|e_token
 operator|=
 operator|*
 name|buf_ptr
 operator|++
 expr_stmt|;
 operator|++
-name|tok
+name|e_token
 expr_stmt|;
 comment|/* we must increment this again because we 				 * copied two chars */
 if|if
@@ -1597,7 +1601,7 @@ block|}
 do|while
 condition|(
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|!=
 name|qchar
@@ -1608,7 +1612,7 @@ condition|(
 name|troff
 condition|)
 block|{
-name|tok
+name|e_token
 operator|=
 name|chfont
 argument_list|(
@@ -1618,7 +1622,7 @@ argument_list|,
 operator|&
 name|bodyf
 argument_list|,
-name|tok
+name|e_token
 operator|-
 literal|1
 argument_list|)
@@ -1630,7 +1634,7 @@ operator|==
 literal|'"'
 condition|)
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 literal|'\''
@@ -1846,7 +1850,7 @@ condition|)
 block|{
 comment|/* check for doubled character */
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -1894,7 +1898,7 @@ literal|'='
 condition|)
 comment|/* check for operator += */
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -1912,7 +1916,7 @@ condition|)
 block|{
 comment|/* check for operator -> */
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -1973,7 +1977,7 @@ name|opchar
 condition|)
 block|{
 comment|/* we have two char assignment */
-name|tok
+name|e_token
 index|[
 operator|-
 literal|1
@@ -1986,7 +1990,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|tok
+name|e_token
 index|[
 operator|-
 literal|1
@@ -1994,7 +1998,7 @@ index|]
 operator|==
 literal|'<'
 operator|||
-name|tok
+name|e_token
 index|[
 operator|-
 literal|1
@@ -2003,7 +2007,7 @@ operator|==
 literal|'>'
 operator|)
 operator|&&
-name|tok
+name|e_token
 index|[
 operator|-
 literal|1
@@ -2013,7 +2017,7 @@ operator|*
 name|buf_ptr
 condition|)
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -2021,14 +2025,14 @@ name|buf_ptr
 operator|++
 expr_stmt|;
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 literal|'='
 expr_stmt|;
 comment|/* Flip =+ to += */
 operator|*
-name|tok
+name|e_token
 operator|=
 literal|0
 expr_stmt|;
@@ -2045,7 +2049,7 @@ condition|)
 block|{
 comment|/* == */
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 literal|'='
@@ -2055,7 +2059,7 @@ name|buf_ptr
 operator|++
 expr_stmt|;
 operator|*
-name|tok
+name|e_token
 operator|=
 literal|0
 expr_stmt|;
@@ -2101,7 +2105,7 @@ literal|'='
 condition|)
 block|{
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -2126,7 +2130,7 @@ operator|==
 literal|'='
 condition|)
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -2168,7 +2172,7 @@ condition|)
 block|{
 comment|/* it is start of comment */
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 literal|'*'
@@ -2199,7 +2203,7 @@ while|while
 condition|(
 operator|*
 operator|(
-name|tok
+name|e_token
 operator|-
 literal|1
 operator|)
@@ -2215,7 +2219,7 @@ condition|)
 block|{
 comment|/* 	     * handle ||,&&, etc, and also things as in int *****i 	     */
 operator|*
-name|tok
+name|e_token
 operator|++
 operator|=
 operator|*
@@ -2283,7 +2287,7 @@ operator|=
 name|unary_delim
 expr_stmt|;
 operator|*
-name|tok
+name|e_token
 operator|=
 literal|'\0'
 expr_stmt|;

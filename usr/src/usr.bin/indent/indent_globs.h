@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1980 The Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley, the University of Illinois,  * Urbana, and Sun Microsystems, Inc.  The name of either University  * or Sun Microsystems may not be used to endorse or promote products  * derived from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)indent_globs.h	5.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1980 The Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley, the University of Illinois,  * Urbana, and Sun Microsystems, Inc.  The name of either University  * or Sun Microsystems may not be used to endorse or promote products  * derived from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)indent_globs.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,17 +25,6 @@ end_define
 
 begin_comment
 comment|/* size of internal buffers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|inp_bufs
-value|600
-end_define
-
-begin_comment
-comment|/* size of input buffer */
 end_comment
 
 begin_define
@@ -289,17 +278,65 @@ begin_comment
 comment|/* limit of comment buffer */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|token
+value|s_token
+end_define
+
 begin_decl_stmt
 name|char
+modifier|*
+name|tokenbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the last token scanned */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s_token
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|e_token
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|l_token
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
 name|in_buffer
-index|[
-name|inp_bufs
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* input buffer */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|in_buffer_limit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the end of the input buffer */
 end_comment
 
 begin_decl_stmt
@@ -368,19 +405,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* similarly saved value of buf_end */
-end_comment
-
-begin_decl_stmt
-name|char
-name|token
-index|[
-name|bufsize
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the last token scanned */
 end_comment
 
 begin_decl_stmt
@@ -952,6 +976,12 @@ end_struct
 begin_decl_stmt
 name|int
 name|ifdef_level
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rparen_count
 decl_stmt|;
 end_decl_stmt
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)args.c	5.7 (Berkeley) %G%"
+literal|"@(#)args.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +177,15 @@ end_define
 begin_comment
 comment|/* type (keyword) */
 end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|option_source
+init|=
+literal|"?"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * N.B.: because of the way the table here is scanned, options whose names are  * substrings of other options must occur later; that is, with -lp vs -l, -lp  * must be first.  Also, while (most) booleans occur more than once, the last  * default value is the one actually assigned.  */
@@ -1016,6 +1025,8 @@ name|f
 operator|=
 name|fopen
 argument_list|(
+name|option_source
+operator|=
 name|fname
 argument_list|,
 literal|"r"
@@ -1046,6 +1057,8 @@ name|f
 operator|=
 name|fopen
 argument_list|(
+name|option_source
+operator|=
 name|prof
 argument_list|,
 literal|"r"
@@ -1069,6 +1082,10 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
+name|option_source
+operator|=
+literal|"Command line"
+expr_stmt|;
 block|}
 end_block
 
@@ -1375,7 +1392,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"indent: unknown parameter \"%s\"\n"
+literal|"indent: %s: unknown parameter \"%s\"\n"
+argument_list|,
+name|option_source
 argument_list|,
 name|arg
 operator|-
@@ -1557,10 +1576,12 @@ name|PRO_INT
 case|:
 if|if
 condition|(
+operator|!
+name|isdigit
+argument_list|(
 operator|*
 name|param_start
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 name|need_param
@@ -1569,7 +1590,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"indent: ``%s'' requires a parameter\n"
+literal|"indent: %s: ``%s'' requires a parameter\n"
+argument_list|,
+name|option_source
 argument_list|,
 name|arg
 operator|-
