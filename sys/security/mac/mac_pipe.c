@@ -251,24 +251,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAC_MAX_POLICIES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAC_MAX_POLICIES
-value|8
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
