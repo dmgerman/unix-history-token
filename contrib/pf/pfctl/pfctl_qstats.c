@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: pfctl_qstats.c,v 1.24 2003/07/31 09:46:08 kjc Exp $ */
 end_comment
 
@@ -102,6 +106,38 @@ include|#
 directive|include
 file|<altq/altq_hfsc.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PRIu64
+value|"llu"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -364,6 +400,25 @@ decl_stmt|,
 modifier|*
 name|node
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+if|if
+condition|(
+operator|!
+name|altqsupport
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pfctl_update_qstats
@@ -1469,8 +1524,16 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"  [ pkts: %10llu  bytes: %10llu  "
-literal|"dropped pkts: %6llu bytes: %6llu ]\n"
+literal|"  [ pkts: %10"
+name|PRIu64
+literal|"  bytes: %10"
+name|PRIu64
+literal|"  "
+literal|"dropped pkts: %6"
+name|PRIu64
+literal|" bytes: %6"
+name|PRIu64
+literal|" ]\n"
 argument_list|,
 name|cur
 operator|.
@@ -1597,8 +1660,16 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"  [ pkts: %10llu  bytes: %10llu  "
-literal|"dropped pkts: %6llu bytes: %6llu ]\n"
+literal|"  [ pkts: %10"
+name|PRIu64
+literal|"  bytes: %10"
+name|PRIu64
+literal|"  "
+literal|"dropped pkts: %6"
+name|PRIu64
+literal|" bytes: %6"
+name|PRIu64
+literal|" ]\n"
 argument_list|,
 name|cur
 operator|.
@@ -1709,8 +1780,16 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"  [ pkts: %10llu  bytes: %10llu  "
-literal|"dropped pkts: %6llu bytes: %6llu ]\n"
+literal|"  [ pkts: %10"
+name|PRIu64
+literal|"  bytes: %10"
+name|PRIu64
+literal|"  "
+literal|"dropped pkts: %6"
+name|PRIu64
+literal|" bytes: %6"
+name|PRIu64
+literal|" ]\n"
 argument_list|,
 name|cur
 operator|.

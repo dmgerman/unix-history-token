@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: ftp-proxy.c,v 1.33 2003/08/22 21:50:34 david Exp $ */
 end_comment
 
@@ -14,6 +18,12 @@ end_comment
 begin_comment
 comment|/*  * TODO:  * Plenty, this is very basic, with the idea to get it in clean first.  *  * - IPv6 and EPASV support  * - Content filter support  * - filename filter support  * - per-user rules perhaps.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#

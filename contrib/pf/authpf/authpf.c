@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: authpf.c,v 1.68 2003/08/21 19:13:23 frantzen Exp $	*/
 end_comment
 
@@ -120,6 +124,27 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__dead
+value|__volatile
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -1300,6 +1325,18 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+return|return
+literal|0
+return|;
+comment|/* gcc hack to prevent warning */
+endif|#
+directive|endif
 block|}
 end_function
 

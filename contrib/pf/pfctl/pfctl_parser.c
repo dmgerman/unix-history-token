@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: pfctl_parser.c,v 1.175 2003/09/18 20:27:58 cedric Exp $ */
 end_comment
 
@@ -120,6 +124,45 @@ include|#
 directive|include
 file|<ifaddrs.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PRIu64
+value|"llu"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRId64
+value|"lld"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -3056,7 +3099,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %-25s %14llu %16llu\n"
+literal|"  %-25s %14"
+name|PRIu64
+literal|" %16"
+name|PRIu64
+literal|"\n"
 argument_list|,
 literal|"Bytes In"
 argument_list|,
@@ -3083,7 +3130,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %-25s %14llu %16llu\n"
+literal|"  %-25s %14"
+name|PRIu64
+literal|" %16"
+name|PRIu64
+literal|"\n"
 argument_list|,
 literal|"Bytes Out"
 argument_list|,
@@ -3115,7 +3166,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %-23s %14llu %16llu\n"
+literal|"    %-23s %14"
+name|PRIu64
+literal|" %16"
+name|PRIu64
+literal|"\n"
 argument_list|,
 literal|"Passed"
 argument_list|,
@@ -3148,7 +3203,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %-23s %14llu %16llu\n"
+literal|"    %-23s %14"
+name|PRIu64
+literal|" %16"
+name|PRIu64
+literal|"\n"
 argument_list|,
 literal|"Blocked"
 argument_list|,
@@ -3186,7 +3245,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %-23s %14llu %16llu\n"
+literal|"    %-23s %14"
+name|PRIu64
+literal|" %16"
+name|PRIu64
+literal|"\n"
 argument_list|,
 literal|"Passed"
 argument_list|,
@@ -3219,7 +3282,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %-23s %14llu %16llu\n\n"
+literal|"    %-23s %14"
+name|PRIu64
+literal|" %16"
+name|PRIu64
+literal|"\n\n"
 argument_list|,
 literal|"Blocked"
 argument_list|,
@@ -3291,18 +3358,15 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"  %-25s %14llu"
+literal|"  %-25s %14"
+name|PRIu64
+literal|" "
 argument_list|,
 name|pf_fcounters
 index|[
 name|i
 index|]
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|s
 operator|->
 name|fcounters
@@ -3367,18 +3431,15 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"  %-25s %14llu "
+literal|"  %-25s %14"
+name|PRIu64
+literal|" "
 argument_list|,
 name|pf_reasons
 index|[
 name|i
 index|]
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|s
 operator|->
 name|counters
@@ -7351,6 +7412,66 @@ name|ina
 operator|.
 name|s_addr
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|<=
+literal|501106
+operator|)
+comment|/* inet_net_pton acts strange w/ multicast addresses, RFC1112 */
+if|if
+condition|(
+name|mask
+operator|==
+operator|-
+literal|1
+operator|&&
+name|h
+operator|->
+name|addr
+operator|.
+name|v
+operator|.
+name|a
+operator|.
+name|addr
+operator|.
+name|addr8
+index|[
+literal|0
+index|]
+operator|>=
+literal|224
+operator|&&
+name|h
+operator|->
+name|addr
+operator|.
+name|v
+operator|.
+name|a
+operator|.
+name|addr
+operator|.
+name|addr8
+index|[
+literal|0
+index|]
+operator|<
+literal|240
+condition|)
+name|bits
+operator|=
+literal|32
+expr_stmt|;
+endif|#
+directive|endif
 name|set_ipmask
 argument_list|(
 name|h

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: pfctl.c,v 1.188 2003/08/29 21:47:36 cedric Exp $ */
 end_comment
 
@@ -36,6 +40,44 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PRIu64
+value|"llu"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1103,6 +1145,28 @@ argument_list|,
 literal|"pf already enabled"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+elseif|else
+if|if
+condition|(
+name|errno
+operator|==
+name|ESRCH
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"pfil registeration failed"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 name|err
 argument_list|(
@@ -3496,8 +3560,14 @@ name|PF_OPT_VERBOSE
 condition|)
 name|printf
 argument_list|(
-literal|"  [ Evaluations: %-8llu  Packets: %-8llu  "
-literal|"Bytes: %-10llu  States: %-6u]\n"
+literal|"  [ Evaluations: %-8"
+name|PRIu64
+literal|"  Packets: %-8"
+name|PRIu64
+literal|"  "
+literal|"Bytes: %-10"
+name|PRIu64
+literal|"  States: %-6u]\n"
 argument_list|,
 name|rule
 operator|->
@@ -3924,7 +3994,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu %llu %llu\n"
+literal|"%"
+name|PRIu64
+literal|" %"
+name|PRIu64
+literal|" %"
+name|PRIu64
+literal|"\n"
 argument_list|,
 name|pr
 operator|.
@@ -4131,7 +4207,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%llu %llu %llu\n"
+literal|"%"
+name|PRIu64
+literal|" %"
+name|PRIu64
+literal|" %"
+name|PRIu64
+literal|"\n"
 argument_list|,
 name|pr
 operator|.
@@ -7758,6 +7840,25 @@ name|int
 name|opts
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ENABLE_ALTQ
+argument_list|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|#
+directive|else
 name|struct
 name|pfioc_altq
 name|pa
@@ -7819,6 +7920,8 @@ operator|(
 literal|1
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -9003,10 +9106,30 @@ name|debugopt
 operator|=
 name|NULL
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ENABLE_ALTQ
+argument_list|)
+name|altqsupport
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 name|altqsupport
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(

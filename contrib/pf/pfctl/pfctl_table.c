@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: pfctl_table.c,v 1.50 2003/08/29 21:47:36 cedric Exp $ */
 end_comment
 
@@ -96,6 +100,38 @@ include|#
 directive|include
 file|<time.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PRIu64
+value|"llu"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2185,7 +2221,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tEvaluations: [ NoMatch: %-18llu Match: %-18llu ]\n"
+literal|"\tEvaluations: [ NoMatch: %-18"
+name|PRIu64
+literal|" Match: %-18"
+name|PRIu64
+literal|" ]\n"
 argument_list|,
 name|ts
 operator|->
@@ -2224,7 +2264,11 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\t%-12s [ Packets: %-18llu Bytes: %-18llu ]\n"
+literal|"\t%-12s [ Packets: %-18"
+name|PRIu64
+literal|" Bytes: %-18"
+name|PRIu64
+literal|" ]\n"
 argument_list|,
 name|stats_text
 index|[
@@ -2871,7 +2915,11 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\t%-12s [ Packets: %-18llu Bytes: %-18llu ]\n"
+literal|"\t%-12s [ Packets: %-18"
+name|PRIu64
+literal|" Bytes: %-18"
+name|PRIu64
+literal|" ]\n"
 argument_list|,
 name|stats_text
 index|[
