@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/gencode.c,v 1.100 1999/12/08 19:54:03 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/gencode.c,v 1.100.2.1 2000/03/01 14:12:54 itojun Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -9568,10 +9568,20 @@ operator|=
 name|Q_IPV6
 expr_stmt|;
 block|}
-while|while
-condition|(
+for|for
+control|(
 name|res
-condition|)
+operator|=
+name|res0
+init|;
+name|res
+condition|;
+name|res
+operator|=
+name|res
+operator|->
+name|ai_next
+control|)
 block|{
 switch|switch
 condition|(
@@ -9583,6 +9593,13 @@ block|{
 case|case
 name|AF_INET
 case|:
+if|if
+condition|(
+name|tproto
+operator|==
+name|Q_IPV6
+condition|)
+continue|continue;
 name|sin
 operator|=
 operator|(
@@ -9618,6 +9635,13 @@ break|break;
 case|case
 name|AF_INET6
 case|:
+if|if
+condition|(
+name|tproto6
+operator|==
+name|Q_IP
+condition|)
+continue|continue;
 name|sin6
 operator|=
 operator|(
@@ -9663,18 +9687,37 @@ name|b
 operator|=
 name|tmp
 expr_stmt|;
-name|res
-operator|=
-name|res
-operator|->
-name|ai_next
-expr_stmt|;
 block|}
 name|freeaddrinfo
 argument_list|(
 name|res0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|b
+operator|==
+name|NULL
+condition|)
+block|{
+name|bpf_error
+argument_list|(
+literal|"unknown host '%s'%s"
+argument_list|,
+name|name
+argument_list|,
+operator|(
+name|proto
+operator|==
+name|Q_DEFAULT
+operator|)
+condition|?
+literal|""
+else|:
+literal|" for specified address family"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|b
 return|;
