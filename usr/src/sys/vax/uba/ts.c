@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	6.2	84/08/29	*/
+comment|/*	ts.c	6.3	84/11/27	*/
 end_comment
 
 begin_include
@@ -3552,6 +3552,15 @@ operator|=
 name|dp
 expr_stmt|;
 block|}
+name|ts_softc
+index|[
+name|ts11
+index|]
+operator|.
+name|sc_mapped
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
