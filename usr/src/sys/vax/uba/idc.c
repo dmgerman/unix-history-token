@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	idc.c	6.4	85/03/12	*/
+comment|/*	idc.c	6.5	85/05/02	*/
 end_comment
 
 begin_include
@@ -63,7 +63,7 @@ value|{*trp++ = *(int*)a; *trp++ = (int)b; if(trp>&idctrb[998])trp=idctrb;}
 end_define
 
 begin_comment
-comment|/*  * IDC (RB730) disk driver  *  * There can only ever be one IDC on a machine,  * and only on a VAX-11/730.  We take advantage  * of that to simplify the driver.  *  * TODO:  *	dk_busy  *	ecc  */
+comment|/*  * IDC (RB730) disk driver  *  * There can only ever be one IDC on a machine,  * and only on a VAX-11/730.  We take advantage  * of that to simplify the driver.  *  * TODO:  *	ecc  */
 end_comment
 
 begin_include
@@ -860,15 +860,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|idcaddr
-operator|->
-name|idccsr
-operator|&
-name|IDC_R80
-condition|)
-block|{
 comment|/* read header to synchronize microcode */
 name|idcaddr
 operator|->
@@ -894,19 +885,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|idcaddr
-operator|->
-name|idccsr
-operator|&
-name|IDC_ERR
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|i
 operator|=
 name|idcaddr
@@ -930,23 +908,53 @@ name|i
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
+name|idcaddr
+operator|->
+name|idccsr
+operator|&
+operator|(
+name|IDC_ERR
+operator||
+name|IDC_R80
+operator|)
+operator|)
+operator|==
+name|IDC_R80
+condition|)
 name|ui
 operator|->
 name|ui_type
 operator|=
 literal|1
 expr_stmt|;
-block|}
 elseif|else
-comment|/* 		 * RB02 may not have pack spun up, just look for drive error. 		 */
 if|if
 condition|(
+operator|(
 name|idcaddr
 operator|->
 name|idccsr
 operator|&
+operator|(
 name|IDC_DE
+operator||
+name|IDC_R80
+operator|)
+operator|)
+operator|==
+literal|0
 condition|)
+comment|/* 		 * RB02 may not have pack spun up, just look for drive error. 		 */
+name|ui
+operator|->
+name|ui_type
+operator|=
+literal|0
+expr_stmt|;
+else|else
 return|return
 operator|(
 literal|0
