@@ -586,12 +586,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|sflag
-operator|||
-name|minusc
-operator|)
-operator|&&
-operator|(
 name|shinit
 operator|=
 name|lookupvar
