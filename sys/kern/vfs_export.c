@@ -7900,6 +7900,13 @@ argument_list|,
 name|v_specnext
 argument_list|)
 expr_stmt|;
+name|freedev
+argument_list|(
+name|vp
+operator|->
+name|v_rdev
+argument_list|)
+expr_stmt|;
 name|simple_unlock
 argument_list|(
 operator|&

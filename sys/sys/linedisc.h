@@ -44,10 +44,18 @@ begin_struct
 struct|struct
 name|specinfo
 block|{
+name|u_int
+name|si_flags
+decl_stmt|;
+define|#
+directive|define
+name|SI_STASHED
+value|0x0001
+comment|/* created in stashed storage */
 name|udev_t
 name|si_udev
 decl_stmt|;
-name|SLIST_ENTRY
+name|LIST_ENTRY
 argument_list|(
 argument|specinfo
 argument_list|)
@@ -611,6 +619,17 @@ name|gid
 typedef|,
 name|int
 name|perms
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|devfs_remove_t
+name|__P
+typedef|((
+name|dev_t
+name|dev
 typedef|));
 end_typedef
 
@@ -1260,6 +1279,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|freedev
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+name|dev
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|iskmemdev
 name|__P
@@ -1343,6 +1375,19 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|lminor
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+name|dev
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|remove_dev
 name|__P
 argument_list|(
 operator|(
