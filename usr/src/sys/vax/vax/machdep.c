@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986,1988,1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988,1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"syscontext.h"
 end_include
 
 begin_include
@@ -211,16 +211,6 @@ include|#
 directive|include
 file|"../vaxuba/ubareg.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|RETURN
-parameter_list|(
-name|value
-parameter_list|)
-value|{ u.u_error = (value); return; }
-end_define
 
 begin_comment
 comment|/*  * Declare these as initialized data so we can patch them.  */
