@@ -824,6 +824,9 @@ name|short
 name|m_num
 decl_stmt|;
 name|u_short
+name|font_size
+decl_stmt|;
+name|u_short
 name|mv_row
 decl_stmt|,
 name|mv_col
