@@ -22,18 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netatm/uni/sscop.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatm/uni/sscf_uni.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netatm/uni/sscf_uni_var.h>
 end_include
 

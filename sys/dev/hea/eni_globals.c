@@ -25,12 +25,6 @@ directive|include
 file|<dev/hea/eni.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/hea/eni_var.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef

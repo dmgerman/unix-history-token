@@ -30,12 +30,6 @@ directive|include
 file|<netatm/kern_include.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netatm/uni/uni.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef

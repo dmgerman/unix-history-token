@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netatm/uni/unisig.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netatm/uni/unisig_var.h>
 end_include
 
@@ -29,18 +23,6 @@ begin_include
 include|#
 directive|include
 file|<netatm/uni/unisig_msg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatm/uni/unisig_mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatm/uni/unisig_decode.h>
 end_include
 
 begin_ifndef

@@ -16,19 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netatm/ipatm/ipatm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netatm/ipatm/ipatm_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatm/ipatm/ipatm_serv.h>
 end_include
 
 begin_ifndef

@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netatm/uni/unisig_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netatm/uni/uniip_var.h>
 end_include
 

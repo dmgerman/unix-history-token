@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netatm/sigpvc/sigpvc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netatm/sigpvc/sigpvc_var.h>
 end_include
 

@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netatm/uni/uni.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netatm/uni/unisig.h>
 end_include
 

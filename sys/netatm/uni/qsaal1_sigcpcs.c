@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netatm/uni/uni.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netatm/uni/sscop.h>
 end_include
 
