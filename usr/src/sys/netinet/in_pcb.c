@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	6.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	6.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -753,42 +753,6 @@ operator|==
 name|INADDR_ANY
 condition|)
 block|{
-name|ia
-operator|=
-name|in_iaonnetof
-argument_list|(
-name|in_netof
-argument_list|(
-name|sin
-operator|->
-name|sin_addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ia
-operator|==
-operator|(
-expr|struct
-name|in_ifaddr
-operator|*
-operator|)
-literal|0
-operator|||
-operator|(
-name|ia
-operator|->
-name|ia_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
 specifier|register
 name|struct
 name|route
@@ -809,7 +773,7 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|/*  			 * If route is known or can be allocated now, 			 * our src addr is taken from the i/f, else punt. 			 */
+comment|/*  		 * If route is known or can be allocated now, 		 * our src addr is taken from the i/f, else punt. 		 */
 name|ro
 operator|=
 operator|&
@@ -1008,7 +972,6 @@ operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-block|}
 name|ifaddr
 operator|=
 operator|(
