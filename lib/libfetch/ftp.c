@@ -2347,6 +2347,30 @@ condition|)
 goto|goto
 name|ouch
 goto|;
+comment|/* seek to required offset */
+if|if
+condition|(
+name|offset
+condition|)
+if|if
+condition|(
+name|_ftp_cmd
+argument_list|(
+name|cd
+argument_list|,
+literal|"REST %lu"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|offset
+argument_list|)
+operator|!=
+name|FTP_FILE_OK
+condition|)
+goto|goto
+name|sysouch
+goto|;
 comment|/* make the server initiate the transfer */
 if|if
 condition|(
