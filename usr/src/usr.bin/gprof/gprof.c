@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gprof.c	5.2 (Berkeley) %G%"
+literal|"@(#)gprof.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -573,6 +573,10 @@ name|FILE
 modifier|*
 name|nfile
 decl_stmt|;
+name|int
+name|valcmp
+parameter_list|()
+function_decl|;
 name|nfile
 operator|=
 name|fopen
@@ -1241,7 +1245,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|unsigned
 name|char
 modifier|*
 name|malloc
@@ -1258,6 +1261,10 @@ return|return;
 block|}
 name|textspace
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|xbuf
@@ -1647,11 +1654,10 @@ name|nsamples
 operator|=
 name|sampbytes
 operator|/
-expr|sizeof
-operator|(
-name|unsigned
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|)
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1938,11 +1944,10 @@ name|fwrite
 argument_list|(
 name|samples
 argument_list|,
-expr|sizeof
-operator|(
-name|unsigned
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|)
+argument_list|)
 argument_list|,
 name|nsamples
 argument_list|,
@@ -2165,7 +2170,6 @@ block|{
 specifier|register
 name|i
 expr_stmt|;
-name|unsigned
 name|UNIT
 name|sample
 decl_stmt|;
@@ -2179,7 +2183,6 @@ block|{
 name|samples
 operator|=
 operator|(
-name|unsigned
 name|UNIT
 operator|*
 operator|)
@@ -2187,11 +2190,10 @@ name|calloc
 argument_list|(
 name|sampbytes
 argument_list|,
-expr|sizeof
-operator|(
-name|unsigned
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2211,11 +2213,10 @@ name|whoami
 argument_list|,
 name|sampbytes
 operator|/
-expr|sizeof
-operator|(
-name|unsigned
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|done
@@ -2242,11 +2243,10 @@ argument_list|(
 operator|&
 name|sample
 argument_list|,
-expr|sizeof
-operator|(
-name|unsigned
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|)
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -2312,7 +2312,6 @@ specifier|register
 name|int
 name|j
 decl_stmt|;
-name|unsigned
 name|UNIT
 name|ccnt
 decl_stmt|;
