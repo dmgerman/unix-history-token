@@ -329,8 +329,9 @@ ifdef|#
 directive|ifdef
 name|KERBEROS
 comment|/* 	 * kerberos errors 	 */
+block|,
 name|AUTH_KERB_GENERIC
-operator|=
+init|=
 literal|8
 block|,
 comment|/* kerberos generic error */
@@ -554,7 +555,8 @@ block|}
 modifier|*
 name|ah_ops
 struct|;
-name|caddr_t
+name|void
+modifier|*
 name|ah_private
 decl_stmt|;
 block|}
