@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|NG_EIFACE_EIFACE_NAME
-value|"nge"
+value|"ngeth"
 end_define
 
 begin_define
