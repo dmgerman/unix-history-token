@@ -1152,6 +1152,24 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+comment|/* 		 * Since we don't separately handle append, map append to 		 * write. 		 */
+if|if
+condition|(
+name|acc_mode
+operator|&
+name|VAPPEND
+condition|)
+block|{
+name|acc_mode
+operator|&=
+operator|~
+name|VAPPEND
+expr_stmt|;
+name|acc_mode
+operator||=
+name|VWRITE
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|mac_bsdextended_rulecheck
