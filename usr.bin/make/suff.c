@@ -2051,9 +2051,10 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
-operator|(
-name|void
-operator|)
+comment|/* 	 * SuffParseTransform() may fail for special rules which are not 	 * actual transformation rules (e.g., .DEFAULT). 	 */
+if|if
+condition|(
+operator|!
 name|SuffParseTransform
 argument_list|(
 name|gn
@@ -2066,7 +2067,12 @@ argument_list|,
 operator|&
 name|t
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|DEBUG
