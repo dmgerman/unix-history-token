@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.26	81/03/22	*/
+comment|/*	uba.c	4.27	81/03/22	*/
 end_comment
 
 begin_include
@@ -328,6 +328,8 @@ name|um
 operator|->
 name|um_tab
 operator|.
+name|b_actf
+operator|->
 name|b_actf
 operator|->
 name|b_bcount
