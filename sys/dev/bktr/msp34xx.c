@@ -82,13 +82,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/ioctl_meteor.h>
+file|<dev/btkr/ioctl_meteor.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/ioctl_bt848.h>
+file|<dev/btkr/ioctl_bt848.h>
 end_include
 
 begin_comment

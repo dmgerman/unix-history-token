@@ -73,14 +73,14 @@ begin_if
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>=
+operator|<
 literal|500014
 end_if
 
 begin_include
 include|#
 directive|include
-file|<sys/selinfo.h>
+file|<sys/select.h>
 end_include
 
 begin_else
@@ -91,7 +91,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<sys/select.h>
+file|<sys/selinfo.h>
 end_include
 
 begin_endif
@@ -193,13 +193,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/ioctl_meteor.h>
+file|<dev/bktr/ioctl_meteor.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/ioctl_bt848.h>
+file|<dev/bktr/ioctl_bt848.h>
 end_include
 
 begin_comment

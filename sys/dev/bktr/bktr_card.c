@@ -193,17 +193,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|<machine/ioctl_meteor.h>
+file|<dev/bktr/ioctl_meteor.h>
 end_include
-
-begin_comment
-comment|/* Traditional location for .h files */
-end_comment
 
 begin_include
 include|#
 directive|include
-file|<machine/ioctl_bt848.h>
+file|<dev/bktr/ioctl_bt848.h>
 end_include
 
 begin_comment
