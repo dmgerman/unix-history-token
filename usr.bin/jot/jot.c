@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: jot.c,v 1.7 1997/07/15 09:59:30 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1547,7 +1547,7 @@ literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: jot [-cnr] [-b word] [-w word] [-s string] [-p precision]"
 argument_list|,
-literal|"           [ reps [ begin [ end [ s ] ] ] ]"
+literal|"           [reps [begin [end [s]]]]"
 argument_list|)
 expr_stmt|;
 name|exit
