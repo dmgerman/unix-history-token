@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	5.21	82/12/28	*/
+comment|/*	kern_descrip.c	5.22	83/01/12	*/
 end_comment
 
 begin_include
@@ -1723,9 +1723,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|coll
@@ -1749,6 +1746,12 @@ condition|(
 name|p
 condition|)
 block|{
+name|int
+name|s
+init|=
+name|spl6
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|p
@@ -1766,13 +1769,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-name|s
-operator|=
-name|spl6
-argument_list|()
-expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|p
@@ -1793,7 +1790,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
