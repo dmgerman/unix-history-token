@@ -619,10 +619,6 @@ operator|*
 literal|300
 argument_list|)
 expr_stmt|;
-name|pages
-operator|=
-literal|0
-expr_stmt|;
 block|}
 block|}
 block|}
