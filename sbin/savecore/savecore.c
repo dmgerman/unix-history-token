@@ -1515,11 +1515,6 @@ name|void
 name|check_kmem
 parameter_list|()
 block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|char
 name|core_vers
 index|[
@@ -1861,6 +1856,18 @@ decl_stmt|;
 name|mode_t
 name|oumask
 decl_stmt|;
+name|bounds
+operator|=
+name|ifd
+operator|=
+name|nr
+operator|=
+name|nw
+operator|=
+name|ofd
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Get the current number and update the bounds file.  Do the update 	 * now, because may fail later and don't want to overwrite anything. 	 */
 operator|(
 name|void
@@ -2966,9 +2973,14 @@ argument_list|)
 argument_list|,
 literal|"%.*s/r%s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|sl
 operator|-
 name|s
+argument_list|)
 argument_list|,
 name|s
 argument_list|,
@@ -3443,7 +3455,19 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"no dump, not enough free space on device"
+literal|"no dump, not enough free space on device (%ld available, need %ld"
+argument_list|,
+operator|(
+name|minfree
+operator|>
+literal|0
+operator|)
+condition|?
+name|spacefree
+else|:
+name|totfree
+argument_list|,
+name|needed
 argument_list|)
 expr_stmt|;
 return|return
