@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initdeck.c	5.1 (Berkeley) %G%"
+literal|"@(#)initdeck.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,8 +116,18 @@ comment|/* "packed" file	*/
 end_comment
 
 begin_function_decl
+specifier|extern
 name|long
 name|ftell
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|calloc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -199,6 +209,10 @@ name|CC_D
 operator|.
 name|offsets
 operator|=
+operator|(
+name|long
+operator|*
+operator|)
 name|calloc
 argument_list|(
 name|CC_D
@@ -217,6 +231,10 @@ name|CH_D
 operator|.
 name|offsets
 operator|=
+operator|(
+name|long
+operator|*
+operator|)
 name|calloc
 argument_list|(
 name|CH_D

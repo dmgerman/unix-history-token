@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.1 (Berkeley) %G%"
+literal|"@(#)print.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,15 +271,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sqn
-operator|==
-name|JAIL
-condition|)
-goto|goto
-name|spec
-goto|;
 switch|switch
 condition|(
 name|sqp
@@ -297,7 +288,16 @@ case|case
 name|CHANCE
 case|:
 case|case
-name|SPEC
+name|INC_TAX
+case|:
+case|case
+name|GOTO_J
+case|:
+case|case
+name|LUX_TAX
+case|:
+case|case
+name|IN_JAIL
 case|:
 name|spec
 label|:

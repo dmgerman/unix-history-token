@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)monop.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)monop.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -201,12 +201,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPEC
+name|INC_TAX
 value|6
 end_define
 
 begin_comment
-comment|/* special				*/
+comment|/* Income tax */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GOTO_J
+value|7
+end_define
+
+begin_comment
+comment|/* Go To Jail! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LUX_TAX
+value|8
+end_define
+
+begin_comment
+comment|/* Luxury tax */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_JAIL
+value|9
+end_define
+
+begin_comment
+comment|/* In jail */
 end_comment
 
 begin_define
@@ -278,7 +311,8 @@ name|shrt
 name|type
 decl_stmt|;
 comment|/* place type			*/
-name|char
+name|struct
+name|prp_st
 modifier|*
 name|desc
 decl_stmt|;
@@ -335,6 +369,13 @@ modifier|*
 name|mon_n
 decl_stmt|;
 comment|/* name if a monopoly		*/
+name|char
+name|sqnum
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Square numbers (used to init)*/
 name|SQUARE
 modifier|*
 name|sq
@@ -354,6 +395,10 @@ name|mon_st
 name|MON
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * This struct describes a property.  For railroads and utilities, only  * the "morg" member is used.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -463,19 +508,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|rr_st
-block|{
-comment|/* railroad description structure	*/
-name|bool
-name|morg
-decl_stmt|;
-comment|/* set if morgaged		*/
-block|}
-struct|;
-end_struct
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -495,7 +527,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
-name|rr_st
+name|prp_st
 name|RR_S
 typedef|;
 end_typedef
@@ -503,7 +535,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
-name|rr_st
+name|prp_st
 name|UTIL_S
 typedef|;
 end_typedef

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prop.c	5.3 (Berkeley) %G%"
+literal|"@(#)prop.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,15 @@ include|#
 directive|include
 file|"monop.ext"
 end_include
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|calloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  *	This routine deals with buying property, setting all the  * appropriate flags.  */
@@ -155,6 +164,10 @@ name|op
 decl_stmt|;
 name|op
 operator|=
+operator|(
+name|OWN
+operator|*
+operator|)
 name|calloc
 argument_list|(
 literal|1
@@ -487,9 +500,8 @@ case|:
 return|return
 literal|0
 return|;
-case|case
-name|SPEC
-case|:
+default|default:
+comment|/* Specials, etc */
 return|return
 literal|1
 return|;
@@ -525,10 +537,6 @@ case|:
 return|return
 literal|8
 operator|+
-operator|(
-name|PROP
-operator|*
-operator|)
 operator|(
 name|sqp
 operator|->

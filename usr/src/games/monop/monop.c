@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)monop.c	5.3 (Berkeley) %G%"
+literal|"@(#)monop.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -708,17 +708,12 @@ operator|=
 operator|&
 name|board
 index|[
-call|(
-name|int
-call|)
-argument_list|(
 name|mp
 operator|->
-name|sq
+name|sqnum
 index|[
 name|i
 index|]
-argument_list|)
 index|]
 expr_stmt|;
 block|}

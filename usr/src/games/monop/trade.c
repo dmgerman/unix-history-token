@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trade.c	5.1 (Berkeley) %G%"
+literal|"@(#)trade.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1109,15 +1109,8 @@ operator|.
 name|owner
 expr_stmt|;
 break|break;
-case|case
-name|SPEC
-case|:
-case|case
-name|CC
-case|:
-case|case
-name|CHANCE
-case|:
+default|default:
+comment|/* Chance, taxes, etc */
 name|new_own
 operator|=
 name|num_play
@@ -1391,7 +1384,7 @@ name|FALSE
 expr_stmt|;
 if|if
 condition|(
-name|op
+name|sqp
 operator|->
 name|type
 operator|==
