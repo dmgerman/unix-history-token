@@ -2512,6 +2512,9 @@ operator|=
 name|sel
 operator|->
 name|self
+operator|==
+operator|-
+literal|1
 expr_stmt|;
 name|show_system
 operator|=
