@@ -978,11 +978,17 @@ name|SM_VERS
 argument_list|,
 name|SM_UNMON_ALL
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_my_id
 argument_list|,
 operator|&
 name|id
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_sm_stat
 argument_list|,
 operator|&
