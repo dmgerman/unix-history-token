@@ -602,6 +602,32 @@ argument_list|(
 literal|"setrootbyname failed\n"
 argument_list|)
 expr_stmt|;
+comment|/* If the root device is a type "memory disk", mount RW */
+if|if
+condition|(
+name|devsw
+argument_list|(
+name|rootdev
+argument_list|)
+operator|&&
+operator|(
+name|devsw
+argument_list|(
+name|rootdev
+argument_list|)
+operator|->
+name|d_flags
+operator|&
+name|D_MEMDISK
+operator|)
+condition|)
+name|mp
+operator|->
+name|mnt_flag
+operator|&=
+operator|~
+name|MNT_RDONLY
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|mp

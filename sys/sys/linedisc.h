@@ -667,6 +667,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|D_MEMDISK
+value|0x10000
+end_define
+
+begin_comment
+comment|/* memory type disk */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|D_NAGGED
 value|0x20000
 end_define
