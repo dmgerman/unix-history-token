@@ -276,6 +276,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|nlist
 name|nl
@@ -441,24 +442,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|usenumflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|totalflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|swapflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|nlistf
@@ -468,6 +473,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|memf
@@ -477,6 +483,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|kvm_t
 modifier|*
 name|kd
@@ -484,6 +491,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|usagestr
@@ -491,6 +499,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|int
@@ -813,6 +822,7 @@ value|if (kvm_read(kd, (u_long)(addr), p, s) != s) {			\ 		warnx("cannot read %s
 end_define
 
 begin_decl_stmt
+specifier|static
 name|void
 name|filemode
 name|__P
@@ -825,6 +835,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|getfiles
 name|__P
@@ -842,6 +853,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mount
 modifier|*
@@ -858,6 +870,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|e_vnode
 modifier|*
@@ -873,6 +886,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|e_vnode
 modifier|*
@@ -888,6 +902,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|mount_print
 name|__P
@@ -902,6 +917,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|nfs_header
 name|__P
@@ -914,6 +930,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nfs_print
 name|__P
@@ -928,6 +945,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|swapmode
 name|__P
@@ -940,6 +958,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ttymode
 name|__P
@@ -952,6 +971,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ttyprt
 name|__P
@@ -968,6 +988,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ttytype
 name|__P
@@ -991,6 +1012,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ufs_header
 name|__P
@@ -1003,6 +1025,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ufs_print
 name|__P
@@ -1017,6 +1040,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|union_header
 name|__P
@@ -1029,6 +1053,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|union_print
 name|__P
@@ -1056,6 +1081,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|vnode_header
 name|__P
@@ -1068,6 +1094,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|vnode_print
 name|__P
@@ -1086,6 +1113,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|vnodemode
 name|__P
@@ -1580,6 +1608,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|void
 name|vnodemode
 parameter_list|()
@@ -1857,6 +1886,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|vnode_header
 parameter_list|()
@@ -1873,6 +1903,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|vnode_print
 parameter_list|(
@@ -2245,6 +2276,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ufs_header
 parameter_list|()
@@ -2261,6 +2293,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ufs_print
 parameter_list|(
@@ -2543,6 +2576,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|nfs_header
 parameter_list|()
@@ -2559,6 +2593,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|nfs_print
 parameter_list|(
@@ -2844,6 +2879,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|union_header
 parameter_list|()
@@ -2860,6 +2896,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_print
 parameter_list|(
@@ -2942,6 +2979,7 @@ comment|/*  * Given a pointer to a mount structure in kernel space,  * read it i
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|mount
 modifier|*
@@ -3086,6 +3124,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mount_print
 parameter_list|(
@@ -3247,6 +3286,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|e_vnode
 modifier|*
@@ -3421,6 +3461,7 @@ comment|/*  * simulate what a running kernel does in in kinfo_vnode  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|e_vnode
 modifier|*
@@ -3720,6 +3761,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 name|hdr
@@ -3738,6 +3780,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|ttymode
 parameter_list|()
@@ -4058,6 +4101,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ttytype
 parameter_list|(
@@ -4268,6 +4312,7 @@ block|}
 end_function
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|int
@@ -4496,6 +4541,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|void
 name|ttyprt
 parameter_list|(
@@ -4843,6 +4889,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|filemode
 parameter_list|()
@@ -5229,6 +5276,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|getfiles
 parameter_list|(
@@ -5398,6 +5446,7 @@ comment|/*  * swapmode is based on a program called swapinfo written  * by Kevin
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|swapmode
 parameter_list|(
