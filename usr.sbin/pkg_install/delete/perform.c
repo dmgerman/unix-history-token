@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.17 1998/11/11 06:09:04 jkh Exp $"
+literal|"$Id: perform.c,v 1.18 1998/12/16 13:59:30 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -613,19 +613,19 @@ argument_list|,
 name|POST_DEINSTALL_FNAME
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|pre_arg
-argument_list|,
-literal|""
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
-name|sprintf
-argument_list|(
 name|post_arg
-argument_list|,
-literal|""
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 block|}
 else|else
