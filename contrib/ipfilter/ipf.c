@@ -239,7 +239,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ipf.c	1.23 6/5/96 (C) 1993-1995 Darren Reed"
+literal|"@(#)ipf.c	1.23 6/5/96 (C) 1993-2000 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,7 +250,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 2.2 1999/08/06 15:26:08 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 2.10.2.1 2000/07/08 02:19:46 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1406,17 +1406,29 @@ name|fd
 argument_list|,
 name|add
 argument_list|,
+operator|&
 name|fr
 argument_list|)
 operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%d:"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
 literal|"ioctl(SIOCZRLST)"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 ifdef|#
@@ -1433,15 +1445,19 @@ literal|"hits %ld bytes %ld "
 argument|,
 endif|#
 directive|endif
-argument|fr->fr_hits, fr->fr_bytes); 					printfr(fr); 				} 			} else if ((opts& OPT_REMOVE)&& 				   !(opts& OPT_DONOTHING)) { 				if (ioctl(fd, del, fr) == -
+argument|fr->fr_hits, fr->fr_bytes); 					printfr(fr); 				} 			} else if ((opts& OPT_REMOVE)&& 				   !(opts& OPT_DONOTHING)) { 				if (ioctl(fd, del,&fr) == -
 literal|1
-argument|) 					perror(
-literal|"ioctl(SIOCDELFR)"
-argument|); 			} else if (!(opts& OPT_DONOTHING)) { 				if (ioctl(fd, add, fr) == -
+argument|) { 					fprintf(stderr,
+literal|"%d:"
+argument|, linenum); 					perror(
+literal|"ioctl(delete rule)"
+argument|); 				} 			} else if (!(opts& OPT_DONOTHING)) { 				if (ioctl(fd, add,&fr) == -
 literal|1
-argument|) 					perror(
-literal|"ioctl(SIOCADDFR)"
-argument|); 			} 		} 	} 	if (ferror(fp) || !feof(fp)) { 		fprintf(stderr,
+argument|) { 					fprintf(stderr,
+literal|"%d:"
+argument|, linenum); 					perror(
+literal|"ioctl(add/insert rule)"
+argument|); 				} 			} 		} 	} 	if (ferror(fp) || !feof(fp)) { 		fprintf(stderr,
 literal|"%s: %s: file error or line too long\n"
 argument|, 		    name, file); 		exit(
 literal|1
@@ -1449,20 +1465,36 @@ argument|); 	} 	(void)fclose(fp); }
 comment|/*  * Similar to fgets(3) but can handle '\\' and NL is converted to NUL.  * Returns NULL if error occured, EOF encounterd or input line is too long.  */
 argument|static char *getline(str, size, file) register char	*str; size_t	size; FILE	*file; { 	char *p; 	int s
 argument_list|,
-argument|len;  	do { 		for (p = str, s = size;; p += len, s -= len) {
+argument|len;  	do { 		for (p = str, s = size;; p += (len -
+literal|1
+argument|), s -= (len -
+literal|1
+argument|)) {
 comment|/* 			 * if an error occured, EOF was encounterd, or there 			 * was no room to put NUL, return NULL. 			 */
-argument|if (fgets(p, s, file) == NULL) 				return (NULL); 			len = strlen(p); 			p[len -
+argument|if (fgets(p, s, file) == NULL) 				return (NULL); 			len = strlen(p); 			if (p[len -
+literal|1
+argument|] !=
+literal|'\n'
+argument|) { 				p[len] =
+literal|'\0'
+argument|; 				break; 			} 			p[len -
 literal|1
 argument|] =
 literal|'\0'
-argument|; 			if (p[len -
-literal|1
+argument|; 			if (len<
+literal|2
+argument||| p[len -
+literal|2
 argument|] !=
 literal|'\\'
-argument|) 				break; 			size -= len; 		} 	} while (*str ==
+argument|) 				break; 			else
+comment|/* 				 * Convert '\\' to a space so words don't 				 * run together 				 */
+argument|p[len -
+literal|2
+argument|] =
+literal|' '
+argument|; 		} 	} while (*str ==
 literal|'\0'
-argument||| *str ==
-literal|'\n'
 argument|); 	return (str); }   static void packetlogon(opt) char	*opt; { 	int	flag
 argument_list|,
 argument|err;  	err = get_flags(); 	if (err !=

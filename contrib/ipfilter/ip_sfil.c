@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"%W% %G% (C) 1993-1995 Darren Reed"
+literal|"%W% %G% (C) 1993-2000 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_sfil.c,v 2.1.2.6 2000/01/16 10:12:44 darrenr Exp $"
+literal|"@(#)$Id: ip_sfil.c,v 2.23.2.3 2000/07/08 02:20:14 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2846,6 +2846,46 @@ name|ire
 expr_stmt|;
 block|}
 comment|/* 	 * Look for a matching filter rule, but don't include the next or 	 * interface pointer in the comparison (fr_next, fr_ifa). 	 */
+for|for
+control|(
+name|fp
+operator|->
+name|fr_cksum
+operator|=
+literal|0
+operator|,
+name|p
+operator|=
+operator|(
+name|u_int
+operator|*
+operator|)
+operator|&
+name|fp
+operator|->
+name|fr_ip
+operator|,
+name|pp
+operator|=
+operator|&
+name|fp
+operator|->
+name|fr_cksum
+init|;
+name|p
+operator|<
+name|pp
+condition|;
+name|p
+operator|++
+control|)
+name|fp
+operator|->
+name|fr_cksum
+operator|+=
+operator|*
+name|p
+expr_stmt|;
 for|for
 control|(
 init|;

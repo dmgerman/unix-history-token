@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.1.2.2 2000/01/16 10:12:14 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.11.2.3 2000/06/17 06:24:31 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,9 +283,17 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|_BSDI_VERSION
 operator|>=
 literal|199802
+operator|)
+operator|||
+operator|(
+name|__FreeBSD_Version
+operator|>=
+literal|400000
+operator|)
 end_if
 
 begin_include

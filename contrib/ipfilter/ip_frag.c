@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ip_frag.c	1.11 3/24/96 (C) 1993-1995 Darren Reed"
+literal|"@(#)ip_frag.c	1.11 3/24/96 (C) 1993-2000 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_frag.c,v 2.4.2.4 1999/11/28 04:52:10 darrenr Exp $"
+literal|"@(#)$Id: ip_frag.c,v 2.10.2.4 2000/06/06 15:49:15 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -836,6 +836,15 @@ decl_stmt|;
 name|u_int
 name|idx
 decl_stmt|;
+if|if
+condition|(
+name|ipfr_inuse
+operator|>=
+name|IPFT_SIZE
+condition|)
+return|return
+name|NULL
+return|;
 name|frag
 operator|.
 name|ipfr_p

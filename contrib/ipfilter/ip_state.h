@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.1.2.2 2000/01/24 13:13:52 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.13.2.1 2000/07/08 02:15:35 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,18 +15,56 @@ directive|define
 name|__IP_STATE_H__
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SIOCDELST
+value|_IOW('r', 61, struct ipstate *)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SIOCDELST
+value|_IOW(r, 61, struct ipstate *)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|IPSTATE_SIZE
-value|257
+value|5737
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPSTATE_MAX
-value|2048
+value|4013
 end_define
 
 begin_comment

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ipmon.c	1.21 6/5/96 (C)1993-1998 Darren Reed"
+literal|"@(#)ipmon.c	1.21 6/5/96 (C)1993-2000 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 2.3.2.4 2000/01/24 12:45:25 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 2.12.2.2 2000/07/15 14:50:06 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1348,12 +1348,12 @@ condition|)
 block|{
 name|port
 operator|=
-operator|(
-name|u_int
-operator|)
+name|ntohs
+argument_list|(
 name|s
 operator|->
 name|s_port
+argument_list|)
 expr_stmt|;
 name|name
 operator|=
@@ -1382,12 +1382,12 @@ condition|)
 block|{
 name|port
 operator|=
-operator|(
-name|u_int
-operator|)
+name|ntohs
+argument_list|(
 name|s
 operator|->
 name|s_port
+argument_list|)
 expr_stmt|;
 name|name
 operator|=
@@ -2417,6 +2417,38 @@ argument_list|(
 name|t
 argument_list|,
 literal|"NAT:EXPIRE "
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|nl
+operator|->
+name|nl_type
+operator|==
+name|NL_NEWBIMAP
+condition|)
+name|strcpy
+argument_list|(
+name|t
+argument_list|,
+literal|"NAT:BIMAP "
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|nl
+operator|->
+name|nl_type
+operator|==
+name|NL_NEWBLOCK
+condition|)
+name|strcpy
+argument_list|(
+name|t
+argument_list|,
+literal|"NAT:MAPBLOCK "
 argument_list|)
 expr_stmt|;
 else|else
