@@ -34,6 +34,12 @@ begin_comment
 comment|/* LIBC_RCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -61,9 +67,9 @@ name|p
 operator|=
 name|strrchr
 argument_list|(
-literal|'/'
-argument_list|,
 name|progname
+argument_list|,
+literal|'/'
 argument_list|)
 expr_stmt|;
 name|__progname
