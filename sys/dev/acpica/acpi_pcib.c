@@ -1052,6 +1052,20 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/*      * Search through the _PRS resources, looking for an IRQ or extended      * IRQ resource.  Skip dependent function resources for now.  In the      * future, we might use these for priority but this is good enough for      * now until BIOS vendors actually mean something by using them.      */
+for|for
+control|(
+name|i
+operator|=
+name|prt
+operator|->
+name|SourceIndex
+init|;
+condition|;
+name|i
+operator|++
+control|)
+block|{
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1061,9 +1075,7 @@ argument_list|(
 operator|&
 name|prsbuf
 argument_list|,
-name|prt
-operator|->
-name|SourceIndex
+name|i
 argument_list|,
 operator|&
 name|prsres
@@ -1075,34 +1087,37 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"_PRS buffer corrupt, cannot route interrupt\n"
+literal|"_PRS lacks IRQ resource, routing failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
-comment|/* type-check the resource we've got */
-if|if
+switch|switch
 condition|(
 name|prsres
 operator|->
 name|Id
-operator|!=
-name|ACPI_RSTYPE_IRQ
-operator|&&
-name|prsres
-operator|->
-name|Id
-operator|!=
-name|ACPI_RSTYPE_EXT_IRQ
 condition|)
 block|{
+case|case
+name|ACPI_RSTYPE_IRQ
+case|:
+case|case
+name|ACPI_RSTYPE_EXT_IRQ
+case|:
+break|break;
+case|case
+name|ACPI_RSTYPE_START_DPF
+case|:
+continue|continue;
+default|default:
 name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"_PRS resource entry has unsupported type %d\n"
+literal|"_PRS has invalid type %d\n"
 argument_list|,
 name|prsres
 operator|->
@@ -1112,6 +1127,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 comment|/* set variables based on resource type */
 if|if
