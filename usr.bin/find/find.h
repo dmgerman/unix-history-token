@@ -73,7 +73,9 @@ block|,
 name|N_USER
 block|,
 name|N_XDEV
-block|, }
+block|,
+name|N_PRINT0
+block|}
 enum|;
 end_enum
 

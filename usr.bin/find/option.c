@@ -364,6 +364,16 @@ name|O_ZERO
 block|}
 block|,
 block|{
+literal|"-print0"
+block|,
+name|N_PRINT0
+block|,
+name|c_print0
+block|,
+name|O_ZERO
+block|}
+block|,
+block|{
 literal|"-prune"
 block|,
 name|N_PRUNE
