@@ -5164,6 +5164,7 @@ operator|->
 name|hcca_done_head
 argument_list|)
 expr_stmt|;
+comment|/* The LSb of done is used to inform the HC Driver that an interrupt 	 * condition exists for both the Done list and for another event 	 * recorded in HcInterruptStatus. On an interrupt from the HC, the HC 	 * Driver checks the HccaDoneHead Value. If this value is 0, then the 	 * interrupt was caused by other than the HccaDoneHead update and the 	 * HcInterruptStatus register needs to be accessed to determine that 	 * exact interrupt cause. If HccaDoneHead is nonzero, then a Done list 	 * update interrupt is indicated and if the LSb of done is nonzero, 	 * then an additional interrupt event is indicated and 	 * HcInterruptStatus should be checked to determine its cause. 	 */
 if|if
 condition|(
 name|done
@@ -5196,6 +5197,7 @@ name|done
 operator|&
 name|OHCI_DONE_INTRS
 condition|)
+block|{
 name|intrs
 operator||=
 name|OREAD4
@@ -5205,8 +5207,15 @@ argument_list|,
 name|OHCI_INTERRUPT_STATUS
 argument_list|)
 expr_stmt|;
+name|done
+operator|&=
+operator|~
+name|OHCI_DONE_INTRS
+expr_stmt|;
+block|}
 block|}
 else|else
+block|{
 name|intrs
 operator|=
 name|OREAD4
@@ -5216,21 +5225,28 @@ argument_list|,
 name|OHCI_INTERRUPT_STATUS
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
-operator|!
 name|intrs
+operator|==
+literal|0
 condition|)
+block|{
+comment|/* nothing to be done ?! */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|intrs
 operator|&=
 operator|~
 name|OHCI_MIE
 expr_stmt|;
+comment|/* mask out Master Interrupt Enable */
+comment|/* Acknowledge any interrupts that have happened */
 name|OWRITE4
 argument_list|(
 name|sc
@@ -5240,7 +5256,7 @@ argument_list|,
 name|intrs
 argument_list|)
 expr_stmt|;
-comment|/* Acknowledge */
+comment|/* Any interrupts we had enabled? */
 name|eintrs
 operator|=
 name|intrs
@@ -5341,9 +5357,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|done
-operator|&
-operator|~
-name|OHCI_DONE_INTRS
 argument_list|)
 expr_stmt|;
 name|intrs
