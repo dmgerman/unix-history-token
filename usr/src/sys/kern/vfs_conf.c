@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -222,44 +222,6 @@ begin_define
 define|#
 directive|define
 name|NFS_VFSOPS
-value|NULL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOFS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vfsops
-name|lofs_vfsops
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|LOFS_VFSOPS
-value|&lofs_vfsops
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LOFS_VFSOPS
 value|NULL
 end_define
 
@@ -636,7 +598,7 @@ comment|/* 4 = MOUNT_PC */
 name|LFS_VFSOPS
 block|,
 comment|/* 5 = MOUNT_LFS */
-name|LOFS_VFSOPS
+name|NULL
 block|,
 comment|/* 6 = MOUNT_LOFS */
 name|FDESC_VFSOPS
@@ -776,14 +738,6 @@ specifier|extern
 name|struct
 name|vnodeopv_desc
 name|fifo_nfsv2nodeop_opv_desc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vnodeopv_desc
-name|lofs_vnodeop_opv_desc
 decl_stmt|;
 end_decl_stmt
 
@@ -947,14 +901,6 @@ name|fifo_nfsv2nodeop_opv_desc
 block|,
 endif|#
 directive|endif
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|LOFS
-operator|&
-name|lofs_vnodeop_opv_desc
-block|,
 endif|#
 directive|endif
 ifdef|#
