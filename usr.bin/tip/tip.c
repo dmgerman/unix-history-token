@@ -109,6 +109,12 @@ literal|9600
 block|,
 literal|19200
 block|,
+literal|38400
+block|,
+literal|57600
+block|,
+literal|115200
+block|,
 operator|-
 literal|1
 block|}
