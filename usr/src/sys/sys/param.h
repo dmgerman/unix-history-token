@@ -4,7 +4,7 @@ comment|/* "@(#)param.h 2.1 3/25/82" */
 end_comment
 
 begin_comment
-comment|/*	param.h	4.18	82/06/11	*/
+comment|/*	param.h	4.19	82/07/15	*/
 end_comment
 
 begin_comment
@@ -638,6 +638,20 @@ define|#
 directive|define
 name|MAXFRAG
 value|8
+end_define
+
+begin_comment
+comment|/*  * Map a ``block device block'' to a file system block.  * This should be device dependent, and will be after we  * add an entry to cdevsw for that purpose.  For now though  * just use DEV_BSIZE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bdbtofsb
+parameter_list|(
+name|bn
+parameter_list|)
+value|((bn) / CLSIZE)
 end_define
 
 begin_comment
