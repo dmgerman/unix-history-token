@@ -878,9 +878,6 @@ name|IFF_UP
 operator|)
 condition|)
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|s
 operator|=
 name|splimp
@@ -1043,8 +1040,6 @@ name|dummy
 decl_stmt|;
 block|{
 name|int
-name|s
-decl_stmt|,
 name|i
 decl_stmt|;
 name|struct
