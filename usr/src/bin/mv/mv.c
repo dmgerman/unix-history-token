@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mv.c	5.5 (Berkeley) %G%"
+literal|"@(#)mv.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -627,8 +633,6 @@ return|;
 block|}
 if|if
 condition|(
-name|iflag
-operator|&&
 operator|!
 name|fflag
 operator|&&
@@ -639,46 +643,41 @@ argument_list|(
 name|stdin
 argument_list|)
 argument_list|)
-operator|&&
+condition|)
+if|if
+condition|(
+name|iflag
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|query
 argument_list|(
 literal|"remove %s? "
 argument_list|,
 name|target
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
+elseif|else
 if|if
 condition|(
 name|access
 argument_list|(
 name|target
 argument_list|,
-literal|2
+name|W_OK
 argument_list|)
 operator|<
 literal|0
 operator|&&
 operator|!
-name|fflag
-operator|&&
-name|isatty
-argument_list|(
-name|fileno
-argument_list|(
-name|stdin
-argument_list|)
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
 name|query
 argument_list|(
 literal|"override protection %o for %s? "
@@ -691,15 +690,12 @@ name|MODEBITS
 argument_list|,
 name|target
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
