@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.12 1998/08/26 19:11:22 gibbs Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.13 1998/09/15 08:33:31 gibbs Exp $"
 end_empty
 
 begin_define
@@ -2842,6 +2842,8 @@ argument_list|,
 name|dpt
 operator|->
 name|unit
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 if|if
@@ -7534,6 +7536,9 @@ name|printf
 argument_list|(
 literal|"CCB 0x%x - timed out\n"
 argument_list|,
+operator|(
+name|intptr_t
+operator|)
 name|dccb
 argument_list|)
 expr_stmt|;
@@ -7568,6 +7573,9 @@ name|printf
 argument_list|(
 literal|"CCB 0x%x - timed out CCB already completed\n"
 argument_list|,
+operator|(
+name|intptr_t
+operator|)
 name|dccb
 argument_list|)
 expr_stmt|;
