@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_slvar.h	7.5 (Berkeley) %G% */
+comment|/*	@(#)if_slvar.h	7.6 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|SLIOCGUNIT
-value|_IOW('t', 88, int)
+value|_IOR('t', 88, int)
 end_define
 
 begin_comment
