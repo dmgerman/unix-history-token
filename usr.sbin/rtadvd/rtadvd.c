@@ -1179,6 +1179,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1190,6 +1191,7 @@ argument_list|,
 name|pidfilename
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|fprintf
@@ -1731,9 +1733,9 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"<%s> received data length is larger than"
-literal|"1st routing message len. multiple messages?"
-literal|" read %d bytes, but 1st msg len = %d"
+literal|"<%s> received data length is larger than "
+literal|"1st routing message len. multiple messages? "
+literal|"read %d bytes, but 1st msg len = %d"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -2005,12 +2007,12 @@ name|msg
 argument_list|)
 expr_stmt|;
 comment|/* sanity check for plen */
+comment|/* as RFC2373, prefixlen is at least 4 */
 if|if
 condition|(
 name|plen
 operator|<
 literal|4
-comment|/* as RFC2373, prefixlen is at least 4 */
 operator|||
 name|plen
 operator|>
@@ -2144,12 +2146,12 @@ name|msg
 argument_list|)
 expr_stmt|;
 comment|/* sanity check for plen */
+comment|/* as RFC2373, prefixlen is at least 4 */
 if|if
 condition|(
 name|plen
 operator|<
 literal|4
-comment|/* as RFC2373, prefixlen is at least 4 */
 operator|||
 name|plen
 operator|>
@@ -2160,8 +2162,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"<%s> deleted interface"
-literal|"route's"
+literal|"<%s> deleted interface route's "
 literal|"plen %d is invalid for a prefix"
 argument_list|,
 name|__FUNCTION__
@@ -2874,7 +2875,7 @@ block|{
 case|case
 name|ND_ROUTER_SOLICIT
 case|:
-comment|/* 		  * Message verification - RFC-2461 6.1.1 		  * XXX: these checks must be done in the kernel as well, 		  *      but we can't completely rely on them. 		  */
+comment|/* 		 * Message verification - RFC-2461 6.1.1 		 * XXX: these checks must be done in the kernel as well, 		 *      but we can't completely rely on them. 		 */
 if|if
 condition|(
 operator|*
@@ -3036,7 +3037,7 @@ break|break;
 case|case
 name|ND_ROUTER_ADVERT
 case|:
-comment|/* 		  * Message verification - RFC-2461 6.1.2 		  * XXX: there's a same dilemma as above...  		  */
+comment|/* 		 * Message verification - RFC-2461 6.1.2 		 * XXX: there's a same dilemma as above...  		 */
 if|if
 condition|(
 operator|*
@@ -3239,7 +3240,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* 		  * Note that this case is POSSIBLE, especially just 		  * after invocation of the daemon. This is because we 		  * could receive message after opening the socket and 		  * before setting ICMP6 type filter(see sock_open()). 		  */
+comment|/* 		 * Note that this case is POSSIBLE, especially just 		 * after invocation of the daemon. This is because we 		 * could receive message after opening the socket and 		 * before setting ICMP6 type filter(see sock_open()). 		 */
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -5464,8 +5465,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"<%s> duplicated ND option"
-literal|" (type = %d)"
+literal|"<%s> duplicated ND option (type = %d)"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
