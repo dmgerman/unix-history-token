@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  *  *	@(#)parser.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  *  *	@(#)parser.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|VSTYPE
-value|07
+value|0x0f
 end_define
 
 begin_comment
@@ -83,7 +83,7 @@ begin_define
 define|#
 directive|define
 name|VSNUL
-value|040
+value|0x10
 end_define
 
 begin_comment
@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|VSQUOTE
-value|0100
+value|0x80
 end_define
 
 begin_comment
@@ -109,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|VSNORMAL
-value|1
+value|0x1
 end_define
 
 begin_comment
@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|VSMINUS
-value|2
+value|0x2
 end_define
 
 begin_comment
@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|VSPLUS
-value|3
+value|0x3
 end_define
 
 begin_comment
@@ -142,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|VSQUESTION
-value|4
+value|0x4
 end_define
 
 begin_comment
@@ -153,11 +153,66 @@ begin_define
 define|#
 directive|define
 name|VSASSIGN
-value|5
+value|0x5
 end_define
 
 begin_comment
 comment|/* ${var=text} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSTRIMLEFT
+value|0x6
+end_define
+
+begin_comment
+comment|/* ${var#pattern} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSTRIMLEFTMAX
+value|0x7
+end_define
+
+begin_comment
+comment|/* ${var##pattern} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSTRIMRIGHT
+value|0x8
+end_define
+
+begin_comment
+comment|/* ${var%pattern} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSTRIMRIGHTMAX
+value|0x9
+end_define
+
+begin_comment
+comment|/* ${var%%pattern} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VSLENGTH
+value|0xa
+end_define
+
+begin_comment
+comment|/* ${#var} */
 end_comment
 
 begin_comment
