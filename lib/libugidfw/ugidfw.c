@@ -3710,6 +3710,9 @@ name|rulenum
 operator|!=
 name|NULL
 condition|)
+operator|*
+name|rulenum
+operator|=
 name|rule_slots
 expr_stmt|;
 return|return
