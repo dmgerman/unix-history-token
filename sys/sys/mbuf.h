@@ -1124,7 +1124,7 @@ name|p
 parameter_list|,
 name|how
 parameter_list|)
-value|do {						\ 	caddr_t _mp;							\ 	int _mhow = (how);						\ 	int _ms = splimp();						\ 									\ 	if (mclfree == NULL)						\ 		(void)m_clalloc(1, _mhow);				\ 	_mp = (caddr_t)mclfree;						\ 	if (_mp != NULL) {						\ 		mclrefcnt[mtocl(_mp)]++;				\ 		mbstat.m_clfree--;					\ 		mclfree = ((union mcluster *)_mp)->mcl_next;		\ 		(p) = _mp;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		if (_mhow == M_WAIT)					\ 			(p) = m_clalloc_wait();				\ 		else							\ 			(p) = NULL;					\ 	}								\ } while (0)
+value|do {						\ 	caddr_t _mp;							\ 	int _mhow = (how);						\ 	int _ms = splimp();						\ 									\ 	if (mclfree == NULL)						\ 		(void)m_clalloc(1, _mhow);				\ 	_mp = (caddr_t)mclfree;						\ 	if (_mp != NULL) {						\ 		KASSERT(mclrefcnt[mtocl(_mp)] == 0,			\ 			("free cluster with refcount %d.",		\ 			mclrefcnt[mtocl(_mp)]));			\ 		mclrefcnt[mtocl(_mp)]++;				\ 		mbstat.m_clfree--;					\ 		mclfree = ((union mcluster *)_mp)->mcl_next;		\ 		(p) = _mp;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		if (_mhow == M_WAIT)					\ 			(p) = m_clalloc_wait();				\ 		else							\ 			(p) = NULL;					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1146,7 +1146,7 @@ name|MCLFREE1
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	KASSERT(mclrefcnt[mtocl(_mp)]> 0, ("freeing free cluster"));	\ 	if (--mclrefcnt[mtocl(_mp)] == 0) {				\ 		_mp->mcl_next = mclfree;				\ 		mclfree = _mp;						\ 		mbstat.m_clfree++;					\ 		MCLWAKEUP();						\ 	}								\ } while (0)
+value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	KASSERT(mclrefcnt[mtocl(_mp)]> 0,				\ 		("freeing free cluster, refcount: %d.",			\ 		mclrefcnt[mtocl(_mp)]));				\ 	if (--mclrefcnt[mtocl(_mp)] == 0) {				\ 		_mp->mcl_next = mclfree;				\ 		mclfree = _mp;						\ 		mbstat.m_clfree++;					\ 		MCLWAKEUP();						\ 	}								\ } while (0)
 end_define
 
 begin_define
