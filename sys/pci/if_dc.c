@@ -1597,7 +1597,7 @@ name|dc_quick
 argument_list|,
 literal|0
 argument_list|,
-literal|"do not mdevget in dc driver"
+literal|"do not m_devget() in dc driver"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
