@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1985, 1986, 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)socket.h	8.4 (Berkeley) 2/21/94  * $Id$  */
+comment|/*  * Copyright (c) 1982, 1985, 1986, 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)socket.h	8.4 (Berkeley) 2/21/94  * $Id: socket.h,v 1.17 1997/02/22 09:45:55 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -1249,6 +1249,56 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * While we may have more groups than this, the cmsgcred struct must  * be able to fit in an mbuf, and NGROUPS_MAX is too large to allow  * this. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMGROUP_MAX
+value|16
+end_define
+
+begin_comment
+comment|/*  * Credentials structure, used to verify the identity of a peer  * process that has sent us a message. This is allocated by the  * peer process but filled in by the kernel. This prevents the  * peer from lying about its identity. (Note that cmcred_groups[0]  * is the effective GID.)  */
+end_comment
+
+begin_struct
+struct|struct
+name|cmsgcred
+block|{
+name|pid_t
+name|cmcred_pid
+decl_stmt|;
+comment|/* PID of sending process */
+name|uid_t
+name|cmcred_uid
+decl_stmt|;
+comment|/* real UID of sending process */
+name|uid_t
+name|cmcred_euid
+decl_stmt|;
+comment|/* effective UID of sending process */
+name|gid_t
+name|cmcred_gid
+decl_stmt|;
+comment|/* real GID of sending process */
+name|short
+name|cmcred_ngroups
+decl_stmt|;
+comment|/* number or groups */
+name|gid_t
+name|cmcred_groups
+index|[
+name|CMGROUP_MAX
+index|]
+decl_stmt|;
+comment|/* groups */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* given pointer to struct cmsghdr, return pointer to data */
 end_comment
 
@@ -1313,6 +1363,17 @@ end_define
 
 begin_comment
 comment|/* timestamp (struct timeval) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCM_CREDS
+value|0x03
+end_define
+
+begin_comment
+comment|/* process creds (struct cmsgcred) */
 end_comment
 
 begin_comment
