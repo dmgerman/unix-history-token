@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c 1.3 %G%"
+literal|"@(#)start.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,6 +511,15 @@ argument_list|(
 name|p
 argument_list|,
 name|SIGIOT
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|psigtrace
+argument_list|(
+name|p
+argument_list|,
+name|SIGILL
 argument_list|,
 name|TRUE
 argument_list|)
