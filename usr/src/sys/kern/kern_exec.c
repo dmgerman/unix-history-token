@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_exec.c	7.38 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_exec.c	7.39 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -297,7 +297,7 @@ name|resid
 decl_stmt|,
 name|error
 decl_stmt|,
-name|flags
+name|paged
 init|=
 literal|0
 decl_stmt|;
@@ -786,10 +786,11 @@ name|ha_version
 operator|!=
 name|BSDVNUM
 condition|)
-name|flags
+name|paged
 operator||=
 name|SHPUX
 expr_stmt|;
+comment|/* XXX */
 comment|/* 		 * Shuffle important fields to their BSD locations. 		 * Note that the order in which this is done is important. 		 */
 name|exdata
 operator|.
@@ -974,10 +975,10 @@ break|break;
 case|case
 name|ZMAGIC
 case|:
-name|flags
-operator||=
-name|SPAGV
+name|paged
+operator|++
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|NMAGIC
 case|:
@@ -1660,7 +1661,7 @@ name|exdata
 operator|.
 name|ex_exec
 argument_list|,
-name|flags
+name|paged
 argument_list|,
 name|nc
 operator|+
@@ -2223,7 +2224,7 @@ name|vp
 argument_list|,
 name|ep
 argument_list|,
-name|flags
+name|paged
 argument_list|,
 name|nargc
 argument_list|,
@@ -2259,7 +2260,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|flags
+name|paged
 decl_stmt|,
 name|nargc
 decl_stmt|,
@@ -2314,6 +2315,20 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HPUXCOMPAT
+name|int
+name|hpux
+init|=
+operator|(
+name|paged
+operator|&
+name|SHPUX
+operator|)
+decl_stmt|;
+name|paged
+operator|&=
+operator|~
+name|SHPUX
+expr_stmt|;
 if|if
 condition|(
 name|ep
@@ -2325,9 +2340,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|flags
-operator|&
-name|SPAGV
+name|paged
 condition|)
 name|toff
 operator|=
@@ -2348,9 +2361,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|flags
-operator|&
-name|SPAGV
+name|paged
 condition|)
 name|toff
 operator|=
@@ -2661,31 +2672,32 @@ name|pcb_flags
 operator||=
 name|PCB_HPUXBIN
 expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
+if|if
+condition|(
+name|hpux
+condition|)
+name|p
+operator|->
+name|p_flag
+operator||=
+name|SHPUX
+expr_stmt|;
+else|else
 name|p
 operator|->
 name|p_flag
 operator|&=
 operator|~
-operator|(
-name|SPAGV
-operator||
-name|SSEQL
-operator||
-name|SUANOM
-operator||
 name|SHPUX
-operator|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 name|p
 operator|->
 name|p_flag
 operator||=
-name|flags
-operator||
 name|SEXEC
 expr_stmt|;
 name|addr
@@ -2817,11 +2829,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|flags
-operator|&
-name|SPAGV
-operator|)
+name|paged
 operator|==
 literal|0
 condition|)
@@ -3077,7 +3085,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SULOCK
+name|SKEEP
 expr_stmt|;
 return|return
 operator|(
