@@ -2746,6 +2746,7 @@ name|drive
 operator|->
 name|vp
 condition|)
+block|{
 comment|/* it's open, */
 name|close_locked_drive
 argument_list|(
@@ -2753,6 +2754,14 @@ name|drive
 argument_list|)
 expr_stmt|;
 comment|/* close it */
+name|drive
+operator|->
+name|state
+operator|=
+name|drive_down
+expr_stmt|;
+comment|/* and note the fact */
+block|}
 if|if
 condition|(
 name|drive
