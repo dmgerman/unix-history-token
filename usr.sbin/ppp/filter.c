@@ -3385,8 +3385,6 @@ literal|"eq"
 block|,
 literal|"gt"
 block|,
-literal|"unknown"
-block|,
 literal|"lt"
 block|}
 decl_stmt|;
