@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984,1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *      @(#)idp_usrreq.c	6.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *      @(#)idp_usrreq.c	6.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -199,14 +199,16 @@ name|idp_sna
 expr_stmt|;
 if|if
 condition|(
-name|ns_netof
+name|ns_neteqnn
 argument_list|(
 name|idp
 operator|->
 name|idp_sna
+operator|.
+name|x_net
+argument_list|,
+name|ns_zeronet
 argument_list|)
-operator|==
-literal|0
 operator|&&
 name|ifp
 condition|)
@@ -711,7 +713,10 @@ argument_list|(
 expr|struct
 name|idp
 argument_list|)
+operator|-
+literal|2
 expr_stmt|;
+comment|/* adjust to start on longword bdry 				   for NSIP on gould */
 name|m
 operator|->
 name|m_len

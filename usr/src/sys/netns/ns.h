@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns.h	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns.h	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -335,6 +335,12 @@ name|sns_port
 value|sns_addr.x_port
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -343,6 +349,27 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(*(long *)& ((a).x_net))
+end_define
+
+begin_comment
+comment|/* XXX - not needed */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ns_neteqnn
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a).s_net[0]==(b).s_net[0])&& \ 					((a).s_net[0]==(b).s_net[0]))
 end_define
 
 begin_define
@@ -354,7 +381,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(ns_netof(a) == ns_netof(b))
+value|ns_neteqnn((a).x_net, (b).x_net)
 end_define
 
 begin_define
@@ -510,6 +537,22 @@ specifier|extern
 name|union
 name|ns_host
 name|ns_broadhost
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|union
+name|ns_net
+name|ns_zeronet
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|union
+name|ns_net
+name|ns_broadnet
 decl_stmt|;
 end_decl_stmt
 
