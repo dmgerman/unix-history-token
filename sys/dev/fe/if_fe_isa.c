@@ -1036,7 +1036,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -1473,7 +1473,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -1885,7 +1885,7 @@ comment|/* Make sure the EEPROM contains ICL's permanent station            addr
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|eeprom
 operator|+
@@ -1900,7 +1900,7 @@ return|;
 comment|/* Check if the "configured" Ethernet address in the EEPROM is 	   valid.  Use it if it is, or use the "permanent" address instead.  */
 if|if
 condition|(
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|eeprom
 operator|+
@@ -2428,7 +2428,7 @@ comment|/* Make sure the EEPROM contains RATOC's station address.  */
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -2589,7 +2589,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|eeprom
 operator|+
@@ -3274,7 +3274,7 @@ comment|/* Make sure the Ethernet (MAC) station address is of TDK's.  */
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|eeprom
 operator|+
@@ -3511,7 +3511,7 @@ comment|/* Make sure the Ethernet (MAC) station address is of TDK/LANX's.  */
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|eeprom
 argument_list|,
@@ -3799,7 +3799,7 @@ comment|/* Make sure it is Gateway Communication's.  */
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -4016,7 +4016,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->

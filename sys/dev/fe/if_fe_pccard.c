@@ -988,7 +988,7 @@ comment|/* Make sure we got a valid station address.  */
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -1137,7 +1137,7 @@ comment|/* Make sure we got a valid station address.  */
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
