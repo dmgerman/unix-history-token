@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scroll.c	5.13 (Berkeley) %G%"
+literal|"@(#)scroll.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
