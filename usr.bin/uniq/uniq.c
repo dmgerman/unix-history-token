@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)uniq.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)uniq.c	8.3 (Berkeley) 5/4/95";
 endif|#
 directive|endif
 end_endif
@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: uniq.c,v 1.1.1.1.8.2 1997/08/29 05:30:06 imp Exp $"
+literal|"$Id: uniq.c,v 1.5 1998/03/08 20:56:43 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,19 +70,25 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<locale.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -95,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -250,6 +262,16 @@ literal|0
 decl_stmt|,
 name|comp
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|obsolete
 argument_list|(
 name|argv
@@ -791,6 +813,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|str
 argument_list|)
@@ -974,6 +1000,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ap
 index|[
 literal|1
