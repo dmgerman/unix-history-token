@@ -2932,8 +2932,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"
-literal|"
+literal|"\001"
 argument_list|)
 expr_stmt|;
 name|printf
