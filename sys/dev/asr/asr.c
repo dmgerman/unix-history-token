@@ -19822,7 +19822,7 @@ name|ptok
 parameter_list|(
 name|a
 parameter_list|)
-value|((char *)(a) + KERNBASE)
+value|((char *)(uintptr_t)(a) + KERNBASE)
 name|bzero
 argument_list|(
 operator|&
