@@ -262,7 +262,7 @@ literal|1
 condition|?
 literal|"s"
 else|:
-literal|""
+literal|" "
 argument_list|)
 expr_stmt|;
 block|}
