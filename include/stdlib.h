@@ -522,9 +522,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* float strtof(const char * __restrict, char ** __restrict); */
-end_comment
+begin_function_decl
+name|float
+name|strtof
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|__restrict
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|long
@@ -545,9 +558,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* long double 	 strtold(const char * __restrict, char ** __restrict); */
-end_comment
+begin_function_decl
+name|long
+name|double
+name|strtold
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|__restrict
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|unsigned
