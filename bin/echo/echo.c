@@ -73,13 +73,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -150,17 +144,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If the next argument is NULL then this is this 		 * the last argument, therefore we need to check 		 * for a trailing \c. 		 */
-if|if
-condition|(
-name|argv
-index|[
-literal|1
-index|]
-operator|==
-name|NULL
-condition|)
-block|{
 name|size_t
 name|len
 decl_stmt|;
@@ -174,6 +157,17 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If the next argument is NULL then this is this 		 * the last argument, therefore we need to check 		 * for a trailing \c. 		 */
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
 comment|/* is there room for a '\c' and is there one? */
 if|if
 condition|(
@@ -207,17 +201,9 @@ literal|'c'
 condition|)
 block|{
 comment|/* chop it and set the no-newline flag. */
-name|argv
-index|[
-literal|0
-index|]
-index|[
 name|len
-operator|-
+operator|-=
 literal|2
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|nflag
 operator|=
@@ -225,17 +211,16 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|write
 argument_list|(
-literal|"%s"
+name|STDOUT_FILENO
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -244,9 +229,13 @@ operator|*
 operator|++
 name|argv
 condition|)
-name|putchar
+name|write
 argument_list|(
-literal|' '
+name|STDOUT_FILENO
+argument_list|,
+literal|" "
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -255,9 +244,13 @@ condition|(
 operator|!
 name|nflag
 condition|)
-name|putchar
+name|write
 argument_list|(
-literal|'\n'
+name|STDOUT_FILENO
+argument_list|,
+literal|"\n"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
