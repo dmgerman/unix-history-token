@@ -3109,7 +3109,7 @@ name|variables
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Since the user has not requested that any variables 		 * be printed, we can built targets. 		 * 		 * Have red the entire graph and need to make a list of targets 		 * to create. If none was given on the command line, we consult 		 * the parsing module to find the main target(s) to create. 		 */
+comment|/* 		 * Since the user has not requested that any variables 		 * be printed, we can build targets. 		 * 		 * Have read the entire graph and need to make a list of targets 		 * to create. If none was given on the command line, we consult 		 * the parsing module to find the main target(s) to create. 		 */
 name|Lst
 name|targs
 init|=
