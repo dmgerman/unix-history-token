@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.57 2001/12/12 15:24:00 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.59 2001/12/24 21:36:15 augustss Exp $	*/
 end_comment
 
 begin_comment
