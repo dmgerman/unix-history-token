@@ -15,6 +15,12 @@ directive|define
 name|_SYS_WAIT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_comment
 comment|/*  * This file holds definitions relevant to the wait4 system call and the  * alternate interfaces that use it (wait, wait3, waitpid).  */
 end_comment
@@ -267,19 +273,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Tokens for special values of the "pid" parameter to wait4.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
 end_if
-
-begin_comment
-comment|/* POSIX extensions and 4.2/4.3 compatibility: */
-end_comment
-
-begin_comment
-comment|/*  * Tokens for special values of the "pid" parameter to wait4.  */
-end_comment
 
 begin_define
 define|#
@@ -303,188 +305,6 @@ begin_comment
 comment|/* any process in my process group */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
-
-begin_comment
-comment|/*  * Deprecated:  * Structure of the information in the status word returned by wait4.  * If w_stopval==WSTOPPED, then the second structure describes  * the information returned, else the first.  */
-end_comment
-
-begin_union
-union|union
-name|wait
-block|{
-name|int
-name|w_status
-decl_stmt|;
-comment|/* used in syscall */
-comment|/* 	 * Terminated process status. 	 */
-struct|struct
-block|{
-if|#
-directive|if
-name|_BYTE_ORDER
-operator|==
-name|_LITTLE_ENDIAN
-name|unsigned
-name|int
-name|w_Termsig
-range|:
-literal|7
-decl_stmt|,
-comment|/* termination signal */
-name|w_Coredump
-range|:
-literal|1
-decl_stmt|,
-comment|/* core dump indicator */
-name|w_Retcode
-range|:
-literal|8
-decl_stmt|,
-comment|/* exit code if w_termsig==0 */
-name|w_Filler
-range|:
-literal|16
-decl_stmt|;
-comment|/* upper bits filler */
-endif|#
-directive|endif
-if|#
-directive|if
-name|_BYTE_ORDER
-operator|==
-name|_BIG_ENDIAN
-name|unsigned
-name|int
-name|w_Filler
-range|:
-literal|16
-decl_stmt|,
-comment|/* upper bits filler */
-name|w_Retcode
-range|:
-literal|8
-decl_stmt|,
-comment|/* exit code if w_termsig==0 */
-name|w_Coredump
-range|:
-literal|1
-decl_stmt|,
-comment|/* core dump indicator */
-name|w_Termsig
-range|:
-literal|7
-decl_stmt|;
-comment|/* termination signal */
-endif|#
-directive|endif
-block|}
-name|w_T
-struct|;
-comment|/* 	 * Stopped process status.  Returned only for traced children unless 	 * requested with the WUNTRACED option bit. 	 */
-struct|struct
-block|{
-if|#
-directive|if
-name|_BYTE_ORDER
-operator|==
-name|_LITTLE_ENDIAN
-name|unsigned
-name|int
-name|w_Stopval
-range|:
-literal|8
-decl_stmt|,
-comment|/* == W_STOPPED if stopped */
-name|w_Stopsig
-range|:
-literal|8
-decl_stmt|,
-comment|/* signal that stopped us */
-name|w_Filler
-range|:
-literal|16
-decl_stmt|;
-comment|/* upper bits filler */
-endif|#
-directive|endif
-if|#
-directive|if
-name|_BYTE_ORDER
-operator|==
-name|_BIG_ENDIAN
-name|unsigned
-name|int
-name|w_Filler
-range|:
-literal|16
-decl_stmt|,
-comment|/* upper bits filler */
-name|w_Stopsig
-range|:
-literal|8
-decl_stmt|,
-comment|/* signal that stopped us */
-name|w_Stopval
-range|:
-literal|8
-decl_stmt|;
-comment|/* == W_STOPPED if stopped */
-endif|#
-directive|endif
-block|}
-name|w_S
-struct|;
-block|}
-union|;
-end_union
-
-begin_define
-define|#
-directive|define
-name|w_termsig
-value|w_T.w_Termsig
-end_define
-
-begin_define
-define|#
-directive|define
-name|w_coredump
-value|w_T.w_Coredump
-end_define
-
-begin_define
-define|#
-directive|define
-name|w_retcode
-value|w_T.w_Retcode
-end_define
-
-begin_define
-define|#
-directive|define
-name|w_stopval
-value|w_S.w_Stopval
-end_define
-
-begin_define
-define|#
-directive|define
-name|w_stopsig
-value|w_S.w_Stopsig
-end_define
-
-begin_define
-define|#
-directive|define
-name|WSTOPPED
-value|_WSTOPPED
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -504,12 +324,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
 end_include
 
 begin_macro
