@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	1.17 %G%"
+literal|"@(#)lex.c	1.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,16 +68,6 @@ name|char
 name|tempMesg
 index|[]
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|sigs
-index|[
-literal|3
-index|]
-function_decl|)
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|(
@@ -118,13 +108,9 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Looks like all will be well.  We must now relinquish our 	 * hold on the current set of stuff.  Must ignore signals 	 * while we are reading the new file, else we will ruin 	 * the message[] data structure. 	 */
-name|sigsave
-argument_list|(
-name|sigs
-argument_list|,
-name|SIG_IGN
-argument_list|)
+comment|/* 	 * Looks like all will be well.  We must now relinquish our 	 * hold on the current set of stuff.  Must hold signals 	 * while we are reading the new file, else we will ruin 	 * the message[] data structure. 	 */
+name|holdsigs
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -303,10 +289,8 @@ argument_list|(
 name|ibuf
 argument_list|)
 expr_stmt|;
-name|sigret
-argument_list|(
-name|sigs
-argument_list|)
+name|relsesigs
+argument_list|()
 expr_stmt|;
 name|shudann
 operator|=
@@ -1502,20 +1486,8 @@ end_macro
 
 begin_block
 block|{
-name|int
-function_decl|(
-modifier|*
-name|sigs
-index|[
-literal|3
-index|]
-function_decl|)
-parameter_list|()
-function_decl|;
-name|sigsave
-argument_list|(
-name|sigs
-argument_list|)
+name|holdsigs
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
