@@ -51,7 +51,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: parse_group.c,v 1.3 1997/02/22 14:21:54 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -514,6 +514,14 @@ name|cp
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|==
+name|NULL
+condition|)
+comment|/* !! Must check for this! */
+break|break;
 for|for
 control|(
 name|m
