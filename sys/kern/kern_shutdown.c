@@ -1002,9 +1002,24 @@ name|first_buf_printf
 init|=
 literal|1
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SMP
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|)
 comment|/* Do all shutdown processing on cpu0 */
 name|mtx_lock_spin
 argument_list|(
