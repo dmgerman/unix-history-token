@@ -1428,7 +1428,7 @@ name|PAGEROW
 argument_list|,
 name|PAGECOL
 argument_list|,
-literal|"        PAGING   SWAPPING "
+literal|"        VN PAGER  SWAP PAGER "
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1439,7 +1439,7 @@ literal|1
 argument_list|,
 name|PAGECOL
 argument_list|,
-literal|"        in  out   in  out "
+literal|"        in  out     in  out "
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -3204,7 +3204,7 @@ name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_pageins
+name|v_vnodein
 argument_list|,
 name|PAGEROW
 operator|+
@@ -3221,7 +3221,7 @@ name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_pageouts
+name|v_vnodeout
 argument_list|,
 name|PAGEROW
 operator|+
@@ -3238,7 +3238,7 @@ name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_swpin
+name|v_swapin
 argument_list|,
 name|PAGEROW
 operator|+
@@ -3246,17 +3246,16 @@ literal|2
 argument_list|,
 name|PAGECOL
 operator|+
-literal|15
+literal|17
 argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|/* - */
 name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_swpout
+name|v_swapout
 argument_list|,
 name|PAGEROW
 operator|+
@@ -3264,17 +3263,16 @@ literal|2
 argument_list|,
 name|PAGECOL
 operator|+
-literal|20
+literal|22
 argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|/* - */
 name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_pgpgin
+name|v_vnodepgsin
 argument_list|,
 name|PAGEROW
 operator|+
@@ -3287,12 +3285,11 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|/* ? */
 name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_pgpgout
+name|v_vnodepgsout
 argument_list|,
 name|PAGEROW
 operator|+
@@ -3305,12 +3302,11 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|/* ? */
 name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_pswpin
+name|v_swappgsin
 argument_list|,
 name|PAGEROW
 operator|+
@@ -3318,17 +3314,16 @@ literal|3
 argument_list|,
 name|PAGECOL
 operator|+
-literal|15
+literal|17
 argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|/* - */
 name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_pswpout
+name|v_swappgsout
 argument_list|,
 name|PAGEROW
 operator|+
@@ -3336,12 +3331,11 @@ literal|3
 argument_list|,
 name|PAGECOL
 operator|+
-literal|20
+literal|22
 argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|/* - */
 name|PUTRATE
 argument_list|(
 name|Cnt
@@ -3429,7 +3423,7 @@ name|PUTRATE
 argument_list|(
 name|Cnt
 operator|.
-name|v_faults
+name|v_vm_faults
 argument_list|,
 name|GENSTATROW
 operator|+
