@@ -109,6 +109,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"port_after.h"
 end_include
 
@@ -1145,7 +1151,7 @@ operator|+=
 operator|(
 operator|(
 operator|(
-name|u_int32_t
+name|u_long
 operator|)
 name|bp
 operator|)
