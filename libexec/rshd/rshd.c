@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)rshd.c	8.2 (Berkeley) 4/6/94";
+unit|static const char sccsid[] = "@(#)rshd.c	8.2 (Berkeley) 4/6/94";
 endif|#
 directive|endif
 end_endif
@@ -334,7 +334,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberosIV/krb.h>
+file|<krb.h>
 end_include
 
 begin_define
@@ -1507,13 +1507,30 @@ condition|(
 name|port
 operator|>=
 name|IPPORT_RESERVED
+operator|||
+name|port
+operator|<
+name|IPPORT_RESERVED
+operator|/
+literal|2
 condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
+operator||
+name|LOG_AUTH
 argument_list|,
-literal|"2nd port not reserved\n"
+literal|"2nd socket from %s on unreserved port %u"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|fromp
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|,
+name|port
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2095,7 +2112,7 @@ argument_list|,
 name|version
 argument_list|)
 expr_stmt|;
-name|des_set_key_krb
+name|des_set_key
 argument_list|(
 operator|&
 name|kdata
@@ -2441,7 +2458,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Permission denied.\n"
+literal|"Login incorrect.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2562,7 +2579,7 @@ name|NULL
 condition|)
 name|errorstr
 operator|=
-literal|"Permission denied.\n"
+literal|"Login incorrect.\n"
 expr_stmt|;
 name|error
 argument_list|(
@@ -2917,7 +2934,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|des_write
+name|des_enc_write
 argument_list|(
 name|s
 argument_list|,
@@ -2929,6 +2946,13 @@ name|msg
 argument_list|)
 operator|-
 literal|1
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|kdata
+operator|->
+name|session
 argument_list|)
 expr_stmt|;
 block|}
@@ -3224,7 +3248,7 @@ name|doencrypt
 condition|)
 name|ret
 operator|=
-name|des_read
+name|des_enc_read
 argument_list|(
 name|s
 argument_list|,
@@ -3232,6 +3256,13 @@ operator|&
 name|sig
 argument_list|,
 literal|1
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|kdata
+operator|->
+name|session
 argument_list|)
 expr_stmt|;
 else|else
@@ -3352,13 +3383,20 @@ condition|)
 operator|(
 name|void
 operator|)
-name|des_write
+name|des_enc_write
 argument_list|(
 name|s
 argument_list|,
 name|buf
 argument_list|,
 name|cc
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|kdata
+operator|->
+name|session
 argument_list|)
 expr_stmt|;
 else|else
@@ -3458,13 +3496,20 @@ else|else
 operator|(
 name|void
 operator|)
-name|des_write
+name|des_enc_write
 argument_list|(
 name|STDOUT_FILENO
 argument_list|,
 name|buf
 argument_list|,
 name|cc
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|kdata
+operator|->
+name|session
 argument_list|)
 expr_stmt|;
 block|}
@@ -3490,7 +3535,7 @@ literal|0
 expr_stmt|;
 name|cc
 operator|=
-name|des_read
+name|des_enc_read
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
@@ -3500,6 +3545,13 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|kdata
+operator|->
+name|session
 argument_list|)
 expr_stmt|;
 if|if
