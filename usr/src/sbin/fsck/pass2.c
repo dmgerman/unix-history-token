@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.2 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1369,6 +1369,17 @@ condition|?
 name|DSTATE
 else|:
 name|FSTATE
+expr_stmt|;
+name|lncntp
+index|[
+name|dirp
+operator|->
+name|d_ino
+index|]
+operator|=
+name|dp
+operator|->
+name|di_nlink
 expr_stmt|;
 goto|goto
 name|again
