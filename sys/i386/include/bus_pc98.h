@@ -3330,7 +3330,7 @@ condition|)
 endif|#
 directive|endif
 block|{
-asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsw					\n\ 			movw %%ax,(%1)				\n\ 			movw %%ax,(%2)				\n\ 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsw					\n\ 			movw %%ax,(%2)				\n\ 			loop 1b"				:
 literal|"=S"
 operator|(
 name|addr
