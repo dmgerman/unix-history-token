@@ -243,6 +243,11 @@ argument|acpi_event
 argument_list|)
 name|event
 expr_stmt|;
+name|struct
+name|proc
+modifier|*
+name|acpi_thread
+decl_stmt|;
 block|}
 name|acpi_softc_t
 typedef|;
