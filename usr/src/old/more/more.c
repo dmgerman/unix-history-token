@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.11 (Berkeley) %G%"
+literal|"@(#)more.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2055,6 +2055,23 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ftell
+argument_list|(
+name|f
+argument_list|)
+operator|<
+sizeof|sizeof
+name|magic
+condition|)
+name|rewind
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+comment|/* reset file position */
+else|else
 name|fseek
 argument_list|(
 name|f
