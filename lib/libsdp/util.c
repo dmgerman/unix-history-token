@@ -29,7 +29,7 @@ begin_struct
 struct|struct
 name|sdp_attr_desc
 block|{
-name|u_int32_t
+name|uint32_t
 name|attr
 decl_stmt|;
 name|char
@@ -792,7 +792,7 @@ modifier|*
 specifier|const
 name|sdp_attr2desc
 parameter_list|(
-name|u_int16_t
+name|uint16_t
 name|attr
 parameter_list|)
 block|{
@@ -850,7 +850,7 @@ modifier|*
 specifier|const
 name|sdp_uuid2desc
 parameter_list|(
-name|u_int16_t
+name|uint16_t
 name|uuid
 parameter_list|)
 block|{
@@ -905,15 +905,15 @@ begin_function
 name|void
 name|sdp_print
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|level
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|start
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|end
@@ -951,10 +951,10 @@ decl_stmt|;
 block|}
 name|value
 union|;
-name|u_int8_t
+name|uint8_t
 name|type
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|i
 decl_stmt|;
 if|if
@@ -1127,7 +1127,7 @@ literal|"int128/uuid128 %#8.8x-%4.4x-%4.4x-%4.4x-%4.4x%8.8x\n"
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -1142,7 +1142,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -1157,7 +1157,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -1172,7 +1172,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -1187,7 +1187,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -1202,7 +1202,7 @@ index|]
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&

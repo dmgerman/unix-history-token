@@ -77,23 +77,23 @@ name|void
 modifier|*
 name|xss
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|plen
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 specifier|const
 modifier|*
 name|pp
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|alen
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 specifier|const
 modifier|*
 name|ap
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|vlen
 parameter_list|,
 name|sdp_attr_t
@@ -107,7 +107,7 @@ block|{
 name|sdp_pdu_t
 name|pdu
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|len
 decl_stmt|;
 block|}
@@ -127,7 +127,7 @@ name|sdp_session_p
 operator|)
 name|xss
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|req
 init|=
@@ -249,18 +249,18 @@ name|plen
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_int8_t
+name|uint8_t
 argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_int16_t
+name|uint16_t
 argument_list|)
 operator|+
 comment|/* ServiceSearchPattern */
 sizeof|sizeof
 argument_list|(
-name|u_int16_t
+name|uint16_t
 argument_list|)
 operator|+
 comment|/* MaximumAttributeByteCount */
@@ -268,12 +268,12 @@ name|alen
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_int8_t
+name|uint8_t
 argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_int16_t
+name|uint16_t
 argument_list|)
 expr_stmt|;
 comment|/* AttributeIDList */
@@ -443,7 +443,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|req_cs
 init|=
@@ -938,7 +938,7 @@ operator|->
 name|imtu
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|size
 decl_stmt|,
 name|offset
@@ -1280,7 +1280,7 @@ name|alen
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int8_t
+name|uint8_t
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1297,7 +1297,7 @@ name|alen
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int16_t
+name|uint16_t
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1314,7 +1314,7 @@ name|alen
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1328,7 +1328,7 @@ name|alen
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int64_t
+name|uint64_t
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1345,7 +1345,7 @@ name|alen
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int128_t
+name|uint128_t
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1370,7 +1370,7 @@ index|]
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_int8_t
+name|uint8_t
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1390,7 +1390,7 @@ name|alen
 operator|=
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|rsp_tmp
 index|[
@@ -1402,7 +1402,7 @@ operator|)
 operator||
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|rsp_tmp
 index|[
@@ -1414,7 +1414,7 @@ name|alen
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_int16_t
+name|uint16_t
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1434,7 +1434,7 @@ name|alen
 operator|=
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rsp_tmp
 index|[
@@ -1446,7 +1446,7 @@ operator|)
 operator||
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rsp_tmp
 index|[
@@ -1458,7 +1458,7 @@ operator|)
 operator||
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rsp_tmp
 index|[
@@ -1470,7 +1470,7 @@ operator|)
 operator||
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|rsp_tmp
 index|[
@@ -1482,7 +1482,7 @@ name|alen
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1505,7 +1505,7 @@ name|alen
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_int8_t
+name|uint8_t
 argument_list|)
 expr_stmt|;
 if|if
@@ -1572,12 +1572,12 @@ operator|-=
 operator|(
 sizeof|sizeof
 argument_list|(
-name|u_int8_t
+name|uint8_t
 argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_int16_t
+name|uint16_t
 argument_list|)
 operator|+
 name|alen

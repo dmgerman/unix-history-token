@@ -830,7 +830,7 @@ parameter_list|,
 name|hi
 parameter_list|)
 define|\
-value|(u_int32_t)(((u_int16_t)(lo)<< 16) | ((u_int16_t)(hi)))
+value|(uint32_t)(((uint16_t)(lo)<< 16) | ((uint16_t)(hi)))
 end_define
 
 begin_define
@@ -1127,6 +1127,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SDP_ATTR_PRIMARY_LANGUAGE_BASE_ID
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDP_ATTR_SERVICE_NAME_OFFSET
 value|0x0000
 end_define
@@ -1202,15 +1209,15 @@ begin_struct
 struct|struct
 name|sdp_pdu
 block|{
-name|u_int8_t
+name|uint8_t
 name|pid
 decl_stmt|;
 comment|/* PDU ID - SDP_PDU_xxx */
-name|u_int16_t
+name|uint16_t
 name|tid
 decl_stmt|;
 comment|/* transaction ID */
-name|u_int16_t
+name|uint16_t
 name|len
 decl_stmt|;
 comment|/* parameters length (in bytes) */
@@ -1242,6 +1249,52 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Error codes for SDP_PDU_ERROR_RESPONSE  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDP_ERROR_CODE_INVALID_SDP_VERSION
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_ERROR_CODE_INVALID_SERVICE_RECORD_HANDLE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_ERROR_CODE_INVALID_REQUEST_SYNTAX
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_ERROR_CODE_INVALID_PDU_SIZE
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_ERROR_CODE_INVALID_CONTINUATION_STATE
+value|0x0005
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_ERROR_CODE_INSUFFICIENT_RESOURCES
+value|0x0006
+end_define
+
+begin_comment
 comment|/*  * SDP int128/uint128 parameter  */
 end_comment
 
@@ -1271,7 +1324,7 @@ begin_typedef
 typedef|typedef
 name|struct
 name|int128
-name|u_int128_t
+name|uint128_t
 typedef|;
 end_typedef
 
@@ -1283,7 +1336,7 @@ begin_struct
 struct|struct
 name|sdp_attr
 block|{
-name|u_int16_t
+name|uint16_t
 name|flags
 decl_stmt|;
 define|#
@@ -1298,15 +1351,15 @@ define|#
 directive|define
 name|SDP_ATTR_TRUNCATED
 value|(1<< 1)
-name|u_int16_t
+name|uint16_t
 name|attr
 decl_stmt|;
 comment|/* SDP_ATTR_xxx */
-name|u_int32_t
+name|uint32_t
 name|vlen
 decl_stmt|;
 comment|/* length of the value[] in bytes */
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|value
 decl_stmt|;
@@ -1349,7 +1402,7 @@ name|b
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	(b) = *t_cp; \ 	(cp) ++; \ }
+value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(b) = *t_cp; \ 	(cp) ++; \ }
 end_define
 
 begin_define
@@ -1361,7 +1414,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	(s) = ((u_int16_t)t_cp[0]<< 8) \ 	    | ((u_int16_t)t_cp[1]) \ 	    ; \ 	(cp) += 2; \ }
+value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(s) = ((uint16_t)t_cp[0]<< 8) \ 	    | ((uint16_t)t_cp[1]) \ 	    ; \ 	(cp) += 2; \ }
 end_define
 
 begin_define
@@ -1373,7 +1426,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	(l) = ((u_int32_t)t_cp[0]<< 24) \ 	    | ((u_int32_t)t_cp[1]<< 16) \ 	    | ((u_int32_t)t_cp[2]<< 8) \ 	    | ((u_int32_t)t_cp[3]) \ 	    ; \ 	(cp) += 4; \ }
+value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(l) = ((uint32_t)t_cp[0]<< 24) \ 	    | ((uint32_t)t_cp[1]<< 16) \ 	    | ((uint32_t)t_cp[2]<< 8) \ 	    | ((uint32_t)t_cp[3]) \ 	    ; \ 	(cp) += 4; \ }
 end_define
 
 begin_define
@@ -1385,7 +1438,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	(l) = ((u_int64_t)t_cp[0]<< 56) \ 	    | ((u_int64_t)t_cp[1]<< 48) \ 	    | ((u_int64_t)t_cp[2]<< 40) \ 	    | ((u_int64_t)t_cp[3]<< 32) \ 	    | ((u_int64_t)t_cp[4]<< 24) \ 	    | ((u_int64_t)t_cp[5]<< 16) \ 	    | ((u_int64_t)t_cp[6]<< 8) \ 	    | ((u_int64_t)t_cp[7]) \ 	    ; \ 	(cp) += 8; \ }
+value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(l) = ((uint64_t)t_cp[0]<< 56) \ 	    | ((uint64_t)t_cp[1]<< 48) \ 	    | ((uint64_t)t_cp[2]<< 40) \ 	    | ((uint64_t)t_cp[3]<< 32) \ 	    | ((uint64_t)t_cp[4]<< 24) \ 	    | ((uint64_t)t_cp[5]<< 16) \ 	    | ((uint64_t)t_cp[6]<< 8) \ 	    | ((uint64_t)t_cp[7]) \ 	    ; \ 	(cp) += 8; \ }
 end_define
 
 begin_if
@@ -1405,7 +1458,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	(l)->b[15] = *t_cp++; \ 	(l)->b[14] = *t_cp++; \ 	(l)->b[13] = *t_cp++; \ 	(l)->b[12] = *t_cp++; \ 	(l)->b[11] = *t_cp++; \ 	(l)->b[10] = *t_cp++; \ 	(l)->b[9]  = *t_cp++; \ 	(l)->b[8]  = *t_cp++; \ 	(l)->b[7]  = *t_cp++; \ 	(l)->b[6]  = *t_cp++; \ 	(l)->b[5]  = *t_cp++; \ 	(l)->b[4]  = *t_cp++; \ 	(l)->b[3]  = *t_cp++; \ 	(l)->b[2]  = *t_cp++; \ 	(l)->b[1]  = *t_cp++; \ 	(cp) += 16; \ }
+value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(l)->b[15] = *t_cp++; \ 	(l)->b[14] = *t_cp++; \ 	(l)->b[13] = *t_cp++; \ 	(l)->b[12] = *t_cp++; \ 	(l)->b[11] = *t_cp++; \ 	(l)->b[10] = *t_cp++; \ 	(l)->b[9]  = *t_cp++; \ 	(l)->b[8]  = *t_cp++; \ 	(l)->b[7]  = *t_cp++; \ 	(l)->b[6]  = *t_cp++; \ 	(l)->b[5]  = *t_cp++; \ 	(l)->b[4]  = *t_cp++; \ 	(l)->b[3]  = *t_cp++; \ 	(l)->b[2]  = *t_cp++; \ 	(l)->b[1]  = *t_cp++; \ 	(cp) += 16; \ }
 end_define
 
 begin_else
@@ -1426,7 +1479,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	(l)->b[0]  = *t_cp++; \ 	(l)->b[1]  = *t_cp++; \ 	(l)->b[2]  = *t_cp++; \ 	(l)->b[3]  = *t_cp++; \ 	(l)->b[4]  = *t_cp++; \ 	(l)->b[5]  = *t_cp++; \ 	(l)->b[6]  = *t_cp++; \ 	(l)->b[7]  = *t_cp++; \ 	(l)->b[8]  = *t_cp++; \ 	(l)->b[9]  = *t_cp++; \ 	(l)->b[10] = *t_cp++; \ 	(l)->b[11] = *t_cp++; \ 	(l)->b[12] = *t_cp++; \ 	(l)->b[13] = *t_cp++; \ 	(l)->b[14] = *t_cp++; \ 	(l)->b[15] = *t_cp++; \ 	(cp) += 16; \ }
+value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(l)->b[0]  = *t_cp++; \ 	(l)->b[1]  = *t_cp++; \ 	(l)->b[2]  = *t_cp++; \ 	(l)->b[3]  = *t_cp++; \ 	(l)->b[4]  = *t_cp++; \ 	(l)->b[5]  = *t_cp++; \ 	(l)->b[6]  = *t_cp++; \ 	(l)->b[7]  = *t_cp++; \ 	(l)->b[8]  = *t_cp++; \ 	(l)->b[9]  = *t_cp++; \ 	(l)->b[10] = *t_cp++; \ 	(l)->b[11] = *t_cp++; \ 	(l)->b[12] = *t_cp++; \ 	(l)->b[13] = *t_cp++; \ 	(l)->b[14] = *t_cp++; \ 	(l)->b[15] = *t_cp++; \ 	(cp) += 16; \ }
 end_define
 
 begin_endif
@@ -1447,7 +1500,7 @@ name|b
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int8_t t_b = (u_int8_t)(b); \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	*t_cp = t_b; \ 	(cp) ++; \ }
+value|{ \ 	register uint8_t t_b = (uint8_t)(b); \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	*t_cp = t_b; \ 	(cp) ++; \ }
 end_define
 
 begin_define
@@ -1459,7 +1512,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int16_t t_s = (u_int16_t)(s); \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	*t_cp++ = t_s>> 8; \ 	*t_cp   = t_s; \ 	(cp) += 2; \ }
+value|{ \ 	register uint16_t t_s = (uint16_t)(s); \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	*t_cp++ = t_s>> 8; \ 	*t_cp   = t_s; \ 	(cp) += 2; \ }
 end_define
 
 begin_define
@@ -1471,7 +1524,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int32_t t_l = (u_int32_t)(l); \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += 4; \ }
+value|{ \ 	register uint32_t t_l = (uint32_t)(l); \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += 4; \ }
 end_define
 
 begin_define
@@ -1483,7 +1536,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int64_t t_l = (u_int64_t)(l); \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	*t_cp++ = t_l>> 56; \ 	*t_cp++ = t_l>> 48; \ 	*t_cp++ = t_l>> 40; \ 	*t_cp++ = t_l>> 32; \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += 8; \ }
+value|{ \ 	register uint64_t t_l = (uint64_t)(l); \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	*t_cp++ = t_l>> 56; \ 	*t_cp++ = t_l>> 48; \ 	*t_cp++ = t_l>> 40; \ 	*t_cp++ = t_l>> 32; \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += 8; \ }
 end_define
 
 begin_if
@@ -1503,7 +1556,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	*t_cp++ = (l)->b[15]; \ 	*t_cp++ = (l)->b[14]; \ 	*t_cp++ = (l)->b[13]; \ 	*t_cp++ = (l)->b[12]; \ 	*t_cp++ = (l)->b[11]; \ 	*t_cp++ = (l)->b[10]; \ 	*t_cp++ = (l)->b[9];  \ 	*t_cp++ = (l)->b[8];  \ 	*t_cp++ = (l)->b[7];  \ 	*t_cp++ = (l)->b[6];  \ 	*t_cp++ = (l)->b[5];  \ 	*t_cp++ = (l)->b[4];  \ 	*t_cp++ = (l)->b[3];  \ 	*t_cp++ = (l)->b[2];  \ 	*t_cp++ = (l)->b[1];  \ 	*t_cp   = (l)->b[0];  \ 	(cp) += 16; \ }
+value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	*t_cp++ = (l)->b[15]; \ 	*t_cp++ = (l)->b[14]; \ 	*t_cp++ = (l)->b[13]; \ 	*t_cp++ = (l)->b[12]; \ 	*t_cp++ = (l)->b[11]; \ 	*t_cp++ = (l)->b[10]; \ 	*t_cp++ = (l)->b[9];  \ 	*t_cp++ = (l)->b[8];  \ 	*t_cp++ = (l)->b[7];  \ 	*t_cp++ = (l)->b[6];  \ 	*t_cp++ = (l)->b[5];  \ 	*t_cp++ = (l)->b[4];  \ 	*t_cp++ = (l)->b[3];  \ 	*t_cp++ = (l)->b[2];  \ 	*t_cp++ = (l)->b[1];  \ 	*t_cp   = (l)->b[0];  \ 	(cp) += 16; \ }
 end_define
 
 begin_else
@@ -1524,7 +1577,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register u_int8_t *t_cp = (u_int8_t *)(cp); \ 	*t_cp++ = (l)->b[0];  \ 	*t_cp++ = (l)->b[1];  \ 	*t_cp++ = (l)->b[2];  \ 	*t_cp++ = (l)->b[3];  \ 	*t_cp++ = (l)->b[4];  \ 	*t_cp++ = (l)->b[5];  \ 	*t_cp++ = (l)->b[6];  \ 	*t_cp++ = (l)->b[7];  \ 	*t_cp++ = (l)->b[8];  \ 	*t_cp++ = (l)->b[9];  \ 	*t_cp++ = (l)->b[10]; \ 	*t_cp++ = (l)->b[11]; \ 	*t_cp++ = (l)->b[12]; \ 	*t_cp++ = (l)->b[13]; \ 	*t_cp++ = (l)->b[14]; \ 	*t_cp   = (l)->b[15]; \ 	(cp) += 16; \ }
+value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	*t_cp++ = (l)->b[0];  \ 	*t_cp++ = (l)->b[1];  \ 	*t_cp++ = (l)->b[2];  \ 	*t_cp++ = (l)->b[3];  \ 	*t_cp++ = (l)->b[4];  \ 	*t_cp++ = (l)->b[5];  \ 	*t_cp++ = (l)->b[6];  \ 	*t_cp++ = (l)->b[7];  \ 	*t_cp++ = (l)->b[8];  \ 	*t_cp++ = (l)->b[9];  \ 	*t_cp++ = (l)->b[10]; \ 	*t_cp++ = (l)->b[11]; \ 	*t_cp++ = (l)->b[12]; \ 	*t_cp++ = (l)->b[13]; \ 	*t_cp++ = (l)->b[14]; \ 	*t_cp   = (l)->b[15]; \ 	(cp) += 16; \ }
 end_define
 
 begin_endif
@@ -1594,23 +1647,23 @@ name|void
 modifier|*
 name|xs
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|plen
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 specifier|const
 modifier|*
 name|pp
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|alen
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 specifier|const
 modifier|*
 name|ap
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|vlen
 parameter_list|,
 name|sdp_attr_t
@@ -1627,7 +1680,7 @@ modifier|*
 specifier|const
 name|sdp_attr2desc
 parameter_list|(
-name|u_int16_t
+name|uint16_t
 name|attr
 parameter_list|)
 function_decl|;
@@ -1640,7 +1693,7 @@ modifier|*
 specifier|const
 name|sdp_uuid2desc
 parameter_list|(
-name|u_int16_t
+name|uint16_t
 name|uuid
 parameter_list|)
 function_decl|;
@@ -1650,21 +1703,292 @@ begin_function_decl
 name|void
 name|sdp_print
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|level
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|start
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 specifier|const
 modifier|*
 name|end
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/******************************************************************************  * sdpd interface and Bluetooth profiles data  *****************************************************************************/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDP_LOCAL_PATH
+value|"/var/run/sdp"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDP_LOCAL_MTU
+value|4096
+end_define
+
+begin_struct
+struct|struct
+name|sdp_dun_profile
+block|{
+name|uint8_t
+name|server_channel
+decl_stmt|;
+name|uint8_t
+name|audio_feedback_support
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_dun_profile
+name|sdp_dun_profile_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_dun_profile
+modifier|*
+name|sdp_dun_profile_p
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|sdp_ftrn_profile
+block|{
+name|uint8_t
+name|server_channel
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_ftrn_profile
+name|sdp_ftrn_profile_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_ftrn_profile
+modifier|*
+name|sdp_ftrn_profile_p
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|sdp_irmc_profile
+block|{
+name|uint8_t
+name|server_channel
+decl_stmt|;
+name|uint8_t
+name|supported_formats_size
+decl_stmt|;
+name|uint8_t
+name|supported_formats
+index|[
+literal|30
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_irmc_profile
+name|sdp_irmc_profile_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_irmc_profile
+modifier|*
+name|sdp_irmc_profile_p
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|sdp_irmc_command_profile
+block|{
+name|uint8_t
+name|server_channel
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_irmc_command_profile
+name|sdp_irmc_command_profile_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_irmc_command_profile
+modifier|*
+name|sdp_irmc_command_profile_p
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|sdp_lan_profile
+block|{
+name|uint8_t
+name|server_channel
+decl_stmt|;
+name|uint8_t
+name|load_factor
+decl_stmt|;
+name|uint8_t
+name|reserved
+decl_stmt|;
+name|uint8_t
+name|ip_subnet_radius
+decl_stmt|;
+name|uint32_t
+name|ip_subnet
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_lan_profile
+name|sdp_lan_profile_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_lan_profile
+modifier|*
+name|sdp_lan_profile_p
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|sdp_opush_profile
+block|{
+name|uint8_t
+name|server_channel
+decl_stmt|;
+name|uint8_t
+name|supported_formats_size
+decl_stmt|;
+name|uint8_t
+name|supported_formats
+index|[
+literal|30
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_opush_profile
+name|sdp_opush_profile_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_opush_profile
+modifier|*
+name|sdp_opush_profile_p
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|sdp_sp_profile
+block|{
+name|uint8_t
+name|server_channel
+decl_stmt|;
+name|uint8_t
+name|reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_sp_profile
+name|sdp_sp_profile_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sdp_sp_profile
+modifier|*
+name|sdp_sp_profile_p
+typedef|;
+end_typedef
 
 begin_macro
 name|__END_DECLS

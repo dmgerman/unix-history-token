@@ -560,7 +560,7 @@ name|sa
 operator|.
 name|sun_path
 argument_list|,
-name|SDP_UNSOCK_PATH
+name|SDP_LOCAL_PATH
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -619,7 +619,7 @@ name|ss
 operator|->
 name|omtu
 operator|=
-name|SDP_UNSOCK_MTU
+name|SDP_LOCAL_MTU
 expr_stmt|;
 if|if
 condition|(

@@ -19,20 +19,6 @@ begin_macro
 name|__BEGIN_DECLS
 end_macro
 
-begin_define
-define|#
-directive|define
-name|SDP_UNSOCK_PATH
-value|"/var/run/sdp"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDP_UNSOCK_MTU
-value|2048
-end_define
-
 begin_comment
 comment|/*  * SDP session  */
 end_comment
@@ -41,50 +27,50 @@ begin_struct
 struct|struct
 name|sdp_session
 block|{
-name|u_int16_t
+name|uint16_t
 name|flags
 decl_stmt|;
 define|#
 directive|define
 name|SDP_SESSION_LOCAL
 value|(1<< 0)
-name|u_int16_t
+name|uint16_t
 name|tid
 decl_stmt|;
 comment|/* current session transaction ID (tid) */
-name|u_int16_t
+name|uint16_t
 name|omtu
 decl_stmt|;
 comment|/* outgoing MTU (req buffer size) */
-name|u_int16_t
+name|uint16_t
 name|imtu
 decl_stmt|;
 comment|/* incoming MTU (rsp buffer size) */
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|req
 decl_stmt|;
 comment|/* request buffer (start) */
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|req_e
 decl_stmt|;
 comment|/* request buffer (end) */
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|rsp
 decl_stmt|;
 comment|/* response buffer (start) */
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|rsp_e
 decl_stmt|;
 comment|/* response buffer (end) */
-name|u_int32_t
+name|uint32_t
 name|cslen
 decl_stmt|;
 comment|/* continuation state length */
-name|u_int8_t
+name|uint8_t
 name|cs
 index|[
 literal|16
