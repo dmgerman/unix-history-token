@@ -69,6 +69,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_ZERO
+value|0x0008
+end_define
+
+begin_comment
+comment|/* bzero the allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_MAGIC
 value|877983977
 end_define
