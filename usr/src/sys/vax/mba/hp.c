@@ -184,7 +184,7 @@ name|int
 name|cyloff
 decl_stmt|;
 block|}
-name|hp6_sizes
+name|rp06_sizes
 index|[
 literal|8
 index|]
@@ -205,18 +205,21 @@ block|,
 literal|0
 block|,
 comment|/* C=cyl 0 thru 814 */
-literal|0
+literal|15884
 block|,
-literal|0
+literal|118
 block|,
-literal|0
+comment|/* D=cyl 118 thru 155 */
+literal|55936
 block|,
-literal|0
+literal|156
 block|,
-literal|0
+comment|/* E=cyl 156 thru 289 */
+literal|219384
 block|,
-literal|0
+literal|290
 block|,
+comment|/* F=cyl 290 thru 814 */
 literal|291280
 block|,
 literal|118
@@ -227,7 +230,53 @@ block|,
 literal|0
 block|, }
 struct|,
-name|rm3_sizes
+name|rp05_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 37 */
+literal|33440
+block|,
+literal|38
+block|,
+comment|/* B=cyl 38 thru 117 */
+literal|171798
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 410 */
+literal|15884
+block|,
+literal|118
+block|,
+comment|/* D=cyl 118 thru 155 */
+literal|55936
+block|,
+literal|156
+block|,
+comment|/* E=cyl 156 thru 289 */
+literal|50512
+block|,
+literal|290
+block|,
+comment|/* F=cyl 290 thru 410 */
+literal|122408
+block|,
+literal|118
+block|,
+comment|/* G=cyl 118 thru 410 */
+literal|0
+block|,
+literal|0
+block|, }
+struct|,
+name|rm03_sizes
 index|[
 literal|8
 index|]
@@ -242,35 +291,50 @@ literal|33440
 block|,
 literal|100
 block|,
-comment|/* B=cyl 100 thru 309 */
+comment|/* B=cyl 100 thru 308 */
 literal|131680
 block|,
 literal|0
 block|,
 comment|/* C=cyl 0 thru 822 */
-literal|0
+literal|15884
 block|,
-literal|0
+literal|309
 block|,
-literal|0
+comment|/* D=cyl 309 thru 408 */
+literal|55936
 block|,
-literal|0
+literal|409
 block|,
-literal|0
+comment|/* E=cyl 409 thru 758 */
+literal|10144
 block|,
-literal|0
+literal|759
 block|,
+comment|/* F=cyl 759 thru 822 */
+ifdef|#
+directive|ifdef
+name|ARPA
 literal|81984
 block|,
 literal|310
 block|,
 comment|/* G=cyl 310 thru 822 */
+else|#
+directive|else
+literal|82144
+block|,
+literal|309
+block|,
+comment|/* G=cyl 309 thru 822 */
+endif|#
+directive|endif
 literal|0
 block|,
 literal|0
 block|, }
 struct|,
-name|rm5_sizes
+name|rm05_sizes
 index|[
 literal|8
 index|]
@@ -339,31 +403,32 @@ block|,
 literal|0
 block|,
 comment|/* C=cyl 0 thru 558 */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|82080
+literal|15884
 block|,
 literal|115
 block|,
-comment|/* G=cyl 115 thru 304 */
-literal|110143
+comment|/* D=cyl 115 thru 151 */
+literal|55936
 block|,
-literal|305
+literal|152
 block|,
-comment|/* H=cyl 305 thru 558 */
-block|}
+comment|/* E=cyl 152 thru 280 */
+literal|120559
+block|,
+literal|281
+block|,
+comment|/* F=cyl 281 thru 558 */
+literal|192603
+block|,
+literal|115
+block|,
+comment|/* G=cyl 115 thru 558 */
+literal|0
+block|,
+literal|0
+block|, }
 struct|,
-name|hp7_sizes
+name|rp07_sizes
 index|[
 literal|8
 index|]
@@ -374,11 +439,11 @@ block|,
 literal|0
 block|,
 comment|/* A=cyl 0 thru 9 */
-literal|64000
+literal|66880
 block|,
 literal|10
 block|,
-comment|/* B=cyl 10 thru 49 */
+comment|/* B=cyl 10 thru 51 */
 literal|1008000
 block|,
 literal|0
@@ -386,77 +451,80 @@ block|,
 comment|/* C=cyl 0 thru 629 */
 literal|15884
 block|,
-literal|330
+literal|235
 block|,
-comment|/* D=cyl 330 thru 339 */
-literal|256000
+comment|/* D=cyl 235 thru 244 */
+literal|307200
 block|,
-literal|340
+literal|245
 block|,
-comment|/* E=cyl 340 thru 499 */
-literal|207850
+comment|/* E=cyl 245 thru 436 */
+literal|308650
 block|,
-literal|500
+literal|437
 block|,
-comment|/* F=cyl 500 thru 629 */
-literal|479850
+comment|/* F=cyl 437 thru 629 */
+literal|631850
 block|,
-literal|330
+literal|235
 block|,
-comment|/* G=cyl 330 thru 629 */
-literal|448000
+comment|/* G=cyl 235 thru 629 */
+literal|291346
 block|,
-literal|50
+literal|52
 block|,
-comment|/* H=cyl 50 thru 329 */
+comment|/* H=cyl 52 thru 234 */
 block|}
 struct|,
-name|si9775_sizes
+name|cdc9775_sizes
 index|[
 literal|8
 index|]
 init|=
 block|{
-literal|16640
+literal|15884
 block|,
 literal|0
 block|,
 comment|/* A=cyl 0 thru 12 */
-literal|34560
+literal|66880
 block|,
 literal|13
 block|,
-comment|/* B=cyl 13 thru 39 */
+comment|/* B=cyl 13 thru 65 */
 literal|1079040
 block|,
 literal|0
 block|,
 comment|/* C=cyl 0 thru 842 */
-literal|0
+literal|15884
 block|,
-literal|0
+literal|294
 block|,
-literal|0
+comment|/* D=cyl 294 thru 306 */
+literal|307200
 block|,
-literal|0
+literal|307
 block|,
-literal|0
+comment|/* E=cyl 307 thru 546 */
+literal|378784
 block|,
-literal|0
+literal|547
 block|,
-literal|513280
+comment|/* F=cyl 547 thru 842 */
+literal|702624
 block|,
-literal|40
+literal|294
 block|,
-comment|/* G=cyl 40 thru 440 */
-literal|513280
+comment|/* G=cyl 294 thru 842 */
+literal|291346
 block|,
-literal|441
+literal|66
 block|,
-comment|/* H=cyl 441 thru 841 */
+comment|/* H=cyl 66 thru 293 */
 block|}
 struct|,
-name|si9730_sizes
+name|cdc9730_sizes
 index|[
 literal|8
 index|]
@@ -477,30 +545,32 @@ block|,
 literal|0
 block|,
 comment|/* C=cyl 0 thru 822 */
-literal|0
+literal|15884
 block|,
-literal|0
+literal|155
 block|,
-literal|0
+comment|/* D=cyl 155 thru 204 */
+literal|55936
 block|,
-literal|0
+literal|205
 block|,
-literal|0
+comment|/* E=cyl 205 thru 379 */
+literal|141664
 block|,
-literal|0
+literal|380
 block|,
-literal|0
-block|,
-literal|0
-block|,
+comment|/* F=cyl 380 thru 822 */
 literal|213664
 block|,
 literal|155
 block|,
-comment|/* H=cyl 155 thru 822 */
-block|}
+comment|/* G=cyl 155 thru 822 */
+literal|0
+block|,
+literal|0
+block|, }
 struct|,
-name|hpam_sizes
+name|capricorn_sizes
 index|[
 literal|8
 index|]
@@ -521,23 +591,26 @@ block|,
 literal|0
 block|,
 comment|/* C=cyl 0 thru 1023 */
-literal|27786
+literal|15884
 block|,
 literal|668
 block|,
-literal|27786
+comment|/* D=cyl 668 thru 699 */
+literal|55936
 block|,
-literal|723
+literal|700
 block|,
-literal|125440
+comment|/* E=cyl 700 thru 809 */
+literal|109472
 block|,
-literal|778
+literal|810
 block|,
-literal|181760
+comment|/* F=cyl 810 thru 1023 */
+literal|182176
 block|,
 literal|668
 block|,
-comment|/* G=cyl 668 thru 1022 */
+comment|/* G=cyl 668 thru 1023 */
 literal|291346
 block|,
 literal|98
@@ -545,57 +618,15 @@ block|,
 comment|/* H=cyl 98 thru 667 */
 block|}
 struct|,
-name|hpfj_sizes
+name|eagle_sizes
 index|[
 literal|8
 index|]
 init|=
 block|{
-literal|15884
-block|,
-literal|0
-block|,
-comment|/* A=cyl 0 thru 18 */
-literal|33440
-block|,
-literal|19
-block|,
-comment|/* B=cyl 19 thru 58 */
-literal|724120
-block|,
-literal|0
-block|,
-comment|/* C=cyl 0 thru 841 */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|381711
-block|,
-literal|398
-block|,
-comment|/* G=cyl 398 thru 841 */
-literal|291346
-block|,
-literal|59
-block|,
-comment|/* H=cyl 59 thru 397 */
-block|}
-struct|,
-name|hpfj48_sizes
-index|[
-literal|8
-index|]
-init|=
-block|{
+ifdef|#
+directive|ifdef
+name|MONET
 literal|15884
 block|,
 literal|0
@@ -633,6 +664,50 @@ block|,
 literal|53
 block|,
 comment|/* H=cyl 52 thru 356 */
+else|#
+directive|else
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 16 */
+literal|66880
+block|,
+literal|17
+block|,
+comment|/* B=cyl 17 thru 86 */
+literal|809280
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 842 */
+literal|15884
+block|,
+literal|391
+block|,
+comment|/* D=cyl 391 thru 407 */
+literal|307200
+block|,
+literal|408
+block|,
+comment|/* E=cyl 408 thru 727 */
+literal|110256
+block|,
+literal|728
+block|,
+comment|/* F=cyl 728 thru 842 */
+literal|433776
+block|,
+literal|391
+block|,
+comment|/* G=cyl 391 thru 842 */
+literal|291346
+block|,
+literal|87
+block|,
+comment|/* H=cyl 87 thru 390 */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -759,15 +834,8 @@ literal|1
 block|,
 define|#
 directive|define
-name|HPDT_EAGLE48
-value|12
-operator|-
-literal|1
-block|,
-define|#
-directive|define
 name|HPDT_RM02
-value|13
+value|12
 name|MBDT_RM02
 block|,
 comment|/* beware, actually capricorn or eagle */
@@ -868,7 +936,7 @@ literal|5
 block|,
 literal|823
 block|,
-name|rm3_sizes
+name|rm03_sizes
 block|,
 comment|/* RM03 */
 literal|32
@@ -881,7 +949,7 @@ literal|19
 block|,
 literal|823
 block|,
-name|rm5_sizes
+name|rm05_sizes
 block|,
 comment|/* RM05 */
 literal|22
@@ -894,7 +962,7 @@ literal|19
 block|,
 literal|815
 block|,
-name|hp6_sizes
+name|rp06_sizes
 block|,
 comment|/* RP06 */
 literal|31
@@ -920,7 +988,7 @@ literal|19
 block|,
 literal|411
 block|,
-name|hp6_sizes
+name|rp05_sizes
 block|,
 comment|/* RP05 */
 literal|50
@@ -933,7 +1001,7 @@ literal|32
 block|,
 literal|630
 block|,
-name|hp7_sizes
+name|rp07_sizes
 block|,
 comment|/* RP07 */
 literal|1
@@ -968,7 +1036,7 @@ literal|40
 block|,
 literal|843
 block|,
-name|si9775_sizes
+name|cdc9775_sizes
 block|,
 comment|/* 9775 */
 literal|32
@@ -981,7 +1049,7 @@ literal|10
 block|,
 literal|823
 block|,
-name|si9730_sizes
+name|cdc9730_sizes
 block|,
 comment|/* 9730 */
 literal|32
@@ -994,35 +1062,22 @@ literal|16
 block|,
 literal|1024
 block|,
-name|hpam_sizes
+name|capricorn_sizes
 block|,
 comment|/* AMPEX capricorn */
-literal|43
+literal|48
 block|,
 literal|20
 block|,
-literal|43
+literal|48
 operator|*
 literal|20
 block|,
 literal|842
 block|,
-name|hpfj_sizes
+name|eagle_sizes
 block|,
 comment|/* Fujitsu EAGLE */
-literal|48
-block|,
-literal|20
-block|,
-literal|48
-operator|*
-literal|20
-block|,
-literal|842
-block|,
-name|hpfj48_sizes
-block|,
-comment|/* 48 sector EAGLE */
 block|}
 struct|;
 end_struct
@@ -1556,42 +1611,27 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|nsectors
+operator|==
+literal|48
+condition|)
+block|{
+name|type
+operator|=
+name|HPDT_EAGLE
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"hp%d: "
+literal|"hp%d: eagle\n"
 argument_list|,
 name|mi
 operator|->
 name|mi_unit
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nsectors
-operator|==
-literal|43
-condition|)
-name|type
-operator|=
-name|HPDT_EAGLE
-expr_stmt|;
-else|else
-block|{
-name|type
-operator|=
-name|HPDT_EAGLE48
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"modified "
-argument_list|)
-expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"eagle\n"
-argument_list|)
-expr_stmt|;
 name|done
 label|:
 name|hpaddr
