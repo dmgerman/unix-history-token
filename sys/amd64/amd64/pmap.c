@@ -637,26 +637,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|vm_page_t
-name|pmap_enter_quick
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
-name|vm_offset_t
-name|va
-parameter_list|,
-name|vm_page_t
-name|m
-parameter_list|,
-name|vm_page_t
-name|mpte
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|pmap_remove_pte
 parameter_list|(
@@ -7610,7 +7590,6 @@ comment|/*  * this code makes some *MAJOR* assumptions:  * 1. Current pmap& pmap
 end_comment
 
 begin_function
-specifier|static
 name|vm_page_t
 name|pmap_enter_quick
 parameter_list|(

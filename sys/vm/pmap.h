@@ -169,6 +169,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_page_t
+name|pmap_enter_quick
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_page_t
+name|m
+parameter_list|,
+name|vm_page_t
+name|mpte
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|vm_paddr_t
 name|pmap_extract
 parameter_list|(
@@ -253,7 +272,7 @@ parameter_list|,
 name|vm_pindex_t
 name|pindex
 parameter_list|,
-name|vm_offset_t
+name|vm_size_t
 name|size
 parameter_list|,
 name|int

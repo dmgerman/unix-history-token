@@ -941,23 +941,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|pmap_enter_quick
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
-name|vm_offset_t
-name|va
-parameter_list|,
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|vm_offset_t
 name|pmap_steal_memory
@@ -6504,8 +6487,7 @@ comment|/*  * this code makes some *MAJOR* assumptions:  * 1. Current pmap& pmap
 end_comment
 
 begin_function
-specifier|static
-name|void
+name|vm_page_t
 name|pmap_enter_quick
 parameter_list|(
 name|pmap_t
@@ -6516,6 +6498,9 @@ name|va
 parameter_list|,
 name|vm_page_t
 name|m
+parameter_list|,
+name|vm_page_t
+name|mpte
 parameter_list|)
 block|{
 name|struct
@@ -6546,7 +6531,9 @@ name|pte
 operator|->
 name|pte_p
 condition|)
-return|return;
+goto|goto
+name|reinstall
+goto|;
 comment|/* 	 * Enter on the PV list since its part of our managed memory. 	 */
 name|pmap_insert_entry
 argument_list|(
@@ -6584,11 +6571,18 @@ argument_list|,
 name|PTE_AR_R
 argument_list|)
 expr_stmt|;
+name|reinstall
+label|:
 name|pmap_install
 argument_list|(
 name|oldpmap
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -6950,6 +6944,8 @@ name|tmpidx
 argument_list|)
 argument_list|,
 name|p
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK
@@ -7113,6 +7109,8 @@ name|tmpidx
 argument_list|)
 argument_list|,
 name|p
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK
@@ -7573,6 +7571,8 @@ argument_list|,
 name|addr
 argument_list|,
 name|m
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
