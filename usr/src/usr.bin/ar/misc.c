@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.4 (Berkeley) %G%"
+literal|"@(#)misc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_include
@@ -302,28 +320,28 @@ begin_comment
 comment|/*  * files --  *	See if the current file matches any file in the argument list; if it  * 	does, remove it from the argument list.  */
 end_comment
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|files
-argument_list|(
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
 modifier|*
 modifier|*
 name|list
+decl_stmt|;
+name|char
+modifier|*
+name|p
 decl_stmt|;
 for|for
 control|(
@@ -346,6 +364,11 @@ name|list
 argument_list|)
 condition|)
 block|{
+name|p
+operator|=
+operator|*
+name|list
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -365,17 +388,54 @@ control|)
 empty_stmt|;
 return|return
 operator|(
-literal|1
+name|p
 operator|)
 return|;
 block|}
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
-end_block
+end_function
+
+begin_function
+name|void
+name|orphans
+parameter_list|(
+name|argv
+parameter_list|)
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+for|for
+control|(
+init|;
+operator|*
+name|argv
+condition|;
+operator|++
+name|argv
+control|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ar: %s: not found in archive.\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|char
@@ -433,11 +493,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-modifier|*
-name|rname
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|options
@@ -481,12 +536,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|badfmt
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|errno
 operator|=
@@ -498,23 +551,18 @@ name|archive
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|error
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 name|void
@@ -539,7 +587,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
