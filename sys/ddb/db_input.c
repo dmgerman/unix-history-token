@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_input.c,v 1.17 1997/02/22 09:28:23 peter Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_input.c,v 1.18 1997/04/12 17:35:02 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -557,6 +557,17 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|__i386__
+operator|&&
+name|__FreeBSD__
+case|case
+literal|591
+case|:
+comment|/* syscons's idea of an arrow key... */
+endif|#
+directive|endif
 case|case
 name|CTRL
 argument_list|(
@@ -581,6 +592,17 @@ operator|--
 expr_stmt|;
 block|}
 break|break;
+if|#
+directive|if
+name|__i386__
+operator|&&
+name|__FreeBSD__
+case|case
+literal|593
+case|:
+comment|/* syscons's idea of an arrow key... */
+endif|#
+directive|endif
 case|case
 name|CTRL
 argument_list|(
@@ -839,6 +861,17 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+if|#
+directive|if
+name|__i386__
+operator|&&
+name|__FreeBSD__
+case|case
+literal|588
+case|:
+comment|/* syscons's idea of an arrow key... */
+endif|#
+directive|endif
 case|case
 name|CTRL
 argument_list|(
@@ -874,6 +907,17 @@ name|hist_redraw
 goto|;
 block|}
 break|break;
+if|#
+directive|if
+name|__i386__
+operator|&&
+name|__FreeBSD__
+case|case
+literal|596
+case|:
+comment|/* syscons's idea of an arrow key... */
+endif|#
+directive|endif
 case|case
 name|CTRL
 argument_list|(
