@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|ISP_GETROLE
-value|_IOR(ISP_IOC, 5), int
+value|_IOR(ISP_IOC, 5, int)
 end_define
 
 begin_comment
