@@ -1188,10 +1188,9 @@ operator|*
 name|ci
 argument_list|)
 condition|)
-name|err
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"S_clockinfo %d != %d"
 argument_list|,
 name|l2
@@ -1203,6 +1202,12 @@ name|ci
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|printf
 argument_list|(
 literal|"{ hz = %d, tick = %d, profhz = %d, stathz = %d }"
@@ -1267,10 +1272,9 @@ operator|*
 name|tv
 argument_list|)
 condition|)
-name|err
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"S_loadavg %d != %d"
 argument_list|,
 name|l2
@@ -1282,6 +1286,12 @@ name|tv
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|printf
 argument_list|(
 literal|"{ %.2f %.2f %.2f }"
@@ -1391,10 +1401,9 @@ operator|*
 name|tv
 argument_list|)
 condition|)
-name|err
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"S_timeval %d != %d"
 argument_list|,
 name|l2
@@ -1406,6 +1415,12 @@ name|tv
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|printf
 argument_list|(
 literal|"{ sec = %ld, usec = %ld } "
@@ -1508,10 +1523,9 @@ operator|*
 name|d
 argument_list|)
 condition|)
-name|err
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"T_dev_T %d != %d"
 argument_list|,
 name|l2
@@ -1523,6 +1537,12 @@ name|d
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 call|(
