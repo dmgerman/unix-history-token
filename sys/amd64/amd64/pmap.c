@@ -10017,14 +10017,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 operator|*
 name|pte
 operator|&
 name|PG_V
-operator|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
