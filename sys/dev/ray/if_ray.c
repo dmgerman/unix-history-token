@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.16 2000/03/31 20:12:30 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.17 2000/04/04 06:43:30 dmlb Exp $  *  */
 end_comment
 
 begin_comment
@@ -45,8 +45,85 @@ comment|/*  * XXX build options - move to LINT  */
 end_comment
 
 begin_comment
-comment|/*  * RAY_DEBUG settings  *  *	2	Recoverable error's  *	6	Subroutine entry  *	11	Startup CM dump  *	16	State transitions for start/join  *	21	CCS info  *	31	IOCTL calls  *	51	MBUFs dumped/packet types reported  */
+comment|/*  * RAY_DEBUG settings  *  *	RECERR		Recoverable error's  *	SUBR		Subroutine entry  *	BOOTPARAM	Startup CM dump  *	STARTJOIN	State transitions for start/join  *	CCS		CCS info  *	IOCTL		IOCTL calls  *	NETPARAM	SSID when rejoining nets  *	MBUF		MBUFs dumped  *	RX		packet types reported  *	CM		common memory re-mapping  *	CMD		command scheduler  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_RECERR
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_SUBR
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_BOOTPARAM
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_STARTJOIN
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_CCS
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_IOCTL
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_NETPARAM
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_MBUF
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_RX
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_CM
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DBG_CMD
+value|0x0400
+end_define
 
 begin_ifndef
 ifndef|#
@@ -58,7 +135,19 @@ begin_define
 define|#
 directive|define
 name|RAY_DEBUG
-value|2
+value|(				\  			   RAY_DBG_RECERR	|   	\
+comment|/* RAY_DBG_SUBR		| */
+value|\ 			   RAY_DBG_BOOTPARAM	|	\ 			   RAY_DBG_STARTJOIN	|	\
+comment|/* RAY_DBG_CCS		| */
+value|\                            RAY_DBG_IOCTL	|   	\
+comment|/* RAY_DBG_NETPARAM	| */
+value|\
+comment|/* RAY_DBG_MBUF		| */
+value|\
+comment|/* RAY_DBG_RX		| */
+value|\
+comment|/* RAY_DBG_CM		| */
+value|\                            RAY_DBG_CMD		|   	\ 			0				\ 			)
 end_define
 
 begin_endif
@@ -194,7 +283,7 @@ begin_define
 define|#
 directive|define
 name|RAY_DEBUG
-value|0
+value|0x0000
 end_define
 
 begin_endif
@@ -227,9 +316,9 @@ name|p
 parameter_list|,
 name|l
 parameter_list|,
-name|lev
+name|mask
 parameter_list|)
-value|do { if (RAY_DEBUG> lev) {	\     u_int8_t *i;						\     for (i = p; i< (u_int8_t *)(p+l); i += 8)			\     	printf("  0x%08lx %8D\n",				\ 		(unsigned long)i, (unsigned char *)i, " ");	\ } } while (0)
+value|do { if (RAY_DEBUG& mask) {	\     u_int8_t *i;						\     for (i = p; i< (u_int8_t *)(p+l); i += 8)			\     	printf("  0x%08lx %8D\n",				\ 		(unsigned long)i, (unsigned char *)i, " ");	\ } } while (0)
 end_define
 
 begin_define
@@ -237,11 +326,11 @@ define|#
 directive|define
 name|RAY_DPRINTFN
 parameter_list|(
-name|l
+name|mask
 parameter_list|,
 name|x
 parameter_list|)
-value|do { if (RAY_DEBUG> l) {		\     printf x ;							\ } } while (0)
+value|do { if (RAY_DEBUG& mask) {	\     printf x ;							\ } } while (0)
 end_define
 
 begin_define
@@ -253,7 +342,7 @@ name|sc
 parameter_list|,
 name|s
 parameter_list|)
-value|do { if (RAY_DEBUG> 15) {			\     printf("ray%d: Current network parameters%s\n", (sc)->unit, (s));	\     printf("  bss_id %6D\n", (sc)->sc_c.np_bss_id, ":");		\     printf("  inited 0x%02x\n", (sc)->sc_c.np_inited);			\     printf("  def_txrate 0x%02x\n", (sc)->sc_c.np_def_txrate);		\     printf("  encrypt 0x%02x\n", (sc)->sc_c.np_encrypt);		\     printf("  net_type 0x%02x\n", (sc)->sc_c.np_net_type);		\     printf("  ssid \"%.32s\"\n", (sc)->sc_c.np_ssid);			\     printf("       %8D\n", (sc)->sc_c.np_ssid, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+8, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+16, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+24, " ");			\     printf("  priv_start 0x%02x\n", (sc)->sc_c.np_priv_start);		\     printf("  priv_join 0x%02x\n", (sc)->sc_c.np_priv_join);		\     printf("ray%d: Desired network parameters%s\n", (sc)->unit, (s));	\     printf("  bss_id %6D\n", (sc)->sc_d.np_bss_id, ":");		\     printf("  inited 0x%02x\n", (sc)->sc_d.np_inited);			\     printf("  def_txrate 0x%02x\n", (sc)->sc_d.np_def_txrate);		\     printf("  encrypt 0x%02x\n", (sc)->sc_d.np_encrypt);		\     printf("  net_type 0x%02x\n", (sc)->sc_d.np_net_type);		\     printf("  ssid \"%.32s\"\n", (sc)->sc_d.np_ssid);			\     printf("       %8D\n", (sc)->sc_c.np_ssid, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+8, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+16, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+24, " ");			\     printf("  priv_start 0x%02x\n", (sc)->sc_d.np_priv_start);		\     printf("  priv_join 0x%02x\n", (sc)->sc_d.np_priv_join);		\ } } while (0)
+value|do { if (RAY_DEBUG& RAY_DBG_NETPARAM) {	\     printf("ray%d: Current network parameters%s\n", (sc)->unit, (s));	\     printf("  bss_id %6D\n", (sc)->sc_c.np_bss_id, ":");		\     printf("  inited 0x%02x\n", (sc)->sc_c.np_inited);			\     printf("  def_txrate 0x%02x\n", (sc)->sc_c.np_def_txrate);		\     printf("  encrypt 0x%02x\n", (sc)->sc_c.np_encrypt);		\     printf("  net_type 0x%02x\n", (sc)->sc_c.np_net_type);		\     printf("  ssid \"%.32s\"\n", (sc)->sc_c.np_ssid);			\     printf("       %8D\n", (sc)->sc_c.np_ssid, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+8, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+16, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+24, " ");			\     printf("  priv_start 0x%02x\n", (sc)->sc_c.np_priv_start);		\     printf("  priv_join 0x%02x\n", (sc)->sc_c.np_priv_join);		\     printf("ray%d: Desired network parameters%s\n", (sc)->unit, (s));	\     printf("  bss_id %6D\n", (sc)->sc_d.np_bss_id, ":");		\     printf("  inited 0x%02x\n", (sc)->sc_d.np_inited);			\     printf("  def_txrate 0x%02x\n", (sc)->sc_d.np_def_txrate);		\     printf("  encrypt 0x%02x\n", (sc)->sc_d.np_encrypt);		\     printf("  net_type 0x%02x\n", (sc)->sc_d.np_net_type);		\     printf("  ssid \"%.32s\"\n", (sc)->sc_d.np_ssid);			\     printf("       %8D\n", (sc)->sc_c.np_ssid, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+8, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+16, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+24, " ");			\     printf("  priv_start 0x%02x\n", (sc)->sc_d.np_priv_start);		\     printf("  priv_join 0x%02x\n", (sc)->sc_d.np_priv_join);		\ } } while (0)
 end_define
 
 begin_else
@@ -270,7 +359,7 @@ name|p
 parameter_list|,
 name|l
 parameter_list|,
-name|lev
+name|mask
 parameter_list|)
 end_define
 
@@ -279,7 +368,7 @@ define|#
 directive|define
 name|RAY_DPRINTFN
 parameter_list|(
-name|l
+name|mask
 parameter_list|,
 name|x
 parameter_list|)
@@ -309,8 +398,8 @@ begin_if
 if|#
 directive|if
 name|RAY_DEBUG
-operator|>
-literal|50
+operator|&
+name|RAY_DBG_MBUF
 end_if
 
 begin_define
@@ -351,7 +440,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* RAY_DEBUG> 10 */
+comment|/* RAY_DEBUG& RAY_DBG_MBUF */
 end_comment
 
 begin_include
@@ -1139,6 +1228,14 @@ define|\
 value|(SCP_UPD_UPDATEPARAMS | SCP_UPD_STARTUP | SCP_UPD_MCAST | \ 	SCP_UPD_PROMISC)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCP_PRINTFB
+define|\
+value|"\020"				\ 	"\001SCP_UPDATESUBCMD"		\ 	"\002SCP_STARTASSOC"		\ 	"\003SCP_REPORTPARAMS"		\ 	"\004SCP_IFSTART"		\ 	"\011SCP_UPD_STARTUP"		\ 	"\012SCP_UPD_STARTJOIN"		\ 	"\013SCP_UPD_PROMISC"		\ 	"\014SCP_UPD_MCAST"		\ 	"\015SCP_UPD_UPDATEPARAMS"
+end_define
+
 begin_comment
 comment|/*  * Translation types  */
 end_comment
@@ -1399,8 +1496,8 @@ begin_if
 if|#
 directive|if
 name|RAY_DEBUG
-operator|>
-literal|50
+operator|&
+name|RAY_DBG_MBUF
 end_if
 
 begin_decl_stmt
@@ -1434,7 +1531,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* RAY_DEBUG> 50 */
+comment|/* RAY_DEBUG& RAY_DBG_MBUF */
 end_comment
 
 begin_decl_stmt
@@ -1808,6 +1905,28 @@ expr|struct
 name|ray_softc
 operator|*
 name|sc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ray_start_assoc_done
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ray_softc
+operator|*
+name|sc
+operator|,
+name|size_t
+name|ccs
+operator|,
+name|u_int8_t
+name|status
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2845,7 +2964,7 @@ name|doRemap
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: PCCard probe\n"
@@ -2909,7 +3028,7 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: Memory window flags 0x%02x, start %p, size 0x%x, card address 0x%lx\n"
@@ -3247,10 +3366,10 @@ name|ifp
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
-literal|"ray%d: PCCard unload\n"
+literal|"ray%d: ray_pccard_unload\n"
 operator|,
 name|dev_p
 operator|->
@@ -3290,7 +3409,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ray%d: already unloaded\n"
+literal|"ray%d: ray_pccard_unload unloaded!\n"
 argument_list|,
 name|sc
 operator|->
@@ -3420,7 +3539,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ray%d: unloaded\n"
+literal|"ray%d: ray_pccard_unload unloading complete\n"
 argument_list|,
 name|sc
 operator|->
@@ -3478,7 +3597,7 @@ decl_stmt|;
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ISA probe\n"
@@ -3537,7 +3656,7 @@ index|]
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ISA/PCCard attach\n"
@@ -3572,7 +3691,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ray%d: unloaded before attach!\n"
+literal|"ray%d: ray_attach unloaded!\n"
 argument_list|,
 name|sc
 operator|->
@@ -3630,16 +3749,7 @@ name|ep
 operator|->
 name|e_status
 argument_list|,
-literal|"\020"
-comment|/* print in hex */
-literal|"\001RESERVED0"
-literal|"\002PROC_SELF_TEST"
-literal|"\003PROG_MEM_CHECKSUM"
-literal|"\004DATA_MEM_TEST"
-literal|"\005RX_CALIBRATION"
-literal|"\006FW_VERSION_COMPAT"
-literal|"\007RERSERVED1"
-literal|"\008TEST_COMPLETE"
+name|RAY_ECFS_PRINTFB
 argument_list|)
 expr_stmt|;
 return|return
@@ -3686,7 +3796,11 @@ if|if
 condition|(
 name|bootverbose
 operator|||
+operator|(
 name|RAY_DEBUG
+operator|&
+name|RAY_DBG_BOOTPARAM
+operator|)
 condition|)
 block|{
 name|printf
@@ -3719,11 +3833,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Status 0x%x\n"
+literal|"  Status 0x%b\n"
 argument_list|,
 name|ep
 operator|->
 name|e_status
+argument_list|,
+name|RAY_ECFS_PRINTFB
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4214,13 +4330,17 @@ name|ccs
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|rv
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_STARTJOIN
 argument_list|,
 operator|(
-literal|"ray%d: Network init\n"
+literal|"ray%d: ray_init\n"
 operator|,
 name|sc
 operator|->
@@ -4242,7 +4362,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ray%d: unloaded before init!\n"
+literal|"ray%d: ray_init unloaded!\n"
 argument_list|,
 name|sc
 operator|->
@@ -4533,16 +4653,7 @@ name|ep
 operator|->
 name|e_status
 argument_list|,
-literal|"\020"
-comment|/* print in hex */
-literal|"\001RESERVED0"
-literal|"\002PROC_SELF_TEST"
-literal|"\003PROG_MEM_CHECKSUM"
-literal|"\004DATA_MEM_TEST"
-literal|"\005RX_CALIBRATION"
-literal|"\006FW_VERSION_COMPAT"
-literal|"\007RERSERVED1"
-literal|"\008TEST_COMPLETE"
+name|RAY_ECFS_PRINTFB
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4587,12 +4698,114 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* XXX is ray_stop is robust enough we can probably dispense with      * XXX the tsleep/wakeup stuff and be safe for fast ifconfigs      */
+while|while
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_OACTIVE
+condition|)
+block|{
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_STARTJOIN
+argument_list|,
+operator|(
+literal|"ray%d: ray_init sleeping\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|rv
+operator|=
+name|tsleep
+argument_list|(
+name|ray_init
+argument_list|,
+literal|0
+operator||
+name|PCATCH
+argument_list|,
+literal|"nwinit"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_STARTJOIN
+argument_list|,
+operator|(
+literal|"ray%d: ray_init awakened\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
+condition|)
+block|{
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_STARTJOIN
+argument_list|,
+operator|(
+literal|"ray%d: ray_init tsleep error\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|printf
+argument_list|(
+literal|"ray%d: ray_init scheduled commands 0x%b\n"
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|,
+name|sc
+operator|->
+name|sc_scheduled
+argument_list|,
+name|SCP_PRINTFB
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ray%d: ray_init running commands 0x%b\n"
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|,
+name|sc
+operator|->
+name|sc_running
+argument_list|,
+name|SCP_PRINTFB
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Network stop.  *  * Assumes that a ray_init is used to restart the card.  *  */
+comment|/*  * Network stop.  *  * Assumes that a ray_init is used to restart the card. And called in a  * sleepable context.  *  */
 end_comment
 
 begin_function
@@ -4618,10 +4831,10 @@ name|s
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
-literal|"ray%d: Network stop\n"
+literal|"ray%d: ray_stop\n"
 operator|,
 name|sc
 operator|->
@@ -4643,7 +4856,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ray%d: unloaded before stop!\n"
+literal|"ray%d: ray_stop unloaded!\n"
 argument_list|,
 name|sc
 operator|->
@@ -4662,6 +4875,163 @@ operator|.
 name|ac_if
 expr_stmt|;
 comment|/*      * Clear out timers and sort out driver state      */
+name|printf
+argument_list|(
+literal|"ray%d: ray_stop scheduled commands 0x%b\n"
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|,
+name|sc
+operator|->
+name|sc_scheduled
+argument_list|,
+name|SCP_PRINTFB
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ray%d: ray_stop running commands 0x%b\n"
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|,
+name|sc
+operator|->
+name|sc_running
+argument_list|,
+name|SCP_PRINTFB
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ray%d: ray_stop ready %d\n"
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|,
+name|RAY_ECF_READY
+argument_list|(
+name|sc
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|XXX
+for|for
+control|(
+name|i
+operator|=
+literal|15
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|scheduled
+operator|&
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+condition|)
+name|ray_cmd_cancel
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_running
+operator|&
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"ray%d: ray_stop command 0x%b still running"
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|,
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+argument_list|,    	    )
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* XXX */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_repreq
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_repreq
+operator|->
+name|r_failcause
+operator|=
+name|RAY_FAILCAUSE_EDEVSTOP
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|ray_report_params
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_updreq
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_repreq
+operator|->
+name|r_failcause
+operator|=
+name|RAY_FAILCAUSE_EDEVSTOP
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|ray_update_params
+argument_list|)
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|RAY_USE_CALLOUT_STOP
@@ -4830,7 +5200,7 @@ name|ifp
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_reset\n"
@@ -4846,6 +5216,16 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"ray%d: ray_reset skip reset card\n"
+argument_list|,
+name|sc
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+return|return;
 name|ifp
 operator|=
 operator|&
@@ -4863,11 +5243,16 @@ name|if_flags
 operator|&
 name|IFF_RUNNING
 condition|)
-name|ray_stop
+name|printf
 argument_list|(
+literal|"ray%d: *** ray_reset skip stop card\n"
+argument_list|,
 name|sc
+operator|->
+name|unit
 argument_list|)
 expr_stmt|;
+comment|/* XXX ray_stop(sc); not always in a sleepable context? */
 name|printf
 argument_list|(
 literal|"ray%d: resetting card\n"
@@ -4941,7 +5326,7 @@ name|xsc
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_reset_timo\n"
@@ -4968,7 +5353,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: ray_reset_timo still busy, re-schedule\n"
@@ -5029,10 +5414,10 @@ name|sc
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
-literal|"ray%d: Network watchdog\n"
+literal|"ray%d: ray_watchdog\n"
 operator|,
 name|ifp
 operator|->
@@ -5060,7 +5445,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ray%d: unloaded before watchdog!\n"
+literal|"ray%d: ray_watchdog unloaded!\n"
 argument_list|,
 name|sc
 operator|->
@@ -5138,10 +5523,12 @@ name|error2
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: Network ioctl\n"
+literal|"ray%d: ray_ioctl\n"
 operator|,
 name|ifp
 operator|->
@@ -5169,7 +5556,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ray%d: unloaded before ioctl!\n"
+literal|"ray%d: ray_ioctl unloaded!\n"
 argument_list|,
 name|sc
 operator|->
@@ -5227,10 +5614,10 @@ name|SIOCSIFMTU
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl SIFADDR/GIFADDR/SIFMTU\n"
+literal|"ray%d: for SIFADDR/GIFADDR/SIFMTU\n"
 operator|,
 name|sc
 operator|->
@@ -5255,7 +5642,7 @@ name|SIOCSIFFLAGS
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
 literal|"ray%d: for SIFFLAGS\n"
@@ -5314,7 +5701,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX DROP THROUGH or not? */
+break|break;
 case|case
 name|SIOCADDMULTI
 case|:
@@ -5323,10 +5710,10 @@ name|SIOCDELMULTI
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl called for ADDMULTI/DELMULTI\n"
+literal|"ray%d: for ADDMULTI/DELMULTI\n"
 operator|,
 name|sc
 operator|->
@@ -5349,10 +5736,10 @@ name|SIOCSRAYPARAM
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl called for SRAYPARAM\n"
+literal|"ray%d: for SRAYPARAM\n"
 operator|,
 name|sc
 operator|->
@@ -5423,10 +5810,10 @@ name|SIOCGRAYPARAM
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl called for GRAYPARAM\n"
+literal|"ray%d: for GRAYPARAM\n"
 operator|,
 name|sc
 operator|->
@@ -5497,10 +5884,10 @@ name|SIOCGRAYSTATS
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl called for GRAYSTATS\n"
+literal|"ray%d: for GRAYSTATS\n"
 operator|,
 name|sc
 operator|->
@@ -5549,10 +5936,10 @@ name|SIOCGRAYSIGLEV
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl called for GRAYSIGLEV\n"
+literal|"ray%d: for GRAYSIGLEV\n"
 operator|,
 name|sc
 operator|->
@@ -5586,10 +5973,10 @@ name|SIOCGIFFLAGS
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl called for GIFFLAGS\n"
+literal|"ray%d: for GIFFLAGS\n"
 operator|,
 name|sc
 operator|->
@@ -5607,10 +5994,10 @@ name|SIOCGIFMETRIC
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl called for GIFMETRIC\n"
+literal|"ray%d: for GIFMETRIC\n"
 operator|,
 name|sc
 operator|->
@@ -5628,10 +6015,10 @@ name|SIOCGIFMTU
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl called for GIFMTU\n"
+literal|"ray%d: for GIFMTU\n"
 operator|,
 name|sc
 operator|->
@@ -5649,10 +6036,10 @@ name|SIOCGIFPHYS
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl called for GIFPYHS\n"
+literal|"ray%d: for GIFPYHS\n"
 operator|,
 name|sc
 operator|->
@@ -5670,10 +6057,10 @@ name|SIOCSIFMEDIA
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl called for SIFMEDIA\n"
+literal|"ray%d: for SIFMEDIA\n"
 operator|,
 name|sc
 operator|->
@@ -5691,10 +6078,10 @@ name|SIOCGIFMEDIA
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|30
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
-literal|"ray%d: ioctl called for GIFMEDIA\n"
+literal|"ray%d: for GIFMEDIA\n"
 operator|,
 name|sc
 operator|->
@@ -5743,7 +6130,7 @@ parameter_list|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_start\n"
@@ -5812,7 +6199,7 @@ name|status
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_start_sc\n"
@@ -5847,7 +6234,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ray%d: unloaded before start!\n"
+literal|"ray%d: ray_start_sc unloaded!\n"
 argument_list|,
 name|sc
 operator|->
@@ -5885,7 +6272,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: ray_start busy, schedule a timeout\n"
@@ -5982,7 +6369,7 @@ return|return;
 block|}
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_start using ccs 0x%02x\n"
@@ -6185,7 +6572,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: mbuf too long %d\n"
@@ -6274,7 +6661,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: ray_start could not pullup ether\n"
@@ -6367,7 +6754,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: ray_start could not translate mbuf\n"
@@ -6764,6 +7151,14 @@ name|use
 name|tsleep
 operator|/
 name|wakeup
+name|use
+name|asleep
+name|await
+operator|*
+operator|*
+operator|*
+operator|*
+operator|*
 name|some
 name|form
 name|of
@@ -6807,7 +7202,7 @@ end_if
 begin_expr_stmt
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_start_done\n"
@@ -6939,7 +7334,7 @@ name|s
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_start_timo\n"
@@ -7034,7 +7429,7 @@ name|header
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_start_wrhdr\n"
@@ -7278,7 +7673,7 @@ name|antenna
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_start_best_antenna\n"
@@ -7478,7 +7873,7 @@ name|i
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx\n"
@@ -7496,7 +7891,7 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: rcs chain - using rcs 0x%x\n"
@@ -7594,7 +7989,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx packet is too big or too small\n"
@@ -7632,7 +8027,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx MGETHDR failed\n"
@@ -7681,7 +8076,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx MCLGET failed\n"
@@ -7813,7 +8208,7 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|50
+name|RAY_DBG_RX
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx frag index %d len %d bufp 0x%x ni %d\n"
@@ -7846,7 +8241,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx bad length current 0x%x pktlen 0x%x\n"
@@ -8094,7 +8489,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: header not version 0 fc 0x%x\n"
@@ -8177,7 +8572,7 @@ name|IEEE80211_FC0_TYPE_DATA
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|50
+name|RAY_DBG_MBUF
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx got a DATA packet\n"
@@ -8240,7 +8635,7 @@ name|IEEE80211_FC1_STA_TO_STA
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|50
+name|RAY_DBG_RX
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx packet from sta %6D\n"
@@ -8261,7 +8656,7 @@ name|IEEE80211_FC1_STA_TO_AP
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RX
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx packet from sta to ap %6D %6D\n"
@@ -8298,7 +8693,7 @@ name|IEEE80211_FC1_AP_TO_STA
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RX
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx packet from ap %6D\n"
@@ -8329,7 +8724,7 @@ name|IEEE80211_FC1_AP_TO_AP
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RX
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx packet between aps %6D %6D\n"
@@ -8614,7 +9009,7 @@ name|sl
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_rx_update_cache\n"
@@ -8884,7 +9279,9 @@ parameter_list|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_CMD
 argument_list|,
 operator|(
 literal|"ray%d: ray_update_params_done\n"
@@ -8898,21 +9295,6 @@ expr_stmt|;
 name|RAY_MAP_CM
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|RAY_DPRINTFN
-argument_list|(
-literal|20
-argument_list|,
-operator|(
-literal|"ray%d: ray_update_params_done stat %d\n"
-operator|,
-name|sc
-operator|->
-name|unit
-operator|,
-name|stat
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* this will get more complex as we add commands */
@@ -8964,7 +9346,7 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_IOCTL
 argument_list|,
 operator|(
 literal|"ray%d: new promisc value %d\n"
@@ -9070,7 +9452,7 @@ name|arg
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_check_scheduled\n"
@@ -9088,10 +9470,10 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CMD
 argument_list|,
 operator|(
-literal|"ray%d: ray_check_scheduled schd 0x%x running 0x%x ready %d\n"
+literal|"ray%d: ray_check_scheduled in schd 0x%b running 0x%b ready %d\n"
 operator|,
 name|sc
 operator|->
@@ -9101,9 +9483,13 @@ name|sc
 operator|->
 name|sc_scheduled
 operator|,
+name|SCP_PRINTFB
+operator|,
 name|sc
 operator|->
 name|sc_running
+operator|,
+name|SCP_PRINTFB
 operator|,
 name|RAY_ECF_READY
 argument_list|(
@@ -9220,10 +9606,10 @@ expr_stmt|;
 block|}
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CMD
 argument_list|,
 operator|(
-literal|"ray%d: ray_check_scheduled sched 0x%x running 0x%x ready %d\n"
+literal|"ray%d: ray_check_scheduled out schd 0x%b running 0x%b ready %d\n"
 operator|,
 name|sc
 operator|->
@@ -9233,9 +9619,13 @@ name|sc
 operator|->
 name|sc_scheduled
 operator|,
+name|SCP_PRINTFB
+operator|,
 name|sc
 operator|->
 name|sc_running
+operator|,
+name|SCP_PRINTFB
 operator|,
 name|RAY_ECF_READY
 argument_list|(
@@ -9313,7 +9703,7 @@ name|arg
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_check_ccs\n"
@@ -9417,19 +9807,16 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CMD
 argument_list|,
 operator|(
-literal|"ray%d: check ccs idx %d ccs 0x%x "
-literal|"cmd 0x%x stat %d\n"
+literal|"ray%d: ray_check_ccs ccs 0x%x cmd 0x%x stat %d\n"
 operator|,
 name|sc
 operator|->
 name|unit
 operator|,
 name|i
-operator|,
-name|ccs
 operator|,
 name|cmd
 operator|,
@@ -9591,7 +9978,7 @@ name|csc
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_update_error_counters\n"
@@ -9777,6 +10164,11 @@ name|size_t
 name|ccs
 parameter_list|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 name|u_int
 name|cmd
 decl_stmt|,
@@ -9784,7 +10176,7 @@ name|stat
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_ccs_done\n"
@@ -9799,6 +10191,15 @@ name|RAY_MAP_CM
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
 expr_stmt|;
 name|cmd
 operator|=
@@ -9828,7 +10229,7 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ccs idx %d ccs 0x%x cmd 0x%x status %d\n"
@@ -9860,7 +10261,7 @@ name|RAY_CMD_START_PARAMS
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_ccs_done got START_PARAMS\n"
@@ -9882,7 +10283,7 @@ name|RAY_CMD_UPDATE_PARAMS
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_ccs_done got UPDATE_PARAMS\n"
@@ -9908,7 +10309,7 @@ name|RAY_CMD_REPORT_PARAMS
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_ccs_done got REPORT_PARAMS\n"
@@ -10005,7 +10406,7 @@ name|RAY_CMD_UPDATE_MCAST
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_ccs_done got UPDATE_MCAST\n"
@@ -10043,7 +10444,7 @@ name|RAY_CMD_JOIN_NET
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_ccs_done got START|JOIN_NET\n"
@@ -10069,7 +10470,7 @@ name|RAY_CMD_TX_REQ
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_ccs_done got TX_REQ\n"
@@ -10097,7 +10498,7 @@ name|RAY_CMD_START_ASSOC
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_ccs_done got START_ASSOC\n"
@@ -10108,52 +10509,27 @@ name|unit
 operator|)
 argument_list|)
 expr_stmt|;
-name|ray_cmd_done
+name|ray_start_assoc_done
 argument_list|(
 name|sc
 argument_list|,
-name|SCP_STARTASSOC
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+name|ccs
+argument_list|,
 name|stat
-operator|==
-name|RAY_CCS_STATUS_FAIL
-condition|)
-name|ray_start_join_net
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
-comment|/* XXX check */
-else|else
-block|{
-name|sc
-operator|->
-name|sc_havenet
-operator|=
-literal|1
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|RAY_CMD_UPDATE_APM
 case|:
-name|RAY_DPRINTFN
+name|printf
 argument_list|(
-literal|20
+literal|"ray%d: ray_ccs_done got UPDATE_APM - why?\n"
 argument_list|,
-operator|(
-literal|"ray%d: ray_ccs_done got UPDATE_APM\n"
-operator|,
 name|sc
 operator|->
 name|unit
-operator|)
 argument_list|)
-expr_stmt|;
-name|XXX
 expr_stmt|;
 break|break;
 case|case
@@ -10270,7 +10646,7 @@ name|status
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_rcs_intr\n"
@@ -10323,7 +10699,7 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: rcs idx %d rcs 0x%x cmd 0x%x status %d\n"
@@ -10355,7 +10731,7 @@ name|RAY_ECMD_RX_DONE
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_rcs_intr got RX_DONE\n"
@@ -10379,7 +10755,7 @@ name|RAY_ECMD_REJOIN_DONE
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_rcs_intr got REJOIN_DONE\n"
@@ -10405,7 +10781,7 @@ name|RAY_ECMD_ROAM_START
 case|:
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_rcs_intr got ROAM_START\n"
@@ -10507,7 +10883,7 @@ index|]
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_intr\n"
@@ -10541,7 +10917,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ray%d: unloaded before interrupt!\n"
+literal|"ray%d: ray_intr unloaded!\n"
 argument_list|,
 name|sc
 operator|->
@@ -10657,7 +11033,7 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|10
+name|RAY_DBG_RX
 argument_list|,
 operator|(
 literal|"ray%d: interrupt %s handled\n"
@@ -10742,7 +11118,9 @@ name|i
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_free_ccs_chain\n"
@@ -10828,7 +11206,9 @@ name|stat
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_free_ccs\n"
@@ -10887,7 +11267,7 @@ literal|0
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_free_ccs freed 0x%02x\n"
@@ -10944,7 +11324,9 @@ name|i
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_alloc_ccs\n"
@@ -11069,6 +11451,21 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_CCS
+argument_list|,
+operator|(
+literal|"ray%d: ray_alloc_ccs using ccs 0x%0x\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|,
+name|i
+operator|)
+argument_list|)
+expr_stmt|;
 name|SRAM_WRITE_FIELD_1
 argument_list|(
 name|sc
@@ -11141,7 +11538,7 @@ parameter_list|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_set_pending\n"
@@ -11159,16 +11556,18 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CMD
 argument_list|,
 operator|(
-literal|"ray%d: ray_set_pending 0x%0x\n"
+literal|"ray%d: ray_set_pending 0x%b\n"
 operator|,
 name|sc
 operator|->
 name|unit
 operator|,
 name|cmdf
+operator|,
+name|SCP_PRINTFB
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11188,7 +11587,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CCS
 argument_list|,
 operator|(
 literal|"ray%d: ray_set_pending new timo\n"
@@ -11245,7 +11644,7 @@ name|track
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_cmd_schedule\n"
@@ -11263,16 +11662,18 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CMD
 argument_list|,
 operator|(
-literal|"ray%d: ray_cmd_schedule 0x%x\n"
+literal|"ray%d: ray_cmd_schedule 0x%b\n"
 operator|,
 name|sc
 operator|->
 name|unit
 operator|,
 name|cmdf
+operator|,
+name|SCP_PRINTFB
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11349,7 +11750,7 @@ parameter_list|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_cmd_is_scheduled\n"
@@ -11363,21 +11764,6 @@ expr_stmt|;
 name|RAY_MAP_CM
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|RAY_DPRINTFN
-argument_list|(
-literal|20
-argument_list|,
-operator|(
-literal|"ray%d: ray_cmd_is_scheduled 0x%x\n"
-operator|,
-name|sc
-operator|->
-name|unit
-operator|,
-name|cmdf
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11418,7 +11804,7 @@ parameter_list|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_cmd_cancel\n"
@@ -11436,16 +11822,18 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CMD
 argument_list|,
 operator|(
-literal|"ray%d: ray_cmd_cancel 0x%x\n"
+literal|"ray%d: ray_cmd_cancel 0x%b\n"
 operator|,
 name|sc
 operator|->
 name|unit
 operator|,
 name|cmdf
+operator|,
+name|SCP_PRINTFB
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11536,7 +11924,7 @@ parameter_list|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_cmd_ran\n"
@@ -11554,16 +11942,18 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CMD
 argument_list|,
 operator|(
-literal|"ray%d: ray_cmd_ran 0x%x\n"
+literal|"ray%d: ray_cmd_ran 0x%b\n"
 operator|,
 name|sc
 operator|->
 name|unit
 operator|,
 name|cmdf
+operator|,
+name|SCP_PRINTFB
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11645,7 +12035,7 @@ parameter_list|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_cmd_is_running\n"
@@ -11659,21 +12049,6 @@ expr_stmt|;
 name|RAY_MAP_CM
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|RAY_DPRINTFN
-argument_list|(
-literal|20
-argument_list|,
-operator|(
-literal|"ray%d: ray_cmd_is_running 0x%x\n"
-operator|,
-name|sc
-operator|->
-name|unit
-operator|,
-name|cmdf
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11714,7 +12089,7 @@ parameter_list|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_cmd_done\n"
@@ -11732,16 +12107,18 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|20
+name|RAY_DBG_CMD
 argument_list|,
 operator|(
-literal|"ray%d: ray_cmd_done 0x%x\n"
+literal|"ray%d: ray_cmd_done 0x%b\n"
 operator|,
 name|sc
 operator|->
 name|unit
 operator|,
 name|cmdf
+operator|,
+name|SCP_PRINTFB
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11821,6 +12198,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 block|}
 end_function
 
@@ -11850,7 +12228,7 @@ name|i
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_cmd_issue\n"
@@ -11864,6 +12242,23 @@ expr_stmt|;
 name|RAY_MAP_CM
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_CMD
+argument_list|,
+operator|(
+literal|"ray%d: ray_issue_cmd 0x%b\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|,
+name|track
+operator|,
+name|SCP_PRINTFB
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX other drivers did this, but I think  	 * what we really want to do is just make sure we don't 	 * get here or that spinning is ok 	 */
@@ -11999,7 +12394,7 @@ name|ccs
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_simple_cmd\n"
@@ -12013,6 +12408,23 @@ expr_stmt|;
 name|RAY_MAP_CM
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_CMD
+argument_list|,
+operator|(
+literal|"ray%d: ray_simple_cmd 0x%b\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|,
+name|track
+operator|,
+name|SCP_PRINTFB
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -12073,7 +12485,7 @@ name|i
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_update_subcmd\n"
@@ -12087,6 +12499,19 @@ expr_stmt|;
 name|RAY_MAP_CM
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_CMD
+argument_list|,
+operator|(
+literal|"ray%d: ray_update_subcmd\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
 argument_list|)
 expr_stmt|;
 name|ray_cmd_cancel
@@ -12239,7 +12664,7 @@ name|ccs
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_report_params\n"
@@ -12397,7 +12822,9 @@ name|ifp
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_STARTJOIN
 argument_list|,
 operator|(
 literal|"ray%d: ray_start_assoc\n"
@@ -12469,6 +12896,133 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * complete association  *  * Part of ray_init, download, start_join control flow.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ray_start_assoc_done
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|,
+name|size_t
+name|ccs
+parameter_list|,
+name|u_int8_t
+name|status
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_STARTJOIN
+argument_list|,
+operator|(
+literal|"ray%d: ray_start_assoc_done\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|RAY_MAP_CM
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+expr_stmt|;
+name|ray_cmd_done
+argument_list|(
+name|sc
+argument_list|,
+name|SCP_STARTASSOC
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|RAY_CCS_STATUS_FAIL
+condition|)
+block|{
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_STARTJOIN
+argument_list|,
+operator|(
+literal|"ray%d: START_ASSOC failed retrying \n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|ray_start_join_net
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* XXX check */
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|sc_havenet
+operator|=
+literal|1
+expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_OACTIVE
+expr_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_STARTJOIN
+argument_list|,
+operator|(
+literal|"ray%d: START_ASSOC waking ray_init\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|ray_init
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Subcommand functions that use the SCP_UPDATESUBCMD command  * (and are serialized with respect to other update sub commands  */
 end_comment
 
@@ -12497,10 +13051,12 @@ name|ray_mib_5_default
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_STARTJOIN
 argument_list|,
 operator|(
-literal|"ray%d: Downloading startup parameters\n"
+literal|"ray%d: ray_download_params\n"
 operator|,
 name|sc
 operator|->
@@ -13273,6 +13829,7 @@ name|sc_d
 operator|.
 name|np_def_txrate
 expr_stmt|;
+comment|/* XXX i think that this can go when ray_stop is fixed or 	 * XXX do we need it for safety for the case where the card is 	 * XXX busy but the driver hasn't got the state e.g. over an unload? 	 * XXX does that mean attach should do this? */
 if|if
 condition|(
 operator|!
@@ -13359,10 +13916,10 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|15
+name|RAY_DBG_STARTJOIN
 argument_list|,
 operator|(
-literal|"ray%d: Download now awaiting completion\n"
+literal|"ray%d: ray_download_params awaiting completion\n"
 operator|,
 name|sc
 operator|->
@@ -13391,7 +13948,9 @@ parameter_list|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_STARTJOIN
 argument_list|,
 operator|(
 literal|"ray%d: ray_download_done\n"
@@ -13486,7 +14045,9 @@ name|update
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_STARTJOIN
 argument_list|,
 operator|(
 literal|"ray%d: ray_start_join_net\n"
@@ -13542,6 +14103,19 @@ name|SCP_UPDATESUBCMD
 argument_list|)
 condition|)
 block|{
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_STARTJOIN
+argument_list|,
+operator|(
+literal|"ray%d: ray_start_join_net already running\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
 name|ray_cmd_schedule
 argument_list|(
 name|sc
@@ -13756,7 +14330,7 @@ argument_list|)
 expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|15
+name|RAY_DBG_STARTJOIN
 argument_list|,
 operator|(
 literal|"ray%d: ray_start_join_net %s updating nw params\n"
@@ -13801,6 +14375,19 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_STARTJOIN
+argument_list|,
+operator|(
+literal|"ray%d: ray_start_join_net awaiting completion\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|RAY_NEED_STARTJOIN_TIMO
@@ -13852,7 +14439,7 @@ name|xsc
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_start_join_timo\n"
@@ -13895,7 +14482,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Complete start or join command.  *  * Part of ray_init, download, start_join control flow.  */
+comment|/*  * Complete start command or intermediate step in join command.  *  * Part of ray_init, download, start_join control flow.  */
 end_comment
 
 begin_function
@@ -13931,7 +14518,9 @@ name|o_net_type
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_STARTJOIN
 argument_list|,
 operator|(
 literal|"ray%d: ray_start_join_done\n"
@@ -14124,7 +14713,7 @@ condition|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
-literal|1
+name|RAY_DBG_RECERR
 argument_list|,
 operator|(
 literal|"ray%d: sj_done card updating parameters - why?\n"
@@ -14252,6 +14841,24 @@ operator|&=
 operator|~
 name|IFF_OACTIVE
 expr_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+name|RAY_DBG_STARTJOIN
+argument_list|,
+operator|(
+literal|"ray%d: ray_start_join_done waking ray_init\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|ray_init
+argument_list|)
+expr_stmt|;
 block|}
 return|return;
 block|}
@@ -14289,7 +14896,7 @@ name|promisc
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_update_promisc\n"
@@ -14473,7 +15080,7 @@ name|ccs
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_update_params\n"
@@ -14666,7 +15273,7 @@ name|count
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_update_mcast\n"
@@ -14936,7 +15543,7 @@ name|rv
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_user_update_params\n"
@@ -15337,7 +15944,7 @@ name|rv
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_user_report_params\n"
@@ -15876,7 +16483,7 @@ name|ifp
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: ray_user_report_stats\n"
@@ -16006,7 +16613,7 @@ name|result
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|5
+name|RAY_DBG_SUBR
 argument_list|,
 operator|(
 literal|"ray%d: attempting to get map for common memory\n"
@@ -16114,7 +16721,7 @@ name|p
 decl_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
-literal|100
+name|RAY_DBG_CM
 argument_list|,
 operator|(
 literal|"ray%d: attempting to remap common memory\n"
@@ -16504,8 +17111,8 @@ begin_if
 if|#
 directive|if
 name|RAY_DEBUG
-operator|>
-literal|50
+operator|&
+name|RAY_DBG_MBUF
 end_if
 
 begin_function
@@ -16715,7 +17322,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* RAY_DEBUG> 50 */
+comment|/* RAY_DEBUG& RAY_DBG_MBUF */
 end_comment
 
 begin_endif
