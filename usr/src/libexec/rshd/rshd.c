@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.1 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1004,6 +1004,19 @@ directive|endif
 block|}
 if|if
 condition|(
+name|pwd
+operator|->
+name|pw_passwd
+operator|!=
+literal|0
+operator|&&
+operator|*
+name|pwd
+operator|->
+name|pw_passwd
+operator|!=
+literal|'\0'
+operator|&&
 name|ruserok
 argument_list|(
 name|hp
