@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: key.c,v 1.188 2001/05/31 14:58:31 sakane Exp $	*/
+comment|/*	$KAME: key.c,v 1.189 2001/05/31 15:02:56 sakane Exp $	*/
 end_comment
 
 begin_comment
@@ -8284,7 +8284,7 @@ name|mhp
 argument_list|,
 literal|2
 argument_list|,
-literal|4
+literal|5
 argument_list|,
 name|SADB_EXT_RESERVED
 argument_list|,
