@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)events.c 1.2 %G%"
+literal|"@(#)events.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1420,6 +1420,64 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Determine if the given function can be executed at full speed.  * This can only be done if there are no breakpoints within the function.  */
+end_comment
+
+begin_function
+name|public
+name|Boolean
+name|canskip
+parameter_list|(
+name|f
+parameter_list|)
+name|Symbol
+name|f
+decl_stmt|;
+block|{
+name|Breakpoint
+name|p
+decl_stmt|;
+name|Boolean
+name|ok
+decl_stmt|;
+name|ok
+operator|=
+name|true
+expr_stmt|;
+name|foreach
+argument_list|(
+argument|Breakpoint
+argument_list|,
+argument|p
+argument_list|,
+argument|bplist
+argument_list|)
+if|if
+condition|(
+name|whatblock
+argument_list|(
+name|p
+operator|->
+name|bpaddr
+argument_list|)
+operator|==
+name|f
+condition|)
+block|{
+name|ok
+operator|=
+name|false
+expr_stmt|;
+break|break;
+block|}
+name|endfor
+return|return
+name|ok
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Print out what's currently being traced by looking at  * the currently active events.  *  * Some convolution here to translate internal representation  * of events back into something more palatable.  */
 end_comment
 
@@ -1430,9 +1488,6 @@ parameter_list|()
 block|{
 name|Event
 name|e
-decl_stmt|;
-name|Command
-name|cmd
 decl_stmt|;
 name|foreach
 argument_list|(
@@ -1450,6 +1505,29 @@ operator|->
 name|temporary
 condition|)
 block|{
+name|printevent
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+block|}
+name|endfor
+block|}
+end_function
+
+begin_function
+name|public
+name|printevent
+parameter_list|(
+name|e
+parameter_list|)
+name|Event
+name|e
+decl_stmt|;
+block|{
+name|Command
+name|cmd
+decl_stmt|;
 if|if
 condition|(
 name|not
@@ -1587,8 +1665,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
-name|endfor
 block|}
 end_function
 
@@ -2057,6 +2133,9 @@ decl_stmt|;
 name|Cmdlist
 name|actions
 decl_stmt|;
+name|Address
+name|ret
+decl_stmt|;
 name|trcmd
 operator|=
 name|new
@@ -2126,6 +2205,18 @@ name|eachline
 argument_list|)
 expr_stmt|;
 block|}
+name|ret
+operator|=
+name|return_addr
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+block|{
 name|until
 operator|=
 name|build
@@ -2143,8 +2234,7 @@ name|build
 argument_list|(
 name|O_LCON
 argument_list|,
-name|return_addr
-argument_list|()
+name|ret
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2169,6 +2259,7 @@ argument_list|,
 name|actions
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|tracebpts
@@ -2372,17 +2463,37 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"removing trace %d for event %d\n"
+literal|"removing trace %d"
 argument_list|,
 name|t
 operator|->
 name|trid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|->
+name|event
+operator|!=
+name|nil
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" for event %d"
 argument_list|,
 name|t
 operator|->
 name|event
 operator|->
 name|id
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2508,6 +2619,13 @@ specifier|register
 name|Command
 name|cmd
 decl_stmt|;
+name|curfunc
+operator|=
+name|whatblock
+argument_list|(
+name|pc
+argument_list|)
+expr_stmt|;
 name|foreach
 argument_list|(
 argument|Trcmd
@@ -2541,13 +2659,6 @@ argument|]->op == O_QLINE
 argument_list|)
 condition|)
 block|{
-name|curfunc
-operator|=
-name|whatblock
-argument_list|(
-name|pc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|iscall
