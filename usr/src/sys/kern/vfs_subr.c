@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1560,9 +1560,16 @@ literal|0
 operator|)
 return|;
 block|}
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|vclean
 argument_list|(
 name|vp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vp
@@ -1911,7 +1918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Disassociate the underlying file system from a vnode.  * If this operation is done on an active vnode (i.e. v_count> 0)  * then the vnode must be delivered locked.  */
+comment|/*  * Disassociate the underlying file system from a vnode.  */
 end_comment
 
 begin_function
@@ -1919,6 +1926,8 @@ name|void
 name|vclean
 parameter_list|(
 name|vp
+parameter_list|,
+name|doclose
 parameter_list|)
 specifier|register
 name|struct
@@ -1926,12 +1935,40 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+name|long
+name|doclose
+decl_stmt|;
 block|{
 name|struct
 name|vnodeops
 modifier|*
 name|origops
 decl_stmt|;
+name|int
+name|active
+decl_stmt|;
+comment|/* 	 * Check to see if the vnode is in use. 	 * If so we have to lock it before we clean it out. 	 */
+if|if
+condition|(
+name|active
+operator|=
+name|vp
+operator|->
+name|v_count
+condition|)
+block|{
+name|VREF
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Prevent the vnode from being recycled or 	 * brought into use while we clean it out. 	 */
 while|while
 condition|(
 name|vp
@@ -1984,14 +2021,10 @@ name|v_tag
 operator|=
 name|VT_NON
 expr_stmt|;
-comment|/* 	 * If purging an active vnode, it must be unlocked and 	 * deactivated before being reclaimed. 	 */
+comment|/* 	 * If purging an active vnode, it must be unlocked, closed, 	 * and deactivated before being reclaimed. 	 */
 if|if
 condition|(
-name|vp
-operator|->
-name|v_count
-operator|>
-literal|0
+name|active
 condition|)
 block|{
 operator|(
@@ -2004,6 +2037,26 @@ operator|)
 operator|)
 operator|(
 name|vp
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|doclose
+condition|)
+operator|(
+operator|*
+operator|(
+name|origops
+operator|->
+name|vn_close
+operator|)
+operator|)
+operator|(
+name|vp
+operator|,
+literal|0
+operator|,
+name|NOCRED
 operator|)
 expr_stmt|;
 operator|(
@@ -2037,6 +2090,15 @@ condition|)
 name|panic
 argument_list|(
 literal|"vclean: cannot reclaim"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|active
+condition|)
+name|vrele
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Done with purge, notify sleepers in vget of the grim news. 	 */
@@ -2109,23 +2171,12 @@ name|vnode
 modifier|*
 name|vq
 decl_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_count
-operator|>
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"vgone: cannot reclaim"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Clean out the filesystem specific data. 	 */
 name|vclean
 argument_list|(
 name|vp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Delete from old mount point vnode list, if on one. 	 */
@@ -2337,7 +2388,7 @@ name|vp
 operator|->
 name|v_type
 operator|=
-name|VNON
+name|VBAD
 expr_stmt|;
 block|}
 end_function
