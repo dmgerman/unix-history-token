@@ -609,7 +609,14 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*s %-7s %-*s %-*s %6.2f secs %.16s\n"
+literal|"%-*.*s %-7s %-*s %-*s %6.2f secs %.16s\n"
+argument_list|,
+name|fldsiz
+argument_list|(
+name|acct
+argument_list|,
+name|ac_comm
+argument_list|)
 argument_list|,
 name|fldsiz
 argument_list|(
