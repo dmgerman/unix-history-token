@@ -1636,6 +1636,8 @@ name|char
 name|uname
 index|[
 name|MAXLOGNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
