@@ -1134,6 +1134,16 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+name|ttyregister
+argument_list|(
+operator|&
+name|pccons
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|vs
 index|[
 name|i
@@ -1147,6 +1157,25 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|make_dev
+argument_list|(
+operator|&
+name|pc_cdevsw
+argument_list|,
+name|i
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+literal|0600
+argument_list|,
+literal|"ttyv%r"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* !PCVT_NETBSD&& !(PCVT_FREEBSD> 110&& PCVT_FREEBSD< 200) */
@@ -1156,20 +1185,6 @@ name|UPDATE_START
 argument_list|)
 expr_stmt|;
 comment|/* start asynchronous updates */
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>
-literal|205
-name|cdevsw_add
-argument_list|(
-operator|&
-name|pc_cdevsw
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_FREEBSD> 205 */
 if|#
 directive|if
 name|PCVT_NETBSD
@@ -1592,6 +1607,12 @@ operator|->
 name|t_param
 operator|=
 name|pcparam
+expr_stmt|;
+name|tp
+operator|->
+name|t_stop
+operator|=
+name|nottystop
 expr_stmt|;
 name|tp
 operator|->
