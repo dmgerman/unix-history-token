@@ -4707,6 +4707,7 @@ case|:
 comment|/* Toggle newfs state */
 if|if
 condition|(
+operator|(
 name|label_chunk_info
 index|[
 name|here
@@ -4715,6 +4716,18 @@ operator|.
 name|type
 operator|==
 name|PART_FILESYSTEM
+operator|)
+operator|&&
+operator|(
+name|label_chunk_info
+index|[
+name|here
+index|]
+operator|.
+name|c
+operator|->
+name|private_data
+operator|)
 condition|)
 block|{
 name|PartInfo
