@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.76 1998/12/04 21:28:39 archie Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.77 1998/12/10 23:36:14 msmith Exp $  */
 end_comment
 
 begin_include
@@ -18,7 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_smp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -53,12 +65,6 @@ end_endif
 begin_comment
 comment|/*DEVFS*/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
 
 begin_include
 include|#
@@ -142,6 +148,23 @@ begin_include
 include|#
 directive|include
 file|<machine/vm86.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
 end_include
 
 begin_endif
@@ -440,6 +463,14 @@ name|u_int
 name|data_limit
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
+name|int
+name|x
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* setup 32bit code segment */
 name|gdt_segs
 index|[
@@ -543,6 +574,80 @@ operator|.
 name|sd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+for|for
+control|(
+name|x
+operator|=
+literal|1
+init|;
+name|x
+operator|<
+name|NCPU
+condition|;
+name|x
+operator|++
+control|)
+block|{
+name|gdt
+index|[
+name|x
+operator|*
+name|NGDT
+operator|+
+name|GAPMCODE32_SEL
+index|]
+operator|.
+name|sd
+operator|=
+name|gdt
+index|[
+name|GAPMCODE32_SEL
+index|]
+operator|.
+name|sd
+expr_stmt|;
+name|gdt
+index|[
+name|x
+operator|*
+name|NGDT
+operator|+
+name|GAPMCODE16_SEL
+index|]
+operator|.
+name|sd
+operator|=
+name|gdt
+index|[
+name|GAPMCODE16_SEL
+index|]
+operator|.
+name|sd
+expr_stmt|;
+name|gdt
+index|[
+name|x
+operator|*
+name|NGDT
+operator|+
+name|GAPMDATA_SEL
+index|]
+operator|.
+name|sd
+operator|=
+name|gdt
+index|[
+name|GAPMDATA_SEL
+index|]
+operator|.
+name|sd
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3095,7 +3200,7 @@ name|APMINI_CANTFIND
 case|:
 comment|/* silent */
 return|return
-literal|0
+name|ENXIO
 return|;
 case|case
 name|APMINI_NOT32BIT
@@ -3106,7 +3211,7 @@ literal|"apm: 32bit connection is not supported.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ENXIO
 return|;
 case|case
 name|APMINI_CONNECTERR
@@ -3117,7 +3222,7 @@ literal|"apm: 32-bit connection error.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ENXIO
 return|;
 block|}
 if|if
