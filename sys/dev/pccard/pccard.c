@@ -1300,6 +1300,12 @@ decl_stmt|;
 name|device_t
 name|bus
 decl_stmt|;
+name|int
+name|start
+decl_stmt|;
+name|int
+name|end
+decl_stmt|;
 if|if
 condition|(
 name|pf
@@ -1395,12 +1401,42 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* XXX kludge, need to not ignore start */
-comment|/* XXX start is a hint here, so this would break */
-comment|/* XXX modems */
-comment|/* XXX ALSO: should just ask for the range 0 to */
-comment|/* XXX 1<< decode bits - 1, so we have a layering */
-comment|/* XXX violation now */
+name|start
+operator|=
+name|cfe
+operator|->
+name|iospace
+index|[
+name|i
+index|]
+operator|.
+name|start
+expr_stmt|;
+if|if
+condition|(
+name|start
+condition|)
+name|end
+operator|=
+name|start
+operator|+
+name|cfe
+operator|->
+name|iospace
+index|[
+name|i
+index|]
+operator|.
+name|length
+operator|-
+literal|1
+expr_stmt|;
+else|else
+name|end
+operator|=
+operator|~
+literal|0
+expr_stmt|;
 name|cfe
 operator|->
 name|iorid
@@ -1433,9 +1469,9 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|0x100
+name|start
 argument_list|,
-literal|0x3ff
+name|end
 argument_list|,
 name|cfe
 operator|->
@@ -1446,7 +1482,17 @@ index|]
 operator|.
 name|length
 argument_list|,
-literal|0
+name|rman_make_alignment_flags
+argument_list|(
+name|cfe
+operator|->
+name|iospace
+index|[
+name|i
+index|]
+operator|.
+name|length
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1540,9 +1586,10 @@ name|cfe
 operator|->
 name|irqrid
 argument_list|,
-literal|10
+literal|0
 argument_list|,
-literal|12
+operator|~
+literal|0
 argument_list|,
 literal|1
 argument_list|,
@@ -1596,6 +1643,19 @@ break|break;
 name|not_this_one
 label|:
 empty_stmt|;
+name|DEVPRVERBOSE
+argument_list|(
+operator|(
+name|bus
+operator|,
+literal|"Allocation failed for cfe %d\n"
+operator|,
+name|cfe
+operator|->
+name|number
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Release resources that we partially allocated 		 * from this config entry. 		 */
 for|for
 control|(
