@@ -9792,6 +9792,11 @@ name|defined
 argument_list|(
 name|FREEBSD_NATIVE
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 end_if
 
 begin_if
@@ -9802,10 +9807,6 @@ argument_list|(
 name|FREEBSD_AOUT
 argument_list|)
 end_if
-
-begin_comment
-comment|/* XXX: revisit this */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -10560,6 +10561,11 @@ name|defined
 argument_list|(
 name|FREEBSD_NATIVE
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 block|{
 comment|/* first hint is /etc/objectformat */
 name|FILE
@@ -10773,6 +10779,11 @@ directive|if
 name|defined
 argument_list|(
 name|FREEBSD_NATIVE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
 argument_list|)
 comment|/* .. and command line args override all */
 if|if
@@ -12144,6 +12155,12 @@ comment|/* Use 2 as fourth arg meaning try just the machine as a suffix,      as
 ifdef|#
 directive|ifdef
 name|FREEBSD_NATIVE
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 if|if
 condition|(
 name|objformat_aout
@@ -12183,6 +12200,8 @@ argument_list|,
 name|NULL_PTR
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|add_prefix
 argument_list|(
 operator|&
@@ -12512,9 +12531,17 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* This, time, copy the text of each switch and store a pointer      to the copy in the vector of switches.      Store all the infiles in their vector.  */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FREEBSD_NATIVE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 if|if
 condition|(
 name|objformat_aout
@@ -12719,9 +12746,17 @@ literal|"-print-multi-directory"
 argument_list|)
 condition|)
 empty_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FREEBSD_NATIVE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 elseif|else
 if|if
 condition|(
