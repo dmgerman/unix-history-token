@@ -326,7 +326,7 @@ expr_stmt|;
 while|while
 condition|(
 name|optind
-operator|<=
+operator|<
 name|argc
 condition|)
 if|if
