@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.19 (Berkeley) %G%"
+literal|"@(#)map.c	8.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1083,13 +1083,36 @@ name|CurEnv
 operator|=
 name|e
 expr_stmt|;
+if|if
+condition|(
+name|rebuild
+condition|)
+block|{
 name|stabapply
 argument_list|(
 name|map_init
 argument_list|,
-name|rebuild
+literal|1
 argument_list|)
 expr_stmt|;
+name|stabapply
+argument_list|(
+name|map_init
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|stabapply
+argument_list|(
+name|map_init
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|XDEBUG
@@ -1166,7 +1189,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"map_init(%s:%s)\n"
+literal|"map_init(%s:%s, %d)\n"
 argument_list|,
 name|map
 operator|->
@@ -1195,8 +1218,57 @@ else|:
 name|map
 operator|->
 name|map_file
+argument_list|,
+name|rebuild
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rebuild
+operator|==
+operator|(
+name|bitset
+argument_list|(
+name|MF_ALIAS
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
+operator|&&
+name|bitset
+argument_list|(
+name|MCF_REBUILDABLE
+argument_list|,
+name|map
+operator|->
+name|map_class
+operator|->
+name|map_cflags
+argument_list|)
+condition|?
+literal|1
+else|:
+literal|2
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|38
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\twrong pass\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* if already open, close it (for nested open) */
 if|if
 condition|(
@@ -1234,30 +1306,10 @@ block|}
 if|if
 condition|(
 name|rebuild
+operator|==
+literal|2
 condition|)
 block|{
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|MF_ALIAS
-argument_list|,
-name|map
-operator|->
-name|map_mflags
-argument_list|)
-operator|&&
-name|bitset
-argument_list|(
-name|MCF_REBUILDABLE
-argument_list|,
-name|map
-operator|->
-name|map_class
-operator|->
-name|map_cflags
-argument_list|)
-condition|)
 name|rebuildaliases
 argument_list|(
 name|map
@@ -1293,7 +1345,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%s:%s: valid\n"
+literal|"\t%s:%s: valid\n"
 argument_list|,
 name|map
 operator|->
@@ -1343,7 +1395,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%s:%s: invalid: %s\n"
+literal|"\t%s:%s: invalid: %s\n"
 argument_list|,
 name|map
 operator|->
