@@ -187,6 +187,7 @@ begin_function
 name|void
 name|dec_2100_a500_init
 parameter_list|(
+name|int
 name|cputype
 parameter_list|)
 block|{
