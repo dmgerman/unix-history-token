@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	5.17 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1395,7 +1395,6 @@ block|{
 comment|/* 		 * Move one char to the right.  We don't use ND space because 		 * it's better to just print the char we are moving over. 		 */
 if|if
 condition|(
-operator|!
 name|in_refresh
 condition|)
 if|if
