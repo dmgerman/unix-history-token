@@ -2631,7 +2631,15 @@ end_asm
 
 begin_expr_stmt
 operator|(
-literal|" 	.text 	.p2align 2,0x90 "
+literal|" 	.text 	.p2align 2,0x90 	.type	"
+name|__XSTRING
+argument_list|(
+name|CNAME
+argument_list|(
+name|bluetrap6
+argument_list|)
+argument_list|)
+literal|",@function "
 name|__XSTRING
 argument_list|(
 name|CNAME
@@ -2668,7 +2676,15 @@ end_asm
 
 begin_expr_stmt
 operator|(
-literal|" 	.text 	.p2align 2,0x90 "
+literal|" 	.text 	.p2align 2,0x90 	.type "
+name|__XSTRING
+argument_list|(
+name|CNAME
+argument_list|(
+name|bluetrap13
+argument_list|)
+argument_list|)
+literal|",@function "
 name|__XSTRING
 argument_list|(
 name|CNAME

@@ -896,6 +896,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_bintr
+value|bintr
+end_define
+
+begin_define
+define|#
+directive|define
 name|_bio_imask
 value|bio_imask
 end_define
@@ -975,6 +982,13 @@ define|#
 directive|define
 name|_bootstrap_gdt
 value|bootstrap_gdt
+end_define
+
+begin_define
+define|#
+directive|define
+name|_btrap
+value|btrap
 end_define
 
 begin_define
@@ -1253,6 +1267,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_doreti
+value|doreti
+end_define
+
+begin_define
+define|#
+directive|define
 name|_edata
 value|edata
 end_define
@@ -1381,6 +1402,13 @@ define|#
 directive|define
 name|_get_syscall_lock
 value|get_syscall_lock
+end_define
+
+begin_define
+define|#
+directive|define
+name|_idle
+value|idle
 end_define
 
 begin_define

@@ -722,7 +722,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|__asm("								\n\ 	.text							\n\ 	.p2align 2,0x90						\n\ " __XSTRING(CNAME(probeintr)) ":				\n\ 	ss							\n\ 	incl	" __XSTRING(CNAME(npx_intrs_while_probing)) "	\n\ 	pushl	%eax						\n\ 	movb	$0x20,%al	# EOI (asm in strings loses cpp features) \n\ 	outb	%al,$0xa0	# IO_ICU2			\n\ 	outb	%al,$0x20	# IO_ICU1			\n\ 	movb	$0,%al						\n\ 	outb	%al,$0xf0	# clear BUSY# latch		\n\ 	popl	%eax						\n\ 	iret							\n\ ");
+asm|__asm("								\n\ 	.text							\n\ 	.p2align 2,0x90						\n\ 	.type	" __XSTRING(CNAME(probeintr)) ",@function	\n\ " __XSTRING(CNAME(probeintr)) ":				\n\ 	ss							\n\ 	incl	" __XSTRING(CNAME(npx_intrs_while_probing)) "	\n\ 	pushl	%eax						\n\ 	movb	$0x20,%al	# EOI (asm in strings loses cpp features) \n\ 	outb	%al,$0xa0	# IO_ICU2			\n\ 	outb	%al,$0x20	# IO_ICU1			\n\ 	movb	$0,%al						\n\ 	outb	%al,$0xf0	# clear BUSY# latch		\n\ 	popl	%eax						\n\ 	iret							\n\ ");
 end_asm
 
 begin_decl_stmt
@@ -732,7 +732,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|__asm("								\n\ 	.text							\n\ 	.p2align 2,0x90						\n\ " __XSTRING(CNAME(probetrap)) ":				\n\ 	ss							\n\ 	incl	" __XSTRING(CNAME(npx_traps_while_probing)) "	\n\ 	fnclex							\n\ 	iret							\n\ ");
+asm|__asm("								\n\ 	.text							\n\ 	.p2align 2,0x90						\n\ 	.type	" __XSTRING(CNAME(probetrap)) ",@function	\n\ " __XSTRING(CNAME(probetrap)) ":				\n\ 	ss							\n\ 	incl	" __XSTRING(CNAME(npx_traps_while_probing)) "	\n\ 	fnclex							\n\ 	iret							\n\ ");
 end_asm
 
 begin_endif

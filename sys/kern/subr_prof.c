@@ -69,6 +69,12 @@ directive|include
 file|<sys/gmon.h>
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|MCOUNT
+end_undef
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -127,6 +133,12 @@ ifdef|#
 directive|ifdef
 name|GUPROF
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/asmacros.h>
+end_include
 
 begin_function
 name|void
@@ -716,7 +728,7 @@ operator|&&
 name|__GNUC__
 operator|>=
 literal|2
-asm|__asm("call mexitcount; 1:"
+asm|__asm("call " __XSTRING(HIDENAME(mexitcount)) "; 1:"
 block|: : :
 literal|"ax"
 operator|,

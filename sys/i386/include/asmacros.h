@@ -161,7 +161,7 @@ name|GEN_ENTRY
 parameter_list|(
 name|name
 parameter_list|)
-value|ALIGN_TEXT; .globl CNAME(name); \ 				CNAME(name):
+value|ALIGN_TEXT; .globl CNAME(name); \ 				.type CNAME(name),@function; CNAME(name):
 end_define
 
 begin_define
@@ -192,7 +192,7 @@ name|GPROF
 end_ifdef
 
 begin_comment
-comment|/*  * __mcount is like mcount except that doesn't require its caller to set  * up a frame pointer.  It must be called before pushing anything onto the  * stack.  gcc should eventually generate code to call __mcount in most  * cases.  This would make -pg in combination with -fomit-frame-pointer  * useful.  gcc has a configuration variable PROFILE_BEFORE_PROLOGUE to  * allow profiling before setting up the frame pointer, but this is  * inadequate for good handling of special cases, e.g., -fpic works best  * with profiling after the prologue.  *  * mexitcount is a new function to support non-statistical profiling if an  * accurate clock is available.  For C sources, calls to it are generated  * by the FreeBSD extension `-mprofiler-epilogue' to gcc.  It is best to  * call mexitcount at the end of a function like the MEXITCOUNT macro does,  * but gcc currently generates calls to it at the start of the epilogue to  * avoid problems with -fpic.  *  * mcount and __mexitcount may clobber the call-used registers and %ef.  * mexitcount may clobber %ecx and %ef.  *  * Cross-jumping makes non-statistical profiling timing more complicated.  * It is handled in many cases by calling mexitcount before jumping.  It is  * handled for conditional jumps using CROSSJUMP() and CROSSJUMP_LABEL().  * It is handled for some fault-handling jumps by not sharing the exit  * routine.  *  * ALTENTRY() must be before a corresponding ENTRY() so that it can jump to  * the main entry point.  Note that alt entries are counted twice.  They  * have to be counted as ordinary entries for gprof to get the call times  * right for the ordinary entries.  *  * High local labels are used in macros to avoid clashes with local labels  * in functions.  *  * Ordinary `ret' is used instead of a macro `RET' because there are a lot  * of `ret's.  0xc3 is the opcode for `ret' (`#define ret ... ret' can't  * be used because this file is sometimes preprocessed in traditional mode).  * `ret' clobbers eflags but this doesn't matter.  */
+comment|/*  * __mcount is like [.]mcount except that doesn't require its caller to set  * up a frame pointer.  It must be called before pushing anything onto the  * stack.  gcc should eventually generate code to call __mcount in most  * cases.  This would make -pg in combination with -fomit-frame-pointer  * useful.  gcc has a configuration variable PROFILE_BEFORE_PROLOGUE to  * allow profiling before setting up the frame pointer, but this is  * inadequate for good handling of special cases, e.g., -fpic works best  * with profiling after the prologue.  *  * [.]mexitcount is a new function to support non-statistical profiling if an  * accurate clock is available.  For C sources, calls to it are generated  * by the FreeBSD extension `-mprofiler-epilogue' to gcc.  It is best to  * call [.]mexitcount at the end of a function like the MEXITCOUNT macro does,  * but gcc currently generates calls to it at the start of the epilogue to  * avoid problems with -fpic.  *  * [.]mcount and __mcount may clobber the call-used registers and %ef.  * [.]mexitcount may clobber %ecx and %ef.  *  * Cross-jumping makes non-statistical profiling timing more complicated.  * It is handled in many cases by calling [.]mexitcount before jumping.  It  * is handled for conditional jumps using CROSSJUMP() and CROSSJUMP_LABEL().  * It is handled for some fault-handling jumps by not sharing the exit  * routine.  *  * ALTENTRY() must be before a corresponding ENTRY() so that it can jump to  * the main entry point.  Note that alt entries are counted twice.  They  * have to be counted as ordinary entries for gprof to get the call times  * right for the ordinary entries.  *  * High local labels are used in macros to avoid clashes with local labels  * in functions.  *  * Ordinary `ret' is used instead of a macro `RET' because there are a lot  * of `ret's.  0xc3 is the opcode for `ret' (`#define ret ... ret' can't  * be used because this file is sometimes preprocessed in traditional mode).  * `ret' clobbers eflags but this doesn't matter.  */
 end_comment
 
 begin_define
@@ -272,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|MEXITCOUNT
-value|call mexitcount
+value|call HIDENAME(mexitcount)
 end_define
 
 begin_define
