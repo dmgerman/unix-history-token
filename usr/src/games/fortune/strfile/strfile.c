@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strfile.c	5.6 (Berkeley) %G%"
+literal|"@(#)strfile.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -558,17 +558,6 @@ literal|0
 expr_stmt|;
 do|do
 block|{
-if|if
-condition|(
-name|Num_pts
-operator|>
-literal|508
-condition|)
-name|atoi
-argument_list|(
-literal|"1"
-argument_list|)
-expr_stmt|;
 name|sp
 operator|=
 name|fgets
@@ -1691,21 +1680,6 @@ name|c1
 operator|-
 name|c2
 return|;
-if|if
-condition|(
-name|c1
-operator|==
-literal|'\n'
-operator|||
-name|c2
-operator|==
-literal|'\n'
-condition|)
-name|atoi
-argument_list|(
-literal|"1"
-argument_list|)
-expr_stmt|;
 name|SET_N
 argument_list|(
 name|n1
