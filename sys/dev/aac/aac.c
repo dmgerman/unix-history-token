@@ -185,12 +185,6 @@ directive|include
 file|<dev/aac/aac_tables.h>
 end_include
 
-begin_decl_stmt
-name|devclass_t
-name|aac_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void

@@ -248,6 +248,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|devclass_t
 name|aac_disk_devclass
 decl_stmt|;

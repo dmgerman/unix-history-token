@@ -593,7 +593,10 @@ name|sc
 operator|=
 name|devclass_get_softc
 argument_list|(
-name|aac_devclass
+name|devclass_find
+argument_list|(
+literal|"aac"
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -745,7 +748,10 @@ name|sc
 operator|=
 name|devclass_get_softc
 argument_list|(
-name|aac_devclass
+name|devclass_find
+argument_list|(
+literal|"aac"
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
