@@ -1859,6 +1859,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|device_quiesce
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|device_quiet
 parameter_list|(
@@ -2204,6 +2214,19 @@ name|devclass_get_sysctl_tree
 parameter_list|(
 name|devclass_t
 name|dc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|devclass_quiesce_driver
+parameter_list|(
+name|devclass_t
+name|dc
+parameter_list|,
+name|kobj_class_t
+name|driver
 parameter_list|)
 function_decl|;
 end_function_decl
