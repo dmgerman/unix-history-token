@@ -1555,6 +1555,14 @@ operator|(
 literal|0
 operator|)
 return|;
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 name|tp
@@ -1591,6 +1599,7 @@ argument_list|,
 name|tqe_q
 argument_list|)
 expr_stmt|;
+comment|/* Unlocked read. */
 if|if
 condition|(
 name|so
@@ -1609,7 +1618,7 @@ name|tqe_m
 argument_list|)
 expr_stmt|;
 else|else
-name|sbappendstream
+name|sbappendstream_locked
 argument_list|(
 operator|&
 name|so
@@ -1661,7 +1670,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|sorwakeup
+name|sorwakeup_locked
 argument_list|(
 name|so
 argument_list|)
@@ -5294,6 +5303,15 @@ argument_list|)
 expr_stmt|;
 comment|/* some progress has been done */
 comment|/* #ifdef TCPDEBUG 			if (so->so_options& SO_DEBUG) 				tcp_trace(TA_INPUT, ostate, tp, 				    (void *)tcp_saveipgen,&tcp_savetcp, 0); #endif 			 * Add data to socket buffer. 			 */
+comment|/* Unlocked read. */
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -5321,7 +5339,7 @@ name|drop_hdrlen
 argument_list|)
 expr_stmt|;
 comment|/* delayed header drop */
-name|sbappendstream
+name|sbappendstream_locked
 argument_list|(
 operator|&
 name|so
@@ -5332,7 +5350,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|sorwakeup
+name|sorwakeup_locked
 argument_list|(
 name|so
 argument_list|)
@@ -8389,15 +8407,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|SOCKBUF_UNLOCK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_snd
-argument_list|)
-expr_stmt|;
-name|sowwakeup
+name|sowwakeup_locked
 argument_list|(
 name|so
 argument_list|)
@@ -9166,6 +9176,15 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+comment|/* Unlocked read. */
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -9182,7 +9201,7 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
-name|sbappendstream
+name|sbappendstream_locked
 argument_list|(
 operator|&
 name|so
@@ -9192,7 +9211,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|sorwakeup
+name|sorwakeup_locked
 argument_list|(
 name|so
 argument_list|)

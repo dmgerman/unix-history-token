@@ -566,12 +566,9 @@ name|sb_state
 operator||=
 name|SBS_CANTRCVMORE
 expr_stmt|;
-name|SOCKBUF_UNLOCK
+name|sorwakeup_locked
 argument_list|(
-operator|&
 name|so
-operator|->
-name|so_rcv
 argument_list|)
 expr_stmt|;
 name|SOCKBUF_LOCK
@@ -590,12 +587,9 @@ name|sb_state
 operator||=
 name|SBS_CANTSENDMORE
 expr_stmt|;
-name|SOCKBUF_UNLOCK
+name|sowwakeup_locked
 argument_list|(
-operator|&
 name|so
-operator|->
-name|so_snd
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -604,16 +598,6 @@ operator|&
 name|so
 operator|->
 name|so_timeo
-argument_list|)
-expr_stmt|;
-name|sowwakeup
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|sorwakeup
-argument_list|(
-name|so
 argument_list|)
 expr_stmt|;
 block|}
@@ -633,6 +617,7 @@ name|so
 decl_stmt|;
 block|{
 comment|/* 	 * XXXRW: This code separately acquires SOCK_LOCK(so) and 	 * SOCKBUF_LOCK(&so->so_rcv) even though they are the same mutex to 	 * avoid introducing the assumption  that they are the same. 	 */
+comment|/* XXXRW: so_state locking? */
 name|SOCK_LOCK
 argument_list|(
 name|so
@@ -678,12 +663,9 @@ name|sb_state
 operator||=
 name|SBS_CANTRCVMORE
 expr_stmt|;
-name|SOCKBUF_UNLOCK
+name|sorwakeup_locked
 argument_list|(
-operator|&
 name|so
-operator|->
-name|so_rcv
 argument_list|)
 expr_stmt|;
 name|SOCKBUF_LOCK
@@ -716,12 +698,9 @@ operator|.
 name|sb_cc
 argument_list|)
 expr_stmt|;
-name|SOCKBUF_UNLOCK
+name|sowwakeup_locked
 argument_list|(
-operator|&
 name|so
-operator|->
-name|so_snd
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -730,16 +709,6 @@ operator|&
 name|so
 operator|->
 name|so_timeo
-argument_list|)
-expr_stmt|;
-name|sowwakeup
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|sorwakeup
-argument_list|(
-name|so
 argument_list|)
 expr_stmt|;
 block|}
