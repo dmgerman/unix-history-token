@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)set.c	5.8 (Berkeley) %G%"
+literal|"@(#)set.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,7 @@ name|getvx
 name|__P
 argument_list|(
 operator|(
-name|char
+name|Char
 operator|*
 operator|,
 name|int

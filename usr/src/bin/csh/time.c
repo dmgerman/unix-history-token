@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)time.c	5.11 (Berkeley) %G%"
+literal|"@(#)time.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +56,7 @@ name|timeval
 operator|*
 operator|,
 expr|struct
-name|timevail
+name|timeval
 operator|*
 operator|)
 argument_list|)
