@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: usrdb.c,v 1.6 1997/10/15 06:41:19 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -492,7 +492,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"get key %d from user accounting stats"
+literal|"get key %lu from user accounting stats"
 argument_list|,
 name|uid
 argument_list|)
@@ -539,7 +539,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"key %d != expected record number %d"
+literal|"key %lu != expected record number %lu"
 argument_list|,
 name|newui
 operator|.
@@ -660,7 +660,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"add key %d to user accounting stats"
+literal|"add key %lu to user accounting stats"
 argument_list|,
 name|uid
 argument_list|)
@@ -1105,7 +1105,7 @@ name|kflag
 condition|)
 name|printf
 argument_list|(
-literal|"%12qu%s"
+literal|"%12.0f%s"
 argument_list|,
 name|ui
 operator|->
