@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vacation.c,v 1.13 1998/10/13 14:52:32 des Exp $"
+literal|"$Id: vacation.c,v 1.14 1999/06/17 14:44:42 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
