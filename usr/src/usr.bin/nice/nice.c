@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1989 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,21 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nice.c	5.2 (Berkeley) %G%"
+literal|"@(#)nice.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -64,6 +64,29 @@ directive|include
 file|<sys/resource.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|DEFNICE
+value|10
+end_define
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|main
 parameter_list|(
@@ -76,21 +99,28 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
+specifier|extern
 name|int
-name|nicarg
-init|=
-literal|10
+name|errno
 decl_stmt|;
+name|int
+name|niceness
+decl_stmt|;
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
+name|niceness
+operator|=
+name|DEFNICE
+expr_stmt|;
 if|if
 condition|(
-name|argc
-operator|>
-literal|1
-operator|&&
 name|argv
 index|[
 literal|1
@@ -101,12 +131,47 @@ index|]
 operator|==
 literal|'-'
 condition|)
+if|if
+condition|(
+name|isdigit
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|1
+index|]
+argument_list|)
+condition|)
 block|{
-name|nicarg
+name|niceness
 operator|=
 name|atoi
 argument_list|(
-operator|&
+name|argv
+index|[
+literal|1
+index|]
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+operator|++
+name|argv
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"nice: illegal option -- %c\n"
+argument_list|,
 name|argv
 index|[
 literal|1
@@ -116,25 +181,52 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|argc
-operator|--
-operator|,
-name|argv
-operator|++
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|argc
-operator|<
-literal|2
+operator|!
+name|argv
+index|[
+literal|1
+index|]
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|niceness
+operator|+=
+name|getpriority
+argument_list|(
+name|PRIO_PROCESS
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
 condition|)
 block|{
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"usage: nice [ -n ] command\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"nice: getpriority: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -151,22 +243,23 @@ name|PRIO_PROCESS
 argument_list|,
 literal|0
 argument_list|,
-name|getpriority
-argument_list|(
-name|PRIO_PROCESS
-argument_list|,
-literal|0
+name|niceness
 argument_list|)
-operator|+
-name|nicarg
-argument_list|)
-operator|<
-literal|0
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"setpriority"
+name|stderr
+argument_list|,
+literal|"nice: setpriority: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -189,12 +282,24 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"nice: %s: %s\n"
+argument_list|,
 name|argv
 index|[
 literal|1
 index|]
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -204,6 +309,31 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"nice [ -# ] command [ options ] [ operands ]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
