@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.23 (Berkeley) %G%"
+literal|"@(#)stty.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1368,7 +1368,7 @@ argument_list|)
 operator|||
 name|CHK
 argument_list|(
-literal|"disable"
+literal|"<undef>"
 argument_list|)
 condition|)
 name|t
