@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.26 (Berkeley) %G%"
+literal|"@(#)mount.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1669,11 +1669,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|char
-modifier|*
-name|root
-decl_stmt|;
 if|if
 condition|(
 name|opflags
@@ -1681,50 +1676,6 @@ operator|&
 name|ISBGRND
 condition|)
 return|return;
-comment|/* 	 * trim trailing /'s and find last component of name 	 */
-for|for
-control|(
-name|root
-operator|=
-name|index
-argument_list|(
-name|spec
-argument_list|,
-literal|'\0'
-argument_list|)
-init|;
-operator|*
-operator|--
-name|root
-operator|==
-literal|'/'
-condition|;
-control|)
-comment|/* void */
-empty_stmt|;
-operator|*
-operator|++
-name|root
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-name|root
-operator|=
-name|rindex
-argument_list|(
-name|spec
-argument_list|,
-literal|'/'
-argument_list|)
-condition|)
-name|spec
-operator|=
-name|root
-operator|+
-literal|1
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s on %s"
