@@ -84,8 +84,12 @@ name|dev
 argument_list|,
 literal|"pci"
 argument_list|,
-operator|-
-literal|1
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|<<
+literal|4
 argument_list|)
 expr_stmt|;
 return|return
