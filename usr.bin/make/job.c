@@ -484,7 +484,6 @@ comment|/* last component of shell */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|maxJobs
 decl_stmt|;
