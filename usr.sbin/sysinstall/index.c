@@ -396,6 +396,10 @@ literal|"russian"
 block|,
 literal|"Ported software for the Russian market."
 block|,
+literal|"science"
+block|,
+literal|"Scientific software."
+block|,
 literal|"security"
 block|,
 literal|"System security software."
@@ -463,6 +467,10 @@ block|,
 literal|"troff"
 block|,
 literal|"TROFF text formatting utilities."
+block|,
+literal|"ukrainian"
+block|,
+literal|"Ported software for the Ukrainian market."
 block|,
 literal|"vietnamese"
 block|,
