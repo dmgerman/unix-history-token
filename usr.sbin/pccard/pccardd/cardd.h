@@ -362,6 +362,18 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* If any */
+name|char
+name|manufstr
+index|[
+name|DEV_MAX_CIS_LEN
+index|]
+decl_stmt|;
+name|char
+name|versstr
+index|[
+name|DEV_MAX_CIS_LEN
+index|]
+decl_stmt|;
 name|struct
 name|allocblk
 name|io
