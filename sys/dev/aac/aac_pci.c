@@ -1263,6 +1263,29 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 	 * Check for quirky hardware 	 */
+if|if
+condition|(
+name|pci_get_subdevice
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x1364
+operator|&&
+name|pci_get_subvendor
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x9005
+condition|)
+name|sc
+operator|->
+name|quirks
+operator||=
+name|AAC_QUIRK_PERC2QC
+expr_stmt|;
 comment|/* 	 * Do bus-independent initialisation. 	 */
 name|error
 operator|=

@@ -1650,6 +1650,13 @@ name|AAC_MONKER_SYNCFIB
 value|0x0c
 end_define
 
+begin_define
+define|#
+directive|define
+name|AAC_MONKER_GETKERNVER
+value|0x11
+end_define
+
 begin_comment
 comment|/*  *  Adapter Status Register  *  *  Phase Staus mailbox is 32bits:  *<31:16> = Phase Status  *<15:0>  = Phase  *  *  The adapter reports its present state through the phase.  Only  *  a single phase should be ever be set.  Each phase can have multiple  *  phase status bits to provide more detailed information about the  *  state of the adapter.  */
 end_comment
