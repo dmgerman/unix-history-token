@@ -372,7 +372,7 @@ name|g_wait_event
 argument_list|,
 name|PRIBIO
 argument_list|,
-literal|"g_events"
+literal|"-"
 argument_list|,
 name|hz
 operator|/
@@ -425,6 +425,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|g_trace
+argument_list|(
+name|G_T_TOPOLOGY
+argument_list|,
+literal|"g_ignition"
+argument_list|)
+expr_stmt|;
 name|sx_init
 argument_list|(
 operator|&

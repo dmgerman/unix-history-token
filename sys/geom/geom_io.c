@@ -1295,7 +1295,7 @@ name|PRIBIO
 operator||
 name|PDROP
 argument_list|,
-literal|"g_down"
+literal|"-"
 argument_list|,
 name|hz
 operator|/
@@ -1568,7 +1568,7 @@ name|PRIBIO
 operator||
 name|PDROP
 argument_list|,
-literal|"g_up"
+literal|"-"
 argument_list|,
 name|hz
 operator|/
