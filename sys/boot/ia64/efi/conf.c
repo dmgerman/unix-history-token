@@ -91,9 +91,7 @@ block|{
 operator|&
 name|efi_fsops
 block|,
-operator|&
-name|ufs_fsops
-block|,
+comment|/*&ufs_fsops, */
 operator|&
 name|nfs_fsops
 block|,
