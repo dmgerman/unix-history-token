@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.3.2.1 1997/05/31 03:18:12 gpalmer Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.3.2.2 1997/09/27 21:30:16 wosch Exp $  */
 end_comment
 
 begin_include
@@ -3195,7 +3195,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* use cpticks to break the tie */
+comment|/* use lifetime CPU usage to break the tie */
 if|if
 condition|(
 operator|(
@@ -3205,15 +3205,19 @@ name|PP
 argument_list|(
 name|p2
 argument_list|,
-name|p_cpticks
+name|p_rtime
 argument_list|)
+operator|.
+name|tv_sec
 operator|-
 name|PP
 argument_list|(
 name|p1
 argument_list|,
-name|p_cpticks
+name|p_rtime
 argument_list|)
+operator|.
+name|tv_sec
 operator|)
 operator|==
 literal|0
