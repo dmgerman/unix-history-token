@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -906,7 +906,7 @@ if|if
 condition|(
 name|aflags
 operator|&
-name|IO_SYNC
+name|B_SYNC
 condition|)
 name|bwrite
 argument_list|(
@@ -1080,7 +1080,7 @@ if|if
 condition|(
 name|aflags
 operator|&
-name|IO_SYNC
+name|B_SYNC
 condition|)
 name|bwrite
 argument_list|(
