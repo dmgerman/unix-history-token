@@ -1363,6 +1363,20 @@ end_endif
 begin_define
 define|#
 directive|define
+name|UWRITE1
+parameter_list|(
+name|sc
+parameter_list|,
+name|r
+parameter_list|,
+name|x
+parameter_list|)
+value|bus_space_write_1((sc)->iot, (sc)->ioh, (r), (x))
+end_define
+
+begin_define
+define|#
+directive|define
 name|UWRITE2
 parameter_list|(
 name|sc
@@ -2848,6 +2862,29 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* stop the controller */
+comment|/* save some state if BIOS doesn't */
+name|sc
+operator|->
+name|sc_saved_frnum
+operator|=
+name|UREAD2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_FRNUM
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_saved_sof
+operator|=
+name|UREAD1
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_SOF
+argument_list|)
+expr_stmt|;
 name|UHCICMD
 argument_list|(
 name|sc
@@ -2898,7 +2935,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * XXX We should really do much more here in case the 		 * controller registers have been lost and BIOS has 		 * not restored them. 		 */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -2944,6 +2980,46 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* in case BIOS has started it */
+comment|/* restore saved state */
+name|UWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_FLBASEADDR
+argument_list|,
+name|DMAADDR
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_dma
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|UWRITE2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_FRNUM
+argument_list|,
+name|sc
+operator|->
+name|sc_saved_frnum
+argument_list|)
+expr_stmt|;
+name|UWRITE1
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_SOF
+argument_list|,
+name|sc
+operator|->
+name|sc_saved_sof
+argument_list|)
+expr_stmt|;
 name|UHCICMD
 argument_list|(
 name|sc

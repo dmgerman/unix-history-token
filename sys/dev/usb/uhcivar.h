@@ -356,6 +356,12 @@ name|u_int8_t
 name|sc_conf
 decl_stmt|;
 comment|/* device configuration */
+name|u_int8_t
+name|sc_saved_sof
+decl_stmt|;
+name|u_int16_t
+name|sc_saved_frnum
+decl_stmt|;
 name|char
 name|sc_isreset
 decl_stmt|;
