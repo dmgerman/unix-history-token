@@ -1,4 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)vpr.c	1.3	(Berkeley)	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include
@@ -8,14 +18,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pagsiz.h>
+file|<sys/param.h>
 end_include
 
 begin_define
 define|#
 directive|define
 name|BUFSIZ
-value|BSIZE
+value|MAXBSIZE
 end_define
 
 begin_comment
