@@ -12018,9 +12018,6 @@ decl_stmt|;
 name|int
 name|cy_align
 decl_stmt|;
-name|register_t
-name|eflags
-decl_stmt|;
 name|cy_addr
 name|iobase
 decl_stmt|;
@@ -12070,11 +12067,6 @@ operator|=
 name|com
 operator|->
 name|iobase
-expr_stmt|;
-name|eflags
-operator|=
-name|read_eflags
-argument_list|()
 expr_stmt|;
 name|critical_enter
 argument_list|()
@@ -12197,9 +12189,6 @@ decl_stmt|;
 name|int
 name|cy_align
 decl_stmt|;
-name|register_t
-name|eflags
-decl_stmt|;
 name|cy_addr
 name|iobase
 decl_stmt|;
@@ -12246,11 +12235,6 @@ operator|=
 name|com
 operator|->
 name|iobase
-expr_stmt|;
-name|eflags
-operator|=
-name|read_eflags
-argument_list|()
 expr_stmt|;
 name|critical_enter
 argument_list|()
