@@ -6230,6 +6230,11 @@ operator|->
 name|p_fd
 expr_stmt|;
 comment|/* 	 * Range check file descriptor. 	 */
+name|FILEDESC_LOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|fd
 operator|=
 name|aiocbe
@@ -6247,6 +6252,11 @@ operator|->
 name|fd_nfiles
 condition|)
 block|{
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|aiocb_zone
@@ -6318,6 +6328,11 @@ operator|)
 operator|)
 condition|)
 block|{
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|aiocb_zone
@@ -6350,6 +6365,11 @@ block|}
 name|fhold
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
 argument_list|)
 expr_stmt|;
 if|if
