@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: popen.c,v 1.14 1998/05/15 16:51:06 ache Exp $"
+literal|"$Id: popen.c,v 1.4.2.7 1998/05/15 16:53:45 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -219,20 +225,6 @@ name|gargv
 index|[
 name|MAXGLOBARGS
 index|]
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|envtz
-index|[
-literal|2
-index|]
-init|=
-block|{
-literal|"TZ="
-block|,
-name|NULL
-block|}
 decl_stmt|;
 if|if
 condition|(
@@ -761,15 +753,38 @@ comment|/* Close syslogging to remove pwd.db missing msgs */
 name|closelog
 argument_list|()
 expr_stmt|;
+comment|/* Trigger to sense new /etc/localtime after chroot */
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"TZ"
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
 name|setenv
 argument_list|(
 literal|"TZ"
 argument_list|,
 literal|""
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
+name|tzset
+argument_list|()
+expr_stmt|;
+name|unsetenv
+argument_list|(
+literal|"TZ"
+argument_list|)
+expr_stmt|;
+name|tzset
+argument_list|()
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|ls_main
@@ -783,7 +798,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|execve
+name|execv
 argument_list|(
 name|gargv
 index|[
@@ -791,8 +806,6 @@ literal|0
 index|]
 argument_list|,
 name|gargv
-argument_list|,
-name|envtz
 argument_list|)
 expr_stmt|;
 name|_exit
