@@ -6362,7 +6362,7 @@ specifier|static
 name|Boolean
 name|errorReported
 decl_stmt|;
-comment|/* Set true if an error has already 				     * been reported to prevent a plethora 				     * of messages when recursing */
+comment|/* Set true if an error has already 					 * been reported to prevent a plethora 					 * of messages when recursing */
 name|buf
 operator|=
 name|Buf_Init

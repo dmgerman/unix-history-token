@@ -658,11 +658,13 @@ name|cp
 decl_stmt|;
 name|Boolean
 name|silent
-decl_stmt|,
+decl_stmt|;
 comment|/* Don't print command */
+name|Boolean
 name|doit
-decl_stmt|,
+decl_stmt|;
 comment|/* Execute even in -n */
+name|Boolean
 name|errCheck
 decl_stmt|;
 comment|/* Check errors */
