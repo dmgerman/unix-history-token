@@ -580,6 +580,46 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Some servers will refuse mounts if the group list is larger  * than it expects (like 8). This allows the application to set  * the maximum size of the group list that will be sent.  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|maxgrplist
+operator|=
+name|NGRPS
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|set_rpc_maxgrouplist
+argument_list|(
+argument|num
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|num
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|num
+operator|<
+name|NGRPS
+condition|)
+name|maxgrplist
+operator|=
+name|num
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * Returns an auth handle with parameters determined by doing lots of  * syscalls.  */
 end_comment
 
@@ -664,6 +704,16 @@ literal|0
 condition|)
 name|abort
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+name|maxgrplist
+condition|)
+name|len
+operator|=
+name|maxgrplist
 expr_stmt|;
 return|return
 operator|(

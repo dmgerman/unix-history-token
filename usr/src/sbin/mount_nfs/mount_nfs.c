@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	5.2 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -821,6 +821,11 @@ operator|>
 literal|0
 condition|)
 block|{
+name|set_rpc_maxgrouplist
+argument_list|(
+name|num
+argument_list|)
+expr_stmt|;
 name|nfsargsp
 operator|->
 name|maxgrouplist
