@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: leave.c,v 1.2 1997/07/21 12:04:31 charnier Exp $"
+literal|"$Id: leave.c,v 1.3 1998/01/06 17:27:09 helbig Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -605,6 +605,12 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* let parent print set message */
+if|if
+condition|(
+name|secs
+operator|>=
+literal|2
+condition|)
 name|secs
 operator|-=
 literal|2
