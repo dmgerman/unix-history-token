@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vsort.c	1.3	83/07/30  *  *	sort troff output into troff output that only goes one  *	direction down the page.  */
+comment|/* vsort.c	1.4	83/08/19  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
 end_include
 
 begin_define
@@ -36,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|NVLIST
-value|1500
+value|3000
 end_define
 
 begin_comment
@@ -47,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|OBUFSIZ
-value|40000
+value|250000
 end_define
 
 begin_comment
@@ -68,11 +74,76 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FONTDIR
+value|"/usr/lib/font"
+end_define
+
+begin_define
+define|#
+directive|define
+name|INCH
+value|200
+end_define
+
+begin_comment
+comment|/* assumed resolution of the printer (dots/inch) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POINT
+value|72
+end_define
+
+begin_comment
+comment|/* number of points per inch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WIDTH
+value|7040
+end_define
+
+begin_comment
+comment|/* number of pixels across the page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HALF
+value|(INCH/2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BAND
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|NLINES
+value|(int)(BAND * INCH)
+end_define
+
+begin_comment
+comment|/* number of pixels in each band */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|hgoto
 parameter_list|(
 name|n
 parameter_list|)
-value|hpos = n
+value|if((hpos = leftmarg + n)> maxh) maxh = hpos
 end_define
 
 begin_define
@@ -82,7 +153,7 @@ name|hmot
 parameter_list|(
 name|n
 parameter_list|)
-value|hgoto(hpos + (n))
+value|if((hpos += n)> maxh) maxh = hpos
 end_define
 
 begin_define
@@ -92,7 +163,7 @@ name|vmot
 parameter_list|(
 name|n
 parameter_list|)
-value|vgoto(vpos + (n))
+value|vgoto(vpos + n)
 end_define
 
 begin_ifdef
@@ -127,7 +198,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* current size */
+comment|/* current size (points) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|up
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of pixels that the current size pushes up */
+end_comment
+
+begin_decl_stmt
+name|int
+name|down
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of pixels that the current size will hang down */
 end_comment
 
 begin_decl_stmt
@@ -140,6 +235,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* current font */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fontdir
+init|=
+name|FONTDIR
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* place to find DESC.out file */
 end_comment
 
 begin_decl_stmt
@@ -158,7 +266,8 @@ begin_decl_stmt
 name|int
 name|style
 init|=
-literal|255
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -190,34 +299,90 @@ begin_comment
 comment|/* current vertical position (down positive) */
 end_comment
 
+begin_decl_stmt
+name|int
+name|maxh
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* farthest right we've gone on the current span */
+end_comment
+
+begin_decl_stmt
+name|int
+name|leftmarg
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current page offset */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pageno
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of pages on this horizontal span */
+end_comment
+
+begin_decl_stmt
+name|int
+name|spanno
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current span number for driver in 'p#' commands */
+end_comment
+
 begin_struct
 struct|struct
 name|vlist
 block|{
-name|int
+name|short
 name|v
 decl_stmt|;
 comment|/* vertical position of this spread */
-name|int
+name|short
 name|h
 decl_stmt|;
 comment|/* horizontal position */
-name|int
-name|s
-decl_stmt|;
-comment|/* point size */
-name|int
+name|short
 name|t
 decl_stmt|;
 comment|/* line thickness */
+name|short
+name|st
+decl_stmt|;
+comment|/* style mask */
+name|short
+name|u
+decl_stmt|;
+comment|/* upper extent of height */
+name|short
+name|d
+decl_stmt|;
+comment|/* depth of height */
+name|char
+name|s
+decl_stmt|;
+comment|/* point size */
 name|char
 name|f
 decl_stmt|;
 comment|/* font number */
-name|char
-name|st
-decl_stmt|;
-comment|/* style mask */
 name|char
 modifier|*
 name|p
@@ -244,10 +409,12 @@ name|struct
 name|vlist
 modifier|*
 name|vlp
-init|=
-name|vlist
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* current spread being added to */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -256,6 +423,10 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* number of spreads in list */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -285,6 +456,10 @@ name|obuf
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* pointer to current spot in buffer */
+end_comment
+
 begin_function
 name|main
 parameter_list|(
@@ -305,6 +480,24 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|vlp
+operator|=
+operator|&
+name|vlist
+index|[
+literal|0
+index|]
+operator|-
+literal|1
+expr_stmt|;
+comment|/* initialize pointer to one less */
+name|startspan
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* than beginning so "startspan" can */
+comment|/* increment it before using it */
 while|while
 condition|(
 name|argc
@@ -330,6 +523,21 @@ literal|1
 index|]
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+name|fontdir
+operator|=
+operator|&
+operator|(
+operator|*
+name|argv
+operator|)
+index|[
+literal|2
+index|]
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|DEBUGABLE
@@ -352,24 +560,40 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|dbg
-operator|==
-literal|0
 condition|)
-block|{
 name|dbg
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+if|if
+condition|(
+operator|(
 name|obufsiz
 operator|=
-literal|50
-expr_stmt|;
-block|}
-else|else
+name|atoi
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|argv
+operator|)
+index|[
+literal|2
+index|]
+argument_list|)
+operator|)
+operator|>
+name|OBUFSIZ
+condition|)
 name|obufsiz
 operator|=
-name|dbg
+name|OBUFSIZ
 expr_stmt|;
 break|break;
 endif|#
@@ -670,6 +894,8 @@ name|DEBUGABLE
 if|if
 condition|(
 name|dbg
+operator|>
+literal|2
 condition|)
 name|fprintf
 argument_list|(
@@ -819,6 +1045,9 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|setlimit
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 literal|'c'
@@ -838,6 +1067,9 @@ name|getc
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+name|setlimit
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -872,6 +1104,9 @@ operator|!=
 literal|'\n'
 condition|)
 empty_stmt|;
+name|setlimit
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 literal|'t'
@@ -898,6 +1133,9 @@ name|strlen
 argument_list|(
 name|op
 argument_list|)
+expr_stmt|;
+name|setlimit
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -992,8 +1230,7 @@ operator|&
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* if line starts higher, put */
-comment|/* it on its own span */
+comment|/* put line on its own spread */
 if|if
 condition|(
 name|m
@@ -1008,28 +1245,38 @@ operator|+
 name|m
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|vlp
+operator|->
+name|d
+operator|=
+name|vpos
+operator|-
+name|m
+expr_stmt|;
+block|}
+else|else
+block|{
+name|startspan
 argument_list|(
-name|op
-argument_list|,
-literal|"V%d "
-argument_list|,
 name|vpos
 argument_list|)
 expr_stmt|;
-name|op
-operator|+=
-name|strlen
-argument_list|(
-name|op
-argument_list|)
+name|vlp
+operator|->
+name|d
+operator|=
+name|vpos
+operator|+
+name|m
 expr_stmt|;
 block|}
 name|sprintf
 argument_list|(
 name|op
 argument_list|,
-literal|"D%s"
+literal|"V%dD%s"
+argument_list|,
+name|vpos
 argument_list|,
 name|buf
 argument_list|)
@@ -1068,29 +1315,39 @@ operator|&
 name|n
 argument_list|)
 expr_stmt|;
-comment|/* always put */
+comment|/* put circle */
 name|startspan
 argument_list|(
 name|vpos
-operator|+
+operator|-
 name|n
 operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* circles on */
+comment|/* on its own */
+name|vlp
+operator|->
+name|d
+operator|=
+name|vpos
+operator|+
+name|n
+operator|/
+literal|2
+expr_stmt|;
+comment|/* spread */
 name|sprintf
 argument_list|(
 name|op
 argument_list|,
-literal|"V%d D%s"
+literal|"V%dD%s"
 argument_list|,
 name|vpos
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/*their own */
 name|op
 operator|+=
 name|strlen
@@ -1098,7 +1355,6 @@ argument_list|(
 name|op
 argument_list|)
 expr_stmt|;
-comment|/* vertl list */
 name|hmot
 argument_list|(
 name|n
@@ -1133,17 +1389,27 @@ comment|/* same here */
 name|startspan
 argument_list|(
 name|vpos
-operator|+
+operator|-
 name|n
 operator|/
 literal|2
 argument_list|)
 expr_stmt|;
+name|vlp
+operator|->
+name|d
+operator|=
+name|vpos
+operator|+
+name|n
+operator|/
+literal|2
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|op
 argument_list|,
-literal|"V%d D%s"
+literal|"V%dD%s"
 argument_list|,
 name|vpos
 argument_list|,
@@ -1193,61 +1459,19 @@ operator|&
 name|m1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|m
-operator|+=
-name|m1
-operator|)
-operator|<
-literal|0
-condition|)
-comment|/* set m1 to highest */
-name|m1
-operator|=
-name|vpos
-operator|+
-name|m
-expr_stmt|;
-comment|/* of the endpoints */
-else|else
-name|m1
-operator|=
-name|vpos
-expr_stmt|;
-comment|/* can't be any more */
-name|m1
-operator|-=
-operator|(
-operator|(
-operator|(
-name|n
-operator|+=
-name|n1
-operator|)
-operator|<
-literal|0
-operator|)
-condition|?
-comment|/* than 1/2 */
-operator|-
-name|n
-else|:
-name|n
-operator|)
-operator|>>
-literal|1
-expr_stmt|;
-comment|/* horiz diff higher */
 name|startspan
 argument_list|(
-name|m1
-operator|<
-literal|0
-condition|?
-literal|0
-else|:
+name|vpos
+argument_list|)
+expr_stmt|;
+name|arcbounds
+argument_list|(
+name|n
+argument_list|,
+name|m
+argument_list|,
+name|n1
+argument_list|,
 name|m1
 argument_list|)
 expr_stmt|;
@@ -1255,7 +1479,7 @@ name|sprintf
 argument_list|(
 name|op
 argument_list|,
-literal|"V%d D%s"
+literal|"V%dD%s"
 argument_list|,
 name|vpos
 argument_list|,
@@ -1272,11 +1496,15 @@ expr_stmt|;
 name|hmot
 argument_list|(
 name|n
+operator|+
+name|n1
 argument_list|)
 expr_stmt|;
 name|vmot
 argument_list|(
 name|m
+operator|+
+name|m1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1374,11 +1602,13 @@ operator|!=
 literal|'\n'
 condition|)
 do|;
+name|m
+operator|=
 name|n
 operator|=
 name|vpos
 expr_stmt|;
-comment|/* = minimum vertical */
+comment|/* = max/min vertical */
 comment|/* position for curve */
 while|while
 condition|(
@@ -1458,6 +1688,17 @@ name|n
 operator|=
 name|vpos
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|vpos
+operator|>
+name|m
+condition|)
+name|m
+operator|=
+name|vpos
+expr_stmt|;
 block|}
 do|while
 condition|(
@@ -1467,15 +1708,27 @@ operator|!=
 literal|'\n'
 condition|)
 do|;
-operator|(
 name|vlp
-operator|-
-literal|1
-operator|)
+operator|->
+name|u
+operator|=
+name|vlp
 operator|->
 name|v
 operator|=
 name|n
+operator|<
+literal|0
+condition|?
+literal|0
+else|:
+name|n
+expr_stmt|;
+name|vlp
+operator|->
+name|d
+operator|=
+name|m
 expr_stmt|;
 name|startspan
 argument_list|(
@@ -1513,6 +1766,22 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|up
+operator|=
+operator|(
+name|size
+operator|*
+name|INCH
+operator|)
+operator|/
+name|POINT
+expr_stmt|;
+name|down
+operator|=
+name|up
+operator|/
+literal|3
+expr_stmt|;
 break|break;
 case|case
 literal|'f'
@@ -1543,12 +1812,29 @@ name|c
 expr_stmt|;
 name|hgoto
 argument_list|(
-name|getnumber
+name|ngetnumber
 argument_list|(
 name|fp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|op
+argument_list|,
+literal|"%d"
+argument_list|,
+name|hpos
+argument_list|)
+expr_stmt|;
+name|op
+operator|+=
+name|strlen
+argument_list|(
+name|op
+argument_list|)
+expr_stmt|;
+comment|/* reposition by page offset */
 break|break;
 case|case
 literal|'h'
@@ -1603,34 +1889,17 @@ case|case
 literal|'p'
 case|:
 comment|/* new page */
+name|t_page
+argument_list|(
+name|ngetnumber
+argument_list|(
+name|fp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|vpos
 operator|=
 literal|0
-expr_stmt|;
-name|oflush
-argument_list|()
-expr_stmt|;
-operator|*
-name|op
-operator|++
-operator|=
-name|c
-expr_stmt|;
-name|fscanf
-argument_list|(
-name|fp
-argument_list|,
-literal|"%s"
-argument_list|,
-name|op
-argument_list|)
-expr_stmt|;
-name|op
-operator|+=
-name|strlen
-argument_list|(
-name|op
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1639,12 +1908,16 @@ case|:
 comment|/* end of line */
 name|hpos
 operator|=
-literal|0
+name|leftmarg
 expr_stmt|;
 case|case
 literal|'#'
 case|:
 comment|/* comment */
+case|case
+literal|'x'
+case|:
+comment|/* device control */
 operator|*
 name|op
 operator|++
@@ -1668,41 +1941,6 @@ literal|'\n'
 condition|)
 empty_stmt|;
 break|break;
-case|case
-literal|'x'
-case|:
-comment|/* device control */
-name|oflush
-argument_list|()
-expr_stmt|;
-name|putchar
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-name|fgets
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-name|buf
-argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-name|buf
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
 name|error
 argument_list|(
@@ -1721,6 +1959,172 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+block|}
+end_block
+
+begin_comment
+comment|/* set the "u" and "d" parts of the vlist given the current */
+end_comment
+
+begin_macro
+name|setlimit
+argument_list|()
+end_macro
+
+begin_comment
+comment|/* up and down limits set by the point size */
+end_comment
+
+begin_block
+block|{
+specifier|register
+name|int
+name|upv
+init|=
+name|vpos
+operator|-
+name|up
+decl_stmt|;
+specifier|register
+name|int
+name|downv
+init|=
+name|vpos
+operator|+
+name|down
+decl_stmt|;
+if|if
+condition|(
+name|upv
+operator|<
+name|vlp
+operator|->
+name|u
+condition|)
+name|vlp
+operator|->
+name|u
+operator|=
+name|upv
+expr_stmt|;
+if|if
+condition|(
+name|downv
+operator|>
+name|vlp
+operator|->
+name|d
+condition|)
+name|vlp
+operator|->
+name|d
+operator|=
+name|downv
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|arcbounds
+argument_list|(
+argument|h
+argument_list|,
+argument|v
+argument_list|,
+argument|h1
+argument_list|,
+argument|v1
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* make a circle out of the arc to estimate */
+end_comment
+
+begin_decl_stmt
+name|int
+name|h
+decl_stmt|,
+name|v
+decl_stmt|,
+name|h1
+decl_stmt|,
+name|v1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* how far up/down the arc will span */
+end_comment
+
+begin_block
+block|{
+specifier|register
+name|int
+name|center
+init|=
+name|vpos
+operator|+
+name|v
+decl_stmt|;
+specifier|register
+name|int
+name|rad
+init|=
+operator|(
+operator|(
+name|int
+operator|)
+name|sqrt
+argument_list|(
+call|(
+name|double
+call|)
+argument_list|(
+name|h
+operator|*
+name|h
+operator|+
+name|v
+operator|*
+name|v
+argument_list|)
+argument_list|)
+operator|)
+operator|>>
+literal|1
+decl_stmt|;
+comment|/* set the vertical extents */
+name|vlp
+operator|->
+name|v
+operator|=
+name|vlp
+operator|->
+name|u
+operator|=
+operator|(
+name|center
+operator|-
+name|rad
+operator|)
+operator|<
+literal|0
+condition|?
+literal|0
+else|:
+name|center
+operator|-
+name|rad
+expr_stmt|;
+name|vlp
+operator|->
+name|d
+operator|=
+name|center
+operator|+
+name|rad
+expr_stmt|;
 block|}
 end_block
 
@@ -1743,14 +2147,24 @@ name|vp
 decl_stmt|;
 specifier|register
 name|int
-name|lastv
-init|=
-operator|-
-literal|1
+name|notdone
+decl_stmt|;
+specifier|register
+name|int
+name|topv
+decl_stmt|;
+specifier|register
+name|int
+name|botv
 decl_stmt|;
 specifier|register
 name|int
 name|i
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|compar
@@ -1806,10 +2220,46 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
+name|topv
+operator|=
+literal|0
+expr_stmt|;
+name|botv
+operator|=
+name|NLINES
+operator|-
+literal|1
+expr_stmt|;
+do|do
+block|{
+name|notdone
+operator|=
+literal|0
+expr_stmt|;
 name|vp
 operator|=
 name|vlist
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+if|if
+condition|(
+name|dbg
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"topv=%d, botv=%d\n"
+argument_list|,
+name|topv
+argument_list|,
+name|botv
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -1827,33 +2277,58 @@ name|vp
 operator|++
 control|)
 block|{
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
-name|lastv
-operator|!=
-name|vp
-operator|->
-name|v
+name|dbg
+operator|>
+literal|1
 condition|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"V%d"
+name|stderr
 argument_list|,
-name|lastv
-operator|=
+literal|"u=%d, d=%d,%.60s\n"
+argument_list|,
 name|vp
 operator|->
-name|v
+name|u
+argument_list|,
+name|vp
+operator|->
+name|d
+argument_list|,
+name|vp
+operator|->
+name|p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|vp
+operator|->
+name|u
+operator|<=
+name|botv
+operator|&&
+name|vp
+operator|->
+name|d
+operator|>=
+name|topv
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"H%ds%df%d Ds %d\nDt %d\n"
+literal|"V%dH%ds%df%dDs%d\nDt%d\n"
+argument_list|,
+name|vp
+operator|->
+name|v
 argument_list|,
 name|vp
 operator|->
@@ -1899,6 +2374,62 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|notdone
+operator||=
+name|vp
+operator|->
+name|d
+operator|>
+name|botv
+expr_stmt|;
+comment|/* not done if there's still */
+block|}
+comment|/* something to put lower */
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+if|if
+condition|(
+name|dbg
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"topv=%d, botv=%d\n"
+argument_list|,
+name|topv
+argument_list|,
+name|botv
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|notdone
+condition|)
+name|putchar
+argument_list|(
+literal|'P'
+argument_list|)
+expr_stmt|;
+comment|/* mark the end of the spread */
+name|topv
+operator|+=
+name|NLINES
+expr_stmt|;
+comment|/* unless it's the last one */
+name|botv
+operator|+=
+name|NLINES
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|notdone
+condition|)
+do|;
 name|fflush
 argument_list|(
 name|stdout
@@ -1930,6 +2461,18 @@ name|vpos
 expr_stmt|;
 name|vlp
 operator|->
+name|u
+operator|=
+name|vpos
+expr_stmt|;
+name|vlp
+operator|->
+name|d
+operator|=
+name|vpos
+expr_stmt|;
+name|vlp
+operator|->
 name|s
 operator|=
 name|size
@@ -1956,9 +2499,6 @@ operator|*
 name|op
 operator|=
 literal|0
-expr_stmt|;
-name|vlp
-operator|++
 expr_stmt|;
 name|nvlist
 operator|=
@@ -2291,6 +2831,150 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|t_page
+argument_list|(
+argument|n
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|n
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+name|x
+decl_stmt|;
+name|pageno
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|maxh
+operator|>
+operator|(
+name|WIDTH
+operator|-
+name|INCH
+operator|)
+comment|/* if we're close to the edge */
+operator|||
+name|n
+operator|==
+literal|1
+comment|/* or if i think we'll go over with this page */
+operator|||
+name|leftmarg
+operator|+
+name|leftmarg
+operator|/
+name|pageno
+operator|>
+operator|(
+name|WIDTH
+operator|-
+name|INCH
+operator|)
+condition|)
+block|{
+name|oflush
+argument_list|()
+expr_stmt|;
+comment|/* make it a REAL page-break */
+name|sprintf
+argument_list|(
+name|op
+argument_list|,
+literal|"p%d\n"
+argument_list|,
+operator|++
+name|spanno
+argument_list|)
+expr_stmt|;
+name|op
+operator|+=
+name|strlen
+argument_list|(
+name|op
+argument_list|)
+expr_stmt|;
+name|pageno
+operator|=
+name|leftmarg
+operator|=
+name|maxh
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* x = last page's width */
+name|x
+operator|=
+operator|(
+name|maxh
+operator|-
+name|leftmarg
+operator|+
+operator|(
+name|HALF
+operator|-
+literal|1
+operator|)
+operator|)
+operator|/
+name|HALF
+expr_stmt|;
+comment|/*  (in half-inches) */
+if|if
+condition|(
+name|x
+operator|>
+literal|12
+operator|&&
+name|x
+operator|<=
+literal|17
+condition|)
+name|leftmarg
+operator|+=
+operator|(
+literal|8
+operator|*
+name|INCH
+operator|)
+operator|+
+name|HALF
+expr_stmt|;
+comment|/* if close to 8.5"  */
+else|else
+comment|/* then make it so   */
+name|leftmarg
+operator|=
+operator|(
+operator|(
+name|maxh
+operator|+
+name|HALF
+operator|)
+operator|/
+name|HALF
+operator|)
+operator|*
+name|HALF
+expr_stmt|;
+comment|/* else set it to the */
+block|}
+comment|/* nearest half-inch */
+block|}
+end_block
+
 begin_expr_stmt
 name|startspan
 argument_list|(
@@ -2322,6 +3006,9 @@ argument_list|()
 expr_stmt|;
 block|}
 name|vlp
+operator|++
+expr_stmt|;
+name|vlp
 operator|->
 name|p
 operator|=
@@ -2330,6 +3017,18 @@ expr_stmt|;
 name|vlp
 operator|->
 name|v
+operator|=
+name|n
+expr_stmt|;
+name|vlp
+operator|->
+name|d
+operator|=
+name|n
+expr_stmt|;
+name|vlp
+operator|->
+name|u
 operator|=
 name|n
 expr_stmt|;
@@ -2362,9 +3061,6 @@ operator|->
 name|t
 operator|=
 name|thick
-expr_stmt|;
-name|vlp
-operator|++
 expr_stmt|;
 name|nvlist
 operator|++
