@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gettable.c	5.5 (Berkeley) %G%"
+literal|"@(#)gettable.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,6 +444,11 @@ name|bind
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sin
 argument_list|,
@@ -473,10 +478,6 @@ name|hp
 operator|->
 name|h_addr
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|sin
 operator|.
@@ -501,6 +502,11 @@ name|connect
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sin
 argument_list|,

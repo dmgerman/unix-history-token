@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dev_mkdb.c	5.2 (Berkeley) %G%"
+literal|"@(#)dev_mkdb.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,19 +67,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dirent.h>
+file|<ndbm.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|DIRBLKSIZ
+end_undef
 
 begin_include
 include|#
 directive|include
-file|<ndbm.h>
+file|<dirent.h>
 end_include
 
 begin_include

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implogd.c	5.9 (Berkeley) %G%"
+literal|"@(#)implogd.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -441,6 +441,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|from
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cron.c	4.16 (Berkeley) %G%"
+literal|"@(#)cron.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,7 +214,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|reapchild
 parameter_list|()
 function_decl|;
@@ -1804,12 +1804,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|reapchild
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|union
 name|wait
@@ -1825,6 +1823,10 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
@@ -1864,7 +1866,7 @@ name|debug
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
