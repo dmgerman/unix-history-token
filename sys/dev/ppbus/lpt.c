@@ -3485,7 +3485,7 @@ literal|0
 condition|)
 return|return;
 block|}
-comment|/* 		 * No more data waiting for printer. 		 * Wakeup is not done if write call was interrupted. 		 */
+comment|/* 		 * No more data waiting for printer. 		 * Wakeup is not done if write call was not interrupted. 		 */
 name|sc
 operator|->
 name|sc_state
@@ -3509,7 +3509,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|sc
+name|lptdev
 argument_list|)
 expr_stmt|;
 name|lprintf
