@@ -538,7 +538,7 @@ condition|(
 name|uap
 operator|->
 name|clock_id
-operator|!=
+operator|==
 name|CLOCK_REALTIME
 condition|)
 name|nanotime
@@ -553,7 +553,7 @@ condition|(
 name|uap
 operator|->
 name|clock_id
-operator|!=
+operator|==
 name|CLOCK_MONOTONIC
 condition|)
 name|nanouptime
@@ -562,6 +562,12 @@ operator|&
 name|ats
 argument_list|)
 expr_stmt|;
+else|else
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 return|return
 operator|(
 name|copyout
