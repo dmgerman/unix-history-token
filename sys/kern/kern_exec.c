@@ -3247,8 +3247,6 @@ modifier|*
 name|imgp
 decl_stmt|;
 block|{
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|imgp
