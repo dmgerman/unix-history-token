@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.7 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3099,7 +3099,7 @@ name|mem
 operator|->
 name|clean
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 block|}
 elseif|else
@@ -3510,7 +3510,7 @@ operator|)
 condition|)
 name|MachFlushICache
 argument_list|(
-name|MACH_PHYS_TO_UNCACHED
+name|MACH_PHYS_TO_CACHED
 argument_list|(
 name|pa
 argument_list|)
