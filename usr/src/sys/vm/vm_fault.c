@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_fault.c	7.10 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_fault.c	7.11 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -10,69 +10,61 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm_page.h"
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm_pageout.h"
+file|<vm/vm_page.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_pageout.h>
 end_include
 
 begin_comment
 comment|/*  *	vm_fault:  *  *	Handle a page fault occuring at the given address,  *	requiring the given permissions, in the map specified.  *	If successful, the page is inserted into the  *	associated physical map.  *  *	NOTE: the given address should be truncated to the  *	proper page address.  *  *	KERN_SUCCESS is returned if the page fault is handled; otherwise,  *	a standard error specifying why the fault is fatal is returned.  *  *  *	The map in question must be referenced, and remains so.  *	Caller may hold no locks.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|vm_fault
-argument_list|(
-argument|map
-argument_list|,
-argument|vaddr
-argument_list|,
-argument|fault_type
-argument_list|,
-argument|change_wiring
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|map
+parameter_list|,
+name|vaddr
+parameter_list|,
+name|fault_type
+parameter_list|,
+name|change_wiring
+parameter_list|)
 name|vm_map_t
 name|map
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_offset_t
 name|vaddr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_prot_t
 name|fault_type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean_t
 name|change_wiring
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|vm_object_t
 name|first_object
@@ -1773,7 +1765,7 @@ name|KERN_SUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	vm_fault_wire:  *  *	Wire down a range of virtual addresses in a map.  */
