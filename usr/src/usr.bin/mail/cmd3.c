@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.11 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1469,11 +1469,11 @@ argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
-name|subj
-argument_list|,
 name|newsubj
 operator|+
 literal|4
+argument_list|,
+name|subj
 argument_list|)
 expr_stmt|;
 return|return
