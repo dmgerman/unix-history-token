@@ -2722,13 +2722,16 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*d"
+literal|"%*lu"
 argument_list|,
 name|v
 operator|->
 name|width
 argument_list|,
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|k
 operator|->
 name|ki_p
@@ -2736,7 +2739,7 @@ operator|->
 name|ki_size
 operator|/
 literal|1024
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
