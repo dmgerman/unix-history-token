@@ -1,13 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raboot.c	6.1	83/07/29	*/
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
-begin_comment
-comment|/*  * UDA50 1st level boot program: loads next 7.5Kbytes from  * boot sector of file system and sets it up to run.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_label
+name|_sccsid
+label|:
+end_label
 
 begin_expr_stmt
+operator|.
+name|asciz
+literal|"@(#)raboot.c	6.2 (Berkeley) %G%"
+endif|#
+directive|endif
+endif|not lint
+comment|/*  * UDA50 1st level boot program: loads next 7.5Kbytes from  * boot sector of file system and sets it up to run.  */
 operator|.
 name|set
 name|RELOC
