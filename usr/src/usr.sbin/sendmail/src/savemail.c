@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.39 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3054,7 +3054,42 @@ name|mci
 argument_list|)
 expr_stmt|;
 comment|/* 		**  Output per-message information. 		*/
-comment|/* Original-MTS-Type: is optional */
+comment|/* OMTS from MAIL FROM: line */
+if|if
+condition|(
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_omts
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Original-MTS-Type: %s"
+argument_list|,
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_omts
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* original envelope id from MAIL FROM: line */
 if|if
 condition|(
@@ -3091,7 +3126,14 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Final-MTS-Type: is optional (always INET?) */
+comment|/* Final-MTS-Type: is required -- our type */
+name|putline
+argument_list|(
+literal|"Final-MTS-Type: Internet"
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
 comment|/* Final-MTA: seems silly -- this is in the From: line */
 operator|(
 name|void
@@ -3103,6 +3145,65 @@ argument_list|,
 literal|"Final-MTA: %s"
 argument_list|,
 name|MyHostName
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+comment|/* Received-From: shows where we got this message from */
+name|expand
+argument_list|(
+literal|"Received-From: \201_"
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|,
+name|e
+operator|->
+name|e_parent
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+comment|/* Arrival-Date: -- when it arrived here */
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Arrival-Date: %s"
+argument_list|,
+name|arpadate
+argument_list|(
+name|ctime
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_ctime
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putline
@@ -3163,7 +3264,7 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
-comment|/* Rcpt: -- the name from the RCPT command */
+comment|/* Recipient: -- the name from the RCPT command */
 for|for
 control|(
 name|r
@@ -3190,7 +3291,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Rcpt: %s"
+literal|"Recipient: %s"
 argument_list|,
 name|r
 operator|->
@@ -3435,6 +3536,71 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
+comment|/* Expiry-Date: -- for delayed messages only */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QQUEUEUP
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+block|{
+name|time_t
+name|xdate
+decl_stmt|;
+name|xdate
+operator|=
+name|e
+operator|->
+name|e_ctime
+operator|+
+name|TimeOuts
+operator|.
+name|to_q_return
+index|[
+name|e
+operator|->
+name|e_timeoutclass
+index|]
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Expiry-Date: %s"
+argument_list|,
+name|arpadate
+argument_list|(
+name|ctime
+argument_list|(
+operator|&
+name|xdate
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Original-Rcpt: -- passed from on high */
 if|if
 condition|(

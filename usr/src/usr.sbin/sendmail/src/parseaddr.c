@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.40 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5948,6 +5948,8 @@ operator|->
 name|q_flags
 operator||=
 name|QPINGONFAILURE
+operator||
+name|QPINGONDELAY
 expr_stmt|;
 comment|/* figure out what net/mailer to use */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.73 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.74 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.73		%G%"
+literal|"@(#)sendmail.h	8.74		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -661,7 +661,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|QHASRETPARAM
+name|QHAS_RET_PARAM
 value|0x00008000
 end_define
 
@@ -672,7 +672,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|QNOBODYRETURN
+name|QRET_HDRS
 value|0x00010000
 end_define
 
@@ -2059,6 +2059,11 @@ modifier|*
 name|e_envid
 decl_stmt|;
 comment|/* envelope id from MAIL FROM: line */
+name|char
+modifier|*
+name|e_omts
+decl_stmt|;
+comment|/* OMTS parameter from MAIL FROM: */
 name|time_t
 name|e_dtime
 decl_stmt|;

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.53 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.54 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.53 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.54 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1467,7 +1467,7 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|QHASRETPARAM
+name|QHAS_RET_PARAM
 argument_list|,
 name|q
 operator|->
@@ -1479,7 +1479,7 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|QNOBODYRETURN
+name|QRET_HDRS
 argument_list|,
 name|q
 operator|->
