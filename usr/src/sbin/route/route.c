@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.29 (Berkeley) %G%"
+literal|"@(#)route.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,6 +262,8 @@ name|int
 name|pid
 decl_stmt|,
 name|rtm_addrs
+decl_stmt|,
+name|uid
 decl_stmt|;
 end_decl_stmt
 
@@ -428,6 +430,29 @@ expr_stmt|;
 block|}
 end_block
 
+begin_define
+define|#
+directive|define
+name|ROUNDUP
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|((a)> 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADVANCE
+parameter_list|(
+name|x
+parameter_list|,
+name|n
+parameter_list|)
+value|(x += ROUNDUP((n)->sa_len))
+end_define
+
 begin_function
 name|main
 parameter_list|(
@@ -553,6 +578,11 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|Cflag
@@ -616,11 +646,26 @@ block|{
 case|case
 name|K_GET
 case|:
-case|case
-name|K_ADD
-case|:
+name|uid
+operator|=
+literal|0
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|K_CHANGE
+case|:
+if|if
+condition|(
+name|Cflag
+condition|)
+name|usage
+argument_list|(
+literal|"change or get with -C"
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|K_ADD
 case|:
 case|case
 name|K_DELETE
@@ -706,6 +751,15 @@ name|rt_msghdr
 modifier|*
 name|rtm
 decl_stmt|;
+if|if
+condition|(
+name|uid
+condition|)
+name|usage
+argument_list|(
+literal|"must be root to alter routing table"
+argument_list|)
+expr_stmt|;
 name|shutdown
 argument_list|(
 name|s
@@ -2359,6 +2413,15 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
+if|if
+condition|(
+name|uid
+condition|)
+name|usage
+argument_list|(
+literal|"must be root to alter routing table"
+argument_list|)
+expr_stmt|;
 name|cmd
 operator|=
 name|argv
@@ -4069,17 +4132,6 @@ name|do_xns
 label|:
 if|if
 condition|(
-name|val
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
 name|which
 operator|==
 name|RTA_DST
@@ -4841,20 +4893,14 @@ name|l
 decl_stmt|;
 define|#
 directive|define
-name|ROUND
-parameter_list|(
-name|a
-parameter_list|)
-value|(1 + (((a) - 1) | (sizeof(long) - 1)))
-define|#
-directive|define
 name|NEXTADDR
 parameter_list|(
 name|w
 parameter_list|,
 name|u
 parameter_list|)
-value|{ if (rtm_addrs& (w)) {l = (u).sa.sa_len;\ 	if(verbose)sodump(&(u),"u");if(l == 0) l = sizeof(int); l = ROUND(l);\ 		bcopy((char *)&(u), cp, l); cp += l;}}
+define|\
+value|if (rtm_addrs& (w)) {\ 	    l = ROUNDUP(u.sa.sa_len); bcopy((char *)&(u), cp, l); cp += l;\ 	    if (verbose) sodump(&(u),"u");\ 	}
 name|errno
 operator|=
 literal|0
@@ -5203,16 +5249,6 @@ literal|"\1UP\2GATEWAY\3HOST\4REJECT\5DYNAMIC\6MODIFIED\7DONE\010MASK_PRESENT\01
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|ROUNDUP
-parameter_list|(
-name|a
-parameter_list|)
-value|((char *)(1 + (((((int)a)) - 1) | (sizeof(long) - 1))))
-end_define
-
 begin_expr_stmt
 name|print_rtmsg
 argument_list|(
@@ -5346,7 +5382,7 @@ condition|(
 name|rtm
 operator|->
 name|rtm_msglen
-operator|!=
+operator|>
 name|msglen
 condition|)
 block|{
@@ -5361,7 +5397,6 @@ argument_list|,
 name|msglen
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|printf
 argument_list|(
@@ -5607,15 +5642,11 @@ name|sa
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cp
-operator|=
-name|ROUNDUP
+name|ADVANCE
 argument_list|(
 name|cp
-operator|+
+argument_list|,
 name|sa
-operator|->
-name|sa_len
 argument_list|)
 expr_stmt|;
 block|}
