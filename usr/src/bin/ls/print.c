@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.12 (Berkeley) %G%"
+literal|"@(#)print.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,6 +154,10 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|f_total
+condition|)
 operator|(
 name|void
 operator|)
@@ -548,6 +552,8 @@ expr_stmt|;
 if|if
 condition|(
 name|f_size
+operator|&&
+name|f_total
 condition|)
 operator|(
 name|void

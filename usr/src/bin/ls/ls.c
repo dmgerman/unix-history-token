@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.28 (Berkeley) %G%"
+literal|"@(#)ls.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,6 +244,26 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_needstat
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if need to stat files */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_newline
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if precede with newline */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_nonprint
 decl_stmt|;
 end_decl_stmt
@@ -314,12 +334,32 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_dirname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if precede with directory name */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_timesort
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* sort by time vice name */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_total
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if precede with "total" line */
 end_comment
 
 begin_decl_stmt
@@ -747,7 +787,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* if need to stat files */
-name|needstat
+name|f_needstat
 operator|=
 name|f_longform
 operator|||
@@ -1466,6 +1506,12 @@ argument_list|,
 name|regcnt
 argument_list|)
 expr_stmt|;
+name|f_newline
+operator|=
+name|f_dirname
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* display directories */
 if|if
@@ -1478,6 +1524,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|f_total
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|dircnt
@@ -1510,6 +1560,10 @@ argument_list|)
 argument_list|,
 name|sortfcn
 argument_list|)
+expr_stmt|;
+name|f_dirname
+operator|=
+literal|1
 expr_stmt|;
 block|}
 for|for
@@ -1552,17 +1606,11 @@ empty_stmt|;
 name|subdir
 argument_list|(
 name|dstats
-argument_list|,
-name|regcnt
-operator|||
-name|cnt
-argument_list|,
-name|regcnt
-operator|||
-name|dircnt
-operator|>
-literal|1
 argument_list|)
+expr_stmt|;
+name|f_newline
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1833,13 +1881,17 @@ operator|++
 name|endofpath
 control|)
 empty_stmt|;
+name|f_newline
+operator|=
+name|f_dirname
+operator|=
+name|f_total
+operator|=
+literal|1
+expr_stmt|;
 name|subdir
 argument_list|(
 name|lp
-argument_list|,
-literal|1
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1860,10 +1912,6 @@ begin_macro
 name|subdir
 argument_list|(
 argument|lp
-argument_list|,
-argument|newline
-argument_list|,
-argument|tag
 argument_list|)
 end_macro
 
@@ -1871,14 +1919,6 @@ begin_decl_stmt
 name|LS
 modifier|*
 name|lp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|newline
-decl_stmt|,
-name|tag
 decl_stmt|;
 end_decl_stmt
 
@@ -1895,10 +1935,9 @@ name|char
 modifier|*
 name|names
 decl_stmt|;
-comment|/* 	 * this doesn't really belong here, but it's the only place that 	 * everybody goes through; the `tag' variable is so that we don't 	 * print the header for directories unless we're going to display 	 * more directories, or we've already displayed files or directories. 	 * The `newline' variable keeps us from inserting a newline before 	 * we've displayed anything at all. 	 */
 if|if
 condition|(
-name|newline
+name|f_newline
 condition|)
 operator|(
 name|void
@@ -1910,7 +1949,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tag
+name|f_dirname
 condition|)
 operator|(
 name|void
@@ -2310,7 +2349,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|needstat
+name|f_needstat
 operator|&&
 name|lstat
 argument_list|(
