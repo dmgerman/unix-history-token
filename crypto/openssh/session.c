@@ -5200,6 +5200,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Set custom environment options from RSA authentication. */
+if|if
+condition|(
+operator|!
+name|options
+operator|.
+name|use_login
+condition|)
+block|{
 while|while
 condition|(
 name|custom_environment
@@ -5298,6 +5306,7 @@ argument_list|(
 name|ce
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|snprintf
 argument_list|(
