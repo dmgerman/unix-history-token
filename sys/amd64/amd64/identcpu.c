@@ -814,33 +814,9 @@ break|break;
 case|case
 literal|0x30
 case|:
-name|strcat
-argument_list|(
-name|cpu_model
-argument_list|,
-literal|"Pentium II"
-argument_list|)
-expr_stmt|;
-name|cpu
-operator|=
-name|CPU_PII
-expr_stmt|;
-break|break;
 case|case
 literal|0x50
 case|:
-name|strcat
-argument_list|(
-name|cpu_model
-argument_list|,
-literal|"Pentium II/Xeon/Celeron"
-argument_list|)
-expr_stmt|;
-name|cpu
-operator|=
-name|CPU_PII
-expr_stmt|;
-break|break;
 case|case
 literal|0x60
 case|:
@@ -848,7 +824,7 @@ name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"Pentium II/Celeron"
+literal|"Pentium II/Pentium II Xeon/Celeron"
 argument_list|)
 expr_stmt|;
 name|cpu
@@ -859,18 +835,6 @@ break|break;
 case|case
 literal|0x70
 case|:
-name|strcat
-argument_list|(
-name|cpu_model
-argument_list|,
-literal|"Pentium III/Xeon"
-argument_list|)
-expr_stmt|;
-name|cpu
-operator|=
-name|CPU_PIII
-expr_stmt|;
-break|break;
 case|case
 literal|0x80
 case|:
@@ -878,7 +842,7 @@ name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"Pentium III"
+literal|"Pentium III/Pentium III Xeon"
 argument_list|)
 expr_stmt|;
 name|cpu
