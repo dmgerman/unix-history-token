@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)types.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)types.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -124,8 +124,35 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/ansi.h>
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
 file|<machine/types.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -154,30 +181,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_TIME_T_
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|_TIME_T_
-name|time_t
-typedef|;
-end_typedef
-
-begin_undef
-undef|#
-directive|undef
-name|_TIME_T_
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|_SIZE_T_
 end_ifdef
 
@@ -192,6 +195,30 @@ begin_undef
 undef|#
 directive|undef
 name|_SIZE_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_TIME_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_TIME_T_
+name|time_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_TIME_T_
 end_undef
 
 begin_endif
