@@ -314,6 +314,12 @@ name|iobus
 operator|=
 literal|"mcbus"
 expr_stmt|;
+name|platform
+operator|.
+name|cons_init
+operator|=
+name|dec_kn300_cons_init
+expr_stmt|;
 block|}
 end_function
 
@@ -334,6 +340,9 @@ name|ctb
 modifier|*
 name|ctb
 decl_stmt|;
+name|mcbus_init
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB

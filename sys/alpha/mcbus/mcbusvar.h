@@ -159,5 +159,15 @@ parameter_list|)
 value|((struct mcbus_device *) device_get_ivars(dev))
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|mcbus_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

@@ -138,5 +138,17 @@ name|MCPCIA_I2C_BVEC
 value|0xAA0
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|mcpcia_init
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
