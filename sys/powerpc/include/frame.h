@@ -147,6 +147,14 @@ struct|struct
 name|callframe
 block|{
 name|register_t
+name|cf_dummy_fp
+decl_stmt|;
+comment|/* dummy frame pointer */
+name|register_t
+name|cf_lr
+decl_stmt|;
+comment|/* space for link register save */
+name|register_t
 name|cf_func
 decl_stmt|;
 name|register_t
