@@ -1030,6 +1030,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYS_uname
+value|164
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYS_shmsys
 value|171
 end_define
