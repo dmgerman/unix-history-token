@@ -77,5 +77,16 @@ begin_comment
 comment|/* disable Joliet Ext.*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ISOFSMNT_BROKENJOLIET
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* allow broken Joliet disks */
+end_comment
+
 end_unit
 
