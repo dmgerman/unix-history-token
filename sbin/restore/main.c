@@ -178,6 +178,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|dokerberos
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|command
 init|=
@@ -364,6 +372,21 @@ operator|&
 name|argv
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+define|#
+directive|define
+name|optlist
+value|"b:cdf:hikmNRrs:tvxy"
+else|#
+directive|else
+define|#
+directive|define
+name|optlist
+value|"b:cdf:himNRrs:tvxy"
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
@@ -375,11 +398,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:cdf:himNRrs:tvxy"
+name|optlist
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -466,6 +490,19 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+case|case
+literal|'k'
+case|:
+name|dokerberos
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'i'
 case|:
@@ -1075,15 +1112,15 @@ name|stderr
 argument_list|,
 literal|"usage:\t%s%s%s%s%s"
 argument_list|,
-literal|"restore tfhsvy [file ...]\n"
+literal|"restore tfhksvy [file ...]\n"
 argument_list|,
-literal|"\trestore xfhmsvy [file ...]\n"
+literal|"\trestore xfhkmsvy [file ...]\n"
 argument_list|,
-literal|"\trestore ifhmsvy\n"
+literal|"\trestore ifhkmsvy\n"
 argument_list|,
-literal|"\trestore rfsvy\n"
+literal|"\trestore rfksvy\n"
 argument_list|,
-literal|"\trestore Rfsvy\n"
+literal|"\trestore Rfksvy\n"
 argument_list|)
 expr_stmt|;
 name|done
