@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dr.c	1.4	86/11/25	*/
+comment|/*	dr.c	1.5	86/11/29	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*      DRV11-W DMA interface driver.  */
+comment|/*      DRV11-W DMA interface driver.  * UNTESTED WITH 4.3  */
 end_comment
 
 begin_include
