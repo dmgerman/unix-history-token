@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)umap_vnops.c	8.3 (Berkeley) 1/5/94  * $Id: umap_vnops.c,v 1.8 1995/03/19 14:28:55 davidg Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)umap_vnops.c	8.3 (Berkeley) 1/5/94  * $Id: umap_vnops.c,v 1.9 1995/05/30 08:07:22 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -1684,16 +1684,13 @@ begin_comment
 comment|/*  * XXX - strategy, bwrite are hand coded currently.  They should  * go away with a merged buffer/block cache.  *  */
 end_comment
 
-begin_function_decl
-name|int
-function_decl|(
+begin_decl_stmt
+name|vop_t
 modifier|*
 modifier|*
 name|umap_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1706,6 +1703,10 @@ block|{
 operator|&
 name|vop_default_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|umap_bypass
 block|}
 block|,
@@ -1713,6 +1714,10 @@ block|{
 operator|&
 name|vop_getattr_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|umap_getattr
 block|}
 block|,
@@ -1720,6 +1725,10 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|umap_inactive
 block|}
 block|,
@@ -1727,6 +1736,10 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|umap_reclaim
 block|}
 block|,
@@ -1734,6 +1747,10 @@ block|{
 operator|&
 name|vop_print_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|umap_print
 block|}
 block|,
@@ -1741,6 +1758,10 @@ block|{
 operator|&
 name|vop_rename_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|umap_rename
 block|}
 block|,
@@ -1748,6 +1769,10 @@ block|{
 operator|&
 name|vop_strategy_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|umap_strategy
 block|}
 block|,
@@ -1755,24 +1780,16 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|umap_bwrite
 block|}
 block|,
 block|{
-operator|(
-expr|struct
-name|vnodeop_desc
-operator|*
-operator|)
 name|NULL
 block|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|NULL
 block|}
 block|}

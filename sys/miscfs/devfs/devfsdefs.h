@@ -35,7 +35,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.6 1995/09/06 23:15:55 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.7 1995/10/04 11:05:09 julian Exp $  */
 end_comment
 
 begin_comment
@@ -339,39 +339,27 @@ name|DEV_SLNK
 value|6
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
-function_decl|(
+name|vop_t
 modifier|*
 modifier|*
 name|devfs_vnodeop_p
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* our own vector array for dirs */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
-function_decl|(
+name|vop_t
 modifier|*
 modifier|*
 name|dev_spec_vnodeop_p
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* our own vector array for devs */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.6 1995/08/02 12:59:47 dfr Exp $ */
+comment|/*	$Id: denode.h,v 1.7 1995/10/29 15:31:43 phk Exp $ */
 end_comment
 
 begin_comment
@@ -411,17 +411,14 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
-function_decl|(
+name|vop_t
 modifier|*
 modifier|*
 name|msdosfs_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

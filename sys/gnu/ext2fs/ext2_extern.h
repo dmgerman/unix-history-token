@@ -1065,30 +1065,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 name|__END_DECLS
 specifier|extern
-name|int
-function_decl|(
+name|vop_t
 modifier|*
 modifier|*
 name|ext2_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
-function_decl|(
+name|vop_t
 modifier|*
 modifier|*
 name|ext2_specop_p
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -1096,17 +1090,14 @@ directive|ifdef
 name|FIFO
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
-function_decl|(
+name|vop_t
 modifier|*
 modifier|*
 name|ext2_fifoop_p
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernfs_vnops.c	8.6 (Berkeley) 2/10/94  * $Id: kernfs_vnops.c,v 1.10 1995/07/31 09:52:21 mpp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernfs_vnops.c	8.6 (Berkeley) 2/10/94  * $Id: kernfs_vnops.c,v 1.11 1995/10/29 15:31:37 phk Exp $  */
 end_comment
 
 begin_comment
@@ -2976,16 +2976,13 @@ name|kernfs_bwrite
 value|((int (*) __P((struct  vop_bwrite_args *)))kernfs_enotsupp)
 end_define
 
-begin_function_decl
-name|int
-function_decl|(
+begin_decl_stmt
+name|vop_t
 modifier|*
 modifier|*
 name|kernfs_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2999,6 +2996,10 @@ block|{
 operator|&
 name|vop_default_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|vn_default_error
 block|}
 block|,
@@ -3006,6 +3007,10 @@ block|{
 operator|&
 name|vop_lookup_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_lookup
 block|}
 block|,
@@ -3014,6 +3019,10 @@ block|{
 operator|&
 name|vop_create_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_create
 block|}
 block|,
@@ -3022,6 +3031,10 @@ block|{
 operator|&
 name|vop_mknod_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_mknod
 block|}
 block|,
@@ -3030,6 +3043,10 @@ block|{
 operator|&
 name|vop_open_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_open
 block|}
 block|,
@@ -3038,6 +3055,10 @@ block|{
 operator|&
 name|vop_close_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_close
 block|}
 block|,
@@ -3046,6 +3067,10 @@ block|{
 operator|&
 name|vop_access_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_access
 block|}
 block|,
@@ -3054,6 +3079,10 @@ block|{
 operator|&
 name|vop_getattr_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_getattr
 block|}
 block|,
@@ -3062,6 +3091,10 @@ block|{
 operator|&
 name|vop_setattr_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_setattr
 block|}
 block|,
@@ -3070,6 +3103,10 @@ block|{
 operator|&
 name|vop_read_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_read
 block|}
 block|,
@@ -3078,6 +3115,10 @@ block|{
 operator|&
 name|vop_write_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_write
 block|}
 block|,
@@ -3086,6 +3127,10 @@ block|{
 operator|&
 name|vop_ioctl_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_ioctl
 block|}
 block|,
@@ -3094,6 +3139,10 @@ block|{
 operator|&
 name|vop_select_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_select
 block|}
 block|,
@@ -3102,6 +3151,10 @@ block|{
 operator|&
 name|vop_mmap_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_mmap
 block|}
 block|,
@@ -3110,6 +3163,10 @@ block|{
 operator|&
 name|vop_fsync_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_fsync
 block|}
 block|,
@@ -3118,6 +3175,10 @@ block|{
 operator|&
 name|vop_seek_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_seek
 block|}
 block|,
@@ -3126,6 +3187,10 @@ block|{
 operator|&
 name|vop_remove_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_remove
 block|}
 block|,
@@ -3134,6 +3199,10 @@ block|{
 operator|&
 name|vop_link_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_link
 block|}
 block|,
@@ -3142,6 +3211,10 @@ block|{
 operator|&
 name|vop_rename_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_rename
 block|}
 block|,
@@ -3150,6 +3223,10 @@ block|{
 operator|&
 name|vop_mkdir_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_mkdir
 block|}
 block|,
@@ -3158,6 +3235,10 @@ block|{
 operator|&
 name|vop_rmdir_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_rmdir
 block|}
 block|,
@@ -3166,6 +3247,10 @@ block|{
 operator|&
 name|vop_symlink_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_symlink
 block|}
 block|,
@@ -3174,6 +3259,10 @@ block|{
 operator|&
 name|vop_readdir_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_readdir
 block|}
 block|,
@@ -3182,6 +3271,10 @@ block|{
 operator|&
 name|vop_readlink_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_readlink
 block|}
 block|,
@@ -3190,6 +3283,10 @@ block|{
 operator|&
 name|vop_abortop_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_abortop
 block|}
 block|,
@@ -3198,6 +3295,10 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_inactive
 block|}
 block|,
@@ -3206,6 +3307,10 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_reclaim
 block|}
 block|,
@@ -3214,6 +3319,10 @@ block|{
 operator|&
 name|vop_lock_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_lock
 block|}
 block|,
@@ -3222,6 +3331,10 @@ block|{
 operator|&
 name|vop_unlock_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_unlock
 block|}
 block|,
@@ -3230,6 +3343,10 @@ block|{
 operator|&
 name|vop_bmap_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_bmap
 block|}
 block|,
@@ -3238,6 +3355,10 @@ block|{
 operator|&
 name|vop_strategy_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_strategy
 block|}
 block|,
@@ -3246,6 +3367,10 @@ block|{
 operator|&
 name|vop_print_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_print
 block|}
 block|,
@@ -3254,6 +3379,10 @@ block|{
 operator|&
 name|vop_islocked_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_islocked
 block|}
 block|,
@@ -3262,6 +3391,10 @@ block|{
 operator|&
 name|vop_pathconf_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_pathconf
 block|}
 block|,
@@ -3270,6 +3403,10 @@ block|{
 operator|&
 name|vop_advlock_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_advlock
 block|}
 block|,
@@ -3278,6 +3415,10 @@ block|{
 operator|&
 name|vop_blkatoff_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_blkatoff
 block|}
 block|,
@@ -3286,6 +3427,10 @@ block|{
 operator|&
 name|vop_valloc_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_valloc
 block|}
 block|,
@@ -3294,6 +3439,10 @@ block|{
 operator|&
 name|vop_vfree_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_vfree
 block|}
 block|,
@@ -3302,6 +3451,10 @@ block|{
 operator|&
 name|vop_truncate_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_truncate
 block|}
 block|,
@@ -3310,6 +3463,10 @@ block|{
 operator|&
 name|vop_update_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_update
 block|}
 block|,
@@ -3318,25 +3475,17 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|kernfs_bwrite
 block|}
 block|,
 comment|/* bwrite */
 block|{
-operator|(
-expr|struct
-name|vnodeop_desc
-operator|*
-operator|)
 name|NULL
 block|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|NULL
 block|}
 block|}

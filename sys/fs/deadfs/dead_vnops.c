@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dead_vnops.c	8.1 (Berkeley) 6/10/93  * $Id: dead_vnops.c,v 1.6 1994/10/08 22:37:00 phk Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dead_vnops.c	8.1 (Berkeley) 6/10/93  * $Id: dead_vnops.c,v 1.7 1995/09/04 00:20:26 dyson Exp $  */
 end_comment
 
 begin_include
@@ -436,16 +436,13 @@ name|dead_bwrite
 value|((int (*) __P((struct  vop_bwrite_args *)))nullop)
 end_define
 
-begin_function_decl
-name|int
-function_decl|(
+begin_decl_stmt
+name|vop_t
 modifier|*
 modifier|*
 name|dead_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -458,6 +455,10 @@ block|{
 operator|&
 name|vop_default_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|vn_default_error
 block|}
 block|,
@@ -465,6 +466,10 @@ block|{
 operator|&
 name|vop_lookup_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_lookup
 block|}
 block|,
@@ -473,6 +478,10 @@ block|{
 operator|&
 name|vop_create_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_create
 block|}
 block|,
@@ -481,6 +490,10 @@ block|{
 operator|&
 name|vop_mknod_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_mknod
 block|}
 block|,
@@ -489,6 +502,10 @@ block|{
 operator|&
 name|vop_open_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_open
 block|}
 block|,
@@ -497,6 +514,10 @@ block|{
 operator|&
 name|vop_close_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_close
 block|}
 block|,
@@ -505,6 +526,10 @@ block|{
 operator|&
 name|vop_access_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_access
 block|}
 block|,
@@ -513,6 +538,10 @@ block|{
 operator|&
 name|vop_getattr_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_getattr
 block|}
 block|,
@@ -521,6 +550,10 @@ block|{
 operator|&
 name|vop_setattr_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_setattr
 block|}
 block|,
@@ -529,6 +562,10 @@ block|{
 operator|&
 name|vop_read_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_read
 block|}
 block|,
@@ -537,6 +574,10 @@ block|{
 operator|&
 name|vop_write_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_write
 block|}
 block|,
@@ -545,6 +586,10 @@ block|{
 operator|&
 name|vop_ioctl_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_ioctl
 block|}
 block|,
@@ -553,6 +598,10 @@ block|{
 operator|&
 name|vop_select_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_select
 block|}
 block|,
@@ -561,6 +610,10 @@ block|{
 operator|&
 name|vop_mmap_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_mmap
 block|}
 block|,
@@ -569,6 +622,10 @@ block|{
 operator|&
 name|vop_fsync_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_fsync
 block|}
 block|,
@@ -577,6 +634,10 @@ block|{
 operator|&
 name|vop_seek_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_seek
 block|}
 block|,
@@ -585,6 +646,10 @@ block|{
 operator|&
 name|vop_remove_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_remove
 block|}
 block|,
@@ -593,6 +658,10 @@ block|{
 operator|&
 name|vop_link_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_link
 block|}
 block|,
@@ -601,6 +670,10 @@ block|{
 operator|&
 name|vop_rename_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_rename
 block|}
 block|,
@@ -609,6 +682,10 @@ block|{
 operator|&
 name|vop_mkdir_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_mkdir
 block|}
 block|,
@@ -617,6 +694,10 @@ block|{
 operator|&
 name|vop_rmdir_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_rmdir
 block|}
 block|,
@@ -625,6 +706,10 @@ block|{
 operator|&
 name|vop_symlink_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_symlink
 block|}
 block|,
@@ -633,6 +718,10 @@ block|{
 operator|&
 name|vop_readdir_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_readdir
 block|}
 block|,
@@ -641,6 +730,10 @@ block|{
 operator|&
 name|vop_readlink_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_readlink
 block|}
 block|,
@@ -649,6 +742,10 @@ block|{
 operator|&
 name|vop_abortop_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_abortop
 block|}
 block|,
@@ -657,6 +754,10 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_inactive
 block|}
 block|,
@@ -665,6 +766,10 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_reclaim
 block|}
 block|,
@@ -673,6 +778,10 @@ block|{
 operator|&
 name|vop_lock_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_lock
 block|}
 block|,
@@ -681,6 +790,10 @@ block|{
 operator|&
 name|vop_unlock_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_unlock
 block|}
 block|,
@@ -689,6 +802,10 @@ block|{
 operator|&
 name|vop_bmap_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_bmap
 block|}
 block|,
@@ -697,6 +814,10 @@ block|{
 operator|&
 name|vop_strategy_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_strategy
 block|}
 block|,
@@ -705,6 +826,10 @@ block|{
 operator|&
 name|vop_print_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_print
 block|}
 block|,
@@ -713,6 +838,10 @@ block|{
 operator|&
 name|vop_islocked_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_islocked
 block|}
 block|,
@@ -721,6 +850,10 @@ block|{
 operator|&
 name|vop_pathconf_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_pathconf
 block|}
 block|,
@@ -729,6 +862,10 @@ block|{
 operator|&
 name|vop_advlock_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_advlock
 block|}
 block|,
@@ -737,6 +874,10 @@ block|{
 operator|&
 name|vop_blkatoff_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_blkatoff
 block|}
 block|,
@@ -745,6 +886,10 @@ block|{
 operator|&
 name|vop_valloc_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_valloc
 block|}
 block|,
@@ -753,6 +898,10 @@ block|{
 operator|&
 name|vop_vfree_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_vfree
 block|}
 block|,
@@ -761,6 +910,10 @@ block|{
 operator|&
 name|vop_truncate_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_truncate
 block|}
 block|,
@@ -769,6 +922,10 @@ block|{
 operator|&
 name|vop_update_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_update
 block|}
 block|,
@@ -777,25 +934,17 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|dead_bwrite
 block|}
 block|,
 comment|/* bwrite */
 block|{
-operator|(
-expr|struct
-name|vnodeop_desc
-operator|*
-operator|)
 name|NULL
 block|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|NULL
 block|}
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.25 1995/10/22 09:32:37 davidg Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.26 1995/10/29 15:31:53 phk Exp $ */
 end_comment
 
 begin_comment
@@ -8371,16 +8371,13 @@ begin_comment
 comment|/* Global vfs data structures for msdosfs */
 end_comment
 
-begin_function_decl
-name|int
-function_decl|(
+begin_decl_stmt
+name|vop_t
 modifier|*
 modifier|*
 name|msdosfs_vnodeop_p
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -8394,6 +8391,10 @@ block|{
 operator|&
 name|vop_default_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|vn_default_error
 block|}
 block|,
@@ -8401,6 +8402,10 @@ block|{
 operator|&
 name|vop_lookup_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_lookup
 block|}
 block|,
@@ -8409,6 +8414,10 @@ block|{
 operator|&
 name|vop_create_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_create
 block|}
 block|,
@@ -8417,6 +8426,10 @@ block|{
 operator|&
 name|vop_mknod_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_mknod
 block|}
 block|,
@@ -8425,6 +8438,10 @@ block|{
 operator|&
 name|vop_open_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_open
 block|}
 block|,
@@ -8433,6 +8450,10 @@ block|{
 operator|&
 name|vop_close_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_close
 block|}
 block|,
@@ -8441,6 +8462,10 @@ block|{
 operator|&
 name|vop_access_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_access
 block|}
 block|,
@@ -8449,6 +8474,10 @@ block|{
 operator|&
 name|vop_getattr_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_getattr
 block|}
 block|,
@@ -8457,6 +8486,10 @@ block|{
 operator|&
 name|vop_setattr_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_setattr
 block|}
 block|,
@@ -8465,6 +8498,10 @@ block|{
 operator|&
 name|vop_read_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_read
 block|}
 block|,
@@ -8473,6 +8510,10 @@ block|{
 operator|&
 name|vop_write_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_write
 block|}
 block|,
@@ -8481,6 +8522,10 @@ block|{
 operator|&
 name|vop_ioctl_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_ioctl
 block|}
 block|,
@@ -8489,6 +8534,10 @@ block|{
 operator|&
 name|vop_select_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_select
 block|}
 block|,
@@ -8497,6 +8546,10 @@ block|{
 operator|&
 name|vop_mmap_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_mmap
 block|}
 block|,
@@ -8505,6 +8558,10 @@ block|{
 operator|&
 name|vop_fsync_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_fsync
 block|}
 block|,
@@ -8513,6 +8570,10 @@ block|{
 operator|&
 name|vop_seek_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_seek
 block|}
 block|,
@@ -8521,6 +8582,10 @@ block|{
 operator|&
 name|vop_remove_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_remove
 block|}
 block|,
@@ -8529,6 +8594,10 @@ block|{
 operator|&
 name|vop_link_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_link
 block|}
 block|,
@@ -8537,6 +8606,10 @@ block|{
 operator|&
 name|vop_rename_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_rename
 block|}
 block|,
@@ -8545,6 +8618,10 @@ block|{
 operator|&
 name|vop_mkdir_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_mkdir
 block|}
 block|,
@@ -8553,6 +8630,10 @@ block|{
 operator|&
 name|vop_rmdir_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_rmdir
 block|}
 block|,
@@ -8561,6 +8642,10 @@ block|{
 operator|&
 name|vop_symlink_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_symlink
 block|}
 block|,
@@ -8569,6 +8654,10 @@ block|{
 operator|&
 name|vop_readdir_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_readdir
 block|}
 block|,
@@ -8577,6 +8666,10 @@ block|{
 operator|&
 name|vop_readlink_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_readlink
 block|}
 block|,
@@ -8585,6 +8678,10 @@ block|{
 operator|&
 name|vop_abortop_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_abortop
 block|}
 block|,
@@ -8593,6 +8690,10 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_inactive
 block|}
 block|,
@@ -8601,6 +8702,10 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_reclaim
 block|}
 block|,
@@ -8609,6 +8714,10 @@ block|{
 operator|&
 name|vop_lock_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_lock
 block|}
 block|,
@@ -8617,6 +8726,10 @@ block|{
 operator|&
 name|vop_unlock_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_unlock
 block|}
 block|,
@@ -8625,6 +8738,10 @@ block|{
 operator|&
 name|vop_bmap_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_bmap
 block|}
 block|,
@@ -8633,6 +8750,10 @@ block|{
 operator|&
 name|vop_strategy_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_strategy
 block|}
 block|,
@@ -8641,6 +8762,10 @@ block|{
 operator|&
 name|vop_print_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_print
 block|}
 block|,
@@ -8649,6 +8774,10 @@ block|{
 operator|&
 name|vop_islocked_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_islocked
 block|}
 block|,
@@ -8657,6 +8786,10 @@ block|{
 operator|&
 name|vop_pathconf_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_pathconf
 block|}
 block|,
@@ -8665,6 +8798,10 @@ block|{
 operator|&
 name|vop_advlock_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_advlock
 block|}
 block|,
@@ -8673,6 +8810,10 @@ block|{
 operator|&
 name|vop_reallocblks_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|msdosfs_reallocblks
 block|}
 block|,
@@ -8681,24 +8822,17 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|vn_bwrite
 block|}
 block|,
+comment|/* bwrite */
 block|{
-operator|(
-expr|struct
-name|vnodeop_desc
-operator|*
-operator|)
 name|NULL
 block|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|NULL
 block|}
 block|}
