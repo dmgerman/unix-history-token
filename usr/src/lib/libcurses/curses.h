@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)curses.h	1.12 (Berkeley) %G% */
+comment|/* @(#)curses.h	1.13 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -995,6 +995,20 @@ name|getcap
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Used to be in unctrl.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|unctrl
+parameter_list|(
+name|c
+parameter_list|)
+value|_unctrl[(c)& 0177]
+end_define
 
 begin_endif
 endif|#
