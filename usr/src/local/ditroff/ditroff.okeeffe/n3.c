@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n3.c	2.1 (CWI) 85/07/18"
+literal|"@(#)n3.c	2.2 (CWI) 85/08/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -3830,6 +3830,29 @@ name|i
 decl_stmt|,
 name|delim
 decl_stmt|;
+comment|/* 	 * bug fix 	 * 	 * if .tl is the first thing in the file, the p1 	 * doesn't come out, also the pagenumber will be 0 	 * 	 * tends too confuse the device filter (and the user as well) 	 */
+if|if
+condition|(
+name|dip
+operator|==
+name|d
+operator|&&
+name|numtab
+index|[
+name|NL
+index|]
+operator|.
+name|val
+operator|==
+operator|-
+literal|1
+condition|)
+name|newline
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* end fix */
 name|dip
 operator|->
 name|nls
