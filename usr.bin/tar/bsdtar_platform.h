@@ -327,7 +327,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !ARCHIVE_H_INCLUDED */
+comment|/* !BSDTAR_PLATFORM_H_INCLUDED */
 end_comment
 
 end_unit
