@@ -6918,7 +6918,7 @@ literal|"Simply blank the screen"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|configSaver
 block|,
 name|NULL
 block|,
@@ -6932,7 +6932,7 @@ literal|"\"Green\" power saving mode (if supported by monitor)"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|configSaver
 block|,
 name|NULL
 block|,
@@ -6946,7 +6946,7 @@ literal|"Draw a FreeBSD \"snake\" on your screen"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|configSaver
 block|,
 name|NULL
 block|,
@@ -6960,7 +6960,7 @@ literal|"A \"twinkling stars\" effect"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|configSaver
 block|,
 name|NULL
 block|,
@@ -6979,12 +6979,6 @@ block|,
 name|NULL
 block|,
 literal|"blanktime"
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
 block|}
 block|,
 block|{
