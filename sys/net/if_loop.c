@@ -1057,6 +1057,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|m_tag_delete_nonpersistent
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr

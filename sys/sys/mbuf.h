@@ -2084,6 +2084,17 @@ begin_comment
 comment|/*  * Packets may have annotations attached by affixing a list  * of "packet tags" to the pkthdr structure.  Packet tags are  * dynamically allocated semi-opaque data structures that have  * a fixed header (struct m_tag) that specifies the size of the  * memory block and a<cookie,type> pair that identifies it.  * The cookie is a 32-bit unique unsigned value used to identify  * a module or ABI.  By convention this value is chose as the  * date+time that the module is created, expressed as the number of  * seconds since the epoch (e.g. using date -u +'%s').  The type value  * is an ABI/module-specific value that identifies a particular annotation  * and is private to the module.  For compatibility with systems  * like openbsd that define packet tags w/o an ABI/module cookie,  * the value PACKET_ABI_COMPAT is used to implement m_tag_get and  * m_tag_find compatibility shim functions and several tag types are  * defined below.  Users that do not require compatibility should use  * a private cookie value so that packet tag-related definitions  * can be maintained privately.  *  * Note that the packet tag returned by m_tag_allocate has the default  * memory alignment implemented by malloc.  To reference private data  * one can use a construct like:  *  *	struct m_tag *mtag = m_tag_allocate(...);  *	struct foo *p = (struct foo *)(mtag+1);  *  * if the alignment of struct m_tag is sufficient for referencing members  * of struct foo.  Otherwise it is necessary to embed struct m_tag within  * the private data structure to insure proper alignment; e.g.  *  *	struct foo {  *		struct m_tag	tag;  *		...  *	};  *	struct foo *p = (struct foo *) m_tag_allocate(...);  *	struct m_tag *mtag =&p->tag;  */
 end_comment
 
+begin_comment
+comment|/*  * Persistent tags stay with an mbuf until the mbuf is reclaimed.  * Otherwise tags are expected to ``vanish'' when they pass through  * a network interface.  For most interfaces this happens normally  * as the tags are reclaimed when the mbuf is free'd.  However in  * some special cases reclaiming must be done manually.  An example  * is packets that pass through the loopback interface.  Also, one  * must be careful to do this when ``turning around'' packets (e.g.  * icmp_reflect).  *  * To mark a tag persistent bit-or this flag in when defining the  * tag id.  The tag will then be treated as described above.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTAG_PERSISTENT
+value|0x800
+end_define
+
 begin_define
 define|#
 directive|define
@@ -2316,7 +2327,7 @@ begin_define
 define|#
 directive|define
 name|PACKET_TAG_MACLABEL
-value|19
+value|(19 | MTAG_PERSISTENT)
 end_define
 
 begin_comment
@@ -2504,6 +2515,17 @@ modifier|*
 parameter_list|,
 name|struct
 name|m_tag
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|m_tag_delete_nonpersistent
+parameter_list|(
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
