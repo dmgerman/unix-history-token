@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_seq.c	5.9 (Berkeley) %G%"
+literal|"@(#)bt_seq.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,7 +196,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_SEQINIT
+name|B_SEQINIT
 argument_list|)
 condition|)
 block|{
@@ -311,7 +311,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_SEQINIT
+name|B_SEQINIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -377,7 +377,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 operator|&&
 name|__bt_crsrdel
@@ -989,7 +989,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 condition|)
 name|delc
@@ -1229,7 +1229,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 condition|)
 block|{
@@ -1237,7 +1237,7 @@ name|CLR
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 expr_stmt|;
 comment|/* Don't try twice. */
@@ -1320,7 +1320,7 @@ name|CLR
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 expr_stmt|;
 comment|/* Don't try twice. */

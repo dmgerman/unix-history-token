@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_get.c	5.8 (Berkeley) %G%"
+literal|"@(#)bt_get.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,7 +196,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 operator|&&
 name|e
@@ -396,7 +396,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 condition|)
 block|{

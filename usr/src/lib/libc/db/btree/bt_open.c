@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.28 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -575,7 +575,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_NEEDSWAP
+name|B_NEEDSWAP
 argument_list|)
 expr_stmt|;
 name|dbp
@@ -646,7 +646,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_RDONLY
+name|B_RDONLY
 argument_list|)
 expr_stmt|;
 break|break;
@@ -723,7 +723,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_INMEM
+name|B_INMEM
 argument_list|)
 expr_stmt|;
 block|}
@@ -819,7 +819,7 @@ name|CLR
 argument_list|(
 name|t
 argument_list|,
-name|BTF_NEEDSWAP
+name|B_NEEDSWAP
 argument_list|)
 expr_stmt|;
 else|else
@@ -828,7 +828,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_NEEDSWAP
+name|B_NEEDSWAP
 argument_list|)
 expr_stmt|;
 name|BLSWAP
@@ -1029,7 +1029,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_NODUPS
+name|B_NODUPS
 argument_list|)
 expr_stmt|;
 name|t
@@ -1048,7 +1048,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_METADIRTY
+name|B_METADIRTY
 argument_list|)
 expr_stmt|;
 block|}
@@ -1238,7 +1238,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_INMEM
+name|B_INMEM
 argument_list|)
 condition|)
 name|mpool_filter
