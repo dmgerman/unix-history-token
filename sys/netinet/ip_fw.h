@@ -821,8 +821,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_SME
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* source = me				*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_DME
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* destination = me			*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_MASK
-value|0x1FFFFFFF
+value|0x7FFFFFFF
 end_define
 
 begin_comment
