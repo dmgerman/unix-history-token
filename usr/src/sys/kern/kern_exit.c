@@ -980,7 +980,9 @@ condition|(
 operator|(
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|PS
 index|]
@@ -1012,7 +1014,9 @@ name|options
 operator|=
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|R0
 index|]
@@ -1028,7 +1032,9 @@ operator|*
 operator|)
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|R1
 index|]
