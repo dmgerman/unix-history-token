@@ -59,6 +59,41 @@ directive|include
 file|<sys/rman.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RMAN_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|params
+parameter_list|)
+value|printf##params
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|params
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -692,40 +727,36 @@ name|rv
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"rman_reserve_resource:<%s> request: [%#lx, %#lx], length "
 literal|"%#lx, flags %u, device %s%d\n"
-argument_list|,
+operator|,
 name|rm
 operator|->
 name|rm_descr
-argument_list|,
+operator|,
 name|start
-argument_list|,
+operator|,
 name|end
-argument_list|,
+operator|,
 name|count
-argument_list|,
+operator|,
 name|flags
-argument_list|,
+operator|,
 name|device_get_name
 argument_list|(
 name|dev
 argument_list|)
-argument_list|,
+operator|,
 name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMAN_DEBUG */
 name|want_activate
 operator|=
 operator|(
@@ -796,17 +827,13 @@ name|rm_list
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"could not find a region\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|RMAN_DEBUG
 goto|goto
 name|out
 goto|;
@@ -838,25 +865,21 @@ name|r_link
 argument_list|)
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"considering [%#lx, %#lx]\n"
-argument_list|,
+operator|,
 name|s
 operator|->
 name|r_start
-argument_list|,
+operator|,
 name|s
 operator|->
 name|r_end
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMAN_DEBUG */
 if|if
 condition|(
 name|s
@@ -866,23 +889,19 @@ operator|>
 name|end
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"s->r_start (%#lx)> end (%#lx)\n"
-argument_list|,
+operator|,
 name|s
 operator|->
 name|r_start
-argument_list|,
+operator|,
 name|end
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMAN_DEBUG */
 break|break;
 block|}
 if|if
@@ -894,17 +913,13 @@ operator|&
 name|RF_ALLOCATED
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"region is allocated\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMAN_DEBUG */
 continue|continue;
 block|}
 name|rstart
@@ -936,17 +951,15 @@ name|end
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"truncated region: [%#lx, %#lx]; size %#lx (requested %#lx)\n"
-argument_list|,
+operator|,
 name|rstart
-argument_list|,
+operator|,
 name|rend
-argument_list|,
+operator|,
 operator|(
 name|rend
 operator|-
@@ -954,13 +967,11 @@ name|rstart
 operator|+
 literal|1
 operator|)
-argument_list|,
+operator|,
 name|count
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMAN_DEBUG */
 if|if
 condition|(
 operator|(
@@ -974,17 +985,15 @@ operator|>=
 name|count
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"candidate region: [%#lx, %#lx], size %#lx\n"
-argument_list|,
+operator|,
 name|rend
-argument_list|,
+operator|,
 name|rstart
-argument_list|,
+operator|,
 operator|(
 name|rend
 operator|-
@@ -992,11 +1001,9 @@ name|rstart
 operator|+
 literal|1
 operator|)
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMAN_DEBUG */
 if|if
 condition|(
 operator|(
@@ -1014,17 +1021,13 @@ operator|==
 name|count
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"candidate region is entire chunk\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMAN_DEBUG */
 name|rv
 operator|=
 name|s
@@ -1140,46 +1143,42 @@ operator|->
 name|r_end
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"splitting region in three parts: "
 literal|"[%#lx, %#lx]; [%#lx, %#lx]; [%#lx, %#lx]\n"
-argument_list|,
+operator|,
 name|s
 operator|->
 name|r_start
-argument_list|,
+operator|,
 name|rv
 operator|->
 name|r_start
 operator|-
 literal|1
-argument_list|,
+operator|,
 name|rv
 operator|->
 name|r_start
-argument_list|,
+operator|,
 name|rv
 operator|->
 name|r_end
-argument_list|,
+operator|,
 name|rv
 operator|->
 name|r_end
 operator|+
 literal|1
-argument_list|,
+operator|,
 name|s
 operator|->
 name|r_end
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMAN_DEBUG */
 comment|/* 				 * We are allocating in the middle. 				 */
 name|r
 operator|=
@@ -1320,17 +1319,13 @@ operator|->
 name|r_start
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"allocating from the beginning\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMAN_DEBUG */
 comment|/* 				 * We are allocating at the beginning. 				 */
 name|s
 operator|->
@@ -1359,17 +1354,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"allocating at the end\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMAN_DEBUG */
 comment|/* 				 * We are allocating at the end. 				 */
 name|s
 operator|->
@@ -1402,17 +1393,13 @@ goto|;
 block|}
 block|}
 comment|/* 	 * Now find an acceptable shared region, if the client's requirements 	 * allow sharing.  By our implementation restriction, a candidate 	 * region must match exactly by both size and sharing type in order 	 * to be considered compatible with the client's request.  (The 	 * former restriction could probably be lifted without too much 	 * additional work, but this does not seem warranted.) 	 */
-ifdef|#
-directive|ifdef
-name|RMAN_DEBUG
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"no unshared regions found\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* RMAN_DEBUG */
 if|if
 condition|(
 operator|(
