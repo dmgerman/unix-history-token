@@ -1365,6 +1365,58 @@ comment|/* pri. error during read */
 end_comment
 
 begin_comment
+comment|/* Definitions for the psycho configuration space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCS_DEVICE
+value|0
+end_define
+
+begin_comment
+comment|/* Device number of psycho CS entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCS_FUNC
+value|0
+end_define
+
+begin_comment
+comment|/* Function number of psycho CS entry */
+end_comment
+
+begin_comment
+comment|/* Non-Standard registers in the configration space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCSR_SECBUS
+value|0x40
+end_define
+
+begin_comment
+comment|/* Secondary bus number register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCSR_SUBBUS
+value|0x41
+end_define
+
+begin_comment
+comment|/* Subordinate bus number register */
+end_comment
+
+begin_comment
 comment|/*  * these are the PROM structures we grovel  */
 end_comment
 
