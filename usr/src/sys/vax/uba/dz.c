@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.20	%G%	*/
+comment|/*	dz.c	4.21	%G%	*/
 end_comment
 
 begin_include
@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/uba.h"
+file|"../h/ubavar.h"
 end_include
 
 begin_include
@@ -146,7 +146,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|dzinfo
 index|[
@@ -632,7 +632,7 @@ name|ui
 argument_list|)
 specifier|register
 expr|struct
-name|uba_dinfo
+name|uba_device
 operator|*
 name|ui
 expr_stmt|;
@@ -2835,7 +2835,7 @@ name|tp
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
