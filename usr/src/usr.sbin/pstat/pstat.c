@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pstat.c	4.20 (Berkeley) %G%"
+literal|"@(#)pstat.c	4.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4184,7 +4184,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   LOC   TYPE    FLG  CNT  MSG    DATA    OFFSET\n"
+literal|"   LOC   TYPE    FLG     CNT  MSG    DATA    OFFSET\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4299,6 +4299,39 @@ operator|&
 name|FAPPEND
 argument_list|,
 literal|'A'
+argument_list|)
+expr_stmt|;
+name|putf
+argument_list|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|FSHLOCK
+argument_list|,
+literal|'S'
+argument_list|)
+expr_stmt|;
+name|putf
+argument_list|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|FEXLOCK
+argument_list|,
+literal|'X'
+argument_list|)
+expr_stmt|;
+name|putf
+argument_list|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|FASYNC
+argument_list|,
+literal|'I'
 argument_list|)
 expr_stmt|;
 name|printf
