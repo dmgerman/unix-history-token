@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.44	83/03/19	*/
+comment|/*	uipc_syscalls.c	4.45	83/03/23	*/
 end_comment
 
 begin_include
@@ -2514,7 +2514,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|u
@@ -3288,6 +3288,21 @@ argument_list|,
 name|MT_SONAME
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENOBUFS
+expr_stmt|;
+return|return;
+block|}
 name|u
 operator|.
 name|u_error
@@ -3468,6 +3483,17 @@ argument_list|,
 name|MT_SONAME
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 name|m
 operator|->
 name|m_len
