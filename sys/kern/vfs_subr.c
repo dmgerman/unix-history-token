@@ -13006,6 +13006,12 @@ name|KINFO_VNODESLOP
 value|10
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_comment
 comment|/*  * Dump vnode list (via sysctl).  */
 end_comment
@@ -13467,6 +13473,11 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Check to see if a filesystem is mounted on a block device.  */
