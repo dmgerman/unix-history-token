@@ -16,24 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -47,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
 end_include
 
 begin_include
@@ -82,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netatm/atm_sap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netatm/atm_cm.h>
 end_include
 
@@ -95,18 +65,6 @@ begin_include
 include|#
 directive|include
 file|<netatm/atm_if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatm/atm_stack.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatm/atm_pcb.h>
 end_include
 
 begin_include
