@@ -256,12 +256,15 @@ name|bus_space_unmap
 parameter_list|(
 name|bus_space_tag_t
 name|t
+name|__unused
 parameter_list|,
 name|bus_space_handle_t
 name|bsh
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|size
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -303,6 +306,7 @@ name|bus_space_subregion
 parameter_list|(
 name|bus_space_tag_t
 name|t
+name|__unused
 parameter_list|,
 name|bus_space_handle_t
 name|bsh
@@ -312,6 +316,7 @@ name|offset
 parameter_list|,
 name|bus_size_t
 name|size
+name|__unused
 parameter_list|,
 name|bus_space_handle_t
 modifier|*
@@ -403,12 +408,15 @@ name|bus_space_free
 parameter_list|(
 name|bus_space_tag_t
 name|t
+name|__unused
 parameter_list|,
 name|bus_space_handle_t
 name|bsh
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|size
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -887,6 +895,9 @@ else|else
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	movb (%2),%%al				\n\ 			stosb					\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -920,6 +931,8 @@ operator|,
 literal|"memory"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1000,6 +1013,9 @@ else|else
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	movw (%2),%%ax				\n\ 			stosw					\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -1033,6 +1049,8 @@ operator|,
 literal|"memory"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1113,6 +1131,9 @@ else|else
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	movl (%2),%%eax				\n\ 			stosl					\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -1146,6 +1167,8 @@ operator|,
 literal|"memory"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1307,7 +1330,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	inb %w2,%%al				\n\ 			stosb					\n\ 			incl %2					\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -1346,6 +1371,8 @@ operator|,
 literal|"cc"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1384,7 +1411,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsb"					:
 literal|"=D"
 operator|(
@@ -1422,6 +1451,11 @@ literal|"cc"
 block|)
 empty_stmt|;
 end_else
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 unit|}
@@ -1481,7 +1515,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	inw %w2,%%ax				\n\ 			stosw					\n\ 			addl $2,%2				\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -1520,6 +1556,8 @@ operator|,
 literal|"cc"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1558,7 +1596,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsw"					:
 literal|"=D"
 operator|(
@@ -1596,6 +1636,11 @@ literal|"cc"
 block|)
 empty_stmt|;
 end_else
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 unit|}
@@ -1655,7 +1700,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	inl %w2,%%eax				\n\ 			stosl					\n\ 			addl $4,%2				\n\ 			loop 1b"				:
 literal|"=D"
 operator|(
@@ -1694,6 +1741,8 @@ operator|,
 literal|"cc"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1732,7 +1781,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsl"					:
 literal|"=D"
 operator|(
@@ -1770,6 +1821,11 @@ literal|"cc"
 block|)
 empty_stmt|;
 end_else
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 unit|}
@@ -2296,6 +2352,9 @@ else|else
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsb					\n\ 			movb %%al,(%2)				\n\ 			loop 1b"				:
 literal|"=S"
 operator|(
@@ -2331,6 +2390,8 @@ operator|,
 literal|"cc"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2412,6 +2473,9 @@ else|else
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsw					\n\ 			movw %%ax,(%2)				\n\ 			loop 1b"				:
 literal|"=S"
 operator|(
@@ -2447,6 +2511,8 @@ operator|,
 literal|"cc"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2528,6 +2594,9 @@ else|else
 endif|#
 directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsl					\n\ 			movl %%eax,(%2)				\n\ 			loop 1b"				:
 literal|"=S"
 operator|(
@@ -2563,6 +2632,8 @@ operator|,
 literal|"cc"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2740,7 +2811,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsb					\n\ 			outb %%al,%w0				\n\ 			incl %0					\n\ 			loop 1b"				:
 literal|"=d"
 operator|(
@@ -2779,6 +2852,8 @@ operator|,
 literal|"cc"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2817,7 +2892,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsb"					:
 literal|"=D"
 operator|(
@@ -2855,6 +2932,11 @@ literal|"cc"
 block|)
 empty_stmt|;
 end_else
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 unit|}
@@ -2915,7 +2997,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsw					\n\ 			outw %%ax,%w0				\n\ 			addl $2,%0				\n\ 			loop 1b"				:
 literal|"=d"
 operator|(
@@ -2954,6 +3038,8 @@ operator|,
 literal|"cc"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2992,7 +3078,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsw"					:
 literal|"=D"
 operator|(
@@ -3030,6 +3118,11 @@ literal|"cc"
 block|)
 empty_stmt|;
 end_else
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 unit|}
@@ -3090,7 +3183,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsl					\n\ 			outl %%eax,%w0				\n\ 			addl $4,%0				\n\ 			loop 1b"				:
 literal|"=d"
 operator|(
@@ -3129,6 +3224,8 @@ operator|,
 literal|"cc"
 block|)
 empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3167,7 +3264,9 @@ name|bsh
 operator|+
 name|offset
 decl_stmt|;
-block|\
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsl"					:
 literal|"=D"
 operator|(
@@ -3205,6 +3304,11 @@ literal|"cc"
 block|)
 empty_stmt|;
 end_else
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 unit|}
@@ -5061,20 +5165,27 @@ name|bus_space_barrier
 parameter_list|(
 name|bus_space_tag_t
 name|tag
+name|__unused
 parameter_list|,
 name|bus_space_handle_t
 name|bsh
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|offset
+name|__unused
 parameter_list|,
 name|bus_size_t
 name|len
+name|__unused
 parameter_list|,
 name|int
 name|flags
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__GNUC__
 if|if
 condition|(
 name|flags
@@ -5084,6 +5195,8 @@ condition|)
 asm|__asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
 else|else
 asm|__asm __volatile("" : : : "memory");
+endif|#
+directive|endif
 block|}
 end_function
 
