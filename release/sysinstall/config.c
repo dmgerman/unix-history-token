@@ -5037,7 +5037,7 @@ argument_list|(
 literal|"Unable to open /etc/periodic.conf.\n"
 literal|"The daily cleanup scripts might generate errors when\n"
 literal|"trying to run some sendmail only cleanup scripts.\n"
-literal|"Please consult the documentation for the postfix port on how to\n"
+literal|"Please consult the documentation for the exim port on how to\n"
 literal|"fix this."
 argument_list|)
 expr_stmt|;
