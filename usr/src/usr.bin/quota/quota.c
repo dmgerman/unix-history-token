@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quota.c	5.2 (Berkeley) %G%"
+literal|"@(#)quota.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1045,16 +1045,14 @@ name|fs
 operator|->
 name|fs_file
 argument_list|,
-operator|(
+name|dbtob
+argument_list|(
 name|dqblk
 operator|.
 name|dqb_curblocks
-operator|/
-name|btodb
-argument_list|(
-literal|1024
 argument_list|)
-operator|)
+operator|/
+literal|1024
 argument_list|,
 operator|(
 name|msgb
@@ -1070,27 +1068,23 @@ literal|' '
 else|:
 literal|'*'
 argument_list|,
-operator|(
+name|dbtob
+argument_list|(
 name|dqblk
 operator|.
 name|dqb_bsoftlimit
-operator|/
-name|btodb
-argument_list|(
-literal|1024
 argument_list|)
-operator|)
+operator|/
+literal|1024
 argument_list|,
-operator|(
+name|dbtob
+argument_list|(
 name|dqblk
 operator|.
 name|dqb_bhardlimit
-operator|/
-name|btodb
-argument_list|(
-literal|1024
 argument_list|)
-operator|)
+operator|/
+literal|1024
 argument_list|,
 name|dwarn
 argument_list|,
