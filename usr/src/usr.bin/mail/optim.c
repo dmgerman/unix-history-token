@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)optim.c	2.6 %G%"
+literal|"@(#)optim.c	2.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3067,6 +3067,12 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GETHOST
+end_ifdef
+
 begin_comment
 comment|/*  * Initialize the network name of the current host.  */
 end_comment
@@ -3156,6 +3162,12 @@ name|host
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|GETHOST
+end_endif
 
 begin_comment
 comment|/*  * Code to twist around arpa net names.  */
