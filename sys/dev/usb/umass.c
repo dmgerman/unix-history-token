@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 MAEKAWA Masahide<bishop@rr.iij4u.or.jp>,  *		      Nick Hibma<n_hibma@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 1999 MAEKAWA Masahide<bishop@rr.iij4u.or.jp>,  *		      Nick Hibma<n_hibma@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  *	$NetBSD: umass.c,v 1.28 2000/04/02 23:46:53 augustss Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Universal Serial Bus Mass Storage Class Bulk-Only Transport  * http://www.usb.org/developers/usbmassbulk_09.pdf  * XXX Add URL to CBI spec in www.usb.org  */
+comment|/*  * Ported to NetBSD by Lennart Augustsson<augustss@netbsd.org>.  * Parts of the code written my Jason R. Thorpe<thorpej@shagadelic.org>.  */
 end_comment
 
 begin_comment
-comment|/*  * The driver handles 3 Wire Protocols  * - Command/Bulk/Interrupt (CBI)  * - Command/Bulk/Interrupt with Command Completion Interrupt (CBI with CCI)  * - Mass Storage Bulk-Only (BBB)  *   (BBB refers Bulk/Bulk/Bulk for Command/Data/Status phases)  *  * Over these wire protocols it handles the following command protocols  * - SCSI  * - UFI (floppy command set)  * - 8070i (ATA/ATAPI)  *  * UFI and 8070i (ATAPI) are transformed versions of the SCSI command set. The  * sc->transform method is used to convert the commands into the appropriate  * format (if at all necessary). For example, UFI requires all commands to be  * 12 bytes in length amongst other things.  *  * The source code below is marked and can be split into a number of pieces  * (in this order):  *  * - probe/attach/detach  * - generic transfer routines  * - BBB  * - CBI  * - CBI_I (in addition to functions from CBI)  * - CAM (Common Access Method)  * - SCSI  * - UFI  * - 8070i (ATAPI)  *  * The protocols are implemented using a state machine, for the transfers as  * well as for the resets. The state machine is contained in umass_*_state.  * The state machine is started through either umass_*_transfer or  * umass_*_reset.  *  * The reason for doing this is a) CAM performs a lot better this way and b) it  * avoids using tsleep from interrupt context (for example after a failed  * transfer).  */
+comment|/*  * The PDF documentation can be found at http://www.usb.org/developers/  */
+end_comment
+
+begin_comment
+comment|/*  * The driver handles 3 Wire Protocols  * - Command/Bulk/Interrupt (CBI)  * - Command/Bulk/Interrupt with Command Completion Interrupt (CBI with CCI)  * - Mass Storage Bulk-Only (BBB)  *   (BBB refers Bulk/Bulk/Bulk for Command/Data/Status phases)  *  * Over these wire protocols it handles the following command protocols  * - SCSI  * - UFI (floppy command set)  * - 8070i (ATAPI)  *  * UFI and 8070i (ATAPI) are transformed versions of the SCSI command set. The  * sc->transform method is used to convert the commands into the appropriate  * format (if at all necessary). For example, UFI requires all commands to be  * 12 bytes in length amongst other things.  *  * The source code below is marked and can be split into a number of pieces  * (in this order):  *  * - probe/attach/detach  * - generic transfer routines  * - BBB  * - CBI  * - CBI_I (in addition to functions from CBI)  * - CAM (Common Access Method)  * - SCSI  * - UFI  * - 8070i (ATAPI)  *  * The protocols are implemented using a state machine, for the transfers as  * well as for the resets. The state machine is contained in umass_*_state.  * The state machine is started through either umass_*_transfer or  * umass_*_reset.  *  * The reason for doing this is a) CAM performs a lot better this way and b) it  * avoids using tsleep from interrupt context (for example after a failed  * transfer).  */
 end_comment
 
 begin_comment
 comment|/*  * The SCSI related part of this driver has been derived from the  * dev/ppbus/vpo.c driver, by Nicolas Souchu (nsouch@freebsd.org).  *  * The CAM layer uses so called actions which are messages sent to the host  * adapter for completion. The actions come in through umass_cam_action. The  * appropriate block of routines is called depending on the transport protocol  * in use. When the transfer has finished, these routines call  * umass_cam_cb again to complete the CAM command.  */
-end_comment
-
-begin_comment
-comment|/* XXX Should we split the driver into a number of files?  umass.c,  *     umass_scsi.c, umass_atapi.c, umass_ufi.c, umass_bbb.c, umass_cbi.c or  *     something similar?  */
 end_comment
 
 begin_comment
@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -57,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
 end_include
 
 begin_include
@@ -220,6 +220,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|UDMASS_CMD
+value|(UDMASS_SCSI|UDMASS_UFI|UDMASS_ATAPI)
+end_define
+
+begin_define
+define|#
+directive|define
 name|UDMASS_USB
 value|0x00100000
 end_define
@@ -249,6 +256,13 @@ end_define
 begin_comment
 comment|/* CBI transfers */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UDMASS_WIRE
+value|(UDMASS_BBB|UDMASS_CBI)
+end_define
 
 begin_define
 define|#
@@ -490,6 +504,17 @@ end_define
 
 begin_comment
 comment|/* Bulk-Only reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UR_BBB_GET_MAX_LUN
+value|0xfe
+end_define
+
+begin_comment
+comment|/* Get maximum lun */
 end_comment
 
 begin_comment
@@ -903,6 +928,10 @@ name|USBBASEDEVICE
 name|sc_dev
 decl_stmt|;
 comment|/* base device */
+name|usbd_device_handle
+name|sc_udev
+decl_stmt|;
+comment|/* USB device */
 name|unsigned
 name|char
 name|flags
@@ -935,7 +964,7 @@ name|unsigned
 name|char
 name|quirks
 decl_stmt|;
-comment|/* The drive does not support Test Unit Ready. Convert to 	 * Start Unit 	 * Y-E Data 	 */
+comment|/* The drive does not support Test Unit Ready. Convert to 	 * Start Unit 	 * Y-E Data, Zip 100 	 */
 define|#
 directive|define
 name|NO_TEST_UNIT_READY
@@ -945,7 +974,11 @@ define|#
 directive|define
 name|RS_NO_CLEAR_UA
 value|0x02
-comment|/* no REQUEST SENSE on INQUIRY*/
+comment|/* The drive does not support START STOP. 	 * Shuttle E-USB 	 */
+define|#
+directive|define
+name|NO_START_STOP
+value|0x04
 name|unsigned
 name|int
 name|proto
@@ -1286,6 +1319,10 @@ name|int
 name|transfer_speed
 decl_stmt|;
 comment|/* in kb/s */
+name|int
+name|maxlun
+decl_stmt|;
+comment|/* maximum LUN number */
 block|}
 struct|;
 end_struct
@@ -1392,6 +1429,29 @@ name|sc
 operator|,
 name|usbd_interface_handle
 name|iface
+operator|,
+name|usbd_device_handle
+name|udev
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* quirk functions */
+end_comment
+
+begin_decl_stmt
+name|Static
+name|void
+name|umass_init_shuttle
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|umass_softc
+operator|*
+name|sc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1446,7 +1506,7 @@ operator|*
 name|sc
 operator|,
 name|usbd_device_handle
-name|dev
+name|udev
 operator|,
 name|usb_device_request_t
 operator|*
@@ -1601,6 +1661,22 @@ name|priv
 operator|,
 name|usbd_status
 name|err
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Static
+name|int
+name|umass_bbb_get_max_lun
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|umass_softc
+operator|*
+name|sc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2143,11 +2219,11 @@ name|sc
 parameter_list|,
 name|usbd_interface_handle
 name|iface
+parameter_list|,
+name|usbd_device_handle
+name|udev
 parameter_list|)
 block|{
-name|usbd_device_handle
-name|dev
-decl_stmt|;
 name|usb_device_descriptor_t
 modifier|*
 name|dd
@@ -2156,6 +2232,12 @@ name|usb_interface_descriptor_t
 modifier|*
 name|id
 decl_stmt|;
+name|sc
+operator|->
+name|sc_udev
+operator|=
+name|udev
+expr_stmt|;
 comment|/* 	 * Fill in sc->drive and sc->proto and return a match 	 * value if both are determined and 0 otherwise. 	 */
 name|sc
 operator|->
@@ -2175,19 +2257,11 @@ name|transfer_speed
 operator|=
 name|UMASS_DEFAULT_TRANSFER_SPEED
 expr_stmt|;
-name|usbd_interface2device_handle
-argument_list|(
-name|iface
-argument_list|,
-operator|&
-name|dev
-argument_list|)
-expr_stmt|;
 name|dd
 operator|=
 name|usbd_get_device_descriptor
 argument_list|(
-name|dev
+name|udev
 argument_list|)
 expr_stmt|;
 if|if
@@ -2240,8 +2314,18 @@ name|PROTO_CBI
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|->
+name|quirks
+operator||=
+name|NO_TEST_UNIT_READY
+operator||
+name|NO_START_STOP
+expr_stmt|;
 return|return
+operator|(
 name|UMATCH_VENDOR_PRODUCT
+operator|)
 return|;
 block|}
 if|if
@@ -2340,7 +2424,9 @@ operator|=
 name|UMASS_FLOPPY_TRANSFER_SPEED
 expr_stmt|;
 return|return
+operator|(
 name|UMATCH_VENDOR_PRODUCT_REV
+operator|)
 return|;
 block|}
 name|id
@@ -2352,8 +2438,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|id
+operator|==
+name|NULL
 operator|||
 name|id
 operator|->
@@ -2362,7 +2449,9 @@ operator|!=
 name|UCLASS_MASS
 condition|)
 return|return
+operator|(
 name|UMATCH_NONE
+operator|)
 return|;
 switch|switch
 condition|(
@@ -2397,6 +2486,9 @@ operator||=
 name|PROTO_UFI
 expr_stmt|;
 break|break;
+case|case
+name|USUBCLASS_SFF8020I
+case|:
 case|case
 name|USUBCLASS_SFF8070I
 case|:
@@ -2505,6 +2597,12 @@ name|transfer_speed
 operator|=
 name|UMASS_ZIP100_TRANSFER_SPEED
 expr_stmt|;
+name|sc
+operator|->
+name|quirks
+operator||=
+name|NO_TEST_UNIT_READY
+expr_stmt|;
 break|break;
 default|default:
 name|DPRINTF
@@ -2589,6 +2687,10 @@ argument_list|,
 name|uaa
 operator|->
 name|iface
+argument_list|,
+name|uaa
+operator|->
+name|device
 argument_list|)
 operator|)
 return|;
@@ -2674,6 +2776,10 @@ argument_list|,
 name|sc
 operator|->
 name|iface
+argument_list|,
+name|uaa
+operator|->
+name|device
 argument_list|)
 expr_stmt|;
 name|id
@@ -3471,6 +3577,48 @@ directive|endif
 comment|/* From here onwards the device can be used. */
 if|if
 condition|(
+name|sc
+operator|->
+name|drive
+operator|==
+name|SHUTTLE_EUSB
+condition|)
+name|umass_init_shuttle
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Get the maximum LUN supported by the device. 	 */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|proto
+operator|&
+name|PROTO_WIRE
+operator|)
+operator|==
+name|PROTO_BBB
+condition|)
+name|sc
+operator|->
+name|maxlun
+operator|=
+name|umass_bbb_get_max_lun
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|maxlun
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|sc
 operator|->
@@ -3751,6 +3899,88 @@ return|;
 block|}
 end_block
 
+begin_function
+name|Static
+name|void
+name|umass_init_shuttle
+parameter_list|(
+name|struct
+name|umass_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|usb_device_request_t
+name|req
+decl_stmt|;
+name|u_char
+name|status
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* The Linux driver does this, but no one can tell us what the 	 * command does. 	 */
+name|req
+operator|.
+name|bmRequestType
+operator|=
+name|UT_READ_VENDOR_DEVICE
+expr_stmt|;
+name|req
+operator|.
+name|bRequest
+operator|=
+literal|1
+expr_stmt|;
+name|USETW
+argument_list|(
+name|req
+operator|.
+name|wValue
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|USETW
+argument_list|(
+name|req
+operator|.
+name|wIndex
+argument_list|,
+name|sc
+operator|->
+name|ifaceno
+argument_list|)
+expr_stmt|;
+name|USETW
+argument_list|(
+name|req
+operator|.
+name|wLength
+argument_list|,
+sizeof|sizeof
+name|status
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|usbd_do_request
+argument_list|(
+name|sc
+operator|->
+name|sc_udev
+argument_list|,
+operator|&
+name|req
+argument_list|,
+operator|&
+name|status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Generic functions to handle transfers  */
 end_comment
@@ -3876,7 +4106,7 @@ modifier|*
 name|sc
 parameter_list|,
 name|usbd_device_handle
-name|dev
+name|udev
 parameter_list|,
 name|usb_device_request_t
 modifier|*
@@ -3907,7 +4137,7 @@ name|usbd_setup_default_xfer
 argument_list|(
 name|xfer
 argument_list|,
-name|dev
+name|udev
 argument_list|,
 operator|(
 name|void
@@ -4006,7 +4236,7 @@ name|xfer
 parameter_list|)
 block|{
 name|usbd_device_handle
-name|dev
+name|udev
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -4033,7 +4263,7 @@ operator|->
 name|iface
 argument_list|,
 operator|&
-name|dev
+name|udev
 argument_list|)
 expr_stmt|;
 name|sc
@@ -4100,7 +4330,7 @@ name|umass_setup_ctrl_transfer
 argument_list|(
 name|sc
 argument_list|,
-name|dev
+name|udev
 argument_list|,
 operator|&
 name|sc
@@ -4181,7 +4411,7 @@ name|status
 parameter_list|)
 block|{
 name|usbd_device_handle
-name|dev
+name|udev
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -4236,7 +4466,7 @@ operator|->
 name|iface
 argument_list|,
 operator|&
-name|dev
+name|udev
 argument_list|)
 expr_stmt|;
 comment|/* reset is a class specific interface write */
@@ -4295,7 +4525,7 @@ name|umass_setup_ctrl_transfer
 argument_list|(
 name|sc
 argument_list|,
-name|dev
+name|udev
 argument_list|,
 operator|&
 name|sc
@@ -5943,6 +6173,181 @@ block|}
 block|}
 end_function
 
+begin_function
+name|Static
+name|int
+name|umass_bbb_get_max_lun
+parameter_list|(
+name|struct
+name|umass_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|usbd_device_handle
+name|udev
+decl_stmt|;
+name|usb_device_request_t
+name|req
+decl_stmt|;
+name|usbd_status
+name|err
+decl_stmt|;
+name|usb_interface_descriptor_t
+modifier|*
+name|id
+decl_stmt|;
+name|int
+name|maxlun
+init|=
+literal|0
+decl_stmt|;
+name|u_int8_t
+name|buf
+init|=
+literal|0
+decl_stmt|;
+name|usbd_interface2device_handle
+argument_list|(
+name|sc
+operator|->
+name|iface
+argument_list|,
+operator|&
+name|udev
+argument_list|)
+expr_stmt|;
+name|id
+operator|=
+name|usbd_get_interface_descriptor
+argument_list|(
+name|sc
+operator|->
+name|iface
+argument_list|)
+expr_stmt|;
+comment|/* The Get Max Lun command is a class-specific request. */
+name|req
+operator|.
+name|bmRequestType
+operator|=
+name|UT_READ_CLASS_INTERFACE
+expr_stmt|;
+name|req
+operator|.
+name|bRequest
+operator|=
+name|UR_BBB_GET_MAX_LUN
+expr_stmt|;
+name|USETW
+argument_list|(
+name|req
+operator|.
+name|wValue
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|USETW
+argument_list|(
+name|req
+operator|.
+name|wIndex
+argument_list|,
+name|id
+operator|->
+name|bInterfaceNumber
+argument_list|)
+expr_stmt|;
+name|USETW
+argument_list|(
+name|req
+operator|.
+name|wLength
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|usbd_do_request
+argument_list|(
+name|udev
+argument_list|,
+operator|&
+name|req
+argument_list|,
+operator|&
+name|buf
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|err
+condition|)
+block|{
+case|case
+name|USBD_NORMAL_COMPLETION
+case|:
+name|DPRINTF
+argument_list|(
+name|UDMASS_BBB
+argument_list|,
+operator|(
+literal|"%s: Max Lun is %d\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+operator|,
+name|maxlun
+operator|)
+argument_list|)
+expr_stmt|;
+name|maxlun
+operator|=
+name|buf
+expr_stmt|;
+break|break;
+case|case
+name|USBD_STALLED
+case|:
+case|case
+name|USBD_SHORT_XFER
+case|:
+default|default:
+comment|/* Device doesn't support Get Max Lun request. */
+name|printf
+argument_list|(
+literal|"%s: Get Max Lun not supported (%s)\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+name|usbd_errstr
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX Should we port_reset the device? */
+break|break;
+block|}
+return|return
+operator|(
+name|maxlun
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Command/Bulk/Interrupt (CBI) specific functions  */
 end_comment
@@ -5969,7 +6374,7 @@ name|xfer
 parameter_list|)
 block|{
 name|usbd_device_handle
-name|dev
+name|udev
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -5999,7 +6404,7 @@ operator|->
 name|iface
 argument_list|,
 operator|&
-name|dev
+name|udev
 argument_list|)
 expr_stmt|;
 name|sc
@@ -6058,7 +6463,7 @@ name|umass_setup_ctrl_transfer
 argument_list|(
 name|sc
 argument_list|,
-name|dev
+name|udev
 argument_list|,
 operator|&
 name|sc
@@ -7600,7 +8005,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * CAM specific functions (used by SCSI, UFI, 8070 (ATAPI))  */
+comment|/*  * CAM specific functions (used by SCSI, UFI, 8070i (ATAPI))  */
 end_comment
 
 begin_function
@@ -8946,13 +9351,27 @@ operator|=
 name|UMASS_SCSIID_MAX
 expr_stmt|;
 comment|/* one target */
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
 name|cpi
 operator|->
 name|max_lun
 operator|=
 literal|0
 expr_stmt|;
-comment|/* no LUN's supported */
+else|else
+name|cpi
+operator|->
+name|max_lun
+operator|=
+name|sc
+operator|->
+name|maxlun
+expr_stmt|;
 name|cpi
 operator|->
 name|initiator_id
@@ -10162,6 +10581,98 @@ modifier|*
 name|rcmdlen
 parameter_list|)
 block|{
+switch|switch
+condition|(
+name|cmd
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+name|TEST_UNIT_READY
+case|:
+if|if
+condition|(
+name|sc
+operator|->
+name|quirks
+operator|&
+name|NO_TEST_UNIT_READY
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+operator|*
+name|rcmdlen
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|scsi_start_stop_unit
+argument_list|)
+argument_list|,
+operator|(
+literal|"rcmdlen = %d< %d, buffer too small"
+operator|,
+name|rcmdlen
+operator|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|scsi_start_stop_unit
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|UDMASS_SCSI
+argument_list|,
+operator|(
+literal|"%s: Converted TEST_UNIT_READY "
+literal|"to START_UNIT\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|*
+name|rcmd
+argument_list|,
+literal|0
+argument_list|,
+operator|*
+name|rcmdlen
+argument_list|)
+expr_stmt|;
+name|cmd
+index|[
+literal|0
+index|]
+operator|=
+name|START_STOP_UNIT
+expr_stmt|;
+name|cmd
+index|[
+literal|4
+index|]
+operator|=
+name|SSS_START
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+comment|/* fallthrough */
+default|default:
 operator|*
 name|rcmd
 operator|=
@@ -10173,6 +10684,7 @@ name|rcmdlen
 operator|=
 name|cmdlen
 expr_stmt|;
+block|}
 return|return
 literal|1
 return|;
@@ -10218,7 +10730,7 @@ name|KASSERT
 argument_list|(
 operator|*
 name|rcmdlen
-operator|<
+operator|>=
 name|UFI_COMMAND_LENGTH
 argument_list|,
 operator|(
@@ -10426,7 +10938,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 8070 (ATAPI) specific functions  */
+comment|/*  * 8070i (ATAPI) specific functions  */
 end_comment
 
 begin_function
@@ -10463,7 +10975,7 @@ name|KASSERT
 argument_list|(
 operator|*
 name|rcmdlen
-operator|<
+operator|>=
 name|ATAPI_COMMAND_LENGTH
 argument_list|,
 operator|(
