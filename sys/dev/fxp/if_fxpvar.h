@@ -505,15 +505,6 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
-name|struct
-name|sysctl_ctx_list
-name|sysctl_ctx
-decl_stmt|;
-name|struct
-name|sysctl_oid
-modifier|*
-name|sysctl_tree
-decl_stmt|;
 name|int
 name|tunable_int_delay
 decl_stmt|;
@@ -522,6 +513,14 @@ name|int
 name|tunable_bundle_max
 decl_stmt|;
 comment|/* max # frames per interrupt (ucode) */
+name|int
+name|tunable_noflow
+decl_stmt|;
+comment|/* flow control disabled */
+name|int
+name|rnr
+decl_stmt|;
+comment|/* RNR events */
 name|int
 name|eeprom_size
 decl_stmt|;
