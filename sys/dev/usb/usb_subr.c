@@ -7268,9 +7268,24 @@ argument_list|,
 name|DETACH_FORCE
 argument_list|)
 expr_stmt|;
+name|dev
+operator|->
+name|subdevs
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 block|}
-comment|/*usbd_add_dev_event(USB_EVENT_DEVICE_DETACH, dev);*/
+name|usbd_add_dev_event
+argument_list|(
+name|USB_EVENT_DEVICE_DETACH
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 name|dev
 operator|->
 name|bus
