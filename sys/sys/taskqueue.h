@@ -251,7 +251,7 @@ value|struct taskqueue *taskqueue_##name;					\ 									\ static void								\ 
 end_define
 
 begin_comment
-comment|/*  * This queue is serviced by a software interrupt handler.  To enqueue  * a task, call taskqueue_enqueue(&taskqueue_swi,&task).  */
+comment|/*  * This queue is serviced by a software interrupt handler.  To enqueue  * a task, call taskqueue_enqueue(taskqueue_swi,&task).  */
 end_comment
 
 begin_expr_stmt
