@@ -809,16 +809,7 @@ name|bn
 operator|+=
 name|thiscc
 operator|/
-operator|(
-name|idc_type
-index|[
-name|dn
-index|]
-condition|?
-literal|512
-else|:
-literal|256
-operator|)
+name|NBPG
 expr_stmt|;
 name|ubinfo
 operator|+=
