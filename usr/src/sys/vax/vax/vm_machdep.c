@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vm_machdep.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vm_machdep.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -880,29 +880,17 @@ argument_list|)
 expr_stmt|;
 name|fpte
 operator|=
-operator|&
-name|Sysmap
-index|[
-name|btop
+name|kvtopte
 argument_list|(
 name|from
-operator|-
-literal|0x80000000
 argument_list|)
-index|]
 expr_stmt|;
 name|tpte
 operator|=
-operator|&
-name|Sysmap
-index|[
-name|btop
+name|kvtopte
 argument_list|(
 name|to
-operator|-
-literal|0x80000000
 argument_list|)
-index|]
 expr_stmt|;
 while|while
 condition|(
