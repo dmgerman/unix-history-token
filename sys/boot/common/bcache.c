@@ -161,6 +161,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|bcache_flushes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|bcache_bcount
 decl_stmt|;
 end_decl_stmt
@@ -208,9 +215,6 @@ name|size_t
 name|bsize
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 comment|/* discard any old contents */
 if|if
 condition|(
@@ -341,7 +345,30 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* Invalidate the cache */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Flush the cache  */
+end_comment
+
+begin_function
+name|void
+name|bcache_flush
+parameter_list|()
+block|{
+name|int
+name|i
+decl_stmt|;
+name|bcache_flushes
+operator|++
+expr_stmt|;
+comment|/* Flush the cache */
 for|for
 control|(
 name|i
@@ -377,11 +404,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -396,6 +418,9 @@ parameter_list|(
 name|void
 modifier|*
 name|devdata
+parameter_list|,
+name|int
+name|unit
 parameter_list|,
 name|int
 name|rw
@@ -415,6 +440,13 @@ modifier|*
 name|rsize
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|bcache_unit
+init|=
+operator|-
+literal|1
+decl_stmt|;
 name|struct
 name|bcache_devdata
 modifier|*
@@ -448,6 +480,21 @@ decl_stmt|;
 name|bcache_ops
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|bcache_unit
+operator|!=
+name|unit
+condition|)
+block|{
+name|bcache_flush
+argument_list|()
+expr_stmt|;
+name|bcache_unit
+operator|=
+name|unit
+expr_stmt|;
+block|}
 comment|/* bypass large requests, or when the cache is inactive */
 if|if
 condition|(
@@ -1213,7 +1260,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\n%d ops  %d bypasses  %d hits  %d misses\n"
+literal|"\n%d ops  %d bypasses  %d hits  %d misses  %d flushes\n"
 argument_list|,
 name|bcache_ops
 argument_list|,
@@ -1222,6 +1269,8 @@ argument_list|,
 name|bcache_hits
 argument_list|,
 name|bcache_misses
+argument_list|,
+name|bcache_flushes
 argument_list|)
 expr_stmt|;
 return|return
