@@ -1,14 +1,57 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Getopt for GNU.    NOTE: getopt is now part of the C library, so if you don't know what    "Keep this file name-space clean" means, talk to roland@gnu.ai.mit.edu    before changing it!     Copyright (C) 1987, 88, 89, 90, 91, 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Getopt for GNU.    NOTE: getopt is now part of the C library, so if you don't know what    "Keep this file name-space clean" means, talk to roland@gnu.ai.mit.edu    before changing it!     Copyright (C) 1987, 88, 89, 90, 91, 92, 1993    	Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* AIX requires this to be the first thing in the file. */
+comment|/* NOTE!!!  AIX requires this to be the first thing in the file.    Do not put ANYTHING before it!  */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+end_if
+
+begin_pragma
+pragma|#
+directive|pragma
+name|alloca
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -37,9 +80,22 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|HAVE_ALLOCA_H
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
 name|sparc
 argument_list|)
 operator|&&
+operator|(
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|||
+operator|(
 operator|!
 name|defined
 argument_list|(
@@ -57,6 +113,9 @@ name|defined
 argument_list|(
 name|__svr4__
 argument_list|)
+operator|)
+operator|)
+operator|)
 end_if
 
 begin_include
@@ -70,22 +129,11 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_AIX
-end_ifdef
-
-begin_pragma
-pragma|#
-directive|pragma
-name|alloca
-end_pragma
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_function_decl
 name|char
@@ -106,7 +154,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sparc */
+comment|/* alloca.h */
 end_comment
 
 begin_endif
@@ -118,21 +166,47 @@ begin_comment
 comment|/* not __GNUC__ */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LIBC
-end_ifdef
+begin_if
+if|#
+directive|if
+operator|!
+name|__STDC__
+operator|&&
+operator|!
+name|defined
+argument_list|(
+specifier|const
+argument_list|)
+operator|&&
+name|IN_GCC
+end_if
+
+begin_define
+define|#
+directive|define
+name|const
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* For when compiled as part of the GNU C library.  */
+comment|/* This tells Alpha OSF/1 not to define a getopt prototype in<stdio.h>.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<ansidecl.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NO_PROTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NO_PROTO
+end_define
 
 begin_endif
 endif|#
@@ -144,6 +218,25 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_comment
+comment|/* Comment out all this code if we are using the GNU C Library, and are not    actually compiling the library itself.  This code is part of the GNU C    Library, but also included in many other GNU distributions.  Compiling    and linking in this code is a waste when using the GNU C library    (especially if it is a shared library).  Rather than having every GNU    program understand `configure --with-gnu-libc' and omit the object files,    it is simpler to just do this in the source for each such file.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_LIBC
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|__GNU_LIBRARY__
+argument_list|)
+end_if
 
 begin_comment
 comment|/* This needs to come after some library #include    to get __GNU_LIBRARY__ defined.  */
@@ -161,16 +254,14 @@ directive|undef
 name|alloca
 end_undef
 
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
+begin_comment
+comment|/* Don't include stdlib.h for non-GNU C libraries because some of them    contain conflicting prototypes for getopt.  */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdlib.h>
 end_include
 
 begin_else
@@ -198,32 +289,13 @@ begin_comment
 comment|/* GNU C library.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* If GETOPT_COMPAT is defined, `+' as well as `--' can introduce a    long-named option.  Because this is not POSIX.2 compliant, it is    being phased out. */
+comment|/* If GETOPT_COMPAT is defined, `+' as well as `--' can introduce a    long-named option.  Because this is not POSIX.2 compliant, it is    being phased out.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|GETOPT_COMPAT
-end_define
+begin_comment
+comment|/* #define GETOPT_COMPAT */
+end_comment
 
 begin_comment
 comment|/* This version of `getopt' appears to the caller like standard Unix `getopt'    but it behaves differently for the user, since it allows the user    to intersperse the options with the other arguments.     As `getopt' works, it permutes the elements of ARGV so that,    when it is done, all the options precede everything else.  Thus    all application programs are extended to handle flexible argument order.     Setting the environment variable POSIXLY_CORRECT disables permutation.    Then the behavior is completely standard.     GNU application programs can use a third alternative mode in which    they can distinguish the relative order of options and other arguments.  */
@@ -250,6 +322,10 @@ end_decl_stmt
 
 begin_comment
 comment|/* Index in ARGV of the next element to be scanned.    This is used for communication to and from the caller    and for communication between successive calls to `getopt'.     On entry to `getopt', zero means this is the first call; initialize.     When `getopt' returns EOF, this is the index of the first of the    non-option elements that the caller should itself scan.     Otherwise, `optind' communicates from one call to the next    how much of ARGV has been scanned so far.  */
+end_comment
+
+begin_comment
+comment|/* XXX 1003.2 says this must be 1 before any call.  */
 end_comment
 
 begin_decl_stmt
@@ -285,6 +361,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Set to an option character which was unrecognized.    This must be initialized on some systems to avoid linking in the    system's own getopt implementation.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|optopt
+init|=
+literal|'?'
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Describe how to deal with options that follow non-option ARGV-elements.     If the caller did not specify anything,    the default is REQUIRE_ORDER if the environment variable    POSIXLY_CORRECT is defined, PERMUTE otherwise.     REQUIRE_ORDER means don't recognize them as options;    stop option processing when the first non-option is seen.    This is what Unix does.    This mode of operation is selected by either setting the environment    variable POSIXLY_CORRECT, or using `+' as the first character    of the list of option characters.     PERMUTE is the default.  We permute the contents of ARGV as we scan,    so that eventually all the non-options are at the end.  This allows options    to be given in any order, even with programs that were not written to    expect this.     RETURN_IN_ORDER is an option available to programs that were written    to expect options and other ARGV-elements in any order and that care about    the ordering of the two.  We describe each non-option ARGV-element    as if it were the argument of an option with character code 1.    Using `-' as the first character of the list of option characters    selects this mode of operation.     The special argument `--' forces an end of option-scanning regardless    of the value of `ordering'.  In the case of RETURN_IN_ORDER, only    `--' can cause `getopt' to return EOF with `optind' != ARGC.  */
 end_comment
 
@@ -310,6 +398,10 @@ ifdef|#
 directive|ifdef
 name|__GNU_LIBRARY__
 end_ifdef
+
+begin_comment
+comment|/* We want to avoid inclusion of string.h with non-GNU libraries    because there are many ways it can cause trouble.    On some systems, it contains special magic macros that don't work    in GCC.  */
+end_comment
 
 begin_include
 include|#
@@ -361,13 +453,14 @@ name|char
 modifier|*
 name|my_index
 parameter_list|(
-name|string
+name|str
 parameter_list|,
 name|chr
 parameter_list|)
+specifier|const
 name|char
 modifier|*
-name|string
+name|str
 decl_stmt|;
 name|int
 name|chr
@@ -376,20 +469,24 @@ block|{
 while|while
 condition|(
 operator|*
-name|string
+name|str
 condition|)
 block|{
 if|if
 condition|(
 operator|*
-name|string
+name|str
 operator|==
 name|chr
 condition|)
 return|return
-name|string
+operator|(
+name|char
+operator|*
+operator|)
+name|str
 return|;
-name|string
+name|str
 operator|++
 expr_stmt|;
 block|}
@@ -410,22 +507,18 @@ name|to
 parameter_list|,
 name|size
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|from
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|char
+modifier|*
 name|to
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|int
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -454,7 +547,7 @@ name|i
 index|]
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -540,12 +633,20 @@ decl_stmt|;
 comment|/* Interchange the two blocks of data in ARGV.  */
 name|my_bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|argv
 index|[
 name|first_nonopt
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|temp
 argument_list|,
 name|nonopts_size
@@ -553,12 +654,20 @@ argument_list|)
 expr_stmt|;
 name|my_bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|argv
 index|[
 name|last_nonopt
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|argv
 index|[
@@ -580,8 +689,16 @@ argument_list|)
 expr_stmt|;
 name|my_bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|temp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|argv
 index|[
@@ -1312,7 +1429,7 @@ operator|*
 name|s
 condition|)
 block|{
-comment|/* Don't test has_arg with>, because some C compilers don't 		 allow it to be used on enums. */
+comment|/* Don't test has_arg with>, because some C compilers don't 		 allow it to be used on enums.  */
 if|if
 condition|(
 name|pfound
@@ -1461,6 +1578,15 @@ name|nextchar
 argument_list|)
 expr_stmt|;
 return|return
+name|optstring
+index|[
+literal|0
+index|]
+operator|==
+literal|':'
+condition|?
+literal|':'
+else|:
 literal|'?'
 return|;
 block|}
@@ -1511,7 +1637,7 @@ operator|->
 name|val
 return|;
 block|}
-comment|/* Can't find it as a long option.  If this is not getopt_long_only, 	 or the option starts with '--' or is not a valid short 	 option, then it's an error. 	 Otherwise interpret it as a short option. */
+comment|/* Can't find it as a long option.  If this is not getopt_long_only, 	 or the option starts with '--' or is not a valid short 	 option, then it's an error. 	 Otherwise interpret it as a short option.  */
 if|if
 condition|(
 operator|!
@@ -1612,11 +1738,12 @@ argument_list|)
 expr_stmt|;
 block|}
 name|nextchar
-operator|+=
-name|strlen
-argument_list|(
-name|nextchar
-argument_list|)
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|""
 expr_stmt|;
 name|optind
 operator|++
@@ -1654,8 +1781,8 @@ name|nextchar
 operator|==
 literal|'\0'
 condition|)
-name|optind
 operator|++
+name|optind
 expr_stmt|;
 if|if
 condition|(
@@ -1673,21 +1800,18 @@ condition|(
 name|opterr
 condition|)
 block|{
-if|if
-condition|(
-name|c
-operator|<
-literal|040
-operator|||
-name|c
-operator|>=
-literal|0177
-condition|)
+if|#
+directive|if
+literal|0
+block|if (c< 040 || c>= 0177) 	      fprintf (stderr, "%s: unrecognized option, character code 0%o\n", 		       argv[0], c); 	    else 	      fprintf (stderr, "%s: unrecognized option `-%c'\n", argv[0], c);
+else|#
+directive|else
+comment|/* 1003.2 specifies the format of this message.  */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: unrecognized option, character code 0%o\n"
+literal|"%s: illegal option -- %c\n"
 argument_list|,
 name|argv
 index|[
@@ -1697,22 +1821,13 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: unrecognized option `-%c'\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 block|}
+name|optopt
+operator|=
+name|c
+expr_stmt|;
 return|return
 literal|'?'
 return|;
@@ -1772,7 +1887,7 @@ condition|(
 operator|*
 name|nextchar
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 block|{
 name|optarg
@@ -1796,11 +1911,19 @@ if|if
 condition|(
 name|opterr
 condition|)
+block|{
+if|#
+directive|if
+literal|0
+block|fprintf (stderr, "%s: option `-%c' requires an argument\n", 			     argv[0], c);
+else|#
+directive|else
+comment|/* 1003.2 specifies the format of this message.  */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: option `-%c' requires an argument\n"
+literal|"%s: option requires an argument -- %c\n"
 argument_list|,
 name|argv
 index|[
@@ -1810,6 +1933,27 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
+name|optopt
+operator|=
+name|c
+expr_stmt|;
+if|if
+condition|(
+name|optstring
+index|[
+literal|0
+index|]
+operator|==
+literal|':'
+condition|)
+name|c
+operator|=
+literal|':'
+expr_stmt|;
+else|else
 name|c
 operator|=
 literal|'?'
@@ -1891,6 +2035,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _LIBC or not __GNU_LIBRARY__.  */
+end_comment
 
 begin_escape
 end_escape
