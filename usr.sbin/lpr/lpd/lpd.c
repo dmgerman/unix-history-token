@@ -4122,9 +4122,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-ifdef|#
-directive|ifdef
-name|IPV6_BINDV6ONLY
 if|if
 condition|(
 name|r
@@ -4143,7 +4140,7 @@ name|s
 argument_list|,
 name|IPPROTO_IPV6
 argument_list|,
-name|IPV6_BINDV6ONLY
+name|IPV6_V6ONLY
 argument_list|,
 operator|&
 name|on
@@ -4161,7 +4158,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"setsockopt (IPV6_BINDV6ONLY): %m"
+literal|"setsockopt (IPV6_V6ONLY): %m"
 argument_list|)
 expr_stmt|;
 name|close
@@ -4173,8 +4170,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|bind
