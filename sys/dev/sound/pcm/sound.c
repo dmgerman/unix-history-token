@@ -235,6 +235,12 @@ name|pcm_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USING_DEVFS
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|snd_unit
@@ -252,6 +258,35 @@ name|snd_unit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|snd
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"Sound driver"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USING_DEVFS
+end_ifdef
 
 begin_function
 specifier|static
@@ -491,24 +526,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_hw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|snd
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|"Sound driver"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|int
@@ -602,6 +619,11 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -887,6 +909,9 @@ operator|->
 name|chancount
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USING_DEVFS
 if|if
 condition|(
 name|d
@@ -900,6 +925,8 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -1679,6 +1706,9 @@ name|rec
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SND_DYNSYSCTL
 name|sysctl_ctx_init
 argument_list|(
 operator|&
@@ -1738,6 +1768,8 @@ goto|goto
 name|no
 goto|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|numplay
@@ -1902,6 +1934,9 @@ decl_stmt|;
 name|dev_t
 name|pdev
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SND_DYNSYSCTL
 name|sysctl_remove_oid
 argument_list|(
 name|d
@@ -1927,6 +1962,8 @@ operator|->
 name|sysctl_tree
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|r
 operator|=
 literal|0
@@ -2141,11 +2178,16 @@ operator|->
 name|fakechan
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USING_DEVFS
 name|pcm_makelinks
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;

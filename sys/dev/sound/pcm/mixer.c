@@ -130,6 +130,12 @@ name|SOUND_DEVICE_NAMES
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SND_DYNSYSCTL
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -187,6 +193,11 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1090,6 +1101,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SND_DYNSYSCTL
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -1216,6 +1233,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|mixer_hwvol_init
@@ -1257,6 +1279,9 @@ name|hwvol_step
 operator|=
 literal|5
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SND_DYNSYSCTL
 name|SYSCTL_ADD_INT
 argument_list|(
 operator|&
@@ -1309,6 +1334,8 @@ literal|"A"
 argument_list|,
 literal|""
 argument_list|)
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
