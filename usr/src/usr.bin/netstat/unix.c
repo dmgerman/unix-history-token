@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unix.c	5.6 (Berkeley) %G%"
+literal|"@(#)unix.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -639,14 +639,16 @@ literal|0
 expr_stmt|;
 name|sa
 operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
+operator|(
 expr|struct
 name|sockaddr_un
 operator|*
-argument_list|)
+operator|)
+operator|(
+name|m
+operator|->
+name|m_dat
+operator|)
 expr_stmt|;
 block|}
 else|else
