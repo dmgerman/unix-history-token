@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kvm_getswapinfo.c,v 1.3 1999/01/25 04:07:07 dillon Exp $"
+literal|"$Id: kvm_getswapinfo.c,v 1.4 1999/01/27 11:29:15 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -574,7 +574,9 @@ index|[
 name|NL_SWAPLIST
 index|]
 operator|.
-name|n_value
+name|n_type
+operator|!=
+name|N_UNDF
 condition|)
 name|type
 operator|=
@@ -587,7 +589,9 @@ index|[
 name|NL_SWAPBLIST
 index|]
 operator|.
-name|n_value
+name|n_type
+operator|!=
+name|N_UNDF
 condition|)
 name|type
 operator|=
@@ -1627,6 +1631,26 @@ argument_list|,
 name|swapblist
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|swapblist
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|SWIF_DUMP_TREE
+condition|)
+name|printf
+argument_list|(
+literal|"radix tree: NULL - no swap in system\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|KGET2
 argument_list|(
 name|swapblist
