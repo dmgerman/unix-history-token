@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP Secret Key Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: auth.c,v 1.34 1998/12/17 00:28:12 brian Exp $  *  *	TODO:  *		o Implement check against with registered IP addresses.  */
+comment|/*  *			PPP Secret Key Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: auth.c,v 1.34.2.1 1999/02/01 13:48:24 brian Exp $  *  *	TODO:  *		o Implement check against with registered IP addresses.  */
 end_comment
 
 begin_include
@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -67,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
 end_include
 
 begin_include
@@ -175,6 +187,36 @@ begin_include
 include|#
 directive|include
 file|"mp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cbcp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"chap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"async.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"physical.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"datalink.h"
 end_include
 
 begin_include
@@ -1237,25 +1279,25 @@ name|physical
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|authp
-operator|->
-name|FailedFunc
-condition|)
-call|(
-modifier|*
-name|authp
-operator|->
-name|FailedFunc
-call|)
+else|else
+block|{
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"Auth: No response from server\n"
+argument_list|)
+expr_stmt|;
+name|datalink_AuthNotOk
 argument_list|(
 name|authp
 operator|->
 name|physical
+operator|->
+name|dl
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1323,17 +1365,6 @@ name|struct
 name|physical
 modifier|*
 parameter_list|)
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|fail
-function_decl|)
-parameter_list|(
-name|struct
-name|physical
-modifier|*
-parameter_list|)
 parameter_list|)
 block|{
 name|authp
@@ -1341,12 +1372,6 @@ operator|->
 name|ChallengeFunc
 operator|=
 name|chal
-expr_stmt|;
-name|authp
-operator|->
-name|FailedFunc
-operator|=
-name|fail
 expr_stmt|;
 name|authp
 operator|->
