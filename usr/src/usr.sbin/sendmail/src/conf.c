@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.143 (Berkeley) %G%"
+literal|"@(#)conf.c	8.144 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7855,7 +7855,7 @@ name|FSBLOCKSIZE
 value|DEV_BSIZE
 define|#
 directive|define
-name|FSF_BAVAIL
+name|SFS_BAVAIL
 value|f_tfree
 else|#
 directive|else
@@ -7871,7 +7871,7 @@ name|fs
 decl_stmt|;
 define|#
 directive|define
-name|FSF_BAVAIL
+name|SFS_BAVAIL
 value|fd_bfreen
 define|#
 directive|define
@@ -7910,10 +7910,10 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|FSF_BAVAIL
+name|SFS_BAVAIL
 define|#
 directive|define
-name|FSF_BAVAIL
+name|SFS_BAVAIL
 value|f_bavail
 endif|#
 directive|endif
@@ -8047,7 +8047,7 @@ return|return
 operator|(
 name|fs
 operator|.
-name|FSF_BAVAIL
+name|SFS_BAVAIL
 operator|)
 return|;
 block|}
@@ -10156,13 +10156,6 @@ modifier|*
 name|user
 decl_stmt|;
 block|{
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwnam
-parameter_list|()
-function_decl|;
 return|return
 name|getpwnam
 argument_list|(
@@ -10184,13 +10177,6 @@ name|uid_t
 name|uid
 decl_stmt|;
 block|{
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-parameter_list|()
-function_decl|;
 return|return
 name|getpwuid
 argument_list|(
