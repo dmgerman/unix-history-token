@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, Garrett A. Wollman.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: devconf.h,v 1.1 1994/10/16 03:52:59 wollman Exp $  */
+comment|/*  * Copyright (c) 1994, Garrett A. Wollman.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: devconf.h,v 1.2 1994/10/19 00:10:10 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -33,6 +33,34 @@ name|MAXDEVNAME
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXDEVDESCR
+value|64
+end_define
+
+begin_enum
+enum|enum
+name|dc_state
+block|{
+name|DC_UNKNOWN
+init|=
+literal|0
+block|,
+comment|/* don't know the state or driver doesn't support */
+name|DC_UNCONFIGURED
+block|,
+comment|/* driver is present but not configured */
+name|DC_IDLE
+block|,
+comment|/* driver supports state and is not in use */
+name|DC_BUSY
+comment|/* driver supports state and is currently busy */
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|devconf
@@ -43,20 +71,47 @@ index|[
 name|MAXDEVNAME
 index|]
 decl_stmt|;
-comment|/* name of the device */
+comment|/* name */
+name|char
+name|dc_descr
+index|[
+name|MAXDEVDESCR
+index|]
+decl_stmt|;
+comment|/* description */
 name|int
 name|dc_unit
 decl_stmt|;
-comment|/* unit number of the device */
+comment|/* unit number */
 name|int
 name|dc_number
 decl_stmt|;
-comment|/* device unique id */
+comment|/* unique id */
+name|char
+name|dc_pname
+index|[
+name|MAXDEVNAME
+index|]
+decl_stmt|;
+comment|/* name of the parent device */
+name|int
+name|dc_punit
+decl_stmt|;
+comment|/* unit number of the parent */
+name|int
+name|dc_pnumber
+decl_stmt|;
+comment|/* unique id of the parent */
 name|struct
 name|machdep_devconf
 name|dc_md
 decl_stmt|;
 comment|/* machine-dependent stuff */
+name|enum
+name|dc_state
+name|dc_state
+decl_stmt|;
+comment|/* state of the device (see above) */
 name|size_t
 name|dc_datalen
 decl_stmt|;
@@ -197,7 +252,7 @@ name|kdc_unit
 decl_stmt|;
 comment|/* filled in by driver */
 name|struct
-name|machdep_devconf
+name|machdep_kdevconf
 name|kdc_md
 decl_stmt|;
 comment|/* filled in by driver */
@@ -217,6 +272,28 @@ name|size_t
 name|kdc_datalen
 decl_stmt|;
 comment|/* filled in by driver */
+name|struct
+name|kern_devconf
+modifier|*
+name|kdc_parent
+decl_stmt|;
+comment|/* filled in by driver */
+name|void
+modifier|*
+name|kdc_parentdata
+decl_stmt|;
+comment|/* filled in by driver */
+name|enum
+name|dc_state
+name|kdc_state
+decl_stmt|;
+comment|/* filled in by driver dynamically */
+specifier|const
+name|char
+modifier|*
+name|kdc_description
+decl_stmt|;
+comment|/* filled in by driver; maybe dyn. */
 block|}
 struct|;
 end_struct
@@ -290,7 +367,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CTL_DEVCONF_NAMES
+name|HW_DEVCONF_NAMES
 value|{ \ 	{ "number", CTLTYPE_INT }, \ }
 end_define
 

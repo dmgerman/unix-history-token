@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.2 1994/10/19 01:58:55 wollman Exp $  */
+comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.3 1994/10/21 01:19:05 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -241,8 +241,6 @@ block|,
 literal|0
 block|,
 block|{
-literal|"isa0"
-block|,
 name|MDDT_ISA
 block|,
 literal|0
@@ -255,6 +253,18 @@ block|,
 literal|0
 block|,
 name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_UNKNOWN
+block|,
+comment|/* not supported */
+literal|"CORTEX-I frame grabber"
 block|}
 block|}
 decl_stmt|;

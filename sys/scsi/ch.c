@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.9 1994/10/19 00:09:44 wollman Exp $  */
+comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.10 1994/10/21 01:19:20 wollman Exp $  */
 end_comment
 
 begin_include
@@ -398,13 +398,7 @@ literal|"ch"
 block|,
 literal|0
 block|,
-block|{
-literal|"scsi"
-block|,
-name|MDDT_SCSI
-block|,
-literal|0
-block|}
+name|MDDC_SCSI
 block|,
 name|ch_externalize
 block|,
@@ -413,6 +407,18 @@ block|,
 name|ch_goaway
 block|,
 name|SCSI_EXTERNALLEN
+block|,
+operator|&
+name|kdc_scbus0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_UNKNOWN
+block|,
+comment|/* not supported */
+literal|"SCSI media changer"
 block|}
 decl_stmt|;
 end_decl_stmt

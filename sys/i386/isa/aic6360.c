@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.1 1994/09/26 16:15:45 jkh Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.2 1994/10/19 01:58:53 wollman Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -4128,11 +4128,11 @@ block|,
 literal|0
 block|,
 block|{
-literal|"isa0"
-block|,
 name|MDDT_ISA
 block|,
 literal|0
+block|,
+literal|"bio"
 block|}
 block|,
 name|isa_generic_externalize
@@ -4142,6 +4142,18 @@ block|,
 literal|0
 block|,
 name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_BUSY
+block|,
+comment|/* host adapters are always busy */
+literal|"Adaptec AIC-6360 SCSI host adapter chipset"
 block|}
 block|}
 block|;
@@ -4191,7 +4203,7 @@ operator|->
 name|id_unit
 index|]
 operator|.
-name|kdc_isa
+name|kdc_parentdata
 operator|=
 name|id
 block|;

@@ -1992,8 +1992,6 @@ block|,
 literal|0
 block|,
 block|{
-literal|"isa0"
-block|,
 name|MDDT_ISA
 block|,
 literal|0
@@ -2006,6 +2004,18 @@ block|,
 literal|0
 block|,
 name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_UNKNOWN
+block|,
+comment|/* we don't support this yet */
+literal|"B004-compatible Transputer board"
 block|}
 block|}
 decl_stmt|;
@@ -2061,7 +2071,7 @@ operator|->
 name|id_unit
 index|]
 operator|.
-name|kdc_isa
+name|kdc_parentdata
 operator|=
 name|id
 expr_stmt|;

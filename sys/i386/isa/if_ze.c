@@ -11,6 +11,10 @@ begin_comment
 comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad230Cs.  *			ETO, Toshihisa<eto@osl.fujitsu.co.jp>  */
 end_comment
 
+begin_comment
+comment|/*  * $Id$  */
+end_comment
+
 begin_include
 include|#
 directive|include

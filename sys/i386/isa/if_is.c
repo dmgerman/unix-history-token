@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_is.c,v 1.27 1994/09/21 18:33:23 davidg Exp $  */
+comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_is.c,v 1.28 1994/10/19 01:59:02 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -612,11 +612,11 @@ block|,
 literal|0
 block|,
 block|{
-literal|"isa0"
-block|,
 name|MDDT_ISA
 block|,
 literal|0
+block|,
+literal|"net"
 block|}
 block|,
 name|isa_generic_externalize
@@ -626,6 +626,18 @@ block|,
 literal|0
 block|,
 name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_BUSY
+block|,
+comment|/* network interfaces are always busy */
+literal|"Isolan AT 4141-0, Isolink 4110, or NE2100 Ethernet adapter"
 block|}
 block|}
 decl_stmt|;

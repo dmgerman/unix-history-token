@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.52 1994/10/19 01:58:58 wollman Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.53 1994/10/22 17:52:22 phk Exp $  */
 end_comment
 
 begin_include
@@ -696,11 +696,11 @@ block|,
 literal|0
 block|,
 block|{
-literal|"isa0"
-block|,
 name|MDDT_ISA
 block|,
 literal|0
+block|,
+literal|"net"
 block|}
 block|,
 name|isa_generic_externalize
@@ -710,6 +710,19 @@ block|,
 literal|0
 block|,
 name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_BUSY
+block|,
+comment|/* network interfaces are always ``open'' */
+literal|""
+comment|/* description */
 block|}
 block|}
 decl_stmt|;
@@ -725,6 +738,11 @@ name|struct
 name|isa_device
 modifier|*
 name|id
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|descr
 parameter_list|)
 block|{
 if|if
@@ -765,9 +783,20 @@ operator|->
 name|id_unit
 index|]
 operator|.
-name|kdc_isa
+name|kdc_parentdata
 operator|=
 name|id
+expr_stmt|;
+name|kdc_ed
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_description
+operator|=
+name|descr
 expr_stmt|;
 name|dev_attach
 argument_list|(
@@ -4722,6 +4751,16 @@ expr_stmt|;
 name|ed_registerdev
 argument_list|(
 name|isa_dev
+argument_list|,
+name|sc
+operator|->
+name|type_str
+condition|?
+name|sc
+operator|->
+name|type_str
+else|:
+literal|"Ethernet adapter"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Print additional info when attached 	 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1994	Poul-Henning Kamp  *  * All rights reserved.  *  * This file contains some material which are covered by the message after   * this message.  *  * The rest of this file is covered by the following clause:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pas.c,v 1.4 1994/09/16 13:33:46 davidg Exp $  *  * This is a driver for the one particular kind of the "ProAudioSpectrum"  * card from MediaVision.  To find out if your card is supported, you can  * either try out the driver, or you can look for a chip a little less than  * 1" square in one end of the card, with writing on it that say ...5380...  *  * Up to four of these cards can be in the same computer.  If you have   * multiple cards, you need to set the "card-id" jumpers correspondingly.  *  * The driver uses no interrupts, so don't expect record-breaking performance.  *  * Poul-Henning Kamp<phk@freefall.cdrom.com>  */
+comment|/*  * Copyright (C) 1994	Poul-Henning Kamp  *  * All rights reserved.  *  * This file contains some material which are covered by the message after   * this message.  *  * The rest of this file is covered by the following clause:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pas.c,v 1.5 1994/10/18 03:53:12 phk Exp $  *  * This is a driver for the one particular kind of the "ProAudioSpectrum"  * card from MediaVision.  To find out if your card is supported, you can  * either try out the driver, or you can look for a chip a little less than  * 1" square in one end of the card, with writing on it that say ...5380...  *  * Up to four of these cards can be in the same computer.  If you have   * multiple cards, you need to set the "card-id" jumpers correspondingly.  *  * The driver uses no interrupts, so don't expect record-breaking performance.  *  * Poul-Henning Kamp<phk@freefall.cdrom.com>  */
 end_comment
 
 begin_comment
@@ -24,31 +24,37 @@ end_if
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/devconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa_device.h"
+file|<i386/isa/isa_device.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/ic/ncr_5380.h>
 end_include
 
 begin_include
@@ -61,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<scsi/scsiconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ic/ncr_5380.h"
 end_include
 
 begin_comment
@@ -1216,6 +1216,128 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|kern_devconf
+name|kdc_pas
+index|[
+name|NPAS
+index|]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* filled in by dev_attach */
+literal|"pas"
+block|,
+literal|0
+block|,
+block|{
+name|MDDT_ISA
+block|,
+literal|0
+block|,
+literal|"bio"
+block|}
+block|,
+name|isa_generic_externalize
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_BUSY
+block|,
+comment|/* host adapters are always busy */
+literal|"Media Vision ProAudioSpectrum SCSI host adapter"
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|pas_registerdev
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|id
+parameter_list|)
+block|{
+if|if
+condition|(
+name|id
+operator|->
+name|id_unit
+condition|)
+name|kdc_pas
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|=
+name|kdc_pas
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|kdc_pas
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_unit
+operator|=
+name|id
+operator|->
+name|id_unit
+expr_stmt|;
+name|kdc_pas
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_parentdata
+operator|=
+name|id
+expr_stmt|;
+name|dev_attach
+argument_list|(
+operator|&
+name|kdc_pas
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|int
 name|pasattach
@@ -1456,6 +1578,11 @@ operator|^
 literal|0x8003
 argument_list|,
 literal|0x4d
+argument_list|)
+expr_stmt|;
+name|pas_registerdev
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 name|scsi_attachdevs

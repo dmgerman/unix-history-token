@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.19 1994/09/28 20:16:45 se Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.20 1994/10/19 00:09:47 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -1337,13 +1337,7 @@ literal|"st"
 block|,
 literal|0
 block|,
-block|{
-literal|"scsi"
-block|,
-name|MDDT_SCSI
-block|,
-literal|0
-block|}
+name|MDDC_SCSI
 block|,
 name|st_externalize
 block|,
@@ -1352,6 +1346,18 @@ block|,
 name|st_goaway
 block|,
 name|SCSI_EXTERNALLEN
+block|,
+operator|&
+name|kdc_scbus0
+block|,
+comment|/* XXX parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_UNKNOWN
+block|,
+comment|/* not supported */
+literal|"SCSI tape drive"
 block|}
 decl_stmt|;
 end_decl_stmt

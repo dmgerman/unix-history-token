@@ -2951,11 +2951,11 @@ block|,
 literal|0
 block|,
 block|{
-literal|"isa0"
-block|,
 name|MDDT_ISA
 block|,
 literal|0
+block|,
+literal|"net"
 block|}
 block|,
 name|isa_generic_externalize
@@ -2965,6 +2965,17 @@ block|,
 literal|0
 block|,
 name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_BUSY
+block|,
+literal|"Generic LANCE-based Ethernet adapter"
 block|}
 block|}
 decl_stmt|;
