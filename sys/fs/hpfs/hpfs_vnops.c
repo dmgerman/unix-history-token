@@ -3593,6 +3593,14 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|lockdestroy
+argument_list|(
+operator|&
+name|hp
+operator|->
+name|h_lock
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|v_data
