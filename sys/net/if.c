@@ -1377,17 +1377,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d XXX: driver didn't set ifq_maxlen\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"XXX: driver didn't set ifq_maxlen\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -1413,17 +1407,11 @@ name|ifq_mtx
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d XXX: driver didn't initialize queue mtx\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"XXX: driver didn't initialize queue mtx\n"
 argument_list|)
 expr_stmt|;
 name|mtx_init
