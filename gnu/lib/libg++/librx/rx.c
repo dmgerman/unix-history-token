@@ -61,6 +61,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_comment
+comment|/* For _POSIX_VERSION */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -31749,7 +31759,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|_POSIX_SOURCE
+name|_POSIX_VERSION
 argument_list|)
 operator|)
 operator|||
@@ -32065,7 +32075,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not emacs and not _POSIX_SOURCE */
+comment|/* not emacs and not _POSIX_VERSION */
 end_comment
 
 begin_escape
@@ -32082,6 +32092,12 @@ operator|!
 name|defined
 argument_list|(
 name|emacs
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_VERSION
 argument_list|)
 end_if
 
@@ -33028,7 +33044,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not emacs  */
+comment|/* not emacs&& not POSIX */
 end_comment
 
 end_unit
