@@ -59,6 +59,12 @@ directive|include
 file|<sys/device.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
 begin_elif
 elif|#
 directive|elif
@@ -84,12 +90,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
 
 begin_include
 include|#
@@ -295,21 +295,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
-name|USB_DECLARE_DRIVER_INIT
-argument_list|(
-name|uhub
-argument_list|,
-name|DEVMETHOD
-argument_list|(
-name|bus_child_detached
-argument_list|,
-name|uhub_child_detached
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* We need two attachment points:  * hub to usb and hub to hub  * Every other driver only connects to hubs  */
 end_comment
@@ -327,6 +312,14 @@ argument_list|(
 name|__OpenBSD__
 argument_list|)
 end_if
+
+begin_expr_stmt
+name|USB_DECLARE_DRIVER
+argument_list|(
+name|uhub
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Create the driver instance for the hub connected to hub case */
@@ -363,6 +356,21 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_elif
+
+begin_expr_stmt
+name|USB_DECLARE_DRIVER_INIT
+argument_list|(
+name|uhub
+argument_list|,
+name|DEVMETHOD
+argument_list|(
+name|bus_child_detached
+argument_list|,
+name|uhub_child_detached
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Create the driver instance for the hub connected to usb case. */
@@ -2461,6 +2469,16 @@ argument_list|(
 literal|"hub not fully initialised, but child deleted?"
 argument_list|)
 expr_stmt|;
+name|nports
+operator|=
+name|dev
+operator|->
+name|hub
+operator|->
+name|hubdesc
+operator|.
+name|bNbrPorts
+expr_stmt|;
 for|for
 control|(
 name|port
@@ -2469,13 +2487,7 @@ literal|0
 init|;
 name|port
 operator|<
-name|dev
-operator|->
-name|hub
-operator|->
-name|hubdesc
-operator|.
-name|bNbrPorts
+name|nports
 condition|;
 name|port
 operator|++
