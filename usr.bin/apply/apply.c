@@ -1075,6 +1075,7 @@ argument_list|,
 literal|"vfork"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 case|case
 literal|0
 case|:
