@@ -10088,6 +10088,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|SIS_ISR
+argument_list|)
+expr_stmt|;
+comment|/* clear any interrupts already pending */
 name|SIS_SETBIT
 argument_list|(
 name|sc
