@@ -82,6 +82,11 @@ argument_list|(
 literal|"Options processed"
 argument_list|)
 expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Unconditional deny"
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|PAM_AUTH_ERR
@@ -131,6 +136,11 @@ expr_stmt|;
 name|PAM_LOG
 argument_list|(
 literal|"Options processed"
+argument_list|)
+expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Unconditional deny"
 argument_list|)
 expr_stmt|;
 name|PAM_RETURN
@@ -184,6 +194,11 @@ argument_list|(
 literal|"Options processed"
 argument_list|)
 expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Unconditional deny"
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|PAM_ACCT_EXPIRED
@@ -235,9 +250,14 @@ argument_list|(
 literal|"Options processed"
 argument_list|)
 expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Unconditional deny"
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
-name|PAM_AUTHTOK_ERR
+name|PAM_PERM_DENIED
 argument_list|)
 expr_stmt|;
 block|}
@@ -286,9 +306,14 @@ argument_list|(
 literal|"Options processed"
 argument_list|)
 expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Unconditional deny"
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
-name|PAM_SYSTEM_ERR
+name|PAM_SESSION_ERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -337,9 +362,14 @@ argument_list|(
 literal|"Options processed"
 argument_list|)
 expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Unconditional deny"
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
-name|PAM_SYSTEM_ERR
+name|PAM_SESSION_ERR
 argument_list|)
 expr_stmt|;
 block|}
