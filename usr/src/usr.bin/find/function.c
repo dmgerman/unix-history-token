@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.22 (Berkeley) %G%"
+literal|"@(#)function.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,7 @@ comment|/*  * find_parsenum --  *	Parse a string of the form [+-]# and return th
 end_comment
 
 begin_function
+specifier|static
 name|long
 name|find_parsenum
 parameter_list|(
@@ -170,6 +171,8 @@ parameter_list|,
 name|option
 parameter_list|,
 name|str
+parameter_list|,
+name|nosign
 parameter_list|,
 name|endch
 parameter_list|)
@@ -188,6 +191,12 @@ modifier|*
 name|endch
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|int
+name|nosign
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -209,6 +218,19 @@ block|{
 case|case
 literal|'+'
 case|:
+if|if
+condition|(
+name|nosign
+condition|)
+name|err
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|option
+argument_list|,
+literal|"signed value not permitted"
+argument_list|)
+expr_stmt|;
 operator|++
 name|str
 expr_stmt|;
@@ -222,6 +244,19 @@ break|break;
 case|case
 literal|'-'
 case|:
+if|if
+condition|(
+name|nosign
+condition|)
+name|err
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|option
+argument_list|,
+literal|"signed value not permitted"
+argument_list|)
+expr_stmt|;
 operator|++
 name|str
 expr_stmt|;
@@ -241,7 +276,7 @@ name|F_EQUAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * convert the string with strtol().  Note, if strtol() returns zero 	 * and endchar points to the beginning of the string we know we have 	 * a syntax error. 	 */
+comment|/* 	 * Convert the string with strtol().  Note, if strtol() returns zero 	 * and endchar points to the beginning of the string we know we have 	 * a syntax error. 	 */
 name|value
 operator|=
 name|strtol
@@ -256,21 +291,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|value
+operator|==
+literal|0
 operator|&&
 name|endchar
 operator|==
 name|str
-operator|||
+condition|)
+name|err
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|option
+argument_list|,
+literal|"illegal numeric value"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|endchar
 index|[
 literal|0
 index|]
 operator|&&
 operator|(
-operator|!
 name|endch
+operator|==
+name|NULL
 operator|||
 name|endchar
 index|[
@@ -287,7 +335,7 @@ literal|"%s: %s"
 argument_list|,
 name|option
 argument_list|,
-literal|"illegal numeric value"
+literal|"illegal trailing character"
 argument_list|)
 expr_stmt|;
 if|if
@@ -411,6 +459,8 @@ literal|"-atime"
 argument_list|,
 name|arg
 argument_list|,
+literal|0
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -523,10 +573,8 @@ literal|"-ctime"
 argument_list|,
 name|arg
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
+literal|0
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1975,10 +2023,8 @@ literal|"-inum"
 argument_list|,
 name|arg
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
+literal|1
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2080,10 +2126,8 @@ literal|"-links"
 argument_list|,
 name|arg
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
+literal|1
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2280,10 +2324,8 @@ literal|"-mtime"
 argument_list|,
 name|arg
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
+literal|0
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3219,6 +3261,10 @@ argument_list|,
 name|f_size
 argument_list|)
 expr_stmt|;
+name|endch
+operator|=
+literal|'c'
+expr_stmt|;
 name|new
 operator|->
 name|o_data
@@ -3230,6 +3276,8 @@ argument_list|,
 literal|"-size"
 argument_list|,
 name|arg
+argument_list|,
+literal|1
 argument_list|,
 operator|&
 name|endch
