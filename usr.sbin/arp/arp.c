@@ -486,6 +486,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ROUNDUP
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|((a)> 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SETFUNC
 parameter_list|(
 name|f
@@ -1590,9 +1601,12 @@ name|sockaddr_dl
 operator|*
 operator|)
 operator|(
+name|ROUNDUP
+argument_list|(
 name|sin
 operator|->
 name|sin_len
+argument_list|)
 operator|+
 operator|(
 name|char
@@ -2120,9 +2134,12 @@ name|sockaddr_dl
 operator|*
 operator|)
 operator|(
+name|ROUNDUP
+argument_list|(
 name|sin
 operator|->
 name|sin_len
+argument_list|)
 operator|+
 operator|(
 name|char
@@ -2758,9 +2775,12 @@ name|sockaddr_inarp
 operator|*
 operator|)
 operator|(
+name|ROUNDUP
+argument_list|(
 name|sdl
 operator|->
 name|sdl_len
+argument_list|)
 operator|+
 operator|(
 name|char
@@ -2794,7 +2814,7 @@ literal|8
 condition|)
 name|printf
 argument_list|(
-literal|"(wierd)"
+literal|"(weird)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3346,7 +3366,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|if (rtm->rtm_addrs& (w)) { \ 		bcopy((char *)&s, cp, sizeof(s)); cp += sizeof(s);}
+value|if (rtm->rtm_addrs& (w)) { \ 		bcopy((char *)&s, cp, sizeof(s)); cp += ROUNDUP(sizeof(s));}
 name|NEXTADDR
 argument_list|(
 name|RTA_DST
