@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)temp.c	5.7 (Berkeley) %G%"
+literal|"@(#)temp.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,10 +110,9 @@ index|[
 name|PATHSIZE
 index|]
 decl_stmt|;
-name|uid_t
-name|getuid
-parameter_list|()
-function_decl|;
+name|int
+name|uid
+decl_stmt|;
 name|mktemp
 argument_list|(
 name|strcpy
