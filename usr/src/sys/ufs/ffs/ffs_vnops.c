@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ffs_vnops.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ffs_vnops.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -314,64 +314,95 @@ init|=
 block|{
 name|spec_lookup
 block|,
+comment|/* lookup */
 name|spec_badop
 block|,
+comment|/* create */
 name|spec_badop
 block|,
+comment|/* mknod */
 name|spec_open
 block|,
+comment|/* open */
 name|spec_close
 block|,
+comment|/* close */
 name|ufs_access
 block|,
+comment|/* access */
 name|ufs_getattr
 block|,
+comment|/* getattr */
 name|ufs_setattr
 block|,
+comment|/* setattr */
 name|spec_read
 block|,
+comment|/* read */
 name|spec_write
 block|,
+comment|/* write */
 name|spec_ioctl
 block|,
+comment|/* ioctl */
 name|spec_select
 block|,
+comment|/* select */
 name|spec_badop
 block|,
+comment|/* mmap */
 name|spec_nullop
 block|,
+comment|/* fsync */
 name|spec_badop
 block|,
+comment|/* seek */
 name|spec_badop
 block|,
+comment|/* remove */
 name|spec_badop
 block|,
+comment|/* link */
 name|spec_badop
 block|,
+comment|/* rename */
 name|spec_badop
 block|,
+comment|/* mkdir */
 name|spec_badop
 block|,
+comment|/* rmdir */
 name|spec_badop
 block|,
+comment|/* symlink */
 name|spec_badop
 block|,
+comment|/* readdir */
 name|spec_badop
 block|,
+comment|/* readlink */
 name|spec_badop
 block|,
+comment|/* abortop */
 name|ufs_inactive
 block|,
+comment|/* inactive */
 name|ufs_reclaim
 block|,
+comment|/* reclaim */
 name|ufs_lock
 block|,
+comment|/* lock */
 name|ufs_unlock
 block|,
+comment|/* unlock */
 name|spec_badop
 block|,
+comment|/* bmap */
 name|spec_strategy
-block|, }
+block|,
+comment|/* strategy */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -2319,6 +2350,8 @@ argument_list|,
 argument|fflags
 argument_list|,
 argument|cred
+argument_list|,
+argument|waitfor
 argument_list|)
 end_macro
 
@@ -2344,9 +2377,14 @@ name|cred
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|waitfor
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -2357,14 +2395,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|ILOCK
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fflags
@@ -2377,21 +2407,14 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|syncip
 argument_list|(
 name|ip
+argument_list|,
+name|waitfor
 argument_list|)
-expr_stmt|;
-name|IUNLOCK
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -3537,11 +3560,14 @@ name|ICHG
 expr_stmt|;
 name|error
 operator|=
-name|rdwri
+name|vn_rdwr
 argument_list|(
 name|UIO_READ
 argument_list|,
+name|ITOV
+argument_list|(
 name|xp
+argument_list|)
 argument_list|,
 operator|(
 name|caddr_t
@@ -3561,6 +3587,8 @@ operator|)
 literal|0
 argument_list|,
 name|UIO_SYSSPACE
+argument_list|,
+name|IO_NODELOCKED
 argument_list|,
 name|tndp
 operator|->
@@ -3624,11 +3652,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|rdwri
+name|vn_rdwr
 argument_list|(
 name|UIO_WRITE
 argument_list|,
+name|ITOV
+argument_list|(
 name|xp
+argument_list|)
 argument_list|,
 operator|(
 name|caddr_t
@@ -3648,6 +3679,10 @@ operator|)
 literal|0
 argument_list|,
 name|UIO_SYSSPACE
+argument_list|,
+name|IO_NODELOCKED
+operator||
+name|IO_SYNC
 argument_list|,
 name|tndp
 operator|->
@@ -4095,11 +4130,14 @@ name|i_number
 expr_stmt|;
 name|error
 operator|=
-name|rdwri
+name|vn_rdwr
 argument_list|(
 name|UIO_WRITE
 argument_list|,
+name|ITOV
+argument_list|(
 name|ip
+argument_list|)
 argument_list|,
 operator|(
 name|caddr_t
@@ -4118,6 +4156,10 @@ operator|)
 literal|0
 argument_list|,
 name|UIO_SYSSPACE
+argument_list|,
+name|IO_NODELOCKED
+operator||
+name|IO_SYNC
 argument_list|,
 name|ndp
 operator|->
@@ -4569,11 +4611,14 @@ operator|)
 return|;
 name|error
 operator|=
-name|rdwri
+name|vn_rdwr
 argument_list|(
 name|UIO_WRITE
 argument_list|,
+name|ITOV
+argument_list|(
 name|ip
+argument_list|)
 argument_list|,
 name|target
 argument_list|,
@@ -4588,6 +4633,8 @@ operator|)
 literal|0
 argument_list|,
 name|UIO_SYSSPACE
+argument_list|,
+name|IO_NODELOCKED
 argument_list|,
 name|ndp
 operator|->
@@ -4624,8 +4671,6 @@ argument|vp
 argument_list|,
 argument|uio
 argument_list|,
-argument|offp
-argument_list|,
 argument|cred
 argument_list|)
 end_macro
@@ -4648,13 +4693,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|off_t
-modifier|*
-name|offp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ucred
 modifier|*
@@ -4664,34 +4702,13 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|inode
-modifier|*
-name|ip
-init|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-decl_stmt|;
 name|int
 name|count
 decl_stmt|,
+name|lost
+decl_stmt|,
 name|error
 decl_stmt|;
-name|ILOCK
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-name|uio
-operator|->
-name|uio_offset
-operator|=
-operator|*
-name|offp
-expr_stmt|;
 name|count
 operator|=
 name|uio
@@ -4707,25 +4724,19 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VDIR
-operator|||
+name|lost
+operator|=
 name|uio
 operator|->
-name|uio_iovcnt
-operator|!=
-literal|1
-operator|||
-operator|(
+name|uio_resid
+operator|-
+name|count
+expr_stmt|;
+if|if
+condition|(
 name|count
 operator|<
 name|DIRBLKSIZ
-operator|)
 operator|||
 operator|(
 name|uio
@@ -4739,18 +4750,11 @@ literal|1
 operator|)
 operator|)
 condition|)
-block|{
-name|IUNLOCK
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 name|uio
 operator|->
 name|uio_resid
@@ -4767,28 +4771,22 @@ name|count
 expr_stmt|;
 name|error
 operator|=
-name|readip
+name|ufs_read
 argument_list|(
-name|ip
+name|vp
 argument_list|,
 name|uio
+argument_list|,
+literal|0
 argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
-operator|*
-name|offp
-operator|+=
-name|count
-operator|-
 name|uio
 operator|->
 name|uio_resid
-expr_stmt|;
-name|IUNLOCK
-argument_list|(
-name|ip
-argument_list|)
+operator|+=
+name|lost
 expr_stmt|;
 return|return
 operator|(
@@ -4841,14 +4839,13 @@ begin_block
 block|{
 return|return
 operator|(
-name|readip
-argument_list|(
-name|VTOI
+name|ufs_read
 argument_list|(
 name|vp
-argument_list|)
 argument_list|,
 name|uiop
+argument_list|,
+literal|0
 argument_list|,
 name|cred
 argument_list|)
