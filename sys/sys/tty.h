@@ -279,6 +279,26 @@ name|t_termios
 decl_stmt|;
 comment|/* Termios state. */
 name|struct
+name|termios
+name|t_init_in
+decl_stmt|;
+comment|/* ... init ingoing */
+name|struct
+name|termios
+name|t_init_out
+decl_stmt|;
+comment|/* ... outgoing */
+name|struct
+name|termios
+name|t_lock_in
+decl_stmt|;
+comment|/* ... lock ingoing */
+name|struct
+name|termios
+name|t_lock_out
+decl_stmt|;
+comment|/* ... outgoing */
+name|struct
 name|winsize
 name|t_winsize
 decl_stmt|;
