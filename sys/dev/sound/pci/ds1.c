@@ -1001,8 +1001,7 @@ name|AFMT_STEREO
 operator||
 name|AFMT_U8
 block|,
-name|AFMT_S16_LE
-block|,
+comment|/* AFMT_S16_LE, */
 name|AFMT_STEREO
 operator||
 name|AFMT_S16_LE
