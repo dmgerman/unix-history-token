@@ -19,6 +19,16 @@ directive|include
 file|"opt_witness.h"
 end_include
 
+begin_comment
+comment|/*  * Cause non-inlined mtx_*() to be compiled.  * Must be defined early because other system headers may include mutex.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_KERN_MUTEX_C_
+end_define
+
 begin_include
 include|#
 directive|include
@@ -114,16 +124,6 @@ include|#
 directive|include
 file|<vm/vm_extern.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|_KERN_MUTEX_C_
-end_define
-
-begin_comment
-comment|/* Cause non-inlined mtx_*() to be compiled. */
-end_comment
 
 begin_include
 include|#
