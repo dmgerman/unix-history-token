@@ -285,7 +285,6 @@ comment|/* Global vfs data structures for nwfs */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|vop_vector
 name|nwfs_vnodeops
