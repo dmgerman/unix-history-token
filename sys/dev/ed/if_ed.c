@@ -1359,12 +1359,12 @@ operator|(
 name|error
 operator|)
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ED_DEBUG
 name|printf
 argument_list|(
-literal|"type = %x type_str=%s isa16bit=%d memsize=%d id_msize=%d\n"
+literal|"type = %x type_str=%s isa16bit=%d memsize=%d id_msize=%lu\n"
 argument_list|,
 name|sc
 operator|->

@@ -6777,7 +6777,7 @@ directive|ifdef
 name|ED_DEBUG
 name|printf
 argument_list|(
-literal|"ed?: ed_pio_testmem: page start=%x, end=%x"
+literal|"ed?: ed_pio_testmem: page start=%x, end=%lx"
 argument_list|,
 name|page_offset
 argument_list|,
