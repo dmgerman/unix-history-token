@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	5.9 (Berkeley) %G%"
+literal|"@(#)trace.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,6 +129,11 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|static
+name|int
+name|iftraceinit
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|iftraceinit

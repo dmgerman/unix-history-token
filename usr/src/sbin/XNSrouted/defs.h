@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -292,31 +292,9 @@ name|argv0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|int
-name|exit
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sendmsg
+name|sndmsg
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -324,13 +302,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|supply
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|timer
 parameter_list|()
 function_decl|;
 end_function_decl
