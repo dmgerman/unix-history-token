@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)mkmakefile.c	5.2 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)mkmakefile.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1235,6 +1235,14 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+comment|/* 	 * The allfiles list does not include the configuration-specific 	 * C source files.  These files should be eliminated someday, but 	 * for now, we have to add them to ${CFILES} (and only ${CFILES}). 	 */
+if|if
+condition|(
+name|suffix
+operator|==
+literal|'c'
+condition|)
+block|{
 for|for
 control|(
 name|cf
@@ -1360,6 +1368,7 @@ name|sp
 operator|=
 literal|' '
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
