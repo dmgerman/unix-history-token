@@ -226,7 +226,7 @@ block|,
 name|discard_dg
 block|}
 block|,
-comment|/* Return 32 bit time since 1970 */
+comment|/* Return 32 bit time since 1900 */
 block|{
 literal|"time"
 block|,
