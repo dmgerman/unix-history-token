@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp_forth.c,v 1.6 1998/11/07 03:44:10 jkh Exp $  */
+comment|/*  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp_forth.c,v 1.7 1998/11/07 06:18:00 jkh Exp $  */
 end_comment
 
 begin_include
@@ -71,7 +71,6 @@ comment|/*  * BootForth   Interface to Ficl Forth interpreter.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|FICL_VM
 modifier|*
 name|bf_vm
@@ -343,22 +342,32 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|strcpy
+name|vmTextOut
 argument_list|(
-name|command_errmsg
-argument_list|,
 name|vm
-operator|->
-name|pad
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vmTextOut
 argument_list|(
 name|vm
 argument_list|,
+literal|": "
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|vmTextOut
+argument_list|(
 name|vm
-operator|->
-name|pad
+argument_list|,
+name|command_errmsg
 argument_list|,
 literal|1
 argument_list|)
@@ -376,10 +385,24 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
+literal|1
+expr_stmt|;
 block|}
 name|free
 argument_list|(
 name|line
+argument_list|)
+expr_stmt|;
+name|stackPushINT32
+argument_list|(
+name|vm
+operator|->
+name|pStack
+argument_list|,
+operator|!
+name|result
 argument_list|)
 expr_stmt|;
 block|}
