@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.56 (Berkeley) %G%"
+literal|"@(#)main.c	6.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3927,6 +3927,14 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|XLA
+name|xla_create_file
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|QUEUE
 if|if
 condition|(
@@ -3968,10 +3976,6 @@ name|getrequests
 argument_list|()
 expr_stmt|;
 comment|/* at this point we are in a child: reset state */
-name|OpMode
-operator|=
-name|MD_SMTP
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4474,6 +4478,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XLA
+end_ifdef
+
+begin_comment
+comment|/* clean up extended load average stuff */
+end_comment
+
+begin_expr_stmt
+name|xla_all_end
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* and exit */
 end_comment
@@ -4558,6 +4583,14 @@ argument_list|(
 name|CurEnv
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XLA
+name|xla_all_end
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 name|EX_OK

@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.39 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.40 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.39 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.40 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1132,6 +1132,23 @@ operator|)
 return|;
 block|}
 comment|/* 	**  Try to actually open the connection. 	*/
+ifdef|#
+directive|ifdef
+name|XLA
+comment|/* if too many connections, don't bother trying */
+if|if
+condition|(
+operator|!
+name|xla_noqueue_ok
+argument_list|(
+name|host
+argument_list|)
+condition|)
+return|return
+name|EX_TEMPFAIL
+return|;
+endif|#
+directive|endif
 for|for
 control|(
 init|;
@@ -1466,6 +1483,16 @@ name|sav_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XLA
+name|xla_host_end
+argument_list|(
+name|host
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EX_UNAVAILABLE

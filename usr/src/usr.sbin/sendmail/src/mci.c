@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	6.8 (Berkeley) %G%"
+literal|"@(#)mci.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -455,6 +455,18 @@ operator|&
 name|BlankEnvelope
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XLA
+name|xla_host_end
+argument_list|(
+name|mci
+operator|->
+name|mci_host
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.44 (Berkeley) %G%"
+literal|"@(#)conf.c	6.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2833,6 +2833,20 @@ name|bool
 name|refuseconnections
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|XLA
+if|if
+condition|(
+operator|!
+name|xla_smtp_ok
+argument_list|()
+condition|)
+return|return
+name|TRUE
+return|;
+endif|#
+directive|endif
 comment|/* this is probably too simplistic */
 return|return
 operator|(

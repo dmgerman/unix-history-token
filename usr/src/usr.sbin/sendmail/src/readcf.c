@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.25 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1544,6 +1544,25 @@ name|delim
 expr_stmt|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|XLA
+case|case
+literal|'L'
+case|:
+comment|/* extended load average description */
+name|xla_init
+argument_list|(
+operator|&
+name|bp
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'M'
 case|:

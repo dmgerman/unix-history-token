@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.12 (Berkeley) %G%"
+literal|"@(#)err.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,11 +273,21 @@ if|if
 condition|(
 name|panic
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|XLA
+name|xla_all_end
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 name|EX_OSERR
 argument_list|)
 expr_stmt|;
+block|}
 name|errno
 operator|=
 literal|0
