@@ -632,7 +632,7 @@ name|pp
 parameter_list|)
 block|{
 name|char
-name|name
+name|lclhost
 index|[
 name|MAXHOSTNAMELEN
 index|]
@@ -713,19 +713,19 @@ return|;
 comment|/* get the addresses of the local host */
 name|gethostname
 argument_list|(
-name|name
+name|lclhost
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|name
+name|lclhost
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|name
+name|lclhost
 index|[
 sizeof|sizeof
 argument_list|(
-name|name
+name|lclhost
 argument_list|)
 operator|-
 literal|1
@@ -771,7 +771,7 @@ name|error
 operator|=
 name|getaddrinfo
 argument_list|(
-name|name
+name|lclhost
 argument_list|,
 name|NULL
 argument_list|,
@@ -794,7 +794,7 @@ argument_list|,
 literal|"unable to get official name "
 literal|"for local machine %s: %s"
 argument_list|,
-name|name
+name|lclhost
 argument_list|,
 name|gai_strerror
 argument_list|(
@@ -1053,7 +1053,7 @@ name|ssize_t
 name|writel
 parameter_list|(
 name|int
-name|s
+name|strm
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -1095,7 +1095,7 @@ name|va_start
 argument_list|(
 name|ap
 argument_list|,
-name|s
+name|strm
 argument_list|)
 expr_stmt|;
 name|n
@@ -1166,7 +1166,7 @@ name|va_start
 argument_list|(
 name|ap
 argument_list|,
-name|s
+name|strm
 argument_list|)
 expr_stmt|;
 for|for
@@ -1225,7 +1225,7 @@ name|retval
 operator|=
 name|writev
 argument_list|(
-name|s
+name|strm
 argument_list|,
 name|iovp
 argument_list|,

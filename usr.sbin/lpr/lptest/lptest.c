@@ -34,13 +34,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)lptest.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)lptest.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,18 +86,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|len
@@ -92,14 +101,15 @@ decl_stmt|,
 name|count
 decl_stmt|;
 specifier|register
+name|int
 name|i
-operator|,
+decl_stmt|,
 name|j
-operator|,
+decl_stmt|,
 name|fc
-operator|,
+decl_stmt|,
 name|nc
-expr_stmt|;
+decl_stmt|;
 name|char
 name|outbuf
 index|[

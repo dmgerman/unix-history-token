@@ -124,14 +124,12 @@ begin_function
 name|int
 name|startdaemon
 parameter_list|(
-name|pp
-parameter_list|)
 specifier|const
 name|struct
 name|printer
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_un

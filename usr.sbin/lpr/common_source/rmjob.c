@@ -216,44 +216,38 @@ begin_comment
 comment|/* real and effective user id's */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|alarmhandler
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+name|_signo
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|do_unlink
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+name|_file
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
 name|rmjob
 parameter_list|(
-name|printer
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|printer
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -590,19 +584,15 @@ begin_function
 name|int
 name|lockchk
 parameter_list|(
-name|pp
-parameter_list|,
-name|s
-parameter_list|)
 name|struct
 name|printer
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-name|s
-decl_stmt|;
+name|slockf
+parameter_list|)
 block|{
 specifier|register
 name|FILE
@@ -627,7 +617,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|s
+name|slockf
 argument_list|,
 literal|"r"
 argument_list|)
@@ -648,7 +638,7 @@ name|pp
 argument_list|,
 literal|"%s: %s"
 argument_list|,
-name|s
+name|slockf
 argument_list|,
 name|strerror
 argument_list|(
@@ -815,20 +805,16 @@ begin_function
 name|void
 name|process
 parameter_list|(
-name|pp
-parameter_list|,
-name|file
-parameter_list|)
 specifier|const
 name|struct
 name|printer
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -950,12 +936,10 @@ specifier|static
 name|void
 name|do_unlink
 parameter_list|(
-name|file
-parameter_list|)
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ret
@@ -1012,12 +996,10 @@ begin_function
 name|int
 name|chk
 parameter_list|(
-name|file
-parameter_list|)
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1328,20 +1310,14 @@ begin_function
 name|int
 name|isowner
 parameter_list|(
-name|owner
-parameter_list|,
-name|file
-parameter_list|)
 name|char
 modifier|*
 name|owner
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|file
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1425,7 +1401,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check to see if we are sending files to a remote machine. If we are,  * then try removing files on the remote machine.  */
@@ -1435,14 +1411,12 @@ begin_function
 name|void
 name|rmremote
 parameter_list|(
-name|pp
-parameter_list|)
 specifier|const
 name|struct
 name|printer
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1911,13 +1885,11 @@ begin_function
 name|int
 name|iscf
 parameter_list|(
-name|d
-parameter_list|)
 name|struct
 name|dirent
 modifier|*
 name|d
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -1947,13 +1919,13 @@ begin_function
 name|void
 name|alarmhandler
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+name|__unused
+parameter_list|)
 block|{
-comment|/* ignored */
+comment|/* the signal is ignored */
+comment|/* (the '__unused' is just to avoid a compile-time warning) */
 block|}
 end_function
 
