@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	4.1	(Berkeley)	%G%"
+literal|"@(#)setup.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -642,8 +642,17 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* set exclusive use for line */
-if|if
-condition|(
+ifdef|#
+directive|ifdef
+name|TIOCEXCL
+ifdef|#
+directive|ifdef
+name|VAX
+operator|(
+name|void
+operator|)
+endif|#
+directive|endif
 name|ioctl
 argument_list|(
 name|netd
@@ -655,9 +664,11 @@ argument_list|,
 operator|&
 name|stt
 argument_list|)
-operator|!=
-literal|0
-operator|||
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
 name|gtty
 argument_list|(
 name|netd
