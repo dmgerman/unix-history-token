@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.61 (Berkeley) %G%"
+literal|"@(#)conf.c	6.62 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1976,6 +1976,12 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FSHIFT
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -2026,12 +2032,6 @@ name|LA_TYPE
 operator|==
 name|LA_INT
 operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|FSHIFT
-argument_list|)
 end_if
 
 begin_define
@@ -2040,6 +2040,11 @@ directive|define
 name|FSHIFT
 value|8
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
