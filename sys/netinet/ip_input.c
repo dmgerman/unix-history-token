@@ -6986,6 +6986,10 @@ name|n_long
 name|dest
 decl_stmt|;
 name|struct
+name|in_addr
+name|pkt_dst
+decl_stmt|;
+name|struct
 name|ifnet
 modifier|*
 name|destifp
@@ -7002,6 +7006,21 @@ directive|endif
 name|dest
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 	 * Cache the destination address of the packet; this may be 	 * changed by use of 'ipfw fwd'. 	 */
+name|pkt_dst
+operator|=
+name|ip_fw_fwd_addr
+operator|==
+name|NULL
+condition|?
+name|ip
+operator|->
+name|ip_dst
+else|:
+name|ip_fw_fwd_addr
+operator|->
+name|sin_addr
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7026,9 +7045,7 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|ip
-operator|->
-name|ip_dst
+name|pkt_dst
 operator|.
 name|s_addr
 argument_list|,
@@ -7053,9 +7070,7 @@ operator|)
 operator|||
 name|in_canforward
 argument_list|(
-name|ip
-operator|->
-name|ip_dst
+name|pkt_dst
 argument_list|)
 operator|==
 literal|0
@@ -7118,9 +7133,7 @@ if|if
 condition|(
 name|ip_rtaddr
 argument_list|(
-name|ip
-operator|->
-name|ip_dst
+name|pkt_dst
 argument_list|,
 operator|&
 name|ipforward_rt
@@ -7291,6 +7304,9 @@ name|ipsendredirects
 operator|&&
 operator|!
 name|srcrt
+operator|&&
+operator|!
+name|ip_fw_fwd_addr
 condition|)
 block|{
 define|#
@@ -7362,9 +7378,7 @@ expr_stmt|;
 else|else
 name|dest
 operator|=
-name|ip
-operator|->
-name|ip_dst
+name|pkt_dst
 operator|.
 name|s_addr
 expr_stmt|;
