@@ -4559,7 +4559,7 @@ case|:
 case|case
 name|HTTP_SEE_OTHER
 case|:
-comment|/* 			 * Not so fine, but we still have to read the headers to 			 * get the new location. 			 */
+comment|/* 			 * Not so fine, but we still have to read the 			 * headers to get the new location. 			 */
 break|break;
 case|case
 name|HTTP_NEED_AUTH
@@ -4569,7 +4569,7 @@ condition|(
 name|need_auth
 condition|)
 block|{
-comment|/* 				 * We already sent out authorization code, so there's 				 * nothing more we can do. 				 */
+comment|/* 				 * We already sent out authorization code, 				 * so there's nothing more we can do. 				 */
 name|_http_seterr
 argument_list|(
 name|conn
@@ -4595,7 +4595,7 @@ break|break;
 case|case
 name|HTTP_NEED_PROXY_AUTH
 case|:
-comment|/* 			 * If we're talking to a proxy, we already sent our proxy 			 * authorization code, so there's nothing more we can do. 			 */
+comment|/* 			 * If we're talking to a proxy, we already sent 			 * our proxy authorization code, so there's 			 * nothing more we can do. 			 */
 name|_http_seterr
 argument_list|(
 name|conn
