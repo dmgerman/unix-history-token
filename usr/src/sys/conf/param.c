@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -57,12 +57,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../sys/text.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../sys/vnode.h"
 end_include
 
@@ -82,12 +76,6 @@ begin_include
 include|#
 directive|include
 file|"../sys/clist.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../sys/cmap.h"
 end_include
 
 begin_include
@@ -221,16 +209,12 @@ begin_define
 define|#
 directive|define
 name|NTEXT
-value|(36 + MAXUSERS)
+value|100
 end_define
 
-begin_decl_stmt
-name|int
-name|ntext
-init|=
-name|NTEXT
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* actually the object cache */
+end_comment
 
 begin_define
 define|#
@@ -411,17 +395,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|text
-modifier|*
-name|text
-decl_stmt|,
-modifier|*
-name|textNTEXT
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|file
 modifier|*
 name|file
@@ -462,17 +435,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|buffers
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|cmap
-modifier|*
-name|cmap
-decl_stmt|,
-modifier|*
-name|ecmap
 decl_stmt|;
 end_decl_stmt
 
