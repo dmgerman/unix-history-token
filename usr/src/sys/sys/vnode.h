@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.42 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.43 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -372,7 +372,7 @@ name|long
 name|va_fileid
 decl_stmt|;
 comment|/* file id */
-name|u_quad
+name|u_quad_t
 name|va_qsize
 decl_stmt|;
 comment|/* file size in bytes */
@@ -411,48 +411,50 @@ name|short
 name|va_pad
 decl_stmt|;
 comment|/* pad out to long */
-name|u_quad
+name|u_quad_t
 name|va_qbytes
 decl_stmt|;
 comment|/* bytes of disk space held by file */
+name|u_quad_t
+name|va_filerev
+decl_stmt|;
+comment|/* file modification number */
 block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_NOQUAD
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|va_size
-value|va_qsize.val[0]
+value|va_qsize.val[_QUAD_LOWWORD]
 end_define
 
 begin_define
 define|#
 directive|define
 name|va_size_rsv
-value|va_qsize.val[1]
+value|va_qsize.val[_QUAD_HIGHWORD]
 end_define
 
 begin_define
 define|#
 directive|define
 name|va_bytes
-value|va_qbytes.val[0]
+value|va_qbytes.val[_QUAD_LOWWORD]
 end_define
 
 begin_define
 define|#
 directive|define
 name|va_bytes_rsv
-value|va_qbytes.val[1]
+value|va_qbytes.val[_QUAD_HIGHWORD]
 end_define
 
 begin_else
@@ -464,28 +466,14 @@ begin_define
 define|#
 directive|define
 name|va_size
-value|va_qsize.val[1]
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_size_rsv
-value|va_qsize.val[0]
+value|va_qsize
 end_define
 
 begin_define
 define|#
 directive|define
 name|va_bytes
-value|va_qbytes.val[1]
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_bytes_rsv
-value|va_qbytes.val[0]
+value|va_qbytes
 end_define
 
 begin_endif
@@ -2044,7 +2032,7 @@ begin_define
 define|#
 directive|define
 name|VNOVAL
-value|((unsigned)0xffffffff)
+value|(-1)
 end_define
 
 begin_ifdef
