@@ -1745,7 +1745,7 @@ name|VFS_SET
 argument_list|(
 name|union_vfsops
 argument_list|,
-expr|union
+name|unionfs
 argument_list|,
 name|VFCF_LOOPBACK
 argument_list|)

@@ -978,7 +978,7 @@ name|error
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"umap"
+literal|"umapfs"
 argument_list|,
 operator|&
 name|vfc
@@ -990,7 +990,7 @@ name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
-literal|"umap"
+literal|"umapfs"
 argument_list|)
 condition|)
 block|{
@@ -998,14 +998,14 @@ if|if
 condition|(
 name|vfsload
 argument_list|(
-literal|"umap"
+literal|"umapfs"
 argument_list|)
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"vfsload(umap)"
+literal|"vfsload(umapfs)"
 argument_list|)
 expr_stmt|;
 name|endvfsent
@@ -1015,7 +1015,7 @@ name|error
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"umap"
+literal|"umapfs"
 argument_list|,
 operator|&
 name|vfc

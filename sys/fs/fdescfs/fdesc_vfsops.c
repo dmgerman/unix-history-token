@@ -840,7 +840,7 @@ name|VFS_SET
 argument_list|(
 name|fdesc_vfsops
 argument_list|,
-name|fdesc
+name|fdescfs
 argument_list|,
 name|VFCF_SYNTHETIC
 argument_list|)

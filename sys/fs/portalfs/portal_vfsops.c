@@ -1096,7 +1096,7 @@ name|VFS_SET
 argument_list|(
 name|portal_vfsops
 argument_list|,
-name|portal
+name|portalfs
 argument_list|,
 name|VFCF_SYNTHETIC
 argument_list|)

@@ -2036,7 +2036,7 @@ name|VFS_SET
 argument_list|(
 name|umap_vfsops
 argument_list|,
-name|umap
+name|umapfs
 argument_list|,
 name|VFCF_LOOPBACK
 argument_list|)

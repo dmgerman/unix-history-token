@@ -643,7 +643,7 @@ name|error
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"portal"
+literal|"portalfs"
 argument_list|,
 operator|&
 name|vfc
@@ -655,7 +655,7 @@ name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
-literal|"portal"
+literal|"portalfs"
 argument_list|)
 condition|)
 block|{
@@ -663,14 +663,14 @@ if|if
 condition|(
 name|vfsload
 argument_list|(
-literal|"portal"
+literal|"portalfs"
 argument_list|)
 condition|)
 name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"vfsload(portal)"
+literal|"vfsload(portalfs)"
 argument_list|)
 expr_stmt|;
 name|endvfsent
@@ -680,7 +680,7 @@ name|error
 operator|=
 name|getvfsbyname
 argument_list|(
-literal|"portal"
+literal|"portalfs"
 argument_list|,
 operator|&
 name|vfc
