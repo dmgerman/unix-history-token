@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)type.c 1.12 %G%"
+literal|"@(#)type.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1216,19 +1216,20 @@ begin_comment
 comment|/*  * Declare a subrange for conformant arrays.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|struct
+name|nl
+modifier|*
 name|tycrang
-argument_list|(
+parameter_list|(
 name|r
-argument_list|)
+parameter_list|)
 specifier|register
-name|int
-operator|*
+name|struct
+name|tnode
+modifier|*
 name|r
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1257,11 +1258,11 @@ if|if
 condition|(
 name|tp
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 return|return
 operator|(
-name|NIL
+name|NLNIL
 operator|)
 return|;
 comment|/* 	 * Just make a new type -- the lower and upper bounds must be 	 * set by params(). 	 */
@@ -1284,7 +1285,7 @@ name|p
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Declare a subrange.  */
