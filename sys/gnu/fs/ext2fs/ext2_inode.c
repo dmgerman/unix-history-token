@@ -157,7 +157,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the access, modified, and inode change times as specified by the  * IACCESS, IUPDATE, and ICHANGE flags respectively. The IMODIFIED flag is  * used to specify that the inode needs to be updated but that the times have  * already been set. The access and modified times are taken from the second  * and third parameters; the inode change time is always taken from the current  * time. If waitfor is set, then wait for the disk write of the inode to  * complete.  */
+comment|/*  * Update the access, modified, and inode change times as specified by the  * IN_ACCESS, IN_UPDATE, and IN_CHANGE flags respectively.  Write the inode  * to disk if the IN_MODIFIED flag is set (it may be set initially, or by  * the timestamp update).  The IN_LAZYMOD flag is set to force a write  * later if not now.  If we write now, then clear both IN_MODIFIED and  * IN_LAZYMOD to reflect the presumably successful write, and if waitfor is  * set, then wait for the write to complete.  */
 end_comment
 
 begin_function
@@ -244,7 +244,11 @@ operator|->
 name|i_flag
 operator|&=
 operator|~
+operator|(
+name|IN_LAZYMOD
+operator||
 name|IN_MODIFIED
+operator|)
 expr_stmt|;
 if|if
 condition|(
