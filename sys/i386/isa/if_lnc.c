@@ -2808,6 +2808,35 @@ name|head
 operator|->
 name|m_data
 expr_stmt|;
+comment|/* 				 * vmware ethernet hardware emulation loops 				 * packets back to itself, violates IFF_SIMPLEX. 				 * drop it if it is from myself. 				 */
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|eh
+operator|->
+name|ether_shost
+argument_list|,
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|head
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Skip over the ether header */
 name|head
 operator|->
@@ -2849,6 +2878,7 @@ argument_list|,
 name|head
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
