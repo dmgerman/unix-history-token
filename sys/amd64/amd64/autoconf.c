@@ -565,17 +565,6 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|NCRD
-operator|>
-literal|0
-comment|/* Before isa_configure to avoid ISA drivers finding our cards */
-name|pccard_configure
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
 name|NEISA
 operator|>
 literal|0
@@ -600,6 +589,17 @@ name|NISA
 operator|>
 literal|0
 name|isa_configure
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NCRD
+operator|>
+literal|0
+comment|/* After everyone else has a chance at grabbing resources */
+name|pccard_configure
 argument_list|()
 expr_stmt|;
 endif|#
@@ -774,34 +774,6 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|NFS
-if|if
-condition|(
-operator|!
-name|mountrootfsname
-operator|&&
-name|nfs_diskless_valid
-condition|)
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Considering NFS root f/s.\n"
-argument_list|)
-expr_stmt|;
-name|mountrootfsname
-operator|=
-literal|"nfs"
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* NFS */
-ifdef|#
-directive|ifdef
 name|MFS_ROOT
 if|if
 condition|(
@@ -843,6 +815,34 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|NFS
+if|if
+condition|(
+operator|!
+name|mountrootfsname
+operator|&&
+name|nfs_diskless_valid
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Considering NFS root f/s.\n"
+argument_list|)
+expr_stmt|;
+name|mountrootfsname
+operator|=
+literal|"nfs"
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* NFS */
 ifdef|#
 directive|ifdef
 name|FFS
@@ -1472,7 +1472,7 @@ name|dumpdev
 argument_list|,
 name|sysctl_kern_dumpdev
 argument_list|,
-literal|"I"
+literal|"T,dev_t"
 argument_list|,
 literal|""
 argument_list|)
