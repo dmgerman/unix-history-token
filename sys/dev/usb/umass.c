@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usbdivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usbdi_util.h>
 end_include
 
@@ -242,15 +236,6 @@ modifier|*
 name|path
 decl_stmt|;
 comment|/* XPT path */
-comment|/* we count the number of soft retries that failed. If 5 have failed, 	 * the device does not support them for example, we revert to hard 	 * resets. 	 */
-name|int
-name|soft_tries
-decl_stmt|;
-comment|/* retries to do soft reset */
-define|#
-directive|define
-name|MAX_SOFT_TRIES
-value|5
 block|}
 name|umass_softc_t
 typedef|;
@@ -322,20 +307,6 @@ define|#
 directive|define
 name|UR_RESET
 value|0xff
-end_define
-
-begin_define
-define|#
-directive|define
-name|URESET_HARD
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|URESET_SOFT
-value|0x01
 end_define
 
 begin_comment
@@ -501,9 +472,6 @@ operator|(
 name|umass_softc_t
 operator|*
 name|sc
-operator|,
-name|int
-name|flag
 operator|)
 argument_list|)
 decl_stmt|;
@@ -752,12 +720,6 @@ operator|->
 name|sc_bulkin_pipe
 operator|=
 name|NULL
-expr_stmt|;
-name|sc
-operator|->
-name|soft_tries
-operator|=
-literal|0
 expr_stmt|;
 name|usbd_devinfo
 argument_list|(
@@ -1312,18 +1274,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * USB Mass Storage Bulk-Only specific request  */
-end_comment
-
-begin_comment
-comment|/*  * The Reset request shall be sent via the Control endpoint to the device.  *  * There are two types of Bulk-Only Mass Storage Resets; soft and hard.  * Implementation of the soft is optional. If the soft one fails, the hard one  * is immediately tried.  *  * Soft reset shall clear all buffers and reset the interface to the device  * without affecting the state of the device itself.  * Hard reset shall clear all buffers and reset the interface and the  * device without changing STALL or toggle conditions.  */
-end_comment
-
-begin_comment
-comment|/*  * XXX Pat LaVarre<LAVARRE@iomega.com> says that soft reset has been removed  * from current versions of the spec. We can remove it once that checks out.  */
-end_comment
-
 begin_function
 name|usbd_status
 name|umass_bulk_reset
@@ -1331,9 +1281,6 @@ parameter_list|(
 name|umass_softc_t
 modifier|*
 name|sc
-parameter_list|,
-name|int
-name|flag
 parameter_list|)
 block|{
 name|usbd_device_handle
@@ -1345,12 +1292,17 @@ decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
+name|usb_interface_descriptor_t
+modifier|*
+name|id
+decl_stmt|;
+comment|/* 	 * Reset recovery (5.3.4 in Universal Serial Bus Mass Storage Class) 	 * 	 * For Reset Recovery the host shall issue in the following order: 	 * a) a Bulk-Only Mass Storage Reset 	 * b) a Clear Feature HALT to the Bulk-In endpoint 	 * c) a Clear Feature HALT to the Bulk-Out endpoint 	 */
 name|DPRINTF
 argument_list|(
 name|UDMASS_BULK
 argument_list|,
 operator|(
-literal|"%s: %s reset\n"
+literal|"%s: Reset\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -1358,35 +1310,8 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|)
-operator|,
-operator|(
-name|flag
-operator|==
-name|URESET_SOFT
-condition|?
-literal|"Soft"
-else|:
-literal|"Hard"
-operator|)
 operator|)
 argument_list|)
-expr_stmt|;
-comment|/* Avoid useless attempts at soft-resetting the drive 	 * XXX Could be done with a quirk entry somewhere as well. 	 */
-if|if
-condition|(
-name|flag
-operator|==
-name|URESET_SOFT
-operator|&&
-name|sc
-operator|->
-name|soft_tries
-operator|>
-name|MAX_SOFT_TRIES
-condition|)
-name|flag
-operator|=
-name|URESET_HARD
 expr_stmt|;
 name|usbd_interface2device_handle
 argument_list|(
@@ -1396,6 +1321,15 @@ name|sc_iface
 argument_list|,
 operator|&
 name|dev
+argument_list|)
+expr_stmt|;
+name|id
+operator|=
+name|usbd_get_interface_descriptor
+argument_list|(
+name|sc
+operator|->
+name|sc_iface
 argument_list|)
 expr_stmt|;
 comment|/* the reset command is a class specific interface request */
@@ -1417,21 +1351,16 @@ name|req
 operator|.
 name|wValue
 argument_list|,
-name|flag
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* type of reset: hard/soft */
 name|USETW
 argument_list|(
 name|req
 operator|.
 name|wIndex
 argument_list|,
-name|sc
-operator|->
-name|sc_iface
-operator|->
-name|idesc
+name|id
 operator|->
 name|bInterfaceNumber
 argument_list|)
@@ -1445,7 +1374,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* no data stage */
 name|err
 operator|=
 name|usbd_do_request
@@ -1463,60 +1391,9 @@ condition|(
 name|err
 condition|)
 block|{
-if|if
-condition|(
-name|flag
-operator|==
-name|URESET_SOFT
-condition|)
-block|{
-comment|/* reset again, but now hard. Soft reset is optional in the 			 * Bulk-Only spec. 			 */
-name|sc
-operator|->
-name|soft_tries
-operator|++
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-name|UDMASS_USB
-argument_list|,
-operator|(
-literal|"%s: Soft reset failed (%d), %s\n"
-operator|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
-operator|,
-name|sc
-operator|->
-name|soft_tries
-operator|,
-name|usbd_errstr
-argument_list|(
-name|err
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|umass_bulk_reset
-argument_list|(
-name|sc
-argument_list|,
-name|URESET_HARD
-argument_list|)
-operator|)
-return|;
-block|}
-else|else
-block|{
 name|printf
 argument_list|(
-literal|"%s: Hard reset failed, %s\n"
+literal|"%s: Reset failed, %s\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -1538,8 +1415,21 @@ name|err
 operator|)
 return|;
 block|}
-block|}
-comment|/* we do not need to wait for the device to finish the reset. 	 * From the Bulk-Only spec (5.3.3): 	 * "For either Bulk-Only Mass Storage Reset, hard, or soft, the device 	 * shall NAK the status stage of Control request until the reset is 	 * complete." 	 * 	 * XXX (Iomega Zip 100) For some reason we get timeouts if we don't. :-( 	 *                      The 2.5sec. is a guessed value. 	 */
+name|usbd_clear_endpoint_stall
+argument_list|(
+name|sc
+operator|->
+name|sc_bulkout_pipe
+argument_list|)
+expr_stmt|;
+name|usbd_clear_endpoint_stall
+argument_list|(
+name|sc
+operator|->
+name|sc_bulkin_pipe
+argument_list|)
+expr_stmt|;
+comment|/* 	 * XXX we should convert this into a more friendly delay. 	 * Perhaps a tsleep (or is this routine run from int context?) 	 */
 name|DELAY
 argument_list|(
 literal|2500000
@@ -1869,19 +1759,10 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* If the device detects that the CBW is invalid, then the 		 * device shall STALL both bulk endpoints and require a 		 * Bulk-Only MS Reset (hard) 		 */
+comment|/* If the device detects that the CBW is invalid, then the 		 * device may STALL both bulk endpoints and require a 		 * Bulk-Only MS Reset 		 */
 name|umass_bulk_reset
 argument_list|(
 name|sc
-argument_list|,
-name|URESET_HARD
-argument_list|)
-expr_stmt|;
-name|usbd_clear_endpoint_stall
-argument_list|(
-name|sc
-operator|->
-name|sc_bulkout_pipe
 argument_list|)
 expr_stmt|;
 return|return
@@ -2111,7 +1992,7 @@ name|USBD_IOERROR
 operator|)
 return|;
 comment|/* 	 * Check the CSW for status and validity, and check for fatal errors 	 */
-comment|/* Invalid CSW: Wrong signature or wrong tag might indicate 	 * that the device is confused -> reset it hard, to remove 	 * all its state. 	 * Other fatal errors: STALL on read of CSW and Phase error 	 * or unknown status. 	 */
+comment|/* Invalid CSW: Wrong signature or wrong tag might indicate 	 * that the device is confused -> reset it. 	 * Other fatal errors: STALL on read of CSW and Phase error 	 * or unknown status. 	 */
 if|if
 condition|(
 name|err
@@ -2275,22 +2156,6 @@ block|}
 name|umass_bulk_reset
 argument_list|(
 name|sc
-argument_list|,
-name|URESET_HARD
-argument_list|)
-expr_stmt|;
-name|usbd_clear_endpoint_stall
-argument_list|(
-name|sc
-operator|->
-name|sc_bulkout_pipe
-argument_list|)
-expr_stmt|;
-name|usbd_clear_endpoint_stall
-argument_list|(
-name|sc
-operator|->
-name|sc_bulkin_pipe
 argument_list|)
 expr_stmt|;
 return|return
@@ -2334,8 +2199,6 @@ name|n
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * According to Pat LaVarre<LAVARRE@iomega.com> on the linux-usb 		 * mailing list this reset is not necessary at all. It looks like 		 * I have an old revision of the spec. 		 */
-comment|/* umass_bulk_reset(sc, URESET_SOFT); */
 operator|*
 name|residue
 operator|=
@@ -2352,6 +2215,7 @@ name|USBD_COMMAND_FAILED
 operator|)
 return|;
 block|}
+comment|/* 	 * XXX a residue not equal to 0 might indicate that something 	 * is wrong. Does CAM high level drivers check this for us? 	 */
 return|return
 operator|(
 name|USBD_NORMAL_COMPLETION
@@ -3075,8 +2939,6 @@ operator|=
 name|umass_bulk_reset
 argument_list|(
 name|sc
-argument_list|,
-name|URESET_HARD
 argument_list|)
 expr_stmt|;
 if|if
