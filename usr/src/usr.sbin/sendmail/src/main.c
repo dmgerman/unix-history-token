@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	1.9	%G%"
+literal|"@(#)main.c	1.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,19 +232,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* the target person */
-end_comment
-
-begin_decl_stmt
-name|char
-name|MsgId
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the message-id for this letter */
 end_comment
 
 begin_decl_stmt

@@ -23,13 +23,22 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	1.2	%G%"
+literal|"@(#)collect.c	1.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* **  MAKETEMP -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  While it is doing it, it looks for **	"From:" and "Sender:" fields to use as the from-person **	(but only if the -a flag is specified).  It prefers to **	to use the "Sender:" field. ** **	MIT seems to like to produce "Sent-By:" fields instead **	of "Sender:" fields.  We used to catch this, but it turns **	out that the "Sent-By:" field doesn't always correspond **	to someone real ("___057", for instance), as required by **	the protocol.  So we limp by..... ** **	Parameters: **		none ** **	Returns: **		Name of temp file. ** **	Side Effects: **		Temp file is created and filled. ** **	Called By: **		main ** **	Notes: **		This is broken off from main largely so that the **		temp buffer can be deallocated. */
 end_comment
+
+begin_decl_stmt
+name|char
+name|MsgId
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|char
