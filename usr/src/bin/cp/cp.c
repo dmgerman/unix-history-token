@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	4.13 (Berkeley) %G%"
+literal|"@(#)cp.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,6 +327,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* I/O buffer; guarantee long-word alignment */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|buf
+index|[
+name|MAXBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|copy
 argument_list|(
@@ -366,11 +380,6 @@ index|[
 name|MAXPATHLEN
 operator|+
 literal|1
-index|]
-decl_stmt|,
-name|buf
-index|[
-name|MAXBSIZE
 index|]
 decl_stmt|;
 name|struct
