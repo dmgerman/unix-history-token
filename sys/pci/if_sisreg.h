@@ -2203,6 +2203,9 @@ name|struct
 name|callout
 name|sis_stat_ch
 decl_stmt|;
+name|int
+name|sis_stopped
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
