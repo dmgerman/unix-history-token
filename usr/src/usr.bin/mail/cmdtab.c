@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmdtab.c	1.4 %G%"
+literal|"@(#)cmdtab.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -702,7 +702,7 @@ literal|"if"
 block|,
 name|ifcmd
 block|,
-name|C
+name|F
 operator||
 name|RAWLIST
 block|,
@@ -714,7 +714,7 @@ literal|"else"
 block|,
 name|elsecmd
 block|,
-name|C
+name|F
 operator||
 name|RAWLIST
 block|,
@@ -726,7 +726,7 @@ literal|"endif"
 block|,
 name|endifcmd
 block|,
-name|C
+name|F
 operator||
 name|RAWLIST
 block|,
