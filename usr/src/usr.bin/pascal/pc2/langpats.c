@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c 1.11 %G%"
+literal|"@(#)langpats.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,58 @@ name|HSHSIZ
 value|101
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CALLTEMPLATE
+value|"calls\t$"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEMPLATESIZE
+value|7
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|vax
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|mc68000
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CALLTEMPLATE
+value|"jbsr\t"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEMPLATESIZE
+value|5
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|mc68000
+end_endif
+
 begin_struct
 struct|struct
 name|pats
@@ -53,6 +105,9 @@ name|ptab
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|vax
 comment|/*  * C library routines  */
 block|{
 literal|"1,_fgetc\n"
@@ -250,7 +305,23 @@ literal|"2,_SUBSCZ\n"
 block|,
 literal|"	popr	$0x03\n\ 	cmpl	r0,r1\n\ 	jlequ	1f\n\ 	pushl	r0\n\ 	pushl	$_ESUBSC\n\ 	calls	$2,_ERROR\n\ 1:\n"
 block|}
-block|,  }
+block|,
+endif|#
+directive|endif
+endif|vax
+ifdef|#
+directive|ifdef
+name|mc68000
+block|{
+literal|"NONE"
+block|,
+literal|"IMPLEMENTED"
+block|}
+block|,
+endif|#
+directive|endif
+endif|mc68000
+block|}
 struct|;
 end_struct
 
@@ -486,9 +557,9 @@ name|strcmpn
 argument_list|(
 name|cp
 argument_list|,
-literal|"calls\t$"
+name|CALLTEMPLATE
 argument_list|,
-literal|7
+name|TEMPLATESIZE
 argument_list|)
 operator|!=
 literal|0
