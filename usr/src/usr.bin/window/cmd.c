@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.25 84/04/06"
+literal|"@(#)cmd.c	3.26 84/04/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -389,20 +389,6 @@ name|ww_altpos
 operator|.
 name|c
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'L'
-case|:
-name|c_list
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-literal|'v'
-case|:
-name|c_variable
-argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -1199,15 +1185,29 @@ operator|==
 name|w
 condition|)
 return|return;
+if|if
+condition|(
+name|selwin
+operator|!=
+literal|0
+condition|)
 name|lastselwin
 operator|=
 name|selwin
 expr_stmt|;
-name|front
-argument_list|(
+if|if
+condition|(
+operator|(
 name|selwin
 operator|=
 name|w
+operator|)
+operator|!=
+literal|0
+condition|)
+name|front
+argument_list|(
+name|selwin
 argument_list|,
 literal|1
 argument_list|)
