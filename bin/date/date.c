@@ -139,6 +139,24 @@ directive|include
 file|"vary.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TM_YEAR_BASE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TM_YEAR_BASE
+value|1900
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|time_t
 name|tval
@@ -739,19 +757,9 @@ define|#
 directive|define
 name|ATOI2
 parameter_list|(
-name|ar
+name|s
 parameter_list|)
-value|((ar)[0] - '0') * 10 + ((ar)[1] - '0'); (ar) += 2;
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOI4
-parameter_list|(
-name|ar
-parameter_list|)
-value|((ar)[0] - '0') * 1000 + ((ar)[1] - '0') * 100 + \ 			    ((ar)[2] - '0') * 10 + ((ar)[3] - '0'); (ar) += 4;
+value|((s) += 2, ((s)[-2] - '0') * 10 + ((s)[-1] - '0'))
 end_define
 
 begin_function
@@ -800,6 +808,9 @@ name|dot
 decl_stmt|,
 modifier|*
 name|t
+decl_stmt|;
+name|int
+name|century
 decl_stmt|;
 if|if
 condition|(
@@ -987,6 +998,10 @@ name|tm_sec
 operator|=
 literal|0
 expr_stmt|;
+name|century
+operator|=
+literal|0
+expr_stmt|;
 comment|/* if p has a ".ss" field then let's pretend it's not there */
 switch|switch
 condition|(
@@ -1016,32 +1031,40 @@ name|lt
 operator|->
 name|tm_year
 operator|=
-operator|-
-literal|1900
-operator|+
-name|ATOI4
+name|ATOI2
 argument_list|(
 name|p
 argument_list|)
+operator|*
+literal|100
+operator|-
+name|TM_YEAR_BASE
 expr_stmt|;
-if|if
-condition|(
-name|lt
-operator|->
-name|tm_year
-operator|<
-literal|0
-condition|)
-name|badformat
-argument_list|()
+name|century
+operator|=
+literal|1
 expr_stmt|;
-goto|goto
-name|year_done
-goto|;
+comment|/* FALLTHROUGH */
 case|case
 literal|10
 case|:
 comment|/* yy */
+if|if
+condition|(
+name|century
+condition|)
+name|lt
+operator|->
+name|tm_year
+operator|+=
+name|ATOI2
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* hack for 2000 ;-} */
 name|lt
 operator|->
 name|tm_year
@@ -1059,15 +1082,24 @@ name|tm_year
 operator|<
 literal|69
 condition|)
-comment|/* hack for 2000 ;-} */
 name|lt
 operator|->
 name|tm_year
 operator|+=
-literal|100
+literal|2000
+operator|-
+name|TM_YEAR_BASE
 expr_stmt|;
-name|year_done
-label|:
+else|else
+name|lt
+operator|->
+name|tm_year
+operator|+=
+literal|1900
+operator|-
+name|TM_YEAR_BASE
+expr_stmt|;
+block|}
 comment|/* FALLTHROUGH */
 case|case
 literal|8
