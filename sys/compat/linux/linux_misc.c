@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -303,22 +309,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_struct
-struct|struct
-name|linux_rlimit
-block|{
-name|unsigned
-name|long
-name|rlim_cur
-decl_stmt|;
-name|unsigned
-name|long
-name|rlim_max
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -370,52 +360,44 @@ end_comment
 
 begin_struct
 struct|struct
-name|linux_sysinfo
+name|l_sysinfo
 block|{
-name|long
+name|l_long
 name|uptime
 decl_stmt|;
 comment|/* Seconds since boot */
-name|unsigned
-name|long
+name|l_ulong
 name|loads
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/* 1, 5, and 15 minute load averages */
-name|unsigned
-name|long
+name|l_ulong
 name|totalram
 decl_stmt|;
 comment|/* Total usable main memory size */
-name|unsigned
-name|long
+name|l_ulong
 name|freeram
 decl_stmt|;
 comment|/* Available memory size */
-name|unsigned
-name|long
+name|l_ulong
 name|sharedram
 decl_stmt|;
 comment|/* Amount of shared memory */
-name|unsigned
-name|long
+name|l_ulong
 name|bufferram
 decl_stmt|;
 comment|/* Memory used by buffers */
-name|unsigned
-name|long
+name|l_ulong
 name|totalswap
 decl_stmt|;
 comment|/* Total swap space size */
-name|unsigned
-name|long
+name|l_ulong
 name|freeswap
 decl_stmt|;
 comment|/* swap space still available */
-name|unsigned
-name|short
+name|l_ushort
 name|procs
 decl_stmt|;
 comment|/* Number of current processes */
@@ -452,7 +434,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|linux_sysinfo
+name|l_sysinfo
 name|sysinfo
 decl_stmt|;
 name|vm_object_t
@@ -465,7 +447,7 @@ name|struct
 name|timespec
 name|ts
 decl_stmt|;
-comment|/* Uptime is copied out of print_uptime() procedure in kern_shutdown.c */
+comment|/* Uptime is copied out of print_uptime() in kern_shutdown.c */
 name|getnanouptime
 argument_list|(
 operator|&
@@ -712,9 +694,6 @@ comment|/* Hack */
 return|return
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sysinfo
 argument_list|,
@@ -727,8 +706,7 @@ name|info
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|linux_sysinfo
+name|sysinfo
 argument_list|)
 argument_list|)
 return|;
@@ -1029,12 +1007,6 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|struct vmspace *vm = p->p_vmspace;     vm_offset_t new, old;     int error;      if ((vm_offset_t)args->dsend< (vm_offset_t)vm->vm_daddr) 	return EINVAL;     if (((caddr_t)args->dsend - (caddr_t)vm->vm_daddr)> p->p_rlimit[RLIMIT_DATA].rlim_cur) 	return ENOMEM;      old = round_page((vm_offset_t)vm->vm_daddr) + ctob(vm->vm_dsize);     new = round_page((vm_offset_t)args->dsend);     p->p_retval[0] = old;     if ((new-old)> 0) { 	if (swap_pager_full) 	    return ENOMEM; 	error = vm_map_find(&vm->vm_map, NULL, 0,&old, (new-old), FALSE, 			VM_PROT_ALL, VM_PROT_ALL, 0); 	if (error) 	    return error; 	vm->vm_dsize += btoc((new-old)); 	p->p_retval[0] = (int)(vm->vm_daddr + ctob(vm->vm_dsize));     }     return 0;
-else|#
-directive|else
 name|struct
 name|vmspace
 modifier|*
@@ -1051,7 +1023,7 @@ name|old
 decl_stmt|;
 name|struct
 name|obreak_args
-comment|/* { 	char * nsize;     } */
+comment|/* { 		char * nsize; 	} */
 name|tmp
 decl_stmt|;
 ifdef|#
@@ -1169,8 +1141,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1326,7 +1296,7 @@ name|ni
 operator|.
 name|ni_vp
 expr_stmt|;
-comment|/*      * XXX This looks like a bogus check - a LOCKLEAF namei should not succeed      * without returning a vnode.      */
+comment|/* 	 * XXX - This looks like a bogus check. A LOCKLEAF namei should not 	 * succeed without returning a vnode. 	 */
 if|if
 condition|(
 name|vp
@@ -1351,11 +1321,11 @@ argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
-comment|/*      * From here on down, we have a locked vnode that must be unlocked.      */
+comment|/* 	 * From here on down, we have a locked vnode that must be unlocked. 	 */
 name|locked
 operator|++
 expr_stmt|;
-comment|/*      * Writable?      */
+comment|/* Writable? */
 if|if
 condition|(
 name|vp
@@ -1371,7 +1341,7 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/*      * Executable?      */
+comment|/* Executable? */
 name|error
 operator|=
 name|VOP_GETATTR
@@ -1436,7 +1406,7 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/*      * Sensible size?      */
+comment|/* Sensible size? */
 if|if
 condition|(
 name|attr
@@ -1454,7 +1424,7 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/*      * Can we access it?      */
+comment|/* Can we access it? */
 name|error
 operator|=
 name|VOP_ACCESS
@@ -1499,7 +1469,7 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-comment|/*      * Lock no longer needed      */
+comment|/* 	 * Lock no longer needed 	 */
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -1513,7 +1483,7 @@ name|locked
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Pull in executable header into kernel_map      */
+comment|/* Pull in executable header into kernel_map */
 name|error
 operator|=
 name|vm_mmap
@@ -1550,7 +1520,7 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-comment|/*      * Is it a Linux binary ?      */
+comment|/* Is it a Linux binary ? */
 if|if
 condition|(
 operator|(
@@ -1576,8 +1546,8 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/* While we are here, we should REALLY do some more checks */
-comment|/*      * Set file/virtual offset based on a.out variant.      */
+comment|/* 	 * While we are here, we should REALLY do some more checks 	 */
+comment|/* Set file/virtual offset based on a.out variant. */
 switch|switch
 condition|(
 call|(
@@ -1628,7 +1598,7 @@ operator|->
 name|a_bss
 argument_list|)
 expr_stmt|;
-comment|/*      * Check various fields in header for validity/bounds.      */
+comment|/* Check various fields in header for validity/bounds. */
 if|if
 condition|(
 name|a_out
@@ -1685,7 +1655,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/*      * text/data/bss must not exceed limits      * XXX: this is not complete. it should check current usage PLUS      * the resources needed by this library.      */
+comment|/* 	 * text/data/bss must not exceed limits 	 * XXX - this is not complete. it should check current usage PLUS 	 * the resources needed by this library. 	 */
 if|if
 condition|(
 name|a_out
@@ -1718,14 +1688,14 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/*      * prevent more writers      */
+comment|/* prevent more writers */
 name|vp
 operator|->
 name|v_flag
 operator||=
 name|VTEXT
 expr_stmt|;
-comment|/*      * Check if file_offset page aligned,.      * Currently we cannot handle misalinged file offsets,      * and so we read in the entire image (what a waste).      */
+comment|/* 	 * Check if file_offset page aligned. Currently we cannot handle 	 * misalinged file offsets, and so we read in the entire image 	 * (what a waste). 	 */
 if|if
 condition|(
 name|file_offset
@@ -1745,7 +1715,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Map text+data read/write/execute 	 */
+comment|/* Map text+data read/write/execute */
 comment|/* a_entry is the load address and is page aligned */
 name|vmaddr
 operator|=
@@ -1855,10 +1825,6 @@ call|(
 name|caddr_t
 call|)
 argument_list|(
-name|void
-operator|*
-argument_list|)
-argument_list|(
 name|uintptr_t
 argument_list|)
 argument_list|(
@@ -1926,7 +1892,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * for QMAGIC, a_entry is 20 bytes beyond the load address 	 * to skip the executable header 	 */
+comment|/* 		 * for QMAGIC, a_entry is 20 bytes beyond the load address 		 * to skip the executable header 		 */
 name|vmaddr
 operator|=
 name|trunc_page
@@ -1936,7 +1902,7 @@ operator|->
 name|a_entry
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Map it all into the process's space as a single copy-on-write 	 * "data" segment. 	 */
+comment|/* 		 * Map it all into the process's space as a single 		 * copy-on-write "data" segment. 		 */
 name|error
 operator|=
 name|vm_mmap
@@ -2027,7 +1993,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 	 * Calculate BSS start address 	 */
+comment|/* Calculate BSS start address */
 name|vmaddr
 operator|=
 name|trunc_page
@@ -2045,7 +2011,7 @@ name|a_out
 operator|->
 name|a_data
 expr_stmt|;
-comment|/* 	 * allocate some 'anon' space 	 */
+comment|/* allocate some 'anon' space */
 name|error
 operator|=
 name|vm_map_find
@@ -2085,7 +2051,7 @@ goto|;
 block|}
 name|cleanup
 label|:
-comment|/*      * Unlock vnode if needed      */
+comment|/* Unlock vnode if needed */
 if|if
 condition|(
 name|locked
@@ -2099,7 +2065,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|/*      * Release the kernel mapping.      */
+comment|/* Release the kernel mapping. */
 if|if
 condition|(
 name|a_out
@@ -2129,7 +2095,7 @@ end_function
 
 begin_function
 name|int
-name|linux_newselect
+name|linux_select
 parameter_list|(
 name|struct
 name|proc
@@ -2137,7 +2103,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_newselect_args
+name|linux_select_args
 modifier|*
 name|args
 parameter_list|)
@@ -2170,14 +2136,14 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|newselect
+name|select
 argument_list|)
 condition|)
 name|printf
 argument_list|(
 name|ARGS
 argument_list|(
-name|newselect
+name|select
 argument_list|,
 literal|"%d, %p, %p, %p, %p"
 argument_list|)
@@ -2261,11 +2227,16 @@ name|bsa
 operator|.
 name|tv
 operator|=
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
 name|args
 operator|->
 name|timeout
 expr_stmt|;
-comment|/*      * Store current time for computation of the amount of      * time left.      */
+comment|/* 	 * Store current time for computation of the amount of 	 * time left. 	 */
 if|if
 condition|(
 name|args
@@ -2280,6 +2251,9 @@ name|error
 operator|=
 name|copyin
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|args
 operator|->
 name|timeout
@@ -2304,7 +2278,7 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|newselect
+name|select
 argument_list|)
 condition|)
 name|printf
@@ -2334,7 +2308,7 @@ name|utv
 argument_list|)
 condition|)
 block|{
-comment|/* 	     * The timeval was invalid.  Convert it to something 	     * valid that will act as it does under Linux. 	     */
+comment|/* 			 * The timeval was invalid.  Convert it to something 			 * valid that will act as it does under Linux. 			 */
 name|sg
 operator|=
 name|stackgap_init
@@ -2458,7 +2432,7 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|newselect
+name|select
 argument_list|)
 condition|)
 name|printf
@@ -2478,7 +2452,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 	 * See fs/select.c in the Linux kernel.  Without this, 	 * Maelstrom doesn't work. 	 */
+comment|/* 		 * See fs/select.c in the Linux kernel.  Without this, 		 * Maelstrom doesn't work. 		 */
 if|if
 condition|(
 name|error
@@ -2510,7 +2484,7 @@ literal|0
 index|]
 condition|)
 block|{
-comment|/* 	     * Compute how much time was left of the timeout, 	     * by subtracting the current time and the time 	     * before we started the call, and subtracting 	     * that result from the user-supplied value. 	     */
+comment|/* 			 * Compute how much time was left of the timeout, 			 * by subtracting the current time and the time 			 * before we started the call, and subtracting 			 * that result from the user-supplied value. 			 */
 name|microtime
 argument_list|(
 operator|&
@@ -2564,7 +2538,7 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|newselect
+name|select
 argument_list|)
 condition|)
 name|printf
@@ -2595,6 +2569,9 @@ argument_list|(
 operator|&
 name|utv
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|args
 operator|->
 name|timeout
@@ -2619,14 +2596,14 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|newselect
+name|select
 argument_list|)
 condition|)
 name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"newselect_out -> %d"
+literal|"select_out -> %d"
 argument_list|)
 argument_list|,
 name|error
@@ -2889,6 +2866,10 @@ name|bsd_args
 operator|.
 name|addr
 operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|args
 operator|->
 name|addr
@@ -2896,6 +2877,7 @@ operator|+
 name|args
 operator|->
 name|new_len
+argument_list|)
 expr_stmt|;
 name|bsd_args
 operator|.
@@ -2967,6 +2949,9 @@ name|bsd_args
 operator|.
 name|addr
 operator|=
+operator|(
+name|caddr_t
+operator|)
 name|args
 operator|->
 name|addr
@@ -3023,7 +3008,7 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|linux_time_t
+name|l_time_t
 name|tm
 decl_stmt|;
 name|int
@@ -3077,13 +3062,16 @@ argument_list|(
 operator|&
 name|tm
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|args
 operator|->
 name|tm
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|linux_time_t
+name|tm
 argument_list|)
 argument_list|)
 operator|)
@@ -3117,18 +3105,18 @@ end_comment
 
 begin_struct
 struct|struct
-name|linux_times_argv
+name|l_times_argv
 block|{
-name|long
+name|l_long
 name|tms_utime
 decl_stmt|;
-name|long
+name|l_long
 name|tms_stime
 decl_stmt|;
-name|long
+name|l_long
 name|tms_cutime
 decl_stmt|;
-name|long
+name|l_long
 name|tms_cstime
 decl_stmt|;
 block|}
@@ -3203,7 +3191,7 @@ name|timeval
 name|tv
 decl_stmt|;
 name|struct
-name|linux_times_argv
+name|l_times_argv
 name|tms
 decl_stmt|;
 name|struct
@@ -3323,9 +3311,6 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|tms
 argument_list|,
@@ -3338,8 +3323,7 @@ name|buf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|linux_times_argv
+name|tms
 argument_list|)
 argument_list|)
 operator|)
@@ -3390,7 +3374,7 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|linux_new_utsname
+name|l_new_utsname
 name|utsname
 decl_stmt|;
 name|char
@@ -3443,8 +3427,7 @@ name|utsname
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|linux_new_utsname
+name|utsname
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3530,9 +3513,6 @@ return|return
 operator|(
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|utsname
 argument_list|,
@@ -3545,8 +3525,7 @@ name|buf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|linux_new_utsname
+name|utsname
 argument_list|)
 argument_list|)
 operator|)
@@ -3554,14 +3533,23 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
 begin_struct
 struct|struct
-name|linux_utimbuf
+name|l_utimbuf
 block|{
-name|linux_time_t
+name|l_time_t
 name|l_actime
 decl_stmt|;
-name|linux_time_t
+name|l_time_t
 name|l_modtime
 decl_stmt|;
 block|}
@@ -3585,7 +3573,7 @@ parameter_list|)
 block|{
 name|struct
 name|utimes_args
-comment|/* { 	char	*path; 	struct	timeval *tptr;     } */
+comment|/* { 		char	*path; 		struct	timeval *tptr; 	} */
 name|bsdutimes
 decl_stmt|;
 name|struct
@@ -3599,7 +3587,7 @@ modifier|*
 name|tvp
 decl_stmt|;
 name|struct
-name|linux_utimbuf
+name|l_utimbuf
 name|lut
 decl_stmt|;
 name|int
@@ -3665,6 +3653,9 @@ name|error
 operator|=
 name|copyin
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|args
 operator|->
 name|times
@@ -3805,6 +3796,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3835,7 +3835,7 @@ parameter_list|)
 block|{
 name|struct
 name|wait_args
-comment|/* { 	int pid; 	int *status; 	int options; 	struct	rusage *rusage;     } */
+comment|/* { 		int pid; 		int *status; 		int options; 		struct	rusage *rusage; 	} */
 name|tmp
 decl_stmt|;
 name|int
@@ -3967,6 +3967,9 @@ name|error
 operator|=
 name|copyin
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|args
 operator|->
 name|status
@@ -4047,6 +4050,9 @@ argument_list|(
 operator|&
 name|tmpstat
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|args
 operator|->
 name|status
@@ -4058,7 +4064,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-else|else
 return|return
 literal|0
 return|;
@@ -4091,7 +4096,7 @@ parameter_list|)
 block|{
 name|struct
 name|wait_args
-comment|/* { 	int pid; 	int *status; 	int options; 	struct	rusage *rusage;     } */
+comment|/* { 		int pid; 		int *status; 		int options; 		struct	rusage *rusage; 	} */
 name|tmp
 decl_stmt|;
 name|int
@@ -4196,6 +4201,11 @@ name|tmp
 operator|.
 name|rusage
 operator|=
+operator|(
+expr|struct
+name|rusage
+operator|*
+operator|)
 name|args
 operator|->
 name|rusage
@@ -4242,6 +4252,9 @@ name|error
 operator|=
 name|copyin
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|args
 operator|->
 name|status
@@ -4322,6 +4335,9 @@ argument_list|(
 operator|&
 name|tmpstat
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|args
 operator|->
 name|status
@@ -4333,7 +4349,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-else|else
 return|return
 literal|0
 return|;
@@ -4648,6 +4663,11 @@ name|bsa
 operator|.
 name|itv
 operator|=
+operator|(
+expr|struct
+name|itimerval
+operator|*
+operator|)
 name|args
 operator|->
 name|itv
@@ -4656,6 +4676,11 @@ name|bsa
 operator|.
 name|oitv
 operator|=
+operator|(
+expr|struct
+name|itimerval
+operator|*
+operator|)
 name|args
 operator|->
 name|oitv
@@ -4681,9 +4706,6 @@ name|args
 operator|->
 name|itv
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|foo
 argument_list|,
@@ -4819,6 +4841,11 @@ name|bsa
 operator|.
 name|itv
 operator|=
+operator|(
+expr|struct
+name|itimerval
+operator|*
+operator|)
 name|args
 operator|->
 name|itv
@@ -4906,20 +4933,16 @@ begin_function
 name|int
 name|linux_setgroups
 parameter_list|(
-name|p
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|linux_setgroups_args
 modifier|*
-name|uap
-decl_stmt|;
+name|args
+parameter_list|)
 block|{
 name|struct
 name|ucred
@@ -4929,7 +4952,7 @@ decl_stmt|,
 modifier|*
 name|oldcred
 decl_stmt|;
-name|linux_gid_t
+name|l_gid_t
 name|linux_gidset
 index|[
 name|NGROUPS
@@ -4946,7 +4969,7 @@ name|error
 decl_stmt|;
 name|ngrp
 operator|=
-name|uap
+name|args
 operator|->
 name|gidsetsize
 expr_stmt|;
@@ -5011,20 +5034,17 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|uap
+name|args
 operator|->
-name|gidset
+name|grouplist
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|linux_gidset
 argument_list|,
 name|ngrp
 operator|*
 sizeof|sizeof
 argument_list|(
-name|linux_gid_t
+name|l_gid_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5113,27 +5133,23 @@ begin_function
 name|int
 name|linux_getgroups
 parameter_list|(
-name|p
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|linux_getgroups_args
 modifier|*
-name|uap
-decl_stmt|;
+name|args
+parameter_list|)
 block|{
 name|struct
 name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-name|linux_gid_t
+name|l_gid_t
 name|linux_gidset
 index|[
 name|NGROUPS
@@ -5176,7 +5192,7 @@ condition|(
 operator|(
 name|ngrp
 operator|=
-name|uap
+name|args
 operator|->
 name|gidsetsize
 operator|)
@@ -5244,23 +5260,20 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|linux_gidset
 argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|uap
+name|args
 operator|->
-name|gidset
+name|grouplist
 argument_list|,
 name|ngrp
 operator|*
 sizeof|sizeof
 argument_list|(
-name|linux_gid_t
+name|l_gid_t
 argument_list|)
 argument_list|)
 operator|)
@@ -5297,27 +5310,23 @@ begin_function
 name|int
 name|linux_setrlimit
 parameter_list|(
-name|p
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|linux_setrlimit_args
 modifier|*
-name|uap
-decl_stmt|;
+name|args
+parameter_list|)
 block|{
 name|struct
 name|__setrlimit_args
 name|bsd
 decl_stmt|;
 name|struct
-name|linux_rlimit
+name|l_rlimit
 name|rlim
 decl_stmt|;
 name|int
@@ -5348,7 +5357,7 @@ argument_list|,
 literal|"%d, %p"
 argument_list|)
 argument_list|,
-name|uap
+name|args
 operator|->
 name|resource
 argument_list|,
@@ -5356,7 +5365,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|uap
+name|args
 operator|->
 name|rlim
 argument_list|)
@@ -5365,7 +5374,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|uap
+name|args
 operator|->
 name|resource
 operator|>=
@@ -5382,7 +5391,7 @@ name|which
 operator|=
 name|linux_to_bsd_resource
 index|[
-name|uap
+name|args
 operator|->
 name|resource
 index|]
@@ -5405,7 +5414,10 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-name|uap
+operator|(
+name|caddr_t
+operator|)
+name|args
 operator|->
 name|rlim
 argument_list|,
@@ -5485,29 +5497,25 @@ end_function
 
 begin_function
 name|int
-name|linux_getrlimit
+name|linux_old_getrlimit
 parameter_list|(
-name|p
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
-name|linux_getrlimit_args
+name|linux_old_getrlimit_args
 modifier|*
-name|uap
-decl_stmt|;
+name|args
+parameter_list|)
 block|{
 name|struct
 name|__getrlimit_args
 name|bsd
 decl_stmt|;
 name|struct
-name|linux_rlimit
+name|l_rlimit
 name|rlim
 decl_stmt|;
 name|int
@@ -5526,19 +5534,19 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|getrlimit
+name|old_getrlimit
 argument_list|)
 condition|)
 name|printf
 argument_list|(
 name|ARGS
 argument_list|(
-name|getrlimit
+name|old_getrlimit
 argument_list|,
 literal|"%d, %p"
 argument_list|)
 argument_list|,
-name|uap
+name|args
 operator|->
 name|resource
 argument_list|,
@@ -5546,7 +5554,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|uap
+name|args
 operator|->
 name|rlim
 argument_list|)
@@ -5555,7 +5563,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|uap
+name|args
 operator|->
 name|resource
 operator|>=
@@ -5572,7 +5580,7 @@ name|which
 operator|=
 name|linux_to_bsd_resource
 index|[
-name|uap
+name|args
 operator|->
 name|resource
 index|]
@@ -5689,7 +5697,199 @@ argument_list|(
 operator|&
 name|rlim
 argument_list|,
-name|uap
+operator|(
+name|caddr_t
+operator|)
+name|args
+operator|->
+name|rlim
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rlim
+argument_list|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|linux_getrlimit
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|linux_getrlimit_args
+modifier|*
+name|args
+parameter_list|)
+block|{
+name|struct
+name|__getrlimit_args
+name|bsd
+decl_stmt|;
+name|struct
+name|l_rlimit
+name|rlim
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|caddr_t
+name|sg
+init|=
+name|stackgap_init
+argument_list|()
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|getrlimit
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+name|ARGS
+argument_list|(
+name|getrlimit
+argument_list|,
+literal|"%d, %p"
+argument_list|)
+argument_list|,
+name|args
+operator|->
+name|resource
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|args
+operator|->
+name|rlim
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|args
+operator|->
+name|resource
+operator|>=
+name|LINUX_RLIM_NLIMITS
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|bsd
+operator|.
+name|which
+operator|=
+name|linux_to_bsd_resource
+index|[
+name|args
+operator|->
+name|resource
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|bsd
+operator|.
+name|which
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|bsd
+operator|.
+name|rlp
+operator|=
+name|stackgap_alloc
+argument_list|(
+operator|&
+name|sg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rlimit
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|getrlimit
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|bsd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|rlim
+operator|.
+name|rlim_cur
+operator|=
+operator|(
+name|l_ulong
+operator|)
+name|bsd
+operator|.
+name|rlp
+operator|->
+name|rlim_cur
+expr_stmt|;
+name|rlim
+operator|.
+name|rlim_max
+operator|=
+operator|(
+name|l_ulong
+operator|)
+name|bsd
+operator|.
+name|rlp
+operator|->
+name|rlim_max
+expr_stmt|;
+return|return
+operator|(
+name|copyout
+argument_list|(
+operator|&
+name|rlim
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|args
 operator|->
 name|rlim
 argument_list|,
@@ -5716,20 +5916,16 @@ begin_function
 name|int
 name|linux_sched_setscheduler
 parameter_list|(
-name|p
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|linux_sched_setscheduler_args
 modifier|*
-name|uap
-decl_stmt|;
+name|args
+parameter_list|)
 block|{
 name|struct
 name|sched_setscheduler_args
@@ -5754,11 +5950,11 @@ argument_list|,
 literal|"%d, %d, %p"
 argument_list|)
 argument_list|,
-name|uap
+name|args
 operator|->
 name|pid
 argument_list|,
-name|uap
+name|args
 operator|->
 name|policy
 argument_list|,
@@ -5767,7 +5963,7 @@ specifier|const
 name|void
 operator|*
 operator|)
-name|uap
+name|args
 operator|->
 name|param
 argument_list|)
@@ -5776,7 +5972,7 @@ endif|#
 directive|endif
 switch|switch
 condition|(
-name|uap
+name|args
 operator|->
 name|policy
 condition|)
@@ -5820,7 +6016,7 @@ name|bsd
 operator|.
 name|pid
 operator|=
-name|uap
+name|args
 operator|->
 name|pid
 expr_stmt|;
@@ -5828,7 +6024,12 @@ name|bsd
 operator|.
 name|param
 operator|=
-name|uap
+operator|(
+expr|struct
+name|sched_param
+operator|*
+operator|)
+name|args
 operator|->
 name|param
 expr_stmt|;
@@ -5848,20 +6049,16 @@ begin_function
 name|int
 name|linux_sched_getscheduler
 parameter_list|(
-name|p
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|linux_sched_getscheduler_args
 modifier|*
-name|uap
-decl_stmt|;
+name|args
+parameter_list|)
 block|{
 name|struct
 name|sched_getscheduler_args
@@ -5889,7 +6086,7 @@ argument_list|,
 literal|"%d"
 argument_list|)
 argument_list|,
-name|uap
+name|args
 operator|->
 name|pid
 argument_list|)
@@ -5900,7 +6097,7 @@ name|bsd
 operator|.
 name|pid
 operator|=
-name|uap
+name|args
 operator|->
 name|pid
 expr_stmt|;
@@ -5974,20 +6171,16 @@ begin_function
 name|int
 name|linux_sched_get_priority_max
 parameter_list|(
-name|p
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|linux_sched_get_priority_max_args
 modifier|*
-name|uap
-decl_stmt|;
+name|args
+parameter_list|)
 block|{
 name|struct
 name|sched_get_priority_max_args
@@ -6012,7 +6205,7 @@ argument_list|,
 literal|"%d"
 argument_list|)
 argument_list|,
-name|uap
+name|args
 operator|->
 name|policy
 argument_list|)
@@ -6021,7 +6214,7 @@ endif|#
 directive|endif
 switch|switch
 condition|(
-name|uap
+name|args
 operator|->
 name|policy
 condition|)
@@ -6077,20 +6270,16 @@ begin_function
 name|int
 name|linux_sched_get_priority_min
 parameter_list|(
-name|p
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|linux_sched_get_priority_min_args
 modifier|*
-name|uap
-decl_stmt|;
+name|args
+parameter_list|)
 block|{
 name|struct
 name|sched_get_priority_min_args
@@ -6115,7 +6304,7 @@ argument_list|,
 literal|"%d"
 argument_list|)
 argument_list|,
-name|uap
+name|args
 operator|->
 name|policy
 argument_list|)
@@ -6124,7 +6313,7 @@ endif|#
 directive|endif
 switch|switch
 condition|(
-name|uap
+name|args
 operator|->
 name|policy
 condition|)
@@ -6237,7 +6426,7 @@ argument_list|)
 argument_list|,
 name|args
 operator|->
-name|opt
+name|cmd
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6246,13 +6435,13 @@ if|if
 condition|(
 name|args
 operator|->
-name|opt
+name|cmd
 operator|==
 name|REBOOT_CAD_ON
 operator|||
 name|args
 operator|->
-name|opt
+name|cmd
 operator|==
 name|REBOOT_CAD_OFF
 condition|)
@@ -6265,11 +6454,13 @@ name|bsd_args
 operator|.
 name|opt
 operator|=
+operator|(
 name|args
 operator|->
-name|opt
+name|cmd
 operator|==
 name|REBOOT_HALT
+operator|)
 condition|?
 name|RB_HALT
 else|:
@@ -6284,6 +6475,116 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * The FreeBSD native getpid(2), getgid(2) and getuid(2) also modify  * p->p_retval[1] when COMPAT_43 or COMPAT_SUNOS is defined. This  * globbers registers that are assumed to be preserved. The following  * lightweight syscalls fixes this. See also linux_getgid16() and  * linux_getuid16() in linux_uid16.c.  *  * linux_getpid() - MP SAFE  * linux_getgid() - MP SAFE  * linux_getuid() - MP SAFE  */
+end_comment
+
+begin_function
+name|int
+name|linux_getpid
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|linux_getpid_args
+modifier|*
+name|args
+parameter_list|)
+block|{
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|p_pid
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|linux_getgid
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|linux_getgid_args
+modifier|*
+name|args
+parameter_list|)
+block|{
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_rgid
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|linux_getuid
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|linux_getuid_args
+modifier|*
+name|args
+parameter_list|)
+block|{
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_ruid
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

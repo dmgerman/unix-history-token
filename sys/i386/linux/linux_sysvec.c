@@ -1331,7 +1331,7 @@ modifier|*
 name|regs
 decl_stmt|;
 name|struct
-name|linux_rt_sigframe
+name|l_rt_sigframe
 modifier|*
 name|fp
 decl_stmt|,
@@ -1369,7 +1369,7 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|sigreturn
+name|rt_sendsig
 argument_list|)
 condition|)
 name|printf
@@ -1426,7 +1426,7 @@ name|fp
 operator|=
 operator|(
 expr|struct
-name|linux_rt_sigframe
+name|l_rt_sigframe
 operator|*
 operator|)
 operator|(
@@ -1445,7 +1445,7 @@ operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|linux_rt_sigframe
+name|l_rt_sigframe
 argument_list|)
 operator|)
 expr_stmt|;
@@ -1455,7 +1455,7 @@ name|fp
 operator|=
 operator|(
 expr|struct
-name|linux_rt_sigframe
+name|l_rt_sigframe
 operator|*
 operator|)
 name|regs
@@ -1497,7 +1497,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|linux_rt_sigframe
+name|l_rt_sigframe
 argument_list|)
 argument_list|,
 name|VM_PROT_WRITE
@@ -1553,7 +1553,7 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|sigreturn
+name|rt_sendsig
 argument_list|)
 condition|)
 name|printf
@@ -2010,7 +2010,7 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|sigreturn
+name|rt_sendsig
 argument_list|)
 condition|)
 name|printf
@@ -2194,13 +2194,13 @@ modifier|*
 name|regs
 decl_stmt|;
 name|struct
-name|linux_sigframe
+name|l_sigframe
 modifier|*
 name|fp
 decl_stmt|,
 name|frame
 decl_stmt|;
-name|linux_sigset_t
+name|l_sigset_t
 name|lmask
 decl_stmt|;
 name|int
@@ -2258,7 +2258,7 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|sigreturn
+name|sendsig
 argument_list|)
 condition|)
 name|printf
@@ -2286,11 +2286,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Allocate space for the signal handler context. 	 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2320,7 +2315,7 @@ name|fp
 operator|=
 operator|(
 expr|struct
-name|linux_sigframe
+name|l_sigframe
 operator|*
 operator|)
 operator|(
@@ -2339,7 +2334,7 @@ operator|-
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|linux_sigframe
+name|l_sigframe
 argument_list|)
 operator|)
 expr_stmt|;
@@ -2349,7 +2344,7 @@ name|fp
 operator|=
 operator|(
 expr|struct
-name|linux_sigframe
+name|l_sigframe
 operator|*
 operator|)
 name|regs
@@ -2391,7 +2386,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|linux_sigframe
+name|l_sigframe
 argument_list|)
 argument_list|,
 name|VM_PROT_WRITE
@@ -2445,11 +2440,6 @@ argument_list|(
 name|p
 argument_list|,
 name|SIGILL
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2709,7 +2699,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|linux_fpstate
+name|l_fpstate
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2841,6 +2831,11 @@ name|tf_ss
 operator|=
 name|_udatasel
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2868,7 +2863,7 @@ name|args
 decl_stmt|;
 block|{
 name|struct
-name|linux_sigframe
+name|l_sigframe
 name|frame
 decl_stmt|;
 specifier|register
@@ -2877,7 +2872,7 @@ name|trapframe
 modifier|*
 name|regs
 decl_stmt|;
-name|linux_sigset_t
+name|l_sigset_t
 name|lmask
 decl_stmt|;
 name|int
@@ -3287,15 +3282,15 @@ name|sigaltstack_args
 name|sasargs
 decl_stmt|;
 name|struct
-name|linux_ucontext
+name|l_ucontext
 name|uc
 decl_stmt|;
 name|struct
-name|linux_sigcontext
+name|l_sigcontext
 modifier|*
 name|context
 decl_stmt|;
-name|linux_stack_t
+name|l_stack_t
 modifier|*
 name|lss
 decl_stmt|;

@@ -222,7 +222,7 @@ index|[
 name|LINUX_MAX_UTSNAME
 index|]
 init|=
-literal|"2.2.12"
+literal|"2.4.2"
 decl_stmt|;
 end_decl_stmt
 

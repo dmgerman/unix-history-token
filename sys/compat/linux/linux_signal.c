@@ -73,7 +73,7 @@ begin_function
 name|void
 name|linux_to_bsd_sigset
 parameter_list|(
-name|linux_sigset_t
+name|l_sigset_t
 modifier|*
 name|lss
 parameter_list|,
@@ -206,7 +206,7 @@ name|sigset_t
 modifier|*
 name|bss
 parameter_list|,
-name|linux_sigset_t
+name|l_sigset_t
 modifier|*
 name|lss
 parameter_list|)
@@ -332,7 +332,7 @@ specifier|static
 name|void
 name|linux_to_bsd_sigaction
 parameter_list|(
-name|linux_sigaction_t
+name|l_sigaction_t
 modifier|*
 name|lsa
 parameter_list|,
@@ -480,7 +480,7 @@ name|sigaction
 modifier|*
 name|bsa
 parameter_list|,
-name|linux_sigaction_t
+name|l_sigaction_t
 modifier|*
 name|lsa
 parameter_list|)
@@ -632,11 +632,11 @@ parameter_list|,
 name|int
 name|linux_sig
 parameter_list|,
-name|linux_sigaction_t
+name|l_sigaction_t
 modifier|*
 name|linux_nsa
 parameter_list|,
-name|linux_sigaction_t
+name|l_sigaction_t
 modifier|*
 name|linux_osa
 parameter_list|)
@@ -839,7 +839,7 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-name|linux_sigaction_t
+name|l_sigaction_t
 name|nsa
 decl_stmt|,
 name|osa
@@ -967,7 +967,7 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-name|linux_sigaction_t
+name|l_sigaction_t
 name|nsa
 decl_stmt|,
 name|osa
@@ -1035,7 +1035,7 @@ name|sigsetsize
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|linux_sigset_t
+name|l_sigset_t
 argument_list|)
 condition|)
 return|return
@@ -1065,7 +1065,7 @@ name|nsa
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|linux_sigaction_t
+name|l_sigaction_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1133,7 +1133,7 @@ name|oact
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|linux_sigaction_t
+name|l_sigaction_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1159,11 +1159,11 @@ parameter_list|,
 name|int
 name|how
 parameter_list|,
-name|linux_sigset_t
+name|l_sigset_t
 modifier|*
 name|new
 parameter_list|,
-name|linux_sigset_t
+name|l_sigset_t
 modifier|*
 name|old
 parameter_list|)
@@ -1320,10 +1320,10 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-name|linux_osigset_t
+name|l_osigset_t
 name|mask
 decl_stmt|;
-name|linux_sigset_t
+name|l_sigset_t
 name|set
 decl_stmt|,
 name|oset
@@ -1379,7 +1379,7 @@ name|mask
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|linux_osigset_t
+name|l_osigset_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1470,7 +1470,7 @@ name|omask
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|linux_osigset_t
+name|l_osigset_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1507,7 +1507,7 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-name|linux_sigset_t
+name|l_sigset_t
 name|set
 decl_stmt|,
 name|oset
@@ -1572,7 +1572,7 @@ name|sigsetsize
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|linux_sigset_t
+name|l_sigset_t
 argument_list|)
 condition|)
 return|return
@@ -1600,7 +1600,7 @@ name|set
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|linux_sigset_t
+name|l_sigset_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1668,7 +1668,7 @@ name|omask
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|linux_sigset_t
+name|l_sigset_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1689,7 +1689,7 @@ end_ifndef
 
 begin_function
 name|int
-name|linux_siggetmask
+name|linux_sgetmask
 parameter_list|(
 name|struct
 name|proc
@@ -1697,12 +1697,12 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_siggetmask_args
+name|linux_sgetmask_args
 modifier|*
 name|args
 parameter_list|)
 block|{
-name|linux_sigset_t
+name|l_sigset_t
 name|mask
 decl_stmt|;
 ifdef|#
@@ -1712,14 +1712,14 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|siggetmask
+name|sgetmask
 argument_list|)
 condition|)
 name|printf
 argument_list|(
 name|ARGS
 argument_list|(
-name|siggetmask
+name|sgetmask
 argument_list|,
 literal|""
 argument_list|)
@@ -1772,7 +1772,7 @@ end_function
 
 begin_function
 name|int
-name|linux_sigsetmask
+name|linux_ssetmask
 parameter_list|(
 name|struct
 name|proc
@@ -1780,12 +1780,12 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_sigsetmask_args
+name|linux_ssetmask_args
 modifier|*
 name|args
 parameter_list|)
 block|{
-name|linux_sigset_t
+name|l_sigset_t
 name|lset
 decl_stmt|;
 name|sigset_t
@@ -1798,14 +1798,14 @@ if|if
 condition|(
 name|ldebug
 argument_list|(
-name|sigsetmask
+name|ssetmask
 argument_list|)
 condition|)
 name|printf
 argument_list|(
 name|ARGS
 argument_list|(
-name|sigsetmask
+name|ssetmask
 argument_list|,
 literal|"%08lx"
 argument_list|)
@@ -1920,10 +1920,10 @@ block|{
 name|sigset_t
 name|bset
 decl_stmt|;
-name|linux_sigset_t
+name|l_sigset_t
 name|lset
 decl_stmt|;
-name|linux_osigset_t
+name|l_osigset_t
 name|mask
 decl_stmt|;
 ifdef|#

@@ -980,6 +980,10 @@ name|bsd_args
 operator|.
 name|addr
 operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|linux_args
 operator|->
 name|addr
@@ -987,6 +991,7 @@ operator|+
 name|linux_args
 operator|->
 name|len
+argument_list|)
 expr_stmt|;
 comment|/* This gives us our maximum stack size */
 if|if
@@ -1047,6 +1052,9 @@ name|bsd_args
 operator|.
 name|addr
 operator|=
+operator|(
+name|caddr_t
+operator|)
 name|linux_args
 operator|->
 name|addr
@@ -1121,7 +1129,7 @@ literal|0
 argument|]);
 endif|#
 directive|endif
-argument|return (error); }  int linux_rt_sigsuspend(p, uap) 	struct proc *p; 	struct linux_rt_sigsuspend_args *uap; { 	int error; 	linux_sigset_t lmask; 	sigset_t *bmask; 	struct sigsuspend_args bsd; 	caddr_t sg;  	sg = stackgap_init();
+argument|return (error); }  int linux_rt_sigsuspend(p, uap) 	struct proc *p; 	struct linux_rt_sigsuspend_args *uap; { 	int error; 	l_sigset_t lmask; 	sigset_t *bmask; 	struct sigsuspend_args bsd; 	caddr_t sg;  	sg = stackgap_init();
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1130,7 +1138,7 @@ literal|"%p, %d"
 argument|), 		    (void *)uap->newset, uap->sigsetsize);
 endif|#
 directive|endif
-argument|if (uap->sigsetsize != sizeof(linux_sigset_t)) 		return (EINVAL);  	error = copyin(uap->newset,&lmask, sizeof(linux_sigset_t)); 	if (error) 		return (error);  	bmask = stackgap_alloc(&sg, sizeof(sigset_t)); 	linux_to_bsd_sigset(&lmask, bmask); 	bsd.sigmask = bmask; 	return (sigsuspend(p,&bsd)); }  int linux_mprotect(p, uap) 	struct proc *p; 	struct linux_mprotect_args *uap; {
+argument|if (uap->sigsetsize != sizeof(l_sigset_t)) 		return (EINVAL);  	error = copyin(uap->newset,&lmask, sizeof(l_sigset_t)); 	if (error) 		return (error);  	bmask = stackgap_alloc(&sg, sizeof(sigset_t)); 	linux_to_bsd_sigset(&lmask, bmask); 	bsd.sigmask = bmask; 	return (sigsuspend(p,&bsd)); }  int linux_mprotect(p, uap) 	struct proc *p; 	struct linux_mprotect_args *uap; {
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1152,7 +1160,7 @@ argument|return (munmap(p, (void *)uap)); }
 comment|/*  * linux/alpha has 2 mappings for this,  * This is here purely to shut the compiler up.  */
 argument|int linux_setpgid(p, uap) 	struct proc *p; 	struct linux_setpgid_args *uap; {  	return (setpgid(p, (void *)uap)); }   static unsigned int linux_to_bsd_resource[LINUX_RLIM_NLIMITS] = { 	RLIMIT_CPU, RLIMIT_FSIZE, RLIMIT_DATA, RLIMIT_STACK, 	RLIMIT_CORE, RLIMIT_RSS, RLIMIT_NOFILE, -
 literal|1
-argument|, 	RLIMIT_NPROC, RLIMIT_MEMLOCK };  int dosetrlimit __P((struct proc *p, u_int which, struct rlimit *limp));  int linux_setrlimit(p, uap) 	struct proc *p; 	struct linux_setrlimit_args *uap; { 	struct rlimit rlim; 	u_int which; 	int error;
+argument|, 	RLIMIT_NPROC, RLIMIT_MEMLOCK };  int linux_setrlimit(p, uap) 	struct proc *p; 	struct linux_setrlimit_args *uap; { 	struct rlimit rlim; 	u_int which; 	int error;
 ifdef|#
 directive|ifdef
 name|DEBUG

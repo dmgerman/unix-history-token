@@ -35,7 +35,7 @@ argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
-name|linux_sigframe
+name|l_sigframe
 argument_list|,
 name|sf_handler
 argument_list|)
@@ -51,21 +51,13 @@ argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
-name|linux_sigframe
+name|l_sigframe
 argument_list|,
 name|sf_sc
 argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* ASSYM(LINUX_SC_GS, offsetof(struct linux_sigcontext, sc_gs)); */
-end_comment
-
-begin_comment
-comment|/* ASSYM(LINUX_SC_EFLAGS, offsetof(struct linux_sigcontext, sc_eflags)); */
-end_comment
 
 end_unit
 
