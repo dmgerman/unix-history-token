@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ldmisc.c    Copyright (C) 1991, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ldmisc.c    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -547,12 +547,35 @@ name|char
 operator|*
 operator|)
 name|NULL
+operator|||
+operator|*
+name|name
+operator|==
+literal|0
 condition|)
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+name|_
+argument_list|(
 literal|"no symbol"
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|demangling
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%s"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 else|else
@@ -669,6 +692,8 @@ comment|/* current bfd error or errno */
 name|fprintf
 argument_list|(
 name|fp
+argument_list|,
+literal|"%s"
 argument_list|,
 name|bfd_errmsg
 argument_list|(
@@ -813,7 +838,10 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+name|_
+argument_list|(
 literal|"built in linker script:%u"
+argument_list|)
 argument_list|,
 name|lineno
 argument_list|)
@@ -1022,7 +1050,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B%F: could not read symbols\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|)
@@ -1056,7 +1087,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B%F: could not read symbols\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|)
@@ -1248,7 +1282,10 @@ name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
+name|_
+argument_list|(
 literal|"%B: In function `%T':\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|,
@@ -1752,7 +1789,10 @@ decl_stmt|;
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%P: internal error %s %d\n"
+argument_list|)
 argument_list|,
 name|file
 argument_list|,
@@ -2030,6 +2070,83 @@ operator|.
 name|map_file
 argument_list|,
 literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* A more or less friendly abort message.  In ld.h abort is defined to    call this function.  */
+end_comment
+
+begin_function
+name|void
+name|ld_abort
+parameter_list|(
+name|file
+parameter_list|,
+name|line
+parameter_list|,
+name|fn
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|file
+decl_stmt|;
+name|int
+name|line
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|fn
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|fn
+operator|!=
+name|NULL
+condition|)
+name|einfo
+argument_list|(
+name|_
+argument_list|(
+literal|"%P: internal error: aborting at %s line %d in %s\n"
+argument_list|)
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|,
+name|fn
+argument_list|)
+expr_stmt|;
+else|else
+name|einfo
+argument_list|(
+name|_
+argument_list|(
+literal|"%P: internal error: aborting at %s line %d\n"
+argument_list|)
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+name|einfo
+argument_list|(
+name|_
+argument_list|(
+literal|"%P%F: please report this bug\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xexit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

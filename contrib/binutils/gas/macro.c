@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* macro.c - macro support for gas and gasp    Copyright (C) 1994, 95, 96, 97, 1998 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* macro.c - macro support for gas and gasp    Copyright (C) 1994, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
 end_comment
 
 begin_include
@@ -274,107 +274,15 @@ directive|include
 file|"macro.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"asintl.h"
+end_include
+
 begin_comment
 comment|/* The routines in this file handle macro definition and expansion.    They are called by both gasp and gas.  */
 end_comment
-
-begin_comment
-comment|/* Structures used to store macros.      Each macro knows its name and included text.  It gets built with a    list of formal arguments, and also keeps a hash table which points    into the list to speed up formal search.  Each formal knows its    name and its default value.  Each time the macro is expanded, the    formals get the actual values attatched to them. */
-end_comment
-
-begin_comment
-comment|/* describe the formal arguments to a macro */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|formal_struct
-block|{
-name|struct
-name|formal_struct
-modifier|*
-name|next
-decl_stmt|;
-comment|/* next formal in list */
-name|sb
-name|name
-decl_stmt|;
-comment|/* name of the formal */
-name|sb
-name|def
-decl_stmt|;
-comment|/* the default value */
-name|sb
-name|actual
-decl_stmt|;
-comment|/* the actual argument (changed on each expansion) */
-name|int
-name|index
-decl_stmt|;
-comment|/* the index of the formal 0..formal_count-1 */
-block|}
-name|formal_entry
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Other values found in the index field of a formal_entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUAL_INDEX
-value|(-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NARG_INDEX
-value|(-2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOCAL_INDEX
-value|(-3)
-end_define
-
-begin_comment
-comment|/* describe the macro. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|macro_struct
-block|{
-name|sb
-name|sub
-decl_stmt|;
-comment|/* substitution text. */
-name|int
-name|formal_count
-decl_stmt|;
-comment|/* number of formal args. */
-name|formal_entry
-modifier|*
-name|formals
-decl_stmt|;
-comment|/* pointer to list of formal_structs */
-name|struct
-name|hash_control
-modifier|*
-name|formal_hash
-decl_stmt|;
-comment|/* hash table of formals. */
-block|}
-name|macro_entry
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* Internal functions.  */
@@ -777,6 +685,27 @@ block|}
 end_block
 
 begin_comment
+comment|/* Switch in and out of MRI mode on the fly.  */
+end_comment
+
+begin_function
+name|void
+name|macro_mri_mode
+parameter_list|(
+name|mri
+parameter_list|)
+name|int
+name|mri
+decl_stmt|;
+block|{
+name|macro_mri
+operator|=
+name|mri
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Read input lines till we get to a TO string.    Increase nesting depth if we get a FROM string.    Put the results into sb at PTR.    Add a new input line to an sb using GET_LINE.    Return 1 on success, 0 on unexpected EOF.  */
 end_comment
 
@@ -1048,6 +977,31 @@ name|from_len
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|ptr
+operator|->
+name|len
+operator|==
+operator|(
+name|i
+operator|+
+name|from_len
+operator|)
+operator|||
+operator|!
+name|isalnum
+argument_list|(
+name|ptr
+operator|->
+name|ptr
+index|[
+name|i
+operator|+
+name|from_len
+index|]
+argument_list|)
+operator|)
 condition|)
 name|depth
 operator|++
@@ -1068,6 +1022,31 @@ name|to_len
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|ptr
+operator|->
+name|len
+operator|==
+operator|(
+name|i
+operator|+
+name|to_len
+operator|)
+operator|||
+operator|!
+name|isalnum
+argument_list|(
+name|ptr
+operator|->
+name|ptr
+index|[
+name|i
+operator|+
+name|to_len
+index|]
+argument_list|)
+operator|)
 condition|)
 block|{
 name|depth
@@ -1785,7 +1764,10 @@ modifier|*
 name|macro_expr
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"% operator needs absolute expression"
+argument_list|)
 argument_list|,
 name|idx
 operator|+
@@ -2602,7 +2584,10 @@ name|get_line
 argument_list|)
 condition|)
 return|return
+name|_
+argument_list|(
 literal|"unexpected end of file in macro definition"
+argument_list|)
 return|;
 if|if
 condition|(
@@ -2669,7 +2654,10 @@ operator|!=
 literal|')'
 condition|)
 return|return
+name|_
+argument_list|(
 literal|"missing ) after formals"
+argument_list|)
 return|;
 block|}
 else|else
@@ -3416,7 +3404,10 @@ operator|++
 expr_stmt|;
 else|else
 return|return
+name|_
+argument_list|(
 literal|"missplaced )"
+argument_list|)
 return|;
 block|}
 elseif|else
@@ -4343,7 +4334,8 @@ name|loclist
 operator|->
 name|next
 expr_stmt|;
-name|hash_delete
+comment|/* Setting the value to NULL effectively deletes the entry.  We          avoid calling hash_delete because it doesn't reclaim memory.  */
+name|hash_jam
 argument_list|(
 name|formal_hash
 argument_list|,
@@ -4354,6 +4346,8 @@ name|loclist
 operator|->
 name|name
 argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|sb_kill
@@ -4773,7 +4767,10 @@ operator|!=
 literal|'='
 condition|)
 return|return
+name|_
+argument_list|(
 literal|"confusion in formal parameters"
+argument_list|)
 return|;
 comment|/* Lookup the formal in the macro's list */
 name|ptr
@@ -4801,7 +4798,10 @@ operator|!
 name|ptr
 condition|)
 return|return
+name|_
+argument_list|(
 literal|"macro formal argument does not exist"
+argument_list|)
 return|;
 else|else
 block|{
@@ -4861,7 +4861,10 @@ condition|(
 name|is_keyword
 condition|)
 return|return
+name|_
+argument_list|(
 literal|"can't mix positional and keyword arguments"
+argument_list|)
 return|;
 if|if
 condition|(
@@ -4883,7 +4886,10 @@ operator|!
 name|macro_mri
 condition|)
 return|return
+name|_
+argument_list|(
 literal|"too many positional arguments"
+argument_list|)
 return|;
 name|f
 operator|=
@@ -5356,6 +5362,8 @@ parameter_list|,
 name|comment_char
 parameter_list|,
 name|error
+parameter_list|,
+name|info
 parameter_list|)
 specifier|const
 name|char
@@ -5374,6 +5382,11 @@ name|char
 modifier|*
 modifier|*
 name|error
+decl_stmt|;
+name|macro_entry
+modifier|*
+modifier|*
+name|info
 decl_stmt|;
 block|{
 specifier|const
@@ -5616,6 +5629,16 @@ operator|&
 name|line_sb
 argument_list|)
 expr_stmt|;
+comment|/* export the macro information if requested */
+if|if
+condition|(
+name|info
+condition|)
+operator|*
+name|info
+operator|=
+name|macro
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -5774,7 +5797,10 @@ name|get_line
 argument_list|)
 condition|)
 return|return
+name|_
+argument_list|(
 literal|"unexpected end of file in irp or irpc"
+argument_list|)
 return|;
 name|sb_new
 argument_list|(
@@ -5825,7 +5851,10 @@ operator|==
 literal|0
 condition|)
 return|return
+name|_
+argument_list|(
 literal|"missing model parameter"
+argument_list|)
 return|;
 name|h
 operator|=

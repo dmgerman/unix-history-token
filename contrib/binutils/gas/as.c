@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* as.c - GAS main program.    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* as.c - GAS main program.    Copyright (C) 1987, 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -49,11 +49,22 @@ directive|include
 file|"macro.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_ITBL_CPU
-end_ifndef
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"itbl-ops.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -374,123 +385,6 @@ end_decl_stmt
 begin_escape
 end_escape
 
-begin_function
-name|void
-name|print_version_id
-parameter_list|()
-block|{
-specifier|static
-name|int
-name|printed
-decl_stmt|;
-if|if
-condition|(
-name|printed
-condition|)
-return|return;
-name|printed
-operator|=
-literal|1
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"GNU assembler version %s (%s)"
-argument_list|,
-name|VERSION
-argument_list|,
-name|TARGET_ALIAS
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|", using BFD version %s"
-argument_list|,
-name|BFD_VERSION
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|show_usage
-parameter_list|(
-name|stream
-parameter_list|)
-name|FILE
-modifier|*
-name|stream
-decl_stmt|;
-block|{
-name|fprintf
-argument_list|(
-name|stream
-argument_list|,
-literal|"Usage: %s [option...] [asmfile...]\n"
-argument_list|,
-name|myname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stream
-argument_list|,
-literal|"\ Options:\n\ -a[sub-option...]	turn on listings\n\   Sub-options [default hls]:\n\   c	omit false conditionals\n\   d	omit debugging directives\n\   h	include high-level source\n\   l	include assembly\n\   m     include macro expansions\n\   n	omit forms processing\n\   s	include symbols\n\   =file set listing file name (must be last sub-option)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stream
-argument_list|,
-literal|"\ -D			produce assembler debugging messages\n\ --defsym SYM=VAL	define symbol SYM to given value\n\ -f			skip whitespace and comment preprocessing\n\ --gstabs		generate stabs debugging information\n\ --help			show this message and exit\n\ -I DIR			add DIR to search list for .include directives\n\ -J			don't warn about signed overflow\n\ -K			warn when differences altered for long displacements\n\ -L,--keep-locals	keep local symbols (e.g. starting with `L')\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stream
-argument_list|,
-literal|"\ -M,--mri		assemble in MRI compatibility mode\n\ --MD FILE		write dependency information in FILE (default none)\n\ -nocpp			ignored\n\ -o OBJFILE		name the object-file output OBJFILE (default a.out)\n\ -R			fold data section into text section\n\ --statistics		print various measured statistics from execution\n\ --strip-local-absolute	strip local absolute symbols\n\ --traditional-format	Use same format as native assembler when possible\n\ --version		print assembler version number and exit\n\ -W			suppress warnings\n\ --itbl INSTTBL		extend instruction set to include instructions\n\ 			matching the specifications defined in file INSTTBL\n\ -w			ignored\n\ -X			ignored\n\ -Z			generate object file even after errors\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stream
-argument_list|,
-literal|"\ --listing-lhs-width	set the width in words of the output data column of\n\ 			the listing\n\ --listing-lhs-width2	set the width in words of the continuation lines\n\ 			of the output data column; ignored if smaller than\n\ 			the width of the first line\n\ --listing-rhs-width	set the max width in characters of the lines from\n\ 			the source file\n\ --listing-cont-lines	set the maximum number of continuation lines used\n\ 			for the output data column of the listing\n"
-argument_list|)
-expr_stmt|;
-name|md_show_usage
-argument_list|(
-name|stream
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stream
-argument_list|,
-literal|"\nReport bugs to bug-gnu-utils@gnu.org\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -535,6 +429,8 @@ name|emulation
 name|i386coff
 decl_stmt|,
 name|i386elf
+decl_stmt|,
+name|i386aout
 decl_stmt|;
 end_decl_stmt
 
@@ -699,7 +595,10 @@ name|p
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"missing emulation mode name"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|em
@@ -773,7 +672,10 @@ name|n_emulations
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unrecognized emulation name `%s'"
+argument_list|)
 argument_list|,
 name|em
 argument_list|)
@@ -896,6 +798,524 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|void
+name|print_version_id
+parameter_list|()
+block|{
+specifier|static
+name|int
+name|printed
+decl_stmt|;
+if|if
+condition|(
+name|printed
+condition|)
+return|return;
+name|printed
+operator|=
+literal|1
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"GNU assembler version %s (%s) using BFD version %s"
+argument_list|)
+argument_list|,
+name|VERSION
+argument_list|,
+name|TARGET_ALIAS
+argument_list|,
+name|BFD_VERSION
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"GNU assembler version %s (%s)"
+argument_list|)
+argument_list|,
+name|VERSION
+argument_list|,
+name|TARGET_ALIAS
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|show_usage
+parameter_list|(
+name|stream
+parameter_list|)
+name|FILE
+modifier|*
+name|stream
+decl_stmt|;
+block|{
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"Usage: %s [option...] [asmfile...]\n"
+argument_list|)
+argument_list|,
+name|myname
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\ Options:\n\   -a[sub-option...]	  turn on listings\n\                       	  Sub-options [default hls]:\n\                       	  c      omit false conditionals\n\                       	  d      omit debugging directives\n\                       	  h      include high-level source\n\                       	  l      include assembly\n\                       	  m      include macro expansions\n\                       	  n      omit forms processing\n\                       	  s      include symbols\n\                       	  L      include line debug statistics (if applicable)\n\                       	  =FILE  list to FILE (must be last sub-option)\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -D                      produce assembler debugging messages\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --defsym SYM=VAL        define symbol SYM to given value\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_EMULATIONS
+block|{
+name|int
+name|i
+decl_stmt|;
+name|char
+modifier|*
+name|def_em
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"\   --em=["
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|n_emulations
+operator|-
+literal|1
+condition|;
+name|i
+operator|++
+control|)
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"%s | "
+argument_list|,
+name|emulations
+index|[
+name|i
+index|]
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"%s]\n"
+argument_list|,
+name|emulations
+index|[
+name|i
+index|]
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|def_em
+operator|=
+name|getenv
+argument_list|(
+name|EMULATION_ENVIRON
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|def_em
+condition|)
+name|def_em
+operator|=
+name|DEFAULT_EMULATION
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\                           emulate output (default %s)\n"
+argument_list|)
+argument_list|,
+name|def_em
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -f                      skip whitespace and comment preprocessing\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --gstabs                generate stabs debugging information\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --gdwarf2               generate DWARF2 debugging information\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --help                  show this message and exit\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -I DIR                  add DIR to search list for .include directives\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -J                      don't warn about signed overflow\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -K                      warn when differences altered for long displacements\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -L,--keep-locals        keep local symbols (e.g. starting with `L')\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -M,--mri                assemble in MRI compatibility mode\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --MD FILE               write dependency information in FILE (default none)\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -nocpp                  ignored\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -o OBJFILE              name the object-file output OBJFILE (default a.out)\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -R                      fold data section into text section\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --statistics            print various measured statistics from execution\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --strip-local-absolute  strip local absolute symbols\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --traditional-format    Use same format as native assembler when possible\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --version               print assembler version number and exit\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -W  --no-warn           suppress warnings\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --warn                  don't suppress warnings\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --fatal-warnings        treat warnings as errors\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --itbl INSTTBL          extend instruction set to include instructions\n\                           matching the specifications defined in file INSTTBL\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -w                      ignored\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -X                      ignored\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   -Z                      generate object file even after errors\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --listing-lhs-width     set the width in words of the output data column of\n\                           the listing\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --listing-lhs-width2    set the width in words of the continuation lines\n\                           of the output data column; ignored if smaller than\n\                           the width of the first line\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --listing-rhs-width     set the max width in characters of the lines from\n\                           the source file\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --listing-cont-lines    set the maximum number of continuation lines used\n\                           for the output data column of the listing\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|md_show_usage
+argument_list|(
+name|stream
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"Report bugs to %s\n"
+argument_list|)
+argument_list|,
+name|REPORT_BUGS_TO
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Since it is easy to do here we interpret the special arg "-"  * to mean "use stdin" and we set that argv[] pointing to "".  * After we have munged argv[], the only things left are source file  * name(s) and ""(s) denoting stdin. These file names are used  * (perhaps more than once) later.  *  * check for new machine-dep cmdline options in  * md_parse_option definitions in config/tc-*.c  */
@@ -1294,6 +1714,58 @@ name|NULL
 block|,
 name|OPTION_TRADITIONAL_FORMAT
 block|}
+block|,
+define|#
+directive|define
+name|OPTION_GDWARF2
+value|(OPTION_STD_BASE + 17)
+block|{
+literal|"gdwarf2"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_GDWARF2
+block|}
+block|,
+block|{
+literal|"no-warn"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'W'
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_WARN
+value|(OPTION_STD_BASE + 18)
+block|{
+literal|"warn"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_WARN
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_WARN_FATAL
+value|(OPTION_STD_BASE + 19)
+block|{
+literal|"fatal-warnings"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_WARN_FATAL
+block|}
 block|}
 decl_stmt|;
 comment|/* Construct the option lists from the standard list and the      target dependent list.  */
@@ -1607,24 +2079,36 @@ case|:
 comment|/* This output is intended to follow the GNU standards document.  */
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"GNU assembler %s\n"
+argument_list|)
 argument_list|,
 name|VERSION
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Copyright 1997 Free Software Foundation, Inc.\n"
+name|_
+argument_list|(
+literal|"Copyright 2000 Free Software Foundation, Inc.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
+argument_list|(
+name|_
 argument_list|(
 literal|"\ This program is free software; you may redistribute it under the terms of\n\ the GNU General Public License.  This program has absolutely no warranty.\n"
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"This assembler was configured for a target of `%s'.\n"
+argument_list|)
 argument_list|,
 name|TARGET_ALIAS
 argument_list|)
@@ -1653,14 +2137,20 @@ argument_list|)
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"multiple emulation names specified"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"emulations not handled in this configuration"
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1673,7 +2163,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"alias = %s\n"
+argument_list|)
 argument_list|,
 name|TARGET_ALIAS
 argument_list|)
@@ -1682,7 +2175,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"canonical = %s\n"
+argument_list|)
 argument_list|,
 name|TARGET_CANONICAL
 argument_list|)
@@ -1691,7 +2187,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"cpu-type = %s\n"
+argument_list|)
 argument_list|,
 name|TARGET_CPU
 argument_list|)
@@ -1703,7 +2202,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"format = %s\n"
+argument_list|)
 argument_list|,
 name|TARGET_OBJ_FORMAT
 argument_list|)
@@ -1717,7 +2219,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"bfd-target = %s\n"
+argument_list|)
 argument_list|,
 name|TARGET_FORMAT
 argument_list|)
@@ -1774,7 +2279,10 @@ literal|'\0'
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"bad defsym; format is --defsym name=value"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1859,7 +2367,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"No file name following -t option\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1920,7 +2431,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Failed to read instruction table %s\n"
+argument_list|)
 argument_list|,
 name|itbl_files
 operator|->
@@ -1950,6 +2464,14 @@ case|:
 name|debug_type
 operator|=
 name|DEBUG_STABS
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_GDWARF2
+case|:
+name|debug_type
+operator|=
+name|DEBUG_DWARF2
 expr_stmt|;
 break|break;
 case|case
@@ -2082,6 +2604,30 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_WARN
+case|:
+name|flag_no_warnings
+operator|=
+literal|0
+expr_stmt|;
+name|flag_fatal_warnings
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_WARN_FATAL
+case|:
+name|flag_no_warnings
+operator|=
+literal|0
+expr_stmt|;
+name|flag_fatal_warnings
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'Z'
 case|:
 name|flag_always_generate_output
@@ -2188,7 +2734,10 @@ break|break;
 default|default:
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"invalid listing option `%c'"
+argument_list|)
 argument_list|,
 operator|*
 name|optarg
@@ -2332,6 +2881,38 @@ name|start_time
 operator|=
 name|get_run_time
 argument_list|()
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LC_MESSAGES
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2707,6 +3288,31 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|flag_fatal_warnings
+operator|&&
+name|had_warnings
+argument_list|()
+operator|>
+literal|0
+operator|&&
+name|had_errors
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"%d warnings, treating warnings as errors"
+argument_list|)
+argument_list|,
+name|had_warnings
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|had_errors
 argument_list|()
 operator|>
@@ -2768,12 +3374,6 @@ name|void
 name|dump_statistics
 parameter_list|()
 block|{
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_SBRK
@@ -2804,7 +3404,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: total time in assembly: %ld.%06ld\n"
+argument_list|)
 argument_list|,
 name|myname
 argument_list|,
@@ -2824,7 +3427,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: data size %ld\n"
+argument_list|)
 argument_list|,
 name|myname
 argument_list|,
@@ -3120,7 +3726,6 @@ name|SEC_READONLY
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* @@ FIXME -- SEC_CODE seems to mean code only, rather than code possibly.*/
 name|bfd_set_section_flags
 argument_list|(
 name|stdoutput
@@ -3135,6 +3740,8 @@ operator||
 name|SEC_LOAD
 operator||
 name|SEC_RELOC
+operator||
+name|SEC_DATA
 operator|)
 argument_list|)
 expr_stmt|;

@@ -112,6 +112,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|PTR
+name|calloc
+name|PARAMS
+argument_list|(
+operator|(
+name|size_t
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|PTR
 name|sbrk
 name|PARAMS
 argument_list|(
@@ -142,20 +156,11 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__CYGWIN32__
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SBRK
+end_ifdef
 
 begin_comment
 comment|/* The initial sbrk, set when the program name is set. Not used for win32    ports other than cygwin32.  */
@@ -176,6 +181,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* HAVE_SBRK */
+end_comment
+
 begin_function
 name|void
 name|xmalloc_set_program_name
@@ -192,18 +201,9 @@ name|name
 operator|=
 name|s
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__CYGWIN32__
-argument_list|)
+ifdef|#
+directive|ifdef
+name|HAVE_SBRK
 comment|/* Win32 ports other than cygwin32 don't have brk() */
 if|if
 condition|(
@@ -224,7 +224,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ! _WIN32 || __CYGWIN32 __ */
+comment|/* HAVE_SBRK */
 block|}
 end_function
 
@@ -264,18 +264,9 @@ operator|!
 name|newmem
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__CYGWIN32__
-argument_list|)
+ifdef|#
+directive|ifdef
+name|HAVE_SBRK
 specifier|extern
 name|char
 modifier|*
@@ -327,7 +318,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%s%sCan not allocate %lu bytes after allocating %lu bytes\n"
+literal|"\n%s%sCannot allocate %lu bytes after allocating %lu bytes\n"
 argument_list|,
 name|name
 argument_list|,
@@ -353,11 +344,12 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* HAVE_SBRK */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%s%sCan not allocate %lu bytes\n"
+literal|"\n%s%sCannot allocate %lu bytes\n"
 argument_list|,
 name|name
 argument_list|,
@@ -377,7 +369,183 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ! _WIN32 || __CYGWIN32 __ */
+comment|/* HAVE_SBRK */
+name|xexit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|newmem
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|PTR
+name|xcalloc
+parameter_list|(
+name|nelem
+parameter_list|,
+name|elsize
+parameter_list|)
+name|size_t
+name|nelem
+decl_stmt|,
+name|elsize
+decl_stmt|;
+block|{
+name|PTR
+name|newmem
+decl_stmt|;
+if|if
+condition|(
+name|nelem
+operator|==
+literal|0
+operator|||
+name|elsize
+operator|==
+literal|0
+condition|)
+name|nelem
+operator|=
+name|elsize
+operator|=
+literal|1
+expr_stmt|;
+name|newmem
+operator|=
+name|calloc
+argument_list|(
+name|nelem
+argument_list|,
+name|elsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|newmem
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SBRK
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+name|size_t
+name|allocated
+decl_stmt|;
+if|if
+condition|(
+name|first_break
+operator|!=
+name|NULL
+condition|)
+name|allocated
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|sbrk
+argument_list|(
+literal|0
+argument_list|)
+operator|-
+name|first_break
+expr_stmt|;
+else|else
+name|allocated
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|sbrk
+argument_list|(
+literal|0
+argument_list|)
+operator|-
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|environ
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n%s%sCannot allocate %lu bytes after allocating %lu bytes\n"
+argument_list|,
+name|name
+argument_list|,
+operator|*
+name|name
+condition|?
+literal|": "
+else|:
+literal|""
+argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+name|nelem
+operator|*
+name|elsize
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|allocated
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* HAVE_SBRK */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n%s%sCannot allocate %lu bytes\n"
+argument_list|,
+name|name
+argument_list|,
+operator|*
+name|name
+condition|?
+literal|": "
+else|:
+literal|""
+argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+name|nelem
+operator|*
+name|elsize
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_SBRK */
 name|xexit
 argument_list|(
 literal|1
@@ -448,9 +616,9 @@ operator|!
 name|newmem
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|__MINGW32__
+ifdef|#
+directive|ifdef
+name|HAVE_SBRK
 specifier|extern
 name|char
 modifier|*
@@ -502,7 +670,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%s%sCan not reallocate %lu bytes after allocating %lu bytes\n"
+literal|"\n%s%sCannot reallocate %lu bytes after allocating %lu bytes\n"
 argument_list|,
 name|name
 argument_list|,
@@ -528,11 +696,12 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* HAVE_SBRK */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%s%sCan not reallocate %lu bytes\n"
+literal|"\n%s%sCannot reallocate %lu bytes\n"
 argument_list|,
 name|name
 argument_list|,
@@ -552,7 +721,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __MINGW32__ */
+comment|/* HAVE_SBRK */
 name|xexit
 argument_list|(
 literal|1

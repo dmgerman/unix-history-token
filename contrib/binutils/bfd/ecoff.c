@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -406,7 +406,93 @@ name|asection
 name|bfd_debug_section
 init|=
 block|{
+comment|/* name,   index, next, flags, set_vma, reloc_done, linker_mark, gc_mark */
 literal|"*DEBUG*"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* vma, lma, _cooked_size, _raw_size, output_offset, output_section, */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+comment|/* alig, reloc..., orel..., reloc_count, filepos, rel_..., line_... */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* userdata, contents, lineno, lineno_count */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* comdat_info, moving_line_filepos, target_index, used_by_bfd,  */
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* cons, owner, symbol */
+literal|0
+block|,
+literal|0
+block|,
+operator|(
+expr|struct
+name|symbol_cache_entry
+operator|*
+operator|)
+name|NULL
+block|,
+comment|/* symbol_ptr_ptr,                   link_order_head, ..._tail */
+operator|(
+expr|struct
+name|symbol_cache_entry
+operator|*
+operator|*
+operator|)
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -688,6 +774,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
@@ -1653,10 +1740,13 @@ parameter_list|,
 name|hdr
 parameter_list|,
 name|name
+parameter_list|,
+name|section
 parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|PTR
 name|hdr
@@ -1665,6 +1755,12 @@ specifier|const
 name|char
 modifier|*
 name|name
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|asection
+modifier|*
+name|section
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -2270,6 +2366,7 @@ decl_stmt|;
 name|asection
 modifier|*
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|ecoff_debug_info
@@ -5638,7 +5735,10 @@ name|sprintf
 argument_list|(
 name|p1
 argument_list|,
+name|_
+argument_list|(
 literal|"Unknown basic type %d"
+argument_list|)
 argument_list|,
 operator|(
 name|int
@@ -6155,8 +6255,8 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
-comment|/* Ignored.  */
 name|asymbol
 modifier|*
 name|symbol
@@ -6195,6 +6295,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -6855,7 +6956,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\n      End+1 symbol: %ld"
+argument_list|)
 argument_list|,
 call|(
 name|long
@@ -6893,7 +6997,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\n      First symbol: %ld"
+argument_list|)
 argument_list|,
 call|(
 name|long
@@ -6910,7 +7017,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\n      First symbol: %ld"
+argument_list|)
 argument_list|,
 operator|(
 call|(
@@ -6969,7 +7079,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\n      End+1 symbol: %-7ld   Type:  %s"
+argument_list|)
 argument_list|,
 operator|(
 call|(
@@ -7012,7 +7125,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\n      Local symbol: %ld"
+argument_list|)
 argument_list|,
 operator|(
 operator|(
@@ -7048,7 +7164,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\n      struct; End+1 symbol: %ld"
+argument_list|)
 argument_list|,
 call|(
 name|long
@@ -7068,7 +7187,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\n      union; End+1 symbol: %ld"
+argument_list|)
 argument_list|,
 call|(
 name|long
@@ -7088,7 +7210,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\n      enum; End+1 symbol: %ld"
+argument_list|)
 argument_list|,
 call|(
 name|long
@@ -7117,7 +7242,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\n      Type: %s"
+argument_list|)
 argument_list|,
 name|ecoff_type_to_string
 argument_list|(
@@ -7913,6 +8041,7 @@ name|asymbol
 modifier|*
 modifier|*
 name|ignore_symbols
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd_vma
 name|offset
@@ -8711,6 +8840,7 @@ name|abfd
 decl_stmt|;
 name|boolean
 name|reloc
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|asection
@@ -14452,6 +14582,13 @@ index|]
 operator|=
 literal|'0'
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|hdr.ar_mode[0] = '0';
+else|#
+directive|else
+comment|/* Building gcc ends up extracting the armap as a file - twice. */
 name|hdr
 operator|.
 name|ar_mode
@@ -14459,8 +14596,28 @@ index|[
 literal|0
 index|]
 operator|=
-literal|'0'
+literal|'6'
 expr_stmt|;
+name|hdr
+operator|.
+name|ar_mode
+index|[
+literal|1
+index|]
+operator|=
+literal|'4'
+expr_stmt|;
+name|hdr
+operator|.
+name|ar_mode
+index|[
+literal|2
+index|]
+operator|=
+literal|'4'
+expr_stmt|;
+endif|#
+directive|endif
 name|sprintf
 argument_list|(
 name|hdr

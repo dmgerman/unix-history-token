@@ -59,7 +59,7 @@ argument_list|,
 name|PTR
 name|out
 name|AND
-name|CONST
+specifier|const
 name|PTR
 name|in
 name|AND

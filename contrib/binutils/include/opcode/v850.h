@@ -87,6 +87,39 @@ begin_comment
 comment|/* Any processor.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PROCESSOR_V850E
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Just the V850E. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_NOT_V850
+value|(~ PROCESSOR_V850)
+end_define
+
+begin_comment
+comment|/* Any processor except the V850.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_V850EA
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Just the V850EA. */
+end_comment
+
 begin_comment
 comment|/* The table itself is sorted by major opcode number, and is otherwise    in the order in which the disassembler should consider    instructions.  */
 end_comment
@@ -287,6 +320,43 @@ define|#
 directive|define
 name|V850_NOT_R0
 value|0x80
+end_define
+
+begin_comment
+comment|/* CYGNUS LOCAL v850e */
+end_comment
+
+begin_comment
+comment|/* push/pop type instruction, V850E specific.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V850E_PUSH_POP
+value|0x100
+end_define
+
+begin_comment
+comment|/* 16 bit immediate follows instruction, V850E specific.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V850E_IMMEDIATE16
+value|0x200
+end_define
+
+begin_comment
+comment|/* 32 bit immediate follows instruction, V850E specific.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V850E_IMMEDIATE32
+value|0x400
 end_define
 
 begin_endif

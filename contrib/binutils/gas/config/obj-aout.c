@@ -1,7 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* a.out object file format    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 1996    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* a.out object file format    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_HEADER
+value|"obj-aout.h"
+end_define
 
 begin_include
 include|#
@@ -220,7 +227,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|pseudo_typeS
-name|obj_pseudo_table
+name|aout_pseudo_table
 index|[]
 init|=
 block|{
@@ -368,6 +375,10 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+name|NULL
+block|,
+literal|0
 block|}
 comment|/* end sentinel */
 block|}
@@ -375,7 +386,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* obj_pseudo_table */
+comment|/* aout_pseudo_table */
 end_comment
 
 begin_ifdef
@@ -417,40 +428,55 @@ name|other
 decl_stmt|;
 name|flags
 operator|=
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 expr_stmt|;
 name|desc
 operator|=
-name|S_GET_DESC
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
 argument_list|(
 name|sym
 argument_list|)
+argument_list|)
+operator|->
+name|desc
 expr_stmt|;
 name|type
 operator|=
-name|S_GET_TYPE
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
 argument_list|(
 name|sym
 argument_list|)
+argument_list|)
+operator|->
+name|type
 expr_stmt|;
 name|other
 operator|=
-name|S_GET_OTHER
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
 argument_list|(
 name|sym
 argument_list|)
+argument_list|)
+operator|->
+name|other
 expr_stmt|;
 name|sec
 operator|=
+name|S_GET_SEGMENT
+argument_list|(
 name|sym
-operator|->
-name|bsym
-operator|->
-name|section
+argument_list|)
 expr_stmt|;
 comment|/* Only frob simple symbols this way right now.  */
 if|if
@@ -483,16 +509,19 @@ operator|==
 operator|&
 name|bfd_abs_section
 condition|)
-name|sym
-operator|->
-name|bsym
-operator|->
-name|section
-operator|=
+block|{
 name|sec
 operator|=
 name|bfd_und_section_ptr
 expr_stmt|;
+name|S_SET_SEGMENT
+argument_list|(
+name|sym
+argument_list|,
+name|sec
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -582,9 +611,10 @@ case|case
 name|N_SETB
 case|:
 comment|/* Set the debugging flag for constructor symbols so that 	     BFD leaves them alone.  */
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator||=
@@ -600,7 +630,10 @@ argument_list|)
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Attempt to put a common symbol into set %s"
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -620,7 +653,10 @@ argument_list|)
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Attempt to put an undefined symbol into set %s"
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -633,17 +669,17 @@ case|case
 name|N_INDR
 case|:
 comment|/* Put indirect symbols in the indirect section.  */
+name|S_SET_SEGMENT
+argument_list|(
 name|sym
-operator|->
-name|bsym
-operator|->
-name|section
-operator|=
+argument_list|,
 name|bfd_ind_section_ptr
+argument_list|)
 expr_stmt|;
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator||=
@@ -656,17 +692,19 @@ operator|&
 name|N_EXT
 condition|)
 block|{
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator||=
 name|BSF_EXPORT
 expr_stmt|;
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator|&=
@@ -679,9 +717,10 @@ case|case
 name|N_WARNING
 case|:
 comment|/* Mark warning symbols.  */
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator||=
@@ -692,32 +731,35 @@ block|}
 block|}
 else|else
 block|{
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator||=
 name|BSF_DEBUGGING
 expr_stmt|;
 block|}
-name|S_SET_TYPE
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
 argument_list|(
 name|sym
-argument_list|,
-name|type
 argument_list|)
+argument_list|)
+operator|->
+name|type
+operator|=
+name|type
 expr_stmt|;
 comment|/* Double check weak symbols.  */
 if|if
 condition|(
+name|S_IS_WEAK
+argument_list|(
 name|sym
-operator|->
-name|bsym
-operator|->
-name|flags
-operator|&
-name|BSF_WEAK
+argument_list|)
 condition|)
 block|{
 if|if
@@ -729,7 +771,10 @@ argument_list|)
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Symbol `%s' can not be both weak and common"
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -842,6 +887,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* ! BFD_ASSEMBLER */
+end_comment
 
 begin_comment
 comment|/* Relocation. */
@@ -983,13 +1032,19 @@ name|file
 argument_list|,
 name|line
 argument_list|,
+name|_
+argument_list|(
 literal|"unresolved relocation"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"bad relocation: symbol `%s' not in symbol table"
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -1352,6 +1407,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! defined (obj_header_append) */
+end_comment
+
 begin_function
 name|void
 name|obj_symbol_to_chars
@@ -1634,7 +1693,10 @@ break|break;
 default|default:
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: bad type for weak symbol"
+argument_list|)
 argument_list|,
 name|temp
 argument_list|)
@@ -1899,6 +1961,23 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|->
+name|other
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
 name|S_SET_OTHER
 argument_list|(
 name|sym
@@ -1906,6 +1985,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -1920,6 +2001,23 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|->
+name|other
+operator|=
+literal|2
+expr_stmt|;
+else|#
+directive|else
 name|S_SET_OTHER
 argument_list|(
 name|sym
@@ -1927,6 +2025,8 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 block|}
@@ -1937,13 +2037,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
-name|void
-name|obj_read_begin_hook
-parameter_list|()
-block|{ }
 end_function
 
 begin_ifndef
@@ -2016,7 +2109,10 @@ argument_list|)
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: global symbols not supported in common sections"
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -2203,12 +2299,9 @@ expr_stmt|;
 name|symbolPP
 operator|=
 operator|&
-operator|(
-name|symbol_next
-argument_list|(
 name|symbolP
-argument_list|)
-operator|)
+operator|->
+name|sy_next
 expr_stmt|;
 block|}
 else|else
@@ -2230,7 +2323,10 @@ comment|/* This warning should never get triggered any more. 	       Well, maybe
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Local symbol %s never defined."
+argument_list|)
 argument_list|,
 name|decode_local_label_name
 argument_list|(
@@ -2562,7 +2658,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"subsegment index too high"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2645,6 +2744,193 @@ end_endif
 begin_comment
 comment|/* ! BFD_ASSEMBLER */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+end_ifdef
+
+begin_comment
+comment|/* Support for an AOUT emulation.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|aout_pop_insert
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|obj_aout_s_get_other
+name|PARAMS
+argument_list|(
+operator|(
+name|symbolS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|obj_aout_s_get_desc
+name|PARAMS
+argument_list|(
+operator|(
+name|symbolS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|aout_pop_insert
+parameter_list|()
+block|{
+name|pop_insert
+argument_list|(
+name|aout_pseudo_table
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|obj_aout_s_get_other
+parameter_list|(
+name|sym
+parameter_list|)
+name|symbolS
+modifier|*
+name|sym
+decl_stmt|;
+block|{
+return|return
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|->
+name|other
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|obj_aout_s_get_desc
+parameter_list|(
+name|sym
+parameter_list|)
+name|symbolS
+modifier|*
+name|sym
+decl_stmt|;
+block|{
+return|return
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|->
+name|desc
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|format_ops
+name|aout_format_ops
+init|=
+block|{
+name|bfd_target_aout_flavour
+block|,
+literal|1
+block|,
+comment|/* dfl_leading_underscore */
+literal|0
+block|,
+comment|/* emit_section_symbols */
+name|obj_aout_frob_symbol
+block|,
+name|obj_aout_frob_file
+block|,
+literal|0
+block|,
+comment|/* frob_file_after_relocs */
+literal|0
+block|,
+comment|/* s_get_size */
+literal|0
+block|,
+comment|/* s_set_size */
+literal|0
+block|,
+comment|/* s_get_align */
+literal|0
+block|,
+comment|/* s_set_align */
+name|obj_aout_s_get_other
+block|,
+name|obj_aout_s_get_desc
+block|,
+literal|0
+block|,
+comment|/* copy_symbol_attributes */
+literal|0
+block|,
+comment|/* generate_asm_lineno */
+literal|0
+block|,
+comment|/* process_stab */
+literal|0
+block|,
+comment|/* sec_sym_ok_for_reloc */
+name|aout_pop_insert
+block|,
+literal|0
+block|,
+comment|/* ecoff_set_ext */
+literal|0
+block|,
+comment|/* read_begin_hook */
+literal|0
+comment|/* symbol_new_hook */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|BFD_ASSEMBLER
+end_endif
 
 begin_comment
 comment|/* end of obj-aout.c */

@@ -85,12 +85,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SH_ARCH_MAGIC_WINCE
+value|0x01a2
+end_define
+
+begin_comment
+comment|/* Windows CE - little endian */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SH_PE_MAGIC
+value|0x010b
+end_define
+
+begin_define
+define|#
+directive|define
 name|SHBADMAG
 parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x).f_magic!=SH_ARCH_MAGIC_BIG)&& \   ((x).f_magic!=SH_ARCH_MAGIC_LITTLE))
+value|(((x).f_magic!=SH_ARCH_MAGIC_BIG)&& \   ((x).f_magic!=SH_ARCH_MAGIC_WINCE)&& \   ((x).f_magic!=SH_ARCH_MAGIC_LITTLE))
 end_define
 
 begin_define
@@ -188,6 +206,42 @@ define|#
 directive|define
 name|AOUTSZ
 value|28
+end_define
+
+begin_comment
+comment|/* Define some NT default values.  */
+end_comment
+
+begin_comment
+comment|/*  #define NT_IMAGE_BASE        0x400000 moved to internal.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_SECTION_ALIGNMENT
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_FILE_ALIGNMENT
+value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_DEF_RESERVE
+value|0x100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_DEF_COMMIT
+value|0x1000
 end_define
 
 begin_comment
@@ -342,6 +396,18 @@ comment|/* (physical) address of line number	*/
 block|}
 name|l_addr
 union|;
+ifdef|#
+directive|ifdef
+name|COFF_WITH_PE
+name|char
+name|l_lnno
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* line number		*/
+else|#
+directive|else
 name|char
 name|l_lnno
 index|[
@@ -349,6 +415,8 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* line number		*/
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -386,12 +454,73 @@ name|LINENO
 value|struct external_lineno
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COFF_WITH_PE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LINESZ
+value|6
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|GET_LINENO_LNNO
+end_undef
+
+begin_define
+define|#
+directive|define
+name|GET_LINENO_LNNO
+parameter_list|(
+name|abfd
+parameter_list|,
+name|ext
+parameter_list|)
+value|bfd_h_get_16(abfd, (bfd_byte *) (ext->l_lnno));
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PUT_LINENO_LNNO
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PUT_LINENO_LNNO
+parameter_list|(
+name|abfd
+parameter_list|,
+name|val
+parameter_list|,
+name|ext
+parameter_list|)
+value|bfd_h_put_16(abfd,val,  (bfd_byte *) (ext->l_lnno));
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|LINESZ
 value|8
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/********************** SYMBOLS **********************/
@@ -669,6 +798,27 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* # line numbers */
+name|char
+name|x_checksum
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* section COMDAT checksum */
+name|char
+name|x_associated
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* COMDAT associated section index */
+name|char
+name|x_comdat
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* COMDAT selection number */
 block|}
 name|x_scn
 struct|;
@@ -742,6 +892,12 @@ begin_comment
 comment|/* The external reloc has an offset field, because some of the reloc    types on the h8 don't have room in the instruction for the entire    offset - eg the strange jump and high page addressing modes */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COFF_WITH_PE
+end_ifndef
+
 begin_struct
 struct|struct
 name|external_reloc
@@ -780,6 +936,42 @@ block|}
 struct|;
 end_struct
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|external_reloc
+block|{
+name|char
+name|r_vaddr
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|char
+name|r_symndx
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|char
+name|r_type
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -787,12 +979,35 @@ name|RELOC
 value|struct external_reloc
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COFF_WITH_PE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RELSZ
+value|10
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|RELSZ
 value|16
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* SH relocation types.  Not all of these are actually used.  */
@@ -807,6 +1022,17 @@ end_define
 
 begin_comment
 comment|/* only used internally */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_SH_IMM32CE
+value|2
+end_define
+
+begin_comment
+comment|/* 32 bit immediate for WinCE */
 end_comment
 
 begin_define
@@ -928,6 +1154,17 @@ end_define
 
 begin_comment
 comment|/* 8 bit immediate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_SH_IMAGEBASE
+value|16
+end_define
+
+begin_comment
+comment|/* Windows CE */
 end_comment
 
 begin_define

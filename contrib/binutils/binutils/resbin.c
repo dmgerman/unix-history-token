@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* resbin.c -- manipulate the Windows binary resource format.    Copyright 1997 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* resbin.c -- manipulate the Windows binary resource format.    Copyright 1997, 1998 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -636,7 +636,7 @@ name|length
 argument_list|)
 return|;
 case|case
-name|RT_ACCELERATORS
+name|RT_ACCELERATOR
 case|:
 return|return
 name|bin_to_res_accelerators
@@ -737,7 +737,10 @@ decl_stmt|;
 block|{
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: not enough binary data"
+argument_list|)
 argument_list|,
 name|msg
 argument_list|)
@@ -803,6 +806,10 @@ if|if
 condition|(
 name|length
 operator|<
+operator|(
+name|unsigned
+name|long
+operator|)
 name|c
 operator|*
 literal|2
@@ -811,7 +818,10 @@ literal|2
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"null terminated unicode string"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -954,7 +964,10 @@ literal|2
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"resource ID"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|first
@@ -981,7 +994,10 @@ literal|4
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"resource ID"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|id
@@ -1190,7 +1206,10 @@ literal|4
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"cursor"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|c
@@ -1376,7 +1395,10 @@ literal|2
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"menu header"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|version
@@ -1403,7 +1425,10 @@ literal|4
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"menu header"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -1441,6 +1466,7 @@ operator|==
 literal|1
 condition|)
 block|{
+name|unsigned
 name|int
 name|offset
 decl_stmt|;
@@ -1452,7 +1478,10 @@ literal|8
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"menuex header"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -1489,7 +1518,10 @@ name|length
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"menuex offset"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -1522,7 +1554,10 @@ block|}
 else|else
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unsupported menu version %d"
+argument_list|)
 argument_list|,
 name|version
 argument_list|)
@@ -1603,11 +1638,13 @@ block|{
 name|int
 name|flags
 decl_stmt|,
-name|stroff
-decl_stmt|,
 name|slen
 decl_stmt|,
 name|itemlen
+decl_stmt|;
+name|unsigned
+name|int
+name|stroff
 decl_stmt|;
 name|struct
 name|menuitem
@@ -1622,7 +1659,10 @@ literal|4
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"menuitem header"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mi
@@ -1702,7 +1742,10 @@ literal|2
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"menuitem header"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1950,7 +1993,9 @@ name|int
 name|flags
 decl_stmt|,
 name|slen
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|itemlen
 decl_stmt|;
 name|struct
@@ -1966,7 +2011,10 @@ literal|14
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"menuitem header"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mi
@@ -2137,7 +2185,10 @@ literal|4
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"menuitem"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mi
@@ -2277,9 +2328,11 @@ name|c
 decl_stmt|,
 name|sublen
 decl_stmt|,
-name|off
-decl_stmt|,
 name|i
+decl_stmt|;
+name|unsigned
+name|int
+name|off
 decl_stmt|;
 name|struct
 name|dialog_control
@@ -2300,7 +2353,10 @@ literal|18
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"dialog header"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|d
@@ -2330,7 +2386,7 @@ if|if
 condition|(
 name|version
 operator|!=
-literal|0xffff
+literal|1
 condition|)
 block|{
 name|d
@@ -2388,11 +2444,14 @@ if|if
 condition|(
 name|signature
 operator|!=
-literal|1
+literal|0xffff
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected dialog signature %d"
+argument_list|)
 argument_list|,
 name|signature
 argument_list|)
@@ -2471,7 +2530,10 @@ literal|10
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"dialog header"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|c
@@ -2689,7 +2751,10 @@ literal|2
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"dialog font point size"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|d
@@ -2728,7 +2793,10 @@ literal|4
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"dialogex font information"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|d
@@ -2876,7 +2944,10 @@ literal|8
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"dialog control"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dc
@@ -2930,7 +3001,10 @@ literal|12
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"dialogex control"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dc
@@ -2973,7 +3047,7 @@ name|data
 operator|+
 name|off
 operator|+
-literal|18
+literal|8
 argument_list|)
 expr_stmt|;
 name|off
@@ -2991,7 +3065,10 @@ literal|10
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"dialog control"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dc
@@ -3052,6 +3129,30 @@ operator|+
 literal|6
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|d
+operator|->
+name|ex
+operator|!=
+name|NULL
+condition|)
+name|dc
+operator|->
+name|id
+operator|=
+name|get_32
+argument_list|(
+name|big_endian
+argument_list|,
+name|data
+operator|+
+name|off
+operator|+
+literal|8
+argument_list|)
+expr_stmt|;
+else|else
 name|dc
 operator|->
 name|id
@@ -3070,6 +3171,18 @@ expr_stmt|;
 name|off
 operator|+=
 literal|10
+operator|+
+operator|(
+name|d
+operator|->
+name|ex
+operator|!=
+name|NULL
+condition|?
+literal|2
+else|:
+literal|0
+operator|)
 expr_stmt|;
 name|sublen
 operator|=
@@ -3129,7 +3242,10 @@ literal|2
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"dialog control end"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|datalen
@@ -3182,7 +3298,10 @@ name|datalen
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"dialog control data"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dc
@@ -3377,6 +3496,7 @@ name|i
 operator|++
 control|)
 block|{
+name|unsigned
 name|int
 name|slen
 decl_stmt|;
@@ -3388,7 +3508,10 @@ literal|2
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"stringtable string length"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|slen
@@ -3422,6 +3545,7 @@ name|unichar
 modifier|*
 name|s
 decl_stmt|;
+name|unsigned
 name|int
 name|j
 decl_stmt|;
@@ -3437,7 +3561,10 @@ name|slen
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"stringtable string"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|s
@@ -3608,7 +3735,10 @@ literal|2
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"fontdir header"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|c
@@ -3648,6 +3778,7 @@ name|fontdir
 modifier|*
 name|fd
 decl_stmt|;
+name|unsigned
 name|int
 name|off
 decl_stmt|;
@@ -3659,7 +3790,10 @@ literal|56
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"fontdir"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fd
@@ -3716,7 +3850,10 @@ name|length
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"fontdir device name"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
@@ -3746,7 +3883,10 @@ name|length
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"fontdir face name"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
@@ -3898,7 +4038,10 @@ literal|8
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"accelerator"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|a
@@ -4207,7 +4350,10 @@ literal|6
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"group cursor header"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|type
@@ -4229,7 +4375,10 @@ literal|2
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected group cursor type %d"
+argument_list|)
 argument_list|,
 name|type
 argument_list|)
@@ -4289,7 +4438,10 @@ literal|14
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"group cursor"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|gc
@@ -4503,7 +4655,10 @@ literal|6
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"group icon header"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|type
@@ -4525,7 +4680,10 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected group icon type %d"
+argument_list|)
 argument_list|,
 name|type
 argument_list|)
@@ -4585,7 +4743,10 @@ literal|14
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"group icon"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|gi
@@ -4929,12 +5090,19 @@ argument_list|,
 name|data
 argument_list|)
 operator|!=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|key
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected version string"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -5074,13 +5242,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|verlen
 operator|!=
 name|length
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"version length %d does not match resource length %lu"
+argument_list|)
 argument_list|,
 name|verlen
 argument_list|,
@@ -5095,7 +5270,10 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected version type %d"
+argument_list|)
 argument_list|,
 name|type
 argument_list|)
@@ -5134,7 +5312,10 @@ literal|52
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected fixed version information length %d"
+argument_list|)
 argument_list|,
 name|vallen
 argument_list|)
@@ -5147,7 +5328,10 @@ literal|52
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"fixed version info"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|signature
@@ -5167,7 +5351,10 @@ literal|0xfeef04bd
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected fixed version signature %lu"
+argument_list|)
 argument_list|,
 name|signature
 argument_list|)
@@ -5195,7 +5382,10 @@ literal|0x10000
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected fixed version info version %lu"
+argument_list|)
 argument_list|,
 name|fiv
 argument_list|)
@@ -5398,7 +5588,10 @@ literal|8
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"version var info"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vi
@@ -5482,7 +5675,10 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected stringfileinfo value length %d"
+argument_list|)
 argument_list|,
 name|vallen
 argument_list|)
@@ -5540,7 +5736,10 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected version stringtable value length %d"
+argument_list|)
 argument_list|,
 name|vallen
 argument_list|)
@@ -5720,7 +5919,10 @@ name|subverlen
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected version string length %d != %d + %d"
+argument_list|)
 argument_list|,
 name|subverlen
 argument_list|,
@@ -5763,7 +5965,10 @@ name|subverlen
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected version string length %d< %d"
+argument_list|)
 argument_list|,
 name|verlen
 argument_list|,
@@ -5833,7 +6038,10 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected varfileinfo value length %d"
+argument_list|)
 argument_list|,
 name|vallen
 argument_list|)
@@ -5932,7 +6140,10 @@ literal|4
 condition|)
 name|toosmall
 argument_list|(
+name|_
+argument_list|(
 literal|"version varfileinfo"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vv
@@ -6007,7 +6218,10 @@ literal|4
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected version value length %d"
+argument_list|)
 argument_list|,
 name|vallen
 argument_list|)
@@ -6021,7 +6235,10 @@ block|}
 else|else
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected version string"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vi
@@ -8173,7 +8390,7 @@ name|put_16
 argument_list|(
 name|big_endian
 argument_list|,
-literal|0xffff
+literal|1
 argument_list|,
 name|first
 operator|->
@@ -8184,7 +8401,7 @@ name|put_16
 argument_list|(
 name|big_endian
 argument_list|,
-literal|1
+literal|0xffff
 argument_list|,
 name|first
 operator|->
@@ -8698,7 +8915,7 @@ name|length
 operator|=
 name|dialogex
 condition|?
-literal|22
+literal|24
 else|:
 literal|18
 expr_stmt|;
@@ -8879,6 +9096,28 @@ operator|+
 literal|6
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dialogex
+condition|)
+name|put_32
+argument_list|(
+name|big_endian
+argument_list|,
+name|dc
+operator|->
+name|id
+argument_list|,
+name|d
+operator|->
+name|data
+operator|+
+name|dcoff
+operator|+
+literal|8
+argument_list|)
+expr_stmt|;
+else|else
 name|put_16
 argument_list|(
 name|big_endian
@@ -12127,19 +12366,6 @@ name|put_16
 argument_list|(
 name|big_endian
 argument_list|,
-literal|0
-argument_list|,
-name|vssd
-operator|->
-name|data
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-name|put_16
-argument_list|(
-name|big_endian
-argument_list|,
 literal|1
 argument_list|,
 name|vssd
@@ -12260,6 +12486,26 @@ operator|->
 name|value
 argument_list|,
 name|big_endian
+argument_list|)
+expr_stmt|;
+name|put_16
+argument_list|(
+name|big_endian
+argument_list|,
+operator|(
+operator|*
+name|pp
+operator|)
+operator|->
+name|length
+operator|/
+literal|2
+argument_list|,
+name|vssd
+operator|->
+name|data
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 name|length

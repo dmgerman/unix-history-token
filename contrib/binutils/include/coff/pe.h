@@ -16,7 +16,7 @@ name|_PE_H
 end_define
 
 begin_comment
-comment|/* NT specific file attributes */
+comment|/* NT specific file attributes.  */
 end_comment
 
 begin_define
@@ -50,6 +50,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|IMAGE_FILE_AGGRESSIVE_WS_TRIM
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_LARGE_ADDRESS_AWARE
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_16BIT_MACHINE
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
 name|IMAGE_FILE_BYTES_REVERSED_LO
 value|0x0080
 end_define
@@ -71,6 +92,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
 name|IMAGE_FILE_SYSTEM
 value|0x1000
 end_define
@@ -85,12 +113,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|IMAGE_FILE_UP_SYSTEM_ONLY
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|IMAGE_FILE_BYTES_REVERSED_HI
 value|0x8000
 end_define
 
 begin_comment
-comment|/* additional flags to be set for section headers to allow the NT loader to    read and write to the section data (to replace the addresses of data in    dlls for one thing); also to execute the section in .text's case */
+comment|/* Additional flags to be set for section headers to allow the NT loader to    read and write to the section data (to replace the addresses of data in    dlls for one thing); also to execute the section in .text's case.  */
 end_comment
 
 begin_define
@@ -122,7 +157,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/*  * Section characteristics added for ppc-nt  */
+comment|/* Section characteristics added for ppc-nt.  */
 end_comment
 
 begin_define
@@ -405,6 +440,129 @@ comment|/* Base on other section.  */
 end_comment
 
 begin_comment
+comment|/* Machine numbers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_UNKNOWN
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_ALPHA
+value|0x184
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_ARM
+value|0x1c0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_ALPHA64
+value|0x284
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_I386
+value|0x14c
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_IA64
+value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_M68K
+value|0x268
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_MIPS16
+value|0x266
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_MIPSFPU
+value|0x366
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_MIPSFPU16
+value|0x466
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_POWERPC
+value|0x1f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_R3000
+value|0x162
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_R4000
+value|0x166
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_R10000
+value|0x168
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_SH3
+value|0x1a2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_SH4
+value|0x1a6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_FILE_MACHINE_THUMB
+value|0x1c2
+end_define
+
+begin_comment
 comment|/* Magic values that are true for all dos/nt implementations */
 end_comment
 
@@ -443,25 +601,9 @@ begin_comment
 comment|/* # characters in a file name		*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COFF_IMAGE_WITH_PE
-end_ifdef
-
-begin_comment
-comment|/* The filehdr is only weired in images */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|FILHDR
-end_undef
-
 begin_struct
 struct|struct
-name|external_PE_filehdr
+name|external_PEI_filehdr
 block|{
 comment|/* DOS header fields */
 name|char
@@ -674,11 +816,27 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COFF_IMAGE_WITH_PE
+end_ifdef
+
+begin_comment
+comment|/* The filehdr is only weird in images.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|FILHDR
+end_undef
+
 begin_define
 define|#
 directive|define
 name|FILHDR
-value|struct external_PE_filehdr
+value|struct external_PEI_filehdr
 end_define
 
 begin_undef
@@ -698,6 +856,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* COFF_IMAGE_WITH_PE */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -882,10 +1044,71 @@ begin_comment
 comment|/* # characters in a file name		*/
 end_comment
 
+begin_comment
+comment|/* Import Tyoes fot ILF format object files..  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMPORT_CODE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMPORT_DATA
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMPORT_CONST
+value|2
+end_define
+
+begin_comment
+comment|/* Import Name Tyoes for ILF format object files.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMPORT_ORDINAL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMPORT_NAME
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMPORT_NAME_NOPREFIX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMPORT_NAME_UNDECORATE
+value|3
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _PE_H */
+end_comment
 
 end_unit
 

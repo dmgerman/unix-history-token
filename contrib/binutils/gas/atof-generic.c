@@ -604,6 +604,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -1171,7 +1175,10 @@ block|{
 comment|/* 		   * We have a GROSS internal error. 		   * This should never happen. 		   */
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"failed sanity check."
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -12,7 +12,58 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|<config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|emacs
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"blockinput.h"
 end_include
 
 begin_endif
@@ -21,7 +72,30 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* If compiling with GCC, this file's not needed.  */
+comment|/* If compiling with GCC 2, this file's not needed.  Except of course if    the C alloca is explicitly requested.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_C_ALLOCA
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|||
+name|__GNUC__
+operator|<
+literal|2
+end_if
+
+begin_comment
+comment|/* If someone has defined alloca as a macro,    there must be some other way alloca is supposed to work.  */
 end_comment
 
 begin_ifndef
@@ -126,12 +200,6 @@ directive|if
 name|__STDC__
 end_if
 
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
 begin_typedef
 typedef|typedef
 name|void
@@ -150,13 +218,6 @@ typedef|typedef
 name|char
 modifier|*
 name|pointer
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|size_t
 typedef|;
 end_typedef
 
@@ -200,18 +261,18 @@ name|malloc
 value|xmalloc
 end_define
 
-begin_function_decl
-specifier|extern
-name|pointer
-name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|extern
+name|pointer
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Define STACK_DIRECTION if you know the direction of stack    growth for your system; otherwise it will be automatically    deduced at run-time.     STACK_DIRECTION> 0 => grows toward higher addresses    STACK_DIRECTION< 0 => grows toward lower addresses    STACK_DIRECTION = 0 => direction of growth unknown  */
@@ -440,7 +501,7 @@ name|alloca
 parameter_list|(
 name|size
 parameter_list|)
-name|size_t
+name|unsigned
 name|size
 decl_stmt|;
 block|{
@@ -476,7 +537,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Reclaim garbage, defined as all alloca'd storage that      was allocated from deeper in the stack than currently. */
+comment|/* Reclaim garbage, defined as all alloca'd storage that      was allocated from deeper in the stack than currently.  */
 block|{
 specifier|register
 name|header
@@ -484,6 +545,13 @@ modifier|*
 name|hp
 decl_stmt|;
 comment|/* Traverses linked list.  */
+ifdef|#
+directive|ifdef
+name|emacs
+name|BLOCK_INPUT
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|hp
@@ -560,6 +628,13 @@ operator|=
 name|hp
 expr_stmt|;
 comment|/* -> last valid storage.  */
+ifdef|#
+directive|ifdef
+name|emacs
+name|UNBLOCK_INPUT
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -588,6 +663,15 @@ name|size
 argument_list|)
 decl_stmt|;
 comment|/* Address of header.  */
+if|if
+condition|(
+name|new
+operator|==
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 operator|(
 operator|(
 name|header
@@ -1031,7 +1115,7 @@ name|CRAY2
 end_ifdef
 
 begin_comment
-comment|/* Determine a "stack measure" for an arbitrary ADDRESS.    I doubt that "lint" will like this much. */
+comment|/* Determine a "stack measure" for an arbitrary ADDRESS.    I doubt that "lint" will like this much.  */
 end_comment
 
 begin_function
@@ -1483,6 +1567,15 @@ end_endif
 
 begin_comment
 comment|/* no alloca */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not GCC version 2 */
 end_comment
 
 end_unit

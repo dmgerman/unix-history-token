@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* itbl-ops.c    Copyright (C) 1997  Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* itbl-ops.c    Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1200,7 +1200,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"Unable to allocate memory for new instructions\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1546,13 +1549,17 @@ comment|/* Get processor's register name from val */
 end_comment
 
 begin_function
-name|unsigned
-name|long
+name|int
 name|itbl_get_reg_val
 parameter_list|(
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|unsigned
+name|long
+modifier|*
+name|pval
 parameter_list|)
 block|{
 name|e_type
@@ -1560,11 +1567,6 @@ name|t
 decl_stmt|;
 name|e_processor
 name|p
-decl_stmt|;
-name|int
-name|r
-init|=
-literal|0
 decl_stmt|;
 for|for
 control|(
@@ -1579,6 +1581,7 @@ condition|;
 name|p
 operator|++
 control|)
+block|{
 for|for
 control|(
 name|t
@@ -1595,8 +1598,6 @@ control|)
 block|{
 if|if
 condition|(
-name|r
-operator|=
 name|itbl_get_val
 argument_list|(
 name|p
@@ -1604,13 +1605,14 @@ argument_list|,
 name|t
 argument_list|,
 name|name
+argument_list|,
+name|pval
 argument_list|)
-operator|,
-name|r
 condition|)
 return|return
-name|r
+literal|1
 return|;
+block|}
 block|}
 return|return
 literal|0
@@ -1675,8 +1677,7 @@ comment|/* Get processor's register value from name */
 end_comment
 
 begin_function
-name|unsigned
-name|long
+name|int
 name|itbl_get_val
 parameter_list|(
 name|e_processor
@@ -1688,6 +1689,11 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|unsigned
+name|long
+modifier|*
+name|pval
 parameter_list|)
 block|{
 name|struct
@@ -1710,17 +1716,22 @@ expr_stmt|;
 if|if
 condition|(
 name|r
+operator|==
+name|NULL
 condition|)
-return|return
-name|r
-operator|->
-name|value
-return|;
-else|else
 return|return
 literal|0
 return|;
-comment|/* error; invalid operand */
+operator|*
+name|pval
+operator|=
+name|r
+operator|->
+name|value
+expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -2279,7 +2290,7 @@ name|sprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"%s$%d"
+literal|"%s$%lu"
 argument_list|,
 name|s
 argument_list|,
@@ -2300,7 +2311,7 @@ name|sprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"%s0x%x"
+literal|"%s0x%lx"
 argument_list|,
 name|s
 argument_list|,
@@ -2578,7 +2589,7 @@ comment|/* Extract processor's assembly instruction field name from s;  * forms 
 end_comment
 
 begin_comment
-comment|/* Return next argument from string pointer "s" and advance s.  * delimiters are " ,\0" */
+comment|/* Return next argument from string pointer "s" and advance s.  * delimiters are " ,()" */
 end_comment
 
 begin_function
@@ -2600,12 +2611,6 @@ literal|128
 index|]
 decl_stmt|;
 name|char
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|ps
-decl_stmt|,
 modifier|*
 name|s
 decl_stmt|;
@@ -2629,91 +2634,15 @@ condition|)
 return|return
 literal|0
 return|;
-name|p
-operator|=
-name|s
-operator|+
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ps
-operator|=
-name|strchr
-argument_list|(
-name|s
-argument_list|,
-literal|','
-argument_list|)
-operator|,
-name|ps
-condition|)
-name|p
-operator|=
-name|ps
-expr_stmt|;
-if|if
-condition|(
-name|ps
-operator|=
-name|strchr
-argument_list|(
-name|s
-argument_list|,
-literal|' '
-argument_list|)
-operator|,
-name|ps
-condition|)
-name|p
-operator|=
-name|min
-argument_list|(
-name|p
-argument_list|,
-name|ps
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ps
-operator|=
-name|strchr
-argument_list|(
-name|s
-argument_list|,
-literal|'\0'
-argument_list|)
-operator|,
-name|ps
-condition|)
-name|p
-operator|=
-name|min
-argument_list|(
-name|p
-argument_list|,
-name|ps
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
-comment|/* error! */
+comment|/* FIXME: This is a weird set of delimiters.  */
 name|len
 operator|=
-name|p
-operator|-
+name|strcspn
+argument_list|(
 name|s
+argument_list|,
+literal|" \t,()"
+argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
@@ -2965,6 +2894,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|r
 operator|->
 name|sbit
@@ -2984,7 +2914,9 @@ operator|->
 name|range
 operator|.
 name|ebit
+operator|)
 operator|||
+operator|(
 name|e
 operator|->
 name|range
@@ -3000,6 +2932,7 @@ operator|.
 name|ebit
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|eval

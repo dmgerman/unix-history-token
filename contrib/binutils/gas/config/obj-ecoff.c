@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ECOFF object file format.    Copyright (C) 1993, 94, 95, 96, 1997 Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ECOFF object file format.    Copyright (C) 1993, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -256,6 +256,10 @@ block|,
 literal|0
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|TC_MIPS
+comment|/* For TC_MIPS, tc-mips.c adds this. */
 block|{
 literal|"weakext"
 block|,
@@ -264,6 +268,8 @@ block|,
 literal|0
 block|}
 block|,
+endif|#
+directive|endif
 comment|/* These are used on Irix.  I don't know how to implement them.  */
 block|{
 literal|"bgnb"
@@ -884,7 +890,10 @@ argument_list|)
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't set GP value"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|gprmask
@@ -913,7 +922,10 @@ argument_list|)
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't set register masks"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -964,9 +976,10 @@ name|know
 argument_list|(
 name|bfd_asymbol_flavour
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|==
 name|bfd_target_ecoff_flavour
@@ -976,9 +989,10 @@ name|esym
 operator|=
 name|ecoffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|esym
@@ -1086,24 +1100,38 @@ name|bfd_target_ecoff_flavour
 block|,
 literal|0
 block|,
+comment|/* dfl_leading_underscore */
 literal|1
 block|,
+comment|/* emit_section_symbols */
 name|obj_ecoff_frob_symbol
 block|,
 name|ecoff_frob_file
 block|,
 literal|0
 block|,
+comment|/* frob_file_after_relocs */
 literal|0
 block|,
+comment|/* s_get_size */
 literal|0
 block|,
+comment|/* s_set_size */
 literal|0
 block|,
+comment|/* s_get_align */
 literal|0
 block|,
+comment|/* s_set_align */
 literal|0
 block|,
+comment|/* s_get_other */
+literal|0
+block|,
+comment|/* s_get_desc */
+literal|0
+block|,
+comment|/* copy_symbol_attributes */
 name|ecoff_generate_asm_lineno
 block|,
 name|ecoff_stab

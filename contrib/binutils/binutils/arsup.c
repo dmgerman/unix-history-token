@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* arsup.c - Archive support for MRI compatibility    Copyright (C) 1992, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* arsup.c - Archive support for MRI compatibility    Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"bucomm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filenames.h"
 end_include
 
 begin_decl_stmt
@@ -258,7 +264,7 @@ name|filename
 operator|!=
 name|NULL
 operator|&&
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|ptr
 operator|->
@@ -298,7 +304,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"No entry %s in archive.\n"
+argument_list|)
 argument_list|,
 name|ptr
 operator|->
@@ -337,6 +346,7 @@ decl_stmt|;
 name|bfd
 modifier|*
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|print_arelt_descr
@@ -421,7 +431,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Can't open file %s\n"
+argument_list|)
 argument_list|,
 name|output
 argument_list|)
@@ -567,11 +580,12 @@ name|real_name
 operator|=
 name|name
 expr_stmt|;
+comment|/* Prepend tmp- to the beginning, to avoid file-name clashes after      truncation on filesystems with limited namespaces (DOS).  */
 name|sprintf
 argument_list|(
 name|tname
 argument_list|,
-literal|"%s-tmp"
+literal|"tmp-%s"
 argument_list|,
 name|name
 argument_list|)
@@ -595,7 +609,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: Can't open output archive %s\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -646,7 +663,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: Can't open input archive %s\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -674,7 +694,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: file %s is not an archive\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -828,7 +851,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: no output archive specified yet\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -902,7 +928,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: no open output archive\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -941,7 +970,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: can't open file %s\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -1028,7 +1060,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: no open output archive\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -1077,7 +1112,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|member
 operator|->
@@ -1132,7 +1167,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: can't find module file %s\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -1173,7 +1211,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: no open output archive\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -1247,7 +1288,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: no open output archive\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -1296,7 +1340,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|member
 operator|->
@@ -1334,7 +1378,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: can't open file %s\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -1410,7 +1457,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: can't find module file %s\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -1429,7 +1479,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: can't open file %s\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -1483,7 +1536,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: no open output archive\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -1508,7 +1564,10 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"Current open archive is %s\n"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -1618,7 +1677,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: no open  archive\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -1658,7 +1720,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|member
 operator|->
@@ -1708,7 +1770,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: can't find module file %s\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,

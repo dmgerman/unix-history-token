@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gasp.c - Gnu assembler preprocessor main program.    Copyright (C) 1994, 95, 96, 97, 1998 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GASP, the GNU Assembler Preprocessor.     GASP is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GASP is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GASP; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* gasp.c - Gnu assembler preprocessor main program.    Copyright (C) 1994, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GASP, the GNU Assembler Preprocessor.     GASP is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GASP is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GASP; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bin-bugs.h"
 end_include
 
 begin_include
@@ -98,6 +104,12 @@ directive|include
 file|"macro.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"asintl.h"
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -129,6 +141,18 @@ name|char
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The default obstack chunk size.  If we set this to zero, the    obstack code will use whatever will fit in a 4096 byte block.  This    is used by the hash table code used by macro.c.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|chunksize
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -569,77 +593,6 @@ name|size
 decl_stmt|;
 block|}
 name|hash_table
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Structures used to store macros.      Each macro knows its name and included text.  It gets built with a    list of formal arguments, and also keeps a hash table which points    into the list to speed up formal search.  Each formal knows its    name and its default value.  Each time the macro is expanded, the    formals get the actual values attatched to them. */
-end_comment
-
-begin_comment
-comment|/* describe the formal arguments to a macro */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|formal_struct
-block|{
-name|struct
-name|formal_struct
-modifier|*
-name|next
-decl_stmt|;
-comment|/* next formal in list */
-name|sb
-name|name
-decl_stmt|;
-comment|/* name of the formal */
-name|sb
-name|def
-decl_stmt|;
-comment|/* the default value */
-name|sb
-name|actual
-decl_stmt|;
-comment|/* the actual argument (changed on each expansion) */
-name|int
-name|index
-decl_stmt|;
-comment|/* the index of the formal 0..formal_count-1 */
-block|}
-name|formal_entry
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* describe the macro. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|macro_struct
-block|{
-name|sb
-name|sub
-decl_stmt|;
-comment|/* substitution text. */
-name|int
-name|formal_count
-decl_stmt|;
-comment|/* number of formal args. */
-name|formal_entry
-modifier|*
-name|formals
-decl_stmt|;
-comment|/* pointer to list of formal_structs */
-name|hash_table
-name|formal_hash
-decl_stmt|;
-comment|/* hash table of formals. */
-block|}
-name|macro_entry
 typedef|;
 end_typedef
 
@@ -2729,7 +2682,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"redefinition not allowed\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2964,7 +2920,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"the %c operator cannot take non-absolute arguments.\n"
+argument_list|)
 operator|,
 name|op
 operator|)
@@ -3324,7 +3283,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"string where expression expected.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3354,7 +3316,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"can't find primary in expression.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3554,7 +3519,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"misplaced closing parens.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3740,7 +3708,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"attempt to divide by zero.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3892,7 +3863,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"can't add two relocatable expressions\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4527,6 +4501,8 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+literal|"%s"
+operator|,
 name|emsg
 operator|)
 argument_list|)
@@ -4704,7 +4680,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"unreasonable nesting.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5015,7 +4994,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"End of file not at start of line.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5184,6 +5166,15 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|||
+name|in
+operator|->
+name|ptr
+index|[
+name|i
+index|]
+operator|==
+literal|'\\'
 condition|)
 block|{
 name|sb_add_char
@@ -5478,7 +5469,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"Illegal base character %c.\n"
+argument_list|)
 operator|,
 name|in
 operator|->
@@ -5997,7 +5991,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"radix is %c must be one of b, q, d or h"
+argument_list|)
 operator|,
 name|radix
 operator|)
@@ -6114,7 +6111,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"size must be one of b, w or l, is %c.\n"
+argument_list|)
 operator|,
 name|in
 operator|->
@@ -6447,6 +6447,8 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
+literal|"%s"
+argument_list|,
 name|acc
 operator|.
 name|ptr
@@ -6554,7 +6556,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"datab repeat must be constant.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -6577,7 +6582,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"datab data must be absolute.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -6635,7 +6643,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"align needs absolute expression.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -6686,7 +6697,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|".align needs absolute fill value.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -6701,29 +6715,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|al
-operator|!=
-literal|1
-operator|&&
-name|al
-operator|!=
-literal|2
-operator|&&
-name|al
-operator|!=
-literal|4
-condition|)
-name|WARNING
-argument_list|(
-operator|(
-name|stderr
-operator|,
-literal|"alignment must be one of 1, 2 or 4.\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|outfile
@@ -6842,7 +6833,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"res needs absolute expression for fill count.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -7177,7 +7171,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"form LIN= needs absolute expresssion.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -7198,7 +7195,10 @@ name|ptr
 operator|+
 name|idx
 argument_list|,
+name|_
+argument_list|(
 literal|"COL="
+argument_list|)
 argument_list|,
 literal|4
 argument_list|)
@@ -7214,7 +7214,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"form COL= needs absolute expresssion.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -7391,7 +7394,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"% operator needs absolute expression"
+argument_list|)
 argument_list|,
 name|idx
 operator|+
@@ -7702,7 +7708,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"misplaced ( .\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7769,7 +7778,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"misplaced ).\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8024,7 +8036,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|".instr needs absolute expresson.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -8207,7 +8222,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"need absolute position.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -8230,7 +8248,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"need absolute length.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -9234,6 +9255,8 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
+literal|"%s"
+argument_list|,
 name|sb_name
 argument_list|(
 operator|&
@@ -9672,7 +9695,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"END missing from end of file.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9765,7 +9791,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|".ASSIGNA needs constant expression argument.\n"
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -9789,7 +9818,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|".ASSIGNA without label.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -9893,7 +9925,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|".ASSIGNS without label.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10198,7 +10233,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"Can't find preprocessor variable %s.\n"
+argument_list|)
 operator|,
 name|sb_name
 argument_list|(
@@ -10532,7 +10570,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"Comparison operator must be one of EQ, NE, LT, LE, GT or GE.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10719,7 +10760,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"Comparison operator for strings must be EQ or NE\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10756,7 +10800,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"Conditional operator must have absolute operands.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -10804,7 +10851,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"String compared against expression.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10819,7 +10869,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"Conditional operator must have absolute operands.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -10968,7 +11021,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"AIF nesting unreasonable.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11064,7 +11120,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"Multiple AELSEs in AIF.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11109,7 +11168,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"AENDI without AIF.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11178,7 +11240,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"IF nesting unreasonable.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11187,7 +11252,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"Conditional operator must have absolute operands.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -11565,7 +11633,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"IF nesting unreasonable.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11619,7 +11690,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"Bad format for IF or IFNC.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11729,7 +11803,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"AENDR without a AREPEAT.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11739,7 +11816,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"ENDR without a REPT.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -11834,7 +11914,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"AWHILE without a AENDW at %d.\n"
+argument_list|)
 operator|,
 name|line
 operator|-
@@ -11956,7 +12039,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"AENDW without a AENDW.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12111,7 +12197,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"AREPEAT must have absolute operand.\n"
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -12166,7 +12255,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"AREPEAT without a AENDR at %d.\n"
+argument_list|)
 operator|,
 name|line
 operator|-
@@ -12322,7 +12414,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|".ENDM without a matching .MACRO.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12445,10 +12540,12 @@ name|line
 parameter_list|)
 name|int
 name|idx
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|sb
 modifier|*
 name|line
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|ERROR
@@ -12456,7 +12553,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"LOCAL outside of MACRO"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12524,7 +12624,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"macro at line %d: %s\n"
+argument_list|)
 operator|,
 name|line
 operator|-
@@ -12596,6 +12699,8 @@ name|comment_char
 argument_list|,
 operator|&
 name|err
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 return|return
@@ -12629,7 +12734,10 @@ argument_list|(
 operator|&
 name|name
 argument_list|,
+name|_
+argument_list|(
 literal|"macro expansion"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|include_buf
@@ -12881,7 +12989,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"Character code in string must be absolute expression.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -12914,7 +13025,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"Missing> for character code.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -13191,7 +13305,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"string for SDATAC longer than 255 characters (%d).\n"
+argument_list|)
 operator|,
 name|acc
 operator|.
@@ -13340,7 +13457,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"illegal character in SDATA line (0x%x).\n"
+argument_list|)
 operator|,
 name|in
 operator|->
@@ -13413,7 +13533,10 @@ name|idx
 operator|=
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"Must have absolute SDATAB repeat count.\n"
+argument_list|)
 argument_list|,
 name|idx
 argument_list|,
@@ -13435,7 +13558,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"Must have positive SDATAB repeat count (%d).\n"
+argument_list|)
 operator|,
 name|repeat
 operator|)
@@ -13567,7 +13693,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"Unreasonable include depth (%ld).\n"
+argument_list|)
 operator|,
 operator|(
 name|long
@@ -13833,7 +13962,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"Can't open include file `%s'.\n"
+argument_list|)
 operator|,
 name|sb_name
 argument_list|(
@@ -14086,7 +14218,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"Unreasonable expansion (-u turns off check).\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -15393,7 +15528,7 @@ if|#
 directive|if
 literal|0
 comment|/* This one causes lots of pain when trying to preprocess 	     ordinary code */
-block|WARNING ((stderr, "Unrecognised pseudo op `%s'.\n", sb_name (acc)));
+block|WARNING ((stderr, _("Unrecognised pseudo op `%s'.\n"), sb_name (acc)));
 endif|#
 directive|endif
 return|return
@@ -15655,7 +15790,10 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
+name|_
+argument_list|(
 literal|"ORG command not allowed.\n"
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -16576,7 +16714,10 @@ expr_stmt|;
 block|}
 name|exp_get_abs
 argument_list|(
+name|_
+argument_list|(
 literal|"Invalid expression on command line.\n"
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -16824,7 +16965,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\ Usage: %s \n\   [-a]      [--alternate]         enter alternate macro mode\n\   [-c char] [--commentchar char]  change the comment character from !\n\   [-d]      [--debug]             print some debugging info\n\   [-h]      [--help]              print this message\n\   [-M]      [--mri]               enter MRI compatibility mode\n\   [-o out]  [--output out]        set the output file\n\   [-p]      [--print]             print line numbers\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -16833,7 +16977,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\   [-s]      [--copysource]        copy source through as comments \n\   [-u]      [--unreasonable]      allow unreasonable nesting\n\   [-v]      [--version]           print the program version\n\   [-Dname=value]                  create preprocessor variable called name, with value\n\   [-Ipath]                        add to include path list\n\   [in-file]\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -16844,7 +16991,12 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\nReport bugs to bug-gnu-utils@gnu.org\n"
+name|_
+argument_list|(
+literal|"Report bugs to %s\n"
+argument_list|)
+argument_list|,
+name|REPORT_BUGS_TO
 argument_list|)
 expr_stmt|;
 name|exit
@@ -16867,7 +17019,10 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: Gnu Assembler Macro Preprocessor\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -16924,6 +17079,38 @@ expr_stmt|;
 name|ifi
 operator|=
 literal|0
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LC_MESSAGES
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
 expr_stmt|;
 name|program_name
 operator|=
@@ -17156,19 +17343,28 @@ case|:
 comment|/* This output is intended to follow the GNU standards document.  */
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"GNU assembler pre-processor %s\n"
+argument_list|)
 argument_list|,
 name|program_version
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"Copyright 1996 Free Software Foundation, Inc.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\ This program is free software; you may redistribute it under the terms of\n\ the GNU General Public License.  This program has absolutely no warranty.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -17230,7 +17426,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: Can't open output file `%s'.\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -17292,7 +17491,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: Can't open input file `%s'.\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -17357,7 +17559,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Internal error, aborting at %s line %d"
+argument_list|)
 argument_list|,
 name|file
 argument_list|,
@@ -17381,7 +17586,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"\nPlease report this bug.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Intel Hex objects.    Copyright 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Written by Ian Lance Taylor of Cygnus Support<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Intel Hex objects.    Copyright 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.    Written by Ian Lance Taylor of Cygnus Support<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -296,7 +296,7 @@ begin_define
 define|#
 directive|define
 name|CHUNK
-value|(21)
+value|16
 end_define
 
 begin_comment
@@ -684,7 +684,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"%s:%d: unexpected character `%s' in Intel Hex file\n"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -1166,7 +1169,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"%s:%d: bad checksum in Intel Hex file (expected %u, found %u)"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -1419,7 +1425,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"%s:%d: bad extended address record length in Intel Hex file"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -1468,7 +1477,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"%s:%d: bad extended start address length in Intel Hex file"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -1528,7 +1540,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"%s:%d: bad extended linear address record length in Intel Hex file"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -1581,7 +1596,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"%s:%d: bad extended linear start address length in Intel Hex file"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -1649,7 +1667,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"%s:%d: unrecognized ihex type %u in Intel Hex file\n"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -2094,7 +2115,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: internal error in ihex_read_section"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -2272,7 +2296,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: bad section length in ihex_read_section"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -3258,7 +3285,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: address 0x%s out of range for Intex Hex file"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -3715,9 +3745,11 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|boolean
 name|exec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
@@ -3866,6 +3898,13 @@ define|#
 directive|define
 name|ihex_bfd_relax_section
 value|bfd_generic_relax_section
+end_define
+
+begin_define
+define|#
+directive|define
+name|ihex_bfd_gc_sections
+value|bfd_generic_gc_sections
 end_define
 
 begin_define
@@ -4052,6 +4091,8 @@ name|BFD_JUMP_TABLE_DYNAMIC
 argument_list|(
 name|_bfd_nodynamic
 argument_list|)
+block|,
+name|NULL
 block|,
 operator|(
 name|PTR

@@ -224,7 +224,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ELFOSABI_SYSV
+name|ELFOSABI_NONE
 value|0
 end_define
 
@@ -329,6 +329,28 @@ end_define
 
 begin_comment
 comment|/* TRU64 UNIX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_MODESTO
+value|11
+end_define
+
+begin_comment
+comment|/* Novell Modesto */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_OPENBSD
+value|12
+end_define
+
+begin_comment
+comment|/* OpenBSD */
 end_comment
 
 begin_define

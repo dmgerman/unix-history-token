@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* expr.c -operands, expressions-    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* expr.c -operands, expressions-    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -57,6 +57,43 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|valueT
+name|generic_bignum_to_int32
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD64
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|valueT
+name|generic_bignum_to_int64
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -215,6 +252,9 @@ modifier|*
 name|expressionP
 decl_stmt|;
 block|{
+name|expressionS
+name|zero
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -248,6 +288,71 @@ name|expressionP
 operator|->
 name|X_add_symbol
 return|;
+if|if
+condition|(
+name|expressionP
+operator|->
+name|X_op
+operator|==
+name|O_big
+condition|)
+block|{
+comment|/* This won't work, because the actual value is stored in          generic_floating_point_number or generic_bignum, and we are          going to lose it if we haven't already.  */
+if|if
+condition|(
+name|expressionP
+operator|->
+name|X_add_number
+operator|>
+literal|0
+condition|)
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"bignum invalid; zero assumed"
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"floating point number invalid; zero assumed"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|zero
+operator|.
+name|X_op
+operator|=
+name|O_constant
+expr_stmt|;
+name|zero
+operator|.
+name|X_add_number
+operator|=
+literal|0
+expr_stmt|;
+name|zero
+operator|.
+name|X_unsigned
+operator|=
+literal|0
+expr_stmt|;
+name|clean_up_expression
+argument_list|(
+operator|&
+name|zero
+argument_list|)
+expr_stmt|;
+name|expressionP
+operator|=
+operator|&
+name|zero
+expr_stmt|;
+block|}
 name|fake
 operator|=
 name|FAKE_LABEL_NAME
@@ -277,12 +382,12 @@ operator|&
 name|zero_address_frag
 argument_list|)
 expr_stmt|;
+name|symbol_set_value_expression
+argument_list|(
 name|symbolP
-operator|->
-name|sy_value
-operator|=
-operator|*
+argument_list|,
 name|expressionP
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -607,6 +712,35 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Build an expression for the current location ('.').  */
+end_comment
+
+begin_function
+name|symbolS
+modifier|*
+name|expr_build_dot
+parameter_list|()
+block|{
+name|expressionS
+name|e
+decl_stmt|;
+name|current_location
+argument_list|(
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+return|return
+name|make_expr_symbol
+argument_list|(
+operator|&
+name|e
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -723,7 +857,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"bad floating-point constant: exponent overflow, probably assembling junk"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -731,7 +868,10 @@ else|else
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"bad floating-point constant: unknown error code=%d."
+argument_list|)
 argument_list|,
 name|error_code
 argument_list|)
@@ -977,7 +1117,11 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
+name|NUMBERS_WITH_SUFFIX
+operator|||
 name|flag_m68k_mri
+operator|)
 operator|&&
 name|radix
 operator|==
@@ -1230,7 +1374,7 @@ operator|=
 operator|(
 name|valuesize
 operator|+
-literal|12
+literal|11
 operator|)
 operator|/
 literal|4
@@ -1403,7 +1547,10 @@ literal|8
 condition|)
 name|as_bad
 argument_list|(
-literal|"An bignum with underscores may not have more than 8 hex digits in any word."
+name|_
+argument_list|(
+literal|"A bignum with underscores may not have more than 8 hex digits in any word."
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Add this chunk to the bignum.  Shift things down 2 little digits.*/
@@ -1498,7 +1645,10 @@ literal|8
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"A bignum with underscores must have exactly 4 words."
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* We might have some leading zeros.  These can be trimmed to give        * us a change to fit this constant into a small number.        */
@@ -1796,7 +1946,11 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
+name|NUMBERS_WITH_SUFFIX
+operator|||
 name|flag_m68k_mri
+operator|)
 operator|&&
 name|suffix
 operator|!=
@@ -1898,7 +2052,10 @@ comment|/* either not seen or not defined. */
 comment|/* @@ Should print out the original string instead of 		 the parsed number.  */
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"backw. ref to unknown label \"%d:\", 0 assumed."
+argument_list|)
 argument_list|,
 operator|(
 name|int
@@ -2348,7 +2505,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Character constant too large"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|i
@@ -2663,7 +2823,11 @@ operator|--
 expr_stmt|;
 name|integer_constant
 argument_list|(
+operator|(
+name|NUMBERS_WITH_SUFFIX
+operator|||
 name|flag_m68k_mri
+operator|)
 condition|?
 literal|0
 else|:
@@ -2679,6 +2843,8 @@ case|:
 comment|/* non-decimal radix */
 if|if
 condition|(
+name|NUMBERS_WITH_SUFFIX
+operator|||
 name|flag_m68k_mri
 condition|)
 block|{
@@ -2759,6 +2925,8 @@ literal|'9'
 case|:
 if|if
 condition|(
+name|NUMBERS_WITH_SUFFIX
+operator|||
 name|flag_m68k_mri
 condition|)
 block|{
@@ -2868,7 +3036,11 @@ condition|(
 name|LOCAL_LABELS_FB
 operator|&&
 operator|!
+operator|(
 name|flag_m68k_mri
+operator|||
+name|NUMBERS_WITH_SUFFIX
+operator|)
 condition|)
 block|{
 comment|/* This code used to check for '+' and '-' here, and, in 		 some conditions, fall through to call 		 integer_constant.  However, that didn't make sense, 		 as integer_constant only accepts digits.  */
@@ -2915,6 +3087,8 @@ expr_stmt|;
 if|if
 condition|(
 name|flag_m68k_mri
+operator|||
+name|NUMBERS_WITH_SUFFIX
 condition|)
 goto|goto
 name|default_case
@@ -2953,7 +3127,11 @@ literal|'7'
 case|:
 name|integer_constant
 argument_list|(
+operator|(
 name|flag_m68k_mri
+operator|||
+name|NUMBERS_WITH_SUFFIX
+operator|)
 condition|?
 literal|0
 else|:
@@ -2991,6 +3169,15 @@ literal|1
 index|]
 index|]
 operator|)
+operator|||
+name|strchr
+argument_list|(
+name|FLT_CHARS
+argument_list|,
+literal|'f'
+argument_list|)
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|is_0f_label
@@ -3047,6 +3234,19 @@ comment|/* looks like a difference expression */
 goto|goto
 name|is_0f_label
 goto|;
+elseif|else
+if|if
+condition|(
+name|cp
+operator|==
+name|input_line_pointer
+operator|+
+literal|1
+condition|)
+comment|/* No characters has been accepted -- looks like                          end of operand. */
+goto|goto
+name|is_0f_label
+goto|;
 else|else
 goto|goto
 name|is_0f_float
@@ -3054,7 +3254,10 @@ goto|;
 default|default:
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"expr.c(operand): bad atof_generic return val %d"
+argument_list|)
 argument_list|,
 name|r
 argument_list|)
@@ -3089,6 +3292,8 @@ case|:
 if|if
 condition|(
 name|flag_m68k_mri
+operator|||
+name|NUMBERS_WITH_SUFFIX
 condition|)
 block|{
 name|integer_constant
@@ -3177,9 +3382,14 @@ break|break;
 case|case
 literal|'('
 case|:
+ifndef|#
+directive|ifndef
+name|NEED_INDEX_OPERATOR
 case|case
 literal|'['
 case|:
+endif|#
+directive|endif
 comment|/* didn't begin with digit& not a name */
 name|segment
 operator|=
@@ -3218,7 +3428,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Missing ')' assumed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|input_line_pointer
@@ -3232,6 +3445,9 @@ comment|/* here with input_line_pointer->char after "(...)" */
 return|return
 name|segment
 return|;
+ifdef|#
+directive|ifdef
+name|TC_M68K
 case|case
 literal|'E'
 case|:
@@ -3250,7 +3466,10 @@ name|de_fault
 goto|;
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"EBCDIC constants are not supported"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Fall through.  */
@@ -3274,6 +3493,8 @@ operator|++
 name|input_line_pointer
 expr_stmt|;
 comment|/* Fall through.  */
+endif|#
+directive|endif
 case|case
 literal|'\''
 case|:
@@ -3318,6 +3539,9 @@ name|expressionP
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|TC_M68K
 case|case
 literal|'"'
 case|:
@@ -3331,6 +3555,8 @@ goto|goto
 name|de_fault
 goto|;
 comment|/* Fall through.  */
+endif|#
+directive|endif
 case|case
 literal|'~'
 case|:
@@ -3493,13 +3719,27 @@ block|}
 else|else
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Unary operator %c ignored because bad operand follows"
+argument_list|)
 argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
 block|}
 break|break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DOLLAR_DOT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TC_M68K
+argument_list|)
 case|case
 literal|'$'
 case|:
@@ -3555,6 +3795,8 @@ name|expressionP
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'.'
 case|:
@@ -3664,7 +3906,10 @@ literal|'('
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"syntax error in .startof. or .sizeof."
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3774,7 +4019,10 @@ literal|')'
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"syntax error in .startof. or .sizeof."
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3812,6 +4060,9 @@ name|input_line_pointer
 operator|--
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|TC_M68K
 case|case
 literal|'%'
 case|:
@@ -3896,9 +4147,16 @@ name|expressionP
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
+ifdef|#
+directive|ifdef
+name|TC_M68K
 name|de_fault
 label|:
+endif|#
+directive|endif
 if|if
 condition|(
 name|is_end_of_line
@@ -4230,7 +4488,10 @@ name|input_line_pointer
 expr_stmt|;
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Bad expression"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|expressionP
@@ -4274,13 +4535,12 @@ name|expressionP
 operator|->
 name|X_add_symbol
 condition|)
+name|symbol_mark_used
+argument_list|(
 name|expressionP
 operator|->
 name|X_add_symbol
-operator|->
-name|sy_used
-operator|=
-literal|1
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -4408,17 +4668,19 @@ name|X_add_symbol
 operator|||
 operator|(
 operator|(
+name|symbol_get_frag
+argument_list|(
 name|expressionP
 operator|->
 name|X_op_symbol
-operator|->
-name|sy_frag
+argument_list|)
 operator|==
+name|symbol_get_frag
+argument_list|(
 name|expressionP
 operator|->
 name|X_add_symbol
-operator|->
-name|sy_frag
+argument_list|)
 operator|)
 operator|&&
 name|SEG_NORMAL
@@ -4526,6 +4788,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|operatorT
 name|op_encoding
 index|[
@@ -4716,8 +4979,17 @@ name|__
 block|,
 name|__
 block|,
+ifdef|#
+directive|ifdef
+name|NEED_INDEX_OPERATOR
+name|O_index
+block|,
+else|#
+directive|else
 name|__
 block|,
+endif|#
+directive|endif
 name|__
 block|,
 name|__
@@ -5081,85 +5353,150 @@ comment|/* O_register */
 literal|0
 block|,
 comment|/* O_bit */
-literal|8
+literal|9
 block|,
 comment|/* O_uminus */
-literal|8
+literal|9
 block|,
 comment|/* O_bit_not */
-literal|8
+literal|9
 block|,
 comment|/* O_logical_not */
-literal|7
+literal|8
 block|,
 comment|/* O_multiply */
-literal|7
+literal|8
 block|,
 comment|/* O_divide */
-literal|7
+literal|8
 block|,
 comment|/* O_modulus */
-literal|7
+literal|8
 block|,
 comment|/* O_left_shift */
-literal|7
+literal|8
 block|,
 comment|/* O_right_shift */
-literal|6
+literal|7
 block|,
 comment|/* O_bit_inclusive_or */
-literal|6
+literal|7
 block|,
 comment|/* O_bit_or_not */
-literal|6
+literal|7
 block|,
 comment|/* O_bit_exclusive_or */
-literal|6
+literal|7
 block|,
 comment|/* O_bit_and */
-literal|4
+literal|5
 block|,
 comment|/* O_add */
-literal|4
+literal|5
 block|,
 comment|/* O_subtract */
-literal|3
+literal|4
 block|,
 comment|/* O_eq */
-literal|3
+literal|4
 block|,
 comment|/* O_ne */
-literal|3
+literal|4
 block|,
 comment|/* O_lt */
-literal|3
+literal|4
 block|,
 comment|/* O_le */
-literal|3
+literal|4
 block|,
 comment|/* O_ge */
-literal|3
+literal|4
 block|,
 comment|/* O_gt */
-literal|2
+literal|3
 block|,
 comment|/* O_logical_and */
-literal|1
+literal|2
+block|,
 comment|/* O_logical_or */
+literal|1
+block|,
+comment|/* O_index */
+literal|0
+block|,
+comment|/* O_md1 */
+literal|0
+block|,
+comment|/* O_md2 */
+literal|0
+block|,
+comment|/* O_md3 */
+literal|0
+block|,
+comment|/* O_md4 */
+literal|0
+block|,
+comment|/* O_md5 */
+literal|0
+block|,
+comment|/* O_md6 */
+literal|0
+block|,
+comment|/* O_md7 */
+literal|0
+block|,
+comment|/* O_md8 */
+literal|0
+block|,
+comment|/* O_md9 */
+literal|0
+block|,
+comment|/* O_md10 */
+literal|0
+block|,
+comment|/* O_md11 */
+literal|0
+block|,
+comment|/* O_md12 */
+literal|0
+block|,
+comment|/* O_md13 */
+literal|0
+block|,
+comment|/* O_md14 */
+literal|0
+block|,
+comment|/* O_md15 */
+literal|0
+block|,
+comment|/* O_md16 */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Initialize the expression parser.  */
+comment|/* Unfortunately, in MRI mode for the m68k, multiplication and    division have lower precedence than the bit wise operators.  This    function sets the operator precedences correctly for the current    mode.  Also, MRI uses a different bit_not operator, and this fixes    that as well.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|STANDARD_MUL_PRECEDENCE
+value|(7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MRI_MUL_PRECEDENCE
+value|(5)
+end_define
 
 begin_function
 name|void
-name|expr_begin
+name|expr_set_precedence
 parameter_list|()
 block|{
-comment|/* In MRI mode for the m68k, multiplication and division have lower      precedence than the bit wise operators.  */
 if|if
 condition|(
 name|flag_m68k_mri
@@ -5170,30 +5507,62 @@ index|[
 name|O_multiply
 index|]
 operator|=
-literal|5
+name|MRI_MUL_PRECEDENCE
 expr_stmt|;
 name|op_rank
 index|[
 name|O_divide
 index|]
 operator|=
-literal|5
+name|MRI_MUL_PRECEDENCE
 expr_stmt|;
 name|op_rank
 index|[
 name|O_modulus
 index|]
 operator|=
-literal|5
-expr_stmt|;
-name|op_encoding
-index|[
-literal|'"'
-index|]
-operator|=
-name|O_bit_not
+name|MRI_MUL_PRECEDENCE
 expr_stmt|;
 block|}
+else|else
+block|{
+name|op_rank
+index|[
+name|O_multiply
+index|]
+operator|=
+name|STANDARD_MUL_PRECEDENCE
+expr_stmt|;
+name|op_rank
+index|[
+name|O_divide
+index|]
+operator|=
+name|STANDARD_MUL_PRECEDENCE
+expr_stmt|;
+name|op_rank
+index|[
+name|O_modulus
+index|]
+operator|=
+name|STANDARD_MUL_PRECEDENCE
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Initialize the expression parser.  */
+end_comment
+
+begin_function
+name|void
+name|expr_begin
+parameter_list|()
+block|{
+name|expr_set_precedence
+argument_list|()
+expr_stmt|;
 comment|/* Verify that X_op field is wide enough.  */
 block|{
 name|expressionS
@@ -5242,6 +5611,8 @@ name|c
 operator|=
 operator|*
 name|input_line_pointer
+operator|&
+literal|0xff
 expr_stmt|;
 switch|switch
 condition|(
@@ -5464,12 +5835,12 @@ begin_function
 name|segT
 name|expr
 parameter_list|(
-name|rank
+name|rankarg
 parameter_list|,
 name|resultP
 parameter_list|)
-name|operator_rankT
-name|rank
+name|int
+name|rankarg
 decl_stmt|;
 comment|/* Larger # is higher rank. */
 name|expressionS
@@ -5478,6 +5849,14 @@ name|resultP
 decl_stmt|;
 comment|/* Deliver result here. */
 block|{
+name|operator_rankT
+name|rank
+init|=
+operator|(
+name|operator_rankT
+operator|)
+name|rankarg
+decl_stmt|;
 name|segT
 name|retval
 decl_stmt|;
@@ -5569,7 +5948,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"missing operand; zero assumed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|right
@@ -5605,6 +5987,35 @@ operator|!=
 literal|' '
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|op_left
+operator|==
+name|O_index
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|input_line_pointer
+operator|!=
+literal|']'
+condition|)
+name|as_bad
+argument_list|(
+literal|"missing right bracket"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+operator|++
+name|input_line_pointer
+expr_stmt|;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|retval
@@ -5660,7 +6071,10 @@ directive|endif
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"operation combines symbols in different segments"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|op_right
@@ -5727,19 +6141,29 @@ operator|==
 name|O_big
 condition|)
 block|{
-name|as_warn
-argument_list|(
-literal|"left operand is a %s; integer 0 assumed"
-argument_list|,
+if|if
+condition|(
 name|resultP
 operator|->
 name|X_add_number
 operator|>
 literal|0
-condition|?
-literal|"bignum"
-else|:
-literal|"float"
+condition|)
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"left operand is a bignum; integer 0 assumed"
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"left operand is a float; integer 0 assumed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|resultP
@@ -5776,19 +6200,29 @@ operator|==
 name|O_big
 condition|)
 block|{
-name|as_warn
-argument_list|(
-literal|"right operand is a %s; integer 0 assumed"
-argument_list|,
+if|if
+condition|(
 name|right
 operator|.
 name|X_add_number
 operator|>
 literal|0
-condition|?
-literal|"bignum"
-else|:
-literal|"float"
+condition|)
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"right operand is a bignum; integer 0 assumed"
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"right operand is a float; integer 0 assumed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|right
@@ -5861,17 +6295,19 @@ operator|==
 name|O_symbol
 operator|&&
 operator|(
+name|symbol_get_frag
+argument_list|(
 name|right
 operator|.
 name|X_add_symbol
-operator|->
-name|sy_frag
+argument_list|)
 operator|==
+name|symbol_get_frag
+argument_list|(
 name|resultP
 operator|->
 name|X_add_symbol
-operator|->
-name|sy_frag
+argument_list|)
 operator|)
 operator|&&
 name|SEG_NORMAL
@@ -6045,7 +6481,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"division by zero"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|v
@@ -6490,13 +6929,12 @@ name|resultP
 operator|->
 name|X_add_symbol
 condition|)
+name|symbol_mark_used
+argument_list|(
 name|resultP
 operator|->
 name|X_add_symbol
-operator|->
-name|sy_used
-operator|=
-literal|1
+argument_list|)
 expr_stmt|;
 return|return
 name|resultP
@@ -6543,6 +6981,7 @@ name|c
 operator|==
 literal|'\001'
 condition|)
+block|{
 while|while
 condition|(
 name|is_part_of_name
@@ -6559,6 +6998,20 @@ operator|==
 literal|'\001'
 condition|)
 empty_stmt|;
+if|if
+condition|(
+name|is_name_ender
+argument_list|(
+name|c
+argument_list|)
+condition|)
+name|c
+operator|=
+operator|*
+name|input_line_pointer
+operator|++
+expr_stmt|;
+block|}
 operator|*
 operator|--
 name|input_line_pointer

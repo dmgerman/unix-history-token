@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Main program of GNU linker.    Copyright (C) 1991, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.    Written by Steve Chamberlain steve@cygnus.com  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Main program of GNU linker.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Written by Steve Chamberlain steve@cygnus.com  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"bfdlink.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filenames.h"
 end_include
 
 begin_include
@@ -306,6 +312,16 @@ end_comment
 begin_decl_stmt
 name|boolean
 name|whole_archive
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if we should demangle symbol names.  */
+end_comment
+
+begin_decl_stmt
+name|boolean
+name|demangling
 decl_stmt|;
 end_decl_stmt
 
@@ -573,6 +589,8 @@ name|asection
 operator|*
 operator|,
 name|bfd_vma
+operator|,
+name|boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -806,6 +824,38 @@ init|=
 name|get_run_time
 argument_list|()
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LC_MESSAGES
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
+expr_stmt|;
 name|program_name
 operator|=
 name|argv
@@ -850,7 +900,10 @@ condition|)
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%X%P: can't set BFD default target to `%s': %E\n"
+argument_list|)
 argument_list|,
 name|TARGET
 argument_list|)
@@ -886,6 +939,12 @@ name|dynamic_link
 operator|=
 name|false
 expr_stmt|;
+name|config
+operator|.
+name|has_shared
+operator|=
+name|false
+expr_stmt|;
 name|command_line
 operator|.
 name|force_common_definition
@@ -909,6 +968,22 @@ operator|.
 name|warn_mismatch
 operator|=
 name|true
+expr_stmt|;
+name|command_line
+operator|.
+name|check_section_addresses
+operator|=
+name|true
+expr_stmt|;
+comment|/* We initialize DEMANGLING based on the environment variable      COLLECT_NO_DEMANGLE.  The gcc collect2 program will demangle the      output of the linker, unless COLLECT_NO_DEMANGLE is set in the      environment.  Acting the same way here lets us provide the same      interface by default.  */
+name|demangling
+operator|=
+name|getenv
+argument_list|(
+literal|"COLLECT_NO_DEMANGLE"
+argument_list|)
+operator|==
+name|NULL
 expr_stmt|;
 name|link_info
 operator|.
@@ -944,6 +1019,18 @@ expr_stmt|;
 name|link_info
 operator|.
 name|traditional_format
+operator|=
+name|false
+expr_stmt|;
+name|link_info
+operator|.
+name|optimize
+operator|=
+name|false
+expr_stmt|;
+name|link_info
+operator|.
+name|no_undefined
 operator|=
 name|false
 expr_stmt|;
@@ -1006,6 +1093,25 @@ operator|.
 name|wrap_hash
 operator|=
 name|NULL
+expr_stmt|;
+name|link_info
+operator|.
+name|mpc860c0
+operator|=
+literal|0
+expr_stmt|;
+comment|/* SVR4 linkers seem to set DT_INIT and DT_FINI based on magic _init      and _fini symbols.  We are compatible.  */
+name|link_info
+operator|.
+name|init_function
+operator|=
+literal|"_init"
+expr_stmt|;
+name|link_info
+operator|.
+name|fini_function
+operator|=
+literal|"_fini"
 expr_stmt|;
 name|ldfile_add_arch
 argument_list|(
@@ -1090,11 +1196,40 @@ if|if
 condition|(
 name|command_line
 operator|.
+name|gc_sections
+condition|)
+name|einfo
+argument_list|(
+literal|"%P%F: --gc-sections and -r may not be used together\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|link_info
+operator|.
+name|mpc860c0
+condition|)
+name|einfo
+argument_list|(
+name|_
+argument_list|(
+literal|"%P%F: -r and --mpc860c0 may not be used together\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|command_line
+operator|.
 name|relax
 condition|)
 name|einfo
 argument_list|(
-literal|"%P%F: -relax and -r may not be used together\n"
+name|_
+argument_list|(
+literal|"%P%F: --relax and -r may not be used together\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1105,7 +1240,10 @@ name|shared
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: -r and -shared may not be used together\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1187,7 +1325,10 @@ condition|)
 block|{
 name|info_msg
 argument_list|(
+name|_
+argument_list|(
 literal|"using internal linker script:\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|info_msg
@@ -1249,7 +1390,10 @@ argument_list|)
 expr_stmt|;
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: no input files\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1260,7 +1404,10 @@ condition|)
 block|{
 name|info_msg
 argument_list|(
+name|_
+argument_list|(
 literal|"%P: mode %s\n"
+argument_list|)
 argument_list|,
 name|emulation
 argument_list|)
@@ -1332,7 +1479,10 @@ argument_list|)
 expr_stmt|;
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: cannot open map file %s: %E\n"
+argument_list|)
 argument_list|,
 name|config
 operator|.
@@ -1471,7 +1621,10 @@ condition|)
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P: link errors found, deleting executable `%s'\n"
+argument_list|)
 argument_list|,
 name|output_filename
 argument_list|)
@@ -1496,7 +1649,10 @@ argument_list|)
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%B: final close failed: %E\n"
+argument_list|)
 argument_list|,
 name|output_bfd
 argument_list|)
@@ -1633,7 +1789,10 @@ name|src
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%X%P: unable to open for source of copy `%s'\n"
+argument_list|)
 argument_list|,
 name|output_filename
 argument_list|)
@@ -1645,7 +1804,10 @@ name|dst
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%X%P: unable to open for destination of copy `%s'\n"
+argument_list|)
 argument_list|,
 name|dst_name
 argument_list|)
@@ -1693,7 +1855,10 @@ condition|)
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P: Error writing file `%s'\n"
+argument_list|)
 argument_list|,
 name|dst_name
 argument_list|)
@@ -1717,7 +1882,10 @@ condition|)
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P: Error closing file `%s'\n"
+argument_list|)
 argument_list|,
 name|dst_name
 argument_list|)
@@ -1748,12 +1916,6 @@ operator|.
 name|stats
 condition|)
 block|{
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_SBRK
@@ -1784,7 +1946,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: total time in link: %ld.%06ld\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -1804,7 +1969,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: data size %ld\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -1959,7 +2127,10 @@ else|else
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: missing argument to -m\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2202,6 +2373,35 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DOS_BASED_FILE_SYSTEM
+block|{
+comment|/* We could have \foo\bar, or /foo\bar.  */
+name|char
+modifier|*
+name|bslash
+init|=
+name|strrchr
+argument_list|(
+name|program_name
+argument_list|,
+literal|'\\'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|bslash
+operator|>
+name|end
+condition|)
+name|end
+operator|=
+name|bslash
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|end
@@ -2346,7 +2546,10 @@ argument_list|)
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: bfd_hash_table_init failed: %E\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2374,7 +2577,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: bfd_hash_lookup failed: %E\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2441,7 +2647,10 @@ argument_list|)
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: bfd_hash_table_init failed: %E\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2464,7 +2673,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: bfd_hash_lookup failed: %E\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2510,7 +2722,10 @@ name|strip_some
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%X%P: error: duplicate retain-symbols-file\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|file
@@ -2581,7 +2796,10 @@ argument_list|)
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: bfd_hash_table_init failed: %E\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bufsize
@@ -2722,7 +2940,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: bfd_hash_lookup for insertion failed: %E\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2737,7 +2958,10 @@ name|strip_none
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P: `-retain-symbols-file' overrides `-s' and `-S'\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|link_info
@@ -2779,6 +3003,7 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd
 modifier|*
@@ -3013,9 +3238,15 @@ name|buf
 argument_list|,
 literal|"%-29s %s\n\n"
 argument_list|,
+name|_
+argument_list|(
 literal|"Archive member included"
+argument_list|)
 argument_list|,
+name|_
+argument_list|(
 literal|"because of file (symbol)"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|minfo
@@ -3227,6 +3458,7 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -3306,7 +3538,10 @@ name|true
 return|;
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%X%C: multiple definition of `%T'\n"
+argument_list|)
 argument_list|,
 name|nbfd
 argument_list|,
@@ -3329,7 +3564,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%D: first defined here\n"
+argument_list|)
 argument_list|,
 name|obfd
 argument_list|,
@@ -3377,6 +3615,7 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -3440,7 +3679,10 @@ argument_list|)
 expr_stmt|;
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B: warning: definition of `%T' overriding common\n"
+argument_list|)
 argument_list|,
 name|nbfd
 argument_list|,
@@ -3455,7 +3697,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B: warning: common is here\n"
+argument_list|)
 argument_list|,
 name|obfd
 argument_list|)
@@ -3486,7 +3731,10 @@ argument_list|)
 expr_stmt|;
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B: warning: common of `%T' overridden by definition\n"
+argument_list|)
 argument_list|,
 name|nbfd
 argument_list|,
@@ -3501,7 +3749,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B: warning: defined here\n"
+argument_list|)
 argument_list|,
 name|obfd
 argument_list|)
@@ -3529,7 +3780,10 @@ condition|)
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B: warning: common of `%T' overridden by larger common\n"
+argument_list|)
 argument_list|,
 name|nbfd
 argument_list|,
@@ -3544,7 +3798,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B: warning: larger common is here\n"
+argument_list|)
 argument_list|,
 name|obfd
 argument_list|)
@@ -3560,7 +3817,10 @@ condition|)
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B: warning: common of `%T' overriding smaller common\n"
+argument_list|)
 argument_list|,
 name|nbfd
 argument_list|,
@@ -3575,7 +3835,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B: warning: smaller common is here\n"
+argument_list|)
 argument_list|,
 name|obfd
 argument_list|)
@@ -3585,7 +3848,10 @@ else|else
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B: warning: multiple common of `%T'\n"
+argument_list|)
 argument_list|,
 name|nbfd
 argument_list|,
@@ -3600,7 +3866,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B: warning: previous common is here\n"
+argument_list|)
 argument_list|,
 name|obfd
 argument_list|)
@@ -3642,6 +3911,7 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|bfd_link_hash_entry
@@ -3671,7 +3941,10 @@ name|warn_constructors
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P: warning: global constructor %s used\n"
+argument_list|)
 argument_list|,
 name|h
 operator|->
@@ -3812,7 +4085,10 @@ name|warn_constructors
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P: warning: global constructor %s used\n"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -3856,7 +4132,10 @@ operator|)
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: BFD backend error: BFD_RELOC_CTOR unsupported\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|s
@@ -3930,7 +4209,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: bfd_link_hash_lookup failed: %E\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4038,6 +4320,7 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -4197,7 +4480,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B%F: could not read symbols: %E\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|)
@@ -4231,7 +4517,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B%F: could not read symbols: %E\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|)
@@ -4411,7 +4700,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B%F: could not read relocs: %E\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|)
@@ -4458,7 +4750,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B%F: could not read relocs: %E\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|)
@@ -4586,11 +4881,14 @@ parameter_list|,
 name|section
 parameter_list|,
 name|address
+parameter_list|,
+name|fatal
 parameter_list|)
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -4607,6 +4905,9 @@ name|section
 decl_stmt|;
 name|bfd_vma
 name|address
+decl_stmt|;
+name|boolean
+name|fatal
 decl_stmt|;
 block|{
 specifier|static
@@ -4674,7 +4975,10 @@ argument_list|)
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%P: bfd_hash_table_init failed: %E\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4713,7 +5017,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%P: bfd_hash_lookup failed: %E\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4782,9 +5089,13 @@ name|error_count
 operator|<
 name|MAX_ERRORS_IN_A_ROW
 condition|)
+block|{
 name|einfo
 argument_list|(
-literal|"%X%C: undefined reference to `%T'\n"
+name|_
+argument_list|(
+literal|"%C: undefined reference to `%T'\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|,
@@ -4795,6 +5106,16 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fatal
+condition|)
+name|einfo
+argument_list|(
+literal|"%X"
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -4804,7 +5125,10 @@ name|MAX_ERRORS_IN_A_ROW
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%D: more undefined references to `%T' follow\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|,
@@ -4824,15 +5148,29 @@ name|error_count
 operator|<
 name|MAX_ERRORS_IN_A_ROW
 condition|)
+block|{
 name|einfo
 argument_list|(
-literal|"%X%B: undefined reference to `%T'\n"
+name|_
+argument_list|(
+literal|"%B: undefined reference to `%T'\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fatal
+condition|)
+name|einfo
+argument_list|(
+literal|"%X"
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -4842,7 +5180,10 @@ name|MAX_ERRORS_IN_A_ROW
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B: more undefined references to `%T' follow\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|,
@@ -4887,6 +5228,7 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -4925,7 +5267,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%X: generated"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -4942,7 +5287,10 @@ argument_list|)
 expr_stmt|;
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|" relocation truncated to fit: %s %T"
+argument_list|)
 argument_list|,
 name|reloc_name
 argument_list|,
@@ -5000,6 +5348,7 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -5030,7 +5379,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%X: generated"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -5047,7 +5399,10 @@ argument_list|)
 expr_stmt|;
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"dangerous relocation: %s\n"
+argument_list|)
 argument_list|,
 name|message
 argument_list|)
@@ -5085,6 +5440,7 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -5115,7 +5471,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%X: generated"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -5132,7 +5491,10 @@ argument_list|)
 expr_stmt|;
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|" reloc refers to symbol `%T' which is not being output\n"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -5214,24 +5576,34 @@ operator|!=
 name|NULL
 operator|)
 condition|)
-name|einfo
-argument_list|(
-literal|"%B: %s %s\n"
-argument_list|,
-name|abfd
-argument_list|,
+block|{
+if|if
+condition|(
 name|bfd_is_und_section
 argument_list|(
 name|section
 argument_list|)
-condition|?
-literal|"reference to"
-else|:
-literal|"definition of"
+condition|)
+name|einfo
+argument_list|(
+literal|"%B: reference to %s\n"
+argument_list|,
+name|abfd
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+else|else
+name|einfo
+argument_list|(
+literal|"%B: definition of %s\n"
+argument_list|,
+name|abfd
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|command_line

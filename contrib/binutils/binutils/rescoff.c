@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* rescoff.c -- read and write resources in Windows COFF files.    Copyright 1997 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* rescoff.c -- read and write resources in Windows COFF files.    Copyright 1997, 1998, 2000 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -379,7 +379,10 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"filename required for COFF input"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|abfd
@@ -458,20 +461,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: no resource section\n"
-argument_list|,
-name|program_name
+name|_
+argument_list|(
+literal|"%s: no resource section"
+argument_list|)
 argument_list|,
 name|filename
-argument_list|)
-expr_stmt|;
-name|xexit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -513,7 +510,10 @@ argument_list|)
 condition|)
 name|bfd_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"can't read resource section"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|finfo
@@ -622,7 +622,10 @@ decl_stmt|;
 block|{
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: %s: address out of bounds"
+argument_list|)
 argument_list|,
 name|finfo
 operator|->
@@ -706,11 +709,16 @@ name|ere
 decl_stmt|;
 if|if
 condition|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|finfo
 operator|->
 name|data_end
 operator|-
 name|data
+argument_list|)
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -722,7 +730,10 @@ name|overrun
 argument_list|(
 name|finfo
 argument_list|,
+name|_
+argument_list|(
 literal|"directory"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|erd
@@ -906,7 +917,10 @@ name|overrun
 argument_list|(
 name|finfo
 argument_list|,
+name|_
+argument_list|(
 literal|"named directory entry"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|name
@@ -941,6 +955,10 @@ if|if
 condition|(
 name|name
 operator|>
+call|(
+name|size_t
+call|)
+argument_list|(
 name|finfo
 operator|->
 name|data_end
@@ -948,12 +966,16 @@ operator|-
 name|finfo
 operator|->
 name|data
+argument_list|)
 condition|)
 name|overrun
 argument_list|(
 name|finfo
 argument_list|,
+name|_
+argument_list|(
 literal|"directory entry name"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ers
@@ -1109,6 +1131,10 @@ if|if
 condition|(
 name|rva
 operator|>=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|finfo
 operator|->
 name|data_end
@@ -1116,12 +1142,16 @@ operator|-
 name|finfo
 operator|->
 name|data
+argument_list|)
 condition|)
 name|overrun
 argument_list|(
 name|finfo
 argument_list|,
+name|_
+argument_list|(
 literal|"named subdirectory"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|re
@@ -1160,6 +1190,10 @@ if|if
 condition|(
 name|rva
 operator|>=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|finfo
 operator|->
 name|data_end
@@ -1167,12 +1201,16 @@ operator|-
 name|finfo
 operator|->
 name|data
+argument_list|)
 condition|)
 name|overrun
 argument_list|(
 name|finfo
 argument_list|,
+name|_
+argument_list|(
 literal|"named resource"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|re
@@ -1259,7 +1297,10 @@ name|overrun
 argument_list|(
 name|finfo
 argument_list|,
+name|_
+argument_list|(
 literal|"ID directory entry"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|name
@@ -1355,6 +1396,10 @@ if|if
 condition|(
 name|rva
 operator|>=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|finfo
 operator|->
 name|data_end
@@ -1362,12 +1407,16 @@ operator|-
 name|finfo
 operator|->
 name|data
+argument_list|)
 condition|)
 name|overrun
 argument_list|(
 name|finfo
 argument_list|,
+name|_
+argument_list|(
 literal|"ID subdirectory"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|re
@@ -1406,6 +1455,10 @@ if|if
 condition|(
 name|rva
 operator|>=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|finfo
 operator|->
 name|data_end
@@ -1413,12 +1466,16 @@ operator|-
 name|finfo
 operator|->
 name|data
+argument_list|)
 condition|)
 name|overrun
 argument_list|(
 name|finfo
 argument_list|,
+name|_
+argument_list|(
 literal|"ID resource"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|re
@@ -1531,16 +1588,24 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"resource type unknown"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|finfo
 operator|->
 name|data_end
 operator|-
 name|data
+argument_list|)
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -1552,7 +1617,10 @@ name|overrun
 argument_list|(
 name|finfo
 argument_list|,
+name|_
+argument_list|(
 literal|"data entry"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|erd
@@ -1601,6 +1669,10 @@ name|finfo
 operator|->
 name|secaddr
 operator|>=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|finfo
 operator|->
 name|data_end
@@ -1608,12 +1680,16 @@ operator|-
 name|finfo
 operator|->
 name|data
+argument_list|)
 condition|)
 name|overrun
 argument_list|(
 name|finfo
 argument_list|,
+name|_
+argument_list|(
 literal|"resource data"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|resdata
@@ -1634,17 +1710,25 @@ if|if
 condition|(
 name|size
 operator|>
+call|(
+name|size_t
+call|)
+argument_list|(
 name|finfo
 operator|->
 name|data_end
 operator|-
 name|resdata
+argument_list|)
 condition|)
 name|overrun
 argument_list|(
 name|finfo
 argument_list|,
+name|_
+argument_list|(
 literal|"resource data size"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|r
@@ -1998,7 +2082,10 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"filename required for COFF output"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|abfd
@@ -2036,6 +2123,71 @@ argument_list|(
 literal|"bfd_set_format"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+name|DLLTOOL_SH
+if|if
+condition|(
+operator|!
+name|bfd_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_sh
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|bfd_fatal
+argument_list|(
+literal|"bfd_set_arch_mach(sh)"
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+name|DLLTOOL_MIPS
+if|if
+condition|(
+operator|!
+name|bfd_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_mips
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|bfd_fatal
+argument_list|(
+literal|"bfd_set_arch_mach(mips)"
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+name|DLLTOOL_ARM
+if|if
+condition|(
+operator|!
+name|bfd_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|bfd_arch_arm
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|bfd_fatal
+argument_list|(
+literal|"bfd_set_arch_mach(arm)"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* FIXME: This is obviously i386 specific.  */
 if|if
 condition|(
@@ -2051,9 +2203,11 @@ argument_list|)
 condition|)
 name|bfd_fatal
 argument_list|(
-literal|"bfd_set_arch_mach"
+literal|"bfd_set_arch_mach(i386)"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3533,7 +3687,10 @@ name|NULL
 condition|)
 name|bfd_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"can't get BFD_RELOC_RVA relocation type"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cwi

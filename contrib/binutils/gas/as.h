@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* as.h - global header file    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* as.h - global header file    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bin-bugs.h"
 end_include
 
 begin_comment
@@ -388,15 +394,19 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
 name|__GNUC__
-argument_list|)
+operator|<
+literal|2
 operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
 name|__GNUC_MINOR__
-operator|<=
-literal|5
+operator|<
+literal|6
+operator|)
 end_if
 
 begin_define
@@ -528,7 +538,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ansidecl.h>
+file|"ansidecl.h"
 end_include
 
 begin_ifdef
@@ -540,7 +550,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<bfd.h>
+file|"bfd.h"
 end_include
 
 begin_endif
@@ -551,7 +561,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<libiberty.h>
+file|"libiberty.h"
 end_include
 
 begin_comment
@@ -561,7 +571,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<progress.h>
+file|"progress.h"
 end_include
 
 begin_comment
@@ -694,6 +704,26 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECLARATION_ENVIRON
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
 decl_stmt|;
 end_decl_stmt
 
@@ -927,6 +957,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SEEK_SET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SEEK_SET
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -948,6 +996,12 @@ name|xfree
 value|free
 end_define
 
+begin_include
+include|#
+directive|include
+file|"asintl.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -956,7 +1010,7 @@ parameter_list|(
 name|val
 parameter_list|)
 define|\
-value|{ \       as_fatal("Case value %ld unexpected at line %d of file \"%s\"\n", \ 	       (long) val, __LINE__, __FILE__); \ 	   }
+value|{ \       as_fatal(_("Case value %ld unexpected at line %d of file \"%s\"\n"), \ 	       (long) val, __LINE__, __FILE__); \ 	   }
 end_define
 
 begin_escape
@@ -1707,17 +1761,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* True if we are assembling in m68k MRI mode.  */
-end_comment
-
-begin_decl_stmt
-name|COMMON
-name|int
-name|flag_m68k_mri
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Should the data section be made read-only and appended to the text    section?  */
 end_comment
 
@@ -1746,6 +1789,21 @@ end_decl_stmt
 
 begin_comment
 comment|/* -W */
+end_comment
+
+begin_comment
+comment|/* True if warnings count as errors.  */
+end_comment
+
+begin_decl_stmt
+name|COMMON
+name|int
+name|flag_fatal_warnings
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* --fatal-warnings */
 end_comment
 
 begin_comment
@@ -1856,18 +1914,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Type of debugging information we should generate.  We currently    only support stabs and ECOFF.  */
+comment|/* Type of debugging information we should generate.  We currently    support stabs, ECOFF, and DWARF2.  */
 end_comment
 
 begin_enum
 enum|enum
 name|debug_info_type
 block|{
+name|DEBUG_UNSPECIFIED
+block|,
 name|DEBUG_NONE
 block|,
 name|DEBUG_STABS
 block|,
 name|DEBUG_ECOFF
+block|,
+name|DEBUG_DWARF
+block|,
+name|DEBUG_DWARF2
 block|}
 enum|;
 end_enum
@@ -2048,6 +2112,10 @@ end_comment
 begin_if
 if|#
 directive|if
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
 name|__GNUC_MINOR__
 operator|<
 literal|6
@@ -2182,11 +2250,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_macro
 name|PRINTF_LIKE
 argument_list|(
-name|as_fatal
+argument|as_fatal
 argument_list|)
+end_macro
+
+begin_expr_stmt
+name|ATTRIBUTE_NORETURN
 expr_stmt|;
 end_expr_stmt
 
@@ -2259,6 +2331,7 @@ name|char
 operator|*
 operator|)
 argument_list|)
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
@@ -2387,6 +2460,37 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|void
+name|input_scrub_insert_line
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|line
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|input_scrub_insert_file
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+name|path
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|input_scrub_new_file
@@ -2431,7 +2535,8 @@ argument_list|)
 argument_list|(
 name|char
 operator|*
-operator|*
+argument_list|,
+name|int
 argument_list|)
 operator|,
 name|char
@@ -2778,6 +2883,18 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+name|int
+name|subseg_text_p
+name|PARAMS
+argument_list|(
+operator|(
+name|segT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|start_dependencies
 name|PARAMS
@@ -2827,11 +2944,13 @@ name|fix
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
+begin_typedef
+typedef|typedef
+name|struct
 name|symbol
-struct_decl|;
-end_struct_decl
+name|symbolS
+typedef|;
+end_typedef
 
 begin_struct_decl
 struct_decl|struct
@@ -2863,8 +2982,7 @@ name|add_to_literal_pool
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|,
 name|valueT
@@ -2962,12 +3080,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"struc-symbol.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"write.h"
 end_include
 
@@ -3030,6 +3142,58 @@ directive|include
 file|"listing.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TC_M68K
+end_ifdef
+
+begin_comment
+comment|/* True if we are assembling in m68k MRI mode.  */
+end_comment
+
+begin_decl_stmt
+name|COMMON
+name|int
+name|flag_m68k_mri
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|flag_m68k_mri
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NUMBERS_WITH_SUFFIX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NUMBERS_WITH_SUFFIX
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3058,6 +3222,42 @@ begin_define
 define|#
 directive|define
 name|LOCAL_LABELS_FB
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LABELS_WITHOUT_COLONS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LABELS_WITHOUT_COLONS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_PSEUDO_DOT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NO_PSEUDO_DOT
 value|0
 end_define
 
@@ -3092,6 +3292,65 @@ directive|define
 name|BSS_SECTION_NAME
 value|".bss"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OCTETS_PER_BYTE_POWER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OCTETS_PER_BYTE_POWER
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OCTETS_PER_BYTE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OCTETS_PER_BYTE
+value|(1<<OCTETS_PER_BYTE_POWER)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|OCTETS_PER_BYTE
+operator|!=
+operator|(
+literal|1
+operator|<<
+name|OCTETS_PER_BYTE_POWER
+operator|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Octets per byte conflicts with its power-of-two definition!"
+end_error
 
 begin_endif
 endif|#

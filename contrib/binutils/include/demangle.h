@@ -19,51 +19,11 @@ directive|define
 name|DEMANGLE_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IN_GCC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"gansidecl.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|PARAMS
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|PROTO(ARGS)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ! IN_GCC */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<ansidecl.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IN_GCC */
-end_comment
 
 begin_comment
 comment|/* Options passed to cplus_demangle (in 2nd parameter). */
@@ -141,6 +101,24 @@ name|DMGL_ARM
 value|(1<< 11)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DMGL_HP
+value|(1<< 12)
+end_define
+
+begin_comment
+comment|/* For the HP aCC compiler; same as ARM                                            except for template arguments, etc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMGL_EDG
+value|(1<< 13)
+end_define
+
 begin_comment
 comment|/* If none of these are set, use 'current_demangling_style' as the default. */
 end_comment
@@ -149,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|DMGL_STYLE_MASK
-value|(DMGL_AUTO|DMGL_GNU|DMGL_LUCID|DMGL_ARM)
+value|(DMGL_AUTO|DMGL_GNU|DMGL_LUCID|DMGL_ARM|DMGL_HP|DMGL_EDG)
 end_define
 
 begin_comment
@@ -180,6 +158,14 @@ block|,
 name|arm_demangling
 init|=
 name|DMGL_ARM
+block|,
+name|hp_demangling
+init|=
+name|DMGL_HP
+block|,
+name|edg_demangling
+init|=
+name|DMGL_EDG
 block|}
 name|current_demangling_style
 enum|;
@@ -215,6 +201,20 @@ define|#
 directive|define
 name|ARM_DEMANGLING_STYLE_STRING
 value|"arm"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HP_DEMANGLING_STYLE_STRING
+value|"hp"
+end_define
+
+begin_define
+define|#
+directive|define
+name|EDG_DEMANGLING_STYLE_STRING
+value|"edg"
 end_define
 
 begin_comment
@@ -253,7 +253,21 @@ begin_define
 define|#
 directive|define
 name|ARM_DEMANGLING
-value|(CURRENT_DEMANGLING_STYLE& DMGL_ARM)
+value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_ARM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HP_DEMANGLING
+value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_HP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EDG_DEMANGLING
+value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_EDG)
 end_define
 
 begin_decl_stmt

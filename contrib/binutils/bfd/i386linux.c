@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for linux flavored i386 a.out binaries.    Copyright (C) 1992, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for linux flavored i386 a.out binaries.    Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -1151,6 +1151,7 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|flagword
@@ -1786,7 +1787,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"Output file requires shared library `%s'\n"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -1820,7 +1824,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"Output file requires shared library `%s.so.%s'\n"
+argument_list|)
 argument_list|,
 name|alloc
 argument_list|,
@@ -2684,7 +2691,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"Symbol %s not defined for fixups\n"
+argument_list|)
 argument_list|,
 name|f
 operator|->
@@ -2967,7 +2977,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"Symbol %s not defined for fixups\n"
+argument_list|)
 argument_list|,
 name|f
 operator|->
@@ -3106,7 +3119,10 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"Warning: fixup count mismatch\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while

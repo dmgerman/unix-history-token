@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back end for traditional Unix core files (U-area and raw sections)    Copyright 1988, 1989, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.    Written by John Gilmore of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back end for traditional Unix core files (U-area and raw sections)    Copyright 1988, 89, 91, 92, 93, 94, 95, 96, 98, 99, 2000    Free Software Foundation, Inc.    Written by John Gilmore of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -30,18 +30,6 @@ end_include
 begin_comment
 comment|/* BFD a.out internal data structures */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -413,6 +401,11 @@ return|;
 block|}
 if|if
 condition|(
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|NBPG
 operator|*
 operator|(
@@ -435,7 +428,12 @@ name|u
 operator|.
 name|u_ssize
 operator|)
+argument_list|)
 operator|>
+operator|(
+name|unsigned
+name|long
+operator|)
 name|statbuf
 operator|.
 name|st_size
@@ -443,7 +441,7 @@ condition|)
 block|{
 name|bfd_set_error
 argument_list|(
-name|bfd_error_file_truncated
+name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
@@ -455,6 +453,11 @@ directive|ifndef
 name|TRAD_CORE_ALLOW_ANY_EXTRA_SIZE
 if|if
 condition|(
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|NBPG
 operator|*
 operator|(
@@ -476,7 +479,12 @@ operator|+
 name|TRAD_CORE_EXTRA_SIZE_ALLOWED
 endif|#
 directive|endif
+argument_list|)
 operator|<
+operator|(
+name|unsigned
+name|long
+operator|)
 name|statbuf
 operator|.
 name|st_size
@@ -817,7 +825,6 @@ argument_list|)
 operator|->
 name|vma
 operator|=
-literal|0
 operator|-
 operator|(
 name|bfd_vma
@@ -1011,6 +1018,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|ignore_abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 ifdef|#
@@ -1049,20 +1057,20 @@ parameter_list|)
 name|bfd
 modifier|*
 name|core_bfd
-decl_stmt|,
-decl|*
-name|exec_bfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
-end_function
-
-begin_block
+name|bfd
+modifier|*
+name|exec_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 return|return
 name|true
 return|;
 comment|/* FIXME, We have no way of telling at this point */
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1284,6 +1292,8 @@ name|BFD_JUMP_TABLE_DYNAMIC
 argument_list|(
 name|_bfd_nodynamic
 argument_list|)
+block|,
+name|NULL
 block|,
 operator|(
 name|PTR

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-alpha.h    Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.    Written by Ken Raeburn<raeburn@cygnus.com>.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* This file is tc-alpha.h    Copyright (C) 1994, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.    Written by Ken Raeburn<raeburn@cygnus.com>.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -19,6 +19,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|WORKING_DOT_WORD
+end_define
+
+begin_define
+define|#
+directive|define
 name|TARGET_ARCH
 value|bfd_arch_alpha
 end_define
@@ -27,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_FORMAT
-value|(OUTPUT_FLAVOR == bfd_target_ecoff_flavour	\ 		       ? "ecoff-littlealpha"				\ 		       : OUTPUT_FLAVOR == bfd_target_elf_flavour	\ 		       ? "elf64-alpha"					\ 		       : OUTPUT_FLAVOR == bfd_target_evax_flavour	\ 		       ? "evax-alpha"					\ 		       : "unknown-format")
+value|(OUTPUT_FLAVOR == bfd_target_ecoff_flavour	\ 		       ? "ecoff-littlealpha"				\ 		       : OUTPUT_FLAVOR == bfd_target_elf_flavour	\ 		       ? "elf64-alpha"					\ 		       : OUTPUT_FLAVOR == bfd_target_evax_flavour	\ 		       ? "vms-alpha"					\ 		       : "unknown-format")
 end_define
 
 begin_define
@@ -121,6 +127,21 @@ directive|define
 name|RELOC_REQUIRES_SYMBOL
 end_define
 
+begin_comment
+comment|/* This expression evaluates to false if the relocation is for a local    object for which we still want to do the relocation at runtime.    True if we are willing to perform this relocation while building    the .o file.  This is only used for pcrel relocations.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_RELOC_RTSYM_LOC_FIXUP
+parameter_list|(
+name|FIX
+parameter_list|)
+define|\
+value|((FIX)->fx_addsy == NULL					\    || (! S_IS_EXTERNAL ((FIX)->fx_addsy)			\&& ! S_IS_WEAK ((FIX)->fx_addsy)				\&& S_IS_DEFINED ((FIX)->fx_addsy)			\&& ! S_IS_COMMON ((FIX)->fx_addsy)))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -133,42 +154,6 @@ parameter_list|,
 name|f
 parameter_list|)
 value|as_fatal ("alpha convert_frag\n")
-end_define
-
-begin_define
-define|#
-directive|define
-name|md_create_long_jump
-parameter_list|(
-name|p
-parameter_list|,
-name|f
-parameter_list|,
-name|t
-parameter_list|,
-name|fr
-parameter_list|,
-name|s
-parameter_list|)
-value|as_fatal("alpha_create_long_jump")
-end_define
-
-begin_define
-define|#
-directive|define
-name|md_create_short_jump
-parameter_list|(
-name|p
-parameter_list|,
-name|f
-parameter_list|,
-name|t
-parameter_list|,
-name|fr
-parameter_list|,
-name|s
-parameter_list|)
-value|as_fatal("alpha_create_short_jump")
 end_define
 
 begin_define
@@ -283,8 +268,7 @@ name|alpha_define_label
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|)
 argument_list|)
@@ -368,6 +352,126 @@ directive|define
 name|ELF_TC_SPECIAL_SECTIONS
 define|\
 value|{ ".sdata",   SHT_PROGBITS,   SHF_ALLOC + SHF_WRITE + SHF_ALPHA_GPREL  }, \   { ".sbss",    SHT_NOBITS,     SHF_ALLOC + SHF_WRITE + SHF_ALPHA_GPREL  },
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Whether to add support for explict !relocation_op!sequence_number.  At the    moment, only do this for ELF, though ECOFF could use it as well.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RELOC_OP_P
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RELOC_OP_P
+end_ifdef
+
+begin_comment
+comment|/* Before the relocations are written, reorder them, so that user supplied    !lituse relocations follow the appropriate !literal relocations.  Also    convert the gas-internal relocations to the appropriate linker relocations.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tc_adjust_symtab
+parameter_list|()
+value|alpha_adjust_symtab ()
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|alpha_adjust_symtab
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* New fields for supporting explicit relocations (such as !literal to mark    where a pointer is loaded from the global table, and !lituse_base to track    all of the normal uses of that pointer).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FIX_TYPE
+value|struct alpha_fix_tag
+end_define
+
+begin_struct
+struct|struct
+name|alpha_fix_tag
+block|{
+name|struct
+name|fix
+modifier|*
+name|next_lituse
+decl_stmt|;
+comment|/* next !lituse */
+name|struct
+name|alpha_literal_tag
+modifier|*
+name|info
+decl_stmt|;
+comment|/* other members with same sequence */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Initialize the TC_FIX_TYPE field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_INIT_FIX_DATA
+parameter_list|(
+name|fixP
+parameter_list|)
+define|\
+value|do {									\   fixP->tc_fix_data.next_lituse = (struct fix *)0;			\   fixP->tc_fix_data.info = (struct alpha_literal_tag *)0;		\ } while (0)
+end_define
+
+begin_comment
+comment|/* Work with DEBUG5 to print fields in tc_fix_type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FIX_DATA_PRINT
+parameter_list|(
+name|stream
+parameter_list|,
+name|fixP
+parameter_list|)
+define|\
+value|do {									\   if (fixP->tc_fix_data.info)						\     fprintf (stderr, "\tinfo = 0x%lx, next_lituse = 0x%lx\n", \ 	     (long)fixP->tc_fix_data.info,				\ 	     (long)fixP->tc_fix_data.next_lituse);			\ } while (0)
 end_define
 
 begin_endif

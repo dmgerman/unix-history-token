@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* rddbg.c -- Read debugging information into a generic form.    Copyright (C) 1995, 96, 1997 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* rddbg.c -- Read debugging information into a generic form.    Copyright (C) 1995, 96, 97, 98, 2000 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -324,11 +324,12 @@ operator|!
 name|found
 condition|)
 block|{
-name|fprintf
+name|non_fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no recognized debugging information\n"
+name|_
+argument_list|(
+literal|"%s: no recognized debugging information"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -708,7 +709,8 @@ operator|+=
 literal|12
 control|)
 block|{
-name|bfd_size_type
+name|unsigned
+name|int
 name|strx
 decl_stmt|;
 name|int
@@ -807,6 +809,48 @@ name|f
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|stroff
+operator|+
+name|strx
+operator|>
+name|strsize
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: %s: stab entry %d is corrupt, strx = 0x%x, type = %d\n"
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|abfd
+argument_list|)
+argument_list|,
+name|names
+index|[
+name|i
+index|]
+operator|.
+name|secname
+argument_list|,
+operator|(
+name|stab
+operator|-
+name|stabs
+operator|)
+operator|/
+literal|12
+argument_list|,
+name|strx
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|s
 operator|=
 operator|(
@@ -1638,7 +1682,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Last stabs entries before error:\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf

@@ -21,41 +21,131 @@ directive|include
 file|"libbfd.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|N
+parameter_list|(
+name|BITS_WORD
+parameter_list|,
+name|BITS_ADDR
+parameter_list|,
+name|NUMBER
+parameter_list|,
+name|PRINT
+parameter_list|,
+name|DEFAULT
+parameter_list|,
+name|NEXT
+parameter_list|)
+define|\
+value|{							\     BITS_WORD,
+comment|/* bits in a word */
+value|\     BITS_ADDR,
+comment|/* bits in an address */
+value|\     8,
+comment|/* 8 bits in a byte */
+value|\     bfd_arch_alpha,					\     NUMBER,						\     "alpha",						\     PRINT,						\     3,							\     DEFAULT,						\     bfd_default_compatible, 				\     bfd_default_scan,					\     NEXT,						\   }
+end_define
+
+begin_define
+define|#
+directive|define
+name|NN
+parameter_list|(
+name|index
+parameter_list|)
+value|(&arch_info_struct[index])
+end_define
+
+begin_comment
+comment|/* These exist only so that we can resonably disassemble PALcode.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|bfd_arch_info_type
+name|arch_info_struct
+index|[]
+init|=
+block|{
+name|N
+argument_list|(
+literal|64
+argument_list|,
+literal|64
+argument_list|,
+name|bfd_mach_alpha_ev4
+argument_list|,
+literal|"alpha:ev4"
+argument_list|,
+name|false
+argument_list|,
+name|NN
+argument_list|(
+literal|1
+argument_list|)
+argument_list|)
+block|,
+name|N
+argument_list|(
+literal|64
+argument_list|,
+literal|64
+argument_list|,
+name|bfd_mach_alpha_ev5
+argument_list|,
+literal|"alpha:ev5"
+argument_list|,
+name|false
+argument_list|,
+name|NN
+argument_list|(
+literal|2
+argument_list|)
+argument_list|)
+block|,
+name|N
+argument_list|(
+literal|64
+argument_list|,
+literal|64
+argument_list|,
+name|bfd_mach_alpha_ev6
+argument_list|,
+literal|"alpha:ev6"
+argument_list|,
+name|false
+argument_list|,
+literal|0
+argument_list|)
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|const
 name|bfd_arch_info_type
 name|bfd_alpha_arch
 init|=
-block|{
+name|N
+argument_list|(
 literal|64
-block|,
-comment|/* 32 bits in a word */
+argument_list|,
 literal|64
-block|,
-comment|/* 32 bits in an address */
-literal|8
-block|,
-comment|/* 8 bits in a byte */
-name|bfd_arch_alpha
-block|,
+argument_list|,
 literal|0
-block|,
-comment|/* only 1 machine */
+argument_list|,
 literal|"alpha"
-block|,
-literal|"alpha"
-block|,
-literal|3
-block|,
+argument_list|,
 name|true
-block|,
-comment|/* the one and only */
-name|bfd_default_compatible
-block|,
-name|bfd_default_scan
-block|,
+argument_list|,
+name|NN
+argument_list|(
 literal|0
-block|,   }
+argument_list|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ar.c - Archive modify and extract.    Copyright 1991, 92, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ar.c - Archive modify and extract.    Copyright 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -55,59 +55,14 @@ end_include
 begin_include
 include|#
 directive|include
+file|"filenames.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_GOOD_UTIME_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<utime.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ! HAVE_GOOD_UTIME_H */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_UTIMES
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_UTIMES */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! HAVE_GOOD_UTIME_H */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -141,6 +96,28 @@ end_define
 begin_comment
 comment|/* ditto for *NIX */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* We need to open files in binary modes on system where that makes a    difference.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
 
 begin_endif
 endif|#
@@ -563,6 +540,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* For extract/delete only.  If COUNTED_NAME_MODE is true, we only    extract the COUNTED_NAME_COUNTER instance of that name.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|counted_name_mode
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|counted_name_counter
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Whether to truncate names of files stored in the archive.  */
 end_comment
 
@@ -570,6 +569,19 @@ begin_decl_stmt
 specifier|static
 name|boolean
 name|ar_truncate
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Whether to use a full file name match when searching an archive.    This is convenient for archives created by the Microsoft lib    program.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|full_pathname
 init|=
 name|false
 decl_stmt|;
@@ -663,6 +675,9 @@ name|bfd
 modifier|*
 name|head
 decl_stmt|;
+name|int
+name|match_count
+decl_stmt|;
 if|if
 condition|(
 name|count
@@ -720,6 +735,10 @@ name|found
 init|=
 name|false
 decl_stmt|;
+name|match_count
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|head
@@ -777,10 +796,15 @@ operator|)
 operator|&&
 operator|(
 operator|!
-name|strcmp
+name|FILENAME_CMP
+argument_list|(
+name|normalize
 argument_list|(
 operator|*
 name|files
+argument_list|,
+name|arch
+argument_list|)
 argument_list|,
 name|head
 operator|->
@@ -789,6 +813,21 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|++
+name|match_count
+expr_stmt|;
+if|if
+condition|(
+name|counted_name_mode
+operator|&&
+name|match_count
+operator|!=
+name|counted_name_counter
+condition|)
+block|{
+comment|/* Counting, and didn't match on count; go on to the                      next one.  */
+continue|continue;
+block|}
 name|found
 operator|=
 name|true
@@ -805,11 +844,15 @@ condition|(
 operator|!
 name|found
 condition|)
+comment|/* xgettext:c-format */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"no entry %s in archive\n"
+argument_list|)
 argument_list|,
 operator|*
 name|files
@@ -858,23 +901,264 @@ condition|(
 operator|!
 name|is_ranlib
 condition|)
+block|{
+comment|/* xgettext:c-format */
 name|fprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"\ Usage: %s [-]{dmpqrtx}[abcilosSuvV] [member-name] archive-file file...\n\        %s -M [<mri-script]\n"
-argument_list|,
-name|program_name
+name|_
+argument_list|(
+literal|"Usage: %s [-]{dmpqrstx}[abcfilNoPsSuvV] [member-name] [count] archive-file file...\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
 expr_stmt|;
-else|else
+comment|/* xgettext:c-format */
 name|fprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"\ Usage: %s [-vV] archive\n"
+name|_
+argument_list|(
+literal|"       %s -M [<mri-script]\n"
+argument_list|)
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|" commands:\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  d            - delete file(s) from the archive\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  m[ab]        - move file(s) in the archive\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  p            - print file(s) found in the archive\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  q[f]         - quick append file(s) to the archive\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  r[ab][f][u]  - replace existing or insert new file(s) into the archive\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  t            - display contents of archive\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  x[o]         - extract file(s) from the archive\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|" command specific modifiers:\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [a]          - put file(s) after [member-name]\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [b]          - put file(s) before [member-name] (same as [i])\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [N]          - use instance [count] of name\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [f]          - truncate inserted file names\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [P]          - use full path names when matching\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [o]          - preserve original dates\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [u]          - only replace files that are newer than current archive contents\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|" generic modifiers:\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [c]          - do not warn if the library had to be created\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [s]          - create an archive index (cf. ranlib)\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [S]          - do not build a symbol table\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [v]          - be verbose\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [V]          - display the version number\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+comment|/* xgettext:c-format */
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"Usage: %s [-vV] archive\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -894,7 +1178,12 @@ name|fprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"Report bugs to bug-gnu-utils@gnu.org\n"
+name|_
+argument_list|(
+literal|"Report bugs to %s\n"
+argument_list|)
+argument_list|,
+name|REPORT_BUGS_TO
 argument_list|)
 expr_stmt|;
 name|xexit
@@ -939,6 +1228,13 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
+if|if
+condition|(
+name|full_pathname
+condition|)
+return|return
+name|file
+return|;
 name|filename
 operator|=
 name|strrchr
@@ -948,6 +1244,61 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DOS_BASED_FILE_SYSTEM
+block|{
+comment|/* We could have foo/bar\\baz, or foo\\bar, or d:bar.  */
+name|char
+modifier|*
+name|bslash
+init|=
+name|strrchr
+argument_list|(
+name|file
+argument_list|,
+literal|'\\'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|bslash
+operator|>
+name|filename
+condition|)
+name|filename
+operator|=
+name|bslash
+expr_stmt|;
+if|if
+condition|(
+name|filename
+operator|==
+name|NULL
+operator|&&
+name|file
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|&&
+name|file
+index|[
+literal|1
+index|]
+operator|==
+literal|':'
+condition|)
+name|filename
+operator|=
+name|file
+operator|+
+literal|1
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|filename
@@ -1049,6 +1400,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|output_filename
@@ -1195,6 +1547,9 @@ modifier|*
 modifier|*
 name|files
 decl_stmt|;
+name|int
+name|file_count
+decl_stmt|;
 name|char
 modifier|*
 name|inarch_filename
@@ -1202,6 +1557,38 @@ decl_stmt|;
 name|int
 name|show_version
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LC_MESSAGES
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
+expr_stmt|;
 name|program_name
 operator|=
 name|argv
@@ -1234,6 +1621,61 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DOS_BASED_FILE_SYSTEM
+block|{
+comment|/* We could have foo/bar\\baz, or foo\\bar, or d:bar.  */
+name|char
+modifier|*
+name|bslash
+init|=
+name|strrchr
+argument_list|(
+name|program_name
+argument_list|,
+literal|'\\'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|bslash
+operator|>
+name|temp
+condition|)
+name|temp
+operator|=
+name|bslash
+expr_stmt|;
+if|if
+condition|(
+name|temp
+operator|==
+name|NULL
+operator|&&
+name|program_name
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|&&
+name|program_name
+index|[
+literal|1
+index|]
+operator|==
+literal|':'
+condition|)
+name|temp
+operator|=
+name|program_name
+operator|+
+literal|1
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|temp
@@ -1257,7 +1699,7 @@ argument_list|)
 operator|>=
 literal|6
 operator|&&
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|temp
 operator|+
@@ -1622,7 +2064,10 @@ name|none
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"two different operation options specified"
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1797,6 +2242,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'N'
+case|:
+name|counted_name_mode
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 literal|'f'
 case|:
 name|ar_truncate
@@ -1804,14 +2257,22 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
+case|case
+literal|'P'
+case|:
+name|full_pathname
+operator|=
+name|true
+expr_stmt|;
+break|break;
 default|default:
-name|fprintf
+comment|/* xgettext:c-format */
+name|non_fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: illegal option -- %c\n"
-argument_list|,
-name|program_name
+name|_
+argument_list|(
+literal|"illegal option -- %c"
+argument_list|)
 argument_list|,
 name|c
 argument_list|)
@@ -1910,7 +2371,10 @@ name|none
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"no operation specified"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1923,7 +2387,10 @@ name|replace
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"`u' is only meaningful with the `r' option."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|arg_index
@@ -1944,6 +2411,55 @@ name|arg_index
 operator|++
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|counted_name_mode
+condition|)
+block|{
+if|if
+condition|(
+name|operation
+operator|!=
+name|extract
+operator|&&
+name|operation
+operator|!=
+name|delete
+condition|)
+name|fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"`N' is only meaningful with the `x' and `d' options."
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|counted_name_counter
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+name|arg_index
+operator|++
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|counted_name_counter
+operator|<=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"Value for `N' must be positive."
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|inarch_filename
 operator|=
 name|argv
@@ -1963,6 +2479,12 @@ operator|+
 name|arg_index
 else|:
 name|NULL
+expr_stmt|;
+name|file_count
+operator|=
+name|argc
+operator|-
+name|arg_index
 expr_stmt|;
 if|#
 directive|if
@@ -2012,9 +2534,7 @@ name|print_descr
 argument_list|,
 name|files
 argument_list|,
-name|argc
-operator|-
-literal|3
+name|file_count
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2029,9 +2549,7 @@ name|print_contents
 argument_list|,
 name|files
 argument_list|,
-name|argc
-operator|-
-literal|3
+name|file_count
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2046,9 +2564,7 @@ name|extract_file
 argument_list|,
 name|files
 argument_list|,
-name|argc
-operator|-
-literal|3
+name|file_count
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2068,6 +2584,11 @@ argument_list|,
 name|files
 argument_list|)
 expr_stmt|;
+else|else
+name|output_filename
+operator|=
+name|NULL
+expr_stmt|;
 break|break;
 case|case
 name|move
@@ -2084,6 +2605,11 @@ name|arch
 argument_list|,
 name|files
 argument_list|)
+expr_stmt|;
+else|else
+name|output_filename
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 case|case
@@ -2113,21 +2639,21 @@ operator|==
 name|quick_append
 argument_list|)
 expr_stmt|;
+else|else
+name|output_filename
+operator|=
+name|NULL
+expr_stmt|;
 break|break;
 comment|/* Shouldn't happen! */
 default|default:
-name|fprintf
+comment|/* xgettext:c-format */
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: internal error -- this option not implemented\n"
-argument_list|,
-name|program_name
+name|_
+argument_list|(
+literal|"internal error -- this option not implemented"
 argument_list|)
-expr_stmt|;
-name|xexit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2217,10 +2743,20 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__GO32__
-comment|/* KLUDGE ALERT! Temporary fix until I figger why  * stat() is wrong ... think it's buried in GO32's IDT  * - Jax  */
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DJGPP__
+argument_list|)
+comment|/* FIXME: I don't understand why this fragment was ifndef'ed 	 away for __GO32__; perhaps it was in the days of DJGPP v1.x. 	 stat() works just fine in v2.x, so I think this should be 	 removed.  For now, I enable it for DJGPP v2. -- EZ.  */
+comment|/* KLUDGE ALERT! Temporary fix until I figger why    stat() is wrong ... think it's buried in GO32's IDT - Jax */
 if|if
 condition|(
 name|errno
@@ -2349,6 +2885,11 @@ name|bfd_fatal
 argument_list|(
 name|archive_filename
 argument_list|)
+expr_stmt|;
+comment|/* If we die creating a new archive, don't leave it around.  */
+name|output_filename
+operator|=
+name|archive_filename
 expr_stmt|;
 block|}
 name|arch
@@ -2540,9 +3081,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+comment|/* xgettext:c-format */
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"internal stat error on %s"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -2556,7 +3101,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"\n<member %s>\n\n"
+literal|"\n<%s>\n\n"
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -2626,9 +3171,13 @@ name|nread
 operator|!=
 name|tocopy
 condition|)
+comment|/* xgettext:c-format */
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"%s is not a valid archive"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -2696,7 +3245,7 @@ name|nread
 decl_stmt|,
 name|tocopy
 decl_stmt|;
-name|int
+name|long
 name|ncopied
 init|=
 literal|0
@@ -2720,9 +3269,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+comment|/* xgettext:c-format */
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"internal stat error on %s"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -2735,6 +3288,26 @@ operator|=
 name|buf
 operator|.
 name|st_size
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|<
+literal|0
+condition|)
+comment|/* xgettext:c-format */
+name|fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"stat returns negative size for %s"
+argument_list|)
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|abfd
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2761,7 +3334,7 @@ argument_list|)
 expr_stmt|;
 name|ostream
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -2792,8 +3365,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ostream
+operator|==
+name|NULL
 condition|)
 block|{
 name|perror
@@ -2858,9 +3432,13 @@ name|nread
 operator|!=
 name|tocopy
 condition|)
+comment|/* xgettext:c-format */
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"%s is not a valid archive"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -2874,8 +3452,9 @@ expr_stmt|;
 comment|/* See comment above; this saves disk arm motion */
 if|if
 condition|(
-operator|!
 name|ostream
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* Seems like an abstraction violation, eh?  Well it's OK! */
@@ -2900,8 +3479,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ostream
+operator|==
+name|NULL
 condition|)
 block|{
 name|perror
@@ -2939,6 +3519,12 @@ operator|+=
 name|tocopy
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ostream
+operator|!=
+name|NULL
+condition|)
 name|fclose
 argument_list|(
 name|ostream
@@ -2968,31 +3554,7 @@ if|if
 condition|(
 name|preserve_dates
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|HAVE_GOOD_UTIME_H
-name|struct
-name|utimbuf
-name|tb
-decl_stmt|;
-name|tb
-operator|.
-name|actime
-operator|=
-name|buf
-operator|.
-name|st_mtime
-expr_stmt|;
-name|tb
-operator|.
-name|modtime
-operator|=
-name|buf
-operator|.
-name|st_mtime
-expr_stmt|;
-name|utime
+name|set_times
 argument_list|(
 name|bfd_get_filename
 argument_list|(
@@ -3000,119 +3562,9 @@ name|abfd
 argument_list|)
 argument_list|,
 operator|&
-name|tb
-argument_list|)
-expr_stmt|;
-comment|/* FIXME check result */
-else|#
-directive|else
-comment|/* ! HAVE_GOOD_UTIME_H */
-ifndef|#
-directive|ifndef
-name|HAVE_UTIMES
-name|long
-name|tb
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|tb
-index|[
-literal|0
-index|]
-operator|=
 name|buf
-operator|.
-name|st_mtime
-expr_stmt|;
-name|tb
-index|[
-literal|1
-index|]
-operator|=
-name|buf
-operator|.
-name|st_mtime
-expr_stmt|;
-name|utime
-argument_list|(
-name|bfd_get_filename
-argument_list|(
-name|abfd
-argument_list|)
-argument_list|,
-name|tb
 argument_list|)
 expr_stmt|;
-comment|/* FIXME check result */
-else|#
-directive|else
-comment|/* HAVE_UTIMES */
-name|struct
-name|timeval
-name|tv
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|tv
-index|[
-literal|0
-index|]
-operator|.
-name|tv_sec
-operator|=
-name|buf
-operator|.
-name|st_mtime
-expr_stmt|;
-name|tv
-index|[
-literal|0
-index|]
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
-name|tv
-index|[
-literal|1
-index|]
-operator|.
-name|tv_sec
-operator|=
-name|buf
-operator|.
-name|st_mtime
-expr_stmt|;
-name|tv
-index|[
-literal|1
-index|]
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
-name|utimes
-argument_list|(
-name|bfd_get_filename
-argument_list|(
-name|abfd
-argument_list|)
-argument_list|,
-name|tv
-argument_list|)
-expr_stmt|;
-comment|/* FIXME check result */
-endif|#
-directive|endif
-comment|/* HAVE_UTIMES */
-endif|#
-directive|endif
-comment|/* ! HAVE_GOOD_UTIME_H */
-block|}
 name|free
 argument_list|(
 name|cbuf
@@ -3135,15 +3587,28 @@ begin_comment
 comment|/* Just do it quickly; don't worry about dups, armap, or anything like that */
 end_comment
 
-begin_ifndef
+begin_if
 unit|static void do_quick_append (archive_filename, files_to_append)      const char *archive_filename;      char **files_to_append; {   FILE *ofile, *ifile;   char *buf = xmalloc (BUFSIZE);   long tocopy, thistime;   bfd *temp;   struct stat sbuf;   boolean newfile = false;   bfd_set_error (bfd_error_no_error);    if (stat (archive_filename,&sbuf) != 0)     {
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__GO32__
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DJGPP__
+argument_list|)
+end_if
 
 begin_comment
-comment|/* KLUDGE ALERT! Temporary fix until I figger why  * stat() is wrong ... think it's buried in GO32's IDT  * - Jax  */
+comment|/* FIXME: I don't understand why this fragment was ifndef'ed 	 away for __GO32__; perhaps it was in the days of DJGPP v1.x. 	 stat() works just fine in v2.x, so I think this should be 	 removed.  For now, I enable it for DJGPP v2.  	 (And yes, I know this is all unused, but somebody, someday, 	 might wish to resurrect this again... -- EZ.  */
+end_comment
+
+begin_comment
+comment|/* KLUDGE ALERT! Temporary fix until I figger why    stat() is wrong ... think it's buried in GO32's IDT - Jax  */
 end_comment
 
 begin_endif
@@ -3153,7 +3618,17 @@ directive|endif
 end_endif
 
 begin_comment
-unit|newfile = true;     }    ofile = fopen (archive_filename, FOPEN_AUB);   if (ofile == NULL)     {       perror (program_name);       xexit (1);     }    temp = bfd_openr (archive_filename, NULL);   if (temp == NULL)     {       bfd_fatal (archive_filename);     }   if (newfile == false)     {       if (bfd_check_format (temp, bfd_archive) != true) 	fatal ("%s is not an archive", archive_filename);     }   else     {       fwrite (ARMAG, 1, SARMAG, ofile);       if (!silent_create) 	fprintf (stderr, "%s: creating %s\n", 		 program_name, archive_filename);     }    if (ar_truncate)     temp->flags |= BFD_TRADITIONAL_FORMAT;
+unit|newfile = true;     }    ofile = fopen (archive_filename, FOPEN_AUB);   if (ofile == NULL)     {       perror (program_name);       xexit (1);     }    temp = bfd_openr (archive_filename, NULL);   if (temp == NULL)     {       bfd_fatal (archive_filename);     }   if (newfile == false)     {       if (bfd_check_format (temp, bfd_archive) != true)
+comment|/* xgettext:c-format */
+end_comment
+
+begin_comment
+unit|fatal (_("%s is not an archive"), archive_filename);     }   else     {       fwrite (ARMAG, 1, SARMAG, ofile);       if (!silent_create)
+comment|/* xgettext:c-format */
+end_comment
+
+begin_comment
+unit|non_fatal (_("creating %s"), archive_filename);     }    if (ar_truncate)     temp->flags |= BFD_TRADITIONAL_FORMAT;
 comment|/* assume it's an achive, go straight to the end, sans $200 */
 end_comment
 
@@ -3338,25 +3813,22 @@ argument_list|(
 name|iarch
 argument_list|)
 expr_stmt|;
-name|unlink
-argument_list|(
-name|old_name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|rename
+name|smart_rename
 argument_list|(
 name|new_name
 argument_list|,
 name|old_name
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 literal|0
 condition|)
-name|bfd_fatal
+name|xexit
 argument_list|(
-name|old_name
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3482,7 +3954,7 @@ name|next
 control|)
 if|if
 condition|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 operator|(
 operator|*
@@ -3554,6 +4026,9 @@ name|something_changed
 init|=
 name|false
 decl_stmt|;
+name|int
+name|match_count
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -3596,6 +4071,10 @@ name|found
 operator|=
 name|false
 expr_stmt|;
+name|match_count
+operator|=
+literal|0
+expr_stmt|;
 name|current_ptr_ptr
 operator|=
 operator|&
@@ -3613,10 +4092,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|FILENAME_CMP
+argument_list|(
+name|normalize
 argument_list|(
 operator|*
 name|files_to_delete
+argument_list|,
+name|arch
+argument_list|)
 argument_list|,
 operator|(
 operator|*
@@ -3628,6 +4112,22 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+operator|++
+name|match_count
+expr_stmt|;
+if|if
+condition|(
+name|counted_name_mode
+operator|&&
+name|match_count
+operator|!=
+name|counted_name_counter
+condition|)
+block|{
+comment|/* Counting, and didn't match on count; go on to the                      next one.  */
+block|}
+else|else
 block|{
 name|found
 operator|=
@@ -3665,8 +4165,7 @@ goto|goto
 name|next_file
 goto|;
 block|}
-else|else
-block|{
+block|}
 name|current_ptr_ptr
 operator|=
 operator|&
@@ -3680,7 +4179,6 @@ name|next
 operator|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|verbose
@@ -3690,9 +4188,13 @@ operator|==
 name|false
 condition|)
 block|{
+comment|/* xgettext:c-format */
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"No member named `%s'\n"
+argument_list|)
 argument_list|,
 operator|*
 name|files_to_delete
@@ -3709,13 +4211,16 @@ name|something_changed
 operator|==
 name|true
 condition|)
-block|{
 name|write_archive
 argument_list|(
 name|arch
 argument_list|)
 expr_stmt|;
-block|}
+else|else
+name|output_filename
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -3788,7 +4293,7 @@ name|current_ptr_ptr
 decl_stmt|;
 if|if
 condition|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|normalize
 argument_list|(
@@ -3878,13 +4383,13 @@ name|next
 operator|)
 expr_stmt|;
 block|}
-name|fprintf
+comment|/* xgettext:c-format */
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no entry %s in archive %s!\n"
-argument_list|,
-name|program_name
+name|_
+argument_list|(
+literal|"no entry %s in archive %s!"
+argument_list|)
 argument_list|,
 operator|*
 name|files_to_move
@@ -3892,11 +4397,6 @@ argument_list|,
 name|arch
 operator|->
 name|filename
-argument_list|)
-expr_stmt|;
-name|xexit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 name|next_file
@@ -3998,7 +4498,7 @@ expr_stmt|;
 comment|/* For compatibility with existing ar programs, we 		 permit the same file to be added multiple times.  */
 if|if
 condition|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|normalize
 argument_list|(
@@ -4080,9 +4580,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+comment|/* xgettext:c-format */
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"internal stat error on %s"
+argument_list|)
 argument_list|,
 name|current
 operator|->
@@ -4300,6 +4804,11 @@ argument_list|(
 name|arch
 argument_list|)
 expr_stmt|;
+else|else
+name|output_filename
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -4403,6 +4912,8 @@ argument_list|(
 name|archname
 argument_list|,
 name|O_RDWR
+operator||
+name|O_BINARY
 argument_list|,
 literal|0
 argument_list|)
@@ -4504,9 +5015,13 @@ argument_list|(
 name|arch
 argument_list|)
 condition|)
+comment|/* xgettext:c-format */
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: no archive map to update"
+argument_list|)
 argument_list|,
 name|archname
 argument_list|)

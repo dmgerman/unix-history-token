@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"sysdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dis-asm.h"
 end_include
 
@@ -25,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"elf/arc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opintl.h"
 end_include
 
 begin_decl_stmt
@@ -1013,7 +1025,10 @@ call|)
 argument_list|(
 name|stream
 argument_list|,
+name|_
+argument_list|(
 literal|"*unknown*"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Parse options for the GNU linker.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Parse options for the GNU linker.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -216,6 +216,27 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+name|int
+name|is_num
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|set_default_dirlist
 name|PARAMS
@@ -308,8 +329,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPTION_DYNAMIC_LINKER
+name|OPTION_DEMANGLE
 value|(OPTION_DEFSYM + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_DYNAMIC_LINKER
+value|(OPTION_DEMANGLE + 1)
 end_define
 
 begin_define
@@ -364,8 +392,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPTION_NO_KEEP_MEMORY
+name|OPTION_NO_DEMANGLE
 value|(OPTION_MAP + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_NO_KEEP_MEMORY
+value|(OPTION_NO_DEMANGLE + 1)
 end_define
 
 begin_define
@@ -532,8 +567,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPTION_WARN_COMMON
+name|OPTION_VERSION_EXPORTS_SECTION
 value|(OPTION_VERSION_SCRIPT + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_WARN_COMMON
+value|(OPTION_VERSION_EXPORTS_SECTION + 1)
 end_define
 
 begin_define
@@ -597,6 +639,62 @@ define|#
 directive|define
 name|OPTION_FORCE_EXE_SUFFIX
 value|(OPTION_WRAP + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_GC_SECTIONS
+value|(OPTION_FORCE_EXE_SUFFIX + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_NO_GC_SECTIONS
+value|(OPTION_GC_SECTIONS + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_CHECK_SECTIONS
+value|(OPTION_NO_GC_SECTIONS + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_NO_CHECK_SECTIONS
+value|(OPTION_CHECK_SECTIONS + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_MPC860C0
+value|(OPTION_NO_CHECK_SECTIONS + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_NO_UNDEFINED
+value|(OPTION_MPC860C0 + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_INIT
+value|(OPTION_NO_UNDEFINED + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_FINI
+value|(OPTION_INIT + 1)
 end_define
 
 begin_comment
@@ -667,9 +765,15 @@ block|}
 block|,
 literal|'a'
 block|,
+name|N_
+argument_list|(
 literal|"KEYWORD"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Shared library control for HP/UX compatibility"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -687,9 +791,15 @@ block|}
 block|,
 literal|'A'
 block|,
+name|N_
+argument_list|(
 literal|"ARCH"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Set architecture"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -707,9 +817,15 @@ block|}
 block|,
 literal|'b'
 block|,
+name|N_
+argument_list|(
 literal|"TARGET"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Specify target for following input files"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -727,9 +843,15 @@ block|}
 block|,
 literal|'c'
 block|,
+name|N_
+argument_list|(
 literal|"FILE"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Read MRI format linker script"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -749,7 +871,10 @@ literal|'d'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Force common symbols to be defined"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -787,9 +912,15 @@ block|}
 block|,
 literal|'e'
 block|,
+name|N_
+argument_list|(
 literal|"ADDRESS"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Set start address"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -809,9 +940,58 @@ literal|'E'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Export all dynamic symbols"
+argument_list|)
 block|,
 name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"EB"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_EB
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Link big-endian objects"
+argument_list|)
+block|,
+name|ONE_DASH
+block|}
+block|,
+block|{
+block|{
+literal|"EL"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_EL
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Link little-endian objects"
+argument_list|)
+block|,
+name|ONE_DASH
 block|}
 block|,
 block|{
@@ -827,9 +1007,15 @@ block|}
 block|,
 literal|'f'
 block|,
+name|N_
+argument_list|(
 literal|"SHLIB"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Auxiliary filter for shared object symbol table"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -847,9 +1033,15 @@ block|}
 block|,
 literal|'F'
 block|,
+name|N_
+argument_list|(
 literal|"SHLIB"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Filter for shared object symbol table"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -869,7 +1061,10 @@ literal|'g'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Ignored"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -887,9 +1082,15 @@ block|}
 block|,
 literal|'G'
 block|,
+name|N_
+argument_list|(
 literal|"SIZE"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Small data size (if no size, same as --shared)"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -907,9 +1108,15 @@ block|}
 block|,
 literal|'h'
 block|,
+name|N_
+argument_list|(
 literal|"FILENAME"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Set internal name of shared library"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -927,9 +1134,15 @@ block|}
 block|,
 literal|'l'
 block|,
+name|N_
+argument_list|(
 literal|"LIBNAME"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Search for library LIBNAME"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -947,9 +1160,15 @@ block|}
 block|,
 literal|'L'
 block|,
+name|N_
+argument_list|(
 literal|"DIRECTORY"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Add DIRECTORY to library search path"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -967,9 +1186,15 @@ block|}
 block|,
 literal|'m'
 block|,
+name|N_
+argument_list|(
 literal|"EMULATION"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Set emulation"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -989,7 +1214,10 @@ literal|'M'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Print map file on standard output"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1009,7 +1237,10 @@ literal|'n'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Do not page align data"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1029,7 +1260,10 @@ literal|'N'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Do not page align data, do not make text readonly"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1047,9 +1281,15 @@ block|}
 block|,
 literal|'o'
 block|,
+name|N_
+argument_list|(
 literal|"FILE"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Set output file name"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1069,7 +1309,33 @@ literal|'O'
 block|,
 name|NULL
 block|,
-literal|"Ignored"
+name|N_
+argument_list|(
+literal|"Optimize output file"
+argument_list|)
+block|,
+name|ONE_DASH
+block|}
+block|,
+block|{
+block|{
+literal|"Qy"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_IGNORE
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Ignored for SVR4 compatibility"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -1089,7 +1355,10 @@ literal|'r'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Generate relocateable output"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1127,9 +1396,15 @@ block|}
 block|,
 literal|'R'
 block|,
+name|N_
+argument_list|(
 literal|"FILE"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Just link symbols (if directory, same as --rpath)"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1149,7 +1424,10 @@ literal|'s'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Strip all symbols"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1169,7 +1447,10 @@ literal|'S'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Strip debugging symbols"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1189,7 +1470,10 @@ literal|'t'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Trace file opens"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1207,9 +1491,15 @@ block|}
 block|,
 literal|'T'
 block|,
+name|N_
+argument_list|(
 literal|"FILE"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Read linker script"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1227,11 +1517,40 @@ block|}
 block|,
 literal|'u'
 block|,
+name|N_
+argument_list|(
 literal|"SYMBOL"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Start with undefined reference to SYMBOL"
+argument_list|)
 block|,
 name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"Ur"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_UR
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Build global constructor/destructor tables"
+argument_list|)
+block|,
+name|ONE_DASH
 block|}
 block|,
 block|{
@@ -1249,7 +1568,10 @@ literal|'v'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Print version information"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1269,7 +1591,10 @@ literal|'V'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Print version and emulation information"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -1289,7 +1614,10 @@ literal|'x'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Discard all local symbols"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1309,7 +1637,10 @@ literal|'X'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Discard temporary local symbols"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1327,9 +1658,15 @@ block|}
 block|,
 literal|'y'
 block|,
+name|N_
+argument_list|(
 literal|"SYMBOL"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Trace mentions of SYMBOL"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1347,9 +1684,15 @@ block|}
 block|,
 literal|'Y'
 block|,
+name|N_
+argument_list|(
 literal|"PATH"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Default search path for Solaris compatibility"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -1367,9 +1710,15 @@ block|}
 block|,
 literal|'z'
 block|,
+name|N_
+argument_list|(
 literal|"KEYWORD"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Ignored for Solaris compatibility"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -1389,7 +1738,10 @@ literal|'('
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Start a group"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1409,7 +1761,10 @@ literal|')'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"End a group"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1427,9 +1782,15 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"KEYWORD"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Ignored for SunOS compatibility"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -1449,7 +1810,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Link against shared libraries"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -1509,7 +1873,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Do not link against shared libraries"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -1589,9 +1956,58 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Bind global references locally"
+argument_list|)
 block|,
 name|ONE_DASH
+block|}
+block|,
+block|{
+block|{
+literal|"check-sections"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_CHECK_SECTIONS
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Check section addresses for overlaps (default)"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"no-check-sections"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NO_CHECK_SECTIONS
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Do not check section addresses for overlaps"
+argument_list|)
+block|,
+name|TWO_DASHES
 block|}
 block|,
 block|{
@@ -1609,7 +2025,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Output cross reference table"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1627,9 +2046,38 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"SYMBOL=EXPRESSION"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Define a symbol"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"demangle"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_DEMANGLE
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Demangle symbol names"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1647,51 +2095,17 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"PROGRAM"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Set the dynamic linker to use"
+argument_list|)
 block|,
 name|TWO_DASHES
-block|}
-block|,
-block|{
-block|{
-literal|"EB"
-block|,
-name|no_argument
-block|,
-name|NULL
-block|,
-name|OPTION_EB
-block|}
-block|,
-literal|'\0'
-block|,
-name|NULL
-block|,
-literal|"Link big-endian objects"
-block|,
-name|ONE_DASH
-block|}
-block|,
-block|{
-block|{
-literal|"EL"
-block|,
-name|no_argument
-block|,
-name|NULL
-block|,
-name|OPTION_EL
-block|}
-block|,
-literal|'\0'
-block|,
-name|NULL
-block|,
-literal|"Link little-endian objects"
-block|,
-name|ONE_DASH
 block|}
 block|,
 block|{
@@ -1709,9 +2123,38 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Generate embedded relocs"
+argument_list|)
 block|,
 name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"fini"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_FINI
+block|}
+block|,
+literal|'\0'
+block|,
+name|N_
+argument_list|(
+literal|"SYMBOL"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"Call SYMBOL at unload-time"
+argument_list|)
+block|,
+name|ONE_DASH
 block|}
 block|,
 block|{
@@ -1729,7 +2172,56 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Force generation of file with .exe suffix"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"gc-sections"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_GC_SECTIONS
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Remove unused sections (on some targets)"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"no-gc-sections"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NO_GC_SECTIONS
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Don't remove unused sections (default)"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1749,9 +2241,38 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Print option help"
+argument_list|)
 block|,
 name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"init"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_INIT
+block|}
+block|,
+literal|'\0'
+block|,
+name|N_
+argument_list|(
+literal|"SYMBOL"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"Call SYMBOL at load-time"
+argument_list|)
+block|,
+name|ONE_DASH
 block|}
 block|,
 block|{
@@ -1767,11 +2288,40 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"FILE"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Write a map file"
+argument_list|)
 block|,
 name|ONE_DASH
+block|}
+block|,
+block|{
+block|{
+literal|"no-demangle"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NO_DEMANGLE
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Do not demangle symbol names"
+argument_list|)
+block|,
+name|TWO_DASHES
 block|}
 block|,
 block|{
@@ -1789,7 +2339,33 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Use less memory and more disk I/O"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"no-undefined"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NO_UNDEFINED
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Allow no undefined symbols"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1809,7 +2385,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Don't warn about mismatched input files"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1829,7 +2408,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Turn off --whole-archive"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1849,7 +2431,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Create an output file even if errors occur"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1887,9 +2472,15 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"TARGET"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Specify target of output file"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1909,27 +2500,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Ignored for Linux compatibility"
-block|,
-name|ONE_DASH
-block|}
-block|,
-block|{
-block|{
-literal|"Qy"
-block|,
-name|no_argument
-block|,
-name|NULL
-block|,
-name|OPTION_IGNORE
-block|}
-block|,
-literal|'\0'
-block|,
-name|NULL
-block|,
-literal|"Ignored for SVR4 compatibility"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -1949,7 +2523,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Relax branches on certain targets"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1967,9 +2544,15 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"FILE"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Keep only symbols listed in FILE"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -1987,9 +2570,15 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"PATH"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Set runtime shared library search path"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -2007,9 +2596,15 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"PATH"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Set link time shared library search path"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -2029,7 +2624,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Create a shared library"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -2070,7 +2668,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Sort common symbols by size"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2110,7 +2711,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Split output sections for each file"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2128,9 +2732,15 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"COUNT"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Split output sections every COUNT relocs"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2150,7 +2760,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Print memory usage statistics"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2168,9 +2781,15 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"SYMBOL"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Do task level linking"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2190,7 +2809,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Use same format as native linker"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2208,9 +2830,15 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"ADDRESS"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Set address of .bss section"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -2228,9 +2856,15 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"ADDRESS"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Set address of .data section"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -2248,29 +2882,15 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"ADDRESS"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Set address of .text section"
-block|,
-name|ONE_DASH
-block|}
-block|,
-block|{
-block|{
-literal|"Ur"
-block|,
-name|no_argument
-block|,
-name|NULL
-block|,
-name|OPTION_UR
-block|}
-block|,
-literal|'\0'
-block|,
-name|NULL
-block|,
-literal|"Build global constructor/destructor tables"
+argument_list|)
 block|,
 name|ONE_DASH
 block|}
@@ -2290,7 +2910,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Output lots of information during link"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2329,9 +2952,41 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"FILE"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Read version information script"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"version-exports-section"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_VERSION_EXPORTS_SECTION
+block|}
+block|,
+literal|'\0'
+block|,
+name|N_
+argument_list|(
+literal|"SYMBOL"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"Take export symbols list from .exports, using\n\t\t\t\tSYMBOL as the version."
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2351,7 +3006,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Warn about duplicate common symbols"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2371,7 +3029,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Warn if global constructors/destructors are seen"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2391,7 +3052,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Warn if the multiple GP values are used"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2411,7 +3075,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Warn only once per undefined symbol"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2431,7 +3098,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Warn if start of section changes due to alignment"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2451,7 +3121,10 @@ literal|'\0'
 block|,
 name|NULL
 block|,
+name|N_
+argument_list|(
 literal|"Include all objects from following archives"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2469,9 +3142,41 @@ block|}
 block|,
 literal|'\0'
 block|,
+name|N_
+argument_list|(
 literal|"SYMBOL"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Use wrapper functions for SYMBOL"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"mpc860c0"
+block|,
+name|optional_argument
+block|,
+name|NULL
+block|,
+name|OPTION_MPC860C0
+block|}
+block|,
+literal|'\0'
+block|,
+name|N_
+argument_list|(
+literal|"[=WORDS]"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"Modify problematic branches in last WORDS (1-10,\n\t\t\t\tdefault 5) words of a page"
+argument_list|)
 block|,
 name|TWO_DASHES
 block|}
@@ -2485,6 +3190,103 @@ directive|define
 name|OPTION_COUNT
 value|((int) (sizeof ld_options / sizeof ld_options[0]))
 end_define
+
+begin_comment
+comment|/* Test STRING for containing a string of digits that form a number    between MIN and MAX.  The return value is the number or ERR.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|is_num
+parameter_list|(
+name|string
+parameter_list|,
+name|min
+parameter_list|,
+name|max
+parameter_list|,
+name|err
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|string
+decl_stmt|;
+name|int
+name|min
+decl_stmt|;
+name|int
+name|max
+decl_stmt|;
+name|int
+name|err
+decl_stmt|;
+block|{
+name|int
+name|result
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+init|;
+operator|*
+name|string
+condition|;
+operator|++
+name|string
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+name|string
+argument_list|)
+condition|)
+block|{
+name|result
+operator|=
+name|err
+expr_stmt|;
+break|break;
+block|}
+name|result
+operator|=
+name|result
+operator|*
+literal|10
+operator|+
+operator|(
+operator|*
+name|string
+operator|-
+literal|'0'
+operator|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|result
+operator|<
+name|min
+operator|||
+name|result
+operator|>
+name|max
+condition|)
+name|result
+operator|=
+name|err
+expr_stmt|;
+return|return
+name|result
+return|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -2774,6 +3576,100 @@ operator|*
 operator|)
 literal|"--shared"
 expr_stmt|;
+comment|/* Because we permit long options to start with a single dash, and      we have a --library option, and the -l option is conventionally      used with an immediately following argument, we can have bad      results if somebody tries to use -l with a library whose name      happens to start with "ibrary", as in -li.  We avoid problems by      simply turning -l into --library.  This means that users will      have to use two dashes in order to use --library, which is OK      since that's how it is documented.       FIXME: It's possible that this problem can arise for other short      options as well, although the user does always have the recourse      of adding a space between the option and the argument.  */
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|argv
+index|[
+name|i
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|argv
+index|[
+name|i
+index|]
+index|[
+literal|1
+index|]
+operator|==
+literal|'l'
+operator|&&
+name|argv
+index|[
+name|i
+index|]
+index|[
+literal|2
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|char
+modifier|*
+name|n
+decl_stmt|;
+name|n
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+operator|+
+literal|20
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|n
+argument_list|,
+literal|"--library=%s"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+name|argv
+index|[
+name|i
+index|]
+operator|=
+name|n
+expr_stmt|;
+block|}
+block|}
 name|last_optind
 operator|=
 operator|-
@@ -2784,7 +3680,6 @@ condition|(
 literal|1
 condition|)
 block|{
-comment|/* getopt_long_only is like getopt_long, but '-' as well as '--' can 	 indicate a long option.  */
 name|int
 name|longind
 decl_stmt|;
@@ -2814,6 +3709,7 @@ operator|=
 name|optind
 expr_stmt|;
 block|}
+comment|/* getopt_long_only is like getopt_long, but '-' as well as '--' 	 can indicate a long option.  */
 name|optc
 operator|=
 name|getopt_long_only
@@ -2844,6 +3740,18 @@ name|optc
 condition|)
 block|{
 default|default:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"%s: use the --help option for usage information\n"
+argument_list|)
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
 name|xexit
 argument_list|(
 literal|1
@@ -2922,7 +3830,10 @@ expr_stmt|;
 else|else
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: unrecognized -a option `%s'\n"
+argument_list|)
 argument_list|,
 name|optarg
 argument_list|)
@@ -2986,7 +3897,10 @@ empty_stmt|;
 else|else
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: unrecognized -assert option `%s'\n"
+argument_list|)
 argument_list|,
 name|optarg
 argument_list|)
@@ -3102,6 +4016,14 @@ expr_stmt|;
 name|lex_string
 operator|=
 name|NULL
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_DEMANGLE
+case|:
+name|demangling
+operator|=
+name|true
 expr_stmt|;
 break|break;
 case|case
@@ -3350,7 +4272,10 @@ name|end
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: invalid number `%s'\n"
+argument_list|)
 argument_list|,
 name|optarg
 argument_list|)
@@ -3361,6 +4286,16 @@ case|case
 literal|'g'
 case|:
 comment|/* Ignore.  */
+break|break;
+case|case
+name|OPTION_GC_SECTIONS
+case|:
+name|command_line
+operator|.
+name|gc_sections
+operator|=
+name|true
+expr_stmt|;
 break|break;
 case|case
 name|OPTION_HELP
@@ -3466,6 +4401,24 @@ name|false
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_NO_DEMANGLE
+case|:
+name|demangling
+operator|=
+name|false
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_NO_GC_SECTIONS
+case|:
+name|command_line
+operator|.
+name|gc_sections
+operator|=
+name|false
+expr_stmt|;
+break|break;
+case|case
 name|OPTION_NO_KEEP_MEMORY
 case|:
 name|link_info
@@ -3473,6 +4426,16 @@ operator|.
 name|keep_memory
 operator|=
 name|false
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_NO_UNDEFINED
+case|:
+name|link_info
+operator|.
+name|no_undefined
+operator|=
+name|true
 expr_stmt|;
 break|break;
 case|case
@@ -3505,6 +4468,24 @@ case|case
 literal|'O'
 case|:
 comment|/* FIXME "-O<non-digits><value>" used to set the address of 	     section<non-digits>.  Was this for compatibility with 	     something, or can we create a new option to do that 	     (with a syntax similar to -defsym)? 	     getopt can't handle two args to an option without kludges.  */
+comment|/* Enable optimizations of output files.  */
+name|link_info
+operator|.
+name|optimize
+operator|=
+name|strtoul
+argument_list|(
+name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+condition|?
+name|true
+else|:
+name|false
+expr_stmt|;
 break|break;
 case|case
 literal|'o'
@@ -3646,25 +4627,134 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|buf
-operator|=
-name|xmalloc
-argument_list|(
+name|size_t
+name|rpath_len
+init|=
 name|strlen
 argument_list|(
 name|command_line
 operator|.
 name|rpath
 argument_list|)
-operator|+
+decl_stmt|;
+name|size_t
+name|optarg_len
+init|=
 name|strlen
 argument_list|(
 name|optarg
 argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+init|=
+name|command_line
+operator|.
+name|rpath
+decl_stmt|;
+comment|/* First see whether OPTARG is already in the path.  */
+do|do
+block|{
+name|size_t
+name|idx
+init|=
+literal|0
+decl_stmt|;
+while|while
+condition|(
+name|optarg
+index|[
+name|idx
+index|]
+operator|!=
+literal|'\0'
+operator|&&
+name|optarg
+index|[
+name|idx
+index|]
+operator|==
+name|cp
+index|[
+name|idx
+index|]
+condition|)
+operator|++
+name|idx
+expr_stmt|;
+if|if
+condition|(
+name|optarg
+index|[
+name|idx
+index|]
+operator|==
+literal|'\0'
+operator|&&
+operator|(
+name|cp
+index|[
+name|idx
+index|]
+operator|==
+literal|'\0'
+operator|||
+name|cp
+index|[
+name|idx
+index|]
+operator|==
+literal|':'
+operator|)
+condition|)
+comment|/* We found it.  */
+break|break;
+comment|/* Not yet found.  */
+name|cp
+operator|=
+name|strchr
+argument_list|(
+name|cp
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|!=
+name|NULL
+condition|)
+operator|++
+name|cp
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|cp
+operator|!=
+name|NULL
+condition|)
+do|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+block|{
+name|buf
+operator|=
+name|xmalloc
+argument_list|(
+name|rpath_len
+operator|+
+name|optarg_len
 operator|+
 literal|2
 argument_list|)
@@ -3695,6 +4785,7 @@ name|rpath
 operator|=
 name|buf
 expr_stmt|;
+block|}
 block|}
 break|break;
 case|case
@@ -3812,11 +4903,26 @@ break|break;
 case|case
 name|OPTION_SHARED
 case|:
+if|if
+condition|(
+name|config
+operator|.
+name|has_shared
+condition|)
 name|link_info
 operator|.
 name|shared
 operator|=
 name|true
+expr_stmt|;
+else|else
+name|einfo
+argument_list|(
+name|_
+argument_list|(
+literal|"%P%F: -shared not supported\n"
+argument_list|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4039,12 +5145,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Copyright 1997 Free Software Foundation, Inc.\n"
+name|_
+argument_list|(
+literal|"Copyright 2000 Free Software Foundation, Inc.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\ This program is free software; you may redistribute it under the terms of\n\ the GNU General Public License.  This program has absolutely no warranty.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|{
@@ -4057,7 +5169,10 @@ name|ld_emulations
 decl_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"  Supported emulations:\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -4118,6 +5233,17 @@ name|yyparse
 argument_list|()
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|OPTION_VERSION_EXPORTS_SECTION
+case|:
+comment|/* This option records a version symbol to be applied to the 	     symbols listed for export to be found in the object files 	     .exports sections.  */
+name|command_line
+operator|.
+name|version_exports_section
+operator|=
+name|optarg
+expr_stmt|;
 break|break;
 case|case
 name|OPTION_WARN_COMMON
@@ -4255,9 +5381,13 @@ name|config
 operator|.
 name|split_by_reloc
 operator|=
-name|atoi
+name|strtoul
 argument_list|(
 name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4272,6 +5402,26 @@ name|true
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_CHECK_SECTIONS
+case|:
+name|command_line
+operator|.
+name|check_section_addresses
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_NO_CHECK_SECTIONS
+case|:
+name|command_line
+operator|.
+name|check_section_addresses
+operator|=
+name|false
+expr_stmt|;
+break|break;
+case|case
 literal|'('
 case|:
 if|if
@@ -4283,7 +5433,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: may not nest groups (--help for usage)\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -4315,7 +5468,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: group ended before it began (--help for usage)\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -4332,6 +5488,99 @@ expr_stmt|;
 name|ingroup
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_MPC860C0
+case|:
+name|link_info
+operator|.
+name|mpc860c0
+operator|=
+literal|20
+expr_stmt|;
+comment|/* default value (in bytes) */
+if|if
+condition|(
+name|optarg
+condition|)
+block|{
+name|unsigned
+name|words
+decl_stmt|;
+name|words
+operator|=
+name|is_num
+argument_list|(
+name|optarg
+argument_list|,
+literal|1
+argument_list|,
+literal|10
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|words
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"%s: Invalid argument to option \"mpc860c0\"\n"
+argument_list|)
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+name|xexit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|link_info
+operator|.
+name|mpc860c0
+operator|=
+name|words
+operator|*
+literal|4
+expr_stmt|;
+comment|/* convert words to bytes */
+block|}
+name|command_line
+operator|.
+name|relax
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_INIT
+case|:
+name|link_info
+operator|.
+name|init_function
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_FINI
+case|:
+name|link_info
+operator|.
+name|fini_function
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 block|}
@@ -4453,15 +5702,15 @@ end_function
 
 begin_block
 block|{
+specifier|const
 name|char
 modifier|*
 name|end
 decl_stmt|;
-name|unsigned
-name|long
+name|bfd_vma
 name|val
 init|=
-name|strtoul
+name|bfd_scan_vma
 argument_list|(
 name|valstr
 argument_list|,
@@ -4478,7 +5727,10 @@ name|end
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: invalid hex number `%s'\n"
+argument_list|)
 argument_list|,
 name|valstr
 argument_list|)
@@ -4524,14 +5776,20 @@ name|pp
 decl_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"Usage: %s [options] file...\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"Options:\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -4678,17 +5936,7 @@ name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|ld_options
-index|[
-name|j
-index|]
-operator|.
-name|arg
-argument_list|)
-expr_stmt|;
-name|len
-operator|+=
-name|strlen
+name|_
 argument_list|(
 name|ld_options
 index|[
@@ -4696,6 +5944,22 @@ name|j
 index|]
 operator|.
 name|arg
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|len
+operator|+=
+name|strlen
+argument_list|(
+name|_
+argument_list|(
+name|ld_options
+index|[
+name|j
+index|]
+operator|.
+name|arg
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4843,12 +6107,15 @@ name|printf
 argument_list|(
 literal|" %s"
 argument_list|,
+name|_
+argument_list|(
 name|ld_options
 index|[
 name|j
 index|]
 operator|.
 name|arg
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|len
@@ -4857,12 +6124,15 @@ literal|1
 operator|+
 name|strlen
 argument_list|(
+name|_
+argument_list|(
 name|ld_options
 index|[
 name|j
 index|]
 operator|.
 name|arg
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4927,6 +6197,8 @@ name|printf
 argument_list|(
 literal|"%s\n"
 argument_list|,
+name|_
+argument_list|(
 name|ld_options
 index|[
 name|i
@@ -4934,12 +6206,18 @@ index|]
 operator|.
 name|doc
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Note: Various tools (such as libtool) depend upon the      format of the listings below - do not change them.  */
+comment|/* xgettext:c-format */
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: supported targets:"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -4981,9 +6259,13 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+comment|/* xgettext:c-format */
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: supported emulations: "
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -4998,9 +6280,35 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+comment|/* xgettext:c-format */
 name|printf
 argument_list|(
-literal|"\nReport bugs to bug-gnu-utils@gnu.org\n"
+name|_
+argument_list|(
+literal|"%s: emulation specific options:\n"
+argument_list|)
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+name|ldemul_list_emulation_options
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|_
+argument_list|(
+literal|"Report bugs to %s\n"
+argument_list|)
+argument_list|,
+name|REPORT_BUGS_TO
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* frags.c - manage frags -    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* frags.c - manage frags -    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -182,8 +182,6 @@ block|{
 name|unsigned
 name|int
 name|n
-decl_stmt|,
-name|oldn
 decl_stmt|;
 name|long
 name|oldc
@@ -197,14 +195,6 @@ name|frag_new
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
-name|oldn
-operator|=
-operator|(
-name|unsigned
-operator|)
-operator|-
-literal|1
 expr_stmt|;
 name|oldc
 operator|=
@@ -223,6 +213,8 @@ operator|=
 literal|2
 operator|*
 name|nchars
+operator|+
+name|SIZEOF_STRUCT_FRAG
 expr_stmt|;
 while|while
 condition|(
@@ -239,10 +231,6 @@ argument_list|)
 operator|)
 operator|<
 name|nchars
-operator|&&
-name|n
-operator|<
-name|oldn
 condition|)
 block|{
 name|frag_wane
@@ -254,10 +242,6 @@ name|frag_new
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
-name|oldn
-operator|=
-name|n
 expr_stmt|;
 block|}
 name|frchain_now
@@ -283,7 +267,10 @@ name|nchars
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't extend frag %d. chars"
+argument_list|)
 argument_list|,
 name|nchars
 argument_list|)
@@ -295,7 +282,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			frag_new()  *  * Call this to close off a completed frag, and start up a new (empty)  * frag, in the same subsegment as the old frag.  * [frchain_now remains the same but frag_now is updated.]  * Because this calculates the correct value of fr_fix by  * looking at the obstack 'frags', it needs to know how many  * characters at the end of the old frag belong to (the maximal)  * fr_var: the rest must belong to fr_fix.  * It doesn't actually set up the old frag's fr_var: you may have  * set fr_var == 1, but allocated 10 chars to the end of the frag:  * in this case you pass old_frags_var_max_size == 10.  *  * Make a new frag, initialising some components. Link new frag at end  * of frchain_now.  */
+comment|/*  *			frag_new()  *  * Call this to close off a completed frag, and start up a new (empty)  * frag, in the same subsegment as the old frag.  * [frchain_now remains the same but frag_now is updated.]  * Because this calculates the correct value of fr_fix by  * looking at the obstack 'frags', it needs to know how many  * characters at the end of the old frag belong to the maximal  * variable part;  The rest must belong to fr_fix.  * It doesn't actually set up the old frag's fr_var.  You may have  * set fr_var == 1, but allocated 10 chars to the end of the frag;  * In this case you pass old_frags_var_max_size == 10.  * In fact, you may use fr_var for something totally unrelated to the  * size of the variable part of the frag;  None of the generic frag  * handling code makes use of fr_var.  *  * Make a new frag, initialising some components. Link new frag at end  * of frchain_now.  */
 end_comment
 
 begin_function
@@ -331,7 +318,7 @@ name|frag_now
 operator|->
 name|fr_fix
 operator|=
-name|frag_now_fix
+name|frag_now_fix_octets
 argument_list|()
 operator|-
 name|old_frags_var_max_size
@@ -493,7 +480,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"attempt to allocate data in absolute section"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|subseg_set
@@ -513,7 +503,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"attempt to allocate data in common section"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mri_common_symbol
@@ -676,6 +669,35 @@ name|opcode
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|USING_CGEN
+name|frag_now
+operator|->
+name|fr_cgen
+operator|.
+name|insn
+operator|=
+literal|0
+expr_stmt|;
+name|frag_now
+operator|->
+name|fr_cgen
+operator|.
+name|opindex
+operator|=
+literal|0
+expr_stmt|;
+name|frag_now
+operator|->
+name|fr_cgen
+operator|.
+name|opinfo
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|TC_FRAG_INIT
 name|TC_FRAG_INIT
 argument_list|(
@@ -811,6 +833,35 @@ name|fr_opcode
 operator|=
 name|opcode
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USING_CGEN
+name|frag_now
+operator|->
+name|fr_cgen
+operator|.
+name|insn
+operator|=
+literal|0
+expr_stmt|;
+name|frag_now
+operator|->
+name|fr_cgen
+operator|.
+name|opindex
+operator|=
+literal|0
+expr_stmt|;
+name|frag_now
+operator|->
+name|fr_cgen
+operator|.
+name|opinfo
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|TC_FRAG_INIT
@@ -1101,7 +1152,7 @@ end_function
 
 begin_function
 name|addressT
-name|frag_now_fix
+name|frag_now_fix_octets
 parameter_list|()
 block|{
 if|if
@@ -1114,10 +1165,7 @@ return|return
 name|abs_section_offset
 return|;
 return|return
-call|(
-name|addressT
-call|)
-argument_list|(
+operator|(
 operator|(
 name|char
 operator|*
@@ -1133,7 +1181,21 @@ operator|-
 name|frag_now
 operator|->
 name|fr_literal
-argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|addressT
+name|frag_now_fix
+parameter_list|()
+block|{
+return|return
+name|frag_now_fix_octets
+argument_list|()
+operator|/
+name|OCTETS_PER_BYTE
 return|;
 block|}
 end_function
