@@ -140,6 +140,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|PacketUnaliasOut
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+name|maxpacketsize
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Port and Address Redirection */
 end_comment
