@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.33	82/10/31	*/
+comment|/*	tty.c	4.34	82/11/22	*/
 end_comment
 
 begin_comment
@@ -1694,6 +1694,9 @@ case|:
 case|case
 name|TIOCLSET
 case|:
+case|case
+name|TIOCSTI
+case|:
 while|while
 condition|(
 name|tp
@@ -2589,6 +2592,51 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+break|break;
+comment|/* 	 * Simulate typing of a character at the terminal. 	 */
+case|case
+name|TIOCSTI
+case|:
+if|if
+condition|(
+name|u
+operator|.
+name|u_uid
+operator|&&
+name|u
+operator|.
+name|u_ttyp
+operator|!=
+name|tp
+condition|)
+return|return
+operator|(
+name|EACCES
+operator|)
+return|;
+else|else
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_rint
+operator|)
+operator|(
+operator|*
+operator|(
+name|char
+operator|*
+operator|)
+name|data
+operator|,
+name|tp
+operator|)
 expr_stmt|;
 break|break;
 default|default:
