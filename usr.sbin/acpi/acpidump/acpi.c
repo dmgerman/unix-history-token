@@ -1461,7 +1461,7 @@ literal|", RsdtAddress=0x%08x\n"
 argument_list|,
 name|rp
 operator|->
-name|addr
+name|rsdt_addr
 argument_list|)
 expr_stmt|;
 name|printf

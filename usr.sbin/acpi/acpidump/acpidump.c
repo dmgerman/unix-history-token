@@ -132,7 +132,7 @@ name|acpi_map_sdt
 argument_list|(
 name|rp
 operator|->
-name|addr
+name|rsdt_addr
 argument_list|)
 expr_stmt|;
 if|if
