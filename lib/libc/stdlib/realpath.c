@@ -271,6 +271,11 @@ expr_stmt|;
 comment|/* Deal with the last component. */
 if|if
 condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+operator|&&
 name|lstat
 argument_list|(
 name|p
