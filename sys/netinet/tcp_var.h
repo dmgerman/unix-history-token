@@ -1470,6 +1470,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|tcp_seq_vs_sess
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|,
+name|tcp_seq
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|tcp_quench
 name|__P

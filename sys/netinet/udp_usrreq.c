@@ -2436,6 +2436,10 @@ argument_list|,
 name|cmd
 argument_list|,
 name|udp_notify
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2456,6 +2460,10 @@ argument_list|,
 name|cmd
 argument_list|,
 name|udp_notify
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

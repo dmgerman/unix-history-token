@@ -1196,6 +1196,10 @@ operator|*
 argument_list|,
 name|int
 argument_list|)
+operator|,
+name|u_int32_t
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

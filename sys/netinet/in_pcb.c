@@ -3184,7 +3184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pass some notification to all connections of a protocol  * associated with address dst.  The local address and/or port numbers  * may be specified to limit the search.  The "usual action" will be  * taken, depending on the ctlinput cmd.  The caller must filter any  * cmds that are uninteresting (e.g., no error in the map).  * Call the protocol specific routine (if any) to report  * any errors for each matching socket.  */
+comment|/*  * Pass some notification to all connections of a protocol  * associated with address dst.  The local address and/or port numbers  * may be specified to limit the search.  The "usual action" will be  * taken, depending on the ctlinput cmd.  The caller must filter any  * cmds that are uninteresting (e.g., no error in the map).  * Call the protocol specific routine (if any) to report  * any errors for each matching socket.  *  * If tcp_seq_check != 0 it also checks if tcp_sequence is  * a valid TCP sequence number for the session.  */
 end_comment
 
 begin_function_decl
@@ -3204,6 +3204,10 @@ parameter_list|,
 name|cmd
 parameter_list|,
 name|notify
+parameter_list|,
+name|tcp_sequence
+parameter_list|,
+name|tcp_seq_check
 parameter_list|)
 name|struct
 name|inpcbhead
@@ -3246,6 +3250,18 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|u_int32_t
+name|tcp_sequence
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_seq_check
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3471,6 +3487,37 @@ operator|.
 name|le_next
 expr_stmt|;
 continue|continue;
+block|}
+comment|/* 		 * If tcp_seq_check is set, then skip sessions where 		 * the sequence number is not one of a unacknowledged 		 * packet. 		 * 		 * If it doesn't match, we break the loop, as only a 		 * single session can match on src/dst ip addresses  		 * and TCP port numbers. 		 */
+if|if
+condition|(
+operator|(
+name|tcp_seq_check
+operator|==
+literal|1
+operator|)
+operator|&&
+operator|(
+name|tcp_seq_vs_sess
+argument_list|(
+name|inp
+argument_list|,
+name|tcp_sequence
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|inp
+operator|=
+name|inp
+operator|->
+name|inp_list
+operator|.
+name|le_next
+expr_stmt|;
+break|break;
 block|}
 name|oinp
 operator|=
