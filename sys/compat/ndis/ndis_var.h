@@ -3629,7 +3629,7 @@ name|void
 modifier|*
 name|ni_introbj
 decl_stmt|;
-name|ndis_spin_lock
+name|ndis_kspin_lock
 name|ni_dpccountlock
 decl_stmt|;
 name|void
@@ -4739,6 +4739,33 @@ name|ndis_timer_entry
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_struct
+struct|struct
+name|ndis_fh
+block|{
+name|void
+modifier|*
+name|nf_vp
+decl_stmt|;
+name|void
+modifier|*
+name|nf_map
+decl_stmt|;
+name|uint32_t
+name|nf_maplen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ndis_fh
+name|ndis_fh
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * The miniport block is basically the internal NDIS handle. We need  * to define this because, unfortunately, it is not entirely opaque  * to NDIS drivers. For one thing, it contains the function pointer  * to the NDIS packet receive handler, which is invoked out of the  * NDIS block via a macro rather than a function pointer. (The  * NdisMIndicateReceivePacket() routine is a macro rather than  * a function.) For another, the driver maintains a pointer to the  * miniport block and passes it as a handle to various NDIS functions.  * (The driver never really knows this because it's hidden behind  * an ndis_handle though.)  *  * The miniport block has two parts: the first part contains fields  * that must never change, since they are referenced by driver  * binaries through macros. The second part is ignored by the driver,  * but contains various things used internaly by NDIS.SYS. In our  * case, we define the first 'immutable' part exactly as it appears  * in Windows, but don't bother duplicating the Windows definitions  * for the second part. Instead, we replace them with a few BSD-specific  * things.  */
