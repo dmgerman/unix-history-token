@@ -218,6 +218,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|char
+name|__progname
+index|[]
+init|=
+literal|"emacs"
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
