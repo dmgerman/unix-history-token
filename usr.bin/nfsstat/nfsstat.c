@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nfsstat.c,v 1.2 1994/10/23 23:25:43 wollman Exp $"
+literal|"$Id: nfsstat.c,v 1.3 1995/06/27 11:07:13 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
 end_include
 
 begin_include
