@@ -3613,20 +3613,6 @@ case|:
 case|case
 name|PTHREAD_MUTEX_NORMAL
 case|:
-comment|/* 		 * POSIX specifies that mutexes should return EDEADLK if a 		 * recursive lock is detected. 		 */
-if|if
-condition|(
-name|m
-operator|->
-name|m_owner
-operator|==
-name|curthread
-condition|)
-name|ret
-operator|=
-name|EDEADLK
-expr_stmt|;
-else|else
 name|ret
 operator|=
 name|EBUSY
