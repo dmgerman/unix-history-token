@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttgeneric.c	3.4 83/08/15"
+literal|"@(#)ttgeneric.c	3.5 83/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"ww.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tt.h"
 end_include
 
 begin_decl_stmt
@@ -52,7 +58,7 @@ literal|'+'
 block|,
 literal|'-'
 block|,
-literal|'|'
+literal|'+'
 block|,
 literal|'-'
 block|,
@@ -1126,15 +1132,6 @@ argument_list|()
 end_macro
 
 begin_block
-block|{ }
-end_block
-
-begin_macro
-name|gen_reset
-argument_list|()
-end_macro
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1147,11 +1144,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|gen_HO
+name|gen_CL
 condition|)
 name|ps
 argument_list|(
-name|gen_HO
+name|gen_CL
 argument_list|)
 expr_stmt|;
 name|gen_col
@@ -1172,7 +1169,7 @@ block|}
 end_block
 
 begin_macro
-name|gen_cleanup
+name|gen_end
 argument_list|()
 end_macro
 
@@ -1799,15 +1796,9 @@ name|gen_init
 expr_stmt|;
 name|tt
 operator|.
-name|tt_reset
+name|tt_end
 operator|=
-name|gen_reset
-expr_stmt|;
-name|tt
-operator|.
-name|tt_cleanup
-operator|=
-name|gen_cleanup
+name|gen_end
 expr_stmt|;
 name|tt
 operator|.
