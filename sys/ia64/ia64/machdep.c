@@ -2913,11 +2913,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Force verbose mode and single-user for a while. 	 */
-name|bootverbose
-operator|=
-literal|1
-expr_stmt|;
+comment|/* 	 * Force single-user for a while. 	 */
 name|boothowto
 operator||=
 name|RB_SINGLE
