@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printgprof.c	5.8 (Berkeley) %G%"
+literal|"@(#)printgprof.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +188,7 @@ name|actime
 operator|=
 literal|0.0
 expr_stmt|;
-name|cfree
+name|free
 argument_list|(
 name|sortednlp
 argument_list|)
@@ -1002,7 +1002,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|cfree
+name|free
 argument_list|(
 name|timesortnlp
 argument_list|)
@@ -3331,7 +3331,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|cfree
+name|free
 argument_list|(
 name|namesortnlp
 argument_list|)
