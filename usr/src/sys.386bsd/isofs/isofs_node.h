@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00151  * --------------------         -----   ----------------------  *  * 23 Apr 93	Jagane D Sundar		support nfs exported isofs  */
+end_comment
+
 begin_struct
 struct|struct
 name|iso_node
@@ -95,6 +99,13 @@ name|iso_volume_seq
 decl_stmt|;
 name|int
 name|iso_namelen
+decl_stmt|;
+comment|/* The following are reqd for NFS FH. -Jagane D Sundar- */
+name|int
+name|iso_parent
+decl_stmt|;
+name|int
+name|iso_parent_ext
 decl_stmt|;
 block|}
 struct|;
