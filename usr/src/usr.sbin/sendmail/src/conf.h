@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.32 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -395,6 +395,10 @@ begin_comment
 comment|/* **  Operating system configuration. ** **	Unless you are porting to a new OS, you shouldn't have to **	change these. */
 end_comment
 
+begin_comment
+comment|/* HP-UX -- tested for 8.07 */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -413,10 +417,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* IBM AIX 3.x -- actually tested for 3.2.3 */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IBM_AIX
+name|_AIX3
 end_ifdef
 
 begin_define
@@ -445,6 +453,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* general System V defines */
+end_comment
 
 begin_ifdef
 ifdef|#
