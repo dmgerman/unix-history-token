@@ -437,8 +437,16 @@ name|LOG_ERR
 argument_list|,
 literal|"in ctl_freeinf(%p): invalid cjinf (cpriv %p)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|cjinf
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|cpriv
 argument_list|)
 expr_stmt|;
@@ -896,6 +904,10 @@ literal|"%s: s=%p r=%ld e=%p %p->%s\n"
 argument_list|,
 name|ptrname
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|cpriv
 argument_list|,
 operator|(
@@ -2390,8 +2402,16 @@ name|LOG_ERR
 argument_list|,
 literal|"in ctl_rewindcf(%p): invalid cjinf (cpriv %p)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|cjinf
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|cpriv
 argument_list|)
 expr_stmt|;
@@ -2612,6 +2632,10 @@ literal|"ctl_dumpcji: Dump '%s' of cjobinfo at %p->%p\n"
 argument_list|,
 name|heading
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|cjinf
 argument_list|,
 name|cpriv
@@ -2745,6 +2769,10 @@ name|dbg_stream
 argument_list|,
 literal|"%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|cpriv
 operator|->
 name|pub
@@ -2841,8 +2869,16 @@ name|LOG_ERR
 argument_list|,
 literal|"in ctl_getline(%p): invalid cjinf (cpriv %p)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|cjinf
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|cpriv
 argument_list|)
 expr_stmt|;
