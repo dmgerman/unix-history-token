@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.36
+literal|3.37
 operator|%
 name|G
 operator|%
@@ -2027,7 +2027,7 @@ operator|--
 expr_stmt|;
 while|while
 condition|(
-name|sfgets
+name|fgets
 argument_list|(
 name|p
 argument_list|,
@@ -2039,6 +2039,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|LineNumber
+operator|++
+expr_stmt|;
 name|fixcrlf
 argument_list|(
 name|p
