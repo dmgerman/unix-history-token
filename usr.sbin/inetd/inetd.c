@@ -7635,18 +7635,20 @@ condition|)
 block|{
 if|if
 condition|(
-name|sep
-operator|->
-name|se_family
+name|no_v4bind
 operator|!=
-name|AF_INET
+literal|0
 condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
-literal|"IPv6 for RPC is not supported yet"
+literal|"IPv4 bind is ignored for %s"
+argument_list|,
+name|sep
+operator|->
+name|se_service
 argument_list|)
 expr_stmt|;
 name|freeconfig
