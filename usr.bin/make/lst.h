@@ -467,6 +467,16 @@ parameter_list|)
 value|(((NODE) == NULL) ? NULL : (NODE)->nextPtr)
 end_define
 
+begin_define
+define|#
+directive|define
+name|LST_NEXT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->nextPtr)
+end_define
+
 begin_comment
 comment|/* Get datum from LstNode */
 end_comment
