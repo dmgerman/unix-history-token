@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)findfp.c	5.10 (Berkeley) %G%"
+literal|"@(#)findfp.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -253,6 +259,8 @@ operator|*
 name|g
 argument_list|)
 operator|+
+name|ALIGNBYTES
+operator|+
 name|n
 operator|*
 sizeof|sizeof
@@ -278,11 +286,12 @@ operator|(
 name|FILE
 operator|*
 operator|)
-operator|(
+name|ALIGN
+argument_list|(
 name|g
 operator|+
 literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 name|g
 operator|->
