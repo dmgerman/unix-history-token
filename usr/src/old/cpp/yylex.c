@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yylex.c	1.2 %G%"
+literal|"@(#)yylex.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,8 @@ directive|if
 name|pdp11
 operator||
 name|vax
+operator||
+name|mc68000
 end_if
 
 begin_define
