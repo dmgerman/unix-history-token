@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* m-x.c -- Meta-x minibuffer reader.    $Id: m-x.c,v 1.8 1999/06/25 21:57:40 karl Exp $     Copyright (C) 1993, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* m-x.c -- Meta-x minibuffer reader.    $Id: m-x.c,v 1.9 2001/11/16 23:14:33 karl Exp $     Copyright (C) 1993, 97, 98, 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"info.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"funs.h"
 end_include
 
 begin_comment
@@ -252,9 +258,9 @@ operator|*
 name|line
 condition|)
 block|{
-name|VFunction
+name|InfoCommand
 modifier|*
-name|fun
+name|cmd
 init|=
 name|named_function
 argument_list|(
@@ -264,7 +270,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|fun
+name|cmd
 condition|)
 return|return;
 name|window_message_in_echo_area
@@ -275,7 +281,7 @@ name|line
 argument_list|,
 name|function_documentation
 argument_list|(
-name|fun
+name|cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -305,16 +311,10 @@ name|char
 modifier|*
 name|line
 decl_stmt|;
-comment|/* Ask the completer to read a reference for us. */
-if|if
-condition|(
-name|info_explicit_arg
-operator|||
-name|count
-operator|!=
-literal|1
-condition|)
-block|{
+name|char
+modifier|*
+name|keys
+decl_stmt|;
 name|char
 modifier|*
 name|prompt
@@ -330,31 +330,62 @@ argument_list|(
 literal|20
 argument_list|)
 expr_stmt|;
+name|keys
+operator|=
+name|where_is
+argument_list|(
+name|info_keymap
+argument_list|,
+name|InfoCmd
+argument_list|(
+name|info_execute_command
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* If the where_is () function thinks that this command doesn't exist,      there's something very wrong!  */
+if|if
+condition|(
+operator|!
+name|keys
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|info_explicit_arg
+operator|||
+name|count
+operator|!=
+literal|1
+condition|)
 name|sprintf
 argument_list|(
 name|prompt
 argument_list|,
-literal|"%d M-x "
+literal|"%d %s "
 argument_list|,
 name|count
+argument_list|,
+name|keys
 argument_list|)
 expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|prompt
+argument_list|,
+literal|"%s "
+argument_list|,
+name|keys
+argument_list|)
+expr_stmt|;
+comment|/* Ask the completer to read a reference for us. */
 name|line
 operator|=
 name|read_function_name
 argument_list|(
 name|prompt
-argument_list|,
-name|window
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|line
-operator|=
-name|read_function_name
-argument_list|(
-literal|"M-x "
 argument_list|,
 name|window
 argument_list|)
@@ -394,9 +425,9 @@ return|return;
 block|}
 comment|/* User wants to execute a named command.  Do it. */
 block|{
-name|VFunction
+name|InfoCommand
 modifier|*
-name|function
+name|command
 decl_stmt|;
 if|if
 condition|(
@@ -435,7 +466,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|function
+name|command
 operator|=
 name|named_function
 argument_list|(
@@ -450,20 +481,23 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|function
+name|command
 condition|)
 return|return;
-call|(
-modifier|*
-name|function
-call|)
+operator|(
+operator|*
+name|InfoFunction
 argument_list|(
-name|active_window
-argument_list|,
-name|count
-argument_list|,
-literal|0
+name|command
 argument_list|)
+operator|)
+operator|(
+name|active_window
+operator|,
+name|count
+operator|,
+literal|0
+operator|)
 expr_stmt|;
 block|}
 block|}

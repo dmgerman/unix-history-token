@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* install-info -- create Info directory entry(ies) for an Info file.    $Id: install-info.c,v 1.48 1999/08/06 18:13:32 karl Exp $     Copyright (C) 1996, 97, 98, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.*/
+comment|/* install-info -- create Info directory entry(ies) for an Info file.    $Id: install-info.c,v 1.52 2002/01/19 01:12:29 karl Exp $     Copyright (C) 1996, 97, 98, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.*/
 end_comment
 
 begin_include
@@ -595,6 +595,8 @@ literal|"virtual memory exhausted"
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -654,6 +656,8 @@ name|_
 argument_list|(
 literal|"virtual memory exhausted"
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -894,6 +898,8 @@ argument_list|(
 name|s
 argument_list|,
 name|name
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1979,6 +1985,8 @@ argument_list|)
 argument_list|,
 operator|*
 name|opened_filename
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|pfatal_with_name
@@ -3327,6 +3335,10 @@ name|_
 argument_list|(
 literal|"START-INFO-DIR-ENTRY without matching END-INFO-DIR-ENTRY"
 argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|start_of_this_entry
@@ -3584,6 +3596,10 @@ name|_
 argument_list|(
 literal|"END-INFO-DIR-ENTRY without matching START-INFO-DIR-ENTRY"
 argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3601,6 +3617,10 @@ name|_
 argument_list|(
 literal|"START-INFO-DIR-ENTRY without matching END-INFO-DIR-ENTRY"
 argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* If we ignored the INFO-DIR-ENTRY directives, we need now go back      and plug the names of all the sections we found into every      element of the ENTRIES list.  */
@@ -4964,7 +4984,7 @@ argument_list|(
 literal|"Copyright (C) %s Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
 argument_list|)
 argument_list|,
-literal|"1999"
+literal|"2002"
 argument_list|)
 expr_stmt|;
 name|xexit
@@ -5029,6 +5049,8 @@ name|argv
 index|[
 name|optind
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5043,6 +5065,10 @@ name|_
 argument_list|(
 literal|"No input file specified; try --help for more information."
 argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5056,6 +5082,10 @@ name|_
 argument_list|(
 literal|"No dir file specified; try --help for more information."
 argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Read the Info file and parse it into lines, unless we're deleting.  */
@@ -5141,6 +5171,8 @@ literal|"no info dir entry in `%s'"
 argument_list|)
 argument_list|,
 name|infile
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|xexit
@@ -5764,6 +5796,8 @@ literal|"no entries found for `%s'; nothing deleted"
 argument_list|)
 argument_list|,
 name|infile
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|output_dirfile

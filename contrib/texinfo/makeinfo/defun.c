@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* defun.c -- @defun and friends.    $Id: defun.c,v 1.11 1999/07/11 16:50:19 karl Exp $     Copyright (C) 1998, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* defun.c -- @defun and friends.    $Id: defun.c,v 1.18 2002/01/22 18:01:24 karl Exp $     Copyright (C) 1998, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"defun.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"docbook.h"
 end_include
 
 begin_include
@@ -1335,17 +1341,23 @@ expr_stmt|;
 comment|/* The type name for typed languages.  */
 if|if
 condition|(
+operator|(
 name|base_type
 operator|==
 name|deftypemethod
+operator|)
 operator|||
+operator|(
 name|base_type
 operator|==
 name|deftypeivar
+operator|)
 operator|||
+operator|(
 name|base_type
 operator|==
 name|deftypeop
+operator|)
 condition|)
 name|type_name2
 operator|=
@@ -1442,6 +1454,33 @@ operator|=
 name|tem
 expr_stmt|;
 block|}
+comment|/* It's easy to write @defun foo(arg1 arg2), but a following ( is      misparsed by texinfo.tex and this is next to impossible to fix.      Warn about it.  */
+if|if
+condition|(
+operator|*
+name|scan_args
+operator|&&
+operator|*
+operator|*
+name|scan_args
+operator|&&
+operator|*
+operator|*
+name|scan_args
+operator|==
+literal|'('
+condition|)
+name|warning
+argument_list|(
+literal|"`%c' follows defined name `%s' instead of whitespace"
+argument_list|,
+operator|*
+operator|*
+name|scan_args
+argument_list|,
+name|defined_name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1462,12 +1501,15 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|html
-operator|&&
 operator|!
 name|x_p
 condition|)
+block|{
 comment|/* Start the definition on new paragraph.  */
+if|if
+condition|(
+name|html
+condition|)
 name|add_word
 argument_list|(
 literal|"<p>\n"
@@ -1475,8 +1517,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|docbook
+condition|)
+name|docbook_begin_paragraph
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|!
 name|html
+operator|&&
+operator|!
+name|docbook
 condition|)
 switch|switch
 condition|(
@@ -1638,18 +1691,25 @@ condition|(
 operator|!
 name|x_p
 condition|)
-name|add_word
+block|{
+name|add_html_elt
 argument_list|(
-literal|"<table width=\"100%\">\n"
+literal|"<table width="
 argument_list|)
 expr_stmt|;
+name|add_word
+argument_list|(
+literal|"\"100%\">\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* If this is an @def...x there has to be an other @def... before          it, so this is only a new row within an existing table.  With          two complete standalone tables the gap between them is too big.  */
 name|add_word
 argument_list|(
 literal|"<tr>\n"
 argument_list|)
 expr_stmt|;
-name|add_word
+name|add_html_elt
 argument_list|(
 literal|"<td align=\"left\">"
 argument_list|)
@@ -1669,11 +1729,150 @@ case|case
 name|deftp
 case|:
 comment|/*<i> is for the following function arguments.  */
-name|add_word_args
+name|add_word
 argument_list|(
-literal|"<b>%s</b><i>"
+literal|"<b>"
+argument_list|)
+expr_stmt|;
+name|execute_string
+argument_list|(
+literal|"%s"
 argument_list|,
 name|defined_name
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+literal|"</b><i>"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|deftypefn
+case|:
+case|case
+name|deftypevr
+case|:
+name|execute_string
+argument_list|(
+literal|"%s "
+argument_list|,
+name|type_name
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+literal|"<b>"
+argument_list|)
+expr_stmt|;
+name|execute_string
+argument_list|(
+literal|"%s"
+argument_list|,
+name|defined_name
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+literal|"</b><i>"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|defcv
+case|:
+case|case
+name|defop
+case|:
+name|add_word
+argument_list|(
+literal|"<b>"
+argument_list|)
+expr_stmt|;
+name|execute_string
+argument_list|(
+literal|"%s"
+argument_list|,
+name|defined_name
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+literal|"</b><i>"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|deftypemethod
+case|:
+case|case
+name|deftypeop
+case|:
+case|case
+name|deftypeivar
+case|:
+name|execute_string
+argument_list|(
+literal|"%s "
+argument_list|,
+name|type_name2
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+literal|"<b>"
+argument_list|)
+expr_stmt|;
+name|execute_string
+argument_list|(
+literal|"%s"
+argument_list|,
+name|defined_name
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+literal|"</b><i>"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+comment|/* if (html)... */
+if|if
+condition|(
+name|docbook
+condition|)
+block|{
+switch|switch
+condition|(
+name|base_type
+condition|)
+block|{
+case|case
+name|deffn
+case|:
+case|case
+name|defvr
+case|:
+case|case
+name|deftp
+case|:
+case|case
+name|defcv
+case|:
+case|case
+name|defop
+case|:
+name|add_word_args
+argument_list|(
+literal|"<%s>%s</%s>"
+argument_list|,
+name|DB_FUNCTION
+argument_list|,
+name|defined_name
+argument_list|,
+name|DB_FUNCTION
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1685,25 +1884,15 @@ name|deftypevr
 case|:
 name|add_word_args
 argument_list|(
-literal|"%s<b>%s</b><i>"
+literal|"%s<%s>%s</%s>"
 argument_list|,
 name|type_name
 argument_list|,
-name|defined_name
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|defcv
-case|:
-case|case
-name|defop
-case|:
-name|add_word_args
-argument_list|(
-literal|"<b>%s</b><i>"
+name|DB_FUNCTION
 argument_list|,
 name|defined_name
+argument_list|,
+name|DB_FUNCTION
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1718,17 +1907,21 @@ name|deftypeivar
 case|:
 name|add_word_args
 argument_list|(
-literal|"%s<b>%s</b><i>"
+literal|"%s<%s>%s</%s>"
 argument_list|,
 name|type_name2
 argument_list|,
+name|DB_FUNCTION
+argument_list|,
 name|defined_name
+argument_list|,
+name|DB_FUNCTION
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* if (html)... */
+comment|/* if (docbook)... */
 name|current_indent
 operator|+=
 name|default_indentation_increment
@@ -1808,9 +2001,19 @@ argument_list|)
 expr_stmt|;
 comment|/* close italic area for arguments */
 comment|/* put the rest into the second column */
-name|add_word_args
+name|add_word
 argument_list|(
-literal|"</td>\n<td align=\"right\">%s"
+literal|"</td>\n"
+argument_list|)
+expr_stmt|;
+name|add_html_elt
+argument_list|(
+literal|"<td align=\"right\">"
+argument_list|)
+expr_stmt|;
+name|execute_string
+argument_list|(
+literal|"%s"
 argument_list|,
 name|category
 argument_list|)
@@ -1821,10 +2024,15 @@ name|defcv
 case|:
 name|add_word
 argument_list|(
-literal|"</td>\n<td align=\"right\">"
+literal|"</td>\n"
 argument_list|)
 expr_stmt|;
-name|add_word_args
+name|add_html_elt
+argument_list|(
+literal|"<td align=\"right\">"
+argument_list|)
+expr_stmt|;
+name|execute_string
 argument_list|(
 literal|"%s %s %s"
 argument_list|,
@@ -1855,10 +2063,15 @@ argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
-literal|"</td>\n<td align=\"right\">"
+literal|"</td>\n"
 argument_list|)
 expr_stmt|;
-name|add_word_args
+name|add_html_elt
+argument_list|(
+literal|"<td align=\"right\">"
+argument_list|)
+expr_stmt|;
+name|execute_string
 argument_list|(
 literal|"%s %s %s"
 argument_list|,
@@ -1883,10 +2096,15 @@ argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
-literal|"</td>\n<td align=\"right\">"
+literal|"</td>\n"
 argument_list|)
 expr_stmt|;
-name|add_word_args
+name|add_html_elt
+argument_list|(
+literal|"<td align=\"right\">"
+argument_list|)
+expr_stmt|;
+name|execute_string
 argument_list|(
 literal|"%s %s %s"
 argument_list|,
@@ -1930,14 +2148,14 @@ argument_list|(
 literal|"</table>\n"
 argument_list|)
 expr_stmt|;
-name|add_word
+name|add_html_elt
 argument_list|(
-literal|"<table width=\"95%\" align=\"center\">\n"
+literal|"<table width=\"95%\" align=\"center\">"
 argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
-literal|"<tr><td>\n"
+literal|"\n<tr><td>\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations for getopt.    Copyright (C) 1989,90,91,92,93,94,96,97 Free Software Foundation, Inc.     NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@gnu.org.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
+comment|/* Declarations for getopt.    Copyright (C) 1989,90,91,92,93,94,96,97,98 Free Software Foundation, Inc.    NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@gnu.org.    This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
 end_comment
 
 begin_ifndef
@@ -9,12 +9,23 @@ directive|ifndef
 name|_GETOPT_H
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__need_getopt
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_GETOPT_H
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -49,6 +60,9 @@ specifier|extern
 name|int
 name|optopt
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__need_getopt
 comment|/* Describe the long-named options requested by the application.    The LONG_OPTIONS argument to getopt_long or getopt_long_only is a vector    of `struct option' terminated by an element containing a name which is    zero.     The field `has_arg' is:    no_argument		(or 0) if the option does not take an argument,    required_argument	(or 1) if the option requires an argument,    optional_argument 	(or 2) if the option takes an optional argument.     If the field `flag' is not NULL, it points to a variable that is set    to the value given in the field `val' when the option is found, but    left unchanged if the option is not found.     To have a long-named option do something other than set an `int' to    a compiled-in constant, such as set a value from `optarg', set the    option's `flag' field to zero and its `val' field to a nonzero    value (the equivalent single-letter option character, if there is    one).  For long options that have a zero `flag' field, `getopt'    returns the contents of the `val' field.  */
 struct|struct
 name|option
@@ -56,9 +70,7 @@ block|{
 if|#
 directive|if
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|&&
 name|__STDC__
 specifier|const
@@ -100,12 +112,14 @@ define|#
 directive|define
 name|optional_argument
 value|2
+endif|#
+directive|endif
+comment|/* need getopt */
+comment|/* Get definitions and prototypes for functions to process the    arguments in ARGV (ARGC of them, minus the program name) for    options given in OPTS.     Return the option character from OPTS just read.  Return -1 when    there are no more options.  For unrecognized options, or options    missing arguments, `optopt' is set to the option letter, and '?' is    returned.     The OPTS string is a list of characters which are recognized option    letters, optionally followed by colons, specifying that that letter    takes an argument, to be placed in `optarg'.     If a letter in OPTS is followed by two colons, its argument is    optional.  This behavior is specific to the GNU `getopt'.     The argument `--' causes premature termination of argument    scanning, explicitly telling `getopt' that there are no more    options.     If OPTS begins with `--', then non-option arguments are treated as    arguments to the option '\0'.  This behavior is specific to the GNU    `getopt'.  */
 if|#
 directive|if
 name|defined
-argument_list|(
 name|__STDC__
-argument_list|)
 operator|&&
 name|__STDC__
 ifdef|#
@@ -117,18 +131,18 @@ name|int
 name|getopt
 parameter_list|(
 name|int
-name|argc
+name|__argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|argv
+name|__argv
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|shortopts
+name|__shortopts
 parameter_list|)
 function_decl|;
 else|#
@@ -142,33 +156,36 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* __GNU_LIBRARY__ */
+ifndef|#
+directive|ifndef
+name|__need_getopt
 specifier|extern
 name|int
 name|getopt_long
 parameter_list|(
 name|int
-name|argc
+name|__argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|argv
+name|__argv
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|shortopts
+name|__shortopts
 parameter_list|,
 specifier|const
 name|struct
 name|option
 modifier|*
-name|longopts
+name|__longopts
 parameter_list|,
 name|int
 modifier|*
-name|longind
+name|__longind
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -176,28 +193,28 @@ name|int
 name|getopt_long_only
 parameter_list|(
 name|int
-name|argc
+name|__argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|argv
+name|__argv
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|shortopts
+name|__shortopts
 parameter_list|,
 specifier|const
 name|struct
 name|option
 modifier|*
-name|longopts
+name|__longopts
 parameter_list|,
 name|int
 modifier|*
-name|longind
+name|__longind
 parameter_list|)
 function_decl|;
 comment|/* Internal only.  Users should not call this directly.  */
@@ -206,33 +223,35 @@ name|int
 name|_getopt_internal
 parameter_list|(
 name|int
-name|argc
+name|__argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|argv
+name|__argv
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|shortopts
+name|__shortopts
 parameter_list|,
 specifier|const
 name|struct
 name|option
 modifier|*
-name|longopts
+name|__longopts
 parameter_list|,
 name|int
 modifier|*
-name|longind
+name|__longind
 parameter_list|,
 name|int
-name|long_only
+name|__long_only
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* not __STDC__ */
@@ -241,6 +260,9 @@ name|int
 name|getopt
 parameter_list|()
 function_decl|;
+ifndef|#
+directive|ifndef
+name|__need_getopt
 specifier|extern
 name|int
 name|getopt_long
@@ -256,6 +278,8 @@ name|int
 name|_getopt_internal
 parameter_list|()
 function_decl|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* __STDC__ */
@@ -269,6 +293,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Make sure we later can get all the definitions and declarations.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|__need_getopt
+end_undef
 
 begin_endif
 endif|#

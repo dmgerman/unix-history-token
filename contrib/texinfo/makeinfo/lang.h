@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lang.h -- declarations for language codes etc.    $Id: lang.h,v 1.6 1999/03/22 20:07:34 karl Exp $     Copyright (C) 1999 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
+comment|/* lang.h -- declarations for language codes etc.    $Id: lang.h,v 1.7 2001/09/11 18:04:29 karl Exp $     Copyright (C) 1999, 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|LANG_H
 end_define
 
 begin_comment
-comment|/* The langauge code which can be changed through @documentlanguage  * Actualy Info does not support this (may be in the future) ;-)  * Default for language code is en (english!)                kama  * These code should ISO 639 two letter codes.  */
+comment|/* The language code which can be changed through @documentlanguage  * Actually we don't currently support this (may be in the future) ;-)  * These code are the ISO-639 two letter codes.  */
 end_comment
 
 begin_typedef
@@ -319,7 +319,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Information about all valid languages.  */
+comment|/* Information for each language.  */
 end_comment
 
 begin_typedef
@@ -341,29 +341,168 @@ name|desc
 decl_stmt|;
 comment|/* full name for language code */
 block|}
-name|language_struct
+name|language_type
 typedef|;
 end_typedef
 
 begin_decl_stmt
 specifier|extern
-name|language_struct
+name|language_type
 name|language_table
 index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_escape
+end_escape
+
 begin_comment
-comment|/* The encoding, or null if not set.  */
+comment|/* The document encoding. This is usefull if we working e.g.  * with german Texinfo so we can produce correct german umlaut  * while creating output (--no-headers ASCII like).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|no_encoding
+block|,
+name|ISO_8859_1
+block|,
+comment|/* default for en, de, */
+name|ISO_8859_2
+block|,
+comment|/* actualy not supported like the rest below */
+name|ISO_8859_3
+block|,
+name|ISO_8859_4
+block|,
+name|ISO_8859_5
+block|,
+name|ISO_8859_6
+block|,
+name|ISO_8859_7
+block|,
+name|ISO_8859_8
+block|,
+name|ISO_8859_9
+block|,
+name|ISO_8859_10
+block|,
+name|ISO_8859_11
+block|,
+name|ISO_8859_12
+block|,
+name|ISO_8859_13
+block|,
+name|ISO_8859_14
+block|,
+name|ISO_8859_15
+block|,
+name|last_encoding_code
+block|}
+name|encoding_code_type
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* The current document encoding, or null if not set.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|document_encoding
+name|encoding_code_type
+name|document_encoding_code
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Maps an HTML abbreviation to ISO and Unicode codes for a given code.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|int
+name|unicode_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* should be 16 bits */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|byte_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|char
+modifier|*
+name|html
+decl_stmt|;
+comment|/* HTML equivalent like umlaut auml =>&auml; */
+name|byte_t
+name|bytecode
+decl_stmt|;
+comment|/* 8-Bit Code (ISO 8859-1,...) */
+name|unicode_t
+name|unicode
+decl_stmt|;
+comment|/* Unicode in U+ convention */
+block|}
+name|iso_map_type
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Information about the document encoding. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|encoding_code_type
+name|ec
+decl_stmt|;
+comment|/* document encoding type (see above enum) */
+name|char
+modifier|*
+name|ecname
+decl_stmt|;
+comment|/* encoding name like ISO-8859-1 */
+name|iso_map_type
+modifier|*
+name|isotab
+decl_stmt|;
+comment|/* address of ISO translation table */
+block|}
+name|encoding_type
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Table with all the encoding codes that we recognize.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|encoding_type
+name|encoding_table
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* The commands.  */

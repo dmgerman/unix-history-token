@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* index.c -- indexing for Texinfo.    $Id: index.c,v 1.21 1999/07/18 18:50:02 karl Exp $     Copyright (C) 1998, 99 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* index.c -- indexing for Texinfo.    $Id: index.c,v 1.24 2002/01/22 14:28:07 karl Exp $     Copyright (C) 1998, 99, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"toc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xml.h"
 end_include
 
 begin_comment
@@ -787,7 +793,42 @@ index|]
 operator|=
 name|new
 expr_stmt|;
+comment|/* The index breaks if there are colons in the entry. */
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|new
+operator|->
+name|entry_text
+argument_list|,
+literal|':'
+argument_list|)
+condition|)
+name|warning
+argument_list|(
+name|_
+argument_list|(
+literal|"Info cannot handle `:' in index entry `%s'"
+argument_list|)
+argument_list|,
+name|new
+operator|->
+name|entry_text
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|xml
+condition|)
+name|xml_insert_indexterm
+argument_list|(
+name|index_entry
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2366,6 +2407,48 @@ name|void
 name|cm_printindex
 parameter_list|()
 block|{
+if|if
+condition|(
+name|xml
+operator|&&
+operator|!
+name|docbook
+condition|)
+block|{
+name|char
+modifier|*
+name|index_name
+decl_stmt|;
+name|get_rest_of_line
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|index_name
+argument_list|)
+expr_stmt|;
+name|xml_insert_element
+argument_list|(
+name|PRINTINDEX
+argument_list|,
+name|START
+argument_list|)
+expr_stmt|;
+name|insert_string
+argument_list|(
+name|index_name
+argument_list|)
+expr_stmt|;
+name|xml_insert_element
+argument_list|(
+name|PRINTINDEX
+argument_list|,
+name|END
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|int
 name|item
 decl_stmt|;
@@ -2463,7 +2546,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Do this before sorting, so execute_string in index_element_compare      will give the same results as when we actually print.  */
+comment|/* Do this before sorting, so execute_string is in the good environment */
+if|if
+condition|(
+name|xml
+operator|&&
+name|docbook
+condition|)
+name|xml_begin_index
+argument_list|()
+expr_stmt|;
+comment|/* Do this before sorting, so execute_string in index_element_compare 	 will give the same results as when we actually print.  */
 name|printing_index
 operator|=
 literal|1
@@ -2476,12 +2569,20 @@ name|inhibit_paragraph_indentation
 operator|=
 literal|1
 expr_stmt|;
+name|xml_sort_index
+operator|=
+literal|1
+expr_stmt|;
 name|array
 operator|=
 name|sort_index
 argument_list|(
 name|index
 argument_list|)
+expr_stmt|;
+name|xml_sort_index
+operator|=
+literal|0
 expr_stmt|;
 name|close_paragraph
 argument_list|()
@@ -2500,6 +2601,9 @@ if|if
 condition|(
 operator|!
 name|no_headers
+operator|&&
+operator|!
+name|docbook
 condition|)
 name|add_word
 argument_list|(
@@ -2540,7 +2644,7 @@ name|item
 operator|++
 control|)
 block|{
-comment|/* A pathological document might have an index entry outside of any          node.  Don't crash; try using the section name instead.  */
+comment|/* A pathological document might have an index entry outside of any 	     node.  Don't crash; try using the section name instead.  */
 name|char
 modifier|*
 name|index_node
@@ -2645,7 +2749,7 @@ expr_stmt|;
 comment|/* Don't repeat the previous entry. */
 else|else
 block|{
-comment|/* In the HTML case, the expanded index entry is not                  good for us, since it was expanded for non-HTML mode                  inside sort_index.  So we need to HTML-escape and                  expand the original entry text here.  */
+comment|/* In the HTML case, the expanded index entry is not 		     good for us, since it was expanded for non-HTML mode 		     inside sort_index.  So we need to HTML-escape and 		     expand the original entry text here.  */
 name|char
 modifier|*
 name|escaped_entry
@@ -2661,7 +2765,7 @@ name|char
 modifier|*
 name|expanded_entry
 decl_stmt|;
-comment|/* expansion() doesn't HTML-escape the argument, so need                  to do it separately.  */
+comment|/* expansion() doesn't HTML-escape the argument, so need 		     to do it separately.  */
 name|escaped_entry
 operator|=
 name|escape_string
@@ -2781,10 +2885,28 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* If we use the section instead of the (missing) node, then 	       index_node already includes all we need except the #.  */
+comment|/* If we use the section instead of the (missing) node, then 		   index_node already includes all we need except the #.  */
 name|add_word_args
 argument_list|(
 literal|"#%s</a>"
+argument_list|,
+name|index_node
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|xml
+operator|&&
+name|docbook
+condition|)
+block|{
+name|xml_insert_indexentry
+argument_list|(
+name|index
+operator|->
+name|entry
 argument_list|,
 name|index_node
 argument_list|)
@@ -2844,7 +2966,7 @@ name|line_length
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Print the entry, nicely formatted.  We've already              expanded any commands in index->entry, including any              implicit @code.  Thus, can't call execute_string, since              @@ has turned into @. */
+comment|/* Print the entry, nicely formatted.  We've already 		 expanded any commands in index->entry, including any 		 implicit @code.  Thus, can't call execute_string, since 		 @@ has turned into @. */
 if|if
 condition|(
 operator|!
@@ -2898,7 +3020,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* With --no-headers, the @node lines are gone, so                  there's little sense in referring to them in the                  index.  Instead, output the number or name of the 		 section that corresponds to that node.  */
+comment|/* With --no-headers, the @node lines are gone, so 		     there's little sense in referring to them in the 		     index.  Instead, output the number or name of the 		     section that corresponds to that node.  */
 name|char
 modifier|*
 name|section_name
@@ -3069,7 +3191,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Prevent `output_paragraph' from growing to the size of the          whole index.  */
+comment|/* Prevent `output_paragraph' from growing to the size of the 	     whole index.  */
 name|flush_output
 argument_list|()
 expr_stmt|;
@@ -3128,6 +3250,17 @@ argument_list|(
 literal|"</ul>"
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|xml
+operator|&&
+name|docbook
+condition|)
+name|xml_end_index
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* window.c -- windows in Info.    $Id: window.c,v 1.11 1999/06/25 21:57:40 karl Exp $     Copyright (C) 1993, 97, 98 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* window.c -- windows in Info.    $Id: window.c,v 1.15 2002/01/19 01:08:20 karl Exp $     Copyright (C) 1993, 97, 98, 2001, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -2943,8 +2943,13 @@ condition|(
 literal|1
 condition|)
 block|{
+comment|/* The cast to unsigned char is for 8-bit characters, which 	     could be passed as negative integers to character_width 	     and wreak havoc on some naive implementations of iscntrl.  */
 name|c
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|node
 operator|->
 name|contents
@@ -4883,6 +4888,8 @@ parameter_list|,
 name|arg1
 parameter_list|,
 name|arg2
+parameter_list|,
+name|arg3
 parameter_list|)
 name|char
 modifier|*
@@ -4894,6 +4901,9 @@ name|arg1
 decl_stmt|,
 decl|*
 name|arg2
+decl_stmt|,
+modifier|*
+name|arg3
 decl_stmt|;
 end_function
 
@@ -4909,7 +4919,7 @@ name|void
 modifier|*
 name|args
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 name|int
@@ -4930,6 +4940,13 @@ literal|1
 index|]
 operator|=
 name|arg2
+expr_stmt|;
+name|args
+index|[
+literal|2
+index|]
+operator|=
+name|arg3
 expr_stmt|;
 name|len
 operator|=
@@ -5005,6 +5022,13 @@ name|fmt_len
 decl_stmt|,
 name|formatted_len
 decl_stmt|;
+name|int
+name|paramed
+init|=
+literal|0
+decl_stmt|;
+name|format_again
+label|:
 name|i
 operator|++
 expr_stmt|;
@@ -5044,6 +5068,54 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'$'
+condition|)
+block|{
+comment|/* position parameter parameter */
+comment|/* better to use bprintf from bfox's metahtml? */
+name|arg_index
+operator|=
+name|atoi
+argument_list|(
+name|fmt_start
+operator|+
+literal|1
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|arg_index
+operator|<
+literal|0
+condition|)
+name|arg_index
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|arg_index
+operator|>=
+literal|2
+condition|)
+name|arg_index
+operator|=
+literal|1
+expr_stmt|;
+name|paramed
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|format_again
+goto|;
+block|}
 name|fmt_len
 operator|=
 name|format
@@ -5083,6 +5155,50 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|paramed
+condition|)
+block|{
+comment|/* removed positioned parameter */
+name|char
+modifier|*
+name|p
+decl_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|fmt
+operator|+
+literal|1
+init|;
+operator|*
+name|p
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'$'
+condition|;
+name|p
+operator|++
+control|)
+block|{
+empty_stmt|;
+block|}
+name|strcpy
+argument_list|(
+name|fmt
+operator|+
+literal|1
+argument_list|,
+name|p
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* If we have "%-98s", maybe 98 calls for a longer string.  */
 if|if
 condition|(
@@ -5098,14 +5214,16 @@ for|for
 control|(
 name|j
 operator|=
-literal|0
+name|fmt_len
+operator|-
+literal|2
 init|;
 name|j
-operator|<
-name|fmt_len
+operator|>=
+literal|0
 condition|;
 name|j
-operator|++
+operator|--
 control|)
 if|if
 condition|(
@@ -5116,6 +5234,13 @@ index|[
 name|j
 index|]
 argument_list|)
+operator|||
+name|fmt
+index|[
+name|j
+index|]
+operator|==
+literal|'$'
 condition|)
 break|break;
 name|formatted_len
@@ -5419,6 +5544,8 @@ argument_list|,
 name|arg1
 argument_list|,
 name|arg2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|node
@@ -5583,6 +5710,8 @@ parameter_list|,
 name|arg1
 parameter_list|,
 name|arg2
+parameter_list|,
+name|arg3
 parameter_list|)
 name|char
 modifier|*
@@ -5594,6 +5723,9 @@ name|arg1
 decl_stmt|,
 decl|*
 name|arg2
+decl_stmt|,
+modifier|*
+name|arg3
 decl_stmt|;
 end_function
 
@@ -5606,6 +5738,8 @@ argument_list|,
 name|arg1
 argument_list|,
 name|arg2
+argument_list|,
+name|arg3
 argument_list|)
 expr_stmt|;
 block|}

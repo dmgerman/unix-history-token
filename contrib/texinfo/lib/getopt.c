@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Getopt for GNU.    NOTE: getopt is now part of the C library, so if you don't know what    "Keep this file name-space clean" means, talk to drepper@gnu.org    before changing it!     Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98    	Free Software Foundation, Inc.     NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@gnu.org.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
+comment|/* Getopt for GNU.    NOTE: The canonical source of this file is maintained with the GNU    C Library.  Bugs can be reported to bug-glibc@gnu.org.     Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99    	Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -39,10 +39,10 @@ directive|include
 file|<config.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_if
 if|#
@@ -70,6 +70,11 @@ define|#
 directive|define
 name|const
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -295,8 +300,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|optarg
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -323,8 +326,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|__getopt_initialized
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2042,6 +2043,7 @@ if|if
 condition|(
 name|opterr
 condition|)
+block|{
 if|if
 condition|(
 name|argv
@@ -2107,6 +2109,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|nextchar
 operator|+=
 name|strlen

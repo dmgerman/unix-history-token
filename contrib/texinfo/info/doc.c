@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"doc.h"
+file|"info.h"
 end_include
 
 begin_include
@@ -27,6 +27,12 @@ name|info_next_line
 block|,
 literal|"next-line"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Move down to the next line"
 block|}
 block|,
@@ -34,6 +40,12 @@ block|{
 name|info_prev_line
 block|,
 literal|"prev-line"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Move up to the previous line"
 block|}
@@ -43,6 +55,12 @@ name|info_end_of_line
 block|,
 literal|"end-of-line"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Move to the end of the line"
 block|}
 block|,
@@ -50,6 +68,12 @@ block|{
 name|info_beginning_of_line
 block|,
 literal|"beginning-of-line"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Move to the start of the line"
 block|}
@@ -59,6 +83,12 @@ name|info_forward_char
 block|,
 literal|"forward-char"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Move forward a character"
 block|}
 block|,
@@ -66,6 +96,12 @@ block|{
 name|info_backward_char
 block|,
 literal|"backward-char"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Move backward a character"
 block|}
@@ -75,6 +111,12 @@ name|info_forward_word
 block|,
 literal|"forward-word"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Move forward a word"
 block|}
 block|,
@@ -82,6 +124,12 @@ block|{
 name|info_backward_word
 block|,
 literal|"backward-word"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Move backward a word"
 block|}
@@ -91,6 +139,12 @@ name|info_global_next_node
 block|,
 literal|"global-next-node"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Move forwards or down through node structure"
 block|}
 block|,
@@ -98,6 +152,12 @@ block|{
 name|info_global_prev_node
 block|,
 literal|"global-prev-node"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Move backwards or up through node structure"
 block|}
@@ -107,6 +167,12 @@ name|info_scroll_forward
 block|,
 literal|"scroll-forward"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Scroll forward in this window"
 block|}
 block|,
@@ -115,13 +181,53 @@ name|info_scroll_forward_set_window
 block|,
 literal|"scroll-forward-set-window"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Scroll forward in this window and set default window size"
+block|}
+block|,
+block|{
+name|info_scroll_forward_page_only
+block|,
+literal|"scroll-forward-page-only"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
+literal|"Scroll forward in this window staying within node"
+block|}
+block|,
+block|{
+name|info_scroll_forward_page_only_set_window
+block|,
+literal|"scroll-forward-page-only-set-window"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
+literal|"Scroll forward in this window staying within node and set default window size"
 block|}
 block|,
 block|{
 name|info_scroll_backward
 block|,
 literal|"scroll-backward"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Scroll backward in this window"
 block|}
@@ -131,13 +237,53 @@ name|info_scroll_backward_set_window
 block|,
 literal|"scroll-backward-set-window"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Scroll backward in this window and set default window size"
+block|}
+block|,
+block|{
+name|info_scroll_backward_page_only
+block|,
+literal|"scroll-backward-page-only"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
+literal|"Scroll backward in this window staying within node"
+block|}
+block|,
+block|{
+name|info_scroll_backward_page_only_set_window
+block|,
+literal|"scroll-backward-page-only-set-window"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
+literal|"Scroll backward in this window staying within node and set default window size"
 block|}
 block|,
 block|{
 name|info_beginning_of_node
 block|,
 literal|"beginning-of-node"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Move to the start of this node"
 block|}
@@ -147,6 +293,12 @@ name|info_end_of_node
 block|,
 literal|"end-of-node"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Move to the end of this node"
 block|}
 block|,
@@ -154,6 +306,12 @@ block|{
 name|info_down_line
 block|,
 literal|"down-line"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Scroll down by lines"
 block|}
@@ -163,6 +321,12 @@ name|info_up_line
 block|,
 literal|"up-line"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Scroll up by lines"
 block|}
 block|,
@@ -170,6 +334,12 @@ block|{
 name|info_scroll_half_screen_down
 block|,
 literal|"scroll-half-screen-down"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Scroll down by half screen size"
 block|}
@@ -179,6 +349,12 @@ name|info_scroll_half_screen_up
 block|,
 literal|"scroll-half-screen-up"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Scroll up by half screen size"
 block|}
 block|,
@@ -186,6 +362,12 @@ block|{
 name|info_next_window
 block|,
 literal|"next-window"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Select the next window"
 block|}
@@ -195,6 +377,12 @@ name|info_prev_window
 block|,
 literal|"prev-window"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Select the previous window"
 block|}
 block|,
@@ -202,6 +390,12 @@ block|{
 name|info_split_window
 block|,
 literal|"split-window"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Split the current window"
 block|}
@@ -211,6 +405,12 @@ name|info_delete_window
 block|,
 literal|"delete-window"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Delete the current window"
 block|}
 block|,
@@ -218,6 +418,12 @@ block|{
 name|info_keep_one_window
 block|,
 literal|"keep-one-window"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Delete all other windows"
 block|}
@@ -227,6 +433,12 @@ name|info_scroll_other_window
 block|,
 literal|"scroll-other-window"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Scroll the other window"
 block|}
 block|,
@@ -234,6 +446,12 @@ block|{
 name|info_scroll_other_window_backward
 block|,
 literal|"scroll-other-window-backward"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Scroll the other window backward"
 block|}
@@ -243,6 +461,12 @@ name|info_grow_window
 block|,
 literal|"grow-window"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Grow (or shrink) this window"
 block|}
 block|,
@@ -250,6 +474,12 @@ block|{
 name|info_tile_windows
 block|,
 literal|"tile-windows"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Divide the available screen space among the visible windows"
 block|}
@@ -259,6 +489,12 @@ name|info_toggle_wrap
 block|,
 literal|"toggle-wrap"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Toggle the state of line wrapping in the current window"
 block|}
 block|,
@@ -266,6 +502,12 @@ block|{
 name|info_next_node
 block|,
 literal|"next-node"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Select the Next node"
 block|}
@@ -275,6 +517,12 @@ name|info_prev_node
 block|,
 literal|"prev-node"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Select the Prev node"
 block|}
 block|,
@@ -282,6 +530,12 @@ block|{
 name|info_up_node
 block|,
 literal|"up-node"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Select the Up node"
 block|}
@@ -291,6 +545,12 @@ name|info_last_node
 block|,
 literal|"last-node"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Select the last node in this file"
 block|}
 block|,
@@ -298,6 +558,12 @@ block|{
 name|info_first_node
 block|,
 literal|"first-node"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Select the first node in this file"
 block|}
@@ -307,6 +573,12 @@ name|info_last_menu_item
 block|,
 literal|"last-menu-item"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Select the last item in this node's menu"
 block|}
 block|,
@@ -314,6 +586,12 @@ block|{
 name|info_menu_digit
 block|,
 literal|"menu-digit"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Select this menu item"
 block|}
@@ -323,6 +601,12 @@ name|info_menu_item
 block|,
 literal|"menu-item"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Read a menu item and select its node"
 block|}
 block|,
@@ -330,6 +614,12 @@ block|{
 name|info_xref_item
 block|,
 literal|"xref-item"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Read a footnote or cross reference and select its node"
 block|}
@@ -339,6 +629,12 @@ name|info_find_menu
 block|,
 literal|"find-menu"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Move to the start of this node's menu"
 block|}
 block|,
@@ -346,6 +642,12 @@ block|{
 name|info_visit_menu
 block|,
 literal|"visit-menu"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Visit as many menu items at once as possible"
 block|}
@@ -355,6 +657,12 @@ name|info_goto_node
 block|,
 literal|"goto-node"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Read a node name and select it"
 block|}
 block|,
@@ -362,6 +670,12 @@ block|{
 name|info_menu_sequence
 block|,
 literal|"menu-sequence"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Read a list of menus starting from dir and follow them"
 block|}
@@ -371,6 +685,12 @@ name|info_goto_invocation_node
 block|,
 literal|"goto-invocation-node"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Find the node describing program invocation"
 block|}
 block|,
@@ -378,6 +698,12 @@ block|{
 name|info_man
 block|,
 literal|"man"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Read a manpage reference and select it"
 block|}
@@ -387,6 +713,12 @@ name|info_top_node
 block|,
 literal|"top-node"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Select the node `Top' in this file"
 block|}
 block|,
@@ -394,6 +726,12 @@ block|{
 name|info_dir_node
 block|,
 literal|"dir-node"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Select the node `(dir)'"
 block|}
@@ -403,6 +741,12 @@ name|info_history_node
 block|,
 literal|"history-node"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Select the most recently selected node"
 block|}
 block|,
@@ -410,6 +754,12 @@ block|{
 name|info_kill_node
 block|,
 literal|"kill-node"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Kill this node"
 block|}
@@ -419,6 +769,12 @@ name|info_view_file
 block|,
 literal|"view-file"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Read the name of a file and select it"
 block|}
 block|,
@@ -426,6 +782,12 @@ block|{
 name|info_print_node
 block|,
 literal|"print-node"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Pipe the contents of this node through INFO_PRINT_COMMAND"
 block|}
@@ -435,6 +797,12 @@ name|info_search_case_sensitively
 block|,
 literal|"search-case-sensitively"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Read a string and search for it case-sensitively"
 block|}
 block|,
@@ -442,6 +810,12 @@ block|{
 name|info_search
 block|,
 literal|"search"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Read a string and search for it"
 block|}
@@ -451,6 +825,12 @@ name|info_search_backward
 block|,
 literal|"search-backward"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Read a string and search backward for it"
 block|}
 block|,
@@ -458,6 +838,12 @@ block|{
 name|info_search_next
 block|,
 literal|"search-next"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Repeat last search in the same direction"
 block|}
@@ -467,6 +853,12 @@ name|info_search_previous
 block|,
 literal|"search-previous"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Repeat last search in the reverse direction"
 block|}
 block|,
@@ -474,6 +866,12 @@ block|{
 name|isearch_forward
 block|,
 literal|"isearch-forward"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Search interactively for a string as you type it"
 block|}
@@ -483,6 +881,12 @@ name|isearch_backward
 block|,
 literal|"isearch-backward"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Search interactively for a string as you type it"
 block|}
 block|,
@@ -490,6 +894,12 @@ block|{
 name|info_move_to_prev_xref
 block|,
 literal|"move-to-prev-xref"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Move to the previous cross reference"
 block|}
@@ -499,6 +909,12 @@ name|info_move_to_next_xref
 block|,
 literal|"move-to-next-xref"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Move to the next cross reference"
 block|}
 block|,
@@ -506,6 +922,12 @@ block|{
 name|info_select_reference_this_line
 block|,
 literal|"select-reference-this-line"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Select reference or menu item appearing on this line"
 block|}
@@ -515,6 +937,12 @@ name|info_abort_key
 block|,
 literal|"abort-key"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Cancel current operation"
 block|}
 block|,
@@ -522,6 +950,12 @@ block|{
 name|info_move_to_window_line
 block|,
 literal|"move-to-window-line"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Move the cursor to a specific line of the window"
 block|}
@@ -531,6 +965,12 @@ name|info_redraw_display
 block|,
 literal|"redraw-display"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Redraw the display"
 block|}
 block|,
@@ -538,6 +978,12 @@ block|{
 name|info_quit
 block|,
 literal|"quit"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Quit using Info"
 block|}
@@ -547,13 +993,25 @@ name|info_do_lowercase_version
 block|,
 literal|"do-lowercase-version"
 block|,
-literal|""
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
+literal|"Run command bound to this key's lowercase variant"
 block|}
 block|,
 block|{
 name|info_add_digit_to_numeric_arg
 block|,
 literal|"add-digit-to-numeric-arg"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Add this digit to the current numeric argument"
 block|}
@@ -563,6 +1021,12 @@ name|info_universal_argument
 block|,
 literal|"universal-argument"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Start (or multiply by 4) the current numeric argument"
 block|}
 block|,
@@ -570,6 +1034,12 @@ block|{
 name|info_numeric_arg_digit_loop
 block|,
 literal|"numeric-arg-digit-loop"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Internally used by \\[universal-argument]"
 block|}
@@ -580,6 +1050,12 @@ name|ea_forward
 block|,
 literal|"echo-area-forward"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Move forward a character"
 block|}
 block|,
@@ -587,6 +1063,12 @@ block|{
 name|ea_backward
 block|,
 literal|"echo-area-backward"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Move backward a character"
 block|}
@@ -596,6 +1078,12 @@ name|ea_beg_of_line
 block|,
 literal|"echo-area-beg-of-line"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Move to the start of this line"
 block|}
 block|,
@@ -603,6 +1091,12 @@ block|{
 name|ea_end_of_line
 block|,
 literal|"echo-area-end-of-line"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Move to the end of this line"
 block|}
@@ -612,6 +1106,12 @@ name|ea_forward_word
 block|,
 literal|"echo-area-forward-word"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Move forward a word"
 block|}
 block|,
@@ -619,6 +1119,12 @@ block|{
 name|ea_backward_word
 block|,
 literal|"echo-area-backward-word"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Move backward a word"
 block|}
@@ -628,6 +1134,12 @@ name|ea_delete
 block|,
 literal|"echo-area-delete"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Delete the character under the cursor"
 block|}
 block|,
@@ -635,6 +1147,12 @@ block|{
 name|ea_rubout
 block|,
 literal|"echo-area-rubout"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Delete the character behind the cursor"
 block|}
@@ -644,6 +1162,12 @@ name|ea_abort
 block|,
 literal|"echo-area-abort"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Cancel or quit operation"
 block|}
 block|,
@@ -651,6 +1175,12 @@ block|{
 name|ea_newline
 block|,
 literal|"echo-area-newline"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Accept (or force completion of) this line"
 block|}
@@ -660,6 +1190,12 @@ name|ea_quoted_insert
 block|,
 literal|"echo-area-quoted-insert"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Insert next character verbatim"
 block|}
 block|,
@@ -667,6 +1203,12 @@ block|{
 name|ea_insert
 block|,
 literal|"echo-area-insert"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Insert this character"
 block|}
@@ -676,6 +1218,12 @@ name|ea_tab_insert
 block|,
 literal|"echo-area-tab-insert"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Insert a TAB character"
 block|}
 block|,
@@ -683,6 +1231,12 @@ block|{
 name|ea_transpose_chars
 block|,
 literal|"echo-area-transpose-chars"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Transpose characters at point"
 block|}
@@ -692,6 +1246,12 @@ name|ea_yank
 block|,
 literal|"echo-area-yank"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Yank back the contents of the last kill"
 block|}
 block|,
@@ -699,6 +1259,12 @@ block|{
 name|ea_yank_pop
 block|,
 literal|"echo-area-yank-pop"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Yank back a previous kill"
 block|}
@@ -708,6 +1274,12 @@ name|ea_kill_line
 block|,
 literal|"echo-area-kill-line"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Kill to the end of the line"
 block|}
 block|,
@@ -715,6 +1287,12 @@ block|{
 name|ea_backward_kill_line
 block|,
 literal|"echo-area-backward-kill-line"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Kill to the beginning of the line"
 block|}
@@ -724,6 +1302,12 @@ name|ea_kill_word
 block|,
 literal|"echo-area-kill-word"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Kill the word following the cursor"
 block|}
 block|,
@@ -731,6 +1315,12 @@ block|{
 name|ea_backward_kill_word
 block|,
 literal|"echo-area-backward-kill-word"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Kill the word preceding the cursor"
 block|}
@@ -740,6 +1330,12 @@ name|ea_possible_completions
 block|,
 literal|"echo-area-possible-completions"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"List possible completions"
 block|}
 block|,
@@ -748,6 +1344,12 @@ name|ea_complete
 block|,
 literal|"echo-area-complete"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Insert completion"
 block|}
 block|,
@@ -755,6 +1357,12 @@ block|{
 name|ea_scroll_completions_window
 block|,
 literal|"echo-area-scroll-completions-window"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Scroll the completions window"
 block|}
@@ -765,6 +1373,12 @@ name|info_get_help_window
 block|,
 literal|"get-help-window"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Display help message"
 block|}
 block|,
@@ -772,6 +1386,12 @@ block|{
 name|info_get_info_help_node
 block|,
 literal|"get-info-help-node"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Visit Info node `(info)Help'"
 block|}
@@ -781,6 +1401,12 @@ name|describe_key
 block|,
 literal|"describe-key"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Print documentation for KEY"
 block|}
 block|,
@@ -788,6 +1414,12 @@ block|{
 name|info_where_is
 block|,
 literal|"where-is"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Show what to type to execute a given command"
 block|}
@@ -798,6 +1430,12 @@ name|describe_command
 block|,
 literal|"describe-command"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Read the name of an Info command and describe it"
 block|}
 block|,
@@ -806,6 +1444,12 @@ name|info_execute_command
 block|,
 literal|"execute-command"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Read a command name in the echo area and execute it"
 block|}
 block|,
@@ -813,6 +1457,12 @@ block|{
 name|set_screen_height
 block|,
 literal|"set-screen-height"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Set the height of the displayed window"
 block|}
@@ -823,6 +1473,12 @@ name|info_index_search
 block|,
 literal|"index-search"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Look up a string in the index for this file"
 block|}
 block|,
@@ -831,6 +1487,12 @@ name|info_next_index_match
 block|,
 literal|"next-index-match"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Go to the next matching index item from the last `\\[index-search]' command"
 block|}
 block|,
@@ -838,6 +1500,12 @@ block|{
 name|info_index_apropos
 block|,
 literal|"index-apropos"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Grovel all known info file's indices for a string and build a menu"
 block|}
@@ -848,6 +1516,12 @@ name|list_visited_nodes
 block|,
 literal|"list-visited-nodes"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Make a window containing a menu of all of the currently visited nodes"
 block|}
 block|,
@@ -855,6 +1529,12 @@ block|{
 name|select_visited_node
 block|,
 literal|"select-visited-node"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Select a node which has been previously visited in a visible window"
 block|}
@@ -865,6 +1545,12 @@ name|info_show_footnotes
 block|,
 literal|"show-footnotes"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Show the footnotes associated with this node in another window"
 block|}
 block|,
@@ -874,6 +1560,12 @@ name|describe_variable
 block|,
 literal|"describe-variable"
 block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
+block|,
 literal|"Explain the use of a variable"
 block|}
 block|,
@@ -881,6 +1573,12 @@ block|{
 name|set_variable
 block|,
 literal|"set-variable"
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
+operator|*
+operator|)
+literal|0
 block|,
 literal|"Set the value of an Info variable"
 block|}
@@ -894,6 +1592,12 @@ name|NULL
 block|,
 operator|(
 name|char
+operator|*
+operator|)
+name|NULL
+block|,
+operator|(
+name|FUNCTION_KEYSEQ
 operator|*
 operator|)
 name|NULL
