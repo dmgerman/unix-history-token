@@ -771,8 +771,6 @@ name|OID_AUTO
 argument_list|,
 name|debugflags
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -794,8 +792,6 @@ name|OID_AUTO
 argument_list|,
 name|g_class
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 literal|0
@@ -820,8 +816,6 @@ name|OID_AUTO
 argument_list|,
 name|g_geom
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 literal|0
@@ -846,8 +840,6 @@ name|OID_AUTO
 argument_list|,
 name|g_provider
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 literal|0
@@ -872,8 +864,6 @@ name|OID_AUTO
 argument_list|,
 name|g_consumer
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 literal|0
@@ -898,8 +888,6 @@ name|OID_AUTO
 argument_list|,
 name|g_bioq
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 literal|0
@@ -924,8 +912,6 @@ name|OID_AUTO
 argument_list|,
 name|g_event
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 literal|0
