@@ -497,7 +497,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_PCFS
-value|"msdos"
+value|"msdosfs"
 end_define
 
 begin_comment
@@ -589,7 +589,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_NULLFS
-value|"null"
+value|"nullfs"
 end_define
 
 begin_comment
@@ -600,7 +600,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_UNIONFS
-value|"union"
+value|"unionfs"
 end_define
 
 begin_comment
@@ -611,7 +611,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_UMAPFS
-value|"umap"
+value|"umapfs"
 end_define
 
 begin_comment
@@ -675,7 +675,7 @@ begin_define
 define|#
 directive|define
 name|MNTTAB_TYPE_PCFS
-value|"msdos"
+value|"msdosfs"
 end_define
 
 begin_comment
@@ -759,7 +759,7 @@ begin_define
 define|#
 directive|define
 name|MNTTAB_TYPE_NULLFS
-value|"null"
+value|"nullfs"
 end_define
 
 begin_comment
@@ -770,7 +770,7 @@ begin_define
 define|#
 directive|define
 name|MNTTAB_TYPE_UNIONFS
-value|"union"
+value|"unionfs"
 end_define
 
 begin_comment
@@ -781,7 +781,7 @@ begin_define
 define|#
 directive|define
 name|MNTTAB_TYPE_UMAPFS
-value|"umap"
+value|"umapfs"
 end_define
 
 begin_comment
