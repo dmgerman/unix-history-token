@@ -2283,8 +2283,7 @@ begin_function_decl
 name|void
 name|iop_attach
 parameter_list|(
-name|struct
-name|iop_softc
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
