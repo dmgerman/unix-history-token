@@ -508,17 +508,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EAI_NODATA
-value|EAI_NONAME
-end_define
-
-begin_comment
-comment|/* to be removed on 23 Apr 2004 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|EAI_SERVICE
 value|9
 end_define
