@@ -4341,9 +4341,14 @@ name|printf
 argument_list|(
 literal|"%.*s\n"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|cp
 operator|-
 name|str
+argument_list|)
 argument_list|,
 name|str
 argument_list|)
