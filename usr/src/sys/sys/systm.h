@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.7	%G%	*/
+comment|/*	systm.h	4.8	%G%	*/
 end_comment
 
 begin_comment
@@ -18,16 +18,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* buffer for erase and kill (#@) */
-end_comment
-
-begin_decl_stmt
-name|int
-name|cpu
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* cpu SID register */
 end_comment
 
 begin_decl_stmt
@@ -441,19 +431,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* poor name! */
-end_comment
-
-begin_decl_stmt
-name|int
-name|mcr
-index|[
-literal|3
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* memory controller registers */
 end_comment
 
 begin_decl_stmt

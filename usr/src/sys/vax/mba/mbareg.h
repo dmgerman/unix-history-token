@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbareg.h	4.4	%G%	*/
+comment|/*	mbareg.h	4.5	%G%	*/
 end_comment
 
 begin_comment
@@ -823,6 +823,12 @@ end_decl_stmt
 begin_comment
 comment|/* blanks for filling mba_info */
 end_comment
+
+begin_decl_stmt
+name|int
+name|nummba
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
