@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.43 (Berkeley) %G%"
+literal|"@(#)collect.c	8.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1706,6 +1706,21 @@ name|e
 argument_list|,
 operator|!
 name|requeueflag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|GrabTo
+operator|&&
+name|e
+operator|->
+name|e_sendqueue
+operator|==
+name|NULL
+condition|)
+name|usrerr
+argument_list|(
+literal|"No recipient addresses found in header"
 argument_list|)
 expr_stmt|;
 comment|/* collect statistics */
