@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.48 1998/01/21 06:08:35 jkh Exp $"
+literal|"$Id: perform.c,v 1.49 1998/02/16 17:16:14 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,17 @@ name|FILENAME_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|zapLogDir
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Should we delete LogDir? */
+end_comment
 
 begin_function
 name|int
@@ -239,6 +250,10 @@ name|int
 name|inPlace
 decl_stmt|;
 name|code
+operator|=
+literal|0
+expr_stmt|;
+name|zapLogDir
 operator|=
 literal|0
 expr_stmt|;
@@ -1691,6 +1706,10 @@ argument_list|,
 name|PkgName
 argument_list|)
 expr_stmt|;
+name|zapLogDir
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|Verbose
@@ -2274,6 +2293,8 @@ if|if
 condition|(
 operator|!
 name|Fake
+operator|&&
+name|zapLogDir
 operator|&&
 name|LogDir
 index|[
