@@ -495,6 +495,7 @@ comment|/* variable, array or function number. */
 name|long
 name|func
 decl_stmt|;
+specifier|static
 name|program_counter
 name|save_adr
 decl_stmt|;
