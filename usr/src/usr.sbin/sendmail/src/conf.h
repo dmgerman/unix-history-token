@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -158,6 +158,24 @@ begin_comment
 comment|/* **  Compilation options. ** **	#define these if they are available; comment them out otherwise. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hpux
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM5
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* # define DBM		1	/* use DBM library (requires -ldbm) */
 end_comment
@@ -265,9 +283,27 @@ begin_comment
 comment|/* look in user database */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSTEM5
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOCKF
+value|1
+end_define
+
 begin_comment
-comment|/* # define LOCKF	1	/* use System V lockf instead of flock */
+comment|/* use System V lockf instead of flock */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* **  Older systems don't have this error code -- it should be in **  /usr/include/sysexits.h. */
