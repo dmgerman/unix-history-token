@@ -1863,9 +1863,11 @@ name|yc_flags
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|ycp
 operator|->
 name|yc_chiptype
+operator|)
 return|;
 block|}
 end_function
@@ -1902,7 +1904,9 @@ operator|==
 name|CB_UNKNOWN
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 name|device_set_desc
 argument_list|(
@@ -1912,7 +1916,9 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2344,7 +2350,15 @@ name|int
 name|rid
 decl_stmt|;
 name|u_int32_t
+name|sockbase
+decl_stmt|;
+name|u_int32_t
 name|tmp
+decl_stmt|;
+name|struct
+name|pccbb_sclist
+modifier|*
+name|sclist
 decl_stmt|;
 if|if
 condition|(
@@ -2498,9 +2512,6 @@ name|sc_base_res
 condition|)
 block|{
 comment|/* 		 * XXX EVILE HACK BAD THING! XXX 		 * The pci bus device should do this for us. 		 * Some BIOSes doesn't assign a memory space properly. 		 * So we try to manually put one in... 		 */
-name|u_int32_t
-name|sockbase
-decl_stmt|;
 name|sockbase
 operator|=
 name|pci_read_config
@@ -2617,7 +2628,9 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|pci_write_config
@@ -2671,7 +2684,9 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 block|}
@@ -2788,7 +2803,9 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 if|if
@@ -2858,7 +2875,9 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 comment|/* attach children */
@@ -3055,17 +3074,13 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 endif|#
 directive|endif
-block|{
-name|struct
-name|pccbb_sclist
-modifier|*
-name|sclist
-decl_stmt|;
 name|sclist
 operator|=
 name|malloc
@@ -3097,9 +3112,10 @@ argument_list|,
 name|entries
 argument_list|)
 expr_stmt|;
-block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3206,7 +3222,9 @@ operator|>
 literal|0
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 name|mtx_lock
 argument_list|(
@@ -3302,6 +3320,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -3310,6 +3329,7 @@ operator|->
 name|sc_mtx
 argument_list|)
 expr_stmt|;
+block|}
 name|bus_release_resource
 argument_list|(
 name|brdev
@@ -3345,7 +3365,9 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3524,7 +3546,9 @@ literal|2
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3995,15 +4019,21 @@ name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|EBUSY
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
@@ -4063,12 +4093,14 @@ operator|&
 name|PCCBB_KTHREAD_RUNNING
 operator|)
 condition|)
+block|{
 name|sc
 operator|->
 name|sc_flags
 operator||=
 name|PCCBB_KTHREAD_RUNNING
 expr_stmt|;
+block|}
 else|else
 block|{
 name|tsleep
@@ -4744,7 +4776,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -4801,50 +4832,44 @@ name|psr
 operator|&
 name|PCCBB_SOCKET_STAT_5VCARD
 condition|)
-block|{
 name|vol
 operator||=
 name|CARD_5V_CARD
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|psr
 operator|&
 name|PCCBB_SOCKET_STAT_3VCARD
 condition|)
-block|{
 name|vol
 operator||=
 name|CARD_3V_CARD
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|psr
 operator|&
 name|PCCBB_SOCKET_STAT_XVCARD
 condition|)
-block|{
 name|vol
 operator||=
 name|CARD_XV_CARD
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|psr
 operator|&
 name|PCCBB_SOCKET_STAT_YVCARD
 condition|)
-block|{
 name|vol
 operator||=
 name|CARD_YV_CARD
 expr_stmt|;
-block|}
 return|return
+operator|(
 name|vol
+operator|)
 return|;
 block|}
 end_function
@@ -4875,6 +4900,12 @@ name|device_get_softc
 argument_list|(
 name|brdev
 argument_list|)
+decl_stmt|;
+name|int
+name|timeout
+decl_stmt|;
+name|u_int32_t
+name|sockevent
 decl_stmt|;
 name|DEVPRINTF
 argument_list|(
@@ -5098,7 +5129,9 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* power NEVER changed */
 break|break;
@@ -5169,7 +5202,9 @@ operator|==
 name|sock_ctrl
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* no change necessary */
 name|sc
@@ -5189,15 +5224,10 @@ operator|->
 name|socket_state
 expr_stmt|;
 comment|/*  	 * XXX This busy wait is bogus.  We should wait for a power 	 * interrupt and then whine if the status is bad.  If we're 	 * worried about the card not coming up, then we should also 	 * schedule a timeout which we can cacel in the power interrupt. 	 */
-block|{
-name|int
 name|timeout
-init|=
+operator|=
 literal|20
-decl_stmt|;
-name|u_int32_t
-name|sockevent
-decl_stmt|;
+expr_stmt|;
 do|do
 block|{
 name|DELAY
@@ -5254,9 +5284,10 @@ literal|"VCC supply failed.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-block|}
 block|}
 comment|/* XXX 	 * delay 400 ms: thgough the standard defines that the Vcc set-up time 	 * is 20 ms, some PC-Card bridge requires longer duration. 	 * XXX Note: We should check the stutus AFTER the delay to give time 	 * for things to stabilize. 	 */
 name|DELAY
@@ -5398,11 +5429,15 @@ name|volts
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* power changed correctly */
 block|}
@@ -5553,7 +5588,9 @@ operator|==
 name|PCCBB_SOCKET_STAT_CD
 condition|)
 return|return
+operator|(
 name|ENODEV
+operator|)
 return|;
 name|voltage
 operator|=
@@ -5612,7 +5649,9 @@ literal|"Unknown card voltage\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 name|pccbb_cardbus_reset
@@ -5621,7 +5660,9 @@ name|brdev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5718,7 +5759,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|basereg
@@ -5760,7 +5803,9 @@ literal|4
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5816,7 +5861,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|basereg
@@ -5858,7 +5905,9 @@ literal|4
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5902,6 +5951,9 @@ name|prefetchable
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|u_int32_t
+name|reg
 decl_stmt|;
 name|starts
 index|[
@@ -6018,7 +6070,9 @@ operator|&
 name|RF_ACTIVE
 operator|)
 condition|)
-block|{ 		}
+block|{
+comment|/* XXX */
+block|}
 elseif|else
 if|if
 condition|(
@@ -6701,9 +6755,6 @@ operator|==
 name|SYS_RES_MEMORY
 condition|)
 block|{
-name|u_int32_t
-name|reg
-decl_stmt|;
 name|pccbb_cardbus_mem_open
 argument_list|(
 name|sc
@@ -6903,7 +6954,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 name|pccbb_cardbus_auto_open
 argument_list|(
@@ -6916,7 +6969,9 @@ name|type
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6972,7 +7027,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 name|pccbb_cardbus_auto_open
 argument_list|(
@@ -6985,7 +7042,9 @@ name|type
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7093,7 +7152,9 @@ name|count
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|start
@@ -7192,7 +7253,9 @@ literal|"pccbb alloc res fail\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 comment|/* 	 * Need to record allocated resource so we can iterate through 	 * it later. 	 */
@@ -7294,11 +7357,15 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|res
+operator|)
 return|;
 block|}
 end_function
@@ -7341,6 +7408,9 @@ name|pccbb_reslist
 modifier|*
 name|rle
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|rman_get_flags
@@ -7351,9 +7421,6 @@ operator|&
 name|RF_ACTIVE
 condition|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|error
 operator|=
 name|bus_deactivate_resource
@@ -7374,7 +7441,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|SLIST_FOREACH
@@ -7420,6 +7489,7 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
 name|BUS_RELEASE_RESOURCE
 argument_list|(
 name|device_get_parent
@@ -7435,6 +7505,7 @@ name|rid
 argument_list|,
 name|res
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -7473,6 +7544,15 @@ argument_list|(
 name|brdev
 argument_list|)
 decl_stmt|;
+name|int
+name|voltage
+decl_stmt|;
+name|int
+name|cardtype
+decl_stmt|;
+name|int
+name|win
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -7481,15 +7561,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* power down/up the socket to reset */
-block|{
-name|int
 name|voltage
-init|=
+operator|=
 name|pccbb_detect_voltage
 argument_list|(
 name|brdev
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|pccbb_power
 argument_list|(
 name|brdev
@@ -7540,9 +7618,10 @@ literal|"Unknown card voltage\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
-block|}
 block|}
 comment|/* enable socket i/o */
 name|PCIC_MASK
@@ -7606,10 +7685,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|{
-name|int
-name|cardtype
-decl_stmt|;
 name|CARD_GET_TYPE
 argument_list|(
 name|child
@@ -7659,12 +7734,7 @@ literal|"mem"
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* reinstall all the memory and io mappings */
-block|{
-name|int
-name|win
-decl_stmt|;
 for|for
 control|(
 name|win
@@ -7737,9 +7807,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8594,7 +8665,9 @@ literal|"pcic_map_mem: Memory resource not found\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 name|card_addr
@@ -8958,7 +9031,9 @@ name|res
 argument_list|)
 condition|)
 return|return
+operator|(
 name|win
+operator|)
 return|;
 block|}
 name|device_printf
@@ -8971,8 +9046,10 @@ literal|"Memory map not found!\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -9772,7 +9849,9 @@ name|res
 argument_list|)
 condition|)
 return|return
+operator|(
 name|win
+operator|)
 return|;
 block|}
 name|device_printf
@@ -9785,8 +9864,10 @@ literal|"IO map not found!\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -9888,10 +9969,13 @@ condition|(
 name|err
 condition|)
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|BUS_ACTIVATE_RESOURCE
 argument_list|(
 name|device_get_parent
@@ -9907,6 +9991,7 @@ name|rid
 argument_list|,
 name|res
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -9990,7 +10075,9 @@ argument_list|)
 expr_stmt|;
 else|else
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 break|break;
 case|case
@@ -10020,12 +10107,15 @@ argument_list|)
 expr_stmt|;
 else|else
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 break|break;
 block|}
 block|}
 return|return
+operator|(
 name|BUS_DEACTIVATE_RESOURCE
 argument_list|(
 name|device_get_parent
@@ -10041,6 +10131,7 @@ name|rid
 argument_list|,
 name|res
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10233,7 +10324,9 @@ name|count
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|flags
@@ -10287,7 +10380,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|rle
 operator|=
@@ -10388,12 +10483,16 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|res
+operator|)
 return|;
 block|}
 end_function
@@ -10436,6 +10535,9 @@ name|pccbb_reslist
 modifier|*
 name|rle
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|rman_get_flags
@@ -10446,9 +10548,6 @@ operator|&
 name|RF_ACTIVE
 condition|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|error
 operator|=
 name|bus_deactivate_resource
@@ -10469,7 +10568,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|SLIST_FOREACH
@@ -10515,6 +10616,7 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
 name|BUS_RELEASE_RESOURCE
 argument_list|(
 name|device_get_parent
@@ -10530,6 +10632,7 @@ name|rid
 argument_list|,
 name|res
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10661,7 +10764,9 @@ literal|"set_res_flags: specified rid not found\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 name|win
@@ -10688,7 +10793,9 @@ literal|"set_res_flags: specified resource not active\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 name|sc
@@ -10710,7 +10817,9 @@ name|win
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -10834,7 +10943,9 @@ literal|"set_memory_offset: specified rid not found\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 name|win
@@ -10861,7 +10972,9 @@ literal|"set_memory_offset: specified resource not active\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 name|delta
@@ -10966,7 +11079,9 @@ name|win
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -11014,21 +11129,25 @@ operator|&
 name|PCCBB_16BIT_CARD
 condition|)
 return|return
+operator|(
 name|pccbb_pcic_power_enable_socket
 argument_list|(
 name|brdev
 argument_list|,
 name|child
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|pccbb_cardbus_power_enable_socket
 argument_list|(
 name|brdev
 argument_list|,
 name|child
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -11135,6 +11254,7 @@ operator|&
 name|PCCBB_16BIT_CARD
 condition|)
 return|return
+operator|(
 name|pccbb_pcic_activate_resource
 argument_list|(
 name|brdev
@@ -11147,9 +11267,11 @@ name|rid
 argument_list|,
 name|r
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|pccbb_cardbus_activate_resource
 argument_list|(
 name|brdev
@@ -11162,6 +11284,7 @@ name|rid
 argument_list|,
 name|r
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -11208,6 +11331,7 @@ operator|&
 name|PCCBB_16BIT_CARD
 condition|)
 return|return
+operator|(
 name|pccbb_pcic_deactivate_resource
 argument_list|(
 name|brdev
@@ -11220,9 +11344,11 @@ name|rid
 argument_list|,
 name|r
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|pccbb_cardbus_deactivate_resource
 argument_list|(
 name|brdev
@@ -11235,6 +11361,7 @@ name|rid
 argument_list|,
 name|r
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -11291,6 +11418,7 @@ operator|&
 name|PCCBB_16BIT_CARD
 condition|)
 return|return
+operator|(
 name|pccbb_pcic_alloc_resource
 argument_list|(
 name|brdev
@@ -11309,9 +11437,11 @@ name|count
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|pccbb_cardbus_alloc_resource
 argument_list|(
 name|brdev
@@ -11330,6 +11460,7 @@ name|count
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -11376,6 +11507,7 @@ operator|&
 name|PCCBB_16BIT_CARD
 condition|)
 return|return
+operator|(
 name|pccbb_pcic_release_resource
 argument_list|(
 name|brdev
@@ -11388,9 +11520,11 @@ name|rid
 argument_list|,
 name|r
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|pccbb_cardbus_release_resource
 argument_list|(
 name|brdev
@@ -11403,6 +11537,7 @@ name|rid
 argument_list|,
 name|r
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -11539,7 +11674,9 @@ name|brdev
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -11570,6 +11707,7 @@ parameter_list|)
 block|{
 comment|/* 	 * Pass through to the next ppb up the chain (i.e. our grandparent). 	 */
 return|return
+operator|(
 name|PCIB_READ_CONFIG
 argument_list|(
 name|device_get_parent
@@ -11590,6 +11728,7 @@ name|reg
 argument_list|,
 name|width
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
