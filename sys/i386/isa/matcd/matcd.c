@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dkbad.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/cdio.h>
 end_include
 
@@ -3471,14 +3465,6 @@ condition|(
 name|command
 condition|)
 block|{
-case|case
-name|DIOCSBAD
-case|:
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 case|case
 name|DIOCGDINFO
 case|:

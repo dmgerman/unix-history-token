@@ -65,12 +65,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dkbad.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/disklabel.h>
 end_include
 
@@ -2133,12 +2127,6 @@ condition|(
 name|cmd
 condition|)
 block|{
-case|case
-name|DIOCSBAD
-case|:
-return|return
-name|EINVAL
-return|;
 case|case
 name|DIOCGDINFO
 case|:
