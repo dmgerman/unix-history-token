@@ -440,6 +440,7 @@ decl_stmt|;
 name|u_long
 name|longlink_addr
 decl_stmt|;
+comment|/* Type suspect */
 name|int
 name|mfc_count
 decl_stmt|;
