@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.5	83/01/27	*/
+comment|/*	hp.c	4.5	83/01/29	*/
 end_comment
 
 begin_comment
@@ -398,6 +398,36 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|short
+name|hpfj_off
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|19
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+literal|398
+block|,
+literal|59
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* END SHOULD BE READ IN */
 end_comment
@@ -436,6 +466,10 @@ operator|-
 literal|1
 comment|/*Capr*/
 block|,
+operator|-
+literal|1
+comment|/* eagle */
+block|,
 name|MBDT_RM02
 block|,
 literal|0
@@ -447,21 +481,28 @@ begin_define
 define|#
 directive|define
 name|RP06
-value|(hptypes[UNITTODRIVE(unit)]<= MBDT_RP06)
+value|(hptypes[hp_type[unit]]<= MBDT_RP06)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ML11
-value|(hptypes[UNITTODRIVE(unit)]<= MBDT_ML11A)
+value|(hptypes[hp_type[unit]] == MBDT_ML11A)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RM80
-value|(hptypes[UNITTODRIVE(unit)]<= MBDT_RM80)
+value|(hptypes[hp_type[unit]] == MBDT_RM80)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAGLE
+value|(hp_type[unit] == 11)
 end_define
 
 begin_decl_stmt
@@ -526,6 +567,8 @@ literal|823
 block|,
 name|rm3_off
 block|,
+literal|0
+block|,
 comment|/* RM03 */
 literal|32
 block|,
@@ -538,6 +581,8 @@ block|,
 literal|823
 block|,
 name|rm5_off
+block|,
+literal|0
 block|,
 comment|/* RM05 */
 literal|22
@@ -552,6 +597,8 @@ literal|815
 block|,
 name|hp6_off
 block|,
+literal|0
+block|,
 comment|/* RP06 */
 literal|31
 block|,
@@ -564,6 +611,8 @@ block|,
 literal|559
 block|,
 name|rm80_off
+block|,
+literal|1
 block|,
 comment|/* RM80 */
 literal|22
@@ -578,6 +627,8 @@ literal|411
 block|,
 name|hp6_off
 block|,
+literal|0
+block|,
 comment|/* RP06 */
 literal|50
 block|,
@@ -591,6 +642,8 @@ literal|630
 block|,
 name|hp7_off
 block|,
+literal|0
+block|,
 comment|/* RP07 */
 literal|1
 block|,
@@ -602,6 +655,8 @@ literal|1
 block|,
 name|ml_off
 block|,
+literal|0
+block|,
 comment|/* ML11A */
 literal|1
 block|,
@@ -612,6 +667,8 @@ block|,
 literal|1
 block|,
 name|ml_off
+block|,
+literal|0
 block|,
 comment|/* ML11B */
 literal|32
@@ -626,6 +683,8 @@ literal|843
 block|,
 name|si9775_off
 block|,
+literal|0
+block|,
 comment|/* 9775 */
 literal|32
 block|,
@@ -638,6 +697,8 @@ block|,
 literal|823
 block|,
 name|si9730_off
+block|,
+literal|0
 block|,
 comment|/* 9730 */
 literal|32
@@ -652,7 +713,24 @@ literal|1024
 block|,
 name|hpam_off
 block|,
-comment|/* AMPEX capricorn */
+literal|0
+block|,
+comment|/* capricorn */
+literal|43
+block|,
+literal|20
+block|,
+literal|43
+operator|*
+literal|20
+block|,
+literal|842
+block|,
+name|hpfj_off
+block|,
+literal|1
+block|,
+comment|/* Eagle */
 literal|1
 block|,
 literal|1
@@ -660,6 +738,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -899,7 +979,7 @@ block|}
 break|break;
 block|}
 case|case
-literal|11
+literal|12
 case|:
 comment|/* rm02 */
 name|hpaddr
@@ -933,9 +1013,9 @@ comment|/* ampex capricorn */
 else|else
 name|i
 operator|=
-literal|0
+literal|11
 expr_stmt|;
-comment|/* rm03 */
+comment|/* eagle */
 break|break;
 case|case
 literal|6
@@ -964,10 +1044,7 @@ operator|=
 operator|&
 name|hpst
 index|[
-name|hp_type
-index|[
-name|unit
-index|]
+name|i
 index|]
 expr_stmt|;
 name|tio
@@ -1002,9 +1079,7 @@ operator|)
 operator|&
 name|hpbad
 index|[
-name|tio
-operator|.
-name|i_unit
+name|unit
 index|]
 expr_stmt|;
 name|tio
@@ -1358,7 +1433,7 @@ name|hprecal
 operator|=
 literal|0
 expr_stmt|;
-name|readmore
+name|restart
 label|:
 name|bn
 operator|=
@@ -1411,6 +1486,13 @@ operator|==
 literal|0
 condition|)
 empty_stmt|;
+name|mba
+operator|->
+name|mba_sr
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|hp_type
@@ -1629,6 +1711,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"\nbytes left: %d, of 0x%x, da 0x%x"
+argument_list|,
+operator|-
+name|bytesleft
+argument_list|,
+name|hpaddr
+operator|->
+name|hpof
+argument_list|,
+name|hpaddr
+operator|->
+name|hpda
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1680,11 +1778,10 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
+name|MASKREG
+argument_list|(
 name|er1
-operator|&
-literal|0xffff
-operator|)
+argument_list|)
 operator|==
 name|HPER1_FER
 operator|&&
@@ -1800,13 +1897,14 @@ name|hpmr
 condition|)
 name|printf
 argument_list|(
-literal|" mr=%o"
+literal|" mr1=%o"
 argument_list|,
+name|MASKREG
+argument_list|(
 name|hpaddr
 operator|->
 name|hpmr
-operator|&
-literal|0xffff
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1819,12 +1917,45 @@ name|printf
 argument_list|(
 literal|" mr2=%o"
 argument_list|,
+name|MASKREG
+argument_list|(
 name|hpaddr
 operator|->
 name|hpmr2
-operator|&
-literal|0xffff
 argument_list|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HPDEBUG
+name|printf
+argument_list|(
+literal|"dc: %d, da: 0x%x"
+argument_list|,
+name|MASKREG
+argument_list|(
+name|hpaddr
+operator|->
+name|hpdc
+argument_list|)
+argument_list|,
+name|MASKREG
+argument_list|(
+name|hpaddr
+operator|->
+name|hpda
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|hpaddr
+operator|->
+name|hpcs1
+operator|=
+name|HP_DCLR
+operator||
+name|HP_GO
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1906,7 +2037,11 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|RM80
+operator|||
+name|EAGLE
+operator|)
 operator|&&
 name|er2
 operator|&
@@ -2197,13 +2332,6 @@ name|i_bn
 operator|=
 name|bn
 expr_stmt|;
-name|mba
-operator|->
-name|mba_sr
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|io
 operator|->
 name|i_ma
@@ -2261,7 +2389,7 @@ expr_stmt|;
 endif|#
 directive|endif
 goto|goto
-name|readmore
+name|restart
 goto|;
 block|}
 return|return
@@ -2358,8 +2486,6 @@ name|sn
 decl_stmt|;
 name|int
 name|bcr
-decl_stmt|,
-name|tad
 decl_stmt|;
 if|if
 condition|(
@@ -2669,6 +2795,18 @@ name|NOBADSECT
 case|case
 name|BSE
 case|:
+block|{
+name|int
+name|bbn
+decl_stmt|;
+name|rp
+operator|->
+name|hpcs1
+operator|=
+name|HP_DCLR
+operator||
+name|HP_GO
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HPDEBUG
@@ -2681,78 +2819,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|rp
-operator|->
-name|hpcs1
-operator|=
-name|HP_DCLR
-operator||
-name|HP_GO
-expr_stmt|;
-name|bcr
-operator|+=
-name|sectsiz
-expr_stmt|;
-name|tad
-operator|=
-name|rp
-operator|->
-name|hpda
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|bn
-operator|=
-name|isbad
-argument_list|(
-operator|&
-name|hpbad
-index|[
-name|unit
-index|]
-argument_list|,
-name|bn
-operator|/
-name|st
-operator|->
-name|nspc
-argument_list|,
-name|tad
-operator|>>
-literal|8
-argument_list|,
-name|tad
-operator|&
-literal|0x7f
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-name|bn
-operator|=
-name|st
-operator|->
-name|ncyl
-operator|*
-name|st
-operator|->
-name|nspc
-operator|-
-name|st
-operator|->
-name|nsect
-operator|-
-literal|1
-operator|-
-name|bn
-expr_stmt|;
 name|cn
 operator|=
 name|bn
@@ -2778,7 +2844,91 @@ operator|->
 name|nsect
 expr_stmt|;
 name|sn
-operator|%=
+operator|=
+name|sn
+operator|%
+name|st
+operator|->
+name|nsect
+expr_stmt|;
+name|bcr
+operator|+=
+name|sectsiz
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bbn
+operator|=
+name|isbad
+argument_list|(
+operator|&
+name|hpbad
+index|[
+name|unit
+index|]
+argument_list|,
+name|cn
+argument_list|,
+name|tn
+argument_list|,
+name|sn
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|bbn
+operator|=
+name|st
+operator|->
+name|ncyl
+operator|*
+name|st
+operator|->
+name|nspc
+operator|-
+name|st
+operator|->
+name|nsect
+operator|-
+literal|1
+operator|-
+name|bbn
+expr_stmt|;
+name|cn
+operator|=
+name|bbn
+operator|/
+name|st
+operator|->
+name|nspc
+expr_stmt|;
+name|sn
+operator|=
+name|bbn
+operator|%
+name|st
+operator|->
+name|nspc
+expr_stmt|;
+name|tn
+operator|=
+name|sn
+operator|/
+name|st
+operator|->
+name|nsect
+expr_stmt|;
+name|sn
+operator|=
+name|sn
+operator|%
 name|st
 operator|->
 name|nsect
@@ -2787,43 +2937,43 @@ name|io
 operator|->
 name|i_cc
 operator|=
-operator|-
 name|sectsiz
 expr_stmt|;
 name|io
 operator|->
 name|i_ma
 operator|+=
-operator|(
-operator|(
-name|io
-operator|->
-name|i_bn
-operator|+
 name|npf
-operator|-
-literal|1
-operator|)
 operator|*
 name|sectsiz
-operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HPDEBUG
 name|printf
 argument_list|(
-literal|"revector to cn %d tn %d sn %d\n"
+literal|"revector to cn %d tn %d sn %d mem: 0x%x\n"
 argument_list|,
 name|cn
 argument_list|,
 name|tn
 argument_list|,
 name|sn
+argument_list|,
+name|io
+operator|->
+name|i_ma
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|mbp
+operator|->
+name|mba_sr
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|rp
 operator|->
 name|hpdc
@@ -2842,13 +2992,6 @@ operator|)
 operator|+
 name|sn
 expr_stmt|;
-name|mbp
-operator|->
-name|mba_sr
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|mbastart
 argument_list|(
 name|io
@@ -2865,6 +3008,18 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* error has been corrected */
+while|while
+condition|(
+name|rp
+operator|->
+name|hpds
+operator|&
+name|HPDS_DRY
+operator|==
+literal|0
+condition|)
+empty_stmt|;
+comment|/* wait for the read to complete */
 if|if
 condition|(
 name|rp
@@ -2884,6 +3039,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 block|}
 end_block
@@ -3002,6 +3158,116 @@ else|else
 return|return
 operator|(
 name|ECMD
+operator|)
+return|;
+case|case
+name|SAIOSSI
+case|:
+comment|/* set the skip-sector-inhibit flag */
+if|if
+condition|(
+operator|(
+name|drv
+operator|->
+name|mbd_dt
+operator|&
+name|MBDT_TAP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|io
+operator|->
+name|i_flgs
+operator|&
+name|F_SSI
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* make sure this is */
+name|io
+operator|->
+name|i_flgs
+operator||=
+name|F_SSI
+expr_stmt|;
+comment|/* done only once    */
+name|st
+operator|->
+name|nsect
+operator|++
+expr_stmt|;
+name|st
+operator|->
+name|nspc
+operator|+=
+name|st
+operator|->
+name|ntrak
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+else|else
+return|return
+operator|(
+name|ECMD
+operator|)
+return|;
+case|case
+name|SAIONOSSI
+case|:
+comment|/* remove the skip-sector-inh. flag */
+if|if
+condition|(
+name|io
+operator|->
+name|i_flgs
+operator|&
+name|F_SSI
+condition|)
+block|{
+name|io
+operator|->
+name|i_flgs
+operator|&=
+operator|~
+name|F_SSI
+expr_stmt|;
+name|drv
+operator|->
+name|mbd_of
+operator|&=
+operator|~
+name|HPOF_SSEI
+expr_stmt|;
+name|st
+operator|->
+name|nsect
+operator|--
+expr_stmt|;
+name|st
+operator|->
+name|nspc
+operator|-=
+name|st
+operator|->
+name|ntrak
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 default|default:
