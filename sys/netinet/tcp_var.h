@@ -1512,6 +1512,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct
+struct|struct
+name|tcp_ident_mapping
+block|{
+name|struct
+name|sockaddr_storage
+name|faddr
+decl_stmt|,
+name|laddr
+decl_stmt|;
+name|uid_t
+name|euid
+decl_stmt|,
+name|ruid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Names for TCP sysctl objects  */
 end_comment
@@ -1662,8 +1681,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPCTL_MAXID
+name|TCPCTL_DROP
 value|15
+end_define
+
+begin_comment
+comment|/* drop tcp connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_MAXID
+value|16
 end_define
 
 begin_define
