@@ -845,12 +845,6 @@ name|struct
 name|ip_moptions
 name|simo
 decl_stmt|;
-specifier|extern
-name|struct
-name|socket
-modifier|*
-name|ip_mrouter
-decl_stmt|;
 name|MGETHDR
 argument_list|(
 name|m
@@ -1026,6 +1020,16 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	 * Request loopback of the report if we are acting as a multicast 	 * router, so that the process-level routing demon can hear it. 	 */
+ifdef|#
+directive|ifdef
+name|MROUTING
+block|{
+specifier|extern
+name|struct
+name|socket
+modifier|*
+name|ip_mrouter
+decl_stmt|;
 name|imo
 operator|->
 name|imo_multicast_loop
@@ -1036,6 +1040,9 @@ operator|!=
 name|NULL
 operator|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|ip_output
 argument_list|(
 name|m
