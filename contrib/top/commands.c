@@ -182,7 +182,7 @@ expr_stmt|;
 else|else
 name|fputs
 argument_list|(
-literal|"\ o       - specify sort order (read, write, fault, total)\n"
+literal|"\ o       - specify sort order (vcsw, ivcsw, read, write, fault, total)\n"
 argument_list|,
 name|stdout
 argument_list|)
