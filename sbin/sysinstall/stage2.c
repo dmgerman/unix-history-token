@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.12 1994/11/04 21:38:36 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.13 1994/11/06 01:16:29 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -108,6 +108,24 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+if|if
+condition|(
+name|dialog_yesno
+argument_list|(
+literal|"Last Chance!"
+argument_list|,
+literal|"Are you sure you want to proceed with the installation?\nLast chance before wiping your hard disk!"
+argument_list|,
+literal|8
+argument_list|,
+literal|72
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Sort in mountpoint order */
 name|memset
 argument_list|(

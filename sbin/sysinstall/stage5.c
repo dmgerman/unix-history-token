@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.13 1994/11/08 03:41:42 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.14 1994/11/08 14:04:19 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -76,7 +76,7 @@ name|char
 name|msg
 index|[]
 init|=
-literal|" You are now done with the initial phase of the installation that gets FreeBSD onto your hard disk.  At this point, we need to go on to ftp, SLIP, DOS floppy, parallel port or carrier pigeon a bindist over so that your system is actually usable.  Select _Yes_ to proceed with this phase, or _No_ to simply drop into a shell."
+literal|" You are now done with the initial phase of the installation that gets FreeBSD onto your hard disk.  At this point, we need to go on to use FTP, NFS, Tape, CD or DOS floppies to get a bindist onto your system so that it's actually usable.  Select Yes to proceed with this phase, or No to simply drop into a shell."
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +99,7 @@ literal|"End of initial installation"
 argument_list|,
 name|msg
 argument_list|,
-literal|10
+literal|11
 argument_list|,
 literal|76
 argument_list|)
