@@ -115,7 +115,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* unsigned int same size as pointer	*/
+comment|/* unsigned long same size as pointer	*/
 end_comment
 
 begin_typedef
@@ -126,7 +126,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* signed int same size as pointer	*/
+comment|/* signed long same size as pointer	*/
 end_comment
 
 begin_endif
@@ -183,7 +183,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* unsigned int same size as pointer	*/
+comment|/* unsigned long same size as pointer	*/
 end_comment
 
 begin_typedef
@@ -194,7 +194,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* signed int same size as pointer	*/
+comment|/* signed long same size as pointer	*/
 end_comment
 
 begin_endif
