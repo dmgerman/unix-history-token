@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.11	84/02/24	*/
+comment|/*	defs.h	4.12	84/04/06	*/
 end_comment
 
 begin_include
@@ -129,57 +129,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|DCOLON
+name|COLON
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|NAME
+name|DCOLON
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|STRING
+name|NAME
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|INSTALL
+name|STRING
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|NOTIFY
+name|INSTALL
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCEPT
+name|NOTIFY
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|SPECIAL
+name|EXCEPT
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTION
+name|SPECIAL
 value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION
+value|14
 end_define
 
 begin_comment
@@ -416,6 +423,11 @@ modifier|*
 name|c_name
 decl_stmt|;
 comment|/* hostname or time stamp file name */
+name|char
+modifier|*
+name|c_label
+decl_stmt|;
+comment|/* label for partial update */
 name|struct
 name|namelist
 modifier|*
@@ -510,30 +522,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* acting as remote server */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|filec
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of files to update */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|filev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list of files/directories to update */
 end_comment
 
 begin_decl_stmt
