@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1988,7 +1988,8 @@ expr|struct
 name|dinode
 argument_list|)
 condition|)
-name|panic
+comment|/* XXX -- Change to a panic. */
+name|printf
 argument_list|(
 literal|"lfs: negative bytes (segment %d)\n"
 argument_list|,
@@ -2758,7 +2759,8 @@ name|fs
 operator|->
 name|lfs_bsize
 condition|)
-name|panic
+comment|/* XXX -- Change to a panic. */
+name|printf
 argument_list|(
 literal|"lfs: negative bytes (segment %d)\n"
 argument_list|,
@@ -4558,6 +4560,12 @@ operator|=
 name|bp
 operator|->
 name|b_saveaddr
+expr_stmt|;
+name|bp
+operator|->
+name|b_saveaddr
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 name|brelse
