@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.1 (Berkeley) %G%"
+literal|"@(#)collect.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -972,6 +972,24 @@ name|e
 argument_list|,
 operator|!
 name|requeueflag
+argument_list|)
+expr_stmt|;
+comment|/* collect statistics */
+if|if
+condition|(
+name|OpMode
+operator|!=
+name|MD_VERIFY
+condition|)
+name|markstats
+argument_list|(
+name|e
+argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Add an Apparently-To: line if we have no recipient lines. 	*/
