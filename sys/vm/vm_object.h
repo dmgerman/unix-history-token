@@ -618,19 +618,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_object_t
-name|vm_object_allocate_wait
-parameter_list|(
-name|objtype_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|_vm_object_allocate
 parameter_list|(
