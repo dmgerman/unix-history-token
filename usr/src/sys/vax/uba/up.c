@@ -168,11 +168,23 @@ literal|8
 index|]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|ERNIE
+literal|49324
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 26 */
+else|#
+directive|else
 literal|15884
 block|,
 literal|0
 block|,
 comment|/* A=cyl 0 thru 26 */
+endif|#
+directive|endif
 literal|33440
 block|,
 literal|27
