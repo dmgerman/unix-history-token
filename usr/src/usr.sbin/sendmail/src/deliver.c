@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.53 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,6 +303,11 @@ name|to
 operator|->
 name|q_host
 expr_stmt|;
+name|CurEnv
+operator|=
+name|e
+expr_stmt|;
+comment|/* just in case */
 if|if
 condition|(
 name|tTd
@@ -1541,10 +1546,9 @@ name|endmailer
 argument_list|(
 name|mci
 argument_list|,
+name|e
+argument_list|,
 name|pv
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -2343,7 +2347,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ENDMAILER -- Wait for mailer to terminate. ** **	We should never get fatal errors (e.g., segmentation **	violation), so we report those specially.  For other **	errors, we choose a status message (into statmsg), **	and if it represents an error, we print it. ** **	Parameters: **		pid -- pid of mailer. **		name -- name of mailer (for error messages). ** **	Returns: **		exit code of mailer. ** **	Side Effects: **		none. */
+comment|/* **  ENDMAILER -- Wait for mailer to terminate. ** **	We should never get fatal errors (e.g., segmentation **	violation), so we report those specially.  For other **	errors, we choose a status message (into statmsg), **	and if it represents an error, we print it. ** **	Parameters: **		pid -- pid of mailer. **		e -- the current envelope. **		pv -- the parameter vector that invoked the mailer **			(for error messages). ** **	Returns: **		exit code of mailer. ** **	Side Effects: **		none. */
 end_comment
 
 begin_expr_stmt
@@ -2351,7 +2355,9 @@ name|endmailer
 argument_list|(
 name|mci
 argument_list|,
-name|name
+name|e
+argument_list|,
+name|pv
 argument_list|)
 specifier|register
 name|MCI
@@ -2361,9 +2367,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
-name|name
+modifier|*
+name|pv
 decl_stmt|;
 end_decl_stmt
 
@@ -2390,7 +2405,10 @@ name|mci
 operator|->
 name|mci_in
 argument_list|,
-name|name
+name|pv
+index|[
+literal|0
+index|]
 argument_list|,
 literal|"mci_in"
 argument_list|)
@@ -2412,7 +2430,10 @@ name|mci
 operator|->
 name|mci_out
 argument_list|,
-name|name
+name|pv
+index|[
+literal|0
+index|]
 argument_list|,
 literal|"mci_out"
 argument_list|)
@@ -2469,7 +2490,10 @@ name|syserr
 argument_list|(
 literal|"endmailer %s: wait"
 argument_list|,
-name|name
+name|pv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -2494,11 +2518,75 @@ name|syserr
 argument_list|(
 literal|"mailer %s died with signal %o"
 argument_list|,
-name|name
+name|pv
+index|[
+literal|0
+index|]
 argument_list|,
 name|st
 argument_list|)
 expr_stmt|;
+comment|/* log the arguments */
+if|if
+condition|(
+name|e
+operator|->
+name|e_xfp
+operator|!=
+name|NULL
+condition|)
+block|{
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|av
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|,
+literal|"Arguments:"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|av
+operator|=
+name|pv
+init|;
+operator|*
+name|av
+operator|!=
+name|NULL
+condition|;
+name|av
+operator|++
+control|)
+name|fprintf
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|,
+literal|" %s"
+argument_list|,
+operator|*
+name|av
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|ExitStat
 operator|=
 name|EX_TEMPFAIL
@@ -6600,71 +6688,11 @@ name|mode
 operator|!=
 name|SM_VERIFY
 condition|)
-block|{
-name|char
-name|xfbuf1
-index|[
-literal|20
-index|]
-decl_stmt|,
-name|xfbuf2
-index|[
-literal|20
-index|]
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|xfbuf1
-argument_list|,
-name|queuename
-argument_list|(
-name|e
-argument_list|,
-literal|'x'
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|xfbuf2
-argument_list|,
-name|queuename
+name|openxscript
 argument_list|(
 name|ee
-argument_list|,
-literal|'x'
-argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|link
-argument_list|(
-name|xfbuf1
-argument_list|,
-name|xfbuf2
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"sendall: link(%s, %s)"
-argument_list|,
-name|xfbuf1
-argument_list|,
-name|xfbuf2
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 ifdef|#
 directive|ifdef
 name|LOG

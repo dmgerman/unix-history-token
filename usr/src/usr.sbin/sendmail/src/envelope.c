@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.26 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1328,6 +1328,24 @@ begin_comment
 comment|/* **  OPENXSCRIPT -- Open transcript file ** **	Creates a transcript file for possible eventual mailing or **	sending back. ** **	Parameters: **		e -- the envelope to create the transcript in/for. ** **	Returns: **		none ** **	Side Effects: **		Creates the transcript file. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_APPEND
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_APPEND
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|openxscript
 argument_list|(
@@ -1377,6 +1395,8 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
+operator||
+name|O_APPEND
 argument_list|,
 literal|0644
 argument_list|)
