@@ -2364,7 +2364,30 @@ break|break;
 case|case
 name|ACPI_RSTYPE_EXT_IRQ
 case|:
-comment|/* XXX special handling? */
+if|if
+condition|(
+name|res
+operator|->
+name|Data
+operator|.
+name|ExtendedIrq
+operator|.
+name|ProducerConsumer
+operator|!=
+name|ACPI_CONSUMER
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_RESOURCES
+operator|,
+literal|"ignored ExtIRQ producer\n"
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|set
 operator|->
 name|set_irq
