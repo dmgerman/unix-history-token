@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	4.11	%G%	*/
+comment|/*	saio.h	4.12	%G%	*/
 end_comment
 
 begin_comment
@@ -665,6 +665,17 @@ end_define
 
 begin_comment
 comment|/* normal skip sector handling */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIOSSDEV
+value|(('d'<<8)|11)
+end_define
+
+begin_comment
+comment|/* is device skip sector type? */
 end_comment
 
 begin_comment
