@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.15 1996/02/23 15:47:52 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.16 1996/02/24 00:17:33 phk Exp $  */
 end_comment
 
 begin_comment
@@ -443,36 +443,11 @@ name|IP_FW_ZERO
 value|(IP_FW_BASE_CTL+3)
 end_define
 
-begin_comment
-comment|/*  * Policy flags...  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|IP_FW_P_DENY
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_P_ICMP
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_P_MBIPO
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_P_MASK
-value|0x07
+name|IP_FW_GET
+value|(IP_FW_BASE_CTL+4)
 end_define
 
 begin_comment
@@ -527,6 +502,7 @@ name|int
 parameter_list|,
 name|struct
 name|mbuf
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
