@@ -10564,18 +10564,6 @@ operator|->
 name|pStack
 argument_list|)
 decl_stmt|;
-comment|/*      ** Since we don't have an output primitive for a counted string     ** (oops), make sure the string is null terminated. If not, copy     ** and terminate it.     */
-comment|/* XXX Uses free space on top of dictionary. Is it guaranteed      * XXX to always fit? (abial)      */
-if|if
-condition|(
-name|cp
-index|[
-name|count
-index|]
-operator|!=
-literal|'\0'
-condition|)
-block|{
 name|char
 modifier|*
 name|pDest
@@ -10584,17 +10572,24 @@ operator|(
 name|char
 operator|*
 operator|)
-name|ficlGetDict
-argument_list|()
-operator|->
-name|here
+name|ficlMalloc
+argument_list|(
+name|count
+argument_list|)
 decl_stmt|;
+comment|/*      ** Since we don't have an output primitive for a counted string     ** (oops), make sure the string is null terminated. If not, copy     ** and terminate it.     */
 if|if
 condition|(
-name|cp
-operator|!=
+operator|!
 name|pDest
 condition|)
+name|vmThrowErr
+argument_list|(
+name|pVM
+argument_list|,
+literal|"Error: out of memory"
+argument_list|)
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|pDest
@@ -10611,11 +10606,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|cp
-operator|=
-name|pDest
-expr_stmt|;
-block|}
 name|vmTextOut
 argument_list|(
 name|pVM
@@ -10623,6 +10613,11 @@ argument_list|,
 name|cp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|ficlFree
+argument_list|(
+name|pDest
 argument_list|)
 expr_stmt|;
 return|return;
