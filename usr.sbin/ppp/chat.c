@@ -611,7 +611,7 @@ name|int
 name|chat_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1726,7 +1726,7 @@ name|int
 name|chat_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2008,7 +2008,7 @@ name|void
 name|chat_Read
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2740,7 +2740,7 @@ name|int
 name|chat_Write
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,

@@ -36,6 +36,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -108,13 +120,13 @@ end_ifndef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|LOCALNAT
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<alias.h>
+file|"alias.h"
 end_include
 
 begin_else
@@ -125,7 +137,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|"alias.h"
+file|<alias.h>
 end_include
 
 begin_endif

@@ -253,6 +253,41 @@ comment|/* VJ statistics */
 block|}
 name|vj
 struct|;
+struct|struct
+block|{
+name|unsigned
+name|resolver
+range|:
+literal|1
+decl_stmt|;
+comment|/* Found resolv.conf ? */
+name|unsigned
+name|writable
+range|:
+literal|1
+decl_stmt|;
+comment|/* Can write resolv.conf ? */
+name|struct
+name|in_addr
+name|dns
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Current DNS addresses */
+name|char
+modifier|*
+name|resolv
+decl_stmt|;
+comment|/* Contents of resolv.conf */
+name|char
+modifier|*
+name|resolv_nons
+decl_stmt|;
+comment|/* Contents of resolv.conf without ns */
+block|}
+name|ns
+struct|;
 name|struct
 name|sticky_route
 modifier|*
@@ -288,6 +323,14 @@ name|u_int32_t
 name|my_compproto
 decl_stmt|;
 comment|/* VJ params I'm willing to use */
+name|struct
+name|in_addr
+name|dns
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* DNSs to REQ/ACK */
 name|u_int32_t
 name|peer_reject
 decl_stmt|;
@@ -615,6 +658,42 @@ name|addr2mask
 parameter_list|(
 name|struct
 name|in_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ipcp_WriteDNS
+parameter_list|(
+name|struct
+name|ipcp
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ipcp_RestoreDNS
+parameter_list|(
+name|struct
+name|ipcp
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ipcp_LoadDNS
+parameter_list|(
+name|struct
+name|ipcp
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

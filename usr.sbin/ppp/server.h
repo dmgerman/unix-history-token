@@ -14,7 +14,7 @@ struct|struct
 name|server
 block|{
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
 name|int

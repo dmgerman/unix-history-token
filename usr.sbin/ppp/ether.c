@@ -1571,7 +1571,7 @@ name|int
 name|ether_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1693,7 +1693,7 @@ name|int
 name|ether_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1766,7 +1766,7 @@ name|void
 name|ether_DescriptorRead
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,

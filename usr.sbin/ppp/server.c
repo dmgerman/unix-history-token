@@ -105,7 +105,7 @@ name|int
 name|server_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -248,7 +248,7 @@ name|int
 name|server_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -340,7 +340,7 @@ begin_define
 define|#
 directive|define
 name|UN_SIZE
-value|sizeof(struct sockaddr_in)
+value|sizeof(struct sockaddr_un)
 end_define
 
 begin_define
@@ -356,7 +356,7 @@ name|void
 name|server_Read
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -808,7 +808,7 @@ name|int
 name|server_Write
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,

@@ -434,7 +434,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|protoname
+parameter_list|(
+name|int
+name|proto
+parameter_list|)
+block|{
 specifier|static
 name|char
 specifier|const
@@ -444,7 +454,7 @@ name|cftypes
 index|[]
 init|=
 block|{
-comment|/* Check out the latest ``Compression Control Protocol'' rfc (rfc1962.txt) */
+comment|/* Check out the latest ``Compression Control Protocol'' rfc (1962) */
 literal|"OUI"
 block|,
 comment|/* 0: OUI */
@@ -457,29 +467,29 @@ comment|/* 2: Predictor type 2 */
 literal|"PUDDLE"
 block|,
 comment|/* 3: Puddle Jumber */
-literal|"???"
+name|NULL
 block|,
-literal|"???"
+name|NULL
 block|,
-literal|"???"
+name|NULL
 block|,
-literal|"???"
+name|NULL
 block|,
-literal|"???"
+name|NULL
 block|,
-literal|"???"
+name|NULL
 block|,
-literal|"???"
+name|NULL
 block|,
-literal|"???"
+name|NULL
 block|,
-literal|"???"
+name|NULL
 block|,
-literal|"???"
+name|NULL
 block|,
-literal|"???"
+name|NULL
 block|,
-literal|"???"
+name|NULL
 block|,
 literal|"HWPPC"
 block|,
@@ -499,7 +509,7 @@ comment|/* 20: ARG->DATA.42bis compression */
 literal|"BSD"
 block|,
 comment|/* 21: BSD LZW Compress */
-literal|"???"
+name|NULL
 block|,
 literal|"LZS-DCP"
 block|,
@@ -516,26 +526,6 @@ block|,
 comment|/* 26: Deflate (rfc1979) */
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|NCFTYPES
-value|(sizeof cftypes/sizeof cftypes[0])
-end_define
-
-begin_function
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|protoname
-parameter_list|(
-name|int
-name|proto
-parameter_list|)
-block|{
 if|if
 condition|(
 name|proto
@@ -544,10 +534,29 @@ literal|0
 operator|||
 name|proto
 operator|>
-name|NCFTYPES
+sizeof|sizeof
+name|cftypes
+operator|/
+sizeof|sizeof
+expr|*
+name|cftypes
+operator|||
+name|cftypes
+index|[
+name|proto
+index|]
+operator|==
+name|NULL
 condition|)
 return|return
-literal|"none"
+name|HexStr
+argument_list|(
+name|proto
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
 return|;
 return|return
 name|cftypes
@@ -2739,34 +2748,16 @@ name|end
 operator|=
 literal|""
 expr_stmt|;
-if|if
-condition|(
-name|type
-operator|<
-name|NCFTYPES
-condition|)
 name|log_Printf
 argument_list|(
 name|LogCCP
 argument_list|,
 literal|" %s[%d] %s\n"
 argument_list|,
-name|cftypes
-index|[
-name|type
-index|]
-argument_list|,
-name|length
-argument_list|,
-name|end
-argument_list|)
-expr_stmt|;
-else|else
-name|log_Printf
+name|protoname
 argument_list|(
-name|LogCCP
-argument_list|,
-literal|" ???[%d] %s\n"
+name|type
+argument_list|)
 argument_list|,
 name|length
 argument_list|,

@@ -8,10 +8,10 @@ struct|struct
 name|radius
 block|{
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
-comment|/* We're a sort of (selectable) descriptor */
+comment|/* We're a sort of (selectable) fdescriptor */
 struct|struct
 block|{
 name|int

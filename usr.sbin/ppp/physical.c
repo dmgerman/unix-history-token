@@ -448,7 +448,7 @@ name|int
 name|physical_DescriptorWrite
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 name|struct
@@ -615,7 +615,7 @@ name|int
 name|physical_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2094,7 +2094,7 @@ name|int
 name|physical_DescriptorWrite
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2177,7 +2177,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"%s: DescriptorWrite: wrote %d(%d) to %d\n"
+literal|"%s: DescriptorWrite: wrote %d(%lu) to %d\n"
 argument_list|,
 name|p
 operator|->
@@ -2187,6 +2187,10 @@ name|name
 argument_list|,
 name|nw
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|p
 operator|->
 name|out
@@ -2983,7 +2987,7 @@ name|void
 name|physical_DescriptorRead
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -5147,7 +5151,7 @@ name|int
 name|physical_doUpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -5563,7 +5567,7 @@ name|int
 name|physical_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,

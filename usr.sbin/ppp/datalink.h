@@ -152,7 +152,7 @@ struct|struct
 name|datalink
 block|{
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
 comment|/* We play either a physical or a chat */

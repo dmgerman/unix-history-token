@@ -135,6 +135,20 @@ name|T_HISADDR
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|T_DNS0
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_DNS1
+value|4
+end_define
+
 begin_comment
 comment|/*  * There's a struct filterent for each possible filter rule.  The  * layout is designed to minimise size (there are 4 * MAXFILTERS of  * them) - which is also conveniently a power of 2 (32 bytes) on  * architectures where sizeof(int)==4 (this makes indexing faster).  *  * f_action and f_proto only need to be 6 and 3 bits, respectively,  * but making them 8 bits allows them to be efficently accessed using  * byte operations as well as allowing space for future expansion  * (expanding MAXFILTERS or converting f_proto IPPROTO_... values).  *  * Note that there are four free bits in the initial word for future  * extensions.  */
 end_comment
@@ -170,13 +184,13 @@ comment|/* Destination port operation: OP_... */
 name|unsigned
 name|f_srctype
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/* T_ value of src */
 name|unsigned
 name|f_dsttype
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/* T_ value of dst */
 name|unsigned
@@ -452,9 +466,17 @@ parameter_list|,
 name|struct
 name|in_addr
 modifier|*
-parameter_list|)
-function_decl|;
+parameter_list|,
+name|struct
+name|in_addr
+type|[
+function_decl|2]
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 end_unit
 

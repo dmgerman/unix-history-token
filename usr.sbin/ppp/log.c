@@ -105,6 +105,8 @@ literal|"Connect"
 block|,
 literal|"Debug"
 block|,
+literal|"DNS"
+block|,
 literal|"HDLC"
 block|,
 literal|"ID0"

@@ -1958,7 +1958,7 @@ name|int
 name|bundle_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2333,7 +2333,7 @@ name|int
 name|bundle_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2453,7 +2453,7 @@ name|void
 name|bundle_DescriptorRead
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2965,7 +2965,7 @@ name|int
 name|bundle_DescriptorWrite
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -7983,8 +7983,11 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Expecting %d scatter/gather bytes\n"
+literal|"Expecting %u scatter/gather bytes\n"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|iov
 index|[
 literal|0
@@ -8041,10 +8044,13 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Failed recvmsg: Got %d, not %d\n"
+literal|"Failed recvmsg: Got %d, not %u\n"
 argument_list|,
 name|got
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|iov
 index|[
 literal|0
@@ -9120,7 +9126,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Sending %d descriptor%s and %d bytes in scatter"
+literal|"Sending %d descriptor%s and %u bytes in scatter"
 literal|"/gather array\n"
 argument_list|,
 name|nfd
@@ -9133,6 +9139,9 @@ literal|""
 else|:
 literal|"s"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|iov
 index|[
 literal|0
@@ -9192,7 +9201,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"%s: Failed initial sendmsg: Only sent %d of %d\n"
+literal|"%s: Failed initial sendmsg: Only sent %d of %u\n"
 argument_list|,
 name|sun
 operator|->
@@ -9200,6 +9209,9 @@ name|sun_path
 argument_list|,
 name|got
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|iov
 index|[
 literal|0
@@ -10420,6 +10432,8 @@ argument_list|,
 name|my_ip
 argument_list|,
 name|peer_ip
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|filter_AdjustAddr
@@ -10434,6 +10448,8 @@ argument_list|,
 name|my_ip
 argument_list|,
 name|peer_ip
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|filter_AdjustAddr
@@ -10448,6 +10464,8 @@ argument_list|,
 name|my_ip
 argument_list|,
 name|peer_ip
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|filter_AdjustAddr
@@ -10462,6 +10480,92 @@ argument_list|,
 name|my_ip
 argument_list|,
 name|peer_ip
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|bundle_AdjustDNS
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
+name|bundle
+parameter_list|,
+name|struct
+name|in_addr
+name|dns
+index|[
+literal|2
+index|]
+parameter_list|)
+block|{
+name|filter_AdjustAddr
+argument_list|(
+operator|&
+name|bundle
+operator|->
+name|filter
+operator|.
+name|in
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|dns
+argument_list|)
+expr_stmt|;
+name|filter_AdjustAddr
+argument_list|(
+operator|&
+name|bundle
+operator|->
+name|filter
+operator|.
+name|out
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|dns
+argument_list|)
+expr_stmt|;
+name|filter_AdjustAddr
+argument_list|(
+operator|&
+name|bundle
+operator|->
+name|filter
+operator|.
+name|dial
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|dns
+argument_list|)
+expr_stmt|;
+name|filter_AdjustAddr
+argument_list|(
+operator|&
+name|bundle
+operator|->
+name|filter
+operator|.
+name|alive
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|dns
 argument_list|)
 expr_stmt|;
 block|}

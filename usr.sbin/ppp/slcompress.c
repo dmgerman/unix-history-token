@@ -494,12 +494,16 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"??? 1 ip_off = %x, m_len = %d\n"
+literal|"??? 1 ip_off = %x, m_len = %lu\n"
 argument_list|,
 name|ip
 operator|->
 name|ip_off
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|m
 operator|->
 name|m_len

@@ -216,7 +216,7 @@ struct|struct
 name|bundle
 block|{
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
 comment|/* really all our datalinks */
@@ -756,7 +756,7 @@ name|bundle
 modifier|*
 parameter_list|,
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|)
 function_decl|;
@@ -772,7 +772,7 @@ name|bundle
 modifier|*
 parameter_list|,
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1023,6 +1023,26 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|bundle_AdjustDNS
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+type|[
+function_decl|2]
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|extern

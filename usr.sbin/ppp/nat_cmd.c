@@ -78,13 +78,13 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|LOCALNAT
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<alias.h>
+file|"alias.h"
 end_include
 
 begin_else
@@ -95,7 +95,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|"alias.h"
+file|<alias.h>
 end_include
 
 begin_endif
@@ -1872,6 +1872,10 @@ modifier|*
 name|proto
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|gfrags
+decl_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -1884,6 +1888,8 @@ name|int
 name|ret
 decl_stmt|,
 name|len
+decl_stmt|,
+name|nfrags
 decl_stmt|;
 name|struct
 name|mbuf
@@ -2026,6 +2032,18 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
+name|pip
+operator|=
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|MBUF_CTOP
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|m_len
@@ -2050,8 +2068,12 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"nat_LayerPull: Problem with IP header length (%d)\n"
+literal|"nat_LayerPull: Problem with IP header length (%lu)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|bp
 operator|->
 name|m_len
@@ -2106,6 +2128,31 @@ argument_list|(
 name|fptr
 argument_list|)
 expr_stmt|;
+name|log_Printf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"Store another frag (%lu) - now %d\n"
+argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|fptr
+argument_list|)
+operator|->
+name|ip_id
+argument_list|,
+operator|++
+name|gfrags
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PKT_ALIAS_FOUND_HEADER_FRAGMENT
@@ -2117,6 +2164,10 @@ operator|&
 name|bp
 operator|->
 name|m_nextpkt
+expr_stmt|;
+name|nfrags
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -2135,6 +2186,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|nfrags
+operator|++
+expr_stmt|;
 name|PacketAliasFragmentIn
 argument_list|(
 name|MBUF_CTOP
@@ -2200,8 +2254,49 @@ operator|->
 name|m_nextpkt
 expr_stmt|;
 block|}
+name|gfrags
+operator|-=
+name|nfrags
+expr_stmt|;
+name|log_Printf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"Found a frag header (%lu) - plus %d more frags (no"
+literal|"w %d)\n"
+argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|MBUF_CTOP
+argument_list|(
+name|bp
+argument_list|)
+argument_list|)
+operator|->
+name|ip_id
+argument_list|,
+name|nfrags
+argument_list|,
+name|gfrags
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"nat_LayerPull: Dropped a packet....\n"
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|bp
