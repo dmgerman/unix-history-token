@@ -4168,6 +4168,20 @@ name|if_hwassist
 operator|=
 name|NGE_CSUM_FEATURES
 expr_stmt|;
+name|ifp
+operator|->
+name|if_capabilities
+operator|=
+name|IFCAP_HWCSUM
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator|=
+name|ifp
+operator|->
+name|if_capabilities
+expr_stmt|;
 comment|/* 	 * Do MII setup. 	 */
 if|if
 condition|(
