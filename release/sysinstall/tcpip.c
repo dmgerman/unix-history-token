@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: tcpip.c,v 1.86 1999/07/22 08:51:42 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  * Copyright (c) 1996  *      Jordan K. Hubbard. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * $Id: tcpip.c,v 1.87 1999/08/07 01:43:39 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  * Copyright (c) 1996  *      Jordan K. Hubbard. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -673,12 +673,8 @@ index|]
 decl_stmt|;
 name|int
 name|i
-init|=
-literal|0
 decl_stmt|,
 name|j
-init|=
-literal|0
 decl_stmt|;
 comment|/* Bah, now we have to kludge getting the information from ifconfig */
 name|snprintf
@@ -709,42 +705,44 @@ condition|(
 name|ifp
 condition|)
 block|{
-while|while
-condition|(
-operator|(
 name|j
 operator|=
 name|fread
 argument_list|(
 name|data
-operator|+
-name|i
 argument_list|,
 literal|1
 argument_list|,
-literal|512
+sizeof|sizeof
+argument_list|(
+name|data
+argument_list|)
 argument_list|,
 name|ifp
 argument_list|)
-operator|)
-operator|>
-literal|0
-condition|)
-name|i
-operator|+=
-name|j
 expr_stmt|;
 name|fclose
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|data
-index|[
-name|i
-index|]
+if|if
+condition|(
+name|j
+operator|<
+literal|0
+condition|)
+comment|/* paranoia */
+name|j
 operator|=
 literal|0
+expr_stmt|;
+name|data
+index|[
+name|j
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -881,28 +879,20 @@ argument_list|(
 literal|"/etc/resolv.conf"
 argument_list|)
 expr_stmt|;
-comment|/* See if we have a hostname and can derive one if not */
 if|if
 condition|(
-operator|!
 name|hostname
 index|[
 literal|0
 index|]
-operator|&&
-name|ipaddr
-index|[
-literal|0
-index|]
 condition|)
-block|{     }
 name|variable_set2
 argument_list|(
 name|VAR_HOSTNAME
 argument_list|,
 name|hostname
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1077,12 +1067,14 @@ for|for
 control|(
 name|k
 operator|=
-literal|3
+literal|1
 init|;
 name|k
+operator|<
+literal|4
 condition|;
-operator|--
 name|k
+operator|++
 control|)
 block|{
 if|if
@@ -1110,6 +1102,13 @@ name|TRUE
 expr_stmt|;
 break|break;
 block|}
+name|msgNotify
+argument_list|(
+literal|"Scanning for DHCP servers...  Retry: %d"
+argument_list|,
+name|k
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* Get old IP address from variable space, if available */
@@ -1803,6 +1802,10 @@ name|VAR_HOSTNAME
 argument_list|,
 name|hostname
 argument_list|,
+name|use_dhcp
+condition|?
+literal|0
+else|:
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1846,6 +1849,10 @@ name|VAR_GATEWAY
 argument_list|,
 name|gateway
 argument_list|,
+name|use_dhcp
+condition|?
+literal|0
+else|:
 literal|1
 argument_list|)
 expr_stmt|;
