@@ -600,6 +600,14 @@ block|}
 break|break;
 comment|/* AMD -- vendor 0x1022 */
 case|case
+literal|0x30001022
+case|:
+name|s
+operator|=
+literal|"AMD Elan SC520 host to PCI bridge"
+expr_stmt|;
+break|break;
+case|case
 literal|0x70061022
 case|:
 name|s
