@@ -792,7 +792,7 @@ comment|/* stage1.c */
 end_comment
 
 begin_decl_stmt
-name|void
+name|int
 name|stage1
 name|__P
 argument_list|(
