@@ -7729,9 +7729,6 @@ name|ng_mesg
 modifier|*
 name|msg
 parameter_list|,
-name|int
-name|len
-parameter_list|,
 specifier|const
 name|char
 modifier|*
