@@ -29,6 +29,20 @@ name|HTTP_DEFAULT_PORT
 value|80
 end_define
 
+begin_define
+define|#
+directive|define
+name|FTP_DEFAULT_PROXY_PORT
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|HTTP_DEFAULT_PROXY_PORT
+value|3128
+end_define
+
 begin_comment
 comment|/* Structure used for error message lists */
 end_comment
@@ -85,6 +99,26 @@ modifier|*
 name|fmt
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_fetch_default_port
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_fetch_default_proxy_port
+parameter_list|(
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
