@@ -4095,19 +4095,11 @@ condition|)
 break|break;
 name|namlen
 operator|=
-operator|(
-operator|(
-expr|struct
-name|odirtemplate
-operator|*
-operator|)
-operator|&
 name|dirbuf
-operator|)
-operator|->
-name|dotdot_namlen
+operator|.
+name|dotdot_type
 expr_stmt|;
-comment|/* XXX */
+comment|/* like ufs little-endian */
 if|if
 condition|(
 name|namlen
