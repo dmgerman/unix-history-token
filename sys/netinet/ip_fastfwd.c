@@ -233,7 +233,8 @@ name|route
 modifier|*
 name|ro
 parameter_list|,
-name|in_addr_t
+name|struct
+name|in_addr
 name|dest
 parameter_list|,
 name|struct
@@ -299,6 +300,8 @@ operator|.
 name|s_addr
 operator|=
 name|dest
+operator|.
+name|s_addr
 expr_stmt|;
 name|rtalloc_ign
 argument_list|(
@@ -488,7 +491,8 @@ name|struct
 name|ip_fw_args
 name|args
 decl_stmt|;
-name|in_addr_t
+name|struct
+name|in_addr
 name|odest
 decl_stmt|,
 name|dest
@@ -1079,36 +1083,18 @@ return|return
 literal|0
 return|;
 comment|/* 	 * Is it for a local address on this host? 	 */
-name|LIST_FOREACH
-argument_list|(
-argument|ia
-argument_list|,
-argument|INADDR_HASH(ip->ip_dst.s_addr)
-argument_list|,
-argument|ia_hash
-argument_list|)
-block|{
 if|if
 condition|(
-name|IA_SIN
+name|in_localip
 argument_list|(
-name|ia
-argument_list|)
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-operator|==
 name|ip
 operator|->
 name|ip_dst
-operator|.
-name|s_addr
+argument_list|)
 condition|)
 return|return
 literal|0
 return|;
-block|}
 comment|/* 	 * Or is it for a local IP broadcast address on this host? 	 */
 if|if
 condition|(
@@ -1232,8 +1218,12 @@ name|ip_off
 argument_list|)
 expr_stmt|;
 name|odest
+operator|.
+name|s_addr
 operator|=
 name|dest
+operator|.
+name|s_addr
 operator|=
 name|ip
 operator|->
@@ -1294,6 +1284,8 @@ argument_list|)
 expr_stmt|;
 comment|/* m may have changed by pfil hook */
 name|dest
+operator|.
+name|s_addr
 operator|=
 name|ip
 operator|->
@@ -1575,6 +1567,8 @@ name|NULL
 condition|)
 block|{
 name|dest
+operator|.
+name|s_addr
 operator|=
 name|args
 operator|.
@@ -1617,41 +1611,25 @@ comment|/* 	 * Destination address changed? 	 */
 if|if
 condition|(
 name|odest
+operator|.
+name|s_addr
 operator|!=
 name|dest
+operator|.
+name|s_addr
 condition|)
 block|{
 comment|/* 		 * Is it now for a local address on this host? 		 */
-name|LIST_FOREACH
-argument_list|(
-argument|ia
-argument_list|,
-argument|INADDR_HASH(ip->ip_dst.s_addr)
-argument_list|,
-argument|ia_hash
-argument_list|)
-block|{
 if|if
 condition|(
-name|IA_SIN
+name|in_localip
 argument_list|(
-name|ia
+name|dest
 argument_list|)
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-operator|==
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
 condition|)
 goto|goto
 name|forwardlocal
 goto|;
-block|}
 comment|/* 		 * Go on with new destination address 		 */
 block|}
 comment|/* 	 * Step 4: decrement TTL and look up route 	 */
@@ -1829,6 +1807,8 @@ operator|*
 argument_list|)
 expr_stmt|;
 name|dest
+operator|.
+name|s_addr
 operator|=
 name|ip
 operator|->
@@ -2134,6 +2114,8 @@ name|NULL
 condition|)
 block|{
 name|dest
+operator|.
+name|s_addr
 operator|=
 name|args
 operator|.
@@ -2175,36 +2157,21 @@ comment|/* 	 * Destination address changed? 	 */
 if|if
 condition|(
 name|odest
+operator|.
+name|s_addr
 operator|!=
 name|dest
+operator|.
+name|s_addr
 condition|)
 block|{
 comment|/* 		 * Is it now for a local address on this host? 		 */
-name|LIST_FOREACH
-argument_list|(
-argument|ia
-argument_list|,
-argument|INADDR_HASH(ip->ip_dst.s_addr)
-argument_list|,
-argument|ia_hash
-argument_list|)
-block|{
 if|if
 condition|(
-name|IA_SIN
+name|in_localip
 argument_list|(
-name|ia
+name|dest
 argument_list|)
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-operator|==
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
 condition|)
 block|{
 name|forwardlocal
@@ -2309,7 +2276,7 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Return packet for processing by ip_input 				 */
+comment|/* 			 * Return packet for processing by ip_input 			 */
 if|if
 condition|(
 name|ro
@@ -2326,7 +2293,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
 block|}
 comment|/* 		 * Redo route lookup with new destination address 		 */
 name|RTFREE
