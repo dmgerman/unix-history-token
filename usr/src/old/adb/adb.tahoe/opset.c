@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opset.c	1.3 (Berkeley) %G%"
+literal|"@(#)opset.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,6 +186,21 @@ name|nbytes
 parameter_list|)
 define|\
 value|(void) adbread(space, inkdot(dotoff),&mem.b, nbytes); \ 	checkerr(); \ 	dotoff += (nbytes)
+if|if
+condition|(
+name|space
+operator|==
+name|SP_NONE
+condition|)
+name|ins
+operator|=
+operator|(
+name|u_char
+operator|)
+name|dot
+expr_stmt|;
+else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -204,6 +219,7 @@ expr_stmt|;
 name|checkerr
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
