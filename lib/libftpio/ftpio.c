@@ -5368,6 +5368,14 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
+name|sin
+operator|.
+name|sin6
+operator|.
+name|sin6_scope_id
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|getnameinfo
