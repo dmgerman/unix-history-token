@@ -1166,12 +1166,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED10
+name|TDP_WAKEPROC0
 value|0x00000400
 end_define
 
 begin_comment
-comment|/* -- available-- */
+comment|/* Wants caller to wakeup(&proc0) */
 end_comment
 
 begin_define
