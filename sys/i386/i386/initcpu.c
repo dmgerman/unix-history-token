@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) KATO Takenori, 1997.  *   * All rights reserved.  Unpublished rights reserved under the copyright  * laws of Japan.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *		$Id: initcpu.c,v 1.2 1997/03/24 07:23:05 kato Exp $  */
+comment|/*  * Copyright (c) KATO Takenori, 1997.  *   * All rights reserved.  Unpublished rights reserved under the copyright  * laws of Japan.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *		$Id: initcpu.c,v 1.3 1997/04/19 05:25:19 kato Exp $  */
 end_comment
 
 begin_include
@@ -90,6 +90,16 @@ begin_function_decl
 specifier|static
 name|void
 name|init_486dlc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|init_cy486dx
 parameter_list|(
 name|void
 parameter_list|)
@@ -283,7 +293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cyrix 486 series  */
+comment|/*  * Cyrix 486SLC/DLC/SR/DR series  */
 end_comment
 
 begin_function
@@ -434,6 +444,66 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !CYRIX_CACHE_WORKS */
+name|write_eflags
+argument_list|(
+name|eflags
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Cyrix 486S/DX series  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|init_cy486dx
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_long
+name|eflags
+decl_stmt|;
+name|u_char
+name|ccr2
+decl_stmt|;
+name|eflags
+operator|=
+name|read_eflags
+argument_list|()
+expr_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
+name|invd
+argument_list|()
+expr_stmt|;
+name|ccr2
+operator|=
+name|read_cyrix_reg
+argument_list|(
+name|CCR2
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SUSP_HLT
+name|ccr2
+operator||=
+name|CCR2_SUSP_HTL
+expr_stmt|;
+endif|#
+directive|endif
+name|write_cyrix_reg
+argument_list|(
+name|CCR2
+argument_list|,
+name|ccr2
+argument_list|)
+expr_stmt|;
 name|write_eflags
 argument_list|(
 name|eflags
@@ -1118,6 +1188,13 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
+name|CPU_CY486DX
+case|:
+name|init_cy486dx
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 name|CPU_M1SC
 case|:
 name|init_5x86
@@ -1356,9 +1433,17 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cpu
 operator|!=
 name|CPU_M1SC
+operator|)
+operator|&&
+operator|(
+name|cpu
+operator|!=
+name|CPU_CY486DX
+operator|)
 condition|)
 block|{
 name|ccr0
@@ -1456,9 +1541,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cpu
 operator|!=
 name|CPU_M1SC
+operator|)
+operator|&&
+operator|(
+name|cpu
+operator|!=
+name|CPU_CY486DX
+operator|)
 condition|)
 name|printf
 argument_list|(
