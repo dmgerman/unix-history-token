@@ -8135,6 +8135,13 @@ name|realloc
 argument_list|(
 name|argv
 argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+operator|*
+operator|(
 call|(
 name|long
 call|)
@@ -8144,6 +8151,7 @@ name|argv
 argument_list|)
 operator|+
 literal|2
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
