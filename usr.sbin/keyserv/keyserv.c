@@ -3,12 +3,43 @@ begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"@(#)keyserv.c	1.15	94/04/25 SMI"
-end_pragma
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)keyserv.c	1.15	94/04/25 SMI";
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1986 - 1991 by Sun Microsystems, Inc.  */
@@ -17,6 +48,18 @@ end_comment
 begin_comment
 comment|/*  * Keyserver  * Store secret keys per uid. Do public key encryption and decryption  * operations. Generate "random" keys.  * Do not talk to anything but a local root  * process on the local transport only  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
 
 begin_include
 include|#
@@ -33,19 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -82,12 +119,6 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_include
@@ -407,15 +438,6 @@ name|nflag
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|c
 decl_stmt|;
@@ -544,20 +566,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"failed to register AUTH_DES authenticator\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"failed to register AUTH_DES authenticator"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|optind
@@ -586,28 +601,13 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s must be run as root\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"keyserv must be run as root"
 argument_list|)
 expr_stmt|;
-block|}
 name|setmodulus
 argument_list|(
 name|HEXMODULUS
@@ -660,20 +660,13 @@ name|transp
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot create udp service."
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"cannot create udp service"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -690,20 +683,13 @@ argument_list|,
 name|IPPROTO_UDP
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unable to register (KEY_PROG, KEY_VERS, udp)."
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to register (KEY_PROG, KEY_VERS, udp)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -720,20 +706,13 @@ argument_list|,
 name|IPPROTO_UDP
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unable to register (KEY_PROG, KEY_VERS2, udp)."
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to register (KEY_PROG, KEY_VERS2, udp)"
 argument_list|)
 expr_stmt|;
-block|}
 name|transp
 operator|=
 name|svctcp_create
@@ -751,20 +730,13 @@ name|transp
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot create tcp service."
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"cannot create tcp service"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -781,20 +753,13 @@ argument_list|,
 name|IPPROTO_TCP
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unable to register (KEY_PROG, KEY_VERS, tcp)."
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to register (KEY_PROG, KEY_VERS, tcp)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -811,20 +776,13 @@ argument_list|,
 name|IPPROTO_TCP
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unable to register (KEY_PROG, KEY_VERS2, tcp)."
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to register (KEY_PROG, KEY_VERS2, tcp)"
 argument_list|)
 expr_stmt|;
-block|}
 name|transp
 operator|=
 name|svcunix_create
@@ -851,20 +809,13 @@ name|transp
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot create AF_UNIX service."
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"cannot create AF_UNIX service"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -881,20 +832,13 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unable to register (KEY_PROG, KEY_VERS, unix)."
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to register (KEY_PROG, KEY_VERS, unix)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -911,20 +855,13 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unable to register (KEY_PROG, KEY_VERS2, unix)."
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to register (KEY_PROG, KEY_VERS2, unix)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -941,20 +878,13 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unable to register (CRYPT_PROG, CRYPT_VERS, unix)."
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to register (CRYPT_PROG, CRYPT_VERS, unix)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1245,14 +1175,9 @@ operator|<
 name|HEXKEYBYTES
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"keyserv: the key read from %s was too short.\n"
+literal|"the key read from %s was too short"
 argument_list|,
 name|ROOTKEY
 argument_list|)
@@ -1288,14 +1213,9 @@ name|name
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"keyserv: \ failed to generate host's netname when establishing root's key.\n"
+literal|"failed to generate host's netname when establishing root's key"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1345,14 +1265,9 @@ operator|!=
 name|KEY_SUCCESS
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"keyserv: could not set root's key and netname.\n"
+literal|"could not set root's key and netname"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1404,14 +1319,9 @@ name|passwd
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't find %s's secret key\n"
+literal|"can't find %s's secret key"
 argument_list|,
 name|name
 argument_list|)
@@ -1432,14 +1342,9 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Password does not decrypt secret key for %s\n"
+literal|"password does not decrypt secret key for %s"
 argument_list|,
 name|name
 argument_list|)
