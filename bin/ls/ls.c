@@ -2854,6 +2854,10 @@ name|flen
 operator|=
 literal|0
 expr_stmt|;
+name|lattr
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|f_lomac
