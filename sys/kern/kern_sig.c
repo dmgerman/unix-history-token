@@ -6721,11 +6721,6 @@ name|p_xstat
 operator|=
 name|sig
 expr_stmt|;
-name|stop
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6767,6 +6762,11 @@ name|p_pptr
 argument_list|)
 expr_stmt|;
 block|}
+name|stop
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -6877,7 +6877,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Put the argument process into the stopped state and notify the parent  * via wakeup.  Signals are handled elsewhere.  The process must not be  * on the run queue.  Must be called with at least a shared hold of the  * proctree lock.  */
+comment|/*  * Put the argument process into the stopped state and notify the parent  * via wakeup.  Signals are handled elsewhere.  The process must not be  * on the run queue.  Must be called with the proc p locked.  */
 end_comment
 
 begin_function
