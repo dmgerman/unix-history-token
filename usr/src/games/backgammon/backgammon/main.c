@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -485,7 +485,7 @@ endif|#
 directive|endif
 name|ospeed
 operator|=
-name|old
+name|tty
 operator|.
 name|sg_ospeed
 expr_stmt|;
