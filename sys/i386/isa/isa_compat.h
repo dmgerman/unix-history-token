@@ -318,12 +318,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"isic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"tina.h"
 end_include
 
@@ -768,14 +762,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|pcfdriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|isicdriver
 decl_stmt|;
 end_decl_stmt
 
@@ -1296,20 +1282,6 @@ name|INTR_TYPE_NET
 block|,
 operator|&
 name|pcfdriver
-block|}
-block|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|NISIC
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_NET
-block|,
-operator|&
-name|isicdriver
 block|}
 block|,
 endif|#
