@@ -99,6 +99,28 @@ directive|include
 file|"libdisk.h"
 end_include
 
+begin_function_decl
+specifier|static
+name|void
+name|msgDebug
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/* Clone these two from sysinstall because we need our own copies  * due to link order problems with `crunch'.  Feh!  */
 end_comment

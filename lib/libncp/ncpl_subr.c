@@ -2097,6 +2097,7 @@ begin_function
 name|void
 name|ncp_error
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
