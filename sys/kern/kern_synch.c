@@ -422,7 +422,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Force switch among equal priority processes every 100ms.  */
+comment|/*  * Force switch among equal priority processes every 100ms.  * We don't actually need to force a context switch of the current process.  * The act of firing the event triggers a context switch to softclock() and  * then switching back out again which is equivalent to a preemption, thus  * no further work is needed on the local CPU.  */
 end_comment
 
 begin_comment
@@ -441,31 +441,26 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|need_resched
-argument_list|(
-name|curproc
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 name|forward_roundrobin
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|callout_reset
 argument_list|(
 operator|&
