@@ -1321,6 +1321,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+modifier|*
+name|reallocf
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|realpath
