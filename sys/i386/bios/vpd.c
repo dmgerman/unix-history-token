@@ -701,22 +701,13 @@ name|res
 argument_list|)
 argument_list|)
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"VPD checksum failed.\n"
+literal|"VPD checksum failed.  BIOS update may be required.\n"
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 name|bad
 label|:
 if|if
@@ -1418,6 +1409,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Perform a checksum over the VPD structure, starting with  * the BuildID.  (Jean Delvare<khali@linux-fr.org>)  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1455,7 +1450,13 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|offsetof
+argument_list|(
+expr|struct
+name|vpd
+argument_list|,
+name|BuildID
+argument_list|)
 init|;
 name|i
 operator|<
@@ -1466,26 +1467,12 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|cksum
 operator|+=
 name|ptr
 index|[
 name|i
 index|]
-expr_stmt|;
-block|}
-comment|/* XXX: For some reason this isn't right. */
-name|printf
-argument_list|(
-literal|"VPD cksum: 0x%02x\n"
-argument_list|,
-name|cksum
-argument_list|)
-expr_stmt|;
-name|cksum
-operator|=
-literal|0
 expr_stmt|;
 return|return
 operator|(
