@@ -506,6 +506,9 @@ decl_stmt|;
 name|int
 name|ceiling
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
 name|pthread_mutex_t
 name|pmutex
 decl_stmt|;
@@ -550,6 +553,10 @@ expr_stmt|;
 name|ceiling
 operator|=
 name|PTHREAD_MAX_PRIORITY
+expr_stmt|;
+name|flags
+operator|=
+literal|0
 expr_stmt|;
 block|}
 comment|/* Check mutex type: */
@@ -644,6 +651,15 @@ operator|)
 operator|->
 name|m_ceiling
 expr_stmt|;
+name|flags
+operator|=
+operator|(
+operator|*
+name|mutex_attr
+operator|)
+operator|->
+name|m_flags
+expr_stmt|;
 block|}
 comment|/* Check no errors so far: */
 if|if
@@ -679,12 +695,12 @@ name|ENOMEM
 expr_stmt|;
 else|else
 block|{
-comment|/* Reset the mutex flags: */
+comment|/* Set the mutex flags: */
 name|pmutex
 operator|->
 name|m_flags
 operator|=
-literal|0
+name|flags
 expr_stmt|;
 comment|/* Process according to mutex type: */
 switch|switch
