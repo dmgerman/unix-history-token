@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_1.c	1.5 83/05/20"
+literal|"@(#)pl_1.c	1.6 83/05/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -2823,6 +2823,8 @@ argument_list|(
 argument|nodriver
 argument_list|,
 argument|randomize
+argument_list|,
+argument|debug
 argument_list|)
 end_macro
 
@@ -2831,6 +2833,8 @@ name|char
 name|randomize
 decl_stmt|,
 name|nodriver
+decl_stmt|,
+name|debug
 decl_stmt|;
 end_decl_stmt
 
@@ -4127,6 +4131,22 @@ name|fork
 argument_list|()
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|execl
+argument_list|(
+name|DEBUGDRIVER
+argument_list|,
+name|DRIVERNAME
+argument_list|,
+name|num
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|execl
 argument_list|(
 name|DRIVER
@@ -4534,10 +4554,15 @@ name|randomize
 init|=
 literal|0
 decl_stmt|,
+name|debug
+init|=
+literal|0
+decl_stmt|;
+name|char
 modifier|*
 name|badstring
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 specifier|extern
 name|char
 name|_sobuf
@@ -4618,6 +4643,13 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'D'
+case|:
+name|debug
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'x'
 case|:
 name|randomize
@@ -4660,6 +4692,8 @@ argument_list|(
 name|nodrive
 argument_list|,
 name|randomize
+argument_list|,
+name|debug
 argument_list|)
 expr_stmt|;
 name|Signal

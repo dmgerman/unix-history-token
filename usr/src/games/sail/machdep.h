@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)machdep.h	1.6 %G%";  */
+comment|/*  * sccsid = "@(#)machdep.h	1.7 %G%";  */
 end_comment
 
 begin_define
@@ -15,6 +15,13 @@ define|#
 directive|define
 name|DRIVER
 value|"/usr/games/.driver"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUGDRIVER
+value|"driver"
 end_define
 
 begin_define
