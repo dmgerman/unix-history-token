@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.9 (Berkeley) %G%"
+literal|"@(#)more.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8494,6 +8494,11 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|no_tty
+condition|)
+return|return;
 if|if
 condition|(
 name|pstate
