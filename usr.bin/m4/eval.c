@@ -939,6 +939,12 @@ name|argc
 operator|>
 literal|2
 condition|)
+block|{
+name|fflush
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|sysval
 operator|=
 name|system
@@ -949,6 +955,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SYSVTYPE
