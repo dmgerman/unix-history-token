@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arp.c	5.8 (Berkeley) %G%"
+literal|"@(#)arp.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +132,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -231,7 +237,7 @@ block|}
 else|else
 name|mem
 operator|=
-literal|"/dev/kmem"
+name|_PATH_KMEM
 expr_stmt|;
 name|dump
 argument_list|(
@@ -246,7 +252,7 @@ index|[
 literal|2
 index|]
 else|:
-literal|"/vmunix"
+name|_PATH_VMUNIX
 argument_list|,
 name|mem
 argument_list|)
