@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: shm.h,v 1.2 1994/09/17 13:24:29 davidg Exp $ */
+comment|/* $Id: shm.h,v 1.3 1994/10/02 17:24:54 phk Exp $ */
 end_comment
 
 begin_comment
@@ -65,6 +65,24 @@ end_define
 begin_comment
 comment|/* Segment low boundry address multiple */
 end_comment
+
+begin_comment
+comment|/* "official" access mode definitions; somewhat braindead since you have    to specify (SHM_*>> 3) for group and (SHM_*>> 6) for world permissions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHM_R
+value|(IPC_R)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHM_W
+value|(IPC_W)
+end_define
 
 begin_struct
 struct|struct

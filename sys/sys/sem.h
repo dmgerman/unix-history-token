@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: sem.h,v 1.2 1994/09/17 13:24:28 davidg Exp $ */
+comment|/* $Id: sem.h,v 1.3 1995/03/28 07:57:35 bde Exp $ */
 end_comment
 
 begin_comment
@@ -251,6 +251,32 @@ begin_comment
 comment|/* Set semvals from arg.array {ALTER} */
 end_comment
 
+begin_comment
+comment|/*  * Permissions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEM_A
+value|0200
+end_define
+
+begin_comment
+comment|/* alter permission */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEM_R
+value|0400
+end_define
+
+begin_comment
+comment|/* read permission */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -281,32 +307,6 @@ end_define
 
 begin_comment
 comment|/* adjust on exit max value */
-end_comment
-
-begin_comment
-comment|/*  * Permissions  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEM_A
-value|0200
-end_define
-
-begin_comment
-comment|/* alter permission */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEM_R
-value|0400
-end_define
-
-begin_comment
-comment|/* read permission */
 end_comment
 
 begin_comment
