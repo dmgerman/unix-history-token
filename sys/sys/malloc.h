@@ -234,7 +234,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|(space) = (cast)malloc((u_long)(size), (type), (flags))
+value|((space) = (cast)malloc((u_long)(size), (type), (flags)))
 end_define
 
 begin_define
