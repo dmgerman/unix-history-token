@@ -2911,6 +2911,8 @@ argument_list|(
 name|cmdbuf
 argument_list|)
 argument_list|,
+literal|"%s"
+argument_list|,
 name|env_pager
 argument_list|)
 expr_stmt|;
