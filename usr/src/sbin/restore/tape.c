@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.29 (Berkeley) %G%"
+literal|"@(#)tape.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5203,6 +5203,45 @@ literal|0
 index|]
 operator|=
 name|i
+expr_stmt|;
+block|}
+comment|/* 	 * If we are restoring a filesystem with old format inodes,  	 * copy the uid/gid to the new location. 	 */
+if|if
+condition|(
+operator|(
+name|buf
+operator|->
+name|c_flags
+operator|&
+name|DR_NEWINODEFMT
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|buf
+operator|->
+name|c_dinode
+operator|.
+name|di_uid
+operator|=
+name|buf
+operator|->
+name|c_dinode
+operator|.
+name|di_ouid
+expr_stmt|;
+name|buf
+operator|->
+name|c_dinode
+operator|.
+name|di_gid
+operator|=
+name|buf
+operator|->
+name|c_dinode
+operator|.
+name|di_ogid
 expr_stmt|;
 block|}
 switch|switch
