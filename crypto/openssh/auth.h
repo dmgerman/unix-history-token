@@ -275,6 +275,27 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|KRB4
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<krb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KRB4 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|KRB5
 end_ifdef
 
@@ -282,12 +303,6 @@ begin_include
 include|#
 directive|include
 file|<krb5.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<krb.h>
 end_include
 
 begin_function_decl
