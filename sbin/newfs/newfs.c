@@ -465,6 +465,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Uflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable soft updates for file system */
+end_comment
+
+begin_decl_stmt
+name|int
 name|fssize
 decl_stmt|;
 end_decl_stmt
@@ -1042,9 +1052,9 @@ name|opstring
 operator|=
 name|mfs
 condition|?
-literal|"NF:T:a:b:c:d:e:f:i:m:o:s:"
+literal|"NF:T:Ua:b:c:d:e:f:i:m:o:s:"
 else|:
-literal|"NOS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:vx:"
+literal|"NOS:T:Ua:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:vx:"
 expr_stmt|;
 while|while
 condition|(
@@ -1128,6 +1138,14 @@ case|:
 name|filename
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+name|Uflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3700,6 +3718,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-U enable soft updates\n"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|fprintf
