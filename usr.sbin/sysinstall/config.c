@@ -3079,10 +3079,15 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_MICE
 name|char
 modifier|*
 name|moused
 decl_stmt|;
+endif|#
+directive|endif
 name|WINDOW
 modifier|*
 name|w
@@ -3263,6 +3268,9 @@ argument_list|(
 name|execfile
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_MICE
 name|moused
 operator|=
 name|variable_get
@@ -3334,6 +3342,8 @@ literal|"\"MouseSystems\" as the mouse protocol in the X configuration\n"
 literal|"utility."
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|Mkdir
 argument_list|(
 literal|"/etc/X11"
