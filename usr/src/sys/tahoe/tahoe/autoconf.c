@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	1.11	87/01/04	*/
+comment|/*	autoconf.c	1.12	87/02/18	*/
 end_comment
 
 begin_comment
@@ -536,6 +536,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|octlr
+decl_stmt|,
 argument_list|(
 operator|*
 operator|*
@@ -1006,6 +1008,20 @@ operator|!=
 literal|'?'
 condition|)
 continue|continue;
+name|octlr
+operator|=
+name|ui
+operator|->
+name|ui_ctlr
+operator|,
+name|ui
+operator|->
+name|ui_ctlr
+operator|=
+name|um
+operator|->
+name|um_ctlr
+expr_stmt|;
 if|if
 condition|(
 call|(
@@ -1149,6 +1165,13 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|ui
+operator|->
+name|ui_ctlr
+operator|=
+name|octlr
+expr_stmt|;
 block|}
 break|break;
 block|}
@@ -1907,6 +1930,12 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|nblks
+operator|!=
+operator|-
+literal|1
+operator|&&
+operator|(
 name|swp
 operator|->
 name|sw_nblks
@@ -1918,6 +1947,7 @@ operator|->
 name|sw_nblks
 operator|>
 name|nblks
+operator|)
 condition|)
 name|swp
 operator|->
