@@ -460,6 +460,7 @@ operator|=
 name|ifqmaxlen
 expr_stmt|;
 block|}
+comment|/* XXX This is an access violation of the mutex internals. */
 if|if
 condition|(
 name|ifp
@@ -468,9 +469,9 @@ name|if_snd
 operator|.
 name|ifq_mtx
 operator|.
-name|mtx_description
+name|mtx_flags
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|printf

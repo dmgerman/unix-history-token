@@ -158,6 +158,12 @@ begin_comment
 comment|/*  * Assembly macros (for internal use only)  *--------------------------------------------------------------------------  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERN_MUTEX_C_
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -185,6 +191,21 @@ name|type
 parameter_list|)
 value|do {				\ 	u_int _ipl = alpha_pal_swpipl(ALPHA_PSL_IPL_HIGH);		\ 	if (!_obtain_lock(mp, tid))					\ 		mtx_enter_hard(mp, (type)& MTX_HARDOPTS, _ipl);	\ 	else {								\ 		alpha_mb();						\ 		(mp)->mtx_saveintr = _ipl;				\ 	}								\ } while (0)
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|_V
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERN_MUTEX_C_ */
+end_comment
 
 begin_endif
 endif|#

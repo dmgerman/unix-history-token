@@ -175,6 +175,12 @@ begin_comment
 comment|/*  * Assembly macros (for internal use only)  *------------------------------------------------------------------------------  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERN_MUTEX_C_
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -434,6 +440,21 @@ end_endif
 
 begin_comment
 comment|/* I386_CPU */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_V
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERN_MUTEX_C_ */
 end_comment
 
 begin_endif
