@@ -3744,7 +3744,7 @@ end_ifndef
 
 begin_struct
 struct|struct
-name|mlockall_args
+name|munlockall_args
 block|{
 name|int
 name|how
