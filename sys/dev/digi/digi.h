@@ -518,7 +518,8 @@ decl_stmt|;
 name|int
 name|mem_seg
 decl_stmt|;
-name|digiModel_t
+name|enum
+name|digi_model
 name|model
 decl_stmt|;
 specifier|const

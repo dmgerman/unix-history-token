@@ -6806,7 +6806,8 @@ name|DIGIIO_MODEL
 case|:
 operator|*
 operator|(
-name|digiModel_t
+expr|enum
+name|digi_model
 operator|*
 operator|)
 name|data
