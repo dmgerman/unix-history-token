@@ -219,7 +219,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<pci/if_ngereg.h>
+file|<dev/nge/if_ngereg.h>
 end_include
 
 begin_expr_stmt
