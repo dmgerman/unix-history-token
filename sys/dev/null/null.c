@@ -382,7 +382,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"nulldev:<null device, zero device>\n"
+literal|"null0:<null device, zero device>\n"
 argument_list|)
 expr_stmt|;
 name|zbuf
@@ -486,7 +486,7 @@ end_function
 begin_expr_stmt
 name|DEV_MODULE
 argument_list|(
-name|nulldev
+name|null
 argument_list|,
 name|null_modevent
 argument_list|,
