@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6_ifattach.c,v 1.61 2000/06/13 08:15:27 itojun Exp $	*/
+comment|/*	$KAME: in6_ifattach.c,v 1.67 2000/10/01 10:51:54 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -1284,7 +1284,7 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"%s: failed to get interface identifier"
+literal|"%s: failed to get interface identifier\n"
 argument_list|,
 name|if_name
 argument_list|(
@@ -3598,7 +3598,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: failed to add link-local address"
+literal|"%s: failed to add link-local address\n"
 argument_list|,
 name|if_name
 argument_list|(
