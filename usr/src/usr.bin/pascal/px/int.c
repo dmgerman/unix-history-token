@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)int.c 1.2 %G%"
+literal|"@(#)int.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,7 +371,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s is not a Pascal program\n"
+literal|"%s is not a Pascal interpreter file\n"
 argument_list|,
 name|file
 argument_list|)
