@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_arp.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_arp.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -19,7 +19,12 @@ define|#
 directive|define
 name|ARPHRD_ETHER
 value|1
-comment|/* ethernet hardware address */
+comment|/* ethernet hardware format */
+define|#
+directive|define
+name|ARPHRD_FRELAY
+value|15
+comment|/* frame relay hardware format */
 name|u_short
 name|ar_pro
 decl_stmt|;
@@ -46,6 +51,26 @@ directive|define
 name|ARPOP_REPLY
 value|2
 comment|/* response to previous request */
+define|#
+directive|define
+name|ARPOP_REVREQUEST
+value|3
+comment|/* request protocol address given hardware */
+define|#
+directive|define
+name|ARPOP_REVREPLY
+value|4
+comment|/* response giving protocol address */
+define|#
+directive|define
+name|ARPOP_INVREQUEST
+value|8
+comment|/* request to identify peer */
+define|#
+directive|define
+name|ARPOP_INVREPLY
+value|9
+comment|/* response identifying peer */
 comment|/*  * The remaining fields are variable in size,  * according to the sizes above.  */
 ifdef|#
 directive|ifdef
