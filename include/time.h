@@ -31,12 +31,6 @@ directive|include
 file|<sys/_types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/ansi.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -59,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|CLK_TCK
-value|_BSD_CLK_TCK_
+value|128
 end_define
 
 begin_endif
@@ -75,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|CLOCKS_PER_SEC
-value|_BSD_CLOCKS_PER_SEC_
+value|128
 end_define
 
 begin_ifndef
