@@ -4335,7 +4335,7 @@ parameter_list|(
 name|cl
 parameter_list|)
 define|\
-value|(((uintptr_t)(cl) - (uintptr_t)cl_refcntmap)>> MCLSHIFT)
+value|(((uintptr_t)(cl) - (uintptr_t)mb_list_clust.ml_mapbase)>> MCLSHIFT)
 end_define
 
 begin_define
