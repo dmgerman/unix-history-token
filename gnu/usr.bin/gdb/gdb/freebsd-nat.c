@@ -319,35 +319,6 @@ operator|-
 literal|1
 operator|)
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"offset: %08x\n"
-argument_list|,
-name|offset
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"core_reg_sect: %08x\n"
-argument_list|,
-name|core_reg_sect
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"core_reg_size: %08x\n"
-argument_list|,
-name|core_reg_size
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"-reg_addr: %08x\n"
-argument_list|,
-operator|-
-name|reg_addr
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|regno
