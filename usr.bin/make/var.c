@@ -409,19 +409,8 @@ operator|*
 name|name
 operator|==
 literal|'.'
-operator|&&
-name|isupper
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|name
-index|[
-literal|1
-index|]
-argument_list|)
 condition|)
+block|{
 switch|switch
 condition|(
 name|name
@@ -552,6 +541,9 @@ operator|=
 name|TARGET
 expr_stmt|;
 break|break;
+default|default:
+break|break;
+block|}
 block|}
 comment|/*      * Note whether this is one of the specific variables we were told through      * the -E flag to use environment-variable-override for.      */
 if|if
