@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.6 (Berkeley) %G%"
+literal|"@(#)option.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,6 +195,56 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+comment|/* backward compatible processing for "+/search" */
+name|char
+modifier|*
+modifier|*
+name|a
+decl_stmt|;
+for|for
+control|(
+name|a
+operator|=
+name|argv
+init|;
+operator|*
+name|a
+condition|;
+operator|++
+name|a
+control|)
+if|if
+condition|(
+operator|(
+operator|*
+name|a
+operator|)
+index|[
+literal|0
+index|]
+operator|==
+literal|'+'
+operator|&&
+operator|(
+operator|*
+name|a
+operator|)
+index|[
+literal|1
+index|]
+operator|==
+literal|'/'
+condition|)
+operator|(
+operator|*
+name|a
+operator|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'-'
+expr_stmt|;
 name|optind
 operator|=
 literal|1
