@@ -155,11 +155,13 @@ directive|include
 file|<machine/clock.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__sparc64__
-end_ifdef
+operator|||
+name|__powerpc__
+end_if
 
 begin_include
 include|#
@@ -812,13 +814,8 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|__i386__
-operator|||
-name|__ia64__
-operator|||
-name|__amd64__
-operator|||
-name|__sparc64__
+operator|!
+name|__alpha__
 end_if
 
 begin_function_decl
@@ -7915,13 +7912,8 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|__i386__
-operator|||
-name|__ia64__
-operator|||
-name|__amd64__
-operator|||
-name|__sparc64__
+operator|!
+name|__alpha__
 name|int
 name|unit
 decl_stmt|;
@@ -7991,7 +7983,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __i386__ || __ia64__ || __amd64__ || __sparc64__ */
+comment|/* !__alpha__ */
 if|#
 directive|if
 name|__alpha__
@@ -8021,13 +8013,8 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|__i386__
-operator|||
-name|__ia64__
-operator|||
-name|__amd64__
-operator|||
-name|__sparc64__
+operator|!
+name|__alpha__
 name|int
 name|unit
 decl_stmt|;
@@ -8075,7 +8062,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __i386__ || __ia64__ || __amd64__ || __sparc64__ */
+comment|/* !__alpha__ */
 if|#
 directive|if
 name|__alpha__
@@ -8108,13 +8095,8 @@ return|return;
 comment|/* shouldn't happen */
 if|#
 directive|if
-name|__i386__
-operator|||
-name|__ia64__
-operator|||
-name|__amd64__
-operator|||
-name|__sparc64__
+operator|!
+name|__alpha__
 if|#
 directive|if
 literal|0
@@ -8140,7 +8122,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __i386__ || __ia64__ || __amd64__ || __sparc64__ */
+comment|/* !__alpha__ */
 if|#
 directive|if
 name|__alpha__
@@ -15471,13 +15453,8 @@ end_function
 begin_if
 if|#
 directive|if
-name|__i386__
-operator|||
-name|__ia64__
-operator|||
-name|__amd64__
-operator|||
-name|__sparc64__
+operator|!
+name|__alpha__
 end_if
 
 begin_function
@@ -15747,7 +15724,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ || __ia64__ || __amd64__ || __sparc64__ */
+comment|/* !__alpha__ */
 end_comment
 
 begin_function

@@ -46,6 +46,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_ofwfb.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -862,11 +879,19 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DEV_CREATOR
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SC_OFWFB
+argument_list|)
+end_if
 
 begin_function
 specifier|static

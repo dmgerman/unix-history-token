@@ -71,11 +71,13 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__sparc64__
-end_ifdef
+operator|||
+name|__powerpc__
+end_if
 
 begin_include
 include|#
