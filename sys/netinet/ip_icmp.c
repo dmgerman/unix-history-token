@@ -3018,7 +3018,7 @@ name|ip
 operator|->
 name|ip_ttl
 operator|=
-name|MAXTTL
+name|ip_defttl
 expr_stmt|;
 if|if
 condition|(
