@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.25 (Berkeley) %G%"
+literal|"@(#)table.c	1.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,6 +337,46 @@ operator||
 name|RESCC
 block|,
 literal|"	ZA\n"
+block|,
+name|SCONV
+block|,
+name|FORARG
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TWORD
+block|,
+name|SANY
+block|,
+name|TWORD
+block|,
+literal|0
+block|,
+name|RNULL
+block|,
+literal|"	pushl	AL\n"
+block|,
+name|SCONV
+block|,
+name|FORARG
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TANY
+block|,
+name|SANY
+block|,
+name|TANY
+block|,
+literal|0
+block|,
+name|RNULL
+block|,
+literal|"	ZV\n"
 block|,
 name|INIT
 block|,
@@ -1930,71 +1970,13 @@ name|TANY
 block|,
 name|SANY
 block|,
-name|TCHAR
-operator||
-name|TSHORT
-block|,
-literal|0
-block|,
-name|RNULL
-block|,
-literal|"	cvtZRl	AR,-(sp)\n"
-block|,
-name|OPLTYPE
-block|,
-name|FORARG
-block|,
-name|SANY
-block|,
 name|TANY
 block|,
-name|SANY
-block|,
-name|TUCHAR
-operator||
-name|TUSHORT
-block|,
 literal|0
 block|,
 name|RNULL
 block|,
-literal|"	movzZRl	AR,-(sp)\n"
-block|,
-name|OPLTYPE
-block|,
-name|FORARG
-block|,
-name|SANY
-block|,
-name|TANY
-block|,
-name|SANY
-block|,
-name|TDOUBLE
-block|,
-literal|0
-block|,
-name|RNULL
-block|,
-literal|"	movd	AR,-(sp)\n"
-block|,
-name|OPLTYPE
-block|,
-name|FORARG
-block|,
-name|SANY
-block|,
-name|TANY
-block|,
-name|SANY
-block|,
-name|TFLOAT
-block|,
-literal|0
-block|,
-name|RNULL
-block|,
-literal|"	cvtfd	AR,-(sp)\n"
+literal|"	ZV\n"
 block|,
 if|#
 directive|if
