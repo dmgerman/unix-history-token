@@ -4944,6 +4944,8 @@ name|pm_pteobj
 argument_list|,
 name|ptepindex
 argument_list|,
+name|VM_ALLOC_WIRED
+operator||
 name|VM_ALLOC_ZERO
 operator||
 name|VM_ALLOC_RETRY
@@ -4963,24 +4965,6 @@ operator|,
 name|m
 operator|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|wire_count
-operator|==
-literal|0
-condition|)
-name|cnt
-operator|.
-name|v_wire_count
-operator|++
-expr_stmt|;
-name|m
-operator|->
-name|wire_count
-operator|++
 expr_stmt|;
 comment|/* 	 * Increment the hold count for the page table page 	 * (denoting a new mapping.) 	 */
 name|m
