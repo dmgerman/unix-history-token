@@ -740,19 +740,6 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-specifier|static
-name|void
-name|spec_getpages_iodone
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Open a special file.  */
 end_comment
@@ -3119,33 +3106,6 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|spec_getpages_iodone
-parameter_list|(
-name|bp
-parameter_list|)
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-block|{
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_DONE
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|int
 name|spec_getpages
 parameter_list|(
@@ -3332,7 +3292,7 @@ name|bp
 operator|->
 name|b_iodone
 operator|=
-name|spec_getpages_iodone
+name|bdone
 expr_stmt|;
 comment|/* B_PHYS is not set, but it is nice to fill this in. */
 name|KASSERT
@@ -3462,28 +3422,13 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* We definitely need to be at splbio here. */
-while|while
-condition|(
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_DONE
-operator|)
-operator|==
-literal|0
-condition|)
-name|tsleep
+name|bwait
 argument_list|(
 name|bp
 argument_list|,
 name|PVM
 argument_list|,
 literal|"spread"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|splx
