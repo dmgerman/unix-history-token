@@ -2768,9 +2768,12 @@ operator||
 name|PG_V
 argument_list|)
 expr_stmt|;
-name|invltlb
-argument_list|()
+name|pmap_invalidate_all
+argument_list|(
+name|kernel_pmap
+argument_list|)
 expr_stmt|;
+comment|/* XXX Bandaid */
 block|}
 return|return
 name|APTmap
@@ -9921,9 +9924,12 @@ name|PG_RW
 operator||
 name|PG_V
 expr_stmt|;
-name|invltlb
-argument_list|()
+name|pmap_invalidate_all
+argument_list|(
+name|kernel_pmap
+argument_list|)
 expr_stmt|;
+comment|/* XXX Bandaid */
 block|}
 name|src_pte
 operator|=
