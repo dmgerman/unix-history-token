@@ -27,11 +27,19 @@ begin_comment
 comment|/* A generic radio capture format is desirable. There is one for  * Linux, but it is neither rigidly defined (there were not even  * units given for some fields) nor easily extensible.  *  * I suggest the following extensible radio capture format. It is  * based on a bitmap indicating which fields are present.  *  * I am trying to describe precisely what the application programmer  * should expect in the following, and for that reason I tell the  * units and origin of each measurement (where it applies), or else I  * use sufficiently weaselly language ("is a monotonically nondecreasing  * function of...") that I cannot set false expectations for lawyerly  * readers.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__KERNEL__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+end_if
 
 begin_ifndef
 ifndef|#
@@ -61,7 +69,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* defined(__KERNEL__) || defined(_KERNEL) */
 end_comment
 
 begin_comment
