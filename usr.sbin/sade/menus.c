@@ -8381,7 +8381,7 @@ name|configRouter
 block|,
 name|NULL
 block|,
-literal|"router_enable"
+literal|"router_enable=YES"
 block|}
 block|,
 block|{
