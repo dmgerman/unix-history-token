@@ -975,7 +975,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pause
+name|ia32_pause
 parameter_list|(
 name|void
 parameter_list|)
@@ -1802,7 +1802,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pause
+name|ia32_pause
 parameter_list|(
 name|void
 parameter_list|)

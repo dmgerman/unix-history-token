@@ -2310,7 +2310,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__i386__
-name|pause
+name|ia32_pause
 argument_list|()
 expr_stmt|;
 endif|#
@@ -2425,7 +2425,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__i386__
-name|pause
+name|ia32_pause
 argument_list|()
 expr_stmt|;
 endif|#
@@ -2488,7 +2488,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__i386__
-name|pause
+name|ia32_pause
 argument_list|()
 expr_stmt|;
 endif|#
@@ -2865,7 +2865,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|__i386__
-name|pause
+name|ia32_pause
 argument_list|()
 expr_stmt|;
 endif|#
@@ -2919,7 +2919,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__i386__
-name|pause
+name|ia32_pause
 argument_list|()
 expr_stmt|;
 endif|#
