@@ -5952,6 +5952,8 @@ parameter_list|)
 block|{
 name|usbd_status
 name|err
+init|=
+name|USBD_NORMAL_COMPLETION
 decl_stmt|;
 name|int
 name|i
