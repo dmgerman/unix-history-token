@@ -208,6 +208,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/sound/midi/miditypes.h>
 end_include
 

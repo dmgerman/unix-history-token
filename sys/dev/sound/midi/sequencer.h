@@ -167,23 +167,6 @@ name|seqdev_info
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-name|seq_callback_t
-function_decl|)
-parameter_list|(
-name|seqdev_info
-modifier|*
-name|sd
-parameter_list|,
-name|int
-name|reason
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_comment
 comment|/*  * The order of mutex lock (from the first to the last)  *  * 1. sequencer flags, queues, timer and device list  * 2. midi synth voice and channel  * 3. midi synth status  * 4. generic midi flags and queues  * 5. midi device  */
 end_comment
@@ -230,7 +213,7 @@ name|d_poll_t
 modifier|*
 name|poll
 decl_stmt|;
-name|seq_callback_t
+name|midi_callback_t
 modifier|*
 name|callback
 decl_stmt|;
@@ -466,7 +449,7 @@ begin_define
 define|#
 directive|define
 name|SEQ_BUFFSIZE
-value|(4 * 1024)
+value|(1024)
 end_define
 
 begin_comment

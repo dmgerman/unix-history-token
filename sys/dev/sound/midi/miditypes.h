@@ -18,7 +18,7 @@ function_decl|(
 name|midi_callback_t
 function_decl|)
 parameter_list|(
-name|mididev_info
+name|void
 modifier|*
 name|d
 parameter_list|,

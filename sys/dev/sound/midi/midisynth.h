@@ -426,6 +426,10 @@ name|int
 name|len
 parameter_list|,
 name|int
+modifier|*
+name|lenr
+parameter_list|,
+name|int
 name|nonblock
 parameter_list|)
 function_decl|;
@@ -448,6 +452,10 @@ name|buf
 parameter_list|,
 name|int
 name|len
+parameter_list|,
+name|int
+modifier|*
+name|lenw
 parameter_list|,
 name|int
 name|nonblock
