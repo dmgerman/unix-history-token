@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)in_pcb.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)in_pcb.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -69,6 +69,64 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sotorawcb
+end_ifdef
+
+begin_comment
+comment|/*  * Common structure pcb for raw internet protocol access.  * Here are internet specific extensions to the raw control block,  * and space is allocated to the necessary sockaddrs.  */
+end_comment
+
+begin_struct
+struct|struct
+name|raw_inpcb
+block|{
+name|struct
+name|rawcb
+name|rinp_rcb
+decl_stmt|;
+comment|/* common control block prefix */
+name|struct
+name|mbuf
+modifier|*
+name|rinp_options
+decl_stmt|;
+comment|/* IP options */
+name|int
+name|rinp_flags
+decl_stmt|;
+comment|/* flags, e.g. raw sockopts */
+define|#
+directive|define
+name|RINPF_HDRINCL
+value|0x1
+comment|/* user supplies entire IP header */
+name|struct
+name|sockaddr_in
+name|rinp_faddr
+decl_stmt|;
+comment|/* foreign address */
+name|struct
+name|sockaddr_in
+name|rinp_laddr
+decl_stmt|;
+comment|/* local address */
+name|struct
+name|route
+name|rinp_route
+decl_stmt|;
+comment|/* placeholder for routing entry */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -91,6 +149,16 @@ parameter_list|(
 name|so
 parameter_list|)
 value|((struct inpcb *)(so)->so_pcb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sotorawinpcb
+parameter_list|(
+name|so
+parameter_list|)
+value|((struct raw_inpcb *)(so)->so_pcb)
 end_define
 
 begin_ifdef

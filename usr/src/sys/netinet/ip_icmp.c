@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_icmp.c	7.8.1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_icmp.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -257,7 +257,7 @@ name|IP_DF
 operator|)
 condition|)
 goto|goto
-name|free
+name|freeit
 goto|;
 if|if
 condition|(
@@ -319,7 +319,7 @@ name|icps_oldicmp
 operator|++
 expr_stmt|;
 goto|goto
-name|free
+name|freeit
 goto|;
 block|}
 comment|/* 	 * First, formulate icmp message 	 */
@@ -339,7 +339,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|free
+name|freeit
 goto|;
 name|icmplen
 operator|=
@@ -629,7 +629,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|free
+name|freeit
 label|:
 name|m_freem
 argument_list|(
@@ -847,7 +847,7 @@ name|icps_tooshort
 operator|++
 expr_stmt|;
 goto|goto
-name|free
+name|freeit
 goto|;
 block|}
 name|i
@@ -940,7 +940,7 @@ name|icps_checksum
 operator|++
 expr_stmt|;
 goto|goto
-name|free
+name|freeit
 goto|;
 block|}
 name|m
@@ -1122,7 +1122,7 @@ name|icps_badlen
 operator|++
 expr_stmt|;
 goto|goto
-name|free
+name|freeit
 goto|;
 block|}
 ifdef|#
@@ -1598,6 +1598,14 @@ operator|*
 operator|)
 operator|&
 name|icmpgw
+argument_list|,
+operator|(
+expr|struct
+name|rtentry
+operator|*
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|icmpsrc
@@ -1672,6 +1680,14 @@ operator|*
 operator|)
 operator|&
 name|icmpgw
+argument_list|,
+operator|(
+expr|struct
+name|rtentry
+operator|*
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|pfctlinput
@@ -1748,7 +1764,7 @@ name|icmpdst
 argument_list|)
 expr_stmt|;
 return|return;
-name|free
+name|freeit
 label|:
 name|m_freem
 argument_list|(
@@ -1997,8 +2013,6 @@ name|int
 name|opt
 decl_stmt|,
 name|cnt
-decl_stmt|,
-name|off
 decl_stmt|;
 name|u_int
 name|len
@@ -2312,6 +2326,10 @@ operator|+
 literal|1
 argument_list|)
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|m
 operator|->
 name|m_len
@@ -2320,6 +2338,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

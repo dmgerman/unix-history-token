@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)in.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)in.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -97,6 +97,28 @@ end_define
 
 begin_comment
 comment|/* xns idp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_TP
+value|29
+end_define
+
+begin_comment
+comment|/* tp-4 w/ class negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_EON
+value|80
+end_define
+
+begin_comment
+comment|/* ISO cnlp */
 end_comment
 
 begin_define
@@ -385,7 +407,10 @@ begin_struct
 struct|struct
 name|sockaddr_in
 block|{
-name|short
+name|u_char
+name|sin_len
+decl_stmt|;
+name|u_char
 name|sin_family
 decl_stmt|;
 name|u_short
@@ -414,6 +439,17 @@ define|#
 directive|define
 name|IP_OPTIONS
 value|1
+end_define
+
+begin_comment
+comment|/* set/get IP per-packet options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_HDRINCL
+value|2
 end_define
 
 begin_comment
