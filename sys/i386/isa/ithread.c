@@ -272,6 +272,10 @@ comment|/* one more global interrupt */
 comment|/* 	 * If this interrupt is marked as being a source of entropy, use 	 * the current timestamp to feed entropy to the PRNG. 	 */
 if|if
 condition|(
+name|harvest
+operator|.
+name|interrupt
+operator|&&
 name|ir
 operator|!=
 name|NULL
