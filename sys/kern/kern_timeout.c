@@ -668,7 +668,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Expensive timeout(9) function: %p(%p) %d.%09d\n"
+literal|"Expensive timeout(9) function: %p(%p) %d.%09ld\n"
 argument_list|,
 name|c_func
 argument_list|,
