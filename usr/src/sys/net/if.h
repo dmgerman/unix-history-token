@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -36,6 +36,10 @@ name|short
 name|if_timer
 decl_stmt|;
 comment|/* time 'til if_watchdog called */
+name|int
+name|if_metric
+decl_stmt|;
+comment|/* routing metric (external only) */
 name|struct
 name|ifaddr
 modifier|*
@@ -173,8 +177,15 @@ begin_comment
 comment|/* turn on debugging */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_LOOPBACK
+value|0x8
+end_define
+
 begin_comment
-comment|/* was	IFF_ROUTE	0x8		/* routing entry installed */
+comment|/* is a loopback net */
 end_comment
 
 begin_define
@@ -426,6 +437,9 @@ decl_stmt|;
 name|short
 name|ifru_flags
 decl_stmt|;
+name|int
+name|ifru_metric
+decl_stmt|;
 name|caddr_t
 name|ifru_data
 decl_stmt|;
@@ -452,6 +466,11 @@ directive|define
 name|ifr_flags
 value|ifr_ifru.ifru_flags
 comment|/* flags */
+define|#
+directive|define
+name|ifr_metric
+value|ifr_ifru.ifru_metric
+comment|/* metric */
 define|#
 directive|define
 name|ifr_data
