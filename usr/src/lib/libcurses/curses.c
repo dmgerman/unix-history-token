@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Define global variables  *  * @(#)curses.c	1.3 (Berkeley) %G%  */
+comment|/*  * Define global variables  *  * @(#)curses.c	1.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -159,6 +159,8 @@ decl_stmt|,
 name|XN
 decl_stmt|,
 name|XT
+decl_stmt|,
+name|XS
 decl_stmt|,
 name|XX
 decl_stmt|;

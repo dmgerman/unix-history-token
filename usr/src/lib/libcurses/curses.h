@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* %G% (Berkeley) @(#)curses.h	1.15 */
+comment|/* %G% (Berkeley) @(#)curses.h	1.16 */
 end_comment
 
 begin_ifndef
@@ -179,6 +179,8 @@ decl_stmt|,
 name|XN
 decl_stmt|,
 name|XT
+decl_stmt|,
+name|XS
 decl_stmt|,
 name|XX
 decl_stmt|;
