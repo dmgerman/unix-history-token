@@ -940,7 +940,7 @@ name|error
 decl_stmt|,
 name|level
 decl_stmt|;
-comment|/* 		 * If the process is in jail, return the maximum of the 		 * global and local levels; otherwise, return the global 		 * level. 		 */
+comment|/* 	 * If the process is in jail, return the maximum of the global and 	 * local levels; otherwise, return the global level. 	 */
 if|if
 condition|(
 name|req
@@ -1003,7 +1003,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Permit update only if the new securelevel exceeds the 		 * global level, and local level if any. 		 */
+comment|/* 	 * Permit update only if the new securelevel exceeds the 	 * global level, and local level if any. 	 */
 if|if
 condition|(
 name|req
