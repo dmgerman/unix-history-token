@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.39 2003/05/04 05:22:46 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.41 2003/05/23 00:57:34 grog Exp $  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -318,13 +318,20 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* delimit */
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ioctl_reply
 operator|->
 name|msg
 argument_list|,
 name|text
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ioctl_reply
+operator|->
+name|msg
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ioctl_reply
@@ -2316,7 +2323,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the named drive in vinum_conf.drive, return a pointer  * return the index in vinum_conf.drive.  * Don't mark the drive as allocated (XXX SMP)  * If create != 0, create an entry if it doesn't exist  */
+comment|/*  * Find the named drive in vinum_conf.drive,  * return the index in vinum_conf.drive.  * Don't mark the drive as allocated (XXX SMP)  * If create != 0, create an entry if it doesn't exist  */
 end_comment
 
 begin_comment
@@ -2454,19 +2461,17 @@ name|name
 operator|!=
 name|NULL
 condition|)
-name|bcopy
+name|strlcpy
 argument_list|(
-name|name
-argument_list|,
-comment|/* put in its name */
 name|drive
 operator|->
 name|label
 operator|.
 name|name
 argument_list|,
-name|min
-argument_list|(
+comment|/* put in its name */
+name|name
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|drive
@@ -2474,12 +2479,6 @@ operator|->
 name|label
 operator|.
 name|name
-argument_list|)
-argument_list|,
-name|strlen
-argument_list|(
-name|name
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3917,21 +3916,6 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isstriped
-argument_list|(
-name|plex
-argument_list|)
-condition|)
-name|mtx_destroy
-argument_list|(
-operator|&
-name|plex
-operator|->
-name|lockmtx
-argument_list|)
-expr_stmt|;
 name|destroy_dev
 argument_list|(
 name|plex
@@ -4913,7 +4897,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle a subdisk definition.  We store the information in the global variable  * sd, so we don't need to allocate.  *  * If we find an error, print a message and return  */
+comment|/*  * Handle a subdisk definition.  We store the  * information in the global variable sd, so we  * don't need to allocate.  *  * On error throw a message back to the caller.  */
 end_comment
 
 begin_function
@@ -5659,6 +5643,25 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|DRIVE
+index|[
+name|sd
+operator|->
+name|driveno
+index|]
+operator|.
+name|state
+operator|!=
+name|drive_up
+condition|)
+name|sd
+operator|->
+name|state
+operator|=
+name|sd_crashed
+expr_stmt|;
 comment|/*      * This is tacky.  If something goes wrong      * with the checks, we may end up losing drive      * space.  FIXME.      */
 if|if
 condition|(
@@ -5754,12 +5757,13 @@ operator|>=
 literal|0
 condition|)
 comment|/* we have a plex */
-name|strcpy
+name|strlcpy
 argument_list|(
 name|sd
 operator|->
 name|name
 argument_list|,
+comment|/* take it from there */
 name|PLEX
 index|[
 name|sd
@@ -5768,9 +5772,15 @@ name|plexno
 index|]
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sd
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* take it from there */
 else|else
 comment|/* no way */
 name|throw_rude_remark
@@ -5790,13 +5800,20 @@ name|sdindex
 argument_list|)
 expr_stmt|;
 comment|/* form the suffix */
-name|strcat
+name|strlcat
 argument_list|(
 name|sd
 operator|->
 name|name
 argument_list|,
 name|sdsuffix
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sd
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* and add it to the name */
@@ -6668,7 +6685,7 @@ operator|>=
 literal|0
 condition|)
 comment|/* we have a volume */
-name|strcpy
+name|strlcpy
 argument_list|(
 name|plex
 operator|->
@@ -6683,6 +6700,13 @@ name|volno
 index|]
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|plex
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -6704,13 +6728,20 @@ name|pindex
 argument_list|)
 expr_stmt|;
 comment|/* form the suffix */
-name|strcat
+name|strlcat
 argument_list|(
 name|plex
 operator|->
 name|name
 argument_list|,
 name|plexsuffix
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|plex
+operator|->
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* and add it to the name */
@@ -6771,22 +6802,19 @@ name|rangelock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
 name|plex
 operator|->
 name|lockmtx
-argument_list|,
-name|plex
-operator|->
-name|name
-argument_list|,
-literal|"plex"
-argument_list|,
-name|MTX_DEF
-argument_list|)
+operator|=
+operator|&
+name|plexmutex
+index|[
+name|plexno
+operator|%
+name|PLEXMUTEXES
+index|]
 expr_stmt|;
+comment|/* use this mutex for locking */
 block|}
 comment|/* Note the last plex we configured */
 name|current_plex
@@ -9585,9 +9613,6 @@ name|update_volume_config
 parameter_list|(
 name|int
 name|volno
-parameter_list|,
-name|int
-name|diskconfig
 parameter_list|)
 block|{
 name|struct
@@ -9830,8 +9855,6 @@ expr_stmt|;
 name|update_volume_config
 argument_list|(
 name|volno
-argument_list|,
-name|diskconfig
 argument_list|)
 expr_stmt|;
 block|}
