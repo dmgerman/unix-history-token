@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rindex.c	5.4 (Berkeley) %G%"
+literal|"@(#)rindex.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stddef.h>
 end_include
 
 begin_function
