@@ -1782,7 +1782,7 @@ name|NAMEIROW
 argument_list|,
 name|NAMEICOL
 argument_list|,
-literal|"Namei         Sys-cache     Proc-cache"
+literal|"Namei         Name-cache    Proc-cache"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -2397,6 +2397,10 @@ operator|+
 name|nchtotal
 operator|.
 name|ncs_long
+operator|+
+name|nchtotal
+operator|.
+name|ncs_neghits
 expr_stmt|;
 if|if
 condition|(
@@ -3556,9 +3560,15 @@ argument_list|)
 expr_stmt|;
 name|putint
 argument_list|(
+operator|(
 name|nchtotal
 operator|.
 name|ncs_goodhits
+operator|+
+name|nchtotal
+operator|.
+name|ncs_neghits
+operator|)
 argument_list|,
 name|NAMEIROW
 operator|+
@@ -3580,9 +3590,15 @@ parameter_list|)
 value|((x) ? (x) : 1)
 name|putfloat
 argument_list|(
+operator|(
 name|nchtotal
 operator|.
 name|ncs_goodhits
+operator|+
+name|nchtotal
+operator|.
+name|ncs_neghits
+operator|)
 operator|*
 literal|100.0
 operator|/
