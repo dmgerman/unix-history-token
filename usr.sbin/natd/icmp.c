@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software freely.  *  * Ari Suutari<suutari@iki.fi>  *  * $Id: icmp.c,v 1.3 1997/12/27 19:31:11 alex Exp $  */
 end_comment
 
 begin_include
