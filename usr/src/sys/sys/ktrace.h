@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ktrace.h	1.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
 comment|/*  * operations to ktrace system call  (op& 0x3)  */
 end_comment
 
@@ -36,6 +40,10 @@ begin_comment
 comment|/* stop all tracing to file */
 end_comment
 
+begin_comment
+comment|/*  * flags to OR in with operation  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -55,14 +63,14 @@ begin_struct
 struct|struct
 name|ktr_header
 block|{
+name|int
+name|ktr_len
+decl_stmt|;
+comment|/* length of buf */
 name|short
 name|ktr_type
 decl_stmt|;
 comment|/* trace record type */
-name|short
-name|ktr_len
-decl_stmt|;
-comment|/* length of buf */
 name|pid_t
 name|ktr_pid
 decl_stmt|;
@@ -105,7 +113,7 @@ value|((p)->p_traceflag& (1<<(type)))
 end_define
 
 begin_comment
-comment|/*  * ktrace record types  */
+comment|/*  * ktrace record types - add new ones here  */
 end_comment
 
 begin_comment
@@ -183,6 +191,33 @@ comment|/* record contains pathname */
 end_comment
 
 begin_comment
+comment|/*  * KTR_GENIO - trace generic process i/o  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_GENIO
+value|0x4
+end_define
+
+begin_struct
+struct|struct
+name|ktr_genio
+block|{
+name|int
+name|ktr_fd
+decl_stmt|;
+name|enum
+name|uio_rw
+name|ktr_rw
+decl_stmt|;
+comment|/* 	 * followed by data successfully read/written 	 */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * kernel trace facilities  */
 end_comment
 
@@ -205,6 +240,13 @@ define|#
 directive|define
 name|KTRFAC_NAMEI
 value|(1<<KTR_NAMEI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_GENIO
+value|(1<<KTR_GENIO)
 end_define
 
 end_unit
