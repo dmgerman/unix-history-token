@@ -10,19 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ip6fw.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ipsec.h"
 end_include
 
 begin_include

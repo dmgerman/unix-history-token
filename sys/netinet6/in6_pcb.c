@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ipsec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_key.h"
 end_include
 
