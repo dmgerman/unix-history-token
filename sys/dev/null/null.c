@@ -320,7 +320,7 @@ if|if
 condition|(
 name|cmd
 operator|!=
-name|DIOCGKERNELDUMP
+name|DIOCSKERNELDUMP
 condition|)
 return|return
 operator|(

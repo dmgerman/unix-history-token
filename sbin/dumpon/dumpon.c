@@ -280,7 +280,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|DIOCGKERNELDUMP
+name|DIOCSKERNELDUMP
 argument_list|,
 operator|&
 name|u
@@ -296,7 +296,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|DIOCGKERNELDUMP
+name|DIOCSKERNELDUMP
 argument_list|,
 operator|&
 name|u
@@ -357,7 +357,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|DIOCGKERNELDUMP
+name|DIOCSKERNELDUMP
 argument_list|,
 operator|&
 name|u
@@ -387,7 +387,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ioctl(DIOCGKERNELDUMP)"
+literal|"ioctl(DIOCSKERNELDUMP)"
 argument_list|)
 expr_stmt|;
 name|exit

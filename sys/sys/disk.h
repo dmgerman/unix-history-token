@@ -246,7 +246,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DIOCGKERNELDUMP
+name|DIOCSKERNELDUMP
 value|_IOW('d', 133, u_int)
 end_define
 
