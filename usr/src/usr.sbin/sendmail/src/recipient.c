@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.51
+literal|3.52
 operator|%
 name|G
 operator|%
@@ -95,6 +95,10 @@ name|bool
 name|selfref
 decl_stmt|;
 comment|/* set if this list includes ctladdr */
+name|char
+name|delimiter
+decl_stmt|;
+comment|/* the address delimiter */
 name|ADDRESS
 modifier|*
 name|sibl
@@ -188,6 +192,30 @@ operator|&=
 operator|~
 name|EF_OLDSTYLE
 expr_stmt|;
+name|delimiter
+operator|=
+literal|' '
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|EF_OLDSTYLE
+argument_list|,
+name|CurEnv
+operator|->
+name|e_flags
+argument_list|)
+operator|||
+name|ctladdr
+operator|!=
+name|NULL
+condition|)
+name|delimiter
+operator|=
+literal|','
+expr_stmt|;
 name|firstone
 operator|=
 name|TRUE
@@ -254,6 +282,8 @@ operator|)
 name|NULL
 argument_list|,
 literal|1
+argument_list|,
+name|delimiter
 argument_list|)
 expr_stmt|;
 name|p

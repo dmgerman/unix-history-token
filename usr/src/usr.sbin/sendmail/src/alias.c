@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.44
+literal|3.45
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.44
+literal|3.45
 operator|%
 name|G
 operator|%
@@ -1105,12 +1105,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-operator|*
-name|p
-operator|++
-operator|=
-literal|'\0'
-expr_stmt|;
 if|if
 condition|(
 name|parseaddr
@@ -1121,17 +1115,13 @@ operator|&
 name|al
 argument_list|,
 literal|1
+argument_list|,
+literal|':'
 argument_list|)
 operator|==
 name|NULL
 condition|)
 block|{
-operator|*
-operator|--
-name|p
-operator|=
-literal|':'
-expr_stmt|;
 name|syserr
 argument_list|(
 literal|"illegal alias name"
@@ -1358,6 +1348,8 @@ name|bl
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|','
 argument_list|)
 expr_stmt|;
 name|p

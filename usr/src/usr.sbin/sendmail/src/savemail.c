@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.59
+literal|3.60
 operator|%
 name|G
 operator|%
@@ -1051,6 +1051,8 @@ name|e_from
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|'\0'
 argument_list|)
 operator|==
 name|NULL

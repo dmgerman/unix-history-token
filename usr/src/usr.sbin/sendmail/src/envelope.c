@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|3.11
+literal|3.12
 operator|%
 name|G
 operator|%
@@ -2222,6 +2222,8 @@ operator|->
 name|e_from
 argument_list|,
 literal|1
+argument_list|,
+literal|'\0'
 argument_list|)
 operator|==
 name|NULL
@@ -2247,6 +2249,8 @@ operator|->
 name|e_from
 argument_list|,
 literal|1
+argument_list|,
+literal|'\0'
 argument_list|)
 expr_stmt|;
 block|}
