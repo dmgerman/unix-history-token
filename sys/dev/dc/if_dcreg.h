@@ -2558,12 +2558,35 @@ name|DC_MAXFRAGS
 value|16
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DC_RX_LIST_CNT
+value|192
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|DC_RX_LIST_CNT
 value|64
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3763,6 +3786,15 @@ name|struct
 name|mtx
 name|dc_mtx
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|int
+name|rxcycles
+decl_stmt|;
+comment|/* ... when polling */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

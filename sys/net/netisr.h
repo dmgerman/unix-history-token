@@ -26,6 +26,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NETISR_POLL
+value|0
+end_define
+
+begin_comment
+comment|/* polling callback, must be first */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NETISR_IP
 value|2
 end_define

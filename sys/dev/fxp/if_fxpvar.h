@@ -44,12 +44,35 @@ begin_comment
 comment|/*  * Number of receive frame area buffers. These are large so chose  * wisely.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FXP_NRFABUFS
+value|192
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|FXP_NRFABUFS
 value|64
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Maximum number of seconds that the receiver can be idle before we  * assume it's dead and attempt to reset it by reprogramming the  * multicast filter. This is part of a work-around for a bug in the  * NIC. See fxp_stats_update().  */

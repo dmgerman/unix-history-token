@@ -158,6 +158,51 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/netisr.h>
+end_include
+
+begin_comment
+comment|/* for NETISR_POLL */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ether_poll1
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|hardclock_device_poll
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEVICE_POLLING */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -337,6 +382,18 @@ expr_stmt|;
 name|cpu_initclocks
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|register_netisr
+argument_list|(
+name|NETISR_POLL
+argument_list|,
+name|ether_poll1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Compute profhz/stathz, and fix profhz if needed. 	 */
 name|i
 operator|=
@@ -596,6 +653,15 @@ expr_stmt|;
 name|tc_windup
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|hardclock_device_poll
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEVICE_POLLING */
 comment|/* 	 * Process callouts at a very low cpu priority, so we don't keep the 	 * relatively high clock interrupt priority any longer than necessary. 	 */
 name|mtx_lock_spin_flags
 argument_list|(
