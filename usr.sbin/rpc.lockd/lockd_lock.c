@@ -126,7 +126,7 @@ file|"lockd.h"
 end_include
 
 begin_comment
-comment|/* A set of utilities for managing file locking */
+comment|/*  * A set of utilities for managing file locking  *  * XXX: All locks are in a linked list, a better structure should be used  * to improve search/access effeciency.  */
 end_comment
 
 begin_expr_stmt
@@ -226,6 +226,10 @@ end_define
 
 begin_comment
 comment|/* lock is locked */
+end_comment
+
+begin_comment
+comment|/* XXX: Is this flag file specific or lock specific? */
 end_comment
 
 begin_define
@@ -347,6 +351,28 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|regions_overlap
+name|__P
+argument_list|(
+operator|(
+name|u_int64_t
+name|start1
+operator|,
+name|u_int64_t
+name|len1
+operator|,
+name|u_int64_t
+name|start2
+operator|,
+name|u_int64_t
+name|len2
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* list of hosts we monitor */
 end_comment
@@ -414,6 +440,130 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * regions_overlap(): This function examines the two provided regions for overlap.  * It is non-trivial because start+len *CAN* overflow a 64-bit unsigned integer  * and NFS semantics are unspecified on this account.  */
+end_comment
+
+begin_function
+name|int
+name|regions_overlap
+parameter_list|(
+name|start1
+parameter_list|,
+name|len1
+parameter_list|,
+name|start2
+parameter_list|,
+name|len2
+parameter_list|)
+name|u_int64_t
+name|start1
+decl_stmt|,
+name|len1
+decl_stmt|,
+name|start2
+decl_stmt|,
+name|len2
+decl_stmt|;
+block|{
+name|int
+name|result
+decl_stmt|;
+comment|/* XXX: Need to adjust checks to account for integer overflow */
+if|if
+condition|(
+name|len1
+operator|==
+literal|0
+operator|&&
+name|len2
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Regions *must* overlap if they both extend to the end */
+name|result
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|len1
+operator|==
+literal|0
+operator|&&
+name|start2
+operator|+
+name|len2
+operator|<
+name|start1
+condition|)
+block|{
+comment|/* Region 2 is completely to the left of Region 1 */
+name|result
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|start1
+operator|+
+name|len1
+operator|<
+name|start2
+operator|&&
+name|len2
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Region 1 is completely to the left of region 2 */
+name|result
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|start1
+operator|+
+name|len1
+operator|<=
+name|start2
+operator|||
+name|start2
+operator|+
+name|len2
+operator|<=
+name|start1
+condition|)
+block|{
+comment|/* 1 is completely left of 2 or 2 is completely left of 1 */
+name|result
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|result
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * testlock(): inform the caller if the requested lock would be granted or not  * returns NULL if lock would granted, or pointer to the current nlm4_holder  * otherwise.  */
 end_comment
 
@@ -425,12 +575,17 @@ name|testlock
 parameter_list|(
 name|lock
 parameter_list|,
+name|exclusive
+parameter_list|,
 name|flags
 parameter_list|)
 name|struct
 name|nlm4_lock
 modifier|*
 name|lock
+decl_stmt|;
+name|bool_t
+name|exclusive
 decl_stmt|;
 name|int
 name|flags
@@ -499,6 +654,7 @@ operator|!=
 name|LKST_LOCKED
 condition|)
 continue|continue;
+comment|/* 		 * XXX: Could we possibly have identical filehandles 		 * on different systems? 		 * ie. Do we need to check more than just the filehandle? 		 * ie. Could someone artificially create requests which are 		 * security violations? 		 */
 if|if
 condition|(
 name|memcmp
@@ -518,7 +674,105 @@ argument_list|)
 argument_list|)
 condition|)
 continue|continue;
-comment|/* got it ! */
+comment|/* File handles match, look for lock region overlap */
+if|if
+condition|(
+name|regions_overlap
+argument_list|(
+name|lock
+operator|->
+name|l_offset
+argument_list|,
+name|lock
+operator|->
+name|l_len
+argument_list|,
+name|fl
+operator|->
+name|client
+operator|.
+name|l_offset
+argument_list|,
+name|fl
+operator|->
+name|client
+operator|.
+name|l_len
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"Region overlap found %llu : %llu -- %llu : %llu\n"
+argument_list|,
+name|lock
+operator|->
+name|l_offset
+argument_list|,
+name|lock
+operator|->
+name|l_len
+argument_list|,
+name|fl
+operator|->
+name|client
+operator|.
+name|l_offset
+argument_list|,
+name|fl
+operator|->
+name|client
+operator|.
+name|l_len
+argument_list|)
+expr_stmt|;
+comment|/* Regions overlap. Now check for exclusivity. */
+if|if
+condition|(
+name|exclusive
+operator|||
+name|fl
+operator|->
+name|client
+operator|.
+name|exclusive
+condition|)
+block|{
+comment|/* Lock test must fail, regions are exclusive */
+break|break;
+block|}
+block|}
+comment|/* Continue looping through all locks */
+block|}
+name|sigunlock
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|fl
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"test for %s: no lock found"
+argument_list|,
+name|lock
+operator|->
+name|caller_name
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+else|else
+block|{
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -534,9 +788,6 @@ operator|->
 name|client_name
 argument_list|)
 expr_stmt|;
-name|sigunlock
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 operator|&
@@ -546,24 +797,6 @@ name|client
 operator|)
 return|;
 block|}
-comment|/* not found */
-name|sigunlock
-argument_list|()
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"test for %s: no lock found"
-argument_list|,
-name|lock
-operator|->
-name|caller_name
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
 block|}
 end_function
 
