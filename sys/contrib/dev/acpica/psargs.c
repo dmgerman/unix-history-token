@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 52 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -926,10 +926,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-operator|(
-name|ACPI_OPERAND_OBJECT
-operator|*
-operator|)
 name|MethodNode
 operator|->
 name|Object
@@ -942,10 +938,6 @@ operator|*
 name|ArgCount
 operator|=
 operator|(
-operator|(
-name|ACPI_OPERAND_OBJECT
-operator|*
-operator|)
 name|MethodNode
 operator|->
 name|Object

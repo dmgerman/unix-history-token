@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 55 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 56 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1325,7 +1325,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"RSDP located at %p, RSDT physical=%8.8lX%8.8lX \n"
+literal|"RSDP located at %p, RSDT physical=%8.8X%8.8X \n"
 operator|,
 name|AcpiGbl_RSDP
 operator|,

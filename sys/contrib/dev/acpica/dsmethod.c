@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -136,6 +136,10 @@ name|ACPI_DB_INFO
 operator|,
 literal|"**** Parsing [%4.4s] **** NamedObj=%p\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 operator|(
 operator|(
@@ -391,6 +395,10 @@ name|ACPI_DB_INFO
 operator|,
 literal|"**** [%4.4s] Parsed **** NamedObj=%p Op=%p\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 operator|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nswalk - Functions for walking the ACPI namespace  *              $Revision: 24 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nswalk - Functions for walking the ACPI namespace  *              $Revision: 26 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -46,13 +46,13 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiGetNextObject  *  * PARAMETERS:  Type                - Type of object to be searched for  *              Parent              - Parent object whose children we are  *                                      getting  *              LastChild           - Previous child that was found.  *                                    The NEXT child will be returned  *  * RETURN:      ACPI_NAMESPACE_NODE - Pointer to the NEXT child or NULL if  *                                      none is found.  *  * DESCRIPTION: Return the next peer object within the namespace.  If Handle  *              is valid, Scope is ignored.  Otherwise, the first object  *              within Scope is returned.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetNextNode  *  * PARAMETERS:  Type                - Type of node to be searched for  *              ParentNode          - Parent node whose children we are  *                                     getting  *              ChildNode           - Previous child that was found.  *                                    The NEXT child will be returned  *  * RETURN:      ACPI_NAMESPACE_NODE - Pointer to the NEXT child or NULL if  *                                    none is found.  *  * DESCRIPTION: Return the next peer node within the namespace.  If Handle  *              is valid, Scope is ignored.  Otherwise, the first node  *              within Scope is returned.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|AcpiNsGetNextObject
+name|AcpiNsGetNextNode
 parameter_list|(
 name|ACPI_OBJECT_TYPE8
 name|Type
@@ -99,10 +99,10 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Start search at the NEXT object */
+comment|/* Start search at the NEXT node */
 name|NextNode
 operator|=
-name|AcpiNsGetNextValidObject
+name|AcpiNsGetNextValidNode
 argument_list|(
 name|ChildNode
 argument_list|)
@@ -123,7 +123,7 @@ name|NextNode
 operator|)
 return|;
 block|}
-comment|/* Must search for the object -- but within this scope only */
+comment|/* Must search for the node -- but within this scope only */
 while|while
 condition|(
 name|NextNode
@@ -145,10 +145,10 @@ name|NextNode
 operator|)
 return|;
 block|}
-comment|/* Otherwise, move on to the next object */
+comment|/* Otherwise, move on to the next node */
 name|NextNode
 operator|=
-name|AcpiNsGetNextValidObject
+name|AcpiNsGetNextValidNode
 argument_list|(
 name|NextNode
 argument_list|)
@@ -164,7 +164,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsWalkNamespace  *  * PARAMETERS:  Type                - ACPI_OBJECT_TYPE to search for  *              StartNode           - Handle in namespace where search begins  *              MaxDepth            - Depth to which search is to reach  *              UnlockBeforeCallback- Whether to unlock the NS before invoking  *                                    the callback routine  *              UserFunction        - Called when an object of "Type" is found  *              Context             - Passed to user function  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The UserFunction is called whenever an object that matches  *              the type parameter is found.  If the user function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              The point of this procedure is to provide a generic namespace  *              walk routine that can be called from multiple places to  *              provide multiple services;  the User Function can be tailored  *              to each task, whether it is a print function, a compare  *              function, etc.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsWalkNamespace  *  * PARAMETERS:  Type                - ACPI_OBJECT_TYPE to search for  *              StartNode           - Handle in namespace where search begins  *              MaxDepth            - Depth to which search is to reach  *              UnlockBeforeCallback- Whether to unlock the NS before invoking  *                                    the callback routine  *              UserFunction        - Called when an object of "Type" is found  *              Context             - Passed to user function  *              ReturnValue         - from the UserFunction if terminated early.  *                                    Otherwise, returns NULL.  * RETURNS:     Status  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the node specified by StartHandle.  *              The UserFunction is called whenever a node that matches  *              the type parameter is found.  If the user function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              The point of this procedure is to provide a generic namespace  *              walk routine that can be called from multiple places to  *              provide multiple services;  the User Function can be tailored  *              to each task, whether it is a print function, a compare  *              function, etc.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -231,7 +231,7 @@ operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
 block|}
-comment|/* Null child means "get first object" */
+comment|/* Null child means "get first node" */
 name|ParentNode
 operator|=
 name|StartNode
@@ -248,7 +248,7 @@ name|Level
 operator|=
 literal|1
 expr_stmt|;
-comment|/*      * Traverse the tree of objects until we bubble back up to where we      * started. When Level is zero, the loop is done because we have      * bubbled up to (and passed) the original parent handle (StartEntry)      */
+comment|/*      * Traverse the tree of nodes until we bubble back up to where we      * started. When Level is zero, the loop is done because we have      * bubbled up to (and passed) the original parent handle (StartEntry)      */
 while|while
 condition|(
 name|Level
@@ -256,14 +256,14 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*          * Get the next typed object in this scope.  Null returned          * if not found          */
+comment|/* Get the next node in this scope.  Null if not found */
 name|Status
 operator|=
 name|AE_OK
 expr_stmt|;
 name|ChildNode
 operator|=
-name|AcpiNsGetNextObject
+name|AcpiNsGetNextNode
 argument_list|(
 name|ACPI_TYPE_ANY
 argument_list|,
@@ -277,7 +277,7 @@ condition|(
 name|ChildNode
 condition|)
 block|{
-comment|/*              * Found an object, Get the type if we are not              * searching for ANY              */
+comment|/*              * Found node, Get the type if we are not              * searching for ANY              */
 if|if
 condition|(
 name|Type
@@ -299,7 +299,7 @@ operator|==
 name|Type
 condition|)
 block|{
-comment|/*                  * Found a matching object, invoke the user                  * callback function                  */
+comment|/*                  * Found a matching node, invoke the user                  * callback function                  */
 if|if
 condition|(
 name|UnlockBeforeCallback
@@ -386,7 +386,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|AcpiNsGetNextObject
+name|AcpiNsGetNextNode
 argument_list|(
 name|ACPI_TYPE_ANY
 argument_list|,
@@ -396,7 +396,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-comment|/*                      * There is at least one child of this                      * object, visit the object                      */
+comment|/*                      * There is at least one child of this                      * node, visit the onde                      */
 name|Level
 operator|++
 expr_stmt|;
@@ -413,7 +413,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*              * No more children in this object (AcpiNsGetNextObject              * failed), go back upwards in the namespace tree to              * the object's parent.              */
+comment|/*              * No more children of this node (AcpiNsGetNextNode              * failed), go back upwards in the namespace tree to              * the node's parent.              */
 name|Level
 operator|--
 expr_stmt|;

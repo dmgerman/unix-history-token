@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 73 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 80 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -149,12 +149,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_GET_OP_TYPE
-argument_list|(
 name|ParentInfo
-argument_list|)
-operator|!=
-name|ACPI_OP_TYPE_OPCODE
+operator|->
+name|Class
+operator|==
+name|AML_CLASS_UNKNOWN
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -162,7 +161,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unknown parent opcode. Op=%X\n"
+literal|"Unknown parent opcode. Op=%p\n"
 operator|,
 name|Op
 operator|)
@@ -177,15 +176,14 @@ block|}
 comment|/*      * Decide what to do with the result based on the parent.  If      * the parent opcode will not use the result, delete the object.      * Otherwise leave it as is, it will be deleted when it is used      * as an operand later.      */
 switch|switch
 condition|(
-name|ACPI_GET_OP_CLASS
-argument_list|(
 name|ParentInfo
-argument_list|)
+operator|->
+name|Class
 condition|)
 block|{
 comment|/*      * In these cases, the parent will never use the return object      */
 case|case
-name|OPTYPE_CONTROL
+name|AML_CLASS_CONTROL
 case|:
 comment|/* IF, ELSE, WHILE only */
 switch|switch
@@ -206,7 +204,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"Result used, [RETURN] opcode=%X Op=%X\n"
+literal|"Result used, [RETURN] opcode=%X Op=%p\n"
 operator|,
 name|Op
 operator|->
@@ -261,7 +259,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"Result used as a predicate, [IF/WHILE] opcode=%X Op=%X\n"
+literal|"Result used as a predicate, [IF/WHILE] opcode=%X Op=%p\n"
 operator|,
 name|Op
 operator|->
@@ -281,9 +279,12 @@ break|break;
 block|}
 comment|/* Fall through to not used case below */
 case|case
-name|OPTYPE_NAMED_OBJECT
+name|AML_CLASS_NAMED_OBJECT
 case|:
 comment|/* Scope, method, etc. */
+case|case
+name|AML_CLASS_CREATE
+case|:
 comment|/*          * These opcodes allow TermArg(s) as operands and therefore          * method calls.  The result is used.          */
 if|if
 condition|(
@@ -363,7 +364,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"Result used, [Region or CreateField] opcode=%X Op=%X\n"
+literal|"Result used, [Region or CreateField] opcode=%X Op=%p\n"
 operator|,
 name|Op
 operator|->
@@ -384,7 +385,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"Result not used, Parent opcode=%X Op=%X\n"
+literal|"Result not used, Parent opcode=%X Op=%p\n"
 operator|,
 name|Op
 operator|->
@@ -783,6 +784,16 @@ comment|/*                  * We just plain didn't find it -- which is a        
 name|Status
 operator|=
 name|AE_AML_NAME_NOT_FOUND
+expr_stmt|;
+comment|/* TBD: Externalize NameString and print */
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Object name was not found in namespace\n"
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1341,12 +1352,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_GET_OP_TYPE
-argument_list|(
 name|OpInfo
-argument_list|)
-operator|!=
-name|ACPI_OP_TYPE_OPCODE
+operator|->
+name|Class
+operator|==
+name|AML_CLASS_UNKNOWN
 condition|)
 block|{
 comment|/* Unknown opcode */
@@ -1367,16 +1377,16 @@ name|DataType
 operator|)
 return|;
 block|}
+comment|/*  * TBD: Use op class  */
 switch|switch
 condition|(
-name|ACPI_GET_OP_CLASS
-argument_list|(
 name|OpInfo
-argument_list|)
+operator|->
+name|Type
 condition|)
 block|{
 case|case
-name|OPTYPE_LITERAL
+name|AML_TYPE_LITERAL
 case|:
 switch|switch
 condition|(
@@ -1432,7 +1442,7 @@ break|break;
 block|}
 break|break;
 case|case
-name|OPTYPE_DATA_TERM
+name|AML_TYPE_DATA_TERM
 case|:
 switch|switch
 condition|(
@@ -1474,13 +1484,13 @@ break|break;
 block|}
 break|break;
 case|case
-name|OPTYPE_CONSTANT
+name|AML_TYPE_CONSTANT
 case|:
 case|case
-name|OPTYPE_METHOD_ARGUMENT
+name|AML_TYPE_METHOD_ARGUMENT
 case|:
 case|case
-name|OPTYPE_LOCAL_VARIABLE
+name|AML_TYPE_LOCAL_VARIABLE
 case|:
 name|DataType
 operator|=
@@ -1488,31 +1498,28 @@ name|INTERNAL_TYPE_REFERENCE
 expr_stmt|;
 break|break;
 case|case
-name|OPTYPE_MONADIC2
+name|AML_TYPE_EXEC_1A_0T_1R
 case|:
 case|case
-name|OPTYPE_MONADIC2R
+name|AML_TYPE_EXEC_1A_1T_1R
 case|:
 case|case
-name|OPTYPE_DYADIC2
+name|AML_TYPE_EXEC_2A_0T_1R
 case|:
 case|case
-name|OPTYPE_DYADIC2R
+name|AML_TYPE_EXEC_2A_1T_1R
 case|:
 case|case
-name|OPTYPE_DYADIC2S
+name|AML_TYPE_EXEC_2A_2T_1R
 case|:
 case|case
-name|OPTYPE_TRIADIC
+name|AML_TYPE_EXEC_3A_1T_1R
 case|:
 case|case
-name|OPTYPE_QUADRADIC
+name|AML_TYPE_EXEC_6A_0T_1R
 case|:
 case|case
-name|OPTYPE_HEXADIC
-case|:
-case|case
-name|OPTYPE_RETURN
+name|AML_TYPE_RETURN
 case|:
 name|Flags
 operator|=
@@ -1524,7 +1531,7 @@ name|ACPI_TYPE_ANY
 expr_stmt|;
 break|break;
 case|case
-name|OPTYPE_METHOD_CALL
+name|AML_TYPE_METHOD_CALL
 case|:
 name|Flags
 operator|=
@@ -1536,7 +1543,16 @@ name|ACPI_TYPE_METHOD
 expr_stmt|;
 break|break;
 case|case
-name|OPTYPE_NAMED_OBJECT
+name|AML_TYPE_NAMED_FIELD
+case|:
+case|case
+name|AML_TYPE_NAMED_SIMPLE
+case|:
+case|case
+name|AML_TYPE_NAMED_COMPLEX
+case|:
+case|case
+name|AML_TYPE_NAMED_NO_OBJ
 case|:
 name|DataType
 operator|=
@@ -1547,10 +1563,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|OPTYPE_DYADIC1
+name|AML_TYPE_EXEC_1A_0T_0R
 case|:
 case|case
-name|OPTYPE_CONTROL
+name|AML_TYPE_EXEC_2A_0T_0R
+case|:
+case|case
+name|AML_TYPE_EXEC_3A_0T_0R
+case|:
+case|case
+name|AML_TYPE_EXEC_1A_1T_0R
+case|:
+case|case
+name|AML_TYPE_CONTROL
 case|:
 comment|/* No mapping needed at this time */
 break|break;

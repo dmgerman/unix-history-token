@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 110 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 116 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -447,7 +447,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExTriadic
+name|AcpiExOpcode_3A_0T_0R
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -458,7 +458,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExHexadic
+name|AcpiExOpcode_3A_1T_1R
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -469,18 +469,27 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExCreateBufferField
+name|AcpiExOpcode_6A_0T_1R
 parameter_list|(
-name|UINT8
+name|ACPI_WALK_STATE
 modifier|*
-name|AmlStart
-parameter_list|,
-name|UINT32
-name|AmlLength
-parameter_list|,
-name|ACPI_NAMESPACE_NODE
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExGetObjectReference
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
 modifier|*
-name|Node
+name|ObjDesc
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ReturnDesc
 parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
@@ -491,11 +500,82 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExReconfiguration
+name|AcpiExDoConcatenate
 parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc2
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ActualReturnDesc
+parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|AcpiExDoLogicalOp
+parameter_list|(
+name|UINT16
+name|Opcode
+parameter_list|,
+name|ACPI_INTEGER
+name|Operand0
+parameter_list|,
+name|ACPI_INTEGER
+name|Operand1
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_INTEGER
+name|AcpiExDoMathOp
+parameter_list|(
+name|UINT16
+name|Opcode
+parameter_list|,
+name|ACPI_INTEGER
+name|Operand0
+parameter_list|,
+name|ACPI_INTEGER
+name|Operand1
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExLoadOp
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|RgnDesc
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|DdbHandle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExUnloadTable
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|DdbHandle
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -515,13 +595,9 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiExCreateProcessor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ACPI_WALK_STATE
 modifier|*
-name|Op
-parameter_list|,
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|ProcessorNode
+name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -530,13 +606,9 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiExCreatePowerResource
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ACPI_WALK_STATE
 modifier|*
-name|Op
-parameter_list|,
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|PowerNode
+name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -606,12 +678,9 @@ parameter_list|,
 name|UINT32
 name|AmlLength
 parameter_list|,
-name|UINT32
-name|MethodFlags
-parameter_list|,
-name|ACPI_NAMESPACE_NODE
+name|ACPI_WALK_STATE
 modifier|*
-name|Method
+name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -782,6 +851,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExPrepFieldValue
+parameter_list|(
+name|ACPI_CREATE_FIELD_INFO
+modifier|*
+name|Info
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * amsystem - Interface to OS services  */
 end_comment
@@ -903,7 +983,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExMonadic1
+name|AcpiExOpcode_1A_0T_0R
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -914,7 +994,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExMonadic2
+name|AcpiExOpcode_1A_0T_1R
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -925,7 +1005,18 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExMonadic2R
+name|AcpiExOpcode_1A_1T_1R
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExOpcode_1A_1T_0R
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -940,7 +1031,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExDyadic1
+name|AcpiExOpcode_2A_0T_0R
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -951,7 +1042,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExDyadic2
+name|AcpiExOpcode_2A_0T_1R
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -962,7 +1053,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExDyadic2R
+name|AcpiExOpcode_2A_1T_1R
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -973,7 +1064,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExDyadic2S
+name|AcpiExOpcode_2A_2T_1R
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 114 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 116 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -130,7 +130,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Install the handler before enabling the event - just in case... */
+comment|/* Install the handler before enabling the event */
 name|AcpiGbl_FixedEventHandlers
 index|[
 name|Event
@@ -273,7 +273,7 @@ argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
 expr_stmt|;
-comment|/* Disable the event before removing the handler - just in case... */
+comment|/* Disable the event before removing the handler */
 name|Status
 operator|=
 name|AcpiDisableEvent
@@ -423,7 +423,7 @@ expr_stmt|;
 comment|/* Convert and validate the device handle */
 name|DeviceNode
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Device
 argument_list|)
@@ -442,7 +442,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/*      * Root Object:      * ------------      * Registering a notify handler on the root object indicates that the      * caller wishes to receive notifications for all objects.  Note that      * only one<external> global handler can be regsitered (per notify type).      */
+comment|/*      * Root Object:      * Registering a notify handler on the root object indicates that the      * caller wishes to receive notifications for all objects.  Note that      * only one<external> global handler can be regsitered (per notify type).      */
 if|if
 condition|(
 name|Device
@@ -536,7 +536,7 @@ expr_stmt|;
 block|}
 comment|/* Global notify handler installed */
 block|}
-comment|/*      * Other Objects:      * --------------      * Caller will only receive notifications specific to the target object.      * Note that only certain object types can receive notifications.      */
+comment|/*      * All Other Objects:      * Caller will only receive notifications specific to the target object.      * Note that only certain object types can receive notifications.      */
 else|else
 block|{
 comment|/*          * These are the ONLY objects that can receive ACPI notifications          */
@@ -852,7 +852,7 @@ expr_stmt|;
 comment|/* Convert and validate the device handle */
 name|DeviceNode
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Device
 argument_list|)
@@ -871,7 +871,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/*      * Root Object:      * ------------      */
+comment|/*      * Root Object      */
 if|if
 condition|(
 name|Device
@@ -973,7 +973,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Other Objects:      * --------------      */
+comment|/*      * All Other Objects      */
 else|else
 block|{
 comment|/*          * These are the ONLY objects that can receive ACPI notifications          */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 30 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -117,6 +117,10 @@ literal|"%s on %4.4s was not found\n"
 operator|,
 name|ObjectName
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|DeviceNode
 operator|->
@@ -136,6 +140,10 @@ literal|"%s on %4.4s failed with status %s\n"
 operator|,
 name|ObjectName
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|DeviceNode
 operator|->
@@ -306,6 +314,10 @@ name|ACPI_DB_INFO
 operator|,
 literal|"_HID on %4.4s was not found\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|DeviceNode
 operator|->
@@ -323,6 +335,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"_HID on %4.4s failed %s\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|DeviceNode
 operator|->
@@ -553,6 +569,10 @@ name|ACPI_DB_INFO
 operator|,
 literal|"_UID on %4.4s was not found\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|DeviceNode
 operator|->
@@ -570,6 +590,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"_UID on %4.4s failed %s\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|DeviceNode
 operator|->
@@ -780,6 +804,10 @@ name|ACPI_DB_INFO
 operator|,
 literal|"_STA on %4.4s was not found, assuming present.\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|DeviceNode
 operator|->
@@ -813,6 +841,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"_STA on %4.4s failed %s\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|DeviceNode
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 76 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 81 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -253,6 +253,10 @@ literal|"Method %p [%4.4s] - parse failure, %s\n"
 operator|,
 name|ObjHandle
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 operator|(
 operator|(
@@ -521,12 +525,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_GET_OP_TYPE
-argument_list|(
 name|OpInfo
-argument_list|)
-operator|!=
-name|ACPI_OP_TYPE_OPCODE
+operator|->
+name|Class
+operator|==
+name|AML_CLASS_UNKNOWN
 condition|)
 block|{
 comment|/* Unknown opcode */
@@ -776,7 +779,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Expecting bytelist, got: %x\n"
+literal|"Expecting bytelist, got: %p\n"
 operator|,
 name|ByteList
 operator|)
@@ -895,14 +898,13 @@ name|INTERNAL_TYPE_REFERENCE
 case|:
 switch|switch
 condition|(
-name|ACPI_GET_OP_CLASS
-argument_list|(
 name|OpInfo
-argument_list|)
+operator|->
+name|Type
 condition|)
 block|{
 case|case
-name|OPTYPE_LOCAL_VARIABLE
+name|AML_TYPE_LOCAL_VARIABLE
 case|:
 comment|/* Split the opcode into a base opcode + offset */
 name|ObjDesc
@@ -925,7 +927,7 @@ name|AML_LOCAL_OP
 expr_stmt|;
 break|break;
 case|case
-name|OPTYPE_METHOD_ARGUMENT
+name|AML_TYPE_METHOD_ARGUMENT
 case|:
 comment|/* Split the opcode into a base opcode + offset */
 name|ObjDesc
@@ -1643,6 +1645,20 @@ argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;
+comment|/*      * Because of the execution pass through the non-control-method      * parts of the table, we can arrive here twice.  Only init      * the named object node the first time through      */
+if|if
+condition|(
+name|Node
+operator|->
+name|Object
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1719,25 +1735,7 @@ operator|->
 name|Type
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|Cleanup
-goto|;
-block|}
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-name|Cleanup
-label|:
+comment|/* Remove local reference to the object */
 name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc

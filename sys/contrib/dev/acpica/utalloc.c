@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utalloc - local cache and memory allocation routines  *              $Revision: 103 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utalloc - local cache and memory allocation routines  *              $Revision: 106 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1106,7 +1106,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OK
 operator|,
-literal|"%p Len %04lX %9.9s-%ld"
+literal|"%p Len %04X %9.9s-%d"
 operator|,
 operator|&
 name|Element
@@ -1156,7 +1156,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OK
 operator|,
-literal|" ObjType %s"
+literal|" ObjType %12.12s R%d"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -1177,6 +1177,23 @@ name|Common
 operator|.
 name|Type
 argument_list|)
+operator|,
+operator|(
+operator|(
+name|ACPI_OPERAND_OBJECT
+operator|*
+operator|)
+operator|(
+operator|&
+name|Element
+operator|->
+name|UserSpace
+operator|)
+operator|)
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1219,6 +1236,10 @@ name|ACPI_DB_OK
 operator|,
 literal|" Node %4.4s"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 operator|(
 operator|(

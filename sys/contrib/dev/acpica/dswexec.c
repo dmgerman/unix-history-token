@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -68,6 +68,41 @@ argument_list|(
 literal|"dswexec"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*  * Dispatch tables for opcode classes   */
+end_comment
+
+begin_decl_stmt
+name|ACPI_EXECUTE_OP
+name|AcpiGbl_OpTypeDispatch
+index|[]
+init|=
+block|{
+name|AcpiExOpcode_1A_0T_0R
+block|,
+name|AcpiExOpcode_1A_0T_1R
+block|,
+name|AcpiExOpcode_1A_1T_0R
+block|,
+name|AcpiExOpcode_1A_1T_1R
+block|,
+name|AcpiExOpcode_2A_0T_0R
+block|,
+name|AcpiExOpcode_2A_0T_1R
+block|,
+name|AcpiExOpcode_2A_1T_1R
+block|,
+name|AcpiExOpcode_2A_2T_1R
+block|,
+name|AcpiExOpcode_3A_0T_0R
+block|,
+name|AcpiExOpcode_3A_1T_1R
+block|,
+name|AcpiExOpcode_6A_0T_1R
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsGetPredicateValue  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION: Get the result of a predicate evaluation  *  ****************************************************************************/
@@ -234,7 +269,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"No predicate ObjDesc=%X State=%X\n"
+literal|"No predicate ObjDesc=%p State=%p\n"
 operator|,
 name|ObjDesc
 operator|,
@@ -265,7 +300,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Bad predicate (not a number) ObjDesc=%X State=%X Type=%X\n"
+literal|"Bad predicate (not a number) ObjDesc=%p State=%p Type=%X\n"
 operator|,
 name|ObjDesc
 operator|,
@@ -341,7 +376,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Completed a predicate eval=%X Op=%X\n"
+literal|"Completed a predicate eval=%X Op=%pn"
 operator|,
 name|WalkState
 operator|->
@@ -419,7 +454,7 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|OpcodeClass
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
@@ -548,7 +583,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Exec predicate Op=%X State=%X\n"
+literal|"Exec predicate Op=%p State=%p\n"
 operator|,
 name|Op
 operator|,
@@ -580,15 +615,11 @@ expr_stmt|;
 block|}
 name|OpcodeClass
 operator|=
-operator|(
-name|UINT8
-operator|)
-name|ACPI_GET_OP_CLASS
-argument_list|(
 name|WalkState
 operator|->
 name|OpInfo
-argument_list|)
+operator|->
+name|Class
 expr_stmt|;
 comment|/* We want to send namepaths to the load code */
 if|if
@@ -602,7 +633,7 @@ condition|)
 block|{
 name|OpcodeClass
 operator|=
-name|OPTYPE_NAMED_OBJECT
+name|AML_CLASS_NAMED_OBJECT
 expr_stmt|;
 block|}
 comment|/*      * Handle the opcode based upon the opcode type      */
@@ -612,7 +643,7 @@ name|OpcodeClass
 condition|)
 block|{
 case|case
-name|OPTYPE_CONTROL
+name|AML_CLASS_CONTROL
 case|:
 name|Status
 operator|=
@@ -646,7 +677,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|OPTYPE_NAMED_OBJECT
+name|AML_CLASS_NAMED_OBJECT
 case|:
 if|if
 condition|(
@@ -688,40 +719,10 @@ block|}
 break|break;
 comment|/* most operators with arguments */
 case|case
-name|OPTYPE_MONADIC1
+name|AML_CLASS_EXECUTE
 case|:
 case|case
-name|OPTYPE_DYADIC1
-case|:
-case|case
-name|OPTYPE_MONADIC2
-case|:
-case|case
-name|OPTYPE_MONADIC2R
-case|:
-case|case
-name|OPTYPE_DYADIC2
-case|:
-case|case
-name|OPTYPE_DYADIC2R
-case|:
-case|case
-name|OPTYPE_DYADIC2S
-case|:
-case|case
-name|OPTYPE_RECONFIGURATION
-case|:
-case|case
-name|OPTYPE_TRIADIC
-case|:
-case|case
-name|OPTYPE_QUADRADIC
-case|:
-case|case
-name|OPTYPE_HEXADIC
-case|:
-case|case
-name|OPTYPE_CREATE_FIELD
+name|AML_CLASS_CREATE
 case|:
 comment|/* Start a new result/operand state */
 name|Status
@@ -766,8 +767,11 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|UINT8
-name|Optype
+name|UINT32
+name|OpType
+decl_stmt|;
+name|UINT32
+name|OpClass
 decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -793,16 +797,27 @@ name|WalkState
 operator|->
 name|Op
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_GET_OP_TYPE
-argument_list|(
+name|OpType
+operator|=
 name|WalkState
 operator|->
 name|OpInfo
-argument_list|)
-operator|!=
-name|ACPI_OP_TYPE_OPCODE
+operator|->
+name|Type
+expr_stmt|;
+name|OpClass
+operator|=
+name|WalkState
+operator|->
+name|OpInfo
+operator|->
+name|Class
+expr_stmt|;
+if|if
+condition|(
+name|OpClass
+operator|==
+name|AML_CLASS_UNKNOWN
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -824,18 +839,6 @@ name|AE_NOT_IMPLEMENTED
 argument_list|)
 expr_stmt|;
 block|}
-name|Optype
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|ACPI_GET_OP_CLASS
-argument_list|(
-name|WalkState
-operator|->
-name|OpInfo
-argument_list|)
-expr_stmt|;
 name|FirstArg
 operator|=
 name|Op
@@ -874,7 +877,7 @@ name|WalkState
 argument_list|,
 name|Op
 argument_list|,
-name|Optype
+name|OpClass
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -883,105 +886,20 @@ argument_list|(
 argument|if (ACPI_FAILURE (Status)) {return_ACPI_STATUS (Status);}
 argument_list|)
 empty_stmt|;
-comment|/* Decode the opcode */
 switch|switch
 condition|(
-name|Optype
+name|OpClass
 condition|)
 block|{
+comment|/* Decode the Opcode Class */
 case|case
-name|OPTYPE_UNDEFINED
+name|AML_CLASS_ARGUMENT
 case|:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Undefined opcode type Op=%X\n"
-operator|,
-name|Op
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NOT_IMPLEMENTED
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_BOGUS
-case|:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_DISPATCH
-operator|,
-literal|"Internal opcode=%X type Op=%X\n"
-operator|,
-name|WalkState
-operator|->
-name|Opcode
-operator|,
-name|Op
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_CONSTANT
-case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_LITERAL
-case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_DATA_TERM
-case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_LOCAL_VARIABLE
-case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_METHOD_ARGUMENT
-case|:
-comment|/* argument type only */
+comment|/* constants, literals, etc.  do nothing */
 break|break;
 comment|/* most operators with arguments */
 case|case
-name|OPTYPE_MONADIC1
-case|:
-case|case
-name|OPTYPE_DYADIC1
-case|:
-case|case
-name|OPTYPE_MONADIC2
-case|:
-case|case
-name|OPTYPE_MONADIC2R
-case|:
-case|case
-name|OPTYPE_DYADIC2
-case|:
-case|case
-name|OPTYPE_DYADIC2R
-case|:
-case|case
-name|OPTYPE_DYADIC2S
-case|:
-case|case
-name|OPTYPE_RECONFIGURATION
-case|:
-case|case
-name|OPTYPE_TRIADIC
-case|:
-case|case
-name|OPTYPE_QUADRADIC
-case|:
-case|case
-name|OPTYPE_HEXADIC
+name|AML_CLASS_EXECUTE
 case|:
 comment|/* Build resolved operand stack */
 name|Status
@@ -1148,141 +1066,18 @@ argument_list|,
 literal|"after ExResolveOperands"
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
-name|Optype
-condition|)
-block|{
-case|case
-name|OPTYPE_MONADIC1
-case|:
-comment|/* 1 Operand, 0 ExternalResult, 0 InternalResult */
+comment|/*          * Dispatch the request to the appropriate interpreter handler          * routine.  There is one routine per opcode "type" based upon the          * number of opcode arguments and return type.          */
 name|Status
 operator|=
-name|AcpiExMonadic1
-argument_list|(
+name|AcpiGbl_OpTypeDispatch
+index|[
+name|OpType
+index|]
+operator|(
 name|WalkState
-argument_list|)
+operator|)
 expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_MONADIC2
-case|:
-comment|/* 1 Operand, 0 ExternalResult, 1 InternalResult */
-name|Status
-operator|=
-name|AcpiExMonadic2
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_MONADIC2R
-case|:
-comment|/* 1 Operand, 1 ExternalResult, 1 InternalResult */
-name|Status
-operator|=
-name|AcpiExMonadic2R
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_DYADIC1
-case|:
-comment|/* 2 Operands, 0 ExternalResult, 0 InternalResult */
-name|Status
-operator|=
-name|AcpiExDyadic1
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_DYADIC2
-case|:
-comment|/* 2 Operands, 0 ExternalResult, 1 InternalResult */
-name|Status
-operator|=
-name|AcpiExDyadic2
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_DYADIC2R
-case|:
-comment|/* 2 Operands, 1 or 2 ExternalResults, 1 InternalResult */
-name|Status
-operator|=
-name|AcpiExDyadic2R
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_DYADIC2S
-case|:
-comment|/* Synchronization Operator */
-comment|/* 2 Operands, 0 ExternalResult, 1 InternalResult */
-name|Status
-operator|=
-name|AcpiExDyadic2S
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_TRIADIC
-case|:
-comment|/* WalkState->Opcode with 3 operands */
-comment|/* 3 Operands, 1 ExternalResult, 1 InternalResult */
-name|Status
-operator|=
-name|AcpiExTriadic
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_QUADRADIC
-case|:
-comment|/* Opcode with 4 operands */
-break|break;
-case|case
-name|OPTYPE_HEXADIC
-case|:
-comment|/* Opcode with 6 operands */
-comment|/* 6 Operands, 0 ExternalResult, 1 InternalResult */
-name|Status
-operator|=
-name|AcpiExHexadic
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_RECONFIGURATION
-case|:
-comment|/* 1 or 2 operands, 0 Internal Result */
-name|Status
-operator|=
-name|AcpiExReconfiguration
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-comment|/* Clear the operand stack */
+comment|/* Delete argument objects and clear the operand stack */
 for|for
 control|(
 name|i
@@ -1299,6 +1094,17 @@ name|i
 operator|++
 control|)
 block|{
+comment|/*              * Remove a reference to all operands, including both               * "Arguments" and "Targets".              */
+name|AcpiUtRemoveReference
+argument_list|(
+name|WalkState
+operator|->
+name|Operands
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|WalkState
 operator|->
 name|Operands
@@ -1341,8 +1147,14 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+default|default:
+switch|switch
+condition|(
+name|OpType
+condition|)
+block|{
 case|case
-name|OPTYPE_CONTROL
+name|AML_TYPE_CONTROL
 case|:
 comment|/* Type 1 opcode, IF/ELSE/WHILE/NOOP */
 comment|/* 1 Operand, 0 ExternalResult, 0 InternalResult */
@@ -1362,20 +1174,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|OPTYPE_METHOD_CALL
+name|AML_TYPE_METHOD_CALL
 case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"Method invocation, Op=%X\n"
+literal|"Method invocation, Op=%p\n"
 operator|,
 name|Op
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * (AML_METHODCALL) Op->Value->Arg->Node contains          * the method Node pointer          */
+comment|/*              * (AML_METHODCALL) Op->Value->Arg->Node contains              * the method Node pointer              */
 comment|/* NextOp points to the op that holds the method name */
 name|NextOp
 operator|=
@@ -1388,7 +1200,7 @@ name|NextOp
 operator|->
 name|Next
 expr_stmt|;
-comment|/*          * Get the method's arguments and put them on the operand stack          */
+comment|/*              * Get the method's arguments and put them on the operand stack              */
 name|Status
 operator|=
 name|AcpiDsCreateOperands
@@ -1408,7 +1220,7 @@ condition|)
 block|{
 break|break;
 block|}
-comment|/*          * Since the operands will be passed to another          * control method, we must resolve all local          * references here (Local variables, arguments          * to *this* method, etc.)          */
+comment|/*              * Since the operands will be passed to another              * control method, we must resolve all local              * references here (Local variables, arguments              * to *this* method, etc.)              */
 name|Status
 operator|=
 name|AcpiDsResolveOperands
@@ -1426,12 +1238,12 @@ condition|)
 block|{
 break|break;
 block|}
-comment|/*          * Tell the walk loop to preempt this running method and          * execute the new method          */
+comment|/*              * Tell the walk loop to preempt this running method and              * execute the new method              */
 name|Status
 operator|=
 name|AE_CTRL_TRANSFER
 expr_stmt|;
-comment|/*          * Return now; we don't want to disturb anything,          * especially the operand count!          */
+comment|/*              * Return now; we don't want to disturb anything,              * especially the operand count!              */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1439,14 +1251,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|OPTYPE_CREATE_FIELD
+name|AML_TYPE_CREATE_FIELD
 case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Executing CreateField Buffer/Index Op=%X\n"
+literal|"Executing CreateField Buffer/Index Op=%p\n"
 operator|,
 name|Op
 operator|)
@@ -1480,7 +1292,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|OPTYPE_NAMED_OBJECT
+name|AML_TYPE_NAMED_FIELD
+case|:
+case|case
+name|AML_TYPE_NAMED_COMPLEX
+case|:
+case|case
+name|AML_TYPE_NAMED_SIMPLE
 case|:
 name|Status
 operator|=
@@ -1499,22 +1317,21 @@ condition|)
 block|{
 break|break;
 block|}
-switch|switch
+if|if
 condition|(
 name|Op
 operator|->
 name|Opcode
+operator|==
+name|AML_REGION_OP
 condition|)
 block|{
-case|case
-name|AML_REGION_OP
-case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Executing OpRegion Address/Length Op=%X\n"
+literal|"Executing OpRegion Address/Length Op=%p\n"
 operator|,
 name|Op
 operator|)
@@ -1546,24 +1363,46 @@ argument_list|(
 name|WalkState
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
-name|AML_METHOD_OP
+name|AML_TYPE_UNDEFINED
 case|:
-break|break;
-case|case
-name|AML_ALIAS_OP
-case|:
-comment|/* Alias creation was already handled by call             to psxload above */
-break|break;
-default|default:
-comment|/* Nothing needs to be done */
-name|Status
-operator|=
-name|AE_OK
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Undefined opcode type Op=%p\n"
+operator|,
+name|Op
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NOT_IMPLEMENTED
+argument_list|)
 expr_stmt|;
 break|break;
-block|}
+case|case
+name|AML_TYPE_BOGUS
+case|:
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_DISPATCH
+operator|,
+literal|"Internal opcode=%X type Op=%p\n"
+operator|,
+name|WalkState
+operator|->
+name|Opcode
+operator|,
+name|Op
+operator|)
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|ACPI_DEBUG_PRINT
@@ -1571,9 +1410,11 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unimplemented opcode, type=%X Opcode=%X Op=%X\n"
+literal|"Unimplemented opcode, class=%X type=%X Opcode=%X Op=%p\n"
 operator|,
-name|Optype
+name|OpClass
+operator|,
+name|OpType
 operator|,
 name|Op
 operator|->
@@ -1588,6 +1429,7 @@ operator|=
 name|AE_NOT_IMPLEMENTED
 expr_stmt|;
 break|break;
+block|}
 block|}
 comment|/*      * ACPI 2.0 support for 64-bit integers:      * Truncate numeric result value if we are executing from a 32-bit ACPI table      */
 name|AcpiExTruncateFor32bitTable

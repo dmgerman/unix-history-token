@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 42 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -419,7 +419,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Table signature at %p [%X] has invalid characters\n"
+literal|"Table signature at %p [%p] has invalid characters\n"
 operator|,
 name|TableHeader
 operator|,
@@ -433,6 +433,10 @@ argument_list|(
 operator|(
 literal|"Invalid table signature %4.4s found\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Signature
 operator|)
@@ -476,6 +480,10 @@ literal|"Invalid length in table header %p name %4.4s\n"
 operator|,
 name|TableHeader
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Signature
 operator|)
@@ -757,6 +765,10 @@ literal|"Invalid checksum (%X) in table %4.4s\n"
 operator|,
 name|Checksum
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|TableHeader
 operator|->

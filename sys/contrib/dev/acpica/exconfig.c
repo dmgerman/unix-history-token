@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 42 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -80,16 +80,14 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_STATUS
-name|AcpiExLoadTableOp
+name|AcpiExLoadOp
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|RgnDesc
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
-modifier|*
 modifier|*
 name|DdbHandle
 parameter_list|)
@@ -122,7 +120,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"ExLoadTable"
+literal|"ExLoadOp"
 argument_list|)
 expr_stmt|;
 comment|/* TBD: [Unhandled] Object can be either a field or an opregion */
@@ -356,6 +354,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Table has invalid signature [%4.4s], must be SSDT or PSDT\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 name|TableHeader
 operator|.
 name|Signature
@@ -470,11 +472,8 @@ name|TableInfo
 operator|.
 name|InstalledDesc
 expr_stmt|;
-operator|*
-name|DdbHandle
-operator|=
-name|TableDesc
-expr_stmt|;
+comment|/* TBD: store the tabledesc into the DdbHandle target */
+comment|/* DdbHandle = TableDesc; */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -505,7 +504,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_STATUS
 name|AcpiExUnloadTable
 parameter_list|(
@@ -626,108 +624,6 @@ argument_list|(
 name|TableDesc
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExReconfiguration  *  * PARAMETERS:  WalkState           - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION: Reconfiguration opcodes such as LOAD and UNLOAD  *  ****************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiExReconfiguration
-parameter_list|(
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|)
-block|{
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|Operand
-init|=
-operator|&
-name|WalkState
-operator|->
-name|Operands
-index|[
-literal|0
-index|]
-decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|FUNCTION_TRACE
-argument_list|(
-literal|"ExReconfiguration"
-argument_list|)
-expr_stmt|;
-define|#
-directive|define
-name|DdbHandle
-value|Operand[0]
-define|#
-directive|define
-name|RegionDesc
-value|Operand[1]
-switch|switch
-condition|(
-name|WalkState
-operator|->
-name|Opcode
-condition|)
-block|{
-case|case
-name|AML_LOAD_OP
-case|:
-name|Status
-operator|=
-name|AcpiExLoadTableOp
-argument_list|(
-name|RegionDesc
-argument_list|,
-operator|&
-name|DdbHandle
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|AML_UNLOAD_OP
-case|:
-name|Status
-operator|=
-name|AcpiExUnloadTable
-argument_list|(
-name|DdbHandle
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"bad opcode=%X\n"
-operator|,
-name|WalkState
-operator|->
-name|Opcode
-operator|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AE_AML_BAD_OPCODE
-expr_stmt|;
-break|break;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

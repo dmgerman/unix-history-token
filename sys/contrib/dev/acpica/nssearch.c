@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 74 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 75 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -121,6 +121,10 @@ name|ScopeName
 operator|,
 name|Node
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|TargetName
 operator|,
@@ -219,6 +223,10 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"Name %4.4s (actual type %X) found at %p\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|TargetName
 operator|,
@@ -270,6 +278,10 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"Name %4.4s (type %X) not found at %p\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|TargetName
 operator|,
@@ -360,6 +372,10 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"[%4.4s] has no parent\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|TargetName
 operator|)
@@ -381,6 +397,10 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"[%4.4s] type %X is local(no search)\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|TargetName
 operator|,
@@ -403,6 +423,10 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"Searching parent for %4.4s\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|TargetName
 operator|)
@@ -525,7 +549,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Null param-  Table %p Name %p Return %p\n"
+literal|"Null param-  Table %p Name %X Return %p\n"
 operator|,
 name|Node
 operator|,
@@ -563,7 +587,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"*** Bad character in name: %08lx *** \n"
+literal|"*** Bad character in name: %08x *** \n"
 operator|,
 name|TargetName
 operator|)
@@ -696,6 +720,10 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"%4.4s Not found in %p [Not adding]\n"
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|TargetName
 operator|,

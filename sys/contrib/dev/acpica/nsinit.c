@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 31 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 33 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -539,6 +539,10 @@ argument_list|(
 name|Status
 argument_list|)
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Node
 operator|->
@@ -630,6 +634,10 @@ argument_list|(
 name|Status
 argument_list|)
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Node
 operator|->
@@ -755,7 +763,7 @@ argument_list|)
 expr_stmt|;
 name|Node
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|ObjHandle
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 48 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -295,7 +295,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OPREGION
 operator|,
-literal|"Attempting to init a region %X, with no handler\n"
+literal|"Attempting to init a region %p, with no handler\n"
 operator|,
 name|RegionObj
 operator|)

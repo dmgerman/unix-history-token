@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utmath - Integer math support routines  *              $Revision: 5 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmath - Integer math support routines  *              $Revision: 7 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -96,6 +96,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiUtShortDivide: Divide by zero\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_DIVIDE_BY_ZERO
@@ -244,6 +251,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiUtDivide: Divide by zero\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_DIVIDE_BY_ZERO
@@ -740,6 +754,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiUtShortDivide: Divide by zero\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_DIVIDE_BY_ZERO
@@ -821,6 +842,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiUtDivide: Divide by zero\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_DIVIDE_BY_ZERO
@@ -860,8 +888,9 @@ expr_stmt|;
 block|}
 name|return_ACPI_STATUS
 argument_list|(
-argument|AE_OK
+name|AE_OK
 argument_list|)
+expr_stmt|;
 block|}
 end_function
 

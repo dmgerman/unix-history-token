@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 65 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 67 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -92,9 +92,6 @@ name|ACPI_TYPE_ANY
 decl_stmt|;
 name|UINT8
 name|Flags
-decl_stmt|;
-name|UINT16
-name|Opcode
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -343,134 +340,6 @@ operator|=
 name|Type
 expr_stmt|;
 block|}
-comment|/*          * Type is TYPE_Any, we must try to determinte the          * actual type of the object.          * Check if value points into the AML code          */
-elseif|else
-if|if
-condition|(
-name|AcpiTbSystemTablePointer
-argument_list|(
-name|Object
-argument_list|)
-condition|)
-block|{
-comment|/*              * Object points into the AML stream.              * Set a flag bit in the Node to indicate this              */
-name|Flags
-operator||=
-name|ANOBJ_AML_ATTACHMENT
-expr_stmt|;
-comment|/*              * The next byte (perhaps the next two bytes)              * will be the AML opcode              */
-name|MOVE_UNALIGNED16_TO_16
-argument_list|(
-operator|&
-name|Opcode
-argument_list|,
-name|Object
-argument_list|)
-expr_stmt|;
-comment|/* Check for a recognized Opcode */
-switch|switch
-condition|(
-operator|(
-name|UINT8
-operator|)
-name|Opcode
-condition|)
-block|{
-case|case
-name|AML_OP_PREFIX
-case|:
-if|if
-condition|(
-name|Opcode
-operator|!=
-name|AML_REVISION_OP
-condition|)
-block|{
-comment|/*                      * OpPrefix is unrecognized unless part                      * of RevisionOp                      */
-break|break;
-block|}
-comment|/* case AML_REVISION_OP: fall through and set the type to Integer */
-case|case
-name|AML_ZERO_OP
-case|:
-case|case
-name|AML_ONES_OP
-case|:
-case|case
-name|AML_ONE_OP
-case|:
-case|case
-name|AML_BYTE_OP
-case|:
-case|case
-name|AML_WORD_OP
-case|:
-case|case
-name|AML_DWORD_OP
-case|:
-case|case
-name|AML_QWORD_OP
-case|:
-name|ObjType
-operator|=
-name|ACPI_TYPE_INTEGER
-expr_stmt|;
-break|break;
-case|case
-name|AML_STRING_OP
-case|:
-name|ObjType
-operator|=
-name|ACPI_TYPE_STRING
-expr_stmt|;
-break|break;
-case|case
-name|AML_BUFFER_OP
-case|:
-name|ObjType
-operator|=
-name|ACPI_TYPE_BUFFER
-expr_stmt|;
-break|break;
-case|case
-name|AML_MUTEX_OP
-case|:
-name|ObjType
-operator|=
-name|ACPI_TYPE_MUTEX
-expr_stmt|;
-break|break;
-case|case
-name|AML_PACKAGE_OP
-case|:
-name|ObjType
-operator|=
-name|ACPI_TYPE_PACKAGE
-expr_stmt|;
-break|break;
-default|default:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"AML Opcode/Type [%x] not supported in attach\n"
-operator|,
-operator|(
-name|UINT8
-operator|)
-name|Opcode
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_TYPE
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
 else|else
 block|{
 comment|/*              * Cannot figure out the type -- set to DefAny which              * will print as an error in the name table dump              */
@@ -492,32 +361,6 @@ argument_list|,
 name|_COMPONENT
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|AcpiTbSystemTablePointer
-argument_list|(
-name|Object
-argument_list|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"AML-stream code %02x\n"
-operator|,
-operator|*
-operator|(
-name|UINT8
-operator|*
-operator|)
-name|Object
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|VALID_DESCRIPTOR_TYPE
@@ -577,6 +420,10 @@ name|ObjDesc
 operator|,
 name|Node
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Node
 operator|->
@@ -690,7 +537,6 @@ name|Object
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Found a valid value */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -702,6 +548,10 @@ name|Node
 operator|,
 name|ObjDesc
 operator|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Node
 operator|->
@@ -709,23 +559,12 @@ name|Name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Not every value is an object allocated via ACPI_MEM_CALLOCATE,      * - must check      */
-if|if
-condition|(
-operator|!
-name|AcpiTbSystemTablePointer
-argument_list|(
-name|ObjDesc
-argument_list|)
-condition|)
-block|{
-comment|/* Attempt to delete the object (and all subobjects) */
+comment|/* Remove one reference on the object (and all subobjects) */
 name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
-block|}
 name|return_VOID
 expr_stmt|;
 block|}

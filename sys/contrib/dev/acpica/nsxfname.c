@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 81 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 82 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -135,7 +135,7 @@ argument_list|)
 expr_stmt|;
 name|PrefixNode
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Parent
 argument_list|)
@@ -339,7 +339,7 @@ argument_list|)
 expr_stmt|;
 name|Node
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Handle
 argument_list|)
@@ -497,7 +497,7 @@ argument_list|)
 expr_stmt|;
 name|Node
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Handle
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 99 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 102 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -157,7 +157,7 @@ argument_list|)
 expr_stmt|;
 name|PrefixNode
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Handle
 argument_list|)
@@ -570,7 +570,7 @@ argument_list|)
 expr_stmt|;
 name|Node
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|Handle
 argument_list|)
@@ -749,7 +749,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Control method at Offset %x Length %lx]\n"
+literal|"Control method at Offset %p Length %x]\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -785,7 +785,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"At offset %8XH\n"
+literal|"At offset %p\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -874,7 +874,7 @@ name|ObjDesc
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|ValDesc
+name|SourceDesc
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -926,7 +926,7 @@ name|UnlockAndExit
 goto|;
 block|}
 comment|/*          *  Get the attached object          */
-name|ValDesc
+name|SourceDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
@@ -936,7 +936,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ValDesc
+name|SourceDesc
 condition|)
 block|{
 name|Status
@@ -952,7 +952,7 @@ name|MEMCPY
 argument_list|(
 name|ObjDesc
 argument_list|,
-name|ValDesc
+name|SourceDesc
 argument_list|,
 sizeof|sizeof
 argument_list|(

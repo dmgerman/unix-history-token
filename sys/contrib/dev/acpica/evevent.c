@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 50 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 51 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1181,23 +1181,47 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"GPE registers: %X@%p (Blk0) %X@%p (Blk1)\n"
+literal|"GPE registers: %X@%8.8X%8.8X (Blk0) %X@%8.8X%8.8X (Blk1)\n"
 operator|,
 name|Gpe0RegisterCount
 operator|,
+name|HIDWORD
+argument_list|(
 name|AcpiGbl_FADT
 operator|->
 name|XGpe0Blk
 operator|.
 name|Address
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|AcpiGbl_FADT
+operator|->
+name|XGpe0Blk
+operator|.
+name|Address
+argument_list|)
 operator|,
 name|Gpe1RegisterCount
 operator|,
+name|HIDWORD
+argument_list|(
 name|AcpiGbl_FADT
 operator|->
 name|XGpe1Blk
 operator|.
 name|Address
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|AcpiGbl_FADT
+operator|->
+name|XGpe1Blk
+operator|.
+name|Address
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

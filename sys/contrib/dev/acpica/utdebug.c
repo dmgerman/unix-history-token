@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 89 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 90 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -658,11 +658,19 @@ name|LineNumber
 argument_list|,
 name|DbgInfo
 argument_list|,
-literal|"%s %08X\n"
+literal|"%s %8.8X%8.8X\n"
 argument_list|,
 name|AcpiGbl_FnExitStr
 argument_list|,
+name|HIDWORD
+argument_list|(
 name|Value
+argument_list|)
+argument_list|,
+name|LODWORD
+argument_list|(
+name|Value
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AcpiGbl_NestingLevel

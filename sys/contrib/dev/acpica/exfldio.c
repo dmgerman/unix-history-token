@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 64 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 66 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -472,7 +472,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Region %s(%X) width %X base:off %X:%X at %8.8lX%8.8lX\n"
+literal|"Region %s(%X) width %X base:off %X:%X at %8.8X%8.8X\n"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -633,7 +633,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Returned value=%08lX \n"
+literal|"Returned value=%08X \n"
 operator|,
 operator|*
 name|Value
@@ -1451,7 +1451,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Store %X in Region %s(%X) at %8.8lX%8.8lX width %X\n"
+literal|"Store %X in Region %s(%X) at %8.8X%8.8X width %X\n"
 operator|,
 name|Value
 operator|,
@@ -1607,7 +1607,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Value written=%08lX \n"
+literal|"Value written=%08X \n"
 operator|,
 name|Value
 operator|)
@@ -2171,12 +2171,14 @@ block|}
 comment|/*          * Special handling for the last datum if the field does NOT end on          * a datum boundary.  Update Rule must be applied to the bits outside          * the field.          */
 if|if
 condition|(
-operator|(
 name|DatumOffset
 operator|==
 name|DatumCount
-operator|)
-operator|&&
+condition|)
+block|{
+comment|/*              * If there are dangling non-aligned bits, perform one more merged write              * Else - field is aligned at the end, no need for any more writes              */
+if|if
+condition|(
 name|ObjDesc
 operator|->
 name|CommonField
@@ -2184,8 +2186,7 @@ operator|.
 name|EndFieldValidBits
 condition|)
 block|{
-comment|/*              * Part3:              * This is the last datum and the field does not end on a datum boundary.              * Build the partial datum and write with the update rule.              */
-comment|/* Mask off the unused bits above (after) the end-of-field */
+comment|/*                  * Part3:                  * This is the last datum and the field does not end on a datum boundary.                  * Build the partial datum and write with the update rule.                  *                  * Mask off the unused bits above (after) the end-of-field                  */
 name|Mask
 operator|=
 name|MASK_BITS_ABOVE
@@ -2228,6 +2229,7 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else

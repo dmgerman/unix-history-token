@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 52 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 57 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -680,7 +680,9 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Object Pathname:  %s\n"
+literal|"Object (%p) Pathname:  %s\n"
+argument_list|,
+name|Node
 argument_list|,
 name|RetBuf
 operator|.
@@ -781,6 +783,10 @@ return|return;
 block|}
 name|AcpiUtDumpBuffer
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|Node
 operator|->
 name|Object
@@ -1222,7 +1228,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"[Const]           Revision (%X)"
 argument_list|,
-name|ACPI_CA_VERSION
+name|ACPI_CA_SUPPORT_LEVEL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1585,6 +1591,7 @@ name|NumRemainingOps
 operator|++
 expr_stmt|;
 block|}
+comment|/* Decode the opcode */
 name|OpInfo
 operator|=
 name|AcpiPsGetOpcodeInfo
@@ -1594,48 +1601,16 @@ operator|->
 name|Opcode
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_GET_OP_TYPE
-argument_list|(
-name|OpInfo
-argument_list|)
-operator|!=
-name|ACPI_OP_TYPE_OPCODE
-condition|)
-block|{
-comment|/* Bad opcode or ASCII character */
-continue|continue;
-block|}
-comment|/* Decode the opcode */
 switch|switch
 condition|(
-name|ACPI_GET_OP_CLASS
-argument_list|(
 name|OpInfo
-argument_list|)
+operator|->
+name|Class
 condition|)
 block|{
 case|case
-name|OPTYPE_CONSTANT
+name|AML_CLASS_ARGUMENT
 case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_LITERAL
-case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_DATA_TERM
-case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_LOCAL_VARIABLE
-case|:
-comment|/* argument type only */
-case|case
-name|OPTYPE_METHOD_ARGUMENT
-case|:
-comment|/* argument type only */
 if|if
 condition|(
 name|CountRemaining
@@ -1649,6 +1624,11 @@ name|NumOperands
 operator|++
 expr_stmt|;
 break|break;
+case|case
+name|AML_CLASS_UNKNOWN
+case|:
+comment|/* Bad opcode or ASCII character */
+continue|continue;
 default|default:
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -177,32 +177,6 @@ operator|(
 name|ACPI_DB_INFO
 operator|,
 literal|"**** Null Object Ptr\n"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-comment|/* Check for a pointer within one of the ACPI tables */
-if|if
-condition|(
-name|AcpiTbSystemTablePointer
-argument_list|(
-name|Object
-argument_list|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"**** Object %p points into an ACPI table\n"
-operator|,
-name|Object
 operator|)
 argument_list|)
 expr_stmt|;

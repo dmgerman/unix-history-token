@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 52 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -789,7 +789,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"RSDP located at %p, RSDT physical=%8.8lX%8.8lX \n"
+literal|"RSDP located at %p, RSDT physical=%8.8X%8.8X \n"
 operator|,
 name|AcpiGbl_RSDP
 operator|,

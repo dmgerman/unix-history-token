@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 131 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 133 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -935,7 +935,7 @@ begin_define
 define|#
 directive|define
 name|TYPE_NAME_LENGTH
-value|9
+value|12
 end_define
 
 begin_comment
@@ -995,22 +995,22 @@ comment|/* 13 */
 literal|"Thermal"
 block|,
 comment|/* 14 */
-literal|"BuffField"
+literal|"BufferField"
 block|,
 comment|/* 15 */
 literal|"DdbHandle"
 block|,
 comment|/* 16 */
-literal|"DebugObj"
+literal|"DebugObject"
 block|,
 comment|/* 17 */
-literal|"RegnField"
+literal|"RegionField"
 block|,
 comment|/* 18 */
 literal|"BankField"
 block|,
 comment|/* 19 */
-literal|"IndxField"
+literal|"IndexField"
 block|,
 comment|/* 20 */
 literal|"Reference"
@@ -1022,22 +1022,22 @@ comment|/* 22 */
 literal|"Notify"
 block|,
 comment|/* 23 */
-literal|"AddrHndlr"
+literal|"AddrHandler"
 block|,
 comment|/* 24 */
-literal|"RsrcDesc"
+literal|"ResourceDesc"
 block|,
 comment|/* 25 */
-literal|"RsrcField"
+literal|"ResourceFld"
 block|,
 comment|/* 26 */
-literal|"RgnFldDfn"
+literal|"RegionFldDfn"
 block|,
 comment|/* 27 */
-literal|"BnkFldDfn"
+literal|"BankFldDfn"
 block|,
 comment|/* 28 */
-literal|"IdxFldDfn"
+literal|"IndexFldDfn"
 block|,
 comment|/* 29 */
 literal|"If"

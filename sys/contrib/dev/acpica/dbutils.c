@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 44 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 45 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -248,7 +248,7 @@ name|ACPI_TYPE_INTEGER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Integer] = %X%8.8X\n"
+literal|"[Integer] = %8.8X%8.8X\n"
 argument_list|,
 name|HIDWORD
 argument_list|(

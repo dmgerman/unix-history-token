@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 101 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 104 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -344,9 +344,6 @@ name|ACPI_OPCODE_INFO
 modifier|*
 name|ParentInfo
 decl_stmt|;
-name|UINT32
-name|OpcodeClass
-decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|ReplacementOp
@@ -358,15 +355,6 @@ argument_list|(
 literal|"PsCompleteThisOp"
 argument_list|,
 name|Op
-argument_list|)
-expr_stmt|;
-name|OpcodeClass
-operator|=
-name|ACPI_GET_OP_CLASS
-argument_list|(
-name|WalkState
-operator|->
-name|OpInfo
 argument_list|)
 expr_stmt|;
 comment|/* Delete this op and the subtree below it if asked to */
@@ -385,41 +373,13 @@ name|ACPI_PARSE_DELETE_TREE
 operator|)
 operator|&&
 operator|(
-name|OpcodeClass
-operator|!=
-name|OPTYPE_CONSTANT
-operator|)
-operator|&&
-operator|(
-name|OpcodeClass
-operator|!=
-name|OPTYPE_LITERAL
-operator|)
-operator|&&
-operator|(
-name|OpcodeClass
-operator|!=
-name|OPTYPE_LOCAL_VARIABLE
-operator|)
-operator|&&
-operator|(
-name|OpcodeClass
-operator|!=
-name|OPTYPE_METHOD_ARGUMENT
-operator|)
-operator|&&
-operator|(
-name|OpcodeClass
-operator|!=
-name|OPTYPE_DATA_TERM
-operator|)
-operator|&&
-operator|(
-name|Op
+name|WalkState
 operator|->
-name|Opcode
+name|OpInfo
+operator|->
+name|Class
 operator|!=
-name|AML_INT_NAMEPATH_OP
+name|AML_CLASS_ARGUMENT
 operator|)
 condition|)
 block|{
@@ -445,21 +405,23 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|ACPI_GET_OP_CLASS
-argument_list|(
 name|ParentInfo
-argument_list|)
+operator|->
+name|Class
 condition|)
 block|{
 case|case
-name|OPTYPE_CONTROL
+name|AML_CLASS_CONTROL
 case|:
 comment|/* IF, ELSE, WHILE only */
 break|break;
 case|case
-name|OPTYPE_NAMED_OBJECT
+name|AML_CLASS_NAMED_OBJECT
 case|:
 comment|/* Scope, method, etc. */
+case|case
+name|AML_CLASS_CREATE
+case|:
 comment|/*                  * These opcodes contain TermArg operands.  The current                  * op must be replace by a placeholder return op                  */
 if|if
 condition|(
@@ -1341,45 +1303,18 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|ACPI_GET_OP_TYPE
-argument_list|(
 name|WalkState
 operator|->
 name|OpInfo
-argument_list|)
+operator|->
+name|Class
 condition|)
 block|{
 case|case
-name|ACPI_OP_TYPE_OPCODE
-case|:
-comment|/* Found opcode info, this is a normal opcode */
-name|ParserState
-operator|->
-name|Aml
-operator|+=
-name|AcpiPsGetOpcodeSize
-argument_list|(
-name|WalkState
-operator|->
-name|Opcode
-argument_list|)
-expr_stmt|;
-name|WalkState
-operator|->
-name|ArgTypes
-operator|=
-name|WalkState
-operator|->
-name|OpInfo
-operator|->
-name|ParseArgs
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_OP_TYPE_ASCII
+name|AML_CLASS_ASCII
 case|:
 case|case
-name|ACPI_OP_TYPE_PREFIX
+name|AML_CLASS_PREFIX
 case|:
 comment|/*                  * Starts with a valid prefix or ASCII char, this is a name                  * string.  Convert the bare name string to a namepath.                  */
 name|WalkState
@@ -1396,7 +1331,7 @@ name|ARGP_NAMESTRING
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_OP_TYPE_UNKNOWN
+name|AML_CLASS_UNKNOWN
 case|:
 comment|/* The opcode is unrecognized.  Just skip unknown opcodes */
 name|ACPI_DEBUG_PRINT
@@ -1404,7 +1339,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Found unknown opcode %lX at AML offset %X, ignoring\n"
+literal|"Found unknown opcode %X at AML offset %X, ignoring\n"
 operator|,
 name|WalkState
 operator|->
@@ -1432,6 +1367,30 @@ name|Aml
 operator|++
 expr_stmt|;
 continue|continue;
+default|default:
+comment|/* Found opcode info, this is a normal opcode */
+name|ParserState
+operator|->
+name|Aml
+operator|+=
+name|AcpiPsGetOpcodeSize
+argument_list|(
+name|WalkState
+operator|->
+name|Opcode
+argument_list|)
+expr_stmt|;
+name|WalkState
+operator|->
+name|ArgTypes
+operator|=
+name|WalkState
+operator|->
+name|OpInfo
+operator|->
+name|ParseArgs
+expr_stmt|;
+break|break;
 block|}
 comment|/* Create Op structure and append to parent's argument list */
 if|if
@@ -1841,7 +1800,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_PARSE
 operator|,
-literal|"Op=%p Opcode=%4.4lX Aml %p Oft=%5.5lX\n"
+literal|"Op=%p Opcode=%4.4X Aml %p Oft=%5.5X\n"
 operator|,
 name|Op
 operator|,
@@ -2839,7 +2798,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_PARSE
 operator|,
-literal|"Entered with WalkState=%p Aml=%p size=%lX\n"
+literal|"Entered with WalkState=%p Aml=%p size=%X\n"
 operator|,
 name|WalkState
 operator|,

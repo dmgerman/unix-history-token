@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 44 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 45 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -255,6 +255,21 @@ parameter_list|,
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|RegionNode
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDsCreateBufferField
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
 parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*

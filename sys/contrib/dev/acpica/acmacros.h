@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 96 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 97 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1229,9 +1229,13 @@ name|PArgs
 parameter_list|,
 name|IArgs
 parameter_list|,
+name|Class
+parameter_list|,
+name|Type
+parameter_list|,
 name|Flags
 parameter_list|)
-value|{PArgs,IArgs,Flags,Name}
+value|{PArgs,IArgs,Flags,Class,Type,Name}
 end_define
 
 begin_else
@@ -1250,9 +1254,13 @@ name|PArgs
 parameter_list|,
 name|IArgs
 parameter_list|,
+name|Class
+parameter_list|,
+name|Type
+parameter_list|,
 name|Flags
 parameter_list|)
-value|{PArgs,IArgs,Flags}
+value|{PArgs,IArgs,Flags,Class,Type}
 end_define
 
 begin_endif

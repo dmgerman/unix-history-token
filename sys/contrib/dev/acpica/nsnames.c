@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 63 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 64 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -399,7 +399,7 @@ expr_stmt|;
 block|}
 name|Node
 operator|=
-name|AcpiNsConvertHandleToEntry
+name|AcpiNsMapHandleToNode
 argument_list|(
 name|TargetHandle
 argument_list|)

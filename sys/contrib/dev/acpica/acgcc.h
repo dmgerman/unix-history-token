@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 13 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 14 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -288,6 +288,17 @@ end_endif
 begin_comment
 comment|/* IA 32 */
 end_comment
+
+begin_comment
+comment|/* This macro is used to tag functions as "printf-like" because  * some compilers (like GCC) can catch printf format string problems.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PRINTF_LIKE_FUNC
+value|__attribute__ ((__format__ (__printf__, 4, 5)))
+end_define
 
 begin_endif
 endif|#

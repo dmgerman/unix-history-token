@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 52 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 53 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -936,7 +936,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_MEM_FREE
+name|AcpiOsFree
 argument_list|(
 name|AcpiGbl_DbTablePtr
 argument_list|)
