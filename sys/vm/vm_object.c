@@ -1957,6 +1957,9 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2046,6 +2049,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -4348,10 +4354,7 @@ name|orig_object
 operator|->
 name|backing_object_offset
 operator|+
-name|IDX_TO_OFF
-argument_list|(
-name|offidxstart
-argument_list|)
+name|offset
 expr_stmt|;
 name|new_object
 operator|->
