@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.h	3.5	%G%	*/
+comment|/*	conf.h	3.6	%G%	*/
 end_comment
 
 begin_comment
@@ -92,6 +92,13 @@ name|int
 function_decl|(
 modifier|*
 name|d_stop
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|d_reset
 function_decl|)
 parameter_list|()
 function_decl|;
