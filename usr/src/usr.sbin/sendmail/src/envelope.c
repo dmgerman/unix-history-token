@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -1392,6 +1392,12 @@ name|realname
 init|=
 name|NULL
 decl_stmt|;
+specifier|register
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -1404,6 +1410,13 @@ index|[
 name|PSBUFSIZE
 index|]
 decl_stmt|;
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|getpwnam
+parameter_list|()
+function_decl|;
 specifier|extern
 name|char
 modifier|*
@@ -1650,22 +1663,8 @@ operator|.
 name|q_mailer
 operator|==
 name|LocalMailer
-condition|)
-block|{
-specifier|register
-name|struct
-name|passwd
-modifier|*
-name|pw
-decl_stmt|;
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwnam
-parameter_list|()
-function_decl|;
-comment|/* 		**  Process passwd file entry. 		*/
+operator|&&
+operator|(
 name|pw
 operator|=
 name|getpwnam
@@ -1676,7 +1675,12 @@ name|e_from
 operator|.
 name|q_user
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		**  Process passwd file entry. 		*/
 comment|/* extract home directory */
 name|CurEnv
 operator|->
