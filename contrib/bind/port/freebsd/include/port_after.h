@@ -54,12 +54,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NEED_PSELECT
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_SA_LEN
 end_define
 
@@ -159,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
 end_include
 
 begin_include
