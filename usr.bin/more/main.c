@@ -1087,6 +1087,12 @@ argument_list|(
 literal|"-"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|file
+operator|>=
+literal|0
+condition|)
 name|cat_file
 argument_list|()
 expr_stmt|;
