@@ -453,13 +453,6 @@ decl_stmt|;
 name|int
 name|zero
 decl_stmt|;
-name|iobase
-operator|=
-name|isa_get_port
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ENODEV
@@ -501,9 +494,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"ioport 0x%x alloc failed\n"
-argument_list|,
-name|iobase
+literal|"No resources alloated.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -512,6 +503,13 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+name|iobase
+operator|=
+name|rman_get_start
+argument_list|(
+name|regs
+argument_list|)
+expr_stmt|;
 name|tag
 operator|=
 name|rman_get_bustag
