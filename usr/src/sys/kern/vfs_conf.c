@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -21,47 +21,8 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/dinode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/ffs_extern.h>
-end_include
-
 begin_comment
-comment|/*  * This specifies the filesystem used to mount the root.  * This specification should be done by /etc/config.  */
-end_comment
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|mountroot
-function_decl|)
-parameter_list|()
-init|=
-name|ffs_mountroot
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * These define the root filesystem and device.  */
+comment|/*  * These define the root filesystem, device, and root filesystem type.  */
 end_comment
 
 begin_decl_stmt
@@ -80,6 +41,22 @@ name|rootvnode
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|mountroot
+function_decl|)
+parameter_list|()
+init|=
+name|NULL
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Set up the initial array of known filesystem types.  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -87,6 +64,14 @@ name|vfsops
 name|ufs_vfsops
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|ffs_mountroot
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -96,6 +81,14 @@ name|lfs_vfsops
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|int
+name|lfs_mountroot
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -104,6 +97,14 @@ name|mfs_vfsops
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|int
+name|mfs_mountroot
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -111,6 +112,14 @@ name|vfsops
 name|cd9660_vfsops
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|cd9660_mountroot
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -135,6 +144,14 @@ name|vfsops
 name|nfs_vfsops
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|nfs_mountroot
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -228,6 +245,8 @@ literal|0
 block|,
 name|MNT_LOCAL
 block|,
+name|ffs_mountroot
+block|,
 name|NULL
 block|}
 block|,
@@ -248,6 +267,8 @@ block|,
 literal|0
 block|,
 name|MNT_LOCAL
+block|,
+name|lfs_mountroot
 block|,
 name|NULL
 block|}
@@ -270,6 +291,8 @@ literal|0
 block|,
 name|MNT_LOCAL
 block|,
+name|mfs_mountroot
+block|,
 name|NULL
 block|}
 block|,
@@ -290,6 +313,8 @@ block|,
 literal|0
 block|,
 name|MNT_LOCAL
+block|,
+name|cd9660_mountroot
 block|,
 name|NULL
 block|}
@@ -313,6 +338,8 @@ block|,
 name|MNT_LOCAL
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -332,6 +359,8 @@ block|,
 literal|0
 block|,
 name|MNT_LOCAL
+block|,
+name|NULL
 block|,
 name|NULL
 block|}
@@ -354,6 +383,8 @@ literal|0
 block|,
 literal|0
 block|,
+name|nfs_mountroot
+block|,
 name|NULL
 block|}
 block|,
@@ -374,6 +405,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|afs_mountroot
 block|,
 name|NULL
 block|}
@@ -397,6 +430,8 @@ block|,
 literal|0
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -416,6 +451,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|NULL
 block|,
 name|NULL
 block|}
@@ -439,6 +476,8 @@ block|,
 literal|0
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -458,6 +497,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|NULL
 block|,
 name|NULL
 block|}
@@ -481,6 +522,8 @@ block|,
 literal|0
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -502,6 +545,8 @@ block|,
 literal|0
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -521,6 +566,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|NULL
 block|,
 name|NULL
 block|}
