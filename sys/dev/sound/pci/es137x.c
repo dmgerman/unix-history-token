@@ -105,6 +105,13 @@ name|ES1371_PCI_ID2
 value|0x13713274
 end_define
 
+begin_define
+define|#
+directive|define
+name|ES_BUFFSIZE
+value|4096
+end_define
+
 begin_comment
 comment|/* device private data */
 end_comment
@@ -156,6 +163,9 @@ name|sh
 decl_stmt|;
 name|bus_dma_tag_t
 name|parent_dmat
+decl_stmt|;
+name|device_t
+name|dev
 decl_stmt|;
 name|int
 name|num
@@ -4665,6 +4675,12 @@ sizeof|sizeof
 expr|*
 name|es
 argument_list|)
+expr_stmt|;
+name|es
+operator|->
+name|dev
+operator|=
+name|dev
 expr_stmt|;
 name|mapped
 operator|=
