@@ -3262,7 +3262,7 @@ name|ip
 operator|->
 name|ip_off
 operator||=
-name|IP_EVIL
+name|IP_EF
 expr_stmt|;
 name|ip
 operator|->
@@ -5360,7 +5360,7 @@ name|ip
 operator|->
 name|ip_off
 operator|&
-name|IP_EVIL
+name|IP_EF
 condition|)
 operator|(
 name|void
