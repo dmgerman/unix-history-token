@@ -215,33 +215,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * These are set up by the serial card that is configured to be the gdb port.  */
-end_comment
-
-begin_decl_stmt
-name|dev_t
-name|gdbdev
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|cn_getc_t
-modifier|*
-name|gdb_getc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|cn_putc_t
-modifier|*
-name|gdb_putc
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -256,8 +229,7 @@ if|if
 condition|(
 name|gdbdev
 operator|==
-operator|-
-literal|1
+name|NODEV
 condition|)
 return|return
 literal|0
@@ -291,8 +263,7 @@ if|if
 condition|(
 name|gdbdev
 operator|==
-operator|-
-literal|1
+name|NODEV
 condition|)
 return|return
 operator|-
