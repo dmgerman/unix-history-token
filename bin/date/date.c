@@ -1060,7 +1060,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* hack for 2000 ;-} */
 name|lt
 operator|->
 name|tm_year
@@ -1078,6 +1077,7 @@ name|tm_year
 operator|<
 literal|69
 condition|)
+comment|/* hack for 2000 ;-} */
 name|lt
 operator|->
 name|tm_year
