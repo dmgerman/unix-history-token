@@ -107,7 +107,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	5.43 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.44 (Berkeley) %G% (with NEWDB)"
 expr_stmt|;
 end_expr_stmt
 
@@ -128,7 +128,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.43 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	5.44 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +143,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.43 (Berkeley) %G% (without NDBM)"
+literal|"@(#)alias.c	5.44 (Berkeley) %G% (without NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -591,7 +591,13 @@ block|}
 ifdef|#
 directive|ifdef
 name|NDBM
-else|else
+elseif|else
+if|if
+condition|(
+name|AliasDBMptr
+operator|!=
+name|NULL
+condition|)
 block|{
 name|rhs
 operator|.
@@ -910,6 +916,26 @@ argument_list|,
 name|DBMMODE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AliasDBMptr
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"initaliases: cannot open %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|NoAlias
+operator|=
+name|TRUE
+expr_stmt|;
+return|return;
+block|}
 else|#
 directive|else
 name|syserr
@@ -940,6 +966,26 @@ argument_list|,
 name|DBMMODE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AliasDBMptr
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"initaliases: cannot open %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|NoAlias
+operator|=
+name|TRUE
+expr_stmt|;
+return|return;
+block|}
 endif|#
 directive|endif
 block|}
@@ -1106,6 +1152,26 @@ argument_list|,
 name|DBMMODE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AliasDBMptr
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"initaliases: cannot open %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|NoAlias
+operator|=
+name|TRUE
+expr_stmt|;
+return|return;
+block|}
 endif|#
 directive|endif
 endif|#
@@ -1487,6 +1553,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|init
+condition|)
+name|syserr
+argument_list|(
+literal|"Can't open %s"
+argument_list|,
+name|aliasfile
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|tTd
