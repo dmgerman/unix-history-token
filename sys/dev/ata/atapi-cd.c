@@ -6863,7 +6863,6 @@ expr_stmt|;
 block|}
 name|devstat_end_transaction_buf
 argument_list|(
-operator|&
 name|cdp
 operator|->
 name|stats

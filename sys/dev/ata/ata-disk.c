@@ -1130,7 +1130,9 @@ name|printf
 argument_list|(
 literal|"ad%d: piomode=%d dmamode=%d udmamode=%d\n"
 argument_list|,
-name|adnlun
+name|adp
+operator|->
+name|lun
 argument_list|,
 name|apiomode
 argument_list|(
@@ -1158,7 +1160,9 @@ name|printf
 argument_list|(
 literal|"ad%d:<%s/%s> ATA-%c disk at ata%d as %s\n"
 argument_list|,
-name|adnlun
+name|adp
+operator|->
+name|lun
 argument_list|,
 name|model_buf
 argument_list|,
@@ -1193,7 +1197,9 @@ argument_list|(
 literal|"ad%d: %luMB (%u sectors), "
 literal|"%u cyls, %u heads, %u S/T, %u B/S\n"
 argument_list|,
-name|adnlun
+name|adp
+operator|->
+name|lun
 argument_list|,
 name|adp
 operator|->
@@ -1232,7 +1238,9 @@ name|printf
 argument_list|(
 literal|"ad%d: %d secs/int, %d depth queue, %s\n"
 argument_list|,
-name|adnlun
+name|adp
+operator|->
+name|lun
 argument_list|,
 name|adp
 operator|->
@@ -1276,7 +1284,9 @@ name|stats
 argument_list|,
 literal|"ad"
 argument_list|,
-name|adnlun
+name|adp
+operator|->
+name|lun
 argument_list|,
 name|DEV_BSIZE
 argument_list|,
@@ -1352,6 +1362,9 @@ name|adp
 operator|->
 name|queue
 argument_list|)
+expr_stmt|;
+name|adnlun
+operator|++
 expr_stmt|;
 block|}
 block|}
