@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.34	82/08/22	*/
+comment|/*	init_main.c	4.35	82/08/24	*/
 end_comment
 
 begin_include
@@ -264,6 +264,29 @@ operator|.
 name|u_cmask
 operator|=
 name|CMASK
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|NGROUPS
+condition|;
+name|i
+operator|++
+control|)
+name|u
+operator|.
+name|u_groups
+index|[
+name|i
+index|]
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 for|for
 control|(
