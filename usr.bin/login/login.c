@@ -1360,12 +1360,6 @@ argument_list|,
 name|PAM_RHOST
 argument_list|,
 name|hostname
-operator|==
-name|NULL
-condition|?
-literal|"localhost"
-else|:
-name|hostname
 argument_list|)
 expr_stmt|;
 if|if
