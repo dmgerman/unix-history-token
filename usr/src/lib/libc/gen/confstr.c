@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)confstr.c	5.1 (Berkeley) %G%"
+literal|"@(#)confstr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,7 @@ name|strncpy
 argument_list|(
 name|buf
 argument_list|,
-name|_PATH_DEFPATH
+name|_PATH_STDPATH
 argument_list|,
 name|len
 operator|-
@@ -123,7 +123,7 @@ return|return
 operator|(
 sizeof|sizeof
 argument_list|(
-name|_PATH_DEFPATH
+name|_PATH_STDPATH
 argument_list|)
 operator|)
 return|;
