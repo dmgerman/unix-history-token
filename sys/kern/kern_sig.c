@@ -5074,6 +5074,11 @@ literal|"psignal signal number"
 argument_list|)
 expr_stmt|;
 block|}
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 name|KNOTE
 argument_list|(
 operator|&
@@ -5084,6 +5089,11 @@ argument_list|,
 name|NOTE_SIGNAL
 operator||
 name|sig
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|prop
