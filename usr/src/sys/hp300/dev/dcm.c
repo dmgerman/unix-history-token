@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from Utah: $Hdr: dcm.c 1.29 92/01/21$  *  *	@(#)dcm.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from Utah: $Hdr: dcm.c 1.29 92/01/21$  *  *	@(#)dcm.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -543,7 +543,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #define IOSTATS */
+comment|/* #define DCMSTATS */
 end_comment
 
 begin_ifdef
@@ -631,7 +631,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IOSTATS
+name|DCMSTATS
 end_ifdef
 
 begin_define
@@ -3088,7 +3088,7 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|IOSTATS
+name|DCMSTATS
 name|struct
 name|dcmstats
 modifier|*
@@ -3469,7 +3469,7 @@ name|nch
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IOSTATS
+name|DCMSTATS
 name|dsp
 operator|->
 name|rchars
@@ -4732,7 +4732,7 @@ name|s
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|IOSTATS
+name|DCMSTATS
 name|struct
 name|dcmstats
 modifier|*
@@ -4763,7 +4763,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IOSTATS
+name|DCMSTATS
 name|dsp
 operator|->
 name|xints
@@ -4888,7 +4888,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|IOSTATS
+name|DCMSTATS
 name|dsp
 operator|->
 name|xempty
@@ -5004,7 +5004,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IOSTATS
+name|DCMSTATS
 name|tch
 operator|+=
 name|nch
@@ -5166,7 +5166,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|IOSTATS
+name|DCMSTATS
 name|dsp
 operator|->
 name|xrestarts
@@ -5273,7 +5273,7 @@ name|out
 label|:
 ifdef|#
 directive|ifdef
-name|IOSTATS
+name|DCMSTATS
 name|dsp
 operator|->
 name|xchars
