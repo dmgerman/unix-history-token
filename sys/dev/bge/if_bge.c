@@ -9190,7 +9190,14 @@ name|sc
 operator|->
 name|bge_link
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|sc
@@ -9256,6 +9263,11 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|mii
