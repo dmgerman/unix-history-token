@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1095,6 +1095,8 @@ expr_stmt|;
 name|vap
 operator|->
 name|va_atime
+operator|.
+name|ts_sec
 operator|=
 name|ip
 operator|->
@@ -1102,7 +1104,19 @@ name|i_atime
 expr_stmt|;
 name|vap
 operator|->
+name|va_atime
+operator|.
+name|ts_nsec
+operator|=
+name|ip
+operator|->
+name|i_atimensec
+expr_stmt|;
+name|vap
+operator|->
 name|va_mtime
+operator|.
+name|ts_sec
 operator|=
 name|ip
 operator|->
@@ -1110,11 +1124,33 @@ name|i_mtime
 expr_stmt|;
 name|vap
 operator|->
+name|va_mtime
+operator|.
+name|ts_nsec
+operator|=
+name|ip
+operator|->
+name|i_mtimensec
+expr_stmt|;
+name|vap
+operator|->
 name|va_ctime
+operator|.
+name|ts_sec
 operator|=
 name|ip
 operator|->
 name|i_ctime
+expr_stmt|;
+name|vap
+operator|->
+name|va_ctime
+operator|.
+name|ts_nsec
+operator|=
+name|ip
+operator|->
+name|i_ctimensec
 expr_stmt|;
 name|vap
 operator|->
