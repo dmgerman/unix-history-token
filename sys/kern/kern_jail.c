@@ -365,28 +365,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * MPSAFE  */
+comment|/*  * MPSAFE  *  * struct jail_args {  *	struct jail *jail;  * };  */
 end_comment
 
 begin_function
 name|int
 name|jail
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|jail_args
-comment|/* { 		struct jail *jail; 	} */
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|nameidata
@@ -425,7 +420,9 @@ operator|&
 name|j
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|j
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -459,8 +456,10 @@ name|prison
 operator|*
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|pr
+argument_list|)
 argument_list|,
 name|M_PRISON
 argument_list|,
@@ -503,9 +502,11 @@ operator|->
 name|pr_path
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pr
 operator|->
 name|pr_path
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -613,9 +614,11 @@ operator|->
 name|pr_host
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|pr
 operator|->
 name|pr_host
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -875,28 +878,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPSAFE  */
+comment|/*  * MPSAFE  *  * struct jail_attach_args {  *	int jid;  * };  */
 end_comment
 
 begin_function
 name|int
 name|jail_attach
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|jail_attach_args
-comment|/* { 		int jid; 	} */
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|proc
@@ -1732,17 +1730,19 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|sai
-init|=
+decl_stmt|;
+name|int
+name|ok
+decl_stmt|;
+name|sai
+operator|=
 operator|(
 expr|struct
 name|sockaddr_in
 operator|*
 operator|)
 name|sa
-decl_stmt|;
-name|int
-name|ok
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1815,21 +1815,16 @@ begin_function
 name|int
 name|prison_check
 parameter_list|(
-name|cred1
-parameter_list|,
-name|cred2
-parameter_list|)
 name|struct
 name|ucred
 modifier|*
 name|cred1
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
 name|cred2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1874,7 +1869,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return 1 if the passed credential is in a jail, otherwise 0.  */
@@ -1884,13 +1879,11 @@ begin_function
 name|int
 name|jailed
 parameter_list|(
-name|cred
-parameter_list|)
 name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -1912,24 +1905,18 @@ begin_function
 name|void
 name|getcredhostname
 parameter_list|(
-name|cred
-parameter_list|,
-name|buf
-parameter_list|,
-name|size
-parameter_list|)
 name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
