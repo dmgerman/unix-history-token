@@ -607,11 +607,6 @@ name|struct
 name|pcf_softc
 modifier|*
 name|pcf
-init|=
-name|DEVTOSOFTC
-argument_list|(
-name|pcfdev
-argument_list|)
 decl_stmt|;
 name|device_t
 name|parent
