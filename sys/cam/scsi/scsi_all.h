@@ -1600,6 +1600,10 @@ name|T_FIXED
 value|0
 end_define
 
+begin_comment
+comment|/*  * This length is the initial inquiry length used by the probe code, as      * well as the legnth necessary for scsi_print_inquiry() to function   * correctly.  If either use requires a different length in the future,   * the two values should be de-coupled.  */
+end_comment
+
 begin_define
 define|#
 directive|define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999 Kenneth D. Merry  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1997, 1998, 1999, 2000 Kenneth D. Merry  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -3071,6 +3071,7 @@ name|inq_buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note that although the size of the inquiry buffer is the full 	 * 256 bytes specified in the SCSI spec, we only tell the device 	 * that we have allocated SHORT_INQUIRY_LENGTH bytes.  There are 	 * two reasons for this: 	 * 	 *  - The SCSI spec says that when a length field is only 1 byte, 	 *    a value of 0 will be interpreted as 256.  Therefore 	 *    scsi_inquiry() will convert an inq_len (which is passed in as 	 *    a u_int32_t, but the field in the CDB is only 1 byte) of 256 	 *    to 0.  Evidently, very few devices meet the spec in that 	 *    regard.  Some devices, like many Seagate disks, take the 0 as  	 *    0, and don't return any data.  One Pioneer DVD-R drive 	 *    returns more data than the command asked for. 	 * 	 *    So, since there are numerous devices that just don't work 	 *    right with the full inquiry size, we don't send the full size. 	 *  	 *  - The second reason not to use the full inquiry data length is 	 *    that we don't need it here.  The only reason we issue a 	 *    standard inquiry is to get the vendor name, device name, 	 *    and revision so scsi_print_inquiry() can print them. 	 * 	 * If, at some point in the future, more inquiry data is needed for 	 * some reason, this code should use a procedure similar to the 	 * probe code.  i.e., issue a short inquiry, and determine from 	 * the additional length passed back from the device how much 	 * inquiry data the device supports.  Once the amount the device 	 * supports is determined, issue an inquiry for that amount and no 	 * more. 	 * 	 * KDM, 2/18/2000 	 */
 name|scsi_inquiry
 argument_list|(
 operator|&
@@ -3095,11 +3096,7 @@ operator|)
 name|inq_buf
 argument_list|,
 comment|/* inq_len */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|scsi_inquiry_data
-argument_list|)
+name|SHORT_INQUIRY_LENGTH
 argument_list|,
 comment|/* evpd */
 literal|0

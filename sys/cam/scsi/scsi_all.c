@@ -11058,6 +11058,10 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/*  * This function currently requires at least 36 bytes, or  * SHORT_INQUIRY_LENGTH, worth of data to function properly.  If this  * function needs more or less data in the future, another length should be  * defined in scsi_all.h to indicate the minimum amount of data necessary  * for this routine to function properly.  */
+end_comment
+
 begin_function
 name|void
 name|scsi_print_inquiry
