@@ -320,22 +320,12 @@ value|_IOWR('c', 6, ssaver_t)
 end_define
 
 begin_comment
-comment|/* set the text cursor shape */
+comment|/* set the text cursor type (obsolete, see CONS_CURSORSHAPE below) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CONS_BLINK_CURSOR
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONS_CHAR_CURSOR
-value|(1<< 1)
-end_define
+begin_comment
+comment|/* #define CONS_BLINK_CURSOR (1<< 0) #define CONS_CHAR_CURSOR (1<< 1) */
+end_comment
 
 begin_define
 define|#
@@ -603,6 +593,88 @@ define|#
 directive|define
 name|CONS_SAVERSTART
 value|_IOW('c', 13, int)
+end_define
+
+begin_comment
+comment|/* set the text cursor shape (see also CONS_CURSORTYPE above) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONS_BLINK_CURSOR
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_CHAR_CURSOR
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_HIDDEN_CURSOR
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_CURSOR_ATTRS
+value|(CONS_BLINK_CURSOR | CONS_CHAR_CURSOR |	\ 				 CONS_HIDDEN_CURSOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_RESET_CURSOR
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_LOCAL_CURSOR
+value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_CURSOR_FLAGS
+value|(CONS_RESET_CURSOR | CONS_LOCAL_CURSOR)
+end_define
+
+begin_struct
+struct|struct
+name|cshape
+block|{
+comment|/* shape[0]: flags, shape[1]: base, shape[2]: height */
+name|int
+name|shape
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CONS_GETCURSORSHAPE
+value|_IOWR('c', 14, struct cshape)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_SETCURSORSHAPE
+value|_IOW('c', 15, struct cshape)
 end_define
 
 begin_comment

@@ -647,6 +647,27 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* text cursor attributes */
+end_comment
+
+begin_struct
+struct|struct
+name|cursor_attr
+block|{
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|base
+decl_stmt|;
+name|int
+name|height
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* softc */
 end_comment
 
@@ -711,6 +732,10 @@ define|#
 directive|define
 name|SC_QUIET_BELL
 value|(1<< 1)
+if|#
+directive|if
+literal|0
+comment|/* not used anymore */
 define|#
 directive|define
 name|SC_BLINK_CURSOR
@@ -719,6 +744,8 @@ define|#
 directive|define
 name|SC_CHAR_CURSOR
 value|(1<< 3)
+endif|#
+directive|endif
 define|#
 directive|define
 name|SC_MOUSE_ENABLED
@@ -810,11 +837,13 @@ decl_stmt|;
 name|long
 name|scrn_time_stamp
 decl_stmt|;
-name|char
-name|cursor_base
+name|struct
+name|cursor_attr
+name|dflt_curs_attr
 decl_stmt|;
-name|char
-name|cursor_height
+name|struct
+name|cursor_attr
+name|curs_attr
 decl_stmt|;
 name|u_char
 name|scr_map
@@ -1006,14 +1035,18 @@ name|u_short
 name|cursor_saveunder_attr
 decl_stmt|;
 comment|/* saved attr under cursor */
-name|char
-name|cursor_base
+name|struct
+name|cursor_attr
+name|dflt_curs_attr
 decl_stmt|;
-comment|/* cursor base line # */
-name|char
-name|cursor_height
+name|struct
+name|cursor_attr
+name|curr_curs_attr
 decl_stmt|;
-comment|/* cursor height */
+name|struct
+name|cursor_attr
+name|curs_attr
+decl_stmt|;
 name|int
 name|mouse_pos
 decl_stmt|;
@@ -2201,6 +2234,26 @@ parameter_list|(
 name|scr_stat
 modifier|*
 name|scp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sc_change_cursor_shape
+parameter_list|(
+name|scr_stat
+modifier|*
+name|scp
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|int
+name|base
+parameter_list|,
+name|int
+name|height
 parameter_list|)
 function_decl|;
 end_function_decl

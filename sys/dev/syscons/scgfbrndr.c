@@ -997,7 +997,7 @@ comment|/* the caller may set height<= 0 in order to disable the cursor */
 if|#
 directive|if
 literal|0
-block|scp->cursor_base = base; 	scp->cursor_height = height;
+block|scp->curs_attr.base = base; 	scp->curs_attr.height = height;
 endif|#
 directive|endif
 operator|(
@@ -1083,11 +1083,13 @@ directive|ifndef
 name|SC_NO_FONT_LOADING
 if|if
 condition|(
-name|sc
+name|scp
 operator|->
+name|curs_attr
+operator|.
 name|flags
 operator|&
-name|SC_CHAR_CURSOR
+name|CONS_CHAR_CURSOR
 condition|)
 block|{
 name|unsigned
@@ -1159,7 +1161,9 @@ if|if
 condition|(
 name|scp
 operator|->
-name|cursor_base
+name|curs_attr
+operator|.
+name|base
 operator|>=
 name|h
 condition|)
@@ -1235,11 +1239,15 @@ name|h
 operator|-
 name|scp
 operator|->
-name|cursor_base
+name|curs_attr
+operator|.
+name|base
 operator|-
 name|scp
 operator|->
-name|cursor_height
+name|curs_attr
+operator|.
+name|height
 argument_list|,
 literal|0
 argument_list|)
@@ -1250,7 +1258,9 @@ name|h
 operator|-
 name|scp
 operator|->
-name|cursor_base
+name|curs_attr
+operator|.
+name|base
 condition|;
 operator|++
 name|i
@@ -1264,12 +1274,6 @@ operator|^=
 literal|0xff
 expr_stmt|;
 block|}
-name|sc
-operator|->
-name|font_loading_in_progress
-operator|=
-name|TRUE
-expr_stmt|;
 comment|/* XXX */
 operator|(
 operator|*
@@ -1299,12 +1303,6 @@ name|cursor_char
 operator|,
 literal|1
 operator|)
-expr_stmt|;
-name|sc
-operator|->
-name|font_loading_in_progress
-operator|=
-name|FALSE
 expr_stmt|;
 name|sc_vtb_putc
 argument_list|(
@@ -1462,7 +1460,9 @@ if|if
 condition|(
 name|scp
 operator|->
-name|cursor_height
+name|curs_attr
+operator|.
+name|height
 operator|<=
 literal|0
 condition|)
@@ -4059,7 +4059,7 @@ comment|/* the caller may set height<= 0 in order to disable the cursor */
 if|#
 directive|if
 literal|0
-block|scp->cursor_base = base; 	scp->cursor_height = height;
+block|scp->curs_attr.base = base; 	scp->curs_attr.height = height;
 endif|#
 directive|endif
 block|}
@@ -4172,7 +4172,9 @@ name|font_size
 operator|-
 name|scp
 operator|->
-name|cursor_base
+name|curs_attr
+operator|.
+name|base
 operator|-
 literal|1
 operator|)
@@ -4386,7 +4388,9 @@ name|font_size
 operator|-
 name|scp
 operator|->
-name|cursor_base
+name|curs_attr
+operator|.
+name|base
 operator|-
 literal|1
 index|]
@@ -4398,7 +4402,9 @@ name|imin
 argument_list|(
 name|scp
 operator|->
-name|cursor_height
+name|curs_attr
+operator|.
+name|height
 argument_list|,
 name|scp
 operator|->
@@ -4511,7 +4517,9 @@ if|if
 condition|(
 name|scp
 operator|->
-name|cursor_height
+name|curs_attr
+operator|.
+name|height
 operator|<=
 literal|0
 condition|)
