@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opset.c 4.4 %G%"
+literal|"@(#)opset.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1788,6 +1788,12 @@ block|}
 ifdef|#
 directive|ifdef
 name|ADB
+if|if
+condition|(
+name|regnumber
+operator|==
+name|R_PC
+condition|)
 name|psymoff
 argument_list|(
 name|valuep
@@ -1806,14 +1812,26 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|regnumber
-operator|!=
-name|R_PC
-condition|)
+else|else
 block|{
 comment|/* } */
+name|printf
+argument_list|(
+name|LPRMODE
+argument_list|,
+name|valuep
+operator|->
+name|num_ulong
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|insoutfmt
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 endif|ADB
