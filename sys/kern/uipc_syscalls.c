@@ -439,12 +439,6 @@ name|fd
 decl_stmt|,
 name|error
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|fdp
 operator|=
 name|td
@@ -474,6 +468,12 @@ goto|goto
 name|done2
 goto|;
 comment|/* An extra reference on `fp' has been held for us by falloc(). */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|socreate
@@ -498,6 +498,12 @@ operator|->
 name|td_ucred
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|FILEDESC_LOCK
@@ -605,12 +611,6 @@ argument_list|)
 expr_stmt|;
 name|done2
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
