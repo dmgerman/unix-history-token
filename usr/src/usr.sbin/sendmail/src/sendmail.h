@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.83		%G%"
+literal|"@(#)sendmail.h	3.84		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|MAXMAILERS
-value|10
+value|25
 end_define
 
 begin_comment
