@@ -8144,10 +8144,14 @@ case|case
 name|N_MAIN
 case|:
 comment|/* Name of main routine.  */
-case|case
-name|N_ALIAS
-case|:
+if|#
+directive|if
+literal|0
+comment|/* XXX remove when binutils 2.9.2 is imported */
+block|case N_ALIAS:
 comment|/* SunPro F77: alias name, ignore for now.  */
+endif|#
+directive|endif
 break|break;
 block|}
 comment|/* '#' is a GNU C extension to allow one symbol to refer to another      related symbol.       Generally this is used so that an alias can refer to its main      symbol.  */

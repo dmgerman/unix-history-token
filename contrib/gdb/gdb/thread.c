@@ -1992,6 +1992,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|long
+operator|)
 name|inferior_pid
 argument_list|)
 expr_stmt|;
@@ -2162,6 +2165,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|long
 operator|)
 name|inferior_pid
 argument_list|)

@@ -1352,6 +1352,12 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|VM_MIN_ADDRESS
 end_ifndef
 
@@ -1361,6 +1367,11 @@ directive|define
 name|VM_MIN_ADDRESS
 value|(CORE_ADDR)0x120000000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

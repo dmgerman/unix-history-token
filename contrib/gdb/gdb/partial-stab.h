@@ -2247,10 +2247,14 @@ case|case
 name|N_DEFD
 case|:
 comment|/* GNU Modula-2 */
-case|case
-name|N_ALIAS
-case|:
+if|#
+directive|if
+literal|0
+comment|/* XXX remove when binutils 2.9.2 is imported */
+block|case N_ALIAS:
 comment|/* SunPro F77: alias name, ignore for now.  */
+endif|#
+directive|endif
 case|case
 name|N_OBJ
 case|:

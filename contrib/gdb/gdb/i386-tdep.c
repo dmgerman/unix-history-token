@@ -2641,35 +2641,23 @@ modifier|*
 name|info
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|disassembly_flavor
-operator|==
-name|att_flavor
-condition|)
+comment|/* XXX remove when binutils 2.9.2 is imported */
+if|#
+directive|if
+literal|0
+block|if (disassembly_flavor == att_flavor)     return print_insn_i386_att (memaddr, info);   else if (disassembly_flavor == intel_flavor)     return print_insn_i386_intel (memaddr, info);
+else|#
+directive|else
 return|return
-name|print_insn_i386_att
+name|print_insn_i386
 argument_list|(
 name|memaddr
 argument_list|,
 name|info
 argument_list|)
 return|;
-elseif|else
-if|if
-condition|(
-name|disassembly_flavor
-operator|==
-name|intel_flavor
-condition|)
-return|return
-name|print_insn_i386_intel
-argument_list|(
-name|memaddr
-argument_list|,
-name|info
-argument_list|)
-return|;
+endif|#
+directive|endif
 block|}
 end_function
 

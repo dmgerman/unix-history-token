@@ -15906,86 +15906,23 @@ name|CORE_ADDR
 name|func_start
 decl_stmt|;
 block|{
-name|struct
-name|symtab_and_line
-name|sal
-decl_stmt|;
-name|CORE_ADDR
-name|func_addr
-decl_stmt|,
-name|func_end
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|find_pc_partial_function
-argument_list|(
-name|pc
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|func_addr
-argument_list|,
-operator|&
-name|func_end
-argument_list|)
-condition|)
-goto|goto
-name|nosyms
-goto|;
+if|#
+directive|if
+literal|0
+block|struct symtab_and_line sal;   CORE_ADDR func_addr, func_end;    if (!find_pc_partial_function (pc, NULL,&func_addr,&func_end))     goto nosyms;
 comment|/* Might be in prologue */
-name|sal
-operator|=
-name|find_pc_line
-argument_list|(
-name|func_addr
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sal
-operator|.
-name|line
-operator|==
-literal|0
-condition|)
-goto|goto
-name|nosyms
-goto|;
+block|sal = find_pc_line (func_addr, 0);    if (sal.line == 0)     goto nosyms;
 comment|/* sal.end is the address of the first instruction past sal.line. */
-if|if
-condition|(
-name|sal
-operator|.
-name|end
-operator|>
-name|func_addr
-operator|&&
-name|sal
-operator|.
-name|end
-operator|<=
-name|func_end
-condition|)
+block|if (sal.end> func_addr&& sal.end<= func_end)
 comment|/* Is prologue in function? */
-return|return
-name|pc
-operator|<
-name|sal
-operator|.
-name|end
-return|;
+block|return pc< sal.end;
 comment|/* Yes, is pc in prologue? */
 comment|/* The line after the prologue seems to be outside the function.  In this      case, tell the caller to find the prologue the hard way.  */
-return|return
-literal|1
-return|;
+block|return 1;
 comment|/* Come here when symtabs don't contain line # info.  In this case, it is    likely that the user has stepped into a library function w/o symbols, or    is doing a stepi/nexti through code without symbols.  */
-name|nosyms
-label|:
+block|nosyms:
+endif|#
+directive|endif
 comment|/* If func_start is zero (meaning unknown) then we don't know whether pc is    in the prologue or not.  I.E. it might be. */
 if|if
 condition|(

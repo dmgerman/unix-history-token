@@ -4211,6 +4211,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|long
+operator|)
 name|cs
 operator|->
 name|c_sclass

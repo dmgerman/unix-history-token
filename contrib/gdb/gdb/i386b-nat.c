@@ -188,8 +188,7 @@ decl_stmt|;
 name|int
 name|which
 decl_stmt|;
-name|unsigned
-name|int
+name|CORE_ADDR
 name|ignore
 decl_stmt|;
 block|{

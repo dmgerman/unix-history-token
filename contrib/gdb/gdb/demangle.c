@@ -130,22 +130,13 @@ block|,
 literal|"ARM style demangling"
 block|}
 block|,
-block|{
-name|HP_DEMANGLING_STYLE_STRING
-block|,
-name|hp_demangling
-block|,
-literal|"HP (aCC) style demangling"
-block|}
-block|,
-block|{
-name|EDG_DEMANGLING_STYLE_STRING
-block|,
-name|edg_demangling
-block|,
-literal|"EDG style demangling"
-block|}
-block|,
+if|#
+directive|if
+literal|0
+comment|/* XXX remove when binutils 2.9.2 is imported */
+block|{     HP_DEMANGLING_STYLE_STRING,       hp_demangling,       "HP (aCC) style demangling"   }   ,   {     EDG_DEMANGLING_STYLE_STRING,       edg_demangling,       "EDG style demangling"   }   ,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|,
