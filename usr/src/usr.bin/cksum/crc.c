@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crc.c	5.4 (Berkeley) %G%"
+literal|"@(#)crc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -563,7 +563,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * crc --  *	Compute a POSIX.2 checksum.  This routine has been broken out since  *	it is anticipated that other programs will use it.  It takes a file  *	descriptor to read from and locations to store the crc and the number  *	of bytes read.  It returns 0 on success and 1 on failure.  Errno is  *	set on failure.  */
+comment|/*  * Compute a POSIX 1003.2 checksum.  This routine has been broken out so that  * other programs can use it.  It takes a file descriptor to read from and  * locations to store the crc and the number of bytes read.  It returns 0 on  * success and 1 on failure.  Errno is set on failure.  */
+end_comment
+
+begin_decl_stmt
+name|u_long
+name|crc_total
+init|=
+operator|~
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The crc over a number of files. */
 end_comment
 
 begin_function
@@ -614,11 +627,25 @@ operator|*
 literal|1024
 index|]
 decl_stmt|;
+define|#
+directive|define
+name|COMPUTE
+parameter_list|(
+name|var
+parameter_list|,
+name|ch
+parameter_list|)
+value|(var) = (var)<< 8 ^ crctab[(var)>> 24 ^ (ch)]
 name|crc
 operator|=
 name|len
 operator|=
 literal|0
+expr_stmt|;
+name|crc_total
+operator|=
+operator|~
+name|crc_total
 expr_stmt|;
 while|while
 condition|(
@@ -656,22 +683,24 @@ condition|;
 operator|++
 name|p
 control|)
+block|{
+name|COMPUTE
+argument_list|(
 name|crc
-operator|=
-name|crc
-operator|<<
-literal|8
-operator|^
-name|crctab
-index|[
-name|crc
-operator|>>
-literal|24
-operator|^
+argument_list|,
 operator|*
 name|p
-index|]
+argument_list|)
 expr_stmt|;
+name|COMPUTE
+argument_list|(
+name|crc_total
+argument_list|,
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|nr
@@ -700,28 +729,36 @@ name|len
 operator|>>=
 literal|8
 control|)
+block|{
+name|COMPUTE
+argument_list|(
 name|crc
-operator|=
-name|crc
-operator|<<
-literal|8
-operator|^
-name|crctab
-index|[
-name|crc
-operator|>>
-literal|24
-operator|^
+argument_list|,
 name|len
 operator|&
 literal|0xff
-index|]
+argument_list|)
 expr_stmt|;
+name|COMPUTE
+argument_list|(
+name|crc_total
+argument_list|,
+name|len
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|cval
 operator|=
 operator|~
 name|crc
+expr_stmt|;
+name|crc_total
+operator|=
+operator|~
+name|crc_total
 expr_stmt|;
 return|return
 operator|(
