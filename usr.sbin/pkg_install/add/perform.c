@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.26.2.5 1995/10/23 12:33:38 jkh Exp $"
+literal|"$Id: perform.c,v 1.30 1995/10/25 15:37:49 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,15 +433,28 @@ name|pkg
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|char
+name|cwd
+index|[
+name|FILENAME_MAX
+index|]
+decl_stmt|;
 name|sprintf
 argument_list|(
 name|pkg_fullname
 argument_list|,
-literal|"./%s"
+literal|"%s/%s"
+argument_list|,
+name|getwd
+argument_list|(
+name|cwd
+argument_list|)
 argument_list|,
 name|pkg
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
