@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2589,10 +2589,7 @@ else|else
 block|{
 name|u
 operator|.
-name|u_arg
-index|[
-literal|1
-index|]
+name|u_code
 operator|=
 name|code
 expr_stmt|;
@@ -2912,7 +2909,7 @@ name|mask
 expr_stmt|;
 name|p
 operator|->
-name|p_cursig
+name|p_xstat
 operator|=
 name|sig
 expr_stmt|;
@@ -2984,13 +2981,6 @@ case|case
 name|SIGCONT
 case|:
 comment|/* 			 * If SIGCONT is default (or ignored), we continue 			 * the process but don't leave the signal in p_sig, 			 * as it has no further action.  If SIGCONT is held, 			 * continue the process and leave the signal in p_sig. 			 * If the process catches SIGCONT, let it handle 			 * the signal itself.  If it isn't waiting on 			 * an event, then it goes back to run state. 			 * Otherwise, process goes back to sleep state. 			 */
-name|p
-operator|->
-name|p_cursig
-operator|=
-literal|0
-expr_stmt|;
-comment|/* ??? XXX */
 if|if
 condition|(
 name|action
@@ -3274,7 +3264,7 @@ block|{
 comment|/* 			 * If traced, always stop, and stay 			 * stopped until released by the parent. 			 */
 name|p
 operator|->
-name|p_cursig
+name|p_xstat
 operator|=
 name|sig
 expr_stmt|;
@@ -3327,7 +3317,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 			 * If parent wants us to take the signal, 			 * then it will leave it in p->p_cursig; 			 * otherwise we just look for signals again. 			 */
+comment|/* 			 * If parent wants us to take the signal, 			 * then it will leave it in p->p_xstat; 			 * otherwise we just look for signals again. 			 */
 name|p
 operator|->
 name|p_sig
@@ -3340,7 +3330,7 @@ name|sig
 operator|=
 name|p
 operator|->
-name|p_cursig
+name|p_xstat
 expr_stmt|;
 if|if
 condition|(
@@ -3435,7 +3425,7 @@ break|break;
 comment|/* == ignore */
 name|p
 operator|->
-name|p_cursig
+name|p_xstat
 operator|=
 name|sig
 expr_stmt|;
@@ -3733,12 +3723,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|u
-operator|.
-name|u_error
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 			 * Set the new mask value and also defer further 			 * occurences of this signal. 			 * 			 * Special case: user has done a sigpause.  Here the 			 * current mask is not of interest, but rather the 			 * mask from before the sigpause is what we want 			 * restored after the signal processing is completed. 			 */
 operator|(
 name|void
@@ -3855,10 +3839,7 @@ name|SIGSYS
 case|:
 name|u
 operator|.
-name|u_arg
-index|[
-literal|0
-index|]
+name|u_sig
 operator|=
 name|sig
 expr_stmt|;
