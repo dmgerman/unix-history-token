@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	4.11 83/03/31"
+literal|"@(#)rlogin.c	4.12 83/04/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,7 +683,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rlogin host [ -ex ] [ -l username ]\n"
+literal|"usage: rlogin host [ -ex ] [ -l username ] [ -8 ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -717,6 +717,12 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|defflags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tabflag
 decl_stmt|;
 end_decl_stmt
 
@@ -802,6 +808,12 @@ operator|)
 operator|&
 name|defflags
 argument_list|)
+expr_stmt|;
+name|tabflag
+operator|=
+name|defflags
+operator|&
+name|TBDELAY
 expr_stmt|;
 name|defflags
 operator|&=
@@ -902,9 +914,14 @@ block|{
 name|reader
 argument_list|()
 expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|prf
 argument_list|(
-literal|"\007Lost connection."
+literal|"\007Connection closed."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -925,7 +942,7 @@ argument_list|()
 expr_stmt|;
 name|prf
 argument_list|(
-literal|"Disconnected."
+literal|"Closed connection."
 argument_list|)
 expr_stmt|;
 name|done
@@ -1208,18 +1225,6 @@ if|if
 condition|(
 name|c
 operator|==
-literal|0177
-condition|)
-name|c
-operator|=
-name|deftc
-operator|.
-name|tc_kill
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|==
 literal|'\r'
 operator|||
 name|c
@@ -1397,10 +1402,6 @@ operator|==
 name|deftc
 operator|.
 name|tc_kill
-operator|||
-name|c
-operator|==
-literal|0177
 operator|||
 name|c
 operator|==
@@ -1762,11 +1763,19 @@ case|:
 name|flags
 operator|&=
 operator|~
+operator|(
 name|CBREAK
+operator||
+name|RAW
+operator||
+name|TBDELAY
+operator|)
 expr_stmt|;
 name|flags
 operator||=
 name|defflags
+operator||
+name|tabflag
 expr_stmt|;
 name|tc
 operator|=
@@ -1779,12 +1788,34 @@ literal|1
 case|:
 name|flags
 operator||=
+operator|(
+name|eight
+condition|?
+name|RAW
+else|:
 name|CBREAK
+operator|)
 expr_stmt|;
 name|flags
 operator|&=
 operator|~
 name|defflags
+expr_stmt|;
+comment|/* preserve tab delays, but turn off XTABS */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|TBDELAY
+operator|)
+operator|==
+name|XTABS
+condition|)
+name|flags
+operator|&=
+operator|~
+name|TBDELAY
 expr_stmt|;
 name|tc
 operator|=
@@ -1888,7 +1919,7 @@ argument_list|)
 expr_stmt|;
 name|prf
 argument_list|(
-literal|"\007Lost connection"
+literal|"\007Connection closed."
 argument_list|)
 expr_stmt|;
 name|done
