@@ -280,6 +280,8 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+union|union
+block|{
 name|int
 argument_list|(
 argument|*if_done
@@ -294,7 +296,14 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* (XXX not used; fake prototype) */
+comment|/* (XXX not used) */
+name|int
+name|uif_capabilities
+decl_stmt|;
+comment|/* interface capabilities */
+block|}
+name|_u1
+union|;
 name|int
 argument_list|(
 argument|*if_ioctl
@@ -327,6 +336,8 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+union|union
+block|{
 name|int
 argument_list|(
 argument|*if_poll_recv
@@ -344,6 +355,13 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+name|int
+name|uif_capenable
+decl_stmt|;
+comment|/* enabled features */
+block|}
+name|_u2
+union|;
 name|int
 argument_list|(
 argument|*if_poll_xmit
@@ -459,6 +477,24 @@ name|void
 modifier|*
 typedef|));
 end_typedef
+
+begin_comment
+comment|/*  * Binary compatability gunk for 4.x ONLY.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|if_capabilities
+value|_u1.uif_capabilities
+end_define
+
+begin_define
+define|#
+directive|define
+name|if_capenable
+value|_u2.uif_capenable
+end_define
 
 begin_define
 define|#
