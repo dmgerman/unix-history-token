@@ -567,7 +567,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_info [-cdDfiIkLmopqrRsv] [-e package] [-l prefix]"
+literal|"usage: pkg_info [-cdDfGiIkLmopqrRsvx] [-e package] [-l prefix]"
 argument_list|,
 literal|"                [-t template] [pkg-name ...]"
 argument_list|,
