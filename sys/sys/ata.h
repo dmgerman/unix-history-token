@@ -1568,6 +1568,10 @@ define|#
 directive|define
 name|ATAGMAXCHANNEL
 value|13
+define|#
+directive|define
+name|ATARAIDADDSPARE
+value|14
 union|union
 block|{
 struct|struct
@@ -1643,6 +1647,14 @@ name|unit
 decl_stmt|;
 block|}
 name|raid_setup
+struct|;
+struct|struct
+block|{
+name|int
+name|disk
+decl_stmt|;
+block|}
+name|raid_spare
 struct|;
 struct|struct
 name|raid_status
