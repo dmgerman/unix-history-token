@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	1.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	2.1 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -204,6 +204,50 @@ define|#
 directive|define
 name|UN_LOCKED
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|UN_ULOCK
+value|0x04
+end_define
+
+begin_comment
+comment|/* Upper node is locked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UN_KLOCK
+value|0x08
+end_define
+
+begin_comment
+comment|/* Keep upper node locked on vput */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCKUVP
+parameter_list|(
+name|un
+parameter_list|)
+define|\
+value|(((un)->un_flags& UN_ULOCK) ? \ 		  (0) : \ 		  (((un)->un_flags |= UN_ULOCK), VOP_LOCK((un)->un_uppervp)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNLOCKUVP
+parameter_list|(
+name|un
+parameter_list|)
+define|\
+value|((un)->un_flags&= ~UN_ULOCK)
 end_define
 
 begin_decl_stmt
