@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: startslip.c,v 1.17 1995/09/20 04:56:09 ache Exp $  */
+comment|/*-  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: startslip.c,v 1.18 1995/09/27 17:15:37 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -165,6 +165,12 @@ begin_include
 include|#
 directive|include
 file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_define
@@ -474,7 +480,64 @@ name|printd
 value|if (debug) printf
 end_define
 
+begin_decl_stmt
+name|int
+name|carrier
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|down
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|getline
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|time_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -640,25 +703,15 @@ name|diali
 operator|>=
 name|MAXDIALS
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"max dial strings number (%d) exceeded\n"
+literal|"max dial strings number (%d) exceeded"
 argument_list|,
 name|MAXDIALS
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|dials
 index|[
 name|diali
@@ -2407,6 +2460,12 @@ block|}
 goto|goto
 name|restart
 goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* not reached */
 block|}
 end_function
 
@@ -2512,41 +2571,30 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|getline
-argument_list|(
-argument|buf
-argument_list|,
-argument|size
-argument_list|,
-argument|fd
-argument_list|,
-argument|fintimeout
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|buf
+parameter_list|,
+name|size
+parameter_list|,
+name|fd
+parameter_list|,
+name|fintimeout
+parameter_list|)
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|size
 decl_stmt|,
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|time_t
 name|fintimeout
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -2862,14 +2910,12 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|carrier
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|comstate
@@ -2916,16 +2962,14 @@ name|TIOCM_CD
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|down
-argument_list|(
-argument|code
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|code
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2965,14 +3009,13 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -2981,7 +3024,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ usage: startslip [-d] [-b speed] [-s string1 [-s string2 [...]]] [-A annexname] \\\n\ 	[-h] [-l] [-U upscript] [-D downscript] [-t script_timeout] [-L]\\\n\ 	[-w retry_pause] [-W maxtries] [-K keepalive] [-O outfill] [-S unit] \\\n\ 	device user passwd\n"
+literal|"%s\n%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: startslip [-d] [-b speed] [-s string1 [-s string2 [...]]] [-h] [-l]"
+argument_list|,
+literal|"                 [-L] [-A annexname] [-U upscript] [-D downscript]"
+argument_list|,
+literal|"                 [-t script_timeout] [-W maxtries] [-w retry_pause]"
+argument_list|,
+literal|"                 [-K keepalive] [-O outfill] [-S unit] device user passwd"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2990,7 +3041,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
