@@ -11889,12 +11889,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" valid: 0x%x, dirty: 0x%x, wired: %d\n"
+literal|" valid: 0x%lx, dirty: 0x%lx, wired: %d\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|m
 operator|->
 name|valid
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|m
 operator|->
 name|dirty
