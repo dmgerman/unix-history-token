@@ -22,6 +22,18 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|in_cksum
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|)
+value|in_cksum_skip(m, len, 0)
+end_define
+
 begin_comment
 comment|/*  * It it useful to have an Internet checksum routine which is inlineable  * and optimized specifically for the task of computing IP header checksums  * in the normal case (where there are no options and the header length is  * therefore always exactly five 32-bit words.  */
 end_comment
@@ -295,13 +307,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|in_psum_t
-typedef|;
-end_typedef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -322,34 +327,6 @@ name|len
 parameter_list|,
 name|int
 name|skip
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|in_psum_t
-name|in_cksum_partial
-parameter_list|(
-name|in_psum_t
-name|psum
-parameter_list|,
-specifier|const
-name|u_short
-modifier|*
-name|w
-parameter_list|,
-name|int
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|in_cksum_finalize
-parameter_list|(
-name|in_psum_t
-name|psum
 parameter_list|)
 function_decl|;
 end_function_decl
