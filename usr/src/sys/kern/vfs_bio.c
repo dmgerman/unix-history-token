@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	4.14	%G%	*/
+comment|/*	vfs_bio.c	4.15	%G%	*/
 end_comment
 
 begin_include
@@ -3114,9 +3114,13 @@ end_decl_stmt
 
 begin_block
 block|{
+name|char
+modifier|*
+name|mesg
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"%d: "
+literal|"pid %d: "
 argument_list|,
 name|p
 operator|->
@@ -3129,15 +3133,28 @@ name|rout
 condition|)
 name|printf
 argument_list|(
-literal|"out of swap space in %s\n"
-argument_list|,
-name|rout
+name|mesg
+operator|=
+literal|"killed due to no swap space\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
+name|mesg
+operator|=
 literal|"killed on swap error\n"
+argument_list|)
+expr_stmt|;
+name|uprintf
+argument_list|(
+literal|"sorry, pid %d was %s"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|mesg
 argument_list|)
 expr_stmt|;
 comment|/* 	 * To be sure no looping (e.g. in vmsched trying to 	 * swap out) mark process locked in core (as though 	 * done by user) after killing it so noone will try 	 * to swap it out. 	 */
