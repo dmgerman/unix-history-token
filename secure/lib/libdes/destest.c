@@ -1,11 +1,52 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lib/des/destest.c */
+comment|/* crypto/des/destest.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995 Eric Young (eay@mincom.oz.au)  * All rights reserved.  *   * This file is part of an SSL implementation written  * by Eric Young (eay@mincom.oz.au).  * The implementation was written so as to conform with Netscapes SSL  * specification.  This library and applications are  * FREE FOR COMMERCIAL AND NON-COMMERCIAL USE  * as long as the following conditions are aheared to.  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  If this code is used in a product,  * Eric Young should be given attribution as the author of the parts used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Eric Young (eay@mincom.oz.au)  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1996 Eric Young (eay@mincom.oz.au)  * All rights reserved.  *   * This file is part of an SSL implementation written  * by Eric Young (eay@mincom.oz.au).  * The implementation was written so as to conform with Netscapes SSL  * specification.  This library and applications are  * FREE FOR COMMERCIAL AND NON-COMMERCIAL USE  * as long as the following conditions are aheared to.  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  If this code is used in a product,  * Eric Young should be given attribution as the author of the parts used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Eric Young (eay@mincom.oz.au)  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|WIN16
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|WINDOWS
+argument_list|)
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSDOS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MSDOS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -3515,8 +3556,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|DES_LONG
 name|cbc_cksum_ret
 init|=
 literal|0xB462FEF7L
@@ -3712,8 +3752,7 @@ index|[
 literal|40
 index|]
 decl_stmt|;
-name|unsigned
-name|long
+name|DES_LONG
 name|cs
 decl_stmt|;
 name|unsigned
@@ -3731,8 +3770,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|unsigned
-name|long
+name|DES_LONG
 name|lqret
 index|[
 literal|4
@@ -3769,7 +3807,7 @@ condition|(
 operator|(
 name|j
 operator|=
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -4010,7 +4048,7 @@ condition|(
 operator|(
 name|j
 operator|=
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -4051,7 +4089,7 @@ condition|(
 operator|(
 name|j
 operator|=
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -4094,7 +4132,7 @@ condition|(
 operator|(
 name|j
 operator|=
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -4323,7 +4361,7 @@ condition|(
 operator|(
 name|j
 operator|=
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -4498,7 +4536,7 @@ condition|(
 operator|(
 name|j
 operator|=
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -4530,7 +4568,7 @@ condition|(
 operator|(
 name|j
 operator|=
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -4562,7 +4600,7 @@ condition|(
 operator|(
 name|j
 operator|=
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -4855,7 +4893,7 @@ condition|(
 operator|(
 name|j
 operator|=
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -5309,7 +5347,7 @@ argument_list|(
 literal|"Doing ofb\n"
 argument_list|)
 expr_stmt|;
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -5457,7 +5495,7 @@ argument_list|(
 literal|"Doing ofb64\n"
 argument_list|)
 expr_stmt|;
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -5659,7 +5697,7 @@ argument_list|(
 literal|"Doing ede_ofb64\n"
 argument_list|)
 expr_stmt|;
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -5869,7 +5907,7 @@ argument_list|(
 literal|"Doing cbc_cksum\n"
 argument_list|)
 expr_stmt|;
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -5882,7 +5920,7 @@ argument_list|)
 expr_stmt|;
 name|cs
 operator|=
-name|cbc_cksum
+name|des_cbc_cksum
 argument_list|(
 operator|(
 name|C_Block
@@ -5924,8 +5962,16 @@ name|printf
 argument_list|(
 literal|"bad return value (%08lX), should be %08lX\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|cs
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|cbc_cksum_ret
 argument_list|)
 expr_stmt|;
@@ -6045,8 +6091,7 @@ block|}
 block|{
 comment|/* Big-endian fix */
 specifier|static
-name|unsigned
-name|long
+name|DES_LONG
 name|l
 init|=
 literal|1
@@ -6065,8 +6110,7 @@ operator|)
 operator|&
 name|l
 decl_stmt|;
-name|unsigned
-name|long
+name|DES_LONG
 name|ll
 decl_stmt|;
 if|if
@@ -6143,6 +6187,10 @@ name|printf
 argument_list|(
 literal|"quad_cksum error, ret %08lx should be 70d7a63a\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|cs
 argument_list|)
 expr_stmt|;
@@ -6165,6 +6213,10 @@ name|printf
 argument_list|(
 literal|"quad_cksum error, out[0] %08lx is not %08lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|lqret
 index|[
 literal|0
@@ -6192,6 +6244,10 @@ name|printf
 argument_list|(
 literal|"quad_cksum error, out[1] %08lx is not %08lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|lqret
 index|[
 literal|1
@@ -6219,6 +6275,10 @@ name|printf
 argument_list|(
 literal|"quad_cksum error, out[2] %08lx is not %08lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|lqret
 index|[
 literal|2
@@ -6246,6 +6306,10 @@ name|printf
 argument_list|(
 literal|"quad_cksum error, out[3] %08lx is not %08lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|lqret
 index|[
 literal|3
@@ -6481,16 +6545,11 @@ argument_list|(
 name|err
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LINT
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -6654,7 +6713,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -6890,7 +6949,7 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
@@ -7214,7 +7273,7 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
-name|key_sched
+name|des_key_sched
 argument_list|(
 operator|(
 name|C_Block
