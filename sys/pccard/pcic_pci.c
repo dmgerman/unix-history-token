@@ -3297,21 +3297,6 @@ block|}
 block|}
 if|if
 condition|(
-name|event
-operator|&
-name|CB_SE_POWER
-condition|)
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"Power interrupt\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|stat
 operator|&
 name|CB_SS_BADVCC
