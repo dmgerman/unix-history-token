@@ -1331,6 +1331,11 @@ name|p_flag
 operator||=
 name|P_SUGID
 expr_stmt|;
+name|setugidsafety
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
