@@ -929,6 +929,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|void
+modifier|*
+name|tls
+decl_stmt|;
 name|sp
 operator|=
 operator|(
@@ -1164,17 +1168,6 @@ name|p_vaddr
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|tls_static_space
-operator|>
-literal|0
-condition|)
-block|{
-name|void
-modifier|*
-name|tls
-decl_stmt|;
 name|tls
 operator|=
 name|_rtld_allocate_tls
@@ -1199,7 +1192,6 @@ argument_list|(
 name|tls
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
