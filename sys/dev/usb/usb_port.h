@@ -1705,7 +1705,7 @@ parameter_list|,
 name|flag
 parameter_list|)
 define|\
-value|do { \ 		free(device_get_ivars(dev), M_USB); \ 		device_detach(dev); \ 		device_delete_child(device_get_parent(dev), dev); \ 	} while (0);
+value|do { \ 		device_detach(dev); \ 		free(device_get_ivars(dev), M_USB); \ 		device_delete_child(device_get_parent(dev), dev); \ 	} while (0);
 end_define
 
 begin_typedef
