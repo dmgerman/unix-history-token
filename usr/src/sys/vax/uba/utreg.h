@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	utreg.h	81/11/06	4.2	*/
+comment|/*	utreg.h	81/11/07	4.3	*/
 end_comment
 
 begin_comment
@@ -87,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|UT_GO
-value|01
+value|0x0001
 end_define
 
 begin_comment
@@ -102,7 +102,7 @@ begin_define
 define|#
 directive|define
 name|UT_NOP
-value|(0)
+value|0x0000
 end_define
 
 begin_comment
@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|UT_REWOFFL
-value|(01<<1)
+value|0x0002
 end_define
 
 begin_comment
@@ -124,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|UT_LOOP
-value|(02<<1)
+value|0x0004
 end_define
 
 begin_comment
@@ -135,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|UT_REW
-value|(03<<1)
+value|0x0006
 end_define
 
 begin_comment
@@ -146,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|UT_CLEAR
-value|(04<<1)
+value|0x0008
 end_define
 
 begin_comment
@@ -157,7 +157,7 @@ begin_define
 define|#
 directive|define
 name|UT_SENSE
-value|(05<<1)
+value|0x000a
 end_define
 
 begin_comment
@@ -168,7 +168,7 @@ begin_define
 define|#
 directive|define
 name|UT_PRESET
-value|(010<<1)
+value|0x0010
 end_define
 
 begin_comment
@@ -179,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|UT_DIAGN
-value|(011<<1)
+value|0x0012
 end_define
 
 begin_comment
@@ -190,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|UT_ERASE
-value|(012<<1)
+value|0x0014
 end_define
 
 begin_comment
@@ -201,7 +201,7 @@ begin_define
 define|#
 directive|define
 name|UT_WEOF
-value|(013<<1)
+value|0x0016
 end_define
 
 begin_comment
@@ -212,7 +212,7 @@ begin_define
 define|#
 directive|define
 name|UT_SFORW
-value|(014<<1)
+value|0x0018
 end_define
 
 begin_comment
@@ -223,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|UT_SREV
-value|(015<<1)
+value|0x001a
 end_define
 
 begin_comment
@@ -234,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|UT_SFORWF
-value|(016<<1)
+value|0x001c
 end_define
 
 begin_comment
@@ -245,7 +245,7 @@ begin_define
 define|#
 directive|define
 name|UT_SREVF
-value|(017<<1)
+value|0x001e
 end_define
 
 begin_comment
@@ -256,7 +256,7 @@ begin_define
 define|#
 directive|define
 name|UT_WCHFORW
-value|(024<<1)
+value|0x0028
 end_define
 
 begin_comment
@@ -267,7 +267,7 @@ begin_define
 define|#
 directive|define
 name|UT_WCHREV
-value|(027<<1)
+value|0x002e
 end_define
 
 begin_comment
@@ -278,7 +278,7 @@ begin_define
 define|#
 directive|define
 name|UT_WCOM
-value|(030<<1)
+value|0x0030
 end_define
 
 begin_comment
@@ -289,7 +289,7 @@ begin_define
 define|#
 directive|define
 name|UT_RCOM
-value|(034<<1)
+value|0x0038
 end_define
 
 begin_comment
@@ -300,7 +300,7 @@ begin_define
 define|#
 directive|define
 name|UT_RREV
-value|(037<<1)
+value|0x003e
 end_define
 
 begin_comment
@@ -315,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|UT_IE
-value|0000100
+value|0x0040
 end_define
 
 begin_comment
@@ -326,7 +326,7 @@ begin_define
 define|#
 directive|define
 name|UT_RDY
-value|0000200
+value|0x0080
 end_define
 
 begin_comment
@@ -337,7 +337,7 @@ begin_define
 define|#
 directive|define
 name|UT_EADDR
-value|0001400
+value|0x0300
 end_define
 
 begin_comment
@@ -352,7 +352,7 @@ begin_define
 define|#
 directive|define
 name|UT_DVA
-value|0004000
+value|0x0800
 end_define
 
 begin_comment
@@ -371,7 +371,7 @@ begin_define
 define|#
 directive|define
 name|UT_TRE
-value|0040000
+value|0x4000
 end_define
 
 begin_comment
@@ -382,7 +382,7 @@ begin_define
 define|#
 directive|define
 name|UT_SC
-value|0100000
+value|0x8000
 end_define
 
 begin_comment
@@ -398,58 +398,95 @@ value|"\10\20SC\17TRE\14DVA\10RDY\7IE\1GO"
 end_define
 
 begin_comment
-comment|/*  * utcs2 --  *   error flags and unit select  */
+comment|/*  * utcs2 --  *   controller clear, error flags, and unit select  */
+end_comment
+
+begin_comment
+comment|/* bits 0-2 are unit select */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UTCS2_DLT
-value|0100000
+name|UTCS2_BAI
+value|0x0008
 end_define
 
 begin_comment
-comment|/* data late */
+comment|/* UNIBUS address increment inhibit */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UTCS2_WCE
-value|0040000
+name|UTCS2_PAT
+value|0x0010
 end_define
 
 begin_comment
-comment|/* write check error */
+comment|/* parity test */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UTCS2_PE
-value|0020000
+name|UTCS2_CLR
+value|0x0020
 end_define
 
 begin_comment
-comment|/* parity error */
+comment|/* controller clear */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UTCS2_NED
-value|0010000
+name|UTCS2_IR
+value|0x0040
 end_define
 
 begin_comment
-comment|/* non existent drive */
+comment|/* input ready (not emulated) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTCS2_OR
+value|0x0080
+end_define
+
+begin_comment
+comment|/* output ready (not emulated) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTCS2_RPE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* rom parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTCS2_MXF
+value|0x0200
+end_define
+
+begin_comment
+comment|/* missed transfer */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UTCS2_NEM
-value|0004000
+value|0x0400
 end_define
 
 begin_comment
@@ -460,7 +497,7 @@ begin_define
 define|#
 directive|define
 name|UTCS2_PGE
-value|0002000
+value|0x0800
 end_define
 
 begin_comment
@@ -470,82 +507,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UTCS2_MXF
-value|0001000
+name|UTCS2_NED
+value|0x1000
 end_define
 
 begin_comment
-comment|/* missed transfer */
+comment|/* non existent drive */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UTCS2_RPE
-value|0000400
+name|UTCS2_PE
+value|0x2000
 end_define
 
 begin_comment
-comment|/* rom parity error */
+comment|/* parity error */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UTCS2_OR
-value|0000200
+name|UTCS2_WCE
+value|0x4000
 end_define
 
 begin_comment
-comment|/* output ready (not emulated) */
+comment|/* write check error */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UTCS2_IR
-value|0000100
+name|UTCS2_DLT
+value|0x8000
 end_define
 
 begin_comment
-comment|/* input ready (not emulated) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTCS2_CLR
-value|0000040
-end_define
-
-begin_comment
-comment|/* controller clear */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTCS2_PAT
-value|0000020
-end_define
-
-begin_comment
-comment|/* parity test */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTCS2_BAI
-value|0000010
-end_define
-
-begin_comment
-comment|/* UNIBUS address increment inhibit */
-end_comment
-
-begin_comment
-comment|/* bits 2-0 unit select */
+comment|/* data late */
 end_comment
 
 begin_define
@@ -557,168 +557,25 @@ value|"\10\20DLT\17WCE\16PE\15NED\14\NEM\13\PGE\12\MXF\11RPE\10OR\7IR\6CLR\5PAT\
 end_define
 
 begin_comment
-comment|/*  * utds --  *   drive status register  */
+comment|/*  * utds --  *   beginning of tape, end of tape, error summary bit, plus lots more  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UTDS_ATA
-value|0100000
+name|UTDS_SLA
+value|0x0001
 end_define
 
 begin_comment
-comment|/* attention active */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_ERR
-value|0040000
-end_define
-
-begin_comment
-comment|/* composite error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_PIP
-value|0020000
-end_define
-
-begin_comment
-comment|/* positioning in progress */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_MOL
-value|0010000
-end_define
-
-begin_comment
-comment|/* medium on line */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_WRL
-value|0004000
-end_define
-
-begin_comment
-comment|/* write lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_EOT
-value|0002000
-end_define
-
-begin_comment
-comment|/* end of tape */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_GCR
-value|0001000
-end_define
-
-begin_comment
-comment|/* GCR status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_DPR
-value|0000400
-end_define
-
-begin_comment
-comment|/* drive present (always 1) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_DRY
-value|0000200
-end_define
-
-begin_comment
-comment|/* drive ready */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_SSC
-value|0000100
-end_define
-
-begin_comment
-comment|/* slave status change */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_PES
-value|0000040
-end_define
-
-begin_comment
-comment|/* phase encode status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_SDWN
-value|0000020
-end_define
-
-begin_comment
-comment|/* slowing down */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_IDB
-value|0000010
-end_define
-
-begin_comment
-comment|/* identification burst */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTDS_TM
-value|0000004
-end_define
-
-begin_comment
-comment|/* tape mark */
+comment|/* slave attention */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UTDS_BOT
-value|0000002
+value|0x0002
 end_define
 
 begin_comment
@@ -728,12 +585,155 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UTDS_SLA
-value|0000001
+name|UTDS_TM
+value|0x0004
 end_define
 
 begin_comment
-comment|/* slave attention */
+comment|/* tape mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_IDB
+value|0x0008
+end_define
+
+begin_comment
+comment|/* identification burst */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_SDWN
+value|0x0010
+end_define
+
+begin_comment
+comment|/* slowing down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_PES
+value|0x0020
+end_define
+
+begin_comment
+comment|/* phase encode status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_SSC
+value|0x0040
+end_define
+
+begin_comment
+comment|/* slave status change */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_DRY
+value|0x0080
+end_define
+
+begin_comment
+comment|/* drive ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_DPR
+value|0x0100
+end_define
+
+begin_comment
+comment|/* drive present (always 1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_GCR
+value|0x0200
+end_define
+
+begin_comment
+comment|/* GCR status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_EOT
+value|0x0400
+end_define
+
+begin_comment
+comment|/* end of tape */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_WRL
+value|0x0800
+end_define
+
+begin_comment
+comment|/* write lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_MOL
+value|0x1000
+end_define
+
+begin_comment
+comment|/* medium on line */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_PIP
+value|0x2000
+end_define
+
+begin_comment
+comment|/* positioning in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_ERR
+value|0x4000
+end_define
+
+begin_comment
+comment|/* composite error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTDS_ATA
+value|0x8000
+end_define
+
+begin_comment
+comment|/* attention active */
 end_comment
 
 begin_define
@@ -745,168 +745,25 @@ value|"\10\20ATA\17ERR\16PIP\15MOL\14WRL\13EOT\12GCR\11DPR\10DRY\ \7SSC\6PES\5SD
 end_define
 
 begin_comment
-comment|/*  * uter --  *   general error register  */
+comment|/*  * uter --  *   detailed breakdown of error summary bit from cs2  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UTER_COR
-value|0100000
+name|UTER_ILF
+value|0x0001
 end_define
 
 begin_comment
-comment|/* correctible data error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_UNS
-value|0040000
-end_define
-
-begin_comment
-comment|/* unsafe */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_OPI
-value|0020000
-end_define
-
-begin_comment
-comment|/* operation incomplete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_DTE
-value|0010000
-end_define
-
-begin_comment
-comment|/* drive timing error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_NEF
-value|0004000
-end_define
-
-begin_comment
-comment|/* non executable function */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_CS
-value|0002000
-end_define
-
-begin_comment
-comment|/* correctable skew */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_FCE
-value|0001000
-end_define
-
-begin_comment
-comment|/* frame count error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_NSG
-value|0000400
-end_define
-
-begin_comment
-comment|/* non standard gap */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_PEF
-value|0000200
-end_define
-
-begin_comment
-comment|/* PE format error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_INC
-value|0000100
-end_define
-
-begin_comment
-comment|/* incorrectable data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_DPAR
-value|0000040
-end_define
-
-begin_comment
-comment|/* data bus parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_FMT
-value|0000020
-end_define
-
-begin_comment
-comment|/* format error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_RPE
-value|0000010
-end_define
-
-begin_comment
-comment|/* read data parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTER_RMR
-value|0000004
-end_define
-
-begin_comment
-comment|/* register modification refused */
+comment|/* illegal function */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UTER_ILR
-value|0000002
+value|0x0002
 end_define
 
 begin_comment
@@ -916,12 +773,155 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UTER_ILF
-value|0000001
+name|UTER_RMR
+value|0x0004
 end_define
 
 begin_comment
-comment|/* illegal function */
+comment|/* register modification refused */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_RPE
+value|0x0008
+end_define
+
+begin_comment
+comment|/* read data parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_FMT
+value|0x0010
+end_define
+
+begin_comment
+comment|/* format error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_DPAR
+value|0x0020
+end_define
+
+begin_comment
+comment|/* data bus parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_INC
+value|0x0040
+end_define
+
+begin_comment
+comment|/* incorrectable data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_PEF
+value|0x0080
+end_define
+
+begin_comment
+comment|/* PE format error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_NSG
+value|0x0100
+end_define
+
+begin_comment
+comment|/* non standard gap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_FCE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* frame count error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_CS
+value|0x0400
+end_define
+
+begin_comment
+comment|/* correctable skew */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_NEF
+value|0x0800
+end_define
+
+begin_comment
+comment|/* non executable function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_DTE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* drive timing error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_OPI
+value|0x2000
+end_define
+
+begin_comment
+comment|/* operation incomplete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_UNS
+value|0x4000
+end_define
+
+begin_comment
+comment|/* unsafe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTER_COR
+value|0x8000
+end_define
+
+begin_comment
+comment|/* correctible data error */
 end_comment
 
 begin_comment
@@ -940,77 +940,33 @@ define|#
 directive|define
 name|UTER_BITS
 define|\
-value|"\10\20COR\17UNS\16DOPI\15DTE\14NEF\13CS\12FCE\11NSG\10PEF\ \7INC\6DPAR\5FMT\4RPE\3RMR\2ILR\1ILF"
+value|"\10\20COR\17UNS\16OPI\15DTE\14NEF\13CS\12FCE\11NSG\10PEF\ \7INC\6DPAR\5FMT\4RPE\3RMR\2ILR\1ILF"
 end_define
 
 begin_comment
-comment|/*  * uttc --  *   tape control register  */
+comment|/*  * uttc --  *   tape format and density  */
+end_comment
+
+begin_comment
+comment|/* bits 0-2 are slave select */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UTTC_ACCL
-value|0100000
+name|UTTC_EVPAR
+value|0x0008
 end_define
 
 begin_comment
-comment|/* acceleration */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTTC_FCS
-value|0040000
-end_define
-
-begin_comment
-comment|/* frame count status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTTC_TCW
-value|0020000
-end_define
-
-begin_comment
-comment|/* tape control write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTTC_EAODTE
-value|0010000
-end_define
-
-begin_comment
-comment|/* enable aborts on data transfer 					   errors (not emulated) */
-end_comment
-
-begin_comment
-comment|/* bit 11 not used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTTC_DEN
-value|0003400
-end_define
-
-begin_comment
-comment|/* density select (see below) */
+comment|/* even parity */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UTTC_FMT
-value|0000360
+value|0x00f0
 end_define
 
 begin_comment
@@ -1020,16 +976,60 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UTTC_EVPAR
-value|0000010
+name|UTTC_DEN
+value|0x0700
 end_define
 
 begin_comment
-comment|/* even parity */
+comment|/* density select (see below) */
 end_comment
 
 begin_comment
-comment|/* bits 0-2 are slave select */
+comment|/* bit 11 not used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTTC_EAODTE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* (not emulated) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTTC_TCW
+value|0x2000
+end_define
+
+begin_comment
+comment|/* tape control write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTTC_FCS
+value|0x4000
+end_define
+
+begin_comment
+comment|/* frame count status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTTC_ACCL
+value|0x8000
+end_define
+
+begin_comment
+comment|/* acceleration */
 end_comment
 
 begin_comment
@@ -1040,7 +1040,7 @@ begin_define
 define|#
 directive|define
 name|UT_NRZI
-value|0000000
+value|0x0000
 end_define
 
 begin_comment
@@ -1051,7 +1051,7 @@ begin_define
 define|#
 directive|define
 name|UT_PE
-value|0002000
+value|0x0400
 end_define
 
 begin_comment
@@ -1062,7 +1062,7 @@ begin_define
 define|#
 directive|define
 name|UT_GCR
-value|0002400
+value|0x0500
 end_define
 
 begin_comment
@@ -1077,7 +1077,7 @@ begin_define
 define|#
 directive|define
 name|PDP11FMT
-value|0000300
+value|0x00c0
 end_define
 
 begin_comment
