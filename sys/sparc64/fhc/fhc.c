@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Jake Burkholder.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003 Jake Burkholder.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -92,16 +106,6 @@ include|#
 directive|include
 file|<sparc64/sbus/ofw_sbus.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|INTIGN
-parameter_list|(
-name|map
-parameter_list|)
-value|(((map)& INTMAP_IGN_MASK)>> INTMAP_IGN_SHIFT)
-end_define
 
 begin_struct
 struct|struct
@@ -251,6 +255,50 @@ name|sc
 operator|->
 name|sc_node
 expr_stmt|;
+if|if
+condition|(
+name|OF_getprop_alloc
+argument_list|(
+name|node
+argument_list|,
+literal|"board-model"
+argument_list|,
+literal|1
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|name
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"board %d, %s\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_board
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|name
+argument_list|,
+name|M_OFWPROP
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -495,7 +543,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"can't get ranges"
+literal|"can't get ranges\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -586,6 +634,13 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fdi
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|fdi
 operator|->
 name|fdi_name
@@ -998,6 +1053,17 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fc
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|fc
 operator|->
 name|fc_func
@@ -1620,7 +1686,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"fhc_alloc_resource: resource entry is busy"
+literal|"%s: resource entry is busy"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -1889,7 +1957,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"fhc_release_resource: can't find resource"
+literal|"%s: can't find resource"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -1902,7 +1972,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"fhc_release_resource: resource entry is not busy"
+literal|"%s: resource entry is not busy"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|rle
