@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmparam.h	1.4	86/01/20	*/
+comment|/*	vmparam.h	1.5	86/04/11	*/
 end_comment
 
 begin_comment
@@ -112,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|MAXDSIZ
-value|(16*1024*1024)
+value|(24*1024*1024)
 end_define
 
 begin_comment
