@@ -370,30 +370,6 @@ begin_comment
 comment|/* Auxiliary macro to pick up files changed since previous dump. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FS_44INODEFMT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CHANGEDSINCE
-parameter_list|(
-name|dp
-parameter_list|,
-name|t
-parameter_list|)
-define|\
-value|((dp)->di_mtime.tv_sec>= (t) || (dp)->di_ctime.tv_sec>= (t))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -406,11 +382,6 @@ parameter_list|)
 define|\
 value|((dp)->di_mtime>= (t) || (dp)->di_ctime>= (t))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The WANTTODUMP macro decides whether a file should be dumped. */
