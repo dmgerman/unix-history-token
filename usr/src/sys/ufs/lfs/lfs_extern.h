@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -277,7 +277,9 @@ name|lfs_init
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|vfsconf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -597,6 +599,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|lfs_sysctl
+value|((int (*) __P((int *, u_int, void *, size_t *, void *, \                                     size_t, struct proc *)))eopnotsupp)
+end_define
+
 begin_decl_stmt
 name|int
 name|lfs_truncate
@@ -828,8 +837,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 name|__END_DECLS
+specifier|extern
+name|int
+name|lfs_mount_type
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 specifier|extern
 name|int
 function_decl|(
