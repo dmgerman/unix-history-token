@@ -3620,6 +3620,9 @@ case|:
 case|case
 name|MOUNT_CD9660
 case|:
+case|case
+name|MOUNT_MSDOS
+case|:
 name|targs
 operator|.
 name|ua
