@@ -12450,6 +12450,14 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+case|case
+name|ALK
+case|:
+name|alkcnt
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 block|}
 block|}
 if|if
