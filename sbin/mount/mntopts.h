@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *      The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mntopts.h	8.3 (Berkeley) 3/27/94  */
+comment|/*-  * Copyright (c) 1994  *      The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mntopts.h	8.7 (Berkeley) 3/29/95  */
 end_comment
 
 begin_struct
@@ -24,7 +24,7 @@ comment|/* bit to set, eg. MNT_RDONLY */
 name|int
 name|m_altloc
 decl_stmt|;
-comment|/* zero if this is a real mount flag */
+comment|/* 1 => set bit in altflags */
 block|}
 struct|;
 end_struct
@@ -45,13 +45,6 @@ define|#
 directive|define
 name|MOPT_NOATIME
 value|{ "atime",	1, MNT_NOATIME, 0 }
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOPT_NOAUTO
-value|{ "auto",	1, 0, 0 }
 end_define
 
 begin_define
@@ -96,21 +89,17 @@ name|MOPT_UNION
 value|{ "union",	0, MNT_UNION, 0 }
 end_define
 
-begin_comment
-comment|/* Skip	this options without any action	(needed	for checkquota/quotaon)	*/
-end_comment
-
 begin_define
 define|#
 directive|define
-name|MOPT_UQUOTA
+name|MOPT_USERQUOTA
 value|{ "userquota",	0, 0, 0 }
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOPT_GQUOTA
+name|MOPT_GROUPQUOTA
 value|{ "groupquota",	0, 0, 0 }
 end_define
 
@@ -132,10 +121,6 @@ name|MOPT_UPDATE
 value|{ "update",	0, MNT_UPDATE, 0 }
 end_define
 
-begin_comment
-comment|/* Support for old-style "ro", "rw" flags. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -150,12 +135,23 @@ name|MOPT_RW
 value|{ "rw",		1, MNT_RDONLY, 0 }
 end_define
 
+begin_comment
+comment|/* This is parsed by mount(8), but is ignored by specific mount_*(8)s. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOPT_AUTO
+value|{ "auto",	0, 0, 0 }
+end_define
+
 begin_define
 define|#
 directive|define
 name|MOPT_FSTAB_COMPAT
 define|\
-value|MOPT_RO,							\ 	MOPT_RW
+value|MOPT_RO,							\ 	MOPT_RW,							\ 	MOPT_AUTO
 end_define
 
 begin_comment
@@ -167,7 +163,7 @@ define|#
 directive|define
 name|MOPT_STDOPTS
 define|\
-value|MOPT_FSTAB_COMPAT,						\ 	MOPT_NOATIME,							\ 	MOPT_NOAUTO,							\ 	MOPT_NODEV,							\ 	MOPT_NOEXEC,							\ 	MOPT_NOSUID,							\ 	MOPT_RDONLY,							\ 	MOPT_UNION
+value|MOPT_USERQUOTA,							\ 	MOPT_GROUPQUOTA,						\ 	MOPT_FSTAB_COMPAT,						\ 	MOPT_NOATIME,							\ 	MOPT_NODEV,							\ 	MOPT_NOEXEC,							\ 	MOPT_NOSUID,							\ 	MOPT_RDONLY,							\ 	MOPT_UNION
 end_define
 
 begin_decl_stmt
