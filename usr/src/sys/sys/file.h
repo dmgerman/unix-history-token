@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)file.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)file.h	7.9 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_include
 include|#
@@ -15,12 +21,6 @@ directive|include
 file|<sys/unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_comment
 comment|/*  * Kernel descriptor table entry;  * one for each open kernel vnode and socket.  */
 end_comment
@@ -29,10 +29,23 @@ begin_struct
 struct|struct
 name|file
 block|{
-name|int
+name|struct
+name|file
+modifier|*
+name|f_filef
+decl_stmt|;
+comment|/* list of active files */
+name|struct
+name|file
+modifier|*
+modifier|*
+name|f_fileb
+decl_stmt|;
+comment|/* list of active files */
+name|short
 name|f_flag
 decl_stmt|;
-comment|/* see below */
+comment|/* see fcntl.h */
 define|#
 directive|define
 name|DTYPE_VNODE
@@ -182,33 +195,51 @@ block|}
 modifier|*
 name|f_ops
 struct|;
-name|caddr_t
-name|f_data
-decl_stmt|;
-comment|/* inode */
 name|off_t
 name|f_offset
 decl_stmt|;
+name|caddr_t
+name|f_data
+decl_stmt|;
+comment|/* vnode or socket */
 block|}
 struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|file
 modifier|*
-name|file
-decl_stmt|,
-modifier|*
-name|fileNFILE
+name|filehead
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* head of list of open files */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|int
-name|nfile
+name|maxfiles
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* kernel limit on number of open files */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nfiles
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* actual number of open files */
+end_comment
 
 begin_endif
 endif|#
