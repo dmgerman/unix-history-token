@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.14.4.4 1996/02/23 15:26:03 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.14.4.5 1996/02/23 20:10:52 phk Exp $  */
 end_comment
 
 begin_comment
@@ -1612,6 +1612,11 @@ operator|.
 name|s_addr
 condition|)
 block|{
+name|int
+name|match
+init|=
+literal|0
+decl_stmt|;
 for|for
 control|(
 name|ia_p
@@ -1685,7 +1690,18 @@ operator|.
 name|s_addr
 condition|)
 continue|continue;
+name|match
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|match
+condition|)
+continue|continue;
 block|}
 comment|/*  		 * Check IP options 		 */
 if|if
