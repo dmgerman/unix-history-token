@@ -630,8 +630,41 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_SMSK
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* src-port + mask 			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_DMSK
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* dst-port + mask 			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_KEEP_S
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* keep state	 			*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_MASK
-value|0x00FFFFFF
+value|0x03FFFFFF
 end_define
 
 begin_comment
