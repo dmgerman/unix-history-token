@@ -65,6 +65,15 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|AcpiSubsystemStatus
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|AcpiEnable
 parameter_list|(
 name|void
@@ -93,15 +102,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
+specifier|const
+name|char
+modifier|*
 name|AcpiFormatException
 parameter_list|(
 name|ACPI_STATUS
 name|Exception
-parameter_list|,
-name|ACPI_BUFFER
-modifier|*
-name|OutBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -151,6 +158,9 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiFindRootPointer
 parameter_list|(
+name|UINT32
+name|Flags
+parameter_list|,
 name|ACPI_PHYSICAL_ADDRESS
 modifier|*
 name|RsdpPhysicalAddress
@@ -162,8 +172,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiLoadTables
 parameter_list|(
-name|ACPI_PHYSICAL_ADDRESS
-name|RsdpPhysicalAddress
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
