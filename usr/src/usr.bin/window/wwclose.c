@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwclose.c	3.11 %G%"
+literal|"@(#)wwclose.c	3.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,7 +123,7 @@ name|ww_buf
 argument_list|,
 name|w
 operator|->
-name|ww_w
+name|ww_b
 operator|.
 name|t
 argument_list|)
