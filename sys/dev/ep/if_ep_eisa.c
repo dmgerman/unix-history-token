@@ -459,7 +459,9 @@ operator|!=
 literal|0x1f
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 name|eisa_add_iospace
 argument_list|(
