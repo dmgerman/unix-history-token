@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	4.9	83/02/23	*/
+comment|/*	ip_var.h	4.10	83/05/12	*/
 end_comment
 
 begin_comment
@@ -198,6 +198,43 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_comment
+comment|/* flags passed to ip_output as last parameter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FORWARDING
+value|0x1
+end_define
+
+begin_comment
+comment|/* most of ip header exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_ROUTETOIF
+value|0x10
+end_define
+
+begin_comment
+comment|/* same as SO_DONTROUTE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_ALLOWBROADCAST
+value|SS_PRIV
+end_define
+
+begin_comment
+comment|/* can send broadcast packets */
+end_comment
 
 begin_decl_stmt
 name|struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_ip.c	4.17	83/02/10	*/
+comment|/*	raw_ip.c	4.18	83/05/12	*/
 end_comment
 
 begin_include
@@ -477,10 +477,16 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-operator|&
-name|routetoif
+operator|(
+expr|struct
+name|route
+operator|*
+operator|)
+literal|0
 argument_list|,
-literal|1
+name|IP_ROUTETOIF
+operator||
+name|IP_ALLOWBROADCAST
 argument_list|)
 operator|)
 return|;

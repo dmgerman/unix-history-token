@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.46	83/02/10	*/
+comment|/*	ip_output.c	1.47	83/05/12	*/
 end_comment
 
 begin_include
@@ -92,7 +92,7 @@ argument|opt
 argument_list|,
 argument|ro
 argument_list|,
-argument|allowbroadcast
+argument|flags
 argument_list|)
 end_macro
 
@@ -122,7 +122,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|allowbroadcast
+name|flags
 decl_stmt|;
 end_decl_stmt
 
@@ -192,17 +192,28 @@ comment|/* XXX */
 comment|/* 	 * Fill in IP header. 	 */
 name|ip
 operator|->
-name|ip_v
-operator|=
-name|IPVERSION
-expr_stmt|;
-name|ip
-operator|->
 name|ip_hl
 operator|=
 name|hlen
 operator|>>
 literal|2
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|IP_FORWARDING
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ip
+operator|->
+name|ip_v
+operator|=
+name|IPVERSION
 expr_stmt|;
 name|ip
 operator|->
@@ -220,6 +231,7 @@ name|ip_id
 operator|++
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Route packet. 	 */
 if|if
 condition|(
@@ -290,16 +302,14 @@ name|ip
 operator|->
 name|ip_dst
 expr_stmt|;
-comment|/* 		 * If routing to interface only, short circuit routing lookup. 		 */
+comment|/* 		 * If routing to interface only, 		 * short circuit routing lookup. 		 */
 if|if
 condition|(
-name|ro
-operator|==
+name|flags
 operator|&
-name|routetoif
+name|IP_ROUTETOIF
 condition|)
 block|{
-comment|/* check ifp is AF_INET??? */
 name|ifp
 operator|=
 name|if_ifonnetof
@@ -318,9 +328,15 @@ name|ifp
 operator|==
 literal|0
 condition|)
+block|{
+name|error
+operator|=
+name|ENETUNREACH
+expr_stmt|;
 goto|goto
-name|unreachable
+name|bad
 goto|;
+block|}
 goto|goto
 name|gotif
 goto|;
@@ -351,9 +367,15 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|error
+operator|=
+name|ENETUNREACH
+expr_stmt|;
 goto|goto
-name|unreachable
+name|bad
 goto|;
+block|}
 name|ro
 operator|->
 name|ro_rt
@@ -455,8 +477,13 @@ goto|;
 block|}
 if|if
 condition|(
-operator|!
-name|allowbroadcast
+operator|(
+name|flags
+operator|&
+name|IP_ALLOWBROADCAST
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|error
@@ -926,37 +953,6 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
-name|unreachable
-label|:
-if|if
-condition|(
-name|ipnorouteprint
-condition|)
-name|printf
-argument_list|(
-literal|"no route to %x (from %x, len %d)\n"
-argument_list|,
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
-argument_list|,
-name|ip
-operator|->
-name|ip_src
-operator|.
-name|s_addr
-argument_list|,
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENETUNREACH
-expr_stmt|;
 name|bad
 label|:
 name|m_freem
@@ -972,6 +968,14 @@ name|ro
 operator|==
 operator|&
 name|iproute
+operator|&&
+operator|(
+name|flags
+operator|&
+name|IP_ROUTETOIF
+operator|)
+operator|==
+literal|0
 operator|&&
 name|ro
 operator|->

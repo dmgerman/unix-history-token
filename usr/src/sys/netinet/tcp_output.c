@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.52	83/03/25	*/
+comment|/*	tcp_output.c	4.53	83/05/12	*/
 end_comment
 
 begin_include
@@ -225,6 +225,19 @@ decl_stmt|;
 name|int
 name|sendalot
 decl_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|==
+name|TCPS_CLOSED
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* 	 * Determine length of data that should be transmitted, 	 * and flags that will be used. 	 * If there is some data or critical controls (SYN, RST) 	 * to send, then transmit; otherwise, investigate further. 	 */
 name|again
 label|:
@@ -1382,6 +1395,12 @@ name|TCP_TTL
 expr_stmt|;
 if|if
 condition|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_DONTROUTE
+condition|)
 name|error
 operator|=
 name|ip_output
@@ -1392,17 +1411,22 @@ name|tp
 operator|->
 name|t_ipopt
 argument_list|,
-operator|(
-name|so
+literal|0
+argument_list|,
+name|IP_ROUTETOIF
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|ip_output
+argument_list|(
+name|m
+argument_list|,
+name|tp
 operator|->
-name|so_options
-operator|&
-name|SO_DONTROUTE
-operator|)
-condition|?
-operator|&
-name|routetoif
-else|:
+name|t_ipopt
+argument_list|,
 operator|&
 name|tp
 operator|->
@@ -1412,6 +1436,10 @@ name|inp_route
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.46	83/05/03	*/
+comment|/*	udp_usrreq.c	4.47	83/05/12	*/
 end_comment
 
 begin_include
@@ -777,6 +777,9 @@ name|len
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
 comment|/* 	 * Calculate data length and get a mbuf 	 * for UDP and IP headers. 	 */
 for|for
 control|(
@@ -1007,6 +1010,24 @@ name|inp
 operator|->
 name|inp_socket
 expr_stmt|;
+name|flags
+operator|=
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_DONTROUTE
+operator|)
+operator||
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_PRIV
+operator|)
+expr_stmt|;
 return|return
 operator|(
 name|ip_output
@@ -1021,28 +1042,13 @@ operator|)
 literal|0
 argument_list|,
 operator|(
-name|so
-operator|->
-name|so_options
-operator|&
-name|SO_DONTROUTE
-operator|)
-condition|?
-operator|&
-name|routetoif
-else|:
-operator|(
 expr|struct
 name|route
 operator|*
 operator|)
 literal|0
 argument_list|,
-name|so
-operator|->
-name|so_state
-operator|&
-name|SS_PRIV
+name|flags
 argument_list|)
 operator|)
 return|;
