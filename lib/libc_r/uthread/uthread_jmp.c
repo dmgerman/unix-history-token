@@ -105,7 +105,7 @@ end_endif
 
 begin_function
 name|void
-name|_libc_siglongjmp
+name|siglongjmp
 parameter_list|(
 name|sigjmp_buf
 name|env
@@ -231,7 +231,7 @@ operator|)
 condition|)
 name|PANIC
 argument_list|(
-literal|"longjmp()ing between thread contexts is undefined by "
+literal|"siglongjmp()ing between thread contexts is undefined by "
 literal|"POSIX 1003.1"
 argument_list|)
 expr_stmt|;
@@ -304,19 +304,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_siglongjmp
-argument_list|,
-name|siglongjmp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|void
-name|_libc_longjmp
+name|longjmp
 parameter_list|(
 name|jmp_buf
 name|env
@@ -515,19 +505,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_longjmp
-argument_list|,
-name|longjmp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|void
-name|_libc__longjmp
+name|_longjmp
 parameter_list|(
 name|jmp_buf
 name|env
@@ -653,7 +633,7 @@ operator|)
 condition|)
 name|PANIC
 argument_list|(
-literal|"longjmp()ing between thread contexts is undefined by "
+literal|"_longjmp()ing between thread contexts is undefined by "
 literal|"POSIX 1003.1"
 argument_list|)
 expr_stmt|;
@@ -725,16 +705,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc__longjmp
-argument_list|,
-name|_longjmp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#
