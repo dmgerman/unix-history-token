@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.27 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1478,8 +1478,7 @@ for|for
 control|(
 name|tmpint
 operator|=
-name|getdtablesize
-argument_list|()
+name|maxsock
 init|;
 operator|--
 name|tmpint
