@@ -3247,7 +3247,7 @@ argument_list|)
 condition|)
 name|write_root_xprofile
 argument_list|(
-literal|"xterm&\nexec fvwm\n"
+literal|"exec fvwm\n"
 argument_list|)
 expr_stmt|;
 block|}
