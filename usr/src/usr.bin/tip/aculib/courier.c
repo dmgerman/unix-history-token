@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)courier.c	5.1 (Berkeley) %G%"
+literal|"@(#)courier.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,7 @@ value|cour_write
 end_define
 
 begin_comment
-comment|/*  * Routines for calling up on a Hayes Smartmodem  */
+comment|/*  * Routines for calling up on a Courier modem.  * Derived from Hayes driver.  */
 end_comment
 
 begin_include
@@ -66,6 +66,15 @@ begin_decl_stmt
 specifier|static
 name|int
 name|timeout
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|connected
 init|=
 literal|0
 decl_stmt|;
@@ -119,12 +128,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
-name|int
-name|connected
-init|=
-literal|0
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ACULOG
@@ -170,6 +173,8 @@ name|coursync
 argument_list|()
 condition|)
 block|{
+name|badsynch
+label|:
 name|printf
 argument_list|(
 literal|"can't synchronize with courier\n"
@@ -200,6 +205,69 @@ literal|0
 operator|)
 return|;
 block|}
+name|write
+argument_list|(
+name|FD
+argument_list|,
+literal|"AT E0\r"
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* turn off echoing */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|boolean
+argument_list|(
+name|value
+argument_list|(
+name|VERBOSE
+argument_list|)
+argument_list|)
+condition|)
+name|verbose_read
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCFLUSH
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* flush any clutter */
+name|write
+argument_list|(
+name|FD
+argument_list|,
+literal|"AT C1 E0 H0 Q0 X6 V1\r"
+argument_list|,
+literal|21
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cour_swallow
+argument_list|(
+literal|"\r\nOK\r\n"
+argument_list|)
+condition|)
+goto|goto
+name|badsynch
+goto|;
 name|fflush
 argument_list|(
 name|stdout
@@ -326,6 +394,34 @@ end_macro
 
 begin_block
 block|{
+comment|/* first hang up the modem*/
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCCDTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCSDTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|coursync
+argument_list|()
+expr_stmt|;
+comment|/* reset */
 name|close
 argument_list|(
 name|FD
@@ -345,15 +441,14 @@ name|write
 argument_list|(
 name|FD
 argument_list|,
-literal|"\rAT Z\r"
+literal|"\r"
 argument_list|,
-literal|6
+literal|1
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|FD
-argument_list|)
+comment|/* send anything to abort the call */
+name|cour_disconnect
+argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -437,7 +532,9 @@ name|f
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -491,6 +588,9 @@ name|c
 operator|&=
 literal|0177
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|boolean
@@ -506,6 +606,8 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 do|while
 condition|(
@@ -516,6 +618,9 @@ name|match
 operator|++
 condition|)
 do|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|boolean
@@ -531,6 +636,8 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|signal
 argument_list|(
 name|SIGALRM
@@ -782,8 +889,19 @@ literal|"RINGING"
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|boolean
+argument_list|(
+name|value
+argument_list|(
+name|VERBOSE
+argument_list|)
+argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"%s\r\n"
@@ -791,6 +909,8 @@ argument_list|,
 name|dialer_buf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|again
 goto|;
@@ -913,6 +1033,9 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|boolean
@@ -930,6 +1053,8 @@ argument_list|,
 name|dialer_buf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|1
@@ -993,7 +1118,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This convoluted piece of code attempts to get  * the courier in sync.  If you don't have FIONREAD  * there are gory ways to simulate this.  */
+comment|/*  * This convoluted piece of code attempts to get  * the courier in sync.  */
 end_comment
 
 begin_function
@@ -1007,30 +1132,15 @@ name|already
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Toggle DTR to force anyone off that might have left 	 * the modem connected, and insure a consistent state 	 * to start from. 	 * 	 * If you don't have the ioctl calls to diddle directly 	 * with DTR, you can always try setting the baud rate to 0. 	 */
-name|ioctl
-argument_list|(
-name|FD
-argument_list|,
-name|TIOCCDTR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-name|ioctl
-argument_list|(
-name|FD
-argument_list|,
-name|TIOCSDTR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+name|int
+name|len
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|40
+index|]
+decl_stmt|;
 while|while
 condition|(
 name|already
@@ -1059,80 +1169,104 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* reset modem */
-name|sleep
+name|bzero
 argument_list|(
-literal|2
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|verbose_read
-argument_list|()
-expr_stmt|;
-name|write
-argument_list|(
-name|FD
-argument_list|,
-literal|"AT E0\r"
-argument_list|,
-literal|6
-argument_list|)
-expr_stmt|;
-comment|/* turn off echoing */
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-name|verbose_read
-argument_list|()
-expr_stmt|;
-name|ioctl
-argument_list|(
-name|FD
-argument_list|,
-name|TIOCFLUSH
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* flush any clutter */
 name|sleep
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|write
+name|ioctl
 argument_list|(
 name|FD
 argument_list|,
-literal|"AT C1 E0 H0 Q0 X6 V1\r"
+name|FIONREAD
 argument_list|,
-literal|21
+operator|&
+name|len
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cour_swallow
-argument_list|(
-literal|"\r\nOK\r\n"
-argument_list|)
+name|len
 condition|)
 block|{
-name|ioctl
+name|len
+operator|=
+name|read
 argument_list|(
 name|FD
 argument_list|,
-name|TIOCFLUSH
+name|buf
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|buf
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"coursync: (\"%s\")\n\r"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|index
+argument_list|(
+name|buf
+argument_list|,
+literal|'0'
+argument_list|)
+operator|||
+operator|(
+name|index
+argument_list|(
+name|buf
+argument_list|,
+literal|'O'
+argument_list|)
+operator|&&
+name|index
+argument_list|(
+name|buf
+argument_list|,
+literal|'K'
+argument_list|)
+operator|)
+condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
+comment|/* 		 * If not strapped for DTR control, 		 * try to get command mode. 		 */
 name|sleep
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 name|write
@@ -1146,7 +1280,31 @@ argument_list|)
 expr_stmt|;
 name|sleep
 argument_list|(
-literal|2
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Toggle DTR to force anyone off that might have left 		 * the modem connected. 		 */
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCCDTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCSDTR
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1160,7 +1318,9 @@ literal|6
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1207,6 +1367,9 @@ name|struct
 name|sgttyb
 name|sb
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|boolean
@@ -1226,6 +1389,8 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ioctl
 argument_list|(
 name|fd
@@ -1295,6 +1460,12 @@ block|}
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_macro
 name|verbose_read
 argument_list|()
@@ -1313,18 +1484,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|boolean
-argument_list|(
-name|value
-argument_list|(
-name|VERBOSE
-argument_list|)
-argument_list|)
-condition|)
-return|return;
 if|if
 condition|(
 name|ioctl
@@ -1372,6 +1531,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Code stolen from /usr/src/lib/libc/gen/sleep.c  */
