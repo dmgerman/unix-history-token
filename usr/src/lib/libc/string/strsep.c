@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strsep.c	5.1 (Berkeley) %G%"
+literal|"@(#)strsep.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,12 +152,6 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|tok
-operator|==
-name|s
-condition|?
-name|NULL
-else|:
 name|tok
 operator|)
 return|;
