@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xargs.c	5.10 (Berkeley) %G%"
+literal|"@(#)xargs.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -611,7 +611,6 @@ name|arg2
 label|:
 operator|*
 name|p
-operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -684,6 +683,10 @@ operator|=
 name|bxp
 expr_stmt|;
 block|}
+else|else
+operator|++
+name|p
+expr_stmt|;
 name|argp
 operator|=
 name|p
@@ -754,7 +757,7 @@ label|:
 if|if
 condition|(
 name|p
-operator|!=
+operator|<
 name|ebp
 condition|)
 block|{
