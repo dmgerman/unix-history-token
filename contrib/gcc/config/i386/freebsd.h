@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Continued development by David O'Brien<obrien@freebsd.org>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Continued development by David O'Brien<obrien@freebsd.org>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"\  %{p:%nconsider using `-pg' instead of `-p' with gprof(1) } \     %{Wl,*:%*} \     %{v:-V} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker: -dynamic-linker /libexec/ld-elf.so.1}} \       %{static:-Bstatic}} \     %{symbolic:-Bsymbolic}"
+value|"\  %{p:%nconsider using `-pg' instead of `-p' with gprof(1) } \     %{Wl,*:%*} \     %{v:-V} \     %{assert*} %{R*} %{rpath*} %{defsym*} \     %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \ 	%{rdynamic: -export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }} \       %{static:-Bstatic}} \     %{symbolic:-Bsymbolic}"
 end_define
 
 begin_comment
@@ -142,6 +142,24 @@ define|#
 directive|define
 name|WCHAR_TYPE_SIZE
 value|(TARGET_64BIT ? 32 : BITS_PER_WORD)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_comment
+comment|/* i386.h bogusly defines it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "fbsd_dynamic_linker", FBSD_DYNAMIC_LINKER }
 end_define
 
 begin_define
@@ -230,7 +248,7 @@ define|#
 directive|define
 name|SUBTARGET_OVERRIDE_OPTIONS
 define|\
-value|do {							\     if (!TARGET_64BIT) {				\       real_format_for_mode[XFmode - QFmode]		\ 	=&ieee_extended_intel_96_round_53_format;	\       real_format_for_mode[TFmode - QFmode]		\ 	=&ieee_extended_intel_96_round_53_format;	\     }							\   } while (0)
+value|do {							\     if (!TARGET_64BIT) {				\       REAL_MODE_FORMAT (XFmode)				\ 	=&ieee_extended_intel_96_round_53_format;	\       REAL_MODE_FORMAT (TFmode)				\ 	=&ieee_extended_intel_96_round_53_format;	\     }							\   } while (0)
 end_define
 
 begin_comment
@@ -401,6 +419,12 @@ ifdef|#
 directive|ifdef
 name|HAVE_GAS_MAX_SKIP_P2ALIGN
 end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_MAX_SKIP_ALIGN
+end_undef
 
 begin_define
 define|#
