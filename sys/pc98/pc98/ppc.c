@@ -8947,7 +8947,6 @@ name|ppc
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|PPB_RSTR
 case|:
@@ -8959,7 +8958,6 @@ name|ppc
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|PPB_RCTR
 case|:
@@ -8971,7 +8969,6 @@ name|ppc
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|PPB_REPP_A
 case|:
@@ -8983,7 +8980,6 @@ name|ppc
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|PPB_REPP_D
 case|:
@@ -8995,7 +8991,6 @@ name|ppc
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|PPB_RECR
 case|:
@@ -9007,7 +9002,6 @@ name|ppc
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|PPB_RFIFO
 case|:
@@ -9019,7 +9013,6 @@ name|ppc
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|PPB_WDTR
 case|:
