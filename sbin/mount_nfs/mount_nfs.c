@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_nfs.c,v 1.14.2.1 1997/05/14 08:19:20 dfr Exp $"
+literal|"$Id: mount_nfs.c,v 1.14.2.2 1997/05/14 12:06:34 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -936,7 +936,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Used to set mount flags with getmntopts.  Call with dir=TRUE to  * initialise altflags from the current mount flags.  Call with  * dir=FALSE to update mount flags with the new value of altflags after  * the call to getmntopts.  */
+comment|/*  * Used to set mount flags with getmntopts.  Call with dir=TRUE to  * initialize altflags from the current mount flags.  Call with  * dir=FALSE to update mount flags with the new value of altflags after  * the call to getmntopts.  */
 end_comment
 
 begin_function
@@ -2360,7 +2360,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NFSKERB
-comment|/* 			 * Set up as ncd_authuid for the kerberos call. 			 * Must set ruid to ncd_authuid and reset the 			 * ticket name iff ncd_authuid is not the same 			 * as last time, so that the right ticket file 			 * is found. 			 * Get the Kerberos credential structure so that 			 * we have the seesion key and get a ticket for 			 * this uid. 			 * For more info see the IETF Draft "Authentication 			 * in ONC RPC". 			 */
+comment|/* 			 * Set up as ncd_authuid for the kerberos call. 			 * Must set ruid to ncd_authuid and reset the 			 * ticket name iff ncd_authuid is not the same 			 * as last time, so that the right ticket file 			 * is found. 			 * Get the Kerberos credential structure so that 			 * we have the session key and get a ticket for 			 * this uid. 			 * For more info see the IETF Draft "Authentication 			 * in ONC RPC". 			 */
 if|if
 condition|(
 name|ncd
@@ -2492,7 +2492,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Fill in the AKN_FULLNAME authenticator and verfier. 			 * Along with the Kerberos ticket, we need to build 			 * the timestamp verifier and encrypt it in CBC mode. 			 */
+comment|/* 			 * Fill in the AKN_FULLNAME authenticator and verifier. 			 * Along with the Kerberos ticket, we need to build 			 * the timestamp verifier and encrypt it in CBC mode. 			 */
 if|if
 condition|(
 name|kret
@@ -3653,7 +3653,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Can't contact NFS server"
+literal|"can't contact NFS server"
 argument_list|)
 expr_stmt|;
 block|}
