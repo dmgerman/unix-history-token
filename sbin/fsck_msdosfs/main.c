@@ -170,7 +170,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: fsck_msdos [-fnpy] filesystem ...\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: fsck_msdosfs -p [-f] filesystem ..."
+argument_list|,
+literal|"       fsck_msdosfs [-ny] filesystem ..."
 argument_list|)
 expr_stmt|;
 name|exit
