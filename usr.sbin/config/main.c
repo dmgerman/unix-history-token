@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.18 1997/09/15 06:37:08 charnier Exp $"
+literal|"$Id: main.c,v 1.19 1997/11/18 03:41:51 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,7 +170,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|PREFIX
@@ -182,7 +181,7 @@ specifier|static
 name|int
 name|no_config_clobber
 init|=
-name|FALSE
+name|TRUE
 decl_stmt|;
 end_decl_stmt
 
@@ -260,7 +259,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"gpn"
+literal|"gpr"
 argument_list|)
 operator|)
 operator|!=
@@ -287,11 +286,11 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'n'
+literal|'r'
 case|:
 name|no_config_clobber
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
@@ -343,17 +342,6 @@ literal|"%s"
 argument_list|,
 name|PREFIX
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|getenv
-argument_list|(
-literal|"NO_CONFIG_CLOBBER"
-argument_list|)
-condition|)
-name|no_config_clobber
-operator|=
-name|TRUE
 expr_stmt|;
 name|p
 operator|=
@@ -420,9 +408,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|NO_CLOBBER_EVER
 elseif|else
 if|if
 condition|(
@@ -515,11 +500,10 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 else|else
 name|old_config_present
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 name|loadaddress
 operator|=
@@ -642,9 +626,14 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|xxx
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|xxx
+argument_list|)
 argument_list|,
 literal|"../../%s/include"
 argument_list|,
@@ -710,7 +699,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: config [-gpn] sysname\n"
+literal|"usage: config [-gpr] sysname\n"
 argument_list|)
 expr_stmt|;
 name|exit
