@@ -8,7 +8,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	Also incorporated from NetBSD: 1.165, 1.166  *	$NetBSD: uhci.c,v 1.162 2002/07/11 21:14:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.163 2002/09/27 15:37:36 provos Exp $  *	$NetBSD: uhci.c,v 1.164 2002/09/29 21:13:01 augustss Exp $  *	$NetBSD: uhci.c,v 1.165 2002/12/31 02:04:49 dsainty Exp $  *	$NetBSD: uhci.c,v 1.166 2002/12/31 02:21:31 dsainty Exp $  *	$NetBSD: uhci.c,v 1.167 2003/01/01 16:25:59 augustss Exp $  *	$NetBSD: uhci.c,v 1.168 2003/02/08 03:32:51 ichiro Exp $  */
+comment|/*	Also incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.162 2002/07/11 21:14:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.163 2002/09/27 15:37:36 provos Exp $  *	$NetBSD: uhci.c,v 1.164 2002/09/29 21:13:01 augustss Exp $  *	$NetBSD: uhci.c,v 1.165 2002/12/31 02:04:49 dsainty Exp $  *	$NetBSD: uhci.c,v 1.166 2002/12/31 02:21:31 dsainty Exp $  *	$NetBSD: uhci.c,v 1.167 2003/01/01 16:25:59 augustss Exp $  *	$NetBSD: uhci.c,v 1.168 2003/02/08 03:32:51 ichiro Exp $  *	$NetBSD: uhci.c,v 1.169 2003/02/16 23:15:28 augustss Exp $  */
 end_comment
 
 begin_comment
@@ -1954,7 +1954,7 @@ parameter_list|,
 name|ii
 parameter_list|)
 define|\
-value|LIST_INSERT_HEAD(&(sc)->sc_intrhead, (ii), list);
+value|LIST_INSERT_HEAD(&(sc)->sc_intrhead, (ii), list)
 end_define
 
 begin_define
@@ -1965,7 +1965,17 @@ parameter_list|(
 name|ii
 parameter_list|)
 define|\
-value|LIST_REMOVE((ii), list)
+value|do { \ 		LIST_REMOVE((ii), list); \ 		(ii)->list.le_prev = NULL; \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|uhci_active_intr_info
+parameter_list|(
+name|ii
+parameter_list|)
+value|((ii)->list.le_prev != NULL)
 end_define
 
 begin_function
@@ -9128,7 +9138,7 @@ argument_list|(
 literal|3
 argument_list|,
 operator|(
-literal|"uhci_device_bulk_transfer: xfer=%p len=%d flags=%d\n"
+literal|"uhci_device_bulk_start: xfer=%p len=%d flags=%d ii=%p\n"
 operator|,
 name|xfer
 operator|,
@@ -9139,6 +9149,8 @@ operator|,
 name|xfer
 operator|->
 name|flags
+operator|,
+name|ii
 operator|)
 argument_list|)
 expr_stmt|;
@@ -13678,6 +13690,13 @@ literal|"uhci_device_intr_done: removing\n"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|uhci_active_intr_info
+argument_list|(
+name|ii
+argument_list|)
+condition|)
 name|uhci_del_intr_info
 argument_list|(
 name|ii
@@ -13754,6 +13773,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
+name|uhci_active_intr_info
+argument_list|(
+name|ii
+argument_list|)
+condition|)
+return|return;
 name|uhci_del_intr_info
 argument_list|(
 name|ii
@@ -13890,6 +13918,32 @@ name|xfer
 operator|->
 name|pipe
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"uhci_device_ctrl_done: xfer=%p ii=%p sc=%p upipe=%p\n"
+operator|,
+name|xfer
+operator|,
+name|ii
+operator|,
+name|sc
+operator|,
+name|upipe
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|uhci_active_intr_info
+argument_list|(
+name|ii
+argument_list|)
+condition|)
+return|return;
 name|uhci_del_intr_info
 argument_list|(
 name|ii
