@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.3 (Berkeley) 83/01/15"
+literal|"@(#)ftpd.c	4.4 (Berkeley) 83/01/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -1835,7 +1835,9 @@ continue|continue;
 block|}
 name|seteuid
 argument_list|(
-literal|0
+name|pw
+operator|->
+name|pw_uid
 argument_list|)
 expr_stmt|;
 name|close
@@ -1851,7 +1853,9 @@ return|;
 block|}
 name|seteuid
 argument_list|(
-literal|0
+name|pw
+operator|->
+name|pw_uid
 argument_list|)
 expr_stmt|;
 return|return
