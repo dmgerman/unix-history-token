@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.16 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6213,12 +6213,10 @@ begin_comment
 comment|/*  * Notify parent process that the filesystem has created itself successfully.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|started
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|exit
 argument_list|(
@@ -6226,7 +6224,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Replace libc function with one suited to our needs.  */

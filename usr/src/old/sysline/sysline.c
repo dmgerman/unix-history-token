@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.17 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4975,12 +4975,10 @@ begin_comment
 comment|/*  * clearbotl :: clear bottom line.  * called when process quits or is killed.  * it clears the bottom line of the terminal.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clearbotl
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -5068,7 +5066,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
