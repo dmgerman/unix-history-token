@@ -421,53 +421,42 @@ name|cdevsw
 name|sx_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
+operator|.
+name|d_open
+operator|=
 name|sxopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|sxclose
 block|,
-comment|/* read */
-name|ttyread
-block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|sxwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|sxioctl
 block|,
-comment|/* poll */
-name|ttypoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"sx"
 block|,
-comment|/* maj */
-name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
+operator|.
+name|d_flags
+operator|=
 name|D_TTY
 operator||
-name|D_KQFILTER
-block|,
-comment|/* bmaj */
-operator|-
-literal|1
-block|,
-comment|/* kqfilter */
-name|ttykqfilter
+name|D_NEEDGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1796,8 +1785,7 @@ parameter_list|,
 name|int
 name|mode
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
 name|p
 parameter_list|)
@@ -2579,8 +2567,7 @@ parameter_list|,
 name|int
 name|mode
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
 name|p
 parameter_list|)
@@ -3385,8 +3372,7 @@ parameter_list|,
 name|int
 name|flag
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
 name|p
 parameter_list|)
@@ -7220,22 +7206,6 @@ name|pp
 operator|->
 name|sp_delta_overflows
 operator|++
-expr_stmt|;
-comment|/* 			 * doesn't seem to be much point doing this here. 			 * this driver has no softtty processing! ?? 			 */
-if|if
-condition|(
-name|pp
-operator|->
-name|sp_hotchar
-operator|&&
-name|i
-operator|==
-name|pp
-operator|->
-name|sp_hotchar
-condition|)
-name|setsofttty
-argument_list|()
 expr_stmt|;
 block|}
 block|}
