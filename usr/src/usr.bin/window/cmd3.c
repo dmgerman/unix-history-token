@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd3.c	3.2 83/08/15"
+literal|"@(#)cmd3.c	3.3 83/08/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,7 +100,6 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
-comment|/* GROT */
 name|didit
 operator|++
 expr_stmt|;

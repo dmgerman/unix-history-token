@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd1.c	3.3 83/08/12"
+literal|"@(#)lcmd1.c	3.4 83/08/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -533,6 +533,25 @@ name|didit
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+block|{
+name|c_close
+argument_list|(
+operator|(
+expr|struct
+name|ww
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 for|for
 control|(
 name|i
