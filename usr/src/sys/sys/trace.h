@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trace.h	4.6	81/03/11	*/
+comment|/*	trace.h	4.7	81/04/18	*/
 end_comment
 
 begin_comment
@@ -284,6 +284,21 @@ comment|/* vadvise occurred with<arg, pid> */
 end_comment
 
 begin_comment
+comment|/*  * Miscellaneous  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TR_STAMP
+value|50
+end_define
+
+begin_comment
+comment|/* user said vtrace(VTR_STAMP, value); */
+end_comment
+
+begin_comment
 comment|/*  * This defines the size of the trace flags array.  */
 end_comment
 
@@ -362,6 +377,17 @@ end_comment
 
 begin_comment
 comment|/* in specified number of hz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VTR_STAMP
+value|4
+end_define
+
+begin_comment
+comment|/* user specified stamp */
 end_comment
 
 begin_ifdef
