@@ -275,11 +275,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|free
-argument_list|(
-name|result
-argument_list|)
-expr_stmt|;
 name|serv_stepping_yp
 operator|=
 literal|0
