@@ -744,7 +744,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*      * The four types of fields are:      *      * BufferFields - Read/write from/to a Buffer      * RegionFields - Read/write from/to a Operation Region.      * BankFields   - Write to a Bank Register, then read/write from/to an OpRegion      * IndexFields  - Write to an Index Register, then read/write from/to a Data Register      */
+comment|/*      * The four types of fields are:      *      * BufferField - Read/write from/to a Buffer      * RegionField - Read/write from/to a Operation Region.      * BankField   - Write to a Bank Register, then read/write from/to an OpRegion      * IndexField  - Write to an Index Register, then read/write from/to a Data Register      */
 switch|switch
 condition|(
 name|ACPI_GET_OBJECT_TYPE
@@ -998,6 +998,25 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Write the index value to the IndexRegister (itself a RegionField) */
+name|FieldDatumByteOffset
+operator|+=
+name|ObjDesc
+operator|->
+name|IndexField
+operator|.
+name|Value
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"Write to Index Register: Value %8.8X\n"
+operator|,
+name|FieldDatumByteOffset
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiExInsertIntoField
@@ -1009,19 +1028,11 @@ operator|.
 name|IndexObj
 argument_list|,
 operator|&
-name|ObjDesc
-operator|->
-name|IndexField
-operator|.
-name|Value
+name|FieldDatumByteOffset
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ObjDesc
-operator|->
-name|IndexField
-operator|.
-name|Value
+name|FieldDatumByteOffset
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1039,6 +1050,17 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"I/O to Data Register: ValuePtr %p\n"
+operator|,
+name|Value
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ReadWrite
@@ -1059,17 +1081,16 @@ name|DataObj
 argument_list|,
 name|Value
 argument_list|,
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|AccessByteWidth
+sizeof|sizeof
+argument_list|(
+name|ACPI_INTEGER
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Write the datum to the Data register */
+comment|/* Write the datum to the DataRegister */
 name|Status
 operator|=
 name|AcpiExInsertIntoField
@@ -1082,11 +1103,10 @@ name|DataObj
 argument_list|,
 name|Value
 argument_list|,
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|AccessByteWidth
+sizeof|sizeof
+argument_list|(
+name|ACPI_INTEGER
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
