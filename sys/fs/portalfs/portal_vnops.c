@@ -856,9 +856,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|uio
 name|auio
@@ -1047,10 +1044,11 @@ name|bad
 goto|;
 comment|/* 	 * Wait for connection to complete 	 */
 comment|/* 	 * XXX: Since the mount point is holding a reference on the 	 * underlying server socket, it is not easy to find out whether 	 * the server process is still running.  To handle this problem 	 * we loop waiting for the new socket to be connected (something 	 * which will only happen if the server is still running) or for 	 * the reference count on the server socket to drop to 1, which 	 * will happen if the server dies.  Sleep for 5 second intervals 	 * and keep polling the reference count.   XXX. 	 */
-name|s
-operator|=
-name|splnet
-argument_list|()
+comment|/* XXXRW: Locking? */
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1080,14 +1078,14 @@ operator|==
 literal|1
 condition|)
 block|{
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ECONNREFUSED
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 goto|goto
 name|bad
@@ -1096,7 +1094,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|tsleep
+name|msleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1105,6 +1103,11 @@ operator|&
 name|so
 operator|->
 name|so_timeo
+argument_list|,
+name|SOCK_MTX
+argument_list|(
+name|so
+argument_list|)
 argument_list|,
 name|PSOCK
 argument_list|,
@@ -1116,9 +1119,9 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
+name|SOCK_UNLOCK
 argument_list|(
-name|s
+name|so
 argument_list|)
 expr_stmt|;
 if|if
@@ -1139,22 +1142,6 @@ name|bad
 goto|;
 block|}
 comment|/* 	 * Set miscellaneous flags 	 */
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_timeo
-operator|=
-literal|0
-expr_stmt|;
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_timeo
-operator|=
-literal|0
-expr_stmt|;
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -1162,6 +1149,14 @@ name|so
 operator|->
 name|so_rcv
 argument_list|)
+expr_stmt|;
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_timeo
+operator|=
+literal|0
 expr_stmt|;
 name|so
 operator|->
@@ -1186,6 +1181,14 @@ name|so
 operator|->
 name|so_snd
 argument_list|)
+expr_stmt|;
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_timeo
+operator|=
+literal|0
 expr_stmt|;
 name|so
 operator|->
