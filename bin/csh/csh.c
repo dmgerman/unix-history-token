@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: csh.c,v 1.9 1997/08/07 21:42:03 steve Exp $"
+literal|"$Id: csh.c,v 1.10 1997/08/08 00:49:25 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -1070,6 +1076,13 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|&&
+name|strlen
+argument_list|(
+name|tcp
+argument_list|)
+operator|<
+name|MAXPATHLEN
 condition|)
 name|cp
 operator|=
