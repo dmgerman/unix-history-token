@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -794,7 +800,7 @@ operator|(
 name|Mbd
 operator|*
 operator|)
-name|KM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
