@@ -130,7 +130,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<termios.h>
 end_include
 
 begin_include
@@ -522,13 +522,6 @@ name|keep
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|sgttyb
-name|otty
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|char
 modifier|*
@@ -696,17 +689,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|gtty
-argument_list|(
-name|fileno
-argument_list|(
-name|stdout
-argument_list|)
-argument_list|,
-operator|&
-name|otty
-argument_list|)
-expr_stmt|;
 name|time
 argument_list|(
 operator|&
@@ -2796,16 +2778,13 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* trick to force wait on output */
-name|stty
+comment|/* force wait on output */
+name|tcdrain
 argument_list|(
 name|fileno
 argument_list|(
 name|stdout
 argument_list|)
-argument_list|,
-operator|&
-name|otty
 argument_list|)
 expr_stmt|;
 block|}
