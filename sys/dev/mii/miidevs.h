@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.4 2001/04/21 16:13:28 mjacob Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.5 2001/05/13 00:17:37 jlemon Exp   */
 end_comment
 
 begin_comment
@@ -186,6 +186,21 @@ end_define
 
 begin_comment
 comment|/* Advanced Micro Devices */
+end_comment
+
+begin_comment
+comment|/* Intel 82553 A/B steppings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_OUI_xxINTEL
+value|0x00f800
+end_define
+
+begin_comment
+comment|/* Intel */
 end_comment
 
 begin_comment
@@ -442,6 +457,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MII_MODEL_xxINTEL_I82553AB
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_xxINTEL_I82553AB
+value|"i83553 10/100 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
 name|MII_MODEL_INTEL_I82555
 value|0x0015
 end_define
@@ -451,6 +480,48 @@ define|#
 directive|define
 name|MII_STR_INTEL_I82555
 value|"i82555 10/100 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_INTEL_I82562EM
+value|0x0032
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_INTEL_I82562EM
+value|"i82562EM 10/100 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_INTEL_I82562ET
+value|0x0033
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_INTEL_I82562ET
+value|"i82562ET 10/100 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_INTEL_I82553C
+value|0x0035
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_INTEL_I82553C
+value|"i82553 10/100 media interface"
 end_define
 
 begin_comment
