@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.52 1999/06/27 18:05:34 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.53 1999/06/28 09:28:17 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1929,7 +1929,8 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: inetd [-dlw] [-a address] [-R rate]"
+literal|"usage: inetd [-dl] [-w [-w]] [-a address]"
+literal|" [-R rate]"
 literal|" [-c maximum] [-C rate]"
 literal|" [-p pidfile] [conf-file]"
 argument_list|)
