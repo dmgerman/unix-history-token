@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)mkboottape.c	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)mkboottape.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pmax/stand/dec_boot.h>
 end_include
 
@@ -68,22 +74,6 @@ include|#
 directive|include
 file|<pmax/stand/dec_exec.h>
 end_include
-
-begin_decl_stmt
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -110,6 +100,18 @@ name|coff_exec
 name|dec_exec
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Program name, from crt0. */
+end_comment
 
 begin_comment
 comment|/*  * This program takes a kernel and the name of the special device file that  * has the mini-root file system stored on it and creates a boot tape.  * The -b option makes a bootfile that can load the kernel and mini-root  * over the network using the 'boot 6/tftp/filename -m' PROM command.  *  * usage: mkboottape [-b] tapedev vmunix minirootdev size  */
@@ -151,7 +153,7 @@ decl_stmt|;
 name|long
 name|execAddr
 decl_stmt|;
-name|long
+name|off_t
 name|textoff
 decl_stmt|;
 name|long
@@ -285,17 +287,14 @@ name|deverr
 label|:
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -322,17 +321,14 @@ name|bootferr
 label|:
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|argv
 index|[
 literal|1
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -359,17 +355,14 @@ name|rooterr
 label|:
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|argv
 index|[
 literal|2
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|rootsize
@@ -409,9 +402,14 @@ name|a_magic
 operator|!=
 name|OMAGIC
 condition|)
-name|err
+block|{
+name|fprintf
 argument_list|(
-literal|"%s: need impure text format (OMAGIC) file"
+name|stderr
+argument_list|,
+literal|"%s: %s: need old text format (OMAGIC) file\n"
+argument_list|,
+name|__progname
 argument_list|,
 name|argv
 index|[
@@ -419,6 +417,12 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|loadAddr
 operator|=
 name|aout
@@ -1039,7 +1043,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"mkboottape: wrote %d sectors\n"
+literal|"%s: wrote %d sectors\n"
+argument_list|,
+name|__progname
 argument_list|,
 name|nsectors
 argument_list|)
@@ -1064,7 +1070,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mkboottape [-b] tapedev vmunix minirootdev size\n"
+literal|"usage: %s [-b] tapedev vmunix minirootdev size\n"
+argument_list|,
+name|__progname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1072,132 +1080,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|void
-if|#
-directive|if
-name|__STDC__
-name|err
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|err
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mkboottape: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
