@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mtrace.c,v 1.12 1997/09/30 06:15:16 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -11848,19 +11848,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"getting my hostname"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|hp
 operator|=
 name|gethostbyname
@@ -11891,19 +11885,13 @@ operator|.
 name|sin_addr
 argument_list|)
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"finding IP address for my hostname"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|memcpy
 argument_list|(
 operator|(
@@ -13970,7 +13958,6 @@ name|LOG_ERR
 condition|)
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;

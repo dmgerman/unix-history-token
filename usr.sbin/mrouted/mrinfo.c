@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mrinfo.c,v 1.13 1997/09/30 06:15:08 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -583,7 +583,6 @@ name|LOG_ERR
 condition|)
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;

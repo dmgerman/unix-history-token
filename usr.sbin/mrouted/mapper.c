@@ -1,10 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id: mapper.c,v 1.10 1997/02/22 16:06:57 peter Exp $  */
+comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) Xerox Corporation 1992. All rights reserved.  *    * License is granted to copy, to use, and to make and to use derivative  * works for research and evaluation purposes, provided that Xerox is  * acknowledged in all documentation pertaining to any such copy or derivative  * work. Xerox grants no other licenses expressed or implied. The Xerox trade  * name should not be used in any advertising without its written permission.  *    * XEROX CORPORATION MAKES NO REPRESENTATIONS CONCERNING EITHER THE  * MERCHANTABILITY OF THIS SOFTWARE OR THE SUITABILITY OF THIS SOFTWARE  * FOR ANY PARTICULAR PURPOSE.  The software is provided "as is" without  * express or implied warranty of any kind.  *    * These notices must be retained in any copies of any part of this software.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -1052,7 +1078,6 @@ name|LOG_ERR
 condition|)
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
