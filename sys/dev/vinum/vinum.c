@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.19 1998/08/13 05:24:02 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.1.1.1 1998/09/16 05:56:21 grog Exp $  */
 end_comment
 
 begin_define
@@ -235,6 +235,35 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACTUALLY_LKM_NOT_KERNEL
+end_ifndef
+
+begin_function_decl
+name|STATIC
+name|int
+name|vinum_modevent
+parameter_list|(
+name|module_t
+name|mod
+parameter_list|,
+name|modeventtype_t
+name|type
+parameter_list|,
+name|void
+modifier|*
+name|unused
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -662,16 +691,6 @@ comment|/* no reply on longjmp */
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACTUALLY_LKM_NOT_KERNEL
-end_ifdef
-
-begin_comment
-comment|/* stuff for LKMs */
-end_comment
-
 begin_comment
 comment|/* Check if we have anything open.  If so, return 0 (not inactive),  * otherwise 1 (inactive) */
 end_comment
@@ -960,6 +979,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACTUALLY_LKM_NOT_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* stuff for LKMs */
+end_comment
+
 begin_expr_stmt
 name|MOD_MISC
 argument_list|(
@@ -1177,11 +1206,125 @@ begin_comment
 comment|/* not LKM */
 end_comment
 
-begin_error
-error|#
-directive|error
-literal|"This driver must be compiled as a loadable kernel module"
-end_error
+begin_function
+name|STATIC
+name|int
+name|vinum_modevent
+parameter_list|(
+name|module_t
+name|mod
+parameter_list|,
+name|modeventtype_t
+name|type
+parameter_list|,
+name|void
+modifier|*
+name|unused
+parameter_list|)
+block|{
+name|struct
+name|sync_args
+name|dummyarg
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
+name|BROKEN_GDB
+expr_stmt|;
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|MOD_LOAD
+case|:
+comment|/* Debugger ("vinum_load"); */
+name|vinumattach
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* OK */
+case|case
+name|MOD_UNLOAD
+case|:
+if|if
+condition|(
+operator|!
+name|vinum_inactive
+argument_list|()
+condition|)
+comment|/* is anything open? */
+return|return
+name|EBUSY
+return|;
+name|sync
+argument_list|(
+name|curproc
+argument_list|,
+operator|&
+name|dummyarg
+argument_list|)
+expr_stmt|;
+comment|/* write out buffers */
+name|free_vinum
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* no: clean up */
+name|cdevsw
+index|[
+name|CDEV_MAJOR
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* and cdevsw */
+return|return
+literal|0
+return|;
+default|default:
+break|break;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|moduledata_t
+name|vinum_mod
+init|=
+block|{
+literal|"vinum"
+block|,
+name|vinum_modevent
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DECLARE_MODULE
+argument_list|(
+name|vinum
+argument_list|,
+name|vinum_mod
+argument_list|,
+name|SI_SUB_DRIVERS
+argument_list|,
+name|SI_ORDER_MIDDLE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
