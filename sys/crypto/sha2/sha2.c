@@ -513,8 +513,8 @@ comment|/* Hash constant words K for SHA-256: */
 end_comment
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|sha2_word32
 name|K256
 index|[
@@ -658,8 +658,8 @@ comment|/* Initial hash value H for SHA-256: */
 end_comment
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|sha2_word32
 name|sha256_initial_hash_value
 index|[
@@ -691,8 +691,8 @@ comment|/* Hash constant words K for SHA-384 and SHA-512: */
 end_comment
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|sha2_word64
 name|K512
 index|[
@@ -868,8 +868,8 @@ comment|/* Initial hash value H for SHA-384 */
 end_comment
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|sha2_word64
 name|sha384_initial_hash_value
 index|[
@@ -901,8 +901,8 @@ comment|/* Initial hash value H for SHA-512 */
 end_comment
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|sha2_word64
 name|sha512_initial_hash_value
 index|[
