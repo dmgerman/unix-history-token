@@ -5018,7 +5018,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|" cstsevent occures, 0x%08x\n"
+literal|"csts event occurred, state = 0x%08x\n"
 operator|,
 name|pccbb_get
 argument_list|(
@@ -5040,7 +5040,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|" pwrevent occures, 0x%08x\n"
+literal|"power event occurred, state = 0x%08x\n"
 operator|,
 name|pccbb_get
 argument_list|(
