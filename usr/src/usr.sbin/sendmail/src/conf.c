@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.33 (Berkeley) %G%"
+literal|"@(#)conf.c	8.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1377,6 +1377,30 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* lint */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|49
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"checkcompat(to=%s, from=%s)\n"
+argument_list|,
+name|to
+operator|->
+name|q_paddr
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_paddr
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|EXAMPLE_CODE
