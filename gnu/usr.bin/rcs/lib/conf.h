@@ -1169,6 +1169,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|has_mkstemp
+value|1
+end_define
+
+begin_comment
+comment|/* Does mkstemp() work?  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|has_NFS
 value|1
 end_define
