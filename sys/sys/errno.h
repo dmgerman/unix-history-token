@@ -1149,11 +1149,70 @@ begin_comment
 comment|/* Programming error */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EBADMSG
+value|89
+end_define
+
+begin_comment
+comment|/* Bad message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EMULTIHOP
+value|90
+end_define
+
+begin_comment
+comment|/* Multihop attempted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENOLINK
+value|91
+end_define
+
+begin_comment
+comment|/* Link has been severed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPROTO
+value|92
+end_define
+
+begin_comment
+comment|/* Protocol error */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ELAST
-value|88
+value|92
 end_define
 
 begin_comment

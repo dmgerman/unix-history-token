@@ -342,6 +342,18 @@ comment|/* General */
 literal|"Programming error"
 block|,
 comment|/* 88 - EDOOFUS */
+literal|"Bad message"
+block|,
+comment|/* 89 - EBADMSG */
+literal|"Multihop attempted"
+block|,
+comment|/* 90 - EMULTIHOP */
+literal|"Link has been severed"
+block|,
+comment|/* 91 - ENOLINK */
+literal|"Protocol error"
+block|,
+comment|/* 92 - EPROTO */
 block|}
 decl_stmt|;
 end_decl_stmt
