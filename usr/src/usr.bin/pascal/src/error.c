@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)error.c 1.3 %G%"
+literal|"@(#)error.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,14 +144,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|errfile
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Error is called for  * semantic errors and  * prints the error and  * a line number.  */
