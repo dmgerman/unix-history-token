@@ -523,11 +523,6 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|prtactive
@@ -545,7 +540,8 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-name|VI_UNLOCK
+comment|/* 	 * Destroy the vm object and flush associated pages. 	 */
+name|vnode_destroy_vobject
 argument_list|(
 name|vp
 argument_list|)
@@ -641,11 +637,6 @@ block|}
 block|}
 endif|#
 directive|endif
-name|vnode_destroy_vobject
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UFS_DIRHASH
