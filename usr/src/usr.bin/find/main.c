@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.2 (Berkeley) %G%"
+literal|"@(#)main.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -396,7 +396,7 @@ operator||=
 name|FTS_LOGICAL
 expr_stmt|;
 block|}
-comment|/* Find first option to delimit the file list. */
+comment|/* 	 * Find first option to delimit the file list.  The first argument 	 * that starts with a -, or is a ! or a ( must be interpreted as a 	 * part of the find expression, according to POSIX .2. 	 */
 for|for
 control|(
 init|;
@@ -413,15 +413,56 @@ operator|*
 name|argv
 operator|++
 control|)
+block|{
 if|if
 condition|(
-name|option
-argument_list|(
-operator|*
 name|argv
-argument_list|)
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
 condition|)
 break|break;
+if|if
+condition|(
+operator|(
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'!'
+operator|||
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'('
+operator|)
+operator|&&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|)
+break|break;
+block|}
 if|if
 condition|(
 name|p
