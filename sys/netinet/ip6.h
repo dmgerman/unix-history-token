@@ -781,6 +781,17 @@ begin_comment
 comment|/* ip6 max packet size without Jumbo payload*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPV6_MAXOPTHDR
+value|2048
+end_define
+
+begin_comment
+comment|/* max option header size, 256 64-bit words */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
