@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.1 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|BANNER
-value|"\r\n\r\n4.2 BSD UNIX (%s)\r\n\r\r\n\r%s"
+value|"\r\n\r\n4.3 BSD UNIX (%s)\r\n\r\r\n\r%s"
 end_define
 
 begin_decl_stmt
@@ -2637,7 +2637,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|utmp
+name|utmpf
 index|[]
 init|=
 literal|"/etc/utmp"
@@ -2653,7 +2653,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|strncpy(a, b, sizeof (a))
+value|strncpy(a, b, sizeof(a))
 end_define
 
 begin_define
@@ -2665,7 +2665,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|strncmp(a, b, sizeof (a))
+value|strncmp(a, b, sizeof(a))
 end_define
 
 begin_macro
@@ -2683,11 +2683,26 @@ name|found
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|utmp
+modifier|*
+name|u
+decl_stmt|,
+modifier|*
+name|utmp
+decl_stmt|;
+name|int
+name|nutmp
+decl_stmt|;
+name|struct
+name|stat
+name|statbf
+decl_stmt|;
 name|f
 operator|=
 name|open
 argument_list|(
-name|utmp
+name|utmpf
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -2699,37 +2714,94 @@ operator|>=
 literal|0
 condition|)
 block|{
-while|while
+name|fstat
+argument_list|(
+name|f
+argument_list|,
+operator|&
+name|statbf
+argument_list|)
+expr_stmt|;
+name|utmp
+operator|=
+operator|(
+expr|struct
+name|utmp
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|statbf
+operator|.
+name|st_size
+argument_list|)
+expr_stmt|;
+if|if
 condition|(
+operator|!
+name|utmp
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"utmp malloc failed"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|statbf
+operator|.
+name|st_size
+operator|&&
+name|utmp
+condition|)
+block|{
+name|nutmp
+operator|=
 name|read
 argument_list|(
 name|f
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|wtmp
+name|utmp
 argument_list|,
+name|statbf
+operator|.
+name|st_size
+argument_list|)
+expr_stmt|;
+name|nutmp
+operator|/=
 sizeof|sizeof
 argument_list|(
-name|wtmp
+expr|struct
+name|utmp
 argument_list|)
-argument_list|)
-operator|==
-sizeof|sizeof
-argument_list|(
-name|wtmp
-argument_list|)
-condition|)
+expr_stmt|;
+for|for
+control|(
+name|u
+operator|=
+name|utmp
+init|;
+name|u
+operator|<
+operator|&
+name|utmp
+index|[
+name|nutmp
+index|]
+condition|;
+name|u
+operator|++
+control|)
 block|{
 if|if
 condition|(
 name|SCMPN
 argument_list|(
-name|wtmp
-operator|.
+name|u
+operator|->
 name|ut_line
 argument_list|,
 name|line
@@ -2737,8 +2809,8 @@ operator|+
 literal|5
 argument_list|)
 operator|||
-name|wtmp
-operator|.
+name|u
+operator|->
 name|ut_name
 index|[
 literal|0
@@ -2751,22 +2823,27 @@ name|lseek
 argument_list|(
 name|f
 argument_list|,
-operator|-
+operator|(
 operator|(
 name|long
 operator|)
-sizeof|sizeof
-argument_list|(
-name|wtmp
-argument_list|)
+name|u
+operator|)
+operator|-
+operator|(
+operator|(
+name|long
+operator|)
+name|utmp
+operator|)
 argument_list|,
-name|L_INCR
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|SCPYN
 argument_list|(
-name|wtmp
-operator|.
+name|u
+operator|->
 name|ut_name
 argument_list|,
 literal|""
@@ -2774,8 +2851,8 @@ argument_list|)
 expr_stmt|;
 name|SCPYN
 argument_list|(
-name|wtmp
-operator|.
+name|u
+operator|->
 name|ut_host
 argument_list|,
 literal|""
@@ -2784,8 +2861,8 @@ expr_stmt|;
 name|time
 argument_list|(
 operator|&
-name|wtmp
-operator|.
+name|u
+operator|->
 name|ut_time
 argument_list|)
 expr_stmt|;
@@ -2797,8 +2874,7 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|&
-name|wtmp
+name|u
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2809,6 +2885,7 @@ expr_stmt|;
 name|found
 operator|++
 expr_stmt|;
+block|}
 block|}
 name|close
 argument_list|(
