@@ -1276,6 +1276,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|m_print
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|mbuf
+operator|*
+name|m
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
