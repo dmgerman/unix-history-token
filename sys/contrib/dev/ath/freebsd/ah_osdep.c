@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002, 2003 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: ah_osdep.c,v 1.28 2003/11/01 01:43:21 sam Exp $  */
+comment|/*-  * Copyright (c) 2002-2004 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: ah_osdep.c,v 1.35 2004/10/25 01:02:50 sam Exp $  */
 end_comment
 
 begin_include
@@ -315,10 +315,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -336,6 +332,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Atheros HAL debugging printfs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ath.hal.debug"
+argument_list|,
+operator|&
+name|ath_hal_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1766,6 +1773,59 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|ath_hal_memzero
+parameter_list|(
+name|void
+modifier|*
+name|dst
+parameter_list|,
+name|size_t
+name|n
+parameter_list|)
+block|{
+name|bzero
+argument_list|(
+name|dst
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|ath_hal_memcpy
+parameter_list|(
+name|void
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|n
+parameter_list|)
+block|{
+return|return
+name|memcpy
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
+name|n
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Module glue.  */
 end_comment
@@ -1786,6 +1846,14 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|sep
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -1794,16 +1862,54 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|printf
 argument_list|(
-literal|"ath_hal:<Atheros Hardware Access Layer>"
-literal|"version %s\n"
+literal|"ath_hal: %s ("
 argument_list|,
 name|ath_hal_version
+argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|""
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|ath_hal_buildopts
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
+literal|"%s%s"
+argument_list|,
+name|sep
+argument_list|,
+name|ath_hal_buildopts
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|", "
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|")\n"
 argument_list|)
 expr_stmt|;
 return|return
