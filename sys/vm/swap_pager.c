@@ -7777,36 +7777,16 @@ return|return;
 block|}
 name|bio
 operator|=
-name|g_new_bio
+name|g_alloc_bio
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|bio
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* 		 * XXX: This is better than panicing, but not much better. 		 * XXX: Somehow this should be retried.  A more generic 		 * XXX: implementation of ENOMEM in geom may be able to cope. 		 */
-name|bp
-operator|->
-name|b_error
-operator|=
-name|ENOMEM
-expr_stmt|;
-name|bp
-operator|->
-name|b_ioflags
-operator||=
-name|BIO_ERROR
-expr_stmt|;
-name|bufdone
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* 	 * XXX: We shouldn't really sleep here when we run out of buffers 	 * XXX: but the alternative is worse right now. 	 */
+block|if (bio == NULL) { 		bp->b_error = ENOMEM; 		bp->b_ioflags |= BIO_ERROR; 		bufdone(bp); 		return; 	}
+endif|#
+directive|endif
 name|bio
 operator|->
 name|bio_caller2
