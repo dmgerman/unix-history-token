@@ -1650,6 +1650,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|nfsclnt
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|nfssvc
 name|__P
 argument_list|(
