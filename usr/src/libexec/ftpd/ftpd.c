@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.20 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -985,6 +985,22 @@ name|mode
 operator|=
 name|MODE_S
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|getsockname
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|ctrl_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ctrl_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|gethostname
 argument_list|(
 name|hostname
@@ -1005,32 +1021,6 @@ name|hostname
 argument_list|,
 name|version
 argument_list|)
-expr_stmt|;
-comment|/* 			 * Anchor data source address to that 			 * of the control port so hosts with 			 * multiple address won't have data 			 * connections bound to an address different 			 * than the control port. 			 */
-if|if
-condition|(
-name|getsockname
-argument_list|(
-literal|0
-argument_list|,
-operator|&
-name|ctrl_addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ctrl_addr
-argument_list|)
-argument_list|)
-operator|>=
-literal|0
-condition|)
-name|data_source
-operator|.
-name|sin_addr
-operator|=
-name|ctrl_addr
-operator|.
-name|sin_addr
 expr_stmt|;
 for|for
 control|(
@@ -1588,6 +1578,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
 name|reply
 argument_list|(
 literal|550
@@ -2046,6 +2042,21 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* anchor socket to avoid multi-homing problems */
+name|data_source
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|data_source
+operator|.
+name|sin_addr
+operator|=
+name|ctrl_addr
+operator|.
+name|sin_addr
+expr_stmt|;
 if|if
 condition|(
 name|bind
@@ -3810,7 +3821,12 @@ expr_stmt|;
 else|else
 name|remotehost
 operator|=
-literal|"UNKNOWNHOST"
+name|inet_ntoa
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
 expr_stmt|;
 name|t
 operator|=
