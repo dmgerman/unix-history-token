@@ -203,7 +203,7 @@ name|LEAPYEAR
 parameter_list|(
 name|y
 parameter_list|)
-value|((u_int)(y) % 4 == 0)
+value|(((u_int)(y) % 4 == 0) ? 1 : 0)
 end_define
 
 begin_define
@@ -604,7 +604,10 @@ literal|0
 block|,
 comment|/* frequency */
 literal|"i8254"
+block|,
 comment|/* name */
+literal|0
+comment|/* quality */
 block|}
 decl_stmt|;
 end_decl_stmt
