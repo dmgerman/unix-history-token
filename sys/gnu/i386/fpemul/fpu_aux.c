@@ -15,10 +15,6 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_comment
-comment|/* for printf() in EXCEPTION() and 				 * to bring in<machine/cpufunc.h 				 */
-end_comment
-
 begin_include
 include|#
 directive|include
