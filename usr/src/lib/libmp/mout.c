@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mout.c	5.1 (Berkeley) %G%"
+literal|"@(#)mout.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,6 +147,9 @@ block|{
 case|case
 literal|'\\'
 case|:
+operator|(
+name|void
+operator|)
 name|getc
 argument_list|(
 name|f
@@ -312,6 +315,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|obuf
+decl_stmt|,
+modifier|*
+name|malloc
+argument_list|()
 decl_stmt|;
 specifier|register
 name|char
@@ -408,14 +415,13 @@ index|]
 expr_stmt|;
 name|obuf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 literal|7
 operator|*
+operator|(
+name|unsigned
+operator|)
 name|xlen
 argument_list|)
 expr_stmt|;
@@ -469,6 +475,9 @@ argument_list|(
 operator|&
 name|x
 argument_list|,
+operator|(
+name|short
+operator|)
 name|b
 argument_list|,
 operator|&
@@ -559,6 +568,12 @@ name|a
 decl_stmt|,
 modifier|*
 name|q
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|short
+name|n
 decl_stmt|;
 end_decl_stmt
 
@@ -709,6 +724,12 @@ name|a
 decl_stmt|,
 modifier|*
 name|q
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|short
+name|n
 decl_stmt|;
 end_decl_stmt
 
