@@ -225,6 +225,18 @@ comment|/* resolution of the device (units/inch) */
 end_comment
 
 begin_decl_stmt
+name|double
+name|fixpix
+init|=
+name|FIXPIX
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* conversion factor "fix"es to pixels */
+end_comment
+
+begin_decl_stmt
 name|int
 name|pointsize
 init|=
@@ -2343,6 +2355,15 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
+name|fixpix
+operator|=
+operator|(
+name|FIXIN
+operator|*
+name|res
+operator|)
+expr_stmt|;
+comment|/* pixels per fix */
 break|break;
 default|default:
 name|error
@@ -3042,7 +3063,7 @@ condition|(
 operator|(
 name|fixtowdth
 operator|=
-name|FIXPIX
+name|fixpix
 operator|*
 name|p
 operator|.
@@ -3055,7 +3076,7 @@ literal|0.0
 condition|)
 name|fixtowdth
 operator|=
-name|FIXPIX
+name|fixpix
 expr_stmt|;
 name|printf
 argument_list|(
@@ -3093,7 +3114,7 @@ literal|"mag %.2f\n"
 argument_list|,
 name|fixtowdth
 operator|/
-name|FIXPIX
+name|fixpix
 argument_list|)
 expr_stmt|;
 name|printf
