@@ -32,18 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -63,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -316,8 +310,7 @@ directive|define
 name|LP_BYPASS
 value|0x80
 comment|/* bypass  printer ready checks */
-name|struct
-name|buf
+name|void
 modifier|*
 name|sc_inbuf
 decl_stmt|;
@@ -2070,9 +2063,13 @@ name|sc
 operator|->
 name|sc_inbuf
 operator|=
-name|geteblk
+name|malloc
 argument_list|(
 name|BUFSIZE
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2472,11 +2469,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|brelse
+name|free
 argument_list|(
 name|sc
 operator|->
 name|sc_inbuf
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|end_close
@@ -2850,8 +2849,6 @@ operator|=
 name|sc
 operator|->
 name|sc_inbuf
-operator|->
-name|b_data
 expr_stmt|;
 name|uiomove
 argument_list|(
