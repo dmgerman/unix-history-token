@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_kern.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_kern.c,v 1.23 1996/04/24 04:16:44 dyson Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_kern.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_kern.c,v 1.24 1996/05/10 19:28:54 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -184,6 +184,12 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_map_t
 name|exec_map
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_map_t
+name|exech_map
 decl_stmt|;
 end_decl_stmt
 
@@ -947,52 +953,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we can wait, just mark the range as wired (will fault pages as 	 * necessary). 	 */
-if|if
-condition|(
-name|waitflag
-operator|==
-name|M_WAITOK
-condition|)
-block|{
-name|vm_map_unlock
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vm_map_pageable
-argument_list|(
-name|map
-argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-name|addr
-argument_list|,
-name|addr
-operator|+
-name|size
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-name|vm_map_simplify
-argument_list|(
-name|map
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|addr
-operator|)
-return|;
-block|}
-comment|/* 	 * If we cannot wait then we must allocate all memory up front, 	 * pulling it off the active queue to prevent pageout. 	 */
 for|for
 control|(
 name|i
@@ -1008,6 +968,8 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
+name|retry
+label|:
 name|m
 operator|=
 name|vm_page_alloc
@@ -1040,6 +1002,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|waitflag
+operator|==
+name|M_WAITOK
+condition|)
+block|{
+name|VM_WAIT
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 while|while
 condition|(
 name|i
@@ -1098,11 +1073,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-operator|(
-name|PG_BUSY
-operator||
 name|PG_ZERO
-operator|)
 expr_stmt|;
 name|m
 operator|->
@@ -1188,8 +1159,15 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pmap_kenter
+name|PAGE_WAKEUP
 argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|pmap_enter
+argument_list|(
+name|kernel_pmap
+argument_list|,
 name|addr
 operator|+
 name|i
@@ -1198,6 +1176,10 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
+argument_list|,
+name|VM_PROT_ALL
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
