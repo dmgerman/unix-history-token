@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)shutdown.c	4.17 (Berkeley) 83/05/22"
+literal|"@(#)shutdown.c	4.18 (Berkeley) 83/06/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
 end_include
 
 begin_include
@@ -813,10 +819,13 @@ argument_list|,
 name|do_nothing
 argument_list|)
 expr_stmt|;
-name|nice
+name|setpriority
 argument_list|(
-operator|-
-literal|20
+name|PRIO_PROCESS
+argument_list|,
+literal|0
+argument_list|,
+name|PRIO_MIN
 argument_list|)
 expr_stmt|;
 name|fflush
