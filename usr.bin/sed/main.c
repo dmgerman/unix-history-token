@@ -1721,12 +1721,12 @@ specifier|static
 name|int
 name|inplace_edit
 parameter_list|(
-name|fname
+name|filename
 parameter_list|)
 name|char
 modifier|*
 modifier|*
-name|fname
+name|filename
 decl_stmt|;
 block|{
 name|struct
@@ -1753,7 +1753,7 @@ condition|(
 name|lstat
 argument_list|(
 operator|*
-name|fname
+name|filename
 argument_list|,
 operator|&
 name|orig
@@ -1786,7 +1786,8 @@ name|warnx
 argument_list|(
 literal|"cannot inplace edit %s, not a regular file"
 argument_list|,
-name|fname
+operator|*
+name|filename
 argument_list|)
 expr_stmt|;
 return|return
@@ -1799,7 +1800,7 @@ argument_list|(
 name|backup
 argument_list|,
 operator|*
-name|fname
+name|filename
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
@@ -1818,7 +1819,7 @@ operator|=
 name|open
 argument_list|(
 operator|*
-name|fname
+name|filename
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -1836,7 +1837,8 @@ literal|1
 argument_list|,
 literal|"open(%s)"
 argument_list|,
-name|fname
+operator|*
+name|filename
 argument_list|)
 expr_stmt|;
 name|output
@@ -1971,7 +1973,7 @@ expr_stmt|;
 name|freopen
 argument_list|(
 operator|*
-name|fname
+name|filename
 argument_list|,
 literal|"w"
 argument_list|,
@@ -1979,7 +1981,7 @@ name|stdout
 argument_list|)
 expr_stmt|;
 operator|*
-name|fname
+name|filename
 operator|=
 name|strdup
 argument_list|(
