@@ -758,6 +758,8 @@ argument_list|)
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
+name|VM_PROT_DEFAULT
+argument_list|,
 name|MAP_ANON
 argument_list|,
 name|shmh
@@ -1854,6 +1856,8 @@ operator|)
 name|size
 argument_list|,
 name|prot
+argument_list|,
+name|VM_PROT_DEFAULT
 argument_list|,
 name|flags
 argument_list|,

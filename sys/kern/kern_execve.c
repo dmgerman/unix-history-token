@@ -1707,6 +1707,8 @@ name|dsize
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
+name|VM_PROT_DEFAULT
+argument_list|,
 name|MAP_FILE
 operator||
 name|MAP_COPY
