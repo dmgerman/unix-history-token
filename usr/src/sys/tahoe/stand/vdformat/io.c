@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	1.6 (Berkeley/CCI) %G%"
+literal|"@(#)io.c	1.7 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,11 +110,12 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-name|int
-name|didmsg
-init|=
-literal|0
-decl_stmt|;
+if|if
+condition|(
+name|kill_processes
+operator|==
+name|false
+condition|)
 name|wait_for_char
 operator|=
 literal|0
@@ -156,6 +157,10 @@ condition|)
 break|break;
 if|if
 condition|(
+name|kill_processes
+operator|==
+name|false
+operator|&&
 name|input
 argument_list|()
 condition|)
@@ -169,19 +174,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|didmsg
-operator|==
-literal|0
-operator|&&
 name|kill_processes
 operator|==
 name|true
 condition|)
 block|{
-name|didmsg
-operator|=
-literal|1
-expr_stmt|;
 name|indent
 argument_list|()
 expr_stmt|;
@@ -571,8 +568,11 @@ end_decl_stmt
 
 begin_block
 block|{
-return|return
-operator|(
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
 name|vrdwr
 argument_list|(
 name|sn
@@ -583,6 +583,21 @@ name|seccnt
 argument_list|,
 name|VDOP_RD
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|vd_error
+argument_list|(
+literal|"read"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
 operator|)
 return|;
 block|}
@@ -616,8 +631,11 @@ end_decl_stmt
 
 begin_block
 block|{
-return|return
-operator|(
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
 name|vrdwr
 argument_list|(
 name|sn
@@ -628,10 +646,29 @@ name|seccnt
 argument_list|,
 name|VDOP_WD
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|vd_error
+argument_list|(
+literal|"write"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
 operator|)
 return|;
 block|}
 end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_macro
 name|vrdwr
@@ -1393,9 +1430,20 @@ name|lab
 operator|->
 name|d_trackskew
 expr_stmt|;
-comment|/* 		addr->vdsecsize = lab->d_secsize/sizeof(short); */
+name|addr
+operator|->
+name|vdsecsize
+operator|=
+name|lab
+operator|->
+name|d_secsize
+operator|/
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* printf("devsel %x, ncyl %d, ntrk %d, nsec %d, slip %d, cylskew %d, trackskew %d, secsize %d\n", dcb.devselect, dcb.trail.rstrail.ncyl, dcb.trail.rstrail.nsurfaces, dcb.trail.rstrail.nsectors, dcb.trail.rstrail.slip_sec, lab->d_cylskew, lab->d_trackskew, lab->d_secsize); */
 name|mdcb
 operator|.
 name|mdcb_head
@@ -1761,7 +1809,9 @@ name|operrsta
 decl_stmt|;
 name|print
 argument_list|(
-literal|"error at sector %d (cyl %d trk %d sect %d),\n"
+literal|"%s error at sector %d (cyl %d trk %d sect %d),\n"
+argument_list|,
+name|s
 argument_list|,
 name|to_sector
 argument_list|(
@@ -1815,7 +1865,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n"
+literal|".\n"
 argument_list|)
 expr_stmt|;
 block|}

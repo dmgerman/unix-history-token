@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdfmt.h	1.6	88/05/31	*/
+comment|/*	vdfmt.h	1.7	88/06/07	*/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* found in prf.c */
+comment|/* found in cons.c */
 end_comment
 
 begin_comment
@@ -214,7 +214,7 @@ define|#
 directive|define
 name|DATA_ERROR
 define|\
-value|(DCBS_HCE|DCBS_UDE|DCBS_DCE|DCBS_DSE|DCBS_DSL|DCBS_TOP|DCBS_TOM|DCBS_CCD|\      DCBS_HARD|DCBS_SOFT)
+value|(DCBS_UDE|DCBS_DCE|DCBS_DSE|DCBS_DSL|DCBS_TOP|DCBS_TOM|DCBS_CCD|\      DCBS_HARD|DCBS_SOFT)
 end_define
 
 begin_define
@@ -293,9 +293,6 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|long
-name|free_error
-decl_stmt|;
 enum|enum
 block|{
 name|ALLOCATED
@@ -686,6 +683,8 @@ block|,
 name|sub_fmt
 block|,
 name|sub_sk
+block|,
+name|sub_wmap
 block|}
 name|substate
 typedef|;
@@ -819,6 +818,7 @@ name|int
 name|type
 decl_stmt|;
 name|fmt_err
+modifier|*
 function_decl|(
 modifier|*
 name|decode_pos
@@ -826,6 +826,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 name|bs_entry
+modifier|*
 function_decl|(
 modifier|*
 name|code_pos

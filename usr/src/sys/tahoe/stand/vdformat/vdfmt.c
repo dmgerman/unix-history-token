@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vdfmt.c	1.5 (Berkeley/CCI) %G%"
+literal|"@(#)vdfmt.c	1.6 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ argument_list|)
 expr_stmt|;
 name|print
 argument_list|(
-literal|"VDFORMAT            Berkeley Version 1.5 \n\n"
+literal|"VDFORMAT            Berkeley Version 1.6 \n\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -258,17 +258,21 @@ begin_block
 block|{
 specifier|extern
 name|fmt_err
+modifier|*
 name|smd_decode_position
 argument_list|()
 decl_stmt|,
+modifier|*
 name|smd_e_decode_position
 argument_list|()
 decl_stmt|;
 specifier|extern
 name|bs_entry
+modifier|*
 name|smd_code_position
 argument_list|()
 decl_stmt|,
+modifier|*
 name|smd_e_code_position
 argument_list|()
 decl_stmt|;

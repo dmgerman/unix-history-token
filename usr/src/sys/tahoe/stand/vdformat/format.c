@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	1.6 (Berkeley/CCI) %G%"
+literal|"@(#)format.c	1.7 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,11 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|clear_relocations
+argument_list|(
+name|false
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|bad_map
@@ -175,19 +180,6 @@ argument_list|()
 expr_stmt|;
 name|format_users_data_area
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|kill_processes
-operator|==
-name|true
-condition|)
-name|_longjmp
-argument_list|(
-name|quit_environ
-argument_list|,
-literal|1
-argument_list|)
 expr_stmt|;
 comment|/* verify the surface */
 name|verify_relocation_area
@@ -934,19 +926,6 @@ condition|)
 name|vd_error
 argument_list|(
 literal|"format"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|kill_processes
-operator|==
-name|true
-condition|)
-name|_longjmp
-argument_list|(
-name|quit_environ
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
