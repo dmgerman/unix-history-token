@@ -408,9 +408,6 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -764,9 +761,6 @@ operator|!
 name|bflag
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -793,9 +787,6 @@ condition|(
 name|nflag
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stdout
