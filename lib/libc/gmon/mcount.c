@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mcount.c,v 1.12 1998/07/10 09:26:40 bde Exp $"
+literal|"$Id: mcount.c,v 1.13 1998/07/14 05:09:41 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__NETBSD_SYSCALLS
+name|__alpha__
 end_ifndef
 
 begin_include
