@@ -588,6 +588,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|handler_installed
 decl_stmt|;
 name|pthread_t
 name|pthread
@@ -772,7 +774,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * Enter a loop to look for threads that have the 		 * signal unmasked.  POSIX specifies that a thread 		 * in a sigwait will get the signal over any other 		 * threads.  Second preference will be threads in 		 * in a sigsuspend.  If none of the above, then the 		 * signal is delivered to the first thread we find. 		 */
+comment|/* 		 * Enter a loop to look for threads that have the signal 		 * unmasked.  POSIX specifies that a thread in a sigwait 		 * will get the signal over any other threads.  Second 		 * preference will be threads in in a sigsuspend.  If 		 * none of the above, then the signal is delivered to the 		 * first thread we find.  Note that if a custom handler 		 * is not installed, the signal only affects threads in 		 * sigwait. 		 */
 name|suspended_thread
 operator|=
 name|NULL
@@ -780,6 +782,43 @@ expr_stmt|;
 name|signaled_thread
 operator|=
 name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|_thread_sigact
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|.
+name|sa_handler
+operator|==
+name|SIG_IGN
+operator|)
+operator|||
+operator|(
+name|_thread_sigact
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|.
+name|sa_handler
+operator|==
+name|SIG_DFL
+operator|)
+condition|)
+name|handler_installed
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|handler_installed
+operator|=
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -857,6 +896,12 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|handler_installed
+operator|!=
+literal|0
+operator|)
+operator|&&
 operator|!
 name|sigismember
 argument_list|(
@@ -902,7 +947,15 @@ name|pthread
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * If we didn't find a thread in the waiting queue, 		 * check the all threads queue: 		 */
+comment|/* 		 * Only perform wakeups and signal delivery if there is a 		 * custom handler installed: 		 */
+if|if
+condition|(
+name|handler_installed
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * If we didn't find a thread in the waiting queue, 			 * check the all threads queue: 			 */
 if|if
 condition|(
 name|suspended_thread
@@ -914,7 +967,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Enter a loop to look for other threads capable 			 * of receiving the signal:  			 */
+comment|/* 				 * Enter a loop to look for other threads 				 * capable of receiving the signal:  				 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|pthread
@@ -946,21 +999,6 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* Check if the signal is not being ignored: */
-if|if
-condition|(
-name|_thread_sigact
-index|[
-name|sig
-operator|-
-literal|1
-index|]
-operator|.
-name|sa_handler
-operator|!=
-name|SIG_IGN
-condition|)
-block|{
 if|if
 condition|(
 name|suspended_thread
@@ -1056,12 +1094,6 @@ name|PS_DEAD
 case|:
 case|case
 name|PS_DEADLOCK
-case|:
-case|case
-name|PS_FDLR_WAIT
-case|:
-case|case
-name|PS_FDLW_WAIT
 case|:
 case|case
 name|PS_FILE_WAIT
@@ -1181,6 +1213,12 @@ name|sig
 expr_stmt|;
 break|break;
 comment|/* 	 * States that are interrupted by the occurrence of a signal 	 * other than the scheduling alarm:  	 */
+case|case
+name|PS_FDLR_WAIT
+case|:
+case|case
+name|PS_FDLW_WAIT
+case|:
 case|case
 name|PS_FDR_WAIT
 case|:
@@ -1423,8 +1461,6 @@ parameter_list|()
 block|{
 name|sigset_t
 name|sigset
-decl_stmt|,
-name|mask
 decl_stmt|;
 name|int
 name|i
