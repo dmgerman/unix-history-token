@@ -1392,7 +1392,7 @@ return|return;
 comment|/* XXX: I read somewhere you can deauth all the stations with 	 * a single broadcast.  Maybe try that someday. 	 */
 name|s
 operator|=
-name|splimp
+name|splclock
 argument_list|()
 expr_stmt|;
 name|sta
@@ -4433,9 +4433,10 @@ block|{
 comment|/* any of the following will mess w/ the station list */
 name|s
 operator|=
-name|splsoftclock
+name|splclock
 argument_list|()
 expr_stmt|;
+comment|/* XXX */
 switch|switch
 condition|(
 name|le16toh
@@ -4586,6 +4587,20 @@ name|wihap_sta_info
 modifier|*
 name|sta
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|,
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
+name|retval
+operator|=
+literal|0
+expr_stmt|;
 name|sta
 operator|=
 name|wihap_sta_find
@@ -4639,16 +4654,19 @@ operator|->
 name|inactivity_time
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|retval
+operator|=
 literal|1
-operator|)
-return|;
+expr_stmt|;
 block|}
-else|else
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|retval
 operator|)
 return|;
 block|}
@@ -4699,11 +4717,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|s
-operator|=
-name|splclock
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|addr
@@ -4726,6 +4739,11 @@ literal|1
 operator|)
 return|;
 block|}
+name|s
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
 name|sta
 operator|=
 name|wihap_sta_find
@@ -4965,7 +4983,7 @@ return|;
 block|}
 name|s
 operator|=
-name|splsoftclock
+name|splclock
 argument_list|()
 expr_stmt|;
 comment|/* Find source station. */
