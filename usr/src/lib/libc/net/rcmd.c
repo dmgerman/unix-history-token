@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.27 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1673,15 +1673,13 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|(
+operator|!
+name|S_ISREG
+argument_list|(
 name|sbuf
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|!=
-name|S_IFREG
+argument_list|)
 condition|)
 name|cp
 operator|=
@@ -1733,11 +1731,15 @@ name|sbuf
 operator|.
 name|st_mode
 operator|&
-literal|022
+operator|(
+name|S_IWGRP
+operator||
+name|S_IWOTH
+operator|)
 condition|)
 name|cp
 operator|=
-literal|"bad .rhosts permissions"
+literal|".rhosts writeable by other than owner"
 expr_stmt|;
 comment|/* If there were any problems, quit. */
 if|if
