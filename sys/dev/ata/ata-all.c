@@ -398,6 +398,15 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ata_resuming
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* sysctl vars */
 end_comment
@@ -2200,6 +2209,10 @@ condition|)
 return|return
 name|ENXIO
 return|;
+name|ata_resuming
+operator|=
+literal|1
+expr_stmt|;
 name|error
 operator|=
 name|ata_reinit
@@ -2211,6 +2224,10 @@ name|ata_start
 argument_list|(
 name|ch
 argument_list|)
+expr_stmt|;
+name|ata_resuming
+operator|=
+literal|0
 expr_stmt|;
 return|return
 name|error
@@ -5162,6 +5179,8 @@ name|hz
 operator|)
 operator|||
 name|ata_delayed_attach
+operator|||
+name|ata_resuming
 condition|)
 name|DELAY
 argument_list|(
