@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)types.h	8.6 (Berkeley) 2/19/95  * $Id: types.h,v 1.22 1997/12/31 01:22:01 alex Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)types.h	8.6 (Berkeley) 2/19/95  * $Id: types.h,v 1.23 1998/01/08 00:27:34 alex Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,10 +15,6 @@ directive|define
 name|_SYS_TYPES_H_
 end_define
 
-begin_comment
-comment|/* Machine type dependent parameters. */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -26,7 +22,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_comment
-comment|/* XXX for __signed in machine/ansi.h */
+comment|/* Machine type dependent parameters. */
 end_comment
 
 begin_include
@@ -419,6 +415,30 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|_BSD_CLOCKID_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_BSD_CLOCKID_T_
+name|clockid_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_CLOCKID_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_BSD_SIZE_T_
 end_ifdef
 
@@ -481,30 +501,6 @@ begin_undef
 undef|#
 directive|undef
 name|_BSD_TIME_T_
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_CLOCKID_T_
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|_BSD_CLOCKID_T_
-name|clockid_t
-typedef|;
-end_typedef
-
-begin_undef
-undef|#
-directive|undef
-name|_BSD_CLOCKID_T_
 end_undef
 
 begin_endif
@@ -777,12 +773,6 @@ directive|ifndef
 name|KERNEL
 end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
 begin_decl_stmt
 name|__BEGIN_DECLS
 ifndef|#
@@ -928,77 +918,6 @@ end_endif
 begin_comment
 comment|/* !KERNEL */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-end_if
-
-begin_comment
-comment|/*  * Forward structure declarations for function prototypes.  We include the  * common structures that cross subsystem boundaries here; others are mostly  * used in the same place that the structure is defined.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|pgrp
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|ucred
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|rusage
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|file
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|buf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|tty
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|uio
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
