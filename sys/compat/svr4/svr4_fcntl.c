@@ -1408,8 +1408,6 @@ name|fgetvp
 argument_list|(
 name|td
 argument_list|,
-name|uap
-operator|->
 name|fd
 argument_list|,
 operator|&
