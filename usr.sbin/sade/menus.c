@@ -3193,6 +3193,21 @@ literal|"=ftp://ftp5.kr.freebsd.org"
 block|}
 block|,
 block|{
+literal|"Lithuania"
+block|,
+literal|"ftp.lt.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.lt.freebsd.org"
+block|}
+block|,
+block|{
 literal|"New Zealand"
 block|,
 literal|"ftp.nz.freebsd.org"
