@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alloc.c	5.9 (Berkeley) %G%"
+literal|"@(#)alloc.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -993,19 +993,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
-
 begin_function
-name|int
-else|#
-directive|else
 name|void
-endif|#
-directive|endif
 name|free
 parameter_list|(
 name|cp
