@@ -3823,7 +3823,7 @@ name|int
 name|ioflg
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -3940,7 +3940,7 @@ name|VOP_GETEXTATTR
 argument_list|(
 name|vp
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|attrname
 argument_list|,
@@ -4014,7 +4014,7 @@ name|int
 name|ioflg
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -4158,7 +4158,7 @@ name|VOP_SETEXTATTR
 argument_list|(
 name|vp
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|attrname
 argument_list|,
@@ -4217,7 +4217,7 @@ name|int
 name|ioflg
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -4291,7 +4291,7 @@ name|VOP_SETEXTATTR
 argument_list|(
 name|vp
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|attrname
 argument_list|,

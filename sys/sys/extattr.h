@@ -96,7 +96,7 @@ modifier|*
 name|filename
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -116,7 +116,7 @@ modifier|*
 name|path
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -136,7 +136,7 @@ modifier|*
 name|path
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -164,7 +164,7 @@ modifier|*
 name|path
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char

@@ -3040,7 +3040,7 @@ name|int
 name|ioflg
 operator|,
 name|int
-name|namespace
+name|attrnamespace
 operator|,
 specifier|const
 name|char
@@ -3079,7 +3079,7 @@ name|int
 name|ioflg
 operator|,
 name|int
-name|namespace
+name|attrnamespace
 operator|,
 specifier|const
 name|char
@@ -3115,7 +3115,7 @@ name|int
 name|ioflg
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char

@@ -218,7 +218,7 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -244,7 +244,7 @@ modifier|*
 name|ump
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -275,7 +275,7 @@ modifier|*
 name|ump
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -301,7 +301,7 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -337,7 +337,7 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -373,7 +373,7 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -558,7 +558,7 @@ modifier|*
 name|ump
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -614,11 +614,11 @@ argument_list|)
 operator|)
 operator|&&
 operator|(
-name|namespace
+name|attrnamespace
 operator|==
 name|search_attribute
 operator|->
-name|uele_namespace
+name|uele_attrnamespace
 operator|)
 condition|)
 block|{
@@ -1287,7 +1287,7 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -1419,7 +1419,7 @@ name|ufs_extattr_enable
 argument_list|(
 name|ump
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|attrname
 argument_list|,
@@ -1458,7 +1458,7 @@ modifier|*
 name|dvp
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 name|struct
 name|proc
@@ -1810,7 +1810,7 @@ name|ump
 argument_list|,
 name|attr_vp
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|dp
 operator|->
@@ -2303,7 +2303,7 @@ name|ump
 argument_list|,
 name|uele
 operator|->
-name|uele_namespace
+name|uele_attrnamespace
 argument_list|,
 name|uele
 operator|->
@@ -2371,7 +2371,7 @@ modifier|*
 name|ump
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -2491,7 +2491,7 @@ name|ufs_extattr_find_attr
 argument_list|(
 name|ump
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|attrname
 argument_list|)
@@ -2518,9 +2518,9 @@ argument_list|)
 expr_stmt|;
 name|attribute
 operator|->
-name|uele_namespace
+name|uele_attrnamespace
 operator|=
-name|namespace
+name|attrnamespace
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -2809,7 +2809,7 @@ modifier|*
 name|ump
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -2851,7 +2851,7 @@ name|ufs_extattr_find_attr
 argument_list|(
 name|ump
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|attrname
 argument_list|)
@@ -2938,7 +2938,7 @@ modifier|*
 name|filename_vp
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -3163,7 +3163,7 @@ name|ump
 argument_list|,
 name|filename_vp
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|attrname
 argument_list|,
@@ -3231,7 +3231,7 @@ name|ufs_extattr_disable
 argument_list|(
 name|ump
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|attrname
 argument_list|,
@@ -3310,7 +3310,7 @@ switch|switch
 condition|(
 name|uele
 operator|->
-name|uele_namespace
+name|uele_attrnamespace
 condition|)
 block|{
 case|case
@@ -3368,7 +3368,7 @@ name|vop_getextattr_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/* vop_getextattr { 	IN struct vnode *a_vp; 	IN int a_namespace; 	IN const char *a_name; 	INOUT struct uio *a_uio; 	IN struct ucred *a_cred; 	IN struct proc *a_p; }; */
+comment|/* vop_getextattr { 	IN struct vnode *a_vp; 	IN int a_attrnamespace; 	IN const char *a_name; 	INOUT struct uio *a_uio; 	IN struct ucred *a_cred; 	IN struct proc *a_p; }; */
 block|{
 name|struct
 name|mount
@@ -3413,7 +3413,7 @@ name|a_vp
 argument_list|,
 name|ap
 operator|->
-name|a_namespace
+name|a_attrnamespace
 argument_list|,
 name|ap
 operator|->
@@ -3464,7 +3464,7 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -3588,7 +3588,7 @@ name|ufs_extattr_find_attr
 argument_list|(
 name|ump
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|name
 argument_list|)
@@ -4018,7 +4018,7 @@ name|vop_setextattr_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/* vop_setextattr { 	IN struct vnode *a_vp; 	IN int a_namespace; 	IN const char *a_name; 	INOUT struct uio *a_uio; 	IN struct ucred *a_cred; 	IN struct proc *a_p; }; */
+comment|/* vop_setextattr { 	IN struct vnode *a_vp; 	IN int a_attrnamespace; 	IN const char *a_name; 	INOUT struct uio *a_uio; 	IN struct ucred *a_cred; 	IN struct proc *a_p; }; */
 block|{
 name|struct
 name|mount
@@ -4071,7 +4071,7 @@ name|a_vp
 argument_list|,
 name|ap
 operator|->
-name|a_namespace
+name|a_attrnamespace
 argument_list|,
 name|ap
 operator|->
@@ -4101,7 +4101,7 @@ name|a_vp
 argument_list|,
 name|ap
 operator|->
-name|a_namespace
+name|a_attrnamespace
 argument_list|,
 name|ap
 operator|->
@@ -4148,7 +4148,7 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -4277,7 +4277,7 @@ name|ufs_extattr_find_attr
 argument_list|(
 name|ump
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|name
 argument_list|)
@@ -4625,7 +4625,7 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char
@@ -4749,7 +4749,7 @@ name|ufs_extattr_find_attr
 argument_list|(
 name|ump
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|name
 argument_list|)
@@ -5244,7 +5244,7 @@ name|vp
 argument_list|,
 name|uele
 operator|->
-name|uele_namespace
+name|uele_attrnamespace
 argument_list|,
 name|uele
 operator|->

@@ -243,7 +243,7 @@ name|ufs_extattr_fileheader
 name|uele_fileheader
 decl_stmt|;
 name|int
-name|uele_namespace
+name|uele_attrnamespace
 decl_stmt|;
 name|char
 name|uele_attrname
@@ -389,7 +389,7 @@ modifier|*
 name|filename
 parameter_list|,
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 specifier|const
 name|char

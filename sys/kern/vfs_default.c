@@ -2457,7 +2457,7 @@ name|cmd
 parameter_list|,
 name|filename_vp
 parameter_list|,
-name|namespace
+name|attrnamespace
 parameter_list|,
 name|attrname
 parameter_list|,
@@ -2477,7 +2477,7 @@ modifier|*
 name|filename_vp
 decl_stmt|;
 name|int
-name|namespace
+name|attrnamespace
 decl_stmt|;
 specifier|const
 name|char

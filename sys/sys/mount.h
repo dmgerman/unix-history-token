@@ -1574,7 +1574,7 @@ operator|*
 name|filename_vp
 operator|,
 name|int
-name|namespace
+name|attrnamespace
 operator|,
 specifier|const
 name|char
@@ -2619,7 +2619,7 @@ operator|*
 name|filename_vp
 operator|,
 name|int
-name|namespace
+name|attrnamespace
 operator|,
 specifier|const
 name|char

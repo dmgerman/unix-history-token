@@ -19474,7 +19474,7 @@ name|SCARG
 argument_list|(
 name|uap
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|)
 argument_list|,
 name|attrname
@@ -19504,7 +19504,7 @@ name|SCARG
 argument_list|(
 name|uap
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|)
 argument_list|,
 name|NULL
@@ -19909,7 +19909,7 @@ name|SCARG
 argument_list|(
 name|uap
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|)
 argument_list|,
 name|attrname
@@ -20314,7 +20314,7 @@ name|SCARG
 argument_list|(
 name|uap
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|)
 argument_list|,
 name|attrname
@@ -20532,7 +20532,7 @@ name|SCARG
 argument_list|(
 name|uap
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|)
 argument_list|,
 name|attrname
