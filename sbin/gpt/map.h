@@ -75,6 +75,7 @@ define|#
 directive|define
 name|MAP_TYPE_PMBR
 value|8
+name|unsigned
 name|int
 name|map_index
 decl_stmt|;

@@ -2368,12 +2368,6 @@ literal|"create"
 block|}
 block|,
 block|{
-name|NULL
-block|,
-literal|"delete"
-block|}
-block|,
-block|{
 name|cmd_destroy
 block|,
 literal|"destroy"
@@ -2395,6 +2389,12 @@ block|{
 name|cmd_recover
 block|,
 literal|"recover"
+block|}
+block|,
+block|{
+name|cmd_remove
+block|,
+literal|"remove"
 block|}
 block|,
 block|{
