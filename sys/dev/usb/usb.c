@@ -2408,6 +2408,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|di
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3055,6 +3057,8 @@ operator|->
 name|ue
 operator|.
 name|ue_device
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|microtime

@@ -462,6 +462,7 @@ modifier|*
 name|cdesc
 decl_stmt|;
 comment|/* full config descr */
+specifier|const
 name|struct
 name|usbd_quirks
 modifier|*
@@ -728,21 +729,6 @@ parameter_list|(
 name|usbd_bus_handle
 parameter_list|,
 name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usbd_devinfo_vp
-parameter_list|(
-name|usbd_device_handle
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -7124,6 +7124,8 @@ name|usb_device_info
 operator|*
 operator|)
 name|addr
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;

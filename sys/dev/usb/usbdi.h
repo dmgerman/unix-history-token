@@ -779,6 +779,9 @@ name|struct
 name|usb_device_info
 modifier|*
 name|di
+parameter_list|,
+name|int
+name|usedev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -892,6 +895,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|struct
 name|usbd_quirks
 modifier|*

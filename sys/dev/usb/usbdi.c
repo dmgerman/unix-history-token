@@ -4908,6 +4908,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|struct
 name|usbd_quirks
 modifier|*

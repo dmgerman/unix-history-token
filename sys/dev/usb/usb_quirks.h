@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_quirks.h,v 1.11 2000/04/27 15:26:50 augustss Exp $	*/
+comment|/*	$NetBSD: usb_quirks.h,v 1.20 2001/04/15 09:38:01 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -61,20 +61,41 @@ value|0x0080
 comment|/* spurious mouse button up events */
 define|#
 directive|define
-name|UQ_NO_XU
+name|UQ_AU_NO_XU
 value|0x0100
 comment|/* audio device has broken extension unit */
 define|#
 directive|define
-name|UQ_ASSUME_CM_OVER_DATA
+name|UQ_POWER_CLAIM
 value|0x0200
+comment|/* hub lies about power status */
+define|#
+directive|define
+name|UQ_AU_NO_FRAC
+value|0x0400
+comment|/* don't adjust for fractional samples */
+define|#
+directive|define
+name|UQ_AU_INP_ASYNC
+value|0x0800
+comment|/* input is async despite claim of adaptive */
+define|#
+directive|define
+name|UQ_ASSUME_CM_OVER_DATA
+value|0x1000
 comment|/* modem device breaks on cm over data */
+define|#
+directive|define
+name|UQ_BROKEN_BIDIR
+value|0x2000
+comment|/* printer has broken bidir mode */
 block|}
 struct|;
 end_struct
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|usbd_quirks
 name|usbd_no_quirk
@@ -82,6 +103,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|const
 name|struct
 name|usbd_quirks
 modifier|*
