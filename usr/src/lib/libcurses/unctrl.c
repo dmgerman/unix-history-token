@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * define unctrl codes for each character  *  * %G% (Berkeley) @(#)unctrl.c	1.2  */
+comment|/*  * define unctrl codes for each character  *  * @(#)unctrl.c	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
