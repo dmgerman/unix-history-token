@@ -2824,10 +2824,12 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|USE_PAM
 comment|/* 	 * Let PAM handle utmp / wtmp. 	 */
+else|#
+directive|else
 comment|/* 	 * Get IP address of client. If the connection is not a socket, let 	 * the address be 0.0.0.0. 	 */
 name|memset
 argument_list|(
@@ -4797,18 +4799,6 @@ name|s
 operator|->
 name|term
 condition|)
-ifdef|#
-directive|ifdef
-name|HAVE_LOGIN_CAP
-if|if
-condition|(
-name|options
-operator|.
-name|use_login
-condition|)
-endif|#
-directive|endif
-comment|/* HAVE_LOGIN_CAP */
 name|child_set_env
 argument_list|(
 operator|&
@@ -5514,7 +5504,9 @@ comment|/* Set login name, uid, gid, and groups. */
 end_comment
 
 begin_function
-name|void
+name|char
+modifier|*
+modifier|*
 name|do_setusercontext
 parameter_list|(
 name|struct
@@ -5829,7 +5821,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_LOGIN_CAP */
-return|return;
+return|return
+name|env
+return|;
 block|}
 end_function
 
@@ -6006,6 +6000,8 @@ argument_list|(
 name|pw
 argument_list|)
 expr_stmt|;
+name|env
+operator|=
 name|do_setusercontext
 argument_list|(
 name|pw
