@@ -620,7 +620,7 @@ name|LST
 parameter_list|,
 name|D
 parameter_list|)
-value|(Lst_Valid(LST) \ 				    ? Lst_Append((LST), Lst_Last(LST), (D)) \ 				    : FAILURE)
+value|(Lst_Valid(LST) \ 				    ? Lst_Append((LST), Lst_Last(LST), (D)) \ 				    : (void)0)
 end_define
 
 begin_comment
