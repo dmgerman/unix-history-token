@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.2 1994/01/11 19:01:09 nate Exp $"
+literal|"$Id: yplib.c,v 1.1 1994/08/07 23:04:55 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2428,8 +2428,7 @@ name|ysd
 operator|->
 name|dom_vers
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 goto|goto
 name|again
