@@ -15,6 +15,13 @@ directive|define
 name|_SYS_IMGACT_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXSHELLCMDLEN
+value|64
+end_define
+
 begin_struct
 struct|struct
 name|image_params
@@ -95,7 +102,7 @@ comment|/* flag - this executable is interpreted */
 name|char
 name|interpreter_name
 index|[
-literal|64
+name|MAXSHELLCMDLEN
 index|]
 decl_stmt|;
 comment|/* name of the interpreter */
@@ -161,6 +168,20 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|exec_new_vmspace
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|image_params
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|exec_shell_imgact
 name|__P
 argument_list|(
 operator|(
