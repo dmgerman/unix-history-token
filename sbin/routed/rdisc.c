@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.17 $"
+empty|#ident "$Revision: 1.19 $"
 end_empty
 
 begin_include
@@ -480,7 +480,7 @@ name|fprintf
 argument_list|(
 name|ftrace
 argument_list|,
-literal|"\t%s preference=%#x"
+literal|"\t%s preference=%d"
 argument_list|,
 name|naddr_ntoa
 argument_list|(
@@ -2706,6 +2706,7 @@ case|case
 literal|0
 case|:
 comment|/* unicast */
+default|default:
 name|msg
 operator|=
 literal|"Send"

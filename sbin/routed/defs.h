@@ -10,7 +10,7 @@ name|__NetBSD__
 end_ifndef
 
 begin_empty
-empty|#ident "$Revision: 1.17 $"
+empty|#ident "$Revision: 1.19 $"
 end_empty
 
 begin_endif
@@ -297,8 +297,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NEVER
+name|DAY
 value|(24*60*60)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEVER
+value|DAY
 end_define
 
 begin_comment
@@ -917,6 +924,10 @@ comment|/* timestamp on network stats */
 block|}
 name|int_data
 struct|;
+define|#
+directive|define
+name|MAX_AUTH_KEYS
+value|5
 struct|struct
 name|auth
 block|{
@@ -924,13 +935,6 @@ comment|/* authentication info */
 name|u_char
 name|type
 decl_stmt|;
-define|#
-directive|define
-name|MAX_AUTH_KEYS
-value|3
-struct|struct
-name|auth_key
-block|{
 name|u_char
 name|key
 index|[
@@ -946,13 +950,10 @@ decl_stmt|,
 name|end
 decl_stmt|;
 block|}
-name|keys
+name|int_auth
 index|[
 name|MAX_AUTH_KEYS
 index|]
-struct|;
-block|}
-name|int_auth
 struct|;
 name|int
 name|int_rdisc_pref
@@ -1079,18 +1080,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IS_BROKE
+name|IS_REDIRECT_OK
 value|0x0000200
 end_define
 
 begin_comment
-comment|/* seems to be broken */
+comment|/* accept ICMP redirects */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IS_SICK
+name|IS_BROKE
 value|0x0000400
 end_define
 
@@ -1101,16 +1102,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IS_DUP
+name|IS_SICK
 value|0x0000800
 end_define
 
 begin_comment
-comment|/* has a duplicate address */
+comment|/* seems to be broken */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IS_DUP
+value|0x0001000
+end_define
+
 begin_comment
-comment|/*			    0x0001000      spare */
+comment|/* has a duplicate address */
 end_comment
 
 begin_define
@@ -1540,6 +1548,9 @@ decl_stmt|;
 name|struct
 name|auth
 name|parm_auth
+index|[
+name|MAX_AUTH_KEYS
+index|]
 decl_stmt|;
 block|}
 modifier|*
@@ -2076,7 +2087,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_int
+name|int
 name|tracelevel
 decl_stmt|,
 name|new_tracelevel
@@ -2141,6 +2152,18 @@ end_decl_stmt
 begin_comment
 comment|/* output trace file */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|inittracename
+index|[
+name|MAXPATHLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -2272,11 +2295,7 @@ name|ws_buf
 modifier|*
 parameter_list|,
 name|struct
-name|auth_key
-modifier|*
-parameter_list|,
-name|struct
-name|interface
+name|auth
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2344,12 +2363,28 @@ begin_struct
 struct|struct
 name|msg_limit
 block|{
+name|time_t
+name|reuse
+decl_stmt|;
+struct|struct
+name|msg_sub
+block|{
 name|naddr
 name|addr
 decl_stmt|;
 name|time_t
 name|until
 decl_stmt|;
+define|#
+directive|define
+name|MSG_SUBJECT_N
+value|8
+block|}
+name|subs
+index|[
+name|MSG_SUBJECT_N
+index|]
+struct|;
 block|}
 struct|;
 end_struct
@@ -2569,6 +2604,8 @@ name|parse_parms
 parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2611,7 +2648,23 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|trace_on
+name|set_tracefile
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|tracelevel_msg
 parameter_list|(
 name|char
 modifier|*
@@ -2637,7 +2690,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|trace_flush
+name|set_tracelevel
 parameter_list|(
 name|void
 parameter_list|)
@@ -2647,9 +2700,9 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|set_tracelevel
+name|trace_flush
 parameter_list|(
-name|int
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3570,7 +3623,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|struct
-name|auth_key
+name|auth
 modifier|*
 name|find_auth
 parameter_list|(
@@ -3591,7 +3644,7 @@ name|ws_buf
 modifier|*
 parameter_list|,
 name|struct
-name|auth_key
+name|auth
 modifier|*
 parameter_list|)
 function_decl|;

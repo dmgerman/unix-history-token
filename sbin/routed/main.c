@@ -69,7 +69,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.18 $"
+empty|#ident "$Revision: 1.20 $"
 end_empty
 
 begin_include
@@ -858,6 +858,8 @@ operator|=
 name|parse_parms
 argument_list|(
 name|optarg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -866,15 +868,34 @@ name|p
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|p
+argument_list|,
+name|optarg
+argument_list|)
+condition|)
 name|msglog
 argument_list|(
-literal|"bad \"%s\" in \"%s\""
+literal|"%s in \"%s\""
 argument_list|,
 name|p
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+else|else
+name|msglog
+argument_list|(
+literal|"bad \"-P %s\""
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
 goto|goto
@@ -913,6 +934,22 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|tracename
+operator|!=
+literal|0
+operator|&&
+name|tracename
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+goto|goto
+name|usage
+goto|;
+if|if
+condition|(
 name|argc
 operator|!=
 literal|0
@@ -924,7 +961,7 @@ name|logbad
 argument_list|(
 literal|0
 argument_list|,
-literal|"usage: routed [-sqdghmpAt] [-T /tracefile]"
+literal|"usage: routed [-sqdghmpAt] [-T tracefile]"
 literal|" [-F net[,metric]] [-P parms]"
 argument_list|)
 expr_stmt|;
@@ -1123,11 +1160,6 @@ name|sigtrace_off
 argument_list|)
 expr_stmt|;
 comment|/* get into the background */
-if|if
-condition|(
-name|background
-condition|)
-block|{
 ifdef|#
 directive|ifdef
 name|sgi
@@ -1137,7 +1169,15 @@ literal|0
 operator|>
 name|_daemonize
 argument_list|(
+name|background
+condition|?
+literal|0
+else|:
+operator|(
 name|_DF_NOCHDIR
+operator||
+name|_DF_NOFORK
+operator|)
 argument_list|,
 name|new_tracelevel
 operator|==
@@ -1172,11 +1212,13 @@ else|#
 directive|else
 if|if
 condition|(
+name|background
+operator|&&
 name|daemon
 argument_list|(
-literal|1
+literal|0
 argument_list|,
-literal|1
+name|new_tracelevel
 argument_list|)
 operator|<
 literal|0
@@ -1190,7 +1232,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 name|mypid
 operator|=
 name|getpid
@@ -1317,30 +1358,43 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|trace_on
+name|strncpy
 argument_list|(
+name|inittracename
+argument_list|,
 name|tracename
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|inittracename
+argument_list|)
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|new_tracelevel
-operator|==
-literal|0
-condition|)
-comment|/* use stdout if file is bad */
-name|new_tracelevel
-operator|=
+name|set_tracefile
+argument_list|(
+name|inittracename
+argument_list|,
+literal|"%s\n"
+argument_list|,
+operator|-
 literal|1
+argument_list|)
 expr_stmt|;
 block|}
-name|set_tracelevel
+else|else
+block|{
+name|tracelevel_msg
 argument_list|(
+literal|"%s\n"
+argument_list|,
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* turn on tracing to stdio */
+block|}
 name|bufinit
 argument_list|()
 expr_stmt|;
@@ -1527,11 +1581,9 @@ name|tv_sec
 operator|-
 name|GARBAGE_TIME
 expr_stmt|;
-comment|/* deal with interrupts that should affect tracing */
+comment|/* deal with signals that should affect tracing */
 name|set_tracelevel
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2082,7 +2134,7 @@ name|void
 name|sigalrm
 parameter_list|(
 name|int
-name|sig
+name|s
 parameter_list|)
 block|{
 comment|/* Historically, SIGALRM would cause the daemon to check for 	 * new and broken interfaces. 	 */
@@ -3515,7 +3567,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Put a message about a bad router into the system log if  * we have not complained about it recently.  */
+comment|/* Put a message about a bad system into the system log if  * we have not complained about it recently.  *  * It is desirable to complain about all bad systems, but not too often.  * In the worst case, it is not practical to keep track of all bad systems.  * For example, there can be many systems with the wrong password.  */
 end_comment
 
 begin_function
@@ -3540,6 +3592,17 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|struct
+name|msg_sub
+modifier|*
+name|ms1
+decl_stmt|,
+modifier|*
+name|ms
+decl_stmt|;
 name|char
 modifier|*
 name|p1
@@ -3551,30 +3614,129 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* look for the oldest slot in the table 	 * or the slot for the bad router. 	 */
+name|ms
+operator|=
+name|ms1
+operator|=
+name|lim
+operator|->
+name|subs
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|MSG_SUBJECT_N
+init|;
+condition|;
+name|i
+operator|--
+operator|,
+name|ms1
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Reuse a slot at most once every 10 minutes. 			 */
 if|if
 condition|(
 name|lim
 operator|->
-name|addr
-operator|!=
-name|addr
-operator|||
-name|lim
-operator|->
-name|until
-operator|<=
+name|reuse
+operator|>
 name|now
 operator|.
 name|tv_sec
 condition|)
 block|{
+name|ms
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ms
+operator|=
+name|ms1
+expr_stmt|;
 name|lim
+operator|->
+name|reuse
+operator|=
+name|now
+operator|.
+name|tv_sec
+operator|+
+literal|10
+operator|*
+literal|60
+expr_stmt|;
+block|}
+break|break;
+block|}
+if|if
+condition|(
+name|ms
+operator|->
+name|addr
+operator|==
+name|addr
+condition|)
+block|{
+comment|/* Repeat a complaint about a given system at 			 * most once an hour. 			 */
+if|if
+condition|(
+name|ms
+operator|->
+name|until
+operator|>
+name|now
+operator|.
+name|tv_sec
+condition|)
+name|ms
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|ms
+operator|->
+name|until
+operator|<
+name|ms1
+operator|->
+name|until
+condition|)
+name|ms
+operator|=
+name|ms1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ms
+operator|!=
+literal|0
+condition|)
+block|{
+name|ms
 operator|->
 name|addr
 operator|=
 name|addr
 expr_stmt|;
-name|lim
+name|ms
 operator|->
 name|until
 operator|=
@@ -3586,6 +3748,7 @@ literal|60
 operator|*
 literal|60
 expr_stmt|;
+comment|/* 60 minutes */
 name|trace_flush
 argument_list|()
 expr_stmt|;
@@ -3614,6 +3777,7 @@ name|args
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* always display the message if tracing */
 if|if
 condition|(
 name|ftrace

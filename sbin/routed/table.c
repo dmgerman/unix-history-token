@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.26 $"
+empty|#ident "$Revision: 1.28 $"
 end_empty
 
 begin_include
@@ -2737,6 +2737,7 @@ value|30
 name|time_t
 name|k_redirect_time
 decl_stmt|;
+comment|/* when redirected route 1st seen */
 block|}
 modifier|*
 name|khash_bins
@@ -3363,10 +3364,61 @@ condition|)
 block|{
 if|if
 condition|(
+name|INFO_AUTHOR
+argument_list|(
+name|info
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|INFO_AUTHOR
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|sa_family
+operator|==
+name|AF_INET
+condition|)
+name|ifp
+operator|=
+name|iflookup
+argument_list|(
+name|S_ADDR
+argument_list|(
+name|INFO_AUTHOR
+argument_list|(
+name|info
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|ifp
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|supplier
+operator|&&
+operator|(
+name|ifp
+operator|==
+literal|0
+operator|||
+operator|!
+operator|(
+name|ifp
+operator|->
+name|int_state
+operator|&
+name|IS_REDIRECT_OK
+operator|)
+operator|)
 condition|)
 block|{
-comment|/* Routers are not supposed to listen to redirects, 			 * so delete it. 			 */
+comment|/* Routers are not supposed to listen to redirects, 			 * so delete it if it came via an unknown interface 			 * or the interface does not have special permission. 			 */
 name|k
 operator|->
 name|k_state
@@ -3389,8 +3441,8 @@ argument_list|)
 expr_stmt|;
 name|trace_act
 argument_list|(
-literal|"mark redirected %s --> %s for deletion"
-literal|" since this is a router"
+literal|"mark for deletion redirected %s --> %s"
+literal|" via %s"
 argument_list|,
 name|addrname
 argument_list|(
@@ -3411,6 +3463,14 @@ name|k
 operator|->
 name|k_gate
 argument_list|)
+argument_list|,
+name|ifp
+condition|?
+name|ifp
+operator|->
+name|int_name
+else|:
+literal|"unknown interface"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3429,6 +3489,39 @@ operator|=
 name|now
 operator|.
 name|tv_sec
+expr_stmt|;
+name|trace_act
+argument_list|(
+literal|"accept redirected %s --> %s via %s"
+argument_list|,
+name|addrname
+argument_list|(
+name|k
+operator|->
+name|k_dst
+argument_list|,
+name|k
+operator|->
+name|k_mask
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|naddr_ntoa
+argument_list|(
+name|k
+operator|->
+name|k_gate
+argument_list|)
+argument_list|,
+name|ifp
+condition|?
+name|ifp
+operator|->
+name|int_name
+else|:
+literal|"unknown interface"
+argument_list|)
 expr_stmt|;
 block|}
 return|return;
@@ -3479,26 +3572,6 @@ name|ifp
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* if there is no known interface, 		 * maybe there is a new interface 		 */
-name|ifinit
-argument_list|()
-expr_stmt|;
-name|ifp
-operator|=
-name|iflookup
-argument_list|(
-name|k
-operator|->
-name|k_gate
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|==
-literal|0
-condition|)
 name|msglog
 argument_list|(
 literal|"static route %s --> %s impossibly lacks ifp"
@@ -3526,7 +3599,6 @@ name|k_gate
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|kern_check_static
 argument_list|(
 name|k
@@ -3576,7 +3648,7 @@ operator|!=
 name|AF_INET
 condition|)
 block|{
-name|msglog
+name|trace_act
 argument_list|(
 literal|"ignore %s without gateway"
 argument_list|,
