@@ -706,6 +706,12 @@ name|inp_socket
 operator|=
 name|so
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 if|if
 condition|(
 name|ip6_mapped_addr_on
@@ -724,6 +730,8 @@ name|inp_flags
 operator||=
 name|IN6P_BINDV6ONLY
 expr_stmt|;
+endif|#
+directive|endif
 name|LIST_INSERT_HEAD
 argument_list|(
 name|pcbinfo
