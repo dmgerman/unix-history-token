@@ -4588,22 +4588,11 @@ operator|,
 name|sp
 operator|++
 control|)
-comment|/* 		 * don't process this interrupt if we are in suspend 		 * state; we have different means to (re)initialize the 		 * slot. 		 * XXX we shouldn't even get here!? 		 */
 if|if
 condition|(
 name|sp
 operator|->
 name|slt
-operator|&&
-operator|(
-name|sp
-operator|->
-name|slt
-operator|->
-name|state
-operator|!=
-name|suspend
-operator|)
 operator|&&
 operator|(
 name|chg
