@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_output.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_output.c	7.8 (Berkeley) %G% */
+comment|/*	@(#)clnp_output.c	7.9 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1431,6 +1431,17 @@ operator|.
 name|ro_rt
 expr_stmt|;
 comment|/* XXX */
+name|clcp
+operator|->
+name|clc_ifp
+operator|=
+name|clcp
+operator|->
+name|clc_ifa
+operator|->
+name|ia_ifp
+expr_stmt|;
+comment|/* XXX */
 name|IFDEBUG
 argument_list|(
 argument|D_OUTPUT
@@ -1878,9 +1889,11 @@ name|SN_MTU
 argument_list|(
 name|clcp
 operator|->
-name|clc_ifa
+name|clc_ifp
+argument_list|,
+name|clcp
 operator|->
-name|ia_ifp
+name|clc_rt
 argument_list|)
 condition|)
 block|{
@@ -2011,9 +2024,7 @@ name|clnp_fragment
 argument_list|(
 name|clcp
 operator|->
-name|clc_ifa
-operator|->
-name|ia_ifp
+name|clc_ifp
 argument_list|,
 name|m
 argument_list|,
