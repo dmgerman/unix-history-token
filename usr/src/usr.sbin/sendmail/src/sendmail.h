@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.96 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.97 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.96		%G%"
+literal|"@(#)sendmail.h	8.97		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2456,7 +2456,7 @@ begin_define
 define|#
 directive|define
 name|MATCHZANY
-value|0220
+value|((u_char)0220)
 end_define
 
 begin_comment
@@ -2467,7 +2467,7 @@ begin_define
 define|#
 directive|define
 name|MATCHANY
-value|0221
+value|((u_char)0221)
 end_define
 
 begin_comment
@@ -2478,7 +2478,7 @@ begin_define
 define|#
 directive|define
 name|MATCHONE
-value|0222
+value|((u_char)0222)
 end_define
 
 begin_comment
@@ -2489,7 +2489,7 @@ begin_define
 define|#
 directive|define
 name|MATCHCLASS
-value|0223
+value|((u_char)0223)
 end_define
 
 begin_comment
@@ -2500,7 +2500,7 @@ begin_define
 define|#
 directive|define
 name|MATCHNCLASS
-value|0224
+value|((u_char)0224)
 end_define
 
 begin_comment
@@ -2511,7 +2511,7 @@ begin_define
 define|#
 directive|define
 name|MATCHREPL
-value|0225
+value|((u_char)0225)
 end_define
 
 begin_comment
@@ -2548,7 +2548,7 @@ begin_define
 define|#
 directive|define
 name|CANONNET
-value|0226
+value|((u_char)0226)
 end_define
 
 begin_comment
@@ -2559,7 +2559,7 @@ begin_define
 define|#
 directive|define
 name|CANONHOST
-value|0227
+value|((u_char)0227)
 end_define
 
 begin_comment
@@ -2570,7 +2570,7 @@ begin_define
 define|#
 directive|define
 name|CANONUSER
-value|0230
+value|((u_char)0230)
 end_define
 
 begin_comment
@@ -2581,7 +2581,7 @@ begin_define
 define|#
 directive|define
 name|CALLSUBR
-value|0231
+value|((u_char)0231)
 end_define
 
 begin_comment
@@ -2596,7 +2596,7 @@ begin_define
 define|#
 directive|define
 name|CONDIF
-value|0232
+value|((u_char)0232)
 end_define
 
 begin_comment
@@ -2607,7 +2607,7 @@ begin_define
 define|#
 directive|define
 name|CONDELSE
-value|0233
+value|((u_char)0233)
 end_define
 
 begin_comment
@@ -2618,7 +2618,7 @@ begin_define
 define|#
 directive|define
 name|CONDFI
-value|0234
+value|((u_char)0234)
 end_define
 
 begin_comment
@@ -2633,7 +2633,7 @@ begin_define
 define|#
 directive|define
 name|HOSTBEGIN
-value|0235
+value|((u_char)0235)
 end_define
 
 begin_comment
@@ -2644,7 +2644,7 @@ begin_define
 define|#
 directive|define
 name|HOSTEND
-value|0236
+value|((u_char)0236)
 end_define
 
 begin_comment
@@ -2659,7 +2659,7 @@ begin_define
 define|#
 directive|define
 name|LOOKUPBEGIN
-value|0205
+value|((u_char)0205)
 end_define
 
 begin_comment
@@ -2670,7 +2670,7 @@ begin_define
 define|#
 directive|define
 name|LOOKUPEND
-value|0206
+value|((u_char)0206)
 end_define
 
 begin_comment
@@ -2685,7 +2685,7 @@ begin_define
 define|#
 directive|define
 name|MACROEXPAND
-value|0201
+value|((u_char)0201)
 end_define
 
 begin_comment
@@ -2696,7 +2696,7 @@ begin_define
 define|#
 directive|define
 name|MACRODEXPAND
-value|0202
+value|((u_char)0202)
 end_define
 
 begin_comment
@@ -2849,7 +2849,7 @@ modifier|*
 name|map_mname
 decl_stmt|;
 comment|/* name of this map */
-name|int
+name|long
 name|map_mflags
 decl_stmt|;
 comment|/* flags, see below */
@@ -2937,7 +2937,7 @@ begin_define
 define|#
 directive|define
 name|MF_VALID
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
@@ -2948,7 +2948,7 @@ begin_define
 define|#
 directive|define
 name|MF_INCLNULL
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -2959,7 +2959,7 @@ begin_define
 define|#
 directive|define
 name|MF_OPTIONAL
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -2970,7 +2970,7 @@ begin_define
 define|#
 directive|define
 name|MF_NOFOLDCASE
-value|0x0008
+value|0x00000008
 end_define
 
 begin_comment
@@ -2981,7 +2981,7 @@ begin_define
 define|#
 directive|define
 name|MF_MATCHONLY
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -2992,7 +2992,7 @@ begin_define
 define|#
 directive|define
 name|MF_OPEN
-value|0x0020
+value|0x00000020
 end_define
 
 begin_comment
@@ -3003,7 +3003,7 @@ begin_define
 define|#
 directive|define
 name|MF_WRITABLE
-value|0x0040
+value|0x00000040
 end_define
 
 begin_comment
@@ -3014,7 +3014,7 @@ begin_define
 define|#
 directive|define
 name|MF_ALIAS
-value|0x0080
+value|0x00000080
 end_define
 
 begin_comment
@@ -3025,7 +3025,7 @@ begin_define
 define|#
 directive|define
 name|MF_TRY0NULL
-value|0x0100
+value|0x00000100
 end_define
 
 begin_comment
@@ -3036,7 +3036,7 @@ begin_define
 define|#
 directive|define
 name|MF_TRY1NULL
-value|0x0200
+value|0x00000200
 end_define
 
 begin_comment
@@ -3047,7 +3047,7 @@ begin_define
 define|#
 directive|define
 name|MF_LOCKED
-value|0x0400
+value|0x00000400
 end_define
 
 begin_comment
@@ -3058,7 +3058,7 @@ begin_define
 define|#
 directive|define
 name|MF_ALIASWAIT
-value|0x0800
+value|0x00000800
 end_define
 
 begin_comment
@@ -3069,7 +3069,7 @@ begin_define
 define|#
 directive|define
 name|MF_IMPL_HASH
-value|0x1000
+value|0x00001000
 end_define
 
 begin_comment
@@ -3080,7 +3080,7 @@ begin_define
 define|#
 directive|define
 name|MF_IMPL_NDBM
-value|0x2000
+value|0x00002000
 end_define
 
 begin_comment
@@ -3091,7 +3091,7 @@ begin_define
 define|#
 directive|define
 name|MF_UNSAFEDB
-value|0x4000
+value|0x00004000
 end_define
 
 begin_comment
@@ -3102,7 +3102,7 @@ begin_define
 define|#
 directive|define
 name|MF_APPEND
-value|0x8000
+value|0x00008000
 end_define
 
 begin_comment
