@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)at.c	5.7 (Berkeley) %G%"
+literal|"@(#)at.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -359,48 +359,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Months of the year.  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|months
-index|[
-literal|13
-index|]
-init|=
-block|{
-literal|"jan"
-block|,
-literal|"feb"
-block|,
-literal|"mar"
-block|,
-literal|"apr"
-block|,
-literal|"may"
-block|,
-literal|"jun"
-block|,
-literal|"jul"
-block|,
-literal|"aug"
-block|,
-literal|"sep"
-block|,
-literal|"oct"
-block|,
-literal|"nov"
-block|,
-literal|"dec"
-block|,
-literal|0
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * A table of the number of days in each month of the year.  *  *	yeartable[0] -- normal year  *	yeartable[1] -- leap year  */
 end_comment
 
@@ -656,11 +614,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* are we reading from stardard input */
-name|char
-modifier|*
-name|tmp
-decl_stmt|;
-comment|/* scratch pointer */
 name|char
 name|line
 index|[
@@ -1039,11 +992,30 @@ comment|/* 	 * Open the spoolfile for writing. 	 */
 if|if
 condition|(
 operator|(
-name|spoolfile
+name|c
 operator|=
-name|fopen
+name|open
 argument_list|(
 name|atfile
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_EXCL
+argument_list|,
+literal|0400
+argument_list|)
+operator|)
+operator|<
+literal|0
+operator|||
+operator|(
+name|spoolfile
+operator|=
+name|fdopen
+argument_list|(
+name|c
 argument_list|,
 literal|"w"
 argument_list|)
@@ -1063,18 +1035,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Make the file not world readable. 	 */
-name|fchmod
-argument_list|(
-name|fileno
-argument_list|(
-name|spoolfile
-argument_list|)
-argument_list|,
-literal|0400
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The protection mechanism works like this: 	 * We are running ruid=user, euid=spool owner.  So far we have been 	 * messing around in the spool directory, so we needed to run 	 * as the owner of the spool directory. 	 * We now need to switch to the user's effective uid 	 * to simplify permission checking.  However, we fork first, 	 * so that we can clean up if interrupted. 	 */
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
