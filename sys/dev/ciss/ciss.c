@@ -14578,6 +14578,22 @@ operator|(
 literal|"RAID 5"
 operator|)
 return|;
+case|case
+name|CISS_LDRIVE_RAID51
+case|:
+return|return
+operator|(
+literal|"RAID 5+1"
+operator|)
+return|;
+case|case
+name|CISS_LDRIVE_RAIDADG
+case|:
+return|return
+operator|(
+literal|"RAID ADG"
+operator|)
+return|;
 block|}
 return|return
 operator|(
