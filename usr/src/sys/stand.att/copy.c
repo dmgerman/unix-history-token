@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	copy.c	4.2	83/02/16	*/
+comment|/*	copy.c	4.3	83/02/18	*/
 end_comment
 
 begin_comment
@@ -109,7 +109,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Read error, errno=%d\n"
+literal|"Record %d: read error, errno=%d\n"
+argument_list|,
+name|record
 argument_list|,
 name|errno
 argument_list|)
@@ -128,6 +130,8 @@ condition|)
 name|printf
 argument_list|(
 literal|"Record %d: read short; expected %d, got %d\n"
+argument_list|,
+name|record
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -157,7 +161,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Write error: errno=%d\n"
+literal|"Record %d: write error: errno=%d\n"
+argument_list|,
+name|record
 argument_list|,
 name|errno
 argument_list|)
@@ -173,7 +179,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Write short; expected %d, got %d\n"
+literal|"Record %d: write short; expected %d, got %d\n"
+argument_list|,
+name|record
 argument_list|,
 name|rcc
 argument_list|,
