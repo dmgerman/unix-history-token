@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mprof.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_mutex_wake_all.h"
 end_include
 
@@ -370,12 +376,35 @@ begin_comment
 comment|/*  * mprof_buf is a static pool of profiling records to avoid possible  * reentrance of the memory allocation functions.  *  * Note: NUM_MPROF_BUFFERS must be smaller than MPROF_HASH_SIZE.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MPROF_BUFFERS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NUM_MPROF_BUFFERS
+value|MPROF_BUFFERS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|NUM_MPROF_BUFFERS
 value|1000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -395,12 +424,42 @@ name|first_free_mprof_buf
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MPROF_HASH_SIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MPROF_HASH_SIZE
 value|1009
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|NUM_MPROF_BUFFERS
+operator|>=
+name|MPROF_HASH_SIZE
+end_if
+
+begin_error
+error|#
+directive|error
+error|MPROF_BUFFERS must be larger than MPROF_HASH_SIZE
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
