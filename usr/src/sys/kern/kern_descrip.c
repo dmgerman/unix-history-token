@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_descrip.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_descrip.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -68,13 +68,6 @@ include|#
 directive|include
 file|"ioctl.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|p_devtmp
-value|p_logname[11]
-end_define
 
 begin_comment
 comment|/*  * Descriptor management.  */
@@ -2410,10 +2403,10 @@ operator|.
 name|u_procp
 decl_stmt|;
 comment|/* XXX */
-comment|/* 	 * XXX Kludge: set p->p_devtmp to contain the value of the 	 * the file descriptor being sought for duplication. The error  	 * return ensures that the vnode for this device will be released 	 * by vn_open. Open will detect this special error and take the 	 * actions in dupfdopen below. Other callers of vn_open or VOP_OPEN 	 * will simply report the error. 	 */
+comment|/* 	 * XXX Kludge: set p->p_dupfd to contain the value of the 	 * the file descriptor being sought for duplication. The error  	 * return ensures that the vnode for this device will be released 	 * by vn_open. Open will detect this special error and take the 	 * actions in dupfdopen below. Other callers of vn_open or VOP_OPEN 	 * will simply report the error. 	 */
 name|p
 operator|->
-name|p_devtmp
+name|p_dupfd
 operator|=
 name|minor
 argument_list|(
