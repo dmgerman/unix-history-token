@@ -1382,8 +1382,6 @@ argument_list|,
 name|msg
 argument_list|,
 name|IFNAMSIZ
-operator|+
-literal|1
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1414,8 +1412,6 @@ operator|->
 name|if_xname
 argument_list|,
 name|IFNAMSIZ
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 break|break;
