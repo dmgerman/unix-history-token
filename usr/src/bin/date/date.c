@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	5.6 (Berkeley) %G%"
+literal|"@(#)date.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -566,6 +566,27 @@ name|t
 operator|++
 operator|=
 literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|t
+argument_list|)
+operator|!=
+literal|2
+condition|)
+name|badformat
+argument_list|()
+expr_stmt|;
+name|lt
+operator|->
+name|tm_sec
+operator|=
+name|ATOI2
+argument_list|(
+name|t
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
