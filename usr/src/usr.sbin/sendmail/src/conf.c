@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.54
+literal|3.55
 operator|%
 name|G
 operator|%
@@ -193,7 +193,7 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|Arpa_Syserr
+name|Arpa_TSyserr
 index|[]
 init|=
 literal|"451"
@@ -202,6 +202,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* some (transient) system error */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_PSyserr
+index|[]
+init|=
+literal|"554"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* some (permanent) system error */
 end_comment
 
 begin_decl_stmt
