@@ -1388,7 +1388,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_2(sc, XL_W4_PHY_MGMT,			\ 		CSR_READ_2(sc, XL_W4_PHY_MGMT) | x)
+value|CSR_WRITE_2(sc, XL_W4_PHY_MGMT,			\ 		CSR_READ_2(sc, XL_W4_PHY_MGMT) | (x))
 end_define
 
 begin_define
@@ -1399,7 +1399,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_2(sc, XL_W4_PHY_MGMT,			\ 		CSR_READ_2(sc, XL_W4_PHY_MGMT)& ~x)
+value|CSR_WRITE_2(sc, XL_W4_PHY_MGMT,			\ 		CSR_READ_2(sc, XL_W4_PHY_MGMT)& ~(x))
 end_define
 
 begin_comment

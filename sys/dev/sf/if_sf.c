@@ -886,7 +886,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|csr_write_4(sc, reg, csr_read_4(sc, reg) | x)
+value|csr_write_4(sc, reg, csr_read_4(sc, reg) | (x))
 end_define
 
 begin_define
@@ -901,7 +901,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|csr_write_4(sc, reg, csr_read_4(sc, reg)& ~x)
+value|csr_write_4(sc, reg, csr_read_4(sc, reg)& ~(x))
 end_define
 
 begin_function

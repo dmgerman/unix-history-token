@@ -906,7 +906,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_1(sc, reg,				\ 		CSR_READ_1(sc, reg) | x)
+value|CSR_WRITE_1(sc, reg,				\ 		CSR_READ_1(sc, reg) | (x))
 end_define
 
 begin_define
@@ -921,7 +921,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_1(sc, reg,				\ 		CSR_READ_1(sc, reg)& ~x)
+value|CSR_WRITE_1(sc, reg,				\ 		CSR_READ_1(sc, reg)& ~(x))
 end_define
 
 begin_define
@@ -936,7 +936,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_2(sc, reg,				\ 		CSR_READ_2(sc, reg) | x)
+value|CSR_WRITE_2(sc, reg,				\ 		CSR_READ_2(sc, reg) | (x))
 end_define
 
 begin_define
@@ -951,7 +951,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_2(sc, reg,				\ 		CSR_READ_2(sc, reg)& ~x)
+value|CSR_WRITE_2(sc, reg,				\ 		CSR_READ_2(sc, reg)& ~(x))
 end_define
 
 begin_define
@@ -966,7 +966,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, reg,				\ 		CSR_READ_4(sc, reg) | x)
+value|CSR_WRITE_4(sc, reg,				\ 		CSR_READ_4(sc, reg) | (x))
 end_define
 
 begin_define
@@ -981,7 +981,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, reg,				\ 		CSR_READ_4(sc, reg)& ~x)
+value|CSR_WRITE_4(sc, reg,				\ 		CSR_READ_4(sc, reg)& ~(x))
 end_define
 
 begin_define
@@ -992,7 +992,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_1(sc, VR_MIICMD,			\ 		CSR_READ_1(sc, VR_MIICMD) | x)
+value|CSR_WRITE_1(sc, VR_MIICMD,			\ 		CSR_READ_1(sc, VR_MIICMD) | (x))
 end_define
 
 begin_define
@@ -1003,7 +1003,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_1(sc, VR_MIICMD,			\ 		CSR_READ_1(sc, VR_MIICMD)& ~x)
+value|CSR_WRITE_1(sc, VR_MIICMD,			\ 		CSR_READ_1(sc, VR_MIICMD)& ~(x))
 end_define
 
 begin_comment
@@ -4563,6 +4563,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|vr_rxeoc
 parameter_list|(

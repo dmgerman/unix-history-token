@@ -1494,7 +1494,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_1(sc, RL_MII,				\ 		CSR_READ_1(sc, RL_MII) | x)
+value|CSR_WRITE_1(sc, RL_MII,				\ 		CSR_READ_1(sc, RL_MII) | (x))
 end_define
 
 begin_define
@@ -1505,7 +1505,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_1(sc, RL_MII,				\ 		CSR_READ_1(sc, RL_MII)& ~x)
+value|CSR_WRITE_1(sc, RL_MII,				\ 		CSR_READ_1(sc, RL_MII)& ~(x))
 end_define
 
 begin_comment
