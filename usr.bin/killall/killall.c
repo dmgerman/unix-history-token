@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -119,14 +113,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|prog
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -140,9 +126,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-l] [-v] [-m] [-sig] [-u user] [-t tty] [-c cmd] [cmd]...\n"
-argument_list|,
-name|prog
+literal|"usage: killall [-l] [-v] [-m] [-sig] [-u user] [-t tty] [-c cmd] [cmd]...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -522,13 +506,6 @@ name|killed
 init|=
 literal|0
 decl_stmt|;
-name|prog
-operator|=
-name|av
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
