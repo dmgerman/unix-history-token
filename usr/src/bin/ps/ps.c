@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.23 (Berkeley) %G%"
+literal|"@(#)ps.c	4.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_include
@@ -201,6 +201,22 @@ define|#
 directive|define
 name|X_NTEXT
 value|9
+block|{
+literal|"_dmmin"
+block|}
+block|,
+define|#
+directive|define
+name|X_DMMIN
+value|10
+block|{
+literal|"_dmmax"
+block|}
+block|,
+define|#
+directive|define
+name|X_DMMAX
+value|11
 block|{
 literal|""
 block|}
@@ -616,6 +632,14 @@ name|int
 name|nproc
 decl_stmt|,
 name|ntext
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dmmin
+decl_stmt|,
+name|dmmax
 decl_stmt|;
 end_decl_stmt
 
@@ -2346,6 +2370,30 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|dmmin
+operator|=
+name|getw
+argument_list|(
+name|nl
+index|[
+name|X_DMMIN
+index|]
+operator|.
+name|n_value
+argument_list|)
+expr_stmt|;
+name|dmmax
+operator|=
+name|getw
+argument_list|(
+name|nl
+index|[
+name|X_DMMAX
+index|]
+operator|.
+name|n_value
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -6222,7 +6270,7 @@ specifier|register
 name|int
 name|blk
 init|=
-name|DMMIN
+name|dmmin
 decl_stmt|;
 specifier|register
 name|swblk_t
@@ -6281,7 +6329,7 @@ if|if
 condition|(
 name|blk
 operator|<
-name|DMMAX
+name|dmmax
 condition|)
 name|blk
 operator|*=
