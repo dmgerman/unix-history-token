@@ -30,6 +30,17 @@ name|TY_COMPPROTO
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPV6CP_IFIDLEN
+value|8
+end_define
+
+begin_comment
+comment|/* RFC2472 */
+end_comment
+
 begin_struct
 struct|struct
 name|ipv6cp
@@ -55,14 +66,20 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Any TY_TOKEN REQs from the peer ? */
-name|u_int32_t
-name|my_token
+name|u_char
+name|my_ifid
+index|[
+name|IPV6CP_IFIDLEN
+index|]
 decl_stmt|;
-comment|/* Token I'm willing to use */
-name|u_int32_t
-name|peer_token
+comment|/* Local Interface Identifier */
+name|u_char
+name|his_ifid
+index|[
+name|IPV6CP_IFIDLEN
+index|]
 decl_stmt|;
-comment|/* Token he's willing to use */
+comment|/* Peer Interface Identifier */
 name|struct
 name|ncpaddr
 name|myaddr
