@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispreg.h,v 1.4 1998/12/28 19:22:27 mjacob Exp $ */
+comment|/* $Id: ispreg.h,v 1.5 1999/01/30 07:29:00 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_01_29_99 */
+comment|/* release_02_05_99 */
 end_comment
 
 begin_comment
@@ -4498,71 +4498,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP2100_NVRAM_ENABLE_HARDLOOPID
+name|ISP2100_NVRAM_OPTIONS
 parameter_list|(
 name|c
 parameter_list|)
-value|ISPBSMX(c, 8, 0, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_ENABLE_FAIRNESS
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 1, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_ENABLE_FULLDUPLEX
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 2, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_ENABLE_FAST_POSTING
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 3, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_ENABLE_TARGET_MODE
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 4, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_ENABLE_INITIATOR_MODE
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 5, 0x01)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_NVRAM_QFRZ
-parameter_list|(
-name|c
-parameter_list|)
-value|ISPBSMX(c, 8, 6, 0x01)
+value|(c)[8]
 end_define
 
 begin_define
@@ -4633,6 +4573,16 @@ parameter_list|(
 name|c
 parameter_list|)
 value|(c)[26]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP2100_NVRAM_HBA_OPTIONS
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)[70]
 end_define
 
 begin_define
