@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c	1.2 (Berkeley) %G%"
+literal|"@(#)stab.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"mfile1"
+file|"pass1.h"
 end_include
 
 begin_include
@@ -2100,6 +2100,11 @@ name|i
 operator|++
 expr_stmt|;
 block|}
+name|putchar
+argument_list|(
+literal|';'
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|cerror
