@@ -4747,12 +4747,8 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"%lx "
+literal|"%p "
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|a
 argument_list|)
 expr_stmt|;
