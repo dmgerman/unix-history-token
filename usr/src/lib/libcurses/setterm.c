@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.17 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,7 @@ name|sflags
 index|[]
 init|=
 block|{
+comment|/*       am   bs   da   eo   hc   hz   in   mi   ms  */
 operator|&
 name|AM
 block|,
@@ -106,6 +107,7 @@ block|,
 operator|&
 name|MS
 block|,
+comment|/*	 nc   ns   os   ul   xb   xn   xt   xs   xx  */
 operator|&
 name|NC
 block|,
@@ -148,6 +150,7 @@ name|sstrs
 index|[]
 init|=
 block|{
+comment|/*	 AL   bc   bt   cd   ce   cl   cm   cr   cs  */
 operator|&
 name|AL
 block|,
@@ -175,6 +178,7 @@ block|,
 operator|&
 name|CS
 block|,
+comment|/*	 dc   DL   dm   do   ed   ei   k0   k1   k2  */
 operator|&
 name|DC
 block|,
@@ -202,6 +206,7 @@ block|,
 operator|&
 name|K2
 block|,
+comment|/*	 k3   k4   k5   k6   k7   k8   k9   ho   ic  */
 operator|&
 name|K3
 block|,
@@ -229,6 +234,7 @@ block|,
 operator|&
 name|IC
 block|,
+comment|/*	 im   ip   kd   ke   kh   kl   kr   ks   ku  */
 operator|&
 name|IM
 block|,
@@ -256,6 +262,7 @@ block|,
 operator|&
 name|KU
 block|,
+comment|/*	 ll   ma   nd   nl    pc   rc   sc   se   SF */
 operator|&
 name|LL
 block|,
@@ -283,6 +290,7 @@ block|,
 operator|&
 name|SF
 block|,
+comment|/*	 so   SR   ta   te   ti   uc   ue   up   us  */
 operator|&
 name|SO
 block|,
@@ -310,6 +318,7 @@ block|,
 operator|&
 name|US
 block|,
+comment|/*	 vb   vs   ve   al   dl   sf   sr   AL	     */
 operator|&
 name|VB
 block|,
@@ -334,6 +343,7 @@ block|,
 operator|&
 name|AL_PARM
 block|,
+comment|/*	 DL	   UP	     DO		 LE	     */
 operator|&
 name|DL_PARM
 block|,
@@ -346,6 +356,7 @@ block|,
 operator|&
 name|LEFT_PARM
 block|,
+comment|/*	 RI					     */
 operator|&
 name|RIGHT_PARM
 block|, 		}
@@ -633,71 +644,6 @@ name|zap
 argument_list|()
 expr_stmt|;
 comment|/* Get terminal description. */
-comment|/* Handle funny termcap capabilities. */
-if|if
-condition|(
-name|CS
-operator|&&
-name|SC
-operator|&&
-name|RC
-condition|)
-name|AL
-operator|=
-name|DL
-operator|=
-literal|""
-expr_stmt|;
-if|if
-condition|(
-name|AL_PARM
-operator|&&
-name|AL
-operator|==
-name|NULL
-condition|)
-name|AL
-operator|=
-literal|""
-expr_stmt|;
-if|if
-condition|(
-name|DL_PARM
-operator|&&
-name|DL
-operator|==
-name|NULL
-condition|)
-name|DL
-operator|=
-literal|""
-expr_stmt|;
-if|if
-condition|(
-name|IC
-condition|)
-block|{
-if|if
-condition|(
-name|IM
-operator|==
-name|NULL
-condition|)
-name|IM
-operator|=
-literal|""
-expr_stmt|;
-if|if
-condition|(
-name|EI
-operator|==
-name|NULL
-condition|)
-name|EI
-operator|=
-literal|""
-expr_stmt|;
-block|}
 comment|/* If we can't tab, we can't backtab, either. */
 if|if
 condition|(
