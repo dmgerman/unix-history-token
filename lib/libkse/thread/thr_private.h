@@ -2090,7 +2090,9 @@ begin_define
 define|#
 directive|define
 name|THR_RUNQ_FIRST
-parameter_list|()
+parameter_list|(
+name|thrd
+parameter_list|)
 define|\
 value|_pq_first(&(thrd)->kseg->kg_schedq.sq_runq)
 end_define
@@ -2187,6 +2189,16 @@ parameter_list|(
 name|curthr
 parameter_list|)
 value|do {			\ 	(void)_kse_critical_enter();			\ 	KSE_SCHED_LOCK((curthr)->kse, (curthr)->kseg);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_UNLOCK_SWITCH
+parameter_list|(
+name|curthr
+parameter_list|)
+value|do {			\ 	KSE_SCHED_UNLOCK((curthr)->kse, (curthr)->kseg);\ } while (0)
 end_define
 
 begin_define
@@ -2366,6 +2378,9 @@ operator|,
 name|NULL
 operator|,
 name|THR_STACK_DEFAULT
+operator|,
+comment|/* guardsize */
+literal|0
 block|}
 end_decl_stmt
 

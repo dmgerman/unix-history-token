@@ -101,6 +101,12 @@ name|pthread_attr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pattr
+operator|->
+name|guardsize_attr
+operator|=
+name|_thr_guard_default
+expr_stmt|;
 comment|/* Return a pointer to the attribute object: */
 operator|*
 name|attr
