@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  * implement the mvscanw commands.  Due to the variable number of  * arguments, they cannot be macros.  Another sigh....  *  * %G% (Berkeley) @(#)mvscanw.c	1.1  */
+comment|/*  * implement the mvscanw commands.  Due to the variable number of  * arguments, they cannot be macros.  Another sigh....  *  * %G% (Berkeley) @(#)mvscanw.c	1.2  */
 end_comment
 
 begin_macro
@@ -56,7 +56,7 @@ argument_list|)
 operator|==
 name|OK
 condition|?
-name|_sscanw
+name|_sscans
 argument_list|(
 name|stdscr
 argument_list|,
@@ -130,7 +130,7 @@ argument_list|)
 operator|==
 name|OK
 condition|?
-name|_sscanw
+name|_sscans
 argument_list|(
 name|win
 argument_list|,
