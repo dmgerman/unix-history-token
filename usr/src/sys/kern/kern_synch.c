@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	3.5	%H%	*/
+comment|/*	kern_synch.c	3.6	%H%	*/
 end_comment
 
 begin_include
@@ -402,9 +402,6 @@ name|p_flag
 operator||=
 name|STIMO
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|sec
 operator|=
 name|pp
@@ -412,13 +409,6 @@ operator|->
 name|p_clktim
 operator|-
 name|seconds
-operator|)
-operator|<
-literal|0
-condition|)
-name|sec
-operator|=
-literal|0
 expr_stmt|;
 name|pp
 operator|->
@@ -520,11 +510,24 @@ name|label_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sec
+operator|>
+literal|0
+condition|)
 name|pp
 operator|->
 name|p_clktim
 operator|+=
 name|sec
+expr_stmt|;
+else|else
+name|pp
+operator|->
+name|p_clktim
+operator|=
+literal|0
 expr_stmt|;
 name|splx
 argument_list|(
