@@ -311,6 +311,10 @@ name|ciss_bmic_id_lstatus
 modifier|*
 name|cl_lstatus
 decl_stmt|;
+name|struct
+name|ciss_ldrive_geometry
+name|cl_geometry
+decl_stmt|;
 name|char
 name|cl_name
 index|[
