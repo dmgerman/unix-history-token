@@ -334,6 +334,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|__inline
 name|void
 name|sched_pin
 parameter_list|(
@@ -358,6 +360,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|__inline
 name|void
 name|sched_unpin
 parameter_list|(
@@ -482,6 +486,46 @@ modifier|*
 name|thread0_sched
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|sched_pin
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|td
+operator|->
+name|td_pinned
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|sched_unpin
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|td
+operator|->
+name|td_pinned
+operator|--
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#
