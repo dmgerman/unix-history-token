@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: arp.c,v 1.14 1998/01/16 17:38:51 bde Exp $"
+literal|"$Id: arp.c,v 1.15 1999/03/10 10:11:43 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3837,11 +3837,21 @@ name|ifr
 operator|->
 name|ifr_addr
 operator|+
+name|MAX
+argument_list|(
 name|ifr
 operator|->
 name|ifr_addr
 operator|.
 name|sa_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|->
+name|ifr_addr
+argument_list|)
+argument_list|)
 operator|)
 expr_stmt|;
 block|}
@@ -3978,11 +3988,21 @@ name|ifr
 operator|->
 name|ifr_addr
 operator|+
+name|MAX
+argument_list|(
 name|ifr
 operator|->
 name|ifr_addr
 operator|.
 name|sa_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|->
+name|ifr_addr
+argument_list|)
+argument_list|)
 operator|)
 expr_stmt|;
 block|}
