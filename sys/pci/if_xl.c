@@ -6083,6 +6083,12 @@ name|if_hwassist
 operator|=
 name|XL905B_CSUM_FEATURES
 expr_stmt|;
+name|ifp
+operator|->
+name|if_capabilities
+operator|=
+name|IFCAP_HWCSUM
+expr_stmt|;
 block|}
 else|else
 name|ifp
@@ -6118,6 +6124,14 @@ operator|=
 name|XL_TX_LIST_CNT
 operator|-
 literal|1
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator|=
+name|ifp
+operator|->
+name|if_capabilities
 expr_stmt|;
 comment|/* 	 * Now we have to see what sort of media we have. 	 * This includes probing for an MII interace and a 	 * possible PHY. 	 */
 name|XL_SEL_WIN
