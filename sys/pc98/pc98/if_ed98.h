@@ -1637,55 +1637,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* LD-BDN */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|edp_bdn98
-index|[
-literal|16
-index|]
-init|=
-block|{
-literal|0x00000
-block|,
-literal|0x01000
-block|,
-literal|0x02000
-block|,
-literal|0x03000
-block|,
-literal|0x04000
-block|,
-literal|0x05000
-block|,
-literal|0x06000
-block|,
-literal|0x07000
-block|,
-literal|0x08000
-block|,
-literal|0x0a000
-block|,
-literal|0x0b000
-block|,
-literal|0x0c000
-block|,
-literal|0x0d000
-block|,
-literal|0x0d000
-block|,
-literal|0x0e000
-block|,
-literal|0x0f000
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* SIC-98 */
 end_comment
 
@@ -1735,7 +1686,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* IO-DATA LA-98 */
+comment|/* IO-DATA LA-98, ELECOM LD-BDN */
 end_comment
 
 begin_decl_stmt
@@ -2101,7 +2052,7 @@ name|edreg
 operator|.
 name|port
 operator|=
-name|edp_bdn98
+name|edp_la98
 expr_stmt|;
 name|sc
 operator|->
