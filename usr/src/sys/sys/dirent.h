@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -19,7 +19,11 @@ name|u_short
 name|d_reclen
 decl_stmt|;
 comment|/* length of this record */
-name|u_short
+name|u_char
+name|d_type
+decl_stmt|;
+comment|/* file type, see below */
+name|u_char
 name|d_namlen
 decl_stmt|;
 comment|/* length of string in d_name */
@@ -55,6 +59,66 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * File types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_REG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_DIR
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_BLK
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_CHR
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_LNK
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_SOCK
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_FIFO
+value|7
+end_define
 
 end_unit
 
