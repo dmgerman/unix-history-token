@@ -2575,6 +2575,9 @@ name|wdc
 operator|+
 name|wd_data
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|addr
 operator|+
 name|du
@@ -3024,7 +3027,7 @@ operator|+
 name|wd_data
 argument_list|,
 operator|(
-name|int
+name|caddr_t
 operator|)
 name|bp
 operator|->
@@ -3066,6 +3069,9 @@ name|wdc
 operator|+
 name|wd_data
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|dummy
 argument_list|,
@@ -6313,6 +6319,9 @@ name|pmap_enter
 argument_list|(
 name|kernel_pmap
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|CADDR1
 argument_list|,
 name|trunc_page
