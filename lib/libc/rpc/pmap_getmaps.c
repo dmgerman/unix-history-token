@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pmap_getmaps.c,v 1.3 1995/10/22 14:51:29 phk Exp $"
+literal|"$Id: pmap_getmaps.c,v 1.4 1996/06/10 00:49:17 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +251,13 @@ name|client
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|socket
+operator|!=
+operator|-
+literal|1
+condition|)
 operator|(
 name|void
 operator|)
