@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *      i4b_l2.c - ISDN layer 2 (Q.921)  *	-------------------------------  *  *	$Id: i4b_l2.c,v 1.30 1999/12/13 21:25:27 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:03:23 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *      i4b_l2.c - ISDN layer 2 (Q.921)  *	-------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Fri Jan 12 16:43:31 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -46,43 +46,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -107,6 +70,30 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -117,12 +104,6 @@ begin_include
 include|#
 directive|include
 file|<machine/i4b_debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/i4b_ioctl.h>
 end_include
 
 begin_else
@@ -157,12 +138,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/include/i4b_l2l3.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_isdnq931.h>
 end_include
 
 begin_include
@@ -260,7 +235,8 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -268,18 +244,6 @@ end_function_decl
 begin_comment
 comment|/* from layer 2 */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|i4b_mdl_attach_ind
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -469,7 +433,8 @@ name|int
 argument_list|,
 name|int
 argument_list|,
-name|int
+name|void
+operator|*
 argument_list|)
 operator|)
 name|i4b_mdl_command_req
@@ -499,17 +464,13 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"DL-ESTABLISH-REQ"
+literal|"unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_l1_activate
@@ -554,17 +515,13 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"DL-RELEASE-REQ"
+literal|"unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_next_l2state
@@ -602,17 +559,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|NOTDEF
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"DL-UNIT-DATA-REQ"
+literal|"unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -655,17 +608,13 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NOTDEF
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"DL-DATA-REQ"
+literal|"unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -688,7 +637,7 @@ name|ST_TIMREC
 case|:
 if|if
 condition|(
-name|IF_QFULL
+name|_IF_QFULL
 argument_list|(
 operator|&
 name|l2sc
@@ -697,15 +646,11 @@ name|i_queue
 argument_list|)
 condition|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_dl_data_req"
-argument_list|,
-operator|(
-literal|"i_queue full!!\n"
-operator|)
+literal|"i_queue full!!"
 argument_list|)
 expr_stmt|;
 name|i4b_Dfreembuf
@@ -740,22 +685,18 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_dl_data_req"
+literal|"unit %d ERROR in state [%s], freeing mbuf"
 argument_list|,
-operator|(
-literal|"unit %d ERROR in state [%s], freeing mbuf\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|i4b_print_l2state
 argument_list|(
 name|l2sc
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_Dfreembuf
@@ -795,17 +736,13 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-name|DBGL1
+name|NDBGL1
 argument_list|(
 name|L1_PRIM
 argument_list|,
-literal|"PH-ACTIVATE-IND"
+literal|"unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -844,17 +781,13 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-name|DBGL1
+name|NDBGL1
 argument_list|(
 name|L1_PRIM
 argument_list|,
-literal|"PH-DEACTIVATE-IND"
+literal|"unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -1080,21 +1013,17 @@ literal|1
 decl_stmt|;
 name|CRIT_BEG
 expr_stmt|;
-name|DBGL1
+name|NDBGL1
 argument_list|(
 name|L1_PRIM
 argument_list|,
-literal|"MPH-STATUS-IND"
+literal|"unit %d, status=%d, parm=%d"
 argument_list|,
-operator|(
-literal|"unit %d, status=%d, parm=%d\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|status
-operator|,
+argument_list|,
 name|parm
-operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1119,6 +1048,32 @@ name|ifq_maxlen
 operator|=
 name|IQUEUE_MAXLEN
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>
+literal|4
+name|mtx_init
+argument_list|(
+operator|&
+name|l2sc
+operator|->
+name|i_queue
+operator|.
+name|ifq_mtx
+argument_list|,
+literal|"i4b_l2sc"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|l2sc
 operator|->
 name|ua_frame
@@ -1184,6 +1139,51 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+comment|/* initialize the callout handles for timeout routines */
+name|callout_init
+argument_list|(
+operator|&
+name|l2sc
+operator|->
+name|T200_callout
+argument_list|)
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|l2sc
+operator|->
+name|T202_callout
+argument_list|)
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|l2sc
+operator|->
+name|T203_callout
+argument_list|)
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|l2sc
+operator|->
+name|IFQU_callout
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|STI_L1STAT
@@ -1214,17 +1214,13 @@ name|ST_TIMREC
 operator|)
 condition|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_mph_status_ind"
+literal|"unit %d, persistent deactivation!"
 argument_list|,
-operator|(
-literal|"unit %d, persistent deactivation!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_l2_unit_init
@@ -1249,32 +1245,24 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_mph_status_ind"
+literal|"unit %d, cannot access S0 bus!"
 argument_list|,
-operator|(
-literal|"unit %d, cannot access S0 bus!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_mph_status_ind"
+literal|"ERROR, unit %d, unknown status message!"
 argument_list|,
-operator|(
-literal|"ERROR, unit %d, unknown status message!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1317,25 +1305,26 @@ parameter_list|,
 name|int
 name|command
 parameter_list|,
-name|int
+name|void
+modifier|*
 name|parm
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"MDL-COMMAND-REQ"
+literal|"unit %d, command=%d, parm=%d"
+argument_list|,
+name|unit
+argument_list|,
+name|command
 argument_list|,
 operator|(
-literal|"unit %d, command=%d, parm=%d\n"
-operator|,
-name|unit
-operator|,
-name|command
-operator|,
-name|parm
+name|unsigned
+name|int
 operator|)
+name|parm
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1400,17 +1389,13 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NOTDEF
-name|DBGL1
+name|NDBGL1
 argument_list|(
 name|L1_PRIM
 argument_list|,
-literal|"PH-DATA-IND"
+literal|"unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1456,15 +1441,11 @@ operator|.
 name|err_rx_len
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_ph_data_ind"
-argument_list|,
-operator|(
-literal|"ERROR, I-frame< 6 octetts!\n"
-operator|)
+literal|"ERROR, I-frame< 6 octetts!"
 argument_list|)
 expr_stmt|;
 name|i4b_Dfreembuf
@@ -1520,15 +1501,11 @@ operator|.
 name|err_rx_len
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_ph_data_ind"
-argument_list|,
-operator|(
-literal|"ERROR, S-frame< 6 octetts!\n"
-operator|)
+literal|"ERROR, S-frame< 6 octetts!"
 argument_list|)
 expr_stmt|;
 name|i4b_Dfreembuf
@@ -1584,15 +1561,11 @@ operator|.
 name|err_rx_len
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_ph_data_ind"
-argument_list|,
-operator|(
-literal|"ERROR, U-frame< 5 octetts!\n"
-operator|)
+literal|"ERROR, U-frame< 5 octetts!"
 argument_list|)
 expr_stmt|;
 name|i4b_Dfreembuf
@@ -1623,15 +1596,11 @@ operator|.
 name|err_rx_badf
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_ph_data_ind"
-argument_list|,
-operator|(
 literal|"ERROR, bad frame rx'd - "
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_print_frame

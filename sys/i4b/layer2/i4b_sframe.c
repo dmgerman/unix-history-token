@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_sframe.c - s frame handling routines  *	----------------------------------------  *  *	$Id: i4b_sframe.c,v 1.12 1999/12/13 21:25:27 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:04:17 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_sframe.c - s frame handling routines  *	----------------------------------------  *  *	$Id: i4b_sframe.c,v 1.15 2000/08/24 11:48:58 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon May 29 16:55:23 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -46,43 +46,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -107,6 +70,30 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -117,12 +104,6 @@ begin_include
 include|#
 directive|include
 file|<machine/i4b_debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/i4b_ioctl.h>
 end_include
 
 begin_else
@@ -151,18 +132,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/include/i4b_l1l2.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_l2l3.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_isdnq931.h>
 end_include
 
 begin_include
@@ -327,19 +296,15 @@ name|rx_rr
 operator|++
 expr_stmt|;
 comment|/* update statistics */
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_S_MSG
 argument_list|,
-literal|"i4b_rxd_s_frame"
+literal|"rx'd RR, N(R) = %d"
 argument_list|,
-operator|(
-literal|"rx'd RR, N(R) = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|rxd_NR
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_next_l2state
@@ -361,19 +326,15 @@ name|rx_rnr
 operator|++
 expr_stmt|;
 comment|/* update statistics */
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_S_MSG
 argument_list|,
-literal|"i4b_rxd_s_frame"
+literal|"rx'd RNR, N(R) = %d"
 argument_list|,
-operator|(
-literal|"rx'd RNR, N(R) = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|rxd_NR
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_next_l2state
@@ -395,19 +356,15 @@ name|rx_rej
 operator|++
 expr_stmt|;
 comment|/* update statistics */
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_S_MSG
 argument_list|,
-literal|"i4b_rxd_s_frame"
+literal|"rx'd REJ, N(R) = %d"
 argument_list|,
-operator|(
-literal|"rx'd REJ, N(R) = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|rxd_NR
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_next_l2state
@@ -427,15 +384,11 @@ name|err_rx_bads
 operator|++
 expr_stmt|;
 comment|/* update statistics */
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_S_ERR
 argument_list|,
-literal|"i4b_rxd_s_frame"
-argument_list|,
-operator|(
-literal|"ERROR, unknown code, frame = \n"
-operator|)
+literal|"ERROR, unknown code, frame = "
 argument_list|)
 expr_stmt|;
 name|i4b_print_frame
@@ -480,19 +433,15 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_S_MSG
 argument_list|,
-literal|"i4b_tx_rr_command"
+literal|"tx RR, unit = %d"
 argument_list|,
-operator|(
-literal|"tx RR, unit = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -551,19 +500,15 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_S_MSG
 argument_list|,
-literal|"i4b_tx_rr_response"
+literal|"tx RR, unit = %d"
 argument_list|,
-operator|(
-literal|"tx RR, unit = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -622,19 +567,15 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_S_MSG
 argument_list|,
-literal|"i4b_tx_rnr_command"
+literal|"tx RNR, unit = %d"
 argument_list|,
-operator|(
-literal|"tx RNR, unit = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -693,19 +634,15 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_S_MSG
 argument_list|,
-literal|"i4b_tx_rnr_response"
+literal|"tx RNR, unit = %d"
 argument_list|,
-operator|(
-literal|"tx RNR, unit = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -764,19 +701,15 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_S_MSG
 argument_list|,
-literal|"i4b_tx_rej_response"
+literal|"tx REJ, unit = %d"
 argument_list|,
-operator|(
-literal|"tx REJ, unit = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|m

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_rbch.c - device driver for raw B channel data  *	---------------------------------------------------  *  *	$Id: i4b_rbch.c,v 1.48 1999/12/13 21:25:24 hm Exp $  *  * $FreeBSD$  *  *	last edit-date: [Mon Dec 13 21:39:15 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_rbch.c - device driver for raw B channel data  *	---------------------------------------------------  *  * $FreeBSD$  *  *	last edit-date: [Fri Jan 12 14:32:16 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -68,14 +68,32 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/tty.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
 
 begin_include
 include|#
 directive|include
-file|<sys/tty.h>
+file|<sys/callout.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -116,6 +134,38 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVFS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/devfsext.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
 end_ifdef
 
@@ -124,13 +174,6 @@ include|#
 directive|include
 file|<sys/filio.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|bootverbose
-value|0
-end_define
 
 begin_endif
 endif|#
@@ -225,18 +268,6 @@ directive|include
 file|<sys/device.h>
 end_include
 
-begin_comment
-comment|/* XXX FIXME */
-end_comment
-
-begin_decl_stmt
-name|int
-name|bootverbose
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -289,10 +320,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
 end_if
 
 begin_include
@@ -424,6 +451,22 @@ name|__FreeBSD__
 argument_list|)
 name|struct
 name|callout_handle
+name|sc_callout
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+name|struct
+name|callout
 name|sc_callout
 decl_stmt|;
 endif|#
@@ -861,19 +904,6 @@ name|CDEV_MAJOR
 value|57
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|4
-end_if
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -919,62 +949,9 @@ name|nopsize
 block|,
 comment|/* flags */
 literal|0
-block|,
-comment|/* bmaj */
-operator|-
-literal|1
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|i4brbch_cdevsw
-init|=
-block|{
-name|i4brbchopen
-block|,
-name|i4brbchclose
-block|,
-name|i4brbchread
-block|,
-name|i4brbchwrite
-block|,
-name|i4brbchioctl
-block|,
-name|nostop
-block|,
-name|noreset
-block|,
-name|nodevtotty
-block|,
-name|POLLFIELD
-block|,
-name|nommap
-block|,
-name|NULL
-block|,
-literal|"i4brbch"
-block|,
-name|NULL
-block|,
-operator|-
-literal|1
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1015,47 +992,12 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|4
 name|cdevsw_add
 argument_list|(
 operator|&
 name|i4brbch_cdevsw
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|dev_t
-name|dev
-init|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-literal|0
-argument_list|)
-decl_stmt|;
-name|cdevsw_add
-argument_list|(
-operator|&
-name|dev
-argument_list|,
-operator|&
-name|i4brbch_cdevsw
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1371,6 +1313,29 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+name|callout_init
+argument_list|(
+operator|&
+name|rbch_softc
+index|[
+name|i
+index|]
+operator|.
+name|sc_callout
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|rbch_softc
 index|[
 name|i
@@ -1411,6 +1376,35 @@ name|ifq_maxlen
 operator|=
 name|I4BRBCHMAXQLEN
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>
+literal|4
+name|mtx_init
+argument_list|(
+operator|&
+name|rbch_softc
+index|[
+name|i
+index|]
+operator|.
+name|sc_hdlcq
+operator|.
+name|ifq_mtx
+argument_list|,
+literal|"i4b_rbch"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|rbch_softc
 index|[
 name|i
@@ -1486,7 +1480,7 @@ decl_stmt|;
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|NI4BRBCH
 condition|)
 return|return
@@ -1525,17 +1519,13 @@ name|sc_devstate
 operator||=
 name|ST_ISOPEN
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchopen"
+literal|"unit %d, open"
 argument_list|,
-operator|(
-literal|"unit %d, open\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1616,17 +1606,13 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbclose"
+literal|"unit %d, closed"
 argument_list|,
-operator|(
-literal|"unit %d, closed\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1694,18 +1680,16 @@ index|]
 decl_stmt|;
 name|CRIT_VAR
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchread"
+literal|"unit %d, enter read"
 argument_list|,
-operator|(
-literal|"unit %d, enter read\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
+expr_stmt|;
+name|CRIT_BEG
 expr_stmt|;
 if|if
 condition|(
@@ -1719,17 +1703,15 @@ name|ST_ISOPEN
 operator|)
 condition|)
 block|{
-name|DBGL4
+name|CRIT_END
+expr_stmt|;
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchread"
+literal|"unit %d, read while not open"
 argument_list|,
-operator|(
-literal|"unit %d, read while not open\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1760,11 +1742,15 @@ operator|&
 name|ST_CONNECTED
 operator|)
 condition|)
+block|{
+name|CRIT_END
+expr_stmt|;
 return|return
 operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|sc
@@ -1805,11 +1791,15 @@ operator|&
 name|ST_ISOPEN
 operator|)
 condition|)
+block|{
+name|CRIT_END
+expr_stmt|;
 return|return
 operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
+block|}
 block|}
 else|else
 block|{
@@ -1825,17 +1815,13 @@ name|ST_CONNECTED
 operator|)
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchread"
+literal|"unit %d, wait read init"
 argument_list|,
-operator|(
-literal|"unit %d, wait read init\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1867,19 +1853,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DBGL4
+name|CRIT_END
+expr_stmt|;
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchread"
+literal|"unit %d, error %d tsleep"
 argument_list|,
-operator|(
-literal|"unit %d, error %d tsleep\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|error
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1930,27 +1914,19 @@ name|ST_ISOPEN
 operator|)
 condition|)
 block|{
-name|CRIT_BEG
-expr_stmt|;
 name|sc
 operator|->
 name|sc_devstate
 operator||=
 name|ST_RDWAITDATA
 expr_stmt|;
-name|CRIT_END
-expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchread"
+literal|"unit %d, wait read data"
 argument_list|,
-operator|(
-literal|"unit %d, wait read data\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1984,19 +1960,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DBGL4
+name|CRIT_END
+expr_stmt|;
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchread"
+literal|"unit %d, error %d tsleep read"
 argument_list|,
-operator|(
-literal|"unit %d, error %d tsleep read\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|error
-operator|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2014,8 +1988,6 @@ return|;
 block|}
 block|}
 block|}
-name|CRIT_BEG
-expr_stmt|;
 name|IF_DEQUEUE
 argument_list|(
 name|iqp
@@ -2023,21 +1995,17 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchread"
+literal|"unit %d, read %d bytes"
 argument_list|,
-operator|(
-literal|"unit %d, read %d bytes\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|m
 operator|->
 name|m_len
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2067,19 +2035,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchread"
+literal|"unit %d, error %d uiomove"
 argument_list|,
-operator|(
-literal|"unit %d, error %d uiomove\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|error
-operator|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -2158,18 +2122,16 @@ index|]
 decl_stmt|;
 name|CRIT_VAR
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchwrite"
+literal|"unit %d, write"
 argument_list|,
-operator|(
-literal|"unit %d, write\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
+expr_stmt|;
+name|CRIT_BEG
 expr_stmt|;
 if|if
 condition|(
@@ -2183,18 +2145,16 @@ name|ST_ISOPEN
 operator|)
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchwrite"
+literal|"unit %d, write while not open"
 argument_list|,
-operator|(
-literal|"unit %d, write while not open\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
+expr_stmt|;
+name|CRIT_END
 expr_stmt|;
 return|return
 operator|(
@@ -2224,14 +2184,18 @@ operator|&
 name|ST_CONNECTED
 operator|)
 condition|)
+block|{
+name|CRIT_END
+expr_stmt|;
 return|return
 operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
+block|}
 if|if
 condition|(
-name|IF_QFULL
+name|_IF_QFULL
 argument_list|(
 name|isdn_linktab
 index|[
@@ -2249,11 +2213,15 @@ operator|&
 name|ST_ISOPEN
 operator|)
 condition|)
+block|{
+name|CRIT_END
+expr_stmt|;
 return|return
 operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
+block|}
 block|}
 else|else
 block|{
@@ -2269,17 +2237,13 @@ name|ST_CONNECTED
 operator|)
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchwrite"
+literal|"unit %d, write wait init"
 argument_list|,
-operator|(
-literal|"unit %d, write wait init\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -2310,11 +2274,15 @@ name|error
 operator|==
 name|ERESTART
 condition|)
+block|{
+name|CRIT_END
+expr_stmt|;
 return|return
 operator|(
 name|ERESTART
 operator|)
 return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2323,17 +2291,15 @@ operator|==
 name|EINTR
 condition|)
 block|{
-name|DBGL4
+name|CRIT_END
+expr_stmt|;
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchwrite"
+literal|"unit %d, EINTR during wait init"
 argument_list|,
-operator|(
-literal|"unit %d, EINTR during wait init\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2348,19 +2314,17 @@ condition|(
 name|error
 condition|)
 block|{
-name|DBGL4
+name|CRIT_END
+expr_stmt|;
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchwrite"
+literal|"unit %d, error %d tsleep init"
 argument_list|,
-operator|(
-literal|"unit %d, error %d tsleep init\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|error
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2396,7 +2360,7 @@ expr_stmt|;
 block|}
 while|while
 condition|(
-name|IF_QFULL
+name|_IF_QFULL
 argument_list|(
 name|isdn_linktab
 index|[
@@ -2415,27 +2379,19 @@ name|ST_ISOPEN
 operator|)
 condition|)
 block|{
-name|CRIT_BEG
-expr_stmt|;
 name|sc
 operator|->
 name|sc_devstate
 operator||=
 name|ST_WRWAITEMPTY
 expr_stmt|;
-name|CRIT_END
-expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchwrite"
+literal|"unit %d, write queue full"
 argument_list|,
-operator|(
-literal|"unit %d, write queue full\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2483,6 +2439,8 @@ operator|==
 name|ERESTART
 condition|)
 block|{
+name|CRIT_END
+expr_stmt|;
 return|return
 operator|(
 name|ERESTART
@@ -2497,17 +2455,15 @@ operator|==
 name|EINTR
 condition|)
 block|{
-name|DBGL4
+name|CRIT_END
+expr_stmt|;
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchwrite"
+literal|"unit %d, EINTR during wait write"
 argument_list|,
-operator|(
-literal|"unit %d, EINTR during wait write\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2522,19 +2478,17 @@ condition|(
 name|error
 condition|)
 block|{
-name|DBGL4
+name|CRIT_END
+expr_stmt|;
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchwrite"
+literal|"unit %d, error %d tsleep write"
 argument_list|,
-operator|(
-literal|"unit %d, error %d tsleep write\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|error
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2546,8 +2500,6 @@ block|}
 block|}
 block|}
 block|}
-name|CRIT_BEG
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2560,17 +2512,13 @@ name|ST_ISOPEN
 operator|)
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchwrite"
+literal|"unit %d, not open anymore"
 argument_list|,
-operator|(
-literal|"unit %d, not open anymore\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|CRIT_END
@@ -2608,21 +2556,17 @@ operator|->
 name|uio_resid
 argument_list|)
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchwrite"
+literal|"unit %d, write %d bytes"
 argument_list|,
-operator|(
-literal|"unit %d, write %d bytes\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|m
 operator|->
 name|m_len
-operator|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -2640,6 +2584,35 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>
+literal|4
+operator|(
+name|void
+operator|)
+name|IF_HANDOFF
+argument_list|(
+name|isdn_linktab
+index|[
+name|unit
+index|]
+operator|->
+name|tx_queue
+argument_list|,
+name|m
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|IF_QFULL
@@ -2652,15 +2625,12 @@ operator|->
 name|tx_queue
 argument_list|)
 condition|)
-block|{
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|IF_ENQUEUE
 argument_list|(
 name|isdn_linktab
@@ -2673,7 +2643,8 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 operator|(
 operator|*
 name|isdn_linktab
@@ -2780,33 +2751,25 @@ operator|)
 name|data
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchioctl"
+literal|"unit %d, setting async mode"
 argument_list|,
-operator|(
-literal|"unit %d, setting async mode\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchioctl"
+literal|"unit %d, clearing async mode"
 argument_list|,
-operator|(
-literal|"unit %d, clearing async mode\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2824,17 +2787,13 @@ operator|)
 name|data
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchioctl"
+literal|"unit %d, setting non-blocking mode"
 argument_list|,
-operator|(
-literal|"unit %d, setting non-blocking mode\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2846,17 +2805,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchioctl"
+literal|"unit %d, clearing non-blocking mode"
 argument_list|,
-operator|(
-literal|"unit %d, clearing non-blocking mode\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2881,17 +2836,13 @@ operator|&
 name|ST_CONNECTED
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchioctl"
+literal|"unit %d, disconnecting for DTR down"
 argument_list|,
-operator|(
-literal|"unit %d, disconnecting for DTR down\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_l4_drvrdisc
@@ -2940,23 +2891,19 @@ condition|(
 name|l
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchioctl"
+literal|"unit %d, attempting dialout to %s"
 argument_list|,
-operator|(
-literal|"unit %d, attempting dialout to %s\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 name|data
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_l4_dialoutnumber
@@ -2982,17 +2929,13 @@ case|case
 name|TIOCSDTR
 case|:
 comment|/* Set DTR */
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchioctl"
+literal|"unit %d, attempting dialout (DTR)"
 argument_list|,
-operator|(
-literal|"unit %d, attempting dialout (DTR)\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_l4_dialout
@@ -3101,22 +3044,18 @@ break|break;
 block|}
 default|default:
 comment|/* Unknown stuff */
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchioctl"
+literal|"unit %d, ioctl, unknown cmd %lx"
 argument_list|,
-operator|(
-literal|"unit %d, ioctl, unknown cmd %lx\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 operator|(
 name|u_long
 operator|)
 name|cmd
-operator|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -3239,7 +3178,7 @@ name|ST_CONNECTED
 operator|)
 operator|&&
 operator|!
-name|IF_QFULL
+name|_IF_QFULL
 argument_list|(
 name|isdn_linktab
 index|[
@@ -3439,17 +3378,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"i4brbchselect"
+literal|"unit %d, not open anymore"
 argument_list|,
-operator|(
-literal|"unit %d, not open anymore\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3532,7 +3467,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|IF_QFULL
+name|_IF_QFULL
 argument_list|(
 name|isdn_linktab
 index|[
@@ -3812,29 +3747,14 @@ name|sc_iinb
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
+name|START_TIMER
 argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|sc
 operator|->
 name|sc_callout
-operator|=
-endif|#
-directive|endif
-name|timeout
-argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
+argument_list|,
 name|rbch_timeout
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|sc
 argument_list|,
 name|I4BRBCHACCTINTVL
@@ -3940,29 +3860,14 @@ name|sc_loutb
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
+name|START_TIMER
 argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|sc
 operator|->
 name|sc_callout
-operator|=
-endif|#
-directive|endif
-name|timeout
-argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
+argument_list|,
 name|rbch_timeout
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|sc
 argument_list|,
 name|I4BRBCHACCTINTVL
@@ -3985,17 +3890,13 @@ name|ST_CONNECTED
 operator|)
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"rbch_connect"
+literal|"unit %d, wakeup"
 argument_list|,
-operator|(
-literal|"unit %d, wakeup\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -4071,40 +3972,32 @@ operator|->
 name|sc_cd
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"rbch_disconnect"
+literal|"rbch%d: channel %d not active"
 argument_list|,
-operator|(
-literal|"rbch%d: channel %d not active\n"
-operator|,
 name|cd
 operator|->
 name|driver_unit
-operator|,
+argument_list|,
 name|cd
 operator|->
 name|channelid
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|CRIT_BEG
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"rbch_disconnect"
+literal|"unit %d, disconnect"
 argument_list|,
-operator|(
-literal|"unit %d, disconnect\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -4152,48 +4045,17 @@ operator|->
 name|sc_iinb
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
+name|STOP_TIMER
 argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|untimeout
-argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
-name|rbch_timeout
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|sc
-argument_list|,
 name|sc
 operator|->
 name|sc_callout
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|untimeout
-argument_list|(
-operator|(
-name|TIMEOUT_FUNC_T
-operator|)
+argument_list|,
 name|rbch_timeout
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|sc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|CRIT_END
@@ -4298,6 +4160,49 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>
+literal|4
+if|if
+condition|(
+operator|!
+name|IF_HANDOFF
+argument_list|(
+operator|&
+operator|(
+name|rbch_softc
+index|[
+name|unit
+index|]
+operator|.
+name|sc_hdlcq
+operator|)
+argument_list|,
+name|m
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|NDBGL4
+argument_list|(
+name|L4_RBCHDBG
+argument_list|,
+literal|"unit %d: hdlc rx queue full!"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 name|IF_QFULL
@@ -4314,17 +4219,13 @@ operator|)
 argument_list|)
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"rbch_rx_data_rdy"
+literal|"unit %d: hdlc rx queue full!"
 argument_list|,
-operator|(
-literal|"unit %d: hdlc rx queue full!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -4351,6 +4252,8 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -4364,17 +4267,13 @@ operator|&
 name|ST_RDWAITDATA
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"rbch_rx_data_rdy"
+literal|"unit %d, wakeup"
 argument_list|,
-operator|(
-literal|"unit %d, wakeup\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|rbch_softc
@@ -4404,17 +4303,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"rbch_rx_data_rdy"
+literal|"unit %d, NO wakeup"
 argument_list|,
-operator|(
-literal|"unit %d, NO wakeup\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4457,17 +4352,13 @@ operator|&
 name|ST_WRWAITEMPTY
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"rbch_tx_queue_empty"
+literal|"unit %d, wakeup"
 argument_list|,
-operator|(
-literal|"unit %d, wakeup\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|rbch_softc
@@ -4497,17 +4388,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_RBCHDBG
 argument_list|,
-literal|"rbch_tx_queue_empty"
+literal|"unit %d, NO wakeup"
 argument_list|,
-operator|(
-literal|"unit %d, NO wakeup\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4588,13 +4475,40 @@ name|int
 name|unit
 parameter_list|)
 block|{
+name|CRIT_VAR
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>
+literal|4
+name|CRIT_BEG
+expr_stmt|;
+name|IF_DRAIN
+argument_list|(
+operator|&
+name|rbch_softc
+index|[
+name|unit
+index|]
+operator|.
+name|sc_hdlcq
+argument_list|)
+expr_stmt|;
+name|CRIT_END
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|CRIT_VAR
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -4630,6 +4544,8 @@ expr_stmt|;
 else|else
 break|break;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 

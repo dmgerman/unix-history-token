@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_tei.c - tei handling procedures  *	-----------------------------------  *  *	$Id: i4b_tei.c,v 1.17 1999/12/13 21:25:27 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:04:24 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_tei.c - tei handling procedures  *	-----------------------------------  *  *	$Id: i4b_tei.c,v 1.25 2000/09/01 14:11:51 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Fri Oct 13 15:56:35 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -46,49 +46,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/random.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -119,6 +76,30 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -129,12 +110,6 @@ begin_include
 include|#
 directive|include
 file|<machine/i4b_debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/i4b_ioctl.h>
 end_include
 
 begin_else
@@ -175,12 +150,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/include/i4b_l2l3.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_isdnq931.h>
 end_include
 
 begin_include
@@ -343,19 +312,15 @@ operator|->
 name|tei
 argument_list|)
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_TEI_MSG
 argument_list|,
-literal|"i4b_tei_rx_frame"
+literal|"TEI ID Assign - TEI = %d"
 argument_list|,
-operator|(
-literal|"TEI ID Assign - TEI = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_next_l2state
@@ -439,15 +404,11 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_TEI_ERR
 argument_list|,
-literal|"i4b_tei_rx_frame"
-argument_list|,
-operator|(
-literal|"TEI ID Denied, No TEI values available from exchange!\n"
-operator|)
+literal|"TEI ID Denied, No TEI values available from exchange!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -472,19 +433,15 @@ operator|->
 name|tei
 argument_list|)
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_TEI_ERR
 argument_list|,
-literal|"i4b_tei_rx_frame"
+literal|"TEI ID Denied - TEI = %d"
 argument_list|,
-operator|(
-literal|"TEI ID Denied - TEI = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -571,19 +528,15 @@ operator|!=
 name|lasttei
 condition|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_TEI_MSG
 argument_list|,
-literal|"i4b_tei_rx_frame"
+literal|"TEI ID Check Req - TEI = %d"
 argument_list|,
-operator|(
-literal|"TEI ID Check Req - TEI = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|lasttei
@@ -700,19 +653,15 @@ operator|->
 name|tei
 argument_list|)
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_TEI_MSG
 argument_list|,
-literal|"i4b_tei_rx_frame"
+literal|"TEI ID Remove - TEI = %d"
 argument_list|,
-operator|(
-literal|"TEI ID Remove - TEI = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|MDL_Status_Ind
@@ -737,21 +686,17 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_TEI_ERR
 argument_list|,
-literal|"i4b_tei_rx_frame"
+literal|"UNKNOWN TEI MGMT Frame, type = 0x%x"
 argument_list|,
-operator|(
-literal|"UNKNOWN TEI MGMT Frame, type = 0x%x\n"
-operator|,
 operator|*
 operator|(
 name|ptr
 operator|+
 name|OFF_MT
-operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1053,15 +998,11 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_TEI_MSG
 argument_list|,
-literal|"i4b_tei_assign"
-argument_list|,
-operator|(
-literal|"tx TEI ID_Request\n"
-operator|)
+literal|"tx TEI ID_Request"
 argument_list|)
 expr_stmt|;
 name|m
@@ -1121,15 +1062,11 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_TEI_MSG
 argument_list|,
-literal|"i4b_tei_verify"
-argument_list|,
-operator|(
-literal|"tx TEI ID_Verify\n"
-operator|)
+literal|"tx TEI ID_Verify"
 argument_list|)
 expr_stmt|;
 name|m
@@ -1210,15 +1147,11 @@ name|l2sc
 operator|->
 name|tei
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_TEI_MSG
 argument_list|,
-literal|"i4b_tei_chkresp"
-argument_list|,
-operator|(
-literal|"tx TEI ID_Check_Response\n"
-operator|)
+literal|"tx TEI ID_Check_Response"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1278,6 +1211,9 @@ argument_list|)
 name|u_short
 name|val
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RANDOMDEV
 name|read_random
 argument_list|(
 operator|(
@@ -1293,6 +1229,19 @@ name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|val
+operator|=
+operator|(
+name|u_short
+operator|)
+name|random
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* RANDOMDEV */
 else|#
 directive|else
 specifier|register

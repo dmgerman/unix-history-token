@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l3fsm.c - layer 3 FSM  *	-------------------------  *  *	$Id: i4b_l3fsm.c,v 1.18 1999/12/13 21:25:27 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:05:02 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l3fsm.c - layer 3 FSM  *	-------------------------  *  *	$Id: i4b_l3fsm.c,v 1.22 2000/08/24 11:48:58 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Thu Oct 12 17:58:35 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -46,43 +46,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -95,17 +58,29 @@ directive|include
 file|<sys/mbuf.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
 
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<sys/callout.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -162,12 +137,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<i4b/include/i4b_isdnq931.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i4b/include/i4b_l2l3.h>
 end_include
 
@@ -175,12 +144,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/include/i4b_l3l4.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_mbuf.h>
 end_include
 
 begin_include
@@ -199,12 +162,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/layer3/i4b_l3fsm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/layer3/i4b_q931.h>
 end_include
 
 begin_include
@@ -772,6 +729,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|F_308TO
+parameter_list|(
+name|call_desc_t
+modifier|*
+name|cd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+name|DO_I4B_DEBUG
+end_if
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -929,6 +904,11 @@ comment|/* Illegal */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	layer 3 state transition table  *---------------------------------------------------------------------------*/
@@ -3585,7 +3565,7 @@ name|ST_ILL
 block|}
 block|,
 block|{
-name|F_ILL
+name|F_308TO
 block|,
 name|ST_ILL
 block|}
@@ -4088,9 +4068,9 @@ name|ST_U0
 block|}
 block|,
 block|{
-name|F_DLRI
+name|F_DLRIA
 block|,
-name|ST_U0
+name|ST_OW
 block|}
 block|,
 block|{
@@ -4598,30 +4578,26 @@ argument_list|(
 literal|"i4b_l3fsm.c: newstate> N_STATES\n"
 argument_list|)
 expr_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"next_l3state"
+literal|"L3 FSM event [%s]: [%s => %s]"
 argument_list|,
-operator|(
-literal|"L3 FSM event [%s]: [%s => %s]\n"
-operator|,
 name|l3event_text
 index|[
 name|event
 index|]
-operator|,
+argument_list|,
 name|l3state_text
 index|[
 name|currstate
 index|]
-operator|,
+argument_list|,
 name|l3state_text
 index|[
 name|newstate
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* execute function */
@@ -4652,25 +4628,21 @@ name|newstate
 operator|=
 name|currstate
 expr_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_ERR
 argument_list|,
-literal|"next_l3state"
+literal|"FSM illegal state, state = %s, event = %s!"
 argument_list|,
-operator|(
-literal|"FSM illegal state, state = %s, event = %s!\n"
-operator|,
 name|l3state_text
 index|[
 name|newstate
 index|]
-operator|,
+argument_list|,
 name|l3event_text
 index|[
 name|event
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4689,8 +4661,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|DO_I4B_DEBUG
+end_if
+
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	resturn pointer to current state description  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	return pointer to current state description  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4720,6 +4698,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	L3 FSM state U0 event L4 setup req  *---------------------------------------------------------------------------*/
 end_comment
@@ -4734,16 +4717,31 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|int
+name|s
+decl_stmt|;
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_00A"
-argument_list|,
-operator|(
-literal|"FSM function F_00A executing\n"
-operator|)
+literal|"FSM function F_00A executing"
 argument_list|)
+expr_stmt|;
+name|cd
+operator|->
+name|T303_first_to
+operator|=
+literal|1
+expr_stmt|;
+name|T303_start
+argument_list|(
+name|cd
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|SPLI4B
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4755,6 +4753,11 @@ operator|==
 name|DL_DOWN
 condition|)
 block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|DL_Est_Req
 argument_list|(
 name|ctrl_desc
@@ -4776,29 +4779,23 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|i4b_l3_tx_setup
-argument_list|(
-name|cd
-argument_list|)
-expr_stmt|;
 name|cd
 operator|->
 name|Q931state
 operator|=
 name|ST_U1
 expr_stmt|;
-block|}
-name|cd
-operator|->
-name|T303_first_to
-operator|=
-literal|1
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
-name|T303_start
+name|i4b_l3_tx_setup
 argument_list|(
 name|cd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4816,15 +4813,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_00H"
-argument_list|,
-operator|(
-literal|"FSM function F_00H executing\n"
-operator|)
+literal|"FSM function F_00H executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l4_connect_ind
@@ -4850,15 +4843,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_00I"
-argument_list|,
-operator|(
-literal|"FSM function F_00I executing\n"
-operator|)
+literal|"FSM function F_00I executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4908,15 +4897,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_00J"
-argument_list|,
-operator|(
-literal|"FSM function F_00J executing\n"
-operator|)
+literal|"FSM function F_00J executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_release_complete
@@ -4944,15 +4929,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_01B"
-argument_list|,
-operator|(
-literal|"FSM function F_01B executing\n"
-operator|)
+literal|"FSM function F_01B executing"
 argument_list|)
 expr_stmt|;
 comment|/* cause from L4 */
@@ -4988,15 +4969,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_01K"
-argument_list|,
-operator|(
-literal|"FSM function F_01K executing\n"
-operator|)
+literal|"FSM function F_01K executing"
 argument_list|)
 expr_stmt|;
 name|T303_stop
@@ -5032,15 +5009,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_01L"
-argument_list|,
-operator|(
-literal|"FSM function F_01L executing\n"
-operator|)
+literal|"FSM function F_01L executing"
 argument_list|)
 expr_stmt|;
 name|T303_stop
@@ -5048,7 +5021,7 @@ argument_list|(
 name|cd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * since this implementation does NOT support overlap sending, 	 * we react here as if we received a CALL PROCEEDING because 	 * several PBX's react with a SETUP ACK even if the called 	 * number is complete AND we sent a SENDING COMPLETE in the 	 * preceeding SETUP message. (-hm) 	 */
+comment|/* 	 * since this implementation does NOT support overlap sending, 	 * we react here as if we received a CALL PROCEEDING because 	 * several PBX's react with a SETUP ACK even if the called 	 * number is complete AND we sent a SENDING COMPLETE in the 	 * preceding SETUP message. (-hm) 	 */
 name|T310_start
 argument_list|(
 name|cd
@@ -5076,15 +5049,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_01M"
-argument_list|,
-operator|(
-literal|"FSM function F_01M executing\n"
-operator|)
+literal|"FSM function F_01M executing"
 argument_list|)
 expr_stmt|;
 name|T303_stop
@@ -5119,15 +5088,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_01N"
-argument_list|,
-operator|(
-literal|"FSM function F_01N executing\n"
-operator|)
+literal|"FSM function F_01N executing"
 argument_list|)
 expr_stmt|;
 name|T303_stop
@@ -5157,15 +5122,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_01O"
-argument_list|,
-operator|(
-literal|"FSM function F_01O executing\n"
-operator|)
+literal|"FSM function F_01O executing"
 argument_list|)
 expr_stmt|;
 name|T303_stop
@@ -5200,15 +5161,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_01U"
-argument_list|,
-operator|(
-literal|"FSM function F_01U executing\n"
-operator|)
+literal|"FSM function F_01U executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5279,15 +5236,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_03C"
-argument_list|,
-operator|(
-literal|"FSM function F_03C executing\n"
-operator|)
+literal|"FSM function F_03C executing"
 argument_list|)
 expr_stmt|;
 name|T310_stop
@@ -5337,15 +5290,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_03N"
-argument_list|,
-operator|(
-literal|"FSM function F_03N executing\n"
-operator|)
+literal|"FSM function F_03N executing"
 argument_list|)
 expr_stmt|;
 name|T310_stop
@@ -5375,15 +5324,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_03O"
-argument_list|,
-operator|(
-literal|"FSM function F_03O executing\n"
-operator|)
+literal|"FSM function F_03O executing"
 argument_list|)
 expr_stmt|;
 name|T310_stop
@@ -5419,15 +5364,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_03P"
-argument_list|,
-operator|(
-literal|"FSM function F_03P executing\n"
-operator|)
+literal|"FSM function F_03P executing"
 argument_list|)
 expr_stmt|;
 name|T310_stop
@@ -5462,15 +5403,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_03Y"
-argument_list|,
-operator|(
-literal|"FSM function F_03Y executing\n"
-operator|)
+literal|"FSM function F_03Y executing"
 argument_list|)
 expr_stmt|;
 name|cd
@@ -5512,15 +5449,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_04O"
-argument_list|,
-operator|(
-literal|"FSM function F_04O executing\n"
-operator|)
+literal|"FSM function F_04O executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_connect_ack
@@ -5551,15 +5484,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_06D"
-argument_list|,
-operator|(
-literal|"FSM function F_06D executing\n"
-operator|)
+literal|"FSM function F_06D executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5622,15 +5551,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_06E"
-argument_list|,
-operator|(
-literal|"FSM function F_06E executing\n"
-operator|)
+literal|"FSM function F_06E executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5698,15 +5623,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_06F"
-argument_list|,
-operator|(
-literal|"FSM function F_06F executing\n"
-operator|)
+literal|"FSM function F_06F executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5787,15 +5708,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_06G"
-argument_list|,
-operator|(
-literal|"FSM function F_06G executing\n"
-operator|)
+literal|"FSM function F_06G executing"
 argument_list|)
 expr_stmt|;
 name|freecd_by_cd
@@ -5820,15 +5737,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_06J"
-argument_list|,
-operator|(
-literal|"FSM function F_06J executing\n"
-operator|)
+literal|"FSM function F_06J executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_release_complete
@@ -5865,15 +5778,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_06Q"
-argument_list|,
-operator|(
-literal|"FSM function F_06Q executing\n"
-operator|)
+literal|"FSM function F_06Q executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l4_disconnect_ind
@@ -5898,15 +5807,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_07E"
-argument_list|,
-operator|(
-literal|"FSM function F_07E executing\n"
-operator|)
+literal|"FSM function F_07E executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_connect
@@ -5936,15 +5841,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_07F"
-argument_list|,
-operator|(
-literal|"FSM function F_07F executing\n"
-operator|)
+literal|"FSM function F_07F executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_release_complete
@@ -5976,15 +5877,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_07G"
-argument_list|,
-operator|(
-literal|"FSM function F_07G executing\n"
-operator|)
+literal|"FSM function F_07G executing"
 argument_list|)
 expr_stmt|;
 name|freecd_by_cd
@@ -6009,15 +5906,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_08R"
-argument_list|,
-operator|(
-literal|"FSM function F_08R executing\n"
-operator|)
+literal|"FSM function F_08R executing"
 argument_list|)
 expr_stmt|;
 name|T313_stop
@@ -6047,15 +5940,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_08Z"
-argument_list|,
-operator|(
-literal|"FSM function F_08Z executing\n"
-operator|)
+literal|"FSM function F_08Z executing"
 argument_list|)
 expr_stmt|;
 name|cd
@@ -6097,15 +5986,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_09D"
-argument_list|,
-operator|(
-literal|"FSM function F_09D executing\n"
-operator|)
+literal|"FSM function F_09D executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_alert
@@ -6130,15 +6015,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_09E"
-argument_list|,
-operator|(
-literal|"FSM function F_09E executing\n"
-operator|)
+literal|"FSM function F_09E executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_connect
@@ -6168,15 +6049,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_09F"
-argument_list|,
-operator|(
-literal|"FSM function F_09F executing\n"
-operator|)
+literal|"FSM function F_09F executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_release_complete
@@ -6208,15 +6085,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_09G"
-argument_list|,
-operator|(
-literal|"FSM function F_09G executing\n"
-operator|)
+literal|"FSM function F_09G executing"
 argument_list|)
 expr_stmt|;
 name|freecd_by_cd
@@ -6241,15 +6114,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_11J"
-argument_list|,
-operator|(
-literal|"FSM function F_11J executing\n"
-operator|)
+literal|"FSM function F_11J executing"
 argument_list|)
 expr_stmt|;
 name|T305_stop
@@ -6291,15 +6160,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_11Q"
-argument_list|,
-operator|(
-literal|"FSM function F_11Q executing\n"
-operator|)
+literal|"FSM function F_11Q executing"
 argument_list|)
 expr_stmt|;
 name|T305_stop
@@ -6342,15 +6207,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_11V"
-argument_list|,
-operator|(
-literal|"FSM function F_11V executing\n"
-operator|)
+literal|"FSM function F_11V executing"
 argument_list|)
 expr_stmt|;
 name|cd
@@ -6394,15 +6255,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_12C"
-argument_list|,
-operator|(
-literal|"FSM function F_12C executing\n"
-operator|)
+literal|"FSM function F_12C executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_release
@@ -6440,15 +6297,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_12J"
-argument_list|,
-operator|(
-literal|"FSM function F_12J executing\n"
-operator|)
+literal|"FSM function F_12J executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_release_complete
@@ -6485,15 +6338,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_19I"
-argument_list|,
-operator|(
-literal|"FSM function F_19I executing\n"
-operator|)
+literal|"FSM function F_19I executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6548,15 +6397,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_19J"
-argument_list|,
-operator|(
-literal|"FSM function F_19J executing\n"
-operator|)
+literal|"FSM function F_19J executing"
 argument_list|)
 expr_stmt|;
 name|T308_stop
@@ -6591,15 +6436,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_19K"
-argument_list|,
-operator|(
-literal|"FSM function F_19K executing\n"
-operator|)
+literal|"FSM function F_19K executing"
 argument_list|)
 expr_stmt|;
 name|T308_stop
@@ -6634,15 +6475,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_19W"
-argument_list|,
-operator|(
-literal|"FSM function F_19W executing\n"
-operator|)
+literal|"FSM function F_19W executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6737,15 +6574,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_STENQ"
-argument_list|,
-operator|(
-literal|"FSM function F_STENQ executing\n"
-operator|)
+literal|"FSM function F_STENQ executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_status
@@ -6773,15 +6606,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_STAT"
-argument_list|,
-operator|(
-literal|"FSM function F_STAT executing\n"
-operator|)
+literal|"FSM function F_STAT executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6859,15 +6688,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_INFO"
-argument_list|,
-operator|(
-literal|"FSM function F_INFO executing\n"
-operator|)
+literal|"FSM function F_INFO executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l4_info_ind
@@ -6876,6 +6701,45 @@ name|cd
 argument_list|)
 expr_stmt|;
 comment|/* remain in current state */
+block|}
+end_function
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	L3 FSM T308 timeout while expecting RELEASE COMPLETE  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|F_308TO
+parameter_list|(
+name|call_desc_t
+modifier|*
+name|cd
+parameter_list|)
+block|{
+name|NDBGL3
+argument_list|(
+name|L3_F_MSG
+argument_list|,
+literal|"FSM function F_308TO executing"
+argument_list|)
+expr_stmt|;
+name|i4b_l3_stop_all_timers
+argument_list|(
+name|cd
+argument_list|)
+expr_stmt|;
+name|i4b_l4_disconnect_ind
+argument_list|(
+name|cd
+argument_list|)
+expr_stmt|;
+name|freecd_by_cd
+argument_list|(
+name|cd
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6893,15 +6757,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_RELCP"
-argument_list|,
-operator|(
-literal|"FSM function F_RELCP executing\n"
-operator|)
+literal|"FSM function F_RELCP executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_stop_all_timers
@@ -6936,15 +6796,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_REL"
-argument_list|,
-operator|(
-literal|"FSM function F_REL executing\n"
-operator|)
+literal|"FSM function F_REL executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_stop_all_timers
@@ -6986,15 +6842,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_DISC"
-argument_list|,
-operator|(
-literal|"FSM function F_DISC executing\n"
-operator|)
+literal|"FSM function F_DISC executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_stop_all_timers
@@ -7044,15 +6896,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_DCRQ"
-argument_list|,
-operator|(
-literal|"FSM function F_DCRQ executing\n"
-operator|)
+literal|"FSM function F_DCRQ executing"
 argument_list|)
 expr_stmt|;
 comment|/* stop T310 in case this is the result of an incoming call for a */
@@ -7104,20 +6952,16 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_ERR
 argument_list|,
-literal|"F_UEM"
+literal|"FSM function F_UEM executing, state = %s"
 argument_list|,
-operator|(
-literal|"FSM function F_UEM executing, state = %s\n"
-operator|,
 name|print_l3state
 argument_list|(
 name|cd
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_status
@@ -7145,15 +6989,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_ERR
 argument_list|,
-literal|"F_SIGN"
-argument_list|,
-operator|(
-literal|"FSM function F_SIGN executing\n"
-operator|)
+literal|"FSM function F_SIGN executing"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -7175,15 +7015,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_DLEI"
-argument_list|,
-operator|(
-literal|"FSM function F_DLEI executing\n"
-operator|)
+literal|"FSM function F_DLEI executing"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -7205,15 +7041,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_ILL"
-argument_list|,
-operator|(
-literal|"FSM function F_ILL executing\n"
-operator|)
+literal|"FSM function F_ILL executing"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7233,15 +7065,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_ERR
 argument_list|,
-literal|"F_309TO"
-argument_list|,
-operator|(
-literal|"FSM function F_309TO executing\n"
-operator|)
+literal|"FSM function F_309TO executing"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -7277,15 +7105,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_FCTY"
-argument_list|,
-operator|(
-literal|"FSM function F_FCTY executing\n"
-operator|)
+literal|"FSM function F_FCTY executing"
 argument_list|)
 expr_stmt|;
 comment|/* ST_SUSE, no change in state ! */
@@ -7306,15 +7130,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_DECF1"
-argument_list|,
-operator|(
-literal|"FSM function F_DECF1 executing\n"
-operator|)
+literal|"FSM function F_DECF1 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_setup
@@ -7339,15 +7159,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_DECF2"
-argument_list|,
-operator|(
-literal|"FSM function F_DECF2 executing\n"
-operator|)
+literal|"FSM function F_DECF2 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_connect
@@ -7372,15 +7188,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_DECF3"
-argument_list|,
-operator|(
-literal|"FSM function F_DECF3 executing\n"
-operator|)
+literal|"FSM function F_DECF3 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_release_complete
@@ -7412,15 +7224,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_DECF4"
-argument_list|,
-operator|(
-literal|"FSM function F_DECF4 executing\n"
-operator|)
+literal|"FSM function F_DECF4 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_tx_alert
@@ -7445,15 +7253,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_DECF"
-argument_list|,
-operator|(
-literal|"FSM function F_DECF executing\n"
-operator|)
+literal|"FSM function F_DECF executing"
 argument_list|)
 expr_stmt|;
 name|T309_stop
@@ -7486,15 +7290,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_DLRI"
-argument_list|,
-operator|(
-literal|"FSM function F_DLRI executing\n"
-operator|)
+literal|"FSM function F_DLRI executing"
 argument_list|)
 expr_stmt|;
 name|i4b_l3_stop_all_timers
@@ -7529,15 +7329,11 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_F_MSG
 argument_list|,
-literal|"F_DLRIA"
-argument_list|,
-operator|(
-literal|"FSM function F_DLRIA executing\n"
-operator|)
+literal|"FSM function F_DLRIA executing"
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_lme.c - layer management entity  *	-------------------------------------  *  *	$Id: i4b_lme.c,v 1.11 1999/12/13 21:25:27 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:04:03 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_lme.c - layer management entity  *	-------------------------------------  *  *	$Id: i4b_lme.c,v 1.15 2000/08/24 11:48:58 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon May 29 16:55:12 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -46,53 +46,10 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
 end_include
 
 begin_include
@@ -107,6 +64,30 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -117,12 +98,6 @@ begin_include
 include|#
 directive|include
 file|<machine/i4b_debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/i4b_ioctl.h>
 end_include
 
 begin_else
@@ -150,37 +125,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<i4b/include/i4b_l1l2.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_l2l3.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_isdnq931.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/include/i4b_mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i4b/layer2/i4b_l2.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/layer2/i4b_l2fsm.h>
 end_include
 
 begin_comment
@@ -196,19 +141,15 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"MDL-ASSIGN-IND"
+literal|"unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|l2sc
 operator|->
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_l1_activate
@@ -306,6 +247,9 @@ name|int
 name|errorcode
 parameter_list|)
 block|{
+if|#
+directive|if
+name|DO_I4B_DEBUG
 specifier|static
 name|char
 modifier|*
@@ -346,6 +290,8 @@ block|,
 literal|"MDL_ERR_MAX: i4b_mdl_error_ind called with wrong parameter!!!"
 block|}
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|errorcode
@@ -356,37 +302,29 @@ name|errorcode
 operator|=
 name|MDL_ERR_MAX
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_mdl_error_ind"
+literal|"unit = %d, location = %s"
 argument_list|,
-operator|(
-literal|"unit = %d, location = %s\n"
-operator|,
 name|l2sc
 operator|->
 name|unit
-operator|,
+argument_list|,
 name|where
-operator|)
 argument_list|)
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_mdl_error_ind"
+literal|"error = %s"
 argument_list|,
-operator|(
-literal|"error = %s\n"
-operator|,
 name|error_text
 index|[
 name|errorcode
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
