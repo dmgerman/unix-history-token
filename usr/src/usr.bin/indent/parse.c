@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.9 (Berkeley) %G%"
+literal|"@(#)parse.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"./indent_globs.h"
+file|"indent_globs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"./indent_codes.h"
+file|"indent_codes.h"
 end_include
 
 begin_macro

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)args.c	5.6 (Berkeley) %G%"
+literal|"@(#)args.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,12 +36,6 @@ begin_include
 include|#
 directive|include
 file|"indent_globs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
