@@ -404,7 +404,7 @@ expr_stmt|;
 name|int
 name|oid_number
 decl_stmt|;
-name|int
+name|u_int
 name|oid_kind
 decl_stmt|;
 name|void
@@ -436,6 +436,7 @@ decl_stmt|;
 name|int
 name|oid_refcnt
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|descr
@@ -650,7 +651,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { 0 },			 \ 		nbr, kind, a1, a2, #name, handler, fmt, 0, descr };	 \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name);
+value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { 0 },			 \ 		nbr, kind, a1, a2, #name, handler, fmt, 0, descr };	 \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
 end_define
 
 begin_define
@@ -679,7 +680,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, kind, a1, a2, handler, fmt, descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, kind, a1, a2, handler, fmt, descr)
 end_define
 
 begin_comment
@@ -704,7 +705,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|struct sysctl_oid_list sysctl_##parent##_##name##_children;	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|access,		    \ 		   (void*)&sysctl_##parent##_##name##_children, 0, handler, \ 		   "N", descr);
+value|struct sysctl_oid_list sysctl_##parent##_##name##_children;	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|access,		    \ 		   (void*)&sysctl_##parent##_##name##_children, 0, handler, \ 		   "N", descr)
 end_define
 
 begin_define
@@ -727,7 +728,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_NODE|access,	    \ 	0, 0, handler, "N", descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_NODE|access,	    \ 	0, 0, handler, "N", descr)
 end_define
 
 begin_comment
@@ -779,7 +780,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_STRING|access,	    \ 	arg, len, sysctl_handle_string, "A", descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_STRING|access,	    \ 	arg, len, sysctl_handle_string, "A", descr)
 end_define
 
 begin_comment
@@ -831,7 +832,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|access,	    \ 	ptr, val, sysctl_handle_int, "I", descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|access,	    \ 	ptr, val, sysctl_handle_int, "I", descr)
 end_define
 
 begin_comment
@@ -883,7 +884,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|access,	    \ 	ptr, val, sysctl_handle_int, "IU", descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|access,	    \ 	ptr, val, sysctl_handle_int, "IU", descr)
 end_define
 
 begin_comment
@@ -933,7 +934,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_LONG|access,	    \ 	ptr, 0, sysctl_handle_long, "L", descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_LONG|access,	    \ 	ptr, 0, sysctl_handle_long, "L", descr)
 end_define
 
 begin_comment
@@ -983,7 +984,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|access,	    \ 	ptr, 0, sysctl_handle_long, "LU", descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|access,	    \ 	ptr, 0, sysctl_handle_long, "LU", descr)
 end_define
 
 begin_comment
@@ -1039,7 +1040,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|access,	    \ 	ptr, len, sysctl_handle_opaque, fmt, descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|access,	    \ 	ptr, len, sysctl_handle_opaque, fmt, descr)
 end_define
 
 begin_comment
@@ -1091,7 +1092,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|access,	    \ 	ptr, sizeof(struct type), sysctl_handle_opaque, "S," #type, descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|access,	    \ 	ptr, sizeof(struct type), sysctl_handle_opaque, "S," #type, descr)
 end_define
 
 begin_comment
@@ -1151,7 +1152,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, access,			    \ 	ptr, arg, handler, fmt, descr);
+value|sysctl_add_oid(ctx, parent, nbr, name, access,			    \ 	ptr, arg, handler, fmt, descr)
 end_define
 
 begin_endif
