@@ -3,11 +3,21 @@ begin_comment
 comment|/*  * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|lint
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|sgi
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -16,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rdisc.c,v 1.2 1996/06/15 17:10:27 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -254,7 +264,7 @@ name|p
 parameter_list|,
 name|ifp
 parameter_list|)
-value|((p)< (ifp)->int_metric ? ((p) != 0 ? 1 : 0) \ 		      : (p) - ((ifp)->int_metric-1))
+value|((p)<= (ifp)->int_metric ? ((p) != 0 ? 1 : 0) \ 		      : (p) - ((ifp)->int_metric))
 end_define
 
 begin_function_decl
@@ -312,6 +322,9 @@ name|lim
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|TRACEPACKETS
+operator|||
 name|ftrace
 operator|==
 literal|0
@@ -361,11 +374,14 @@ name|int_name
 else|:
 literal|"?"
 argument_list|,
+name|ntohs
+argument_list|(
 name|p
 operator|->
 name|ad
 operator|.
 name|icmp_ad_life
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -481,7 +497,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|trace_msg
+name|trace_act
 argument_list|(
 literal|"%s Router Solic. from %s to %s via %s"
 literal|" value=%#x\n"
@@ -687,10 +703,8 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|DBGERR
+name|LOGERR
 argument_list|(
-literal|1
-argument_list|,
 literal|"IP_DROP_MEMBERSHIP ALLHOSTS"
 argument_list|)
 expr_stmt|;
@@ -749,19 +763,22 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|DBGERR
+block|{
+name|LOGERR
 argument_list|(
-literal|1
-argument_list|,
 literal|"IP_ADD_MEMBERSHIP ALLHOSTS"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|ifp
 operator|->
 name|int_state
 operator||=
 name|IS_ALL_HOSTS
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -822,10 +839,8 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|DBGERR
+name|LOGERR
 argument_list|(
-literal|1
-argument_list|,
 literal|"IP_DROP_MEMBERSHIP ALLROUTERS"
 argument_list|)
 expr_stmt|;
@@ -884,19 +899,22 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|DBGERR
+block|{
+name|LOGERR
 argument_list|(
-literal|1
-argument_list|,
 literal|"IP_ADD_MEMBERSHIP ALLROUTERS"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|ifp
 operator|->
 name|int_state
 operator||=
 name|IS_ALL_ROUTERS
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -927,7 +945,7 @@ condition|(
 name|supplier_set
 condition|)
 return|return;
-name|trace_msg
+name|trace_act
 argument_list|(
 literal|"start suppying routes\n"
 argument_list|)
@@ -1050,6 +1068,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* get rid of any redirects */
+name|del_redirects
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1073,12 +1099,22 @@ name|dr
 modifier|*
 name|drp
 decl_stmt|;
+comment|/* If only adverising, then do only that. */
 if|if
 condition|(
 name|supplier
 condition|)
 block|{
-comment|/* If only adverising, then do only that. */
+comment|/* if switching from client to server, get rid of old 		 * default routes. 		 */
+if|if
+condition|(
+name|cur_drp
+operator|!=
+literal|0
+condition|)
+name|rdisc_sort
+argument_list|()
+expr_stmt|;
 name|rdisc_adv
 argument_list|()
 expr_stmt|;
@@ -1153,7 +1189,7 @@ operator|>
 name|sec
 condition|)
 block|{
-name|trace_msg
+name|trace_act
 argument_list|(
 literal|"age 0.0.0.0 --> %s"
 literal|" via %s\n"
@@ -1219,12 +1255,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* zap all routes discovered via an interface that has gone bad  */
+comment|/* Zap all routes discovered via an interface that has gone bad  *	This should only be called when !(ifp->int_state& IS_ALIAS)  */
 end_comment
 
 begin_function
 name|void
-name|ifbad_rdisc
+name|if_bad_rdisc
 parameter_list|(
 name|struct
 name|interface
@@ -1289,7 +1325,7 @@ end_comment
 
 begin_function
 name|void
-name|ifok_rdisc
+name|if_ok_rdisc
 parameter_list|(
 name|struct
 name|interface
@@ -1457,9 +1493,10 @@ operator|>=
 name|MAX_SOLICITATIONS
 condition|)
 block|{
-name|trace_msg
+name|trace_act
 argument_list|(
-literal|"re-solicit routers via %s\n"
+literal|"discovered route is bad"
+literal|"--re-solicit routers via %s\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1517,10 +1554,13 @@ name|interface
 modifier|*
 name|ifp
 decl_stmt|;
-name|time_t
-name|sec
+name|u_int
+name|new_st
 decl_stmt|;
-comment|/* find the best discovered route 	 */
+name|n_long
+name|new_pref
+decl_stmt|;
+comment|/* Find the best discovered route. 	 */
 name|new_drp
 operator|=
 literal|0
@@ -1558,7 +1598,7 @@ name|drp
 operator|->
 name|dr_ifp
 expr_stmt|;
-comment|/* Get rid of expired discovered routes. 		 * Routes received over PPP links do not die until 		 * the link has been active long enough to be certain 		 * we should have heard from the router. 		 */
+comment|/* Get rid of expired discovered routers. 		 */
 if|if
 condition|(
 name|drp
@@ -1572,59 +1612,6 @@ operator|<=
 name|now
 operator|.
 name|tv_sec
-condition|)
-block|{
-if|if
-condition|(
-name|drp
-operator|->
-name|dr_recv_pref
-operator|==
-literal|0
-operator|||
-operator|!
-name|ppp_noage
-operator|||
-operator|!
-operator|(
-name|ifp
-operator|->
-name|int_if_flags
-operator|&
-name|IFF_POINTOPOINT
-operator|)
-operator|||
-operator|!
-operator|(
-name|ifp
-operator|->
-name|int_state
-operator|&
-name|IS_QUIET
-operator|)
-operator|||
-operator|(
-name|ifp
-operator|->
-name|int_quiet_time
-operator|+
-operator|(
-name|sec
-operator|=
-name|MIN
-argument_list|(
-name|MaxMaxAdvertiseInterval
-argument_list|,
-name|drp
-operator|->
-name|dr_life
-argument_list|)
-operator|)
-operator|<=
-name|now
-operator|.
-name|tv_sec
-operator|)
 condition|)
 block|{
 name|del_rdisc
@@ -1634,20 +1621,10 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* If the PPP link is quiet, keep checking 			 * in case the link becomes active. 			 * After the link is active, the timer on the 			 * discovered route might force its deletion. 			 */
-name|sec
-operator|+=
-name|now
-operator|.
-name|tv_sec
-operator|+
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|sec
-operator|=
+name|LIM_SEC
+argument_list|(
+name|rdisc_timer
+argument_list|,
 name|drp
 operator|->
 name|dr_ts
@@ -1657,13 +1634,6 @@ operator|->
 name|dr_life
 operator|+
 literal|1
-expr_stmt|;
-block|}
-name|LIM_SEC
-argument_list|(
-name|rdisc_timer
-argument_list|,
-name|sec
 argument_list|)
 expr_stmt|;
 comment|/* Update preference with possibly changed interface 		 * metric. 		 */
@@ -1680,25 +1650,38 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* Prefer the current route to prevent thrashing. 		 * Prefer shorter lifetimes to speed the detection of 		 * bad routers. 		 */
+comment|/* Prefer the current route to prevent thrashing. 		 * Prefer shorter lifetimes to speed the detection of 		 * bad routers. 		 * Avoid sick interfaces. 		 */
 if|if
 condition|(
 name|new_drp
 operator|==
 literal|0
 operator|||
-name|new_drp
+operator|(
+operator|!
+operator|(
+operator|(
+name|new_st
+operator|^
+name|drp
 operator|->
-name|dr_pref
+name|dr_ifp
+operator|->
+name|int_state
+operator|)
+operator|&
+name|IS_SICK
+operator|)
+operator|&&
+operator|(
+name|new_pref
 operator|<
 name|drp
 operator|->
 name|dr_pref
 operator|||
 operator|(
-name|new_drp
-operator|->
-name|dr_pref
+name|new_pref
 operator|==
 name|drp
 operator|->
@@ -1724,11 +1707,48 @@ name|dr_life
 operator|)
 operator|)
 operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+operator|(
+name|new_st
+operator|&
+name|IS_SICK
+operator|)
+operator|&&
+operator|!
+operator|(
+name|drp
+operator|->
+name|dr_ifp
+operator|->
+name|int_state
+operator|&
+name|IS_SICK
+operator|)
+operator|)
 condition|)
+block|{
 name|new_drp
 operator|=
 name|drp
 expr_stmt|;
+name|new_st
+operator|=
+name|drp
+operator|->
+name|dr_ifp
+operator|->
+name|int_state
+expr_stmt|;
+name|new_pref
+operator|=
+name|drp
+operator|->
+name|dr_pref
+expr_stmt|;
+block|}
 block|}
 comment|/* switch to a better default route 	 */
 if|if
@@ -1755,9 +1775,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|trace_msg
+name|trace_act
 argument_list|(
-literal|"turn off Router Discovery\n"
+literal|"turn off Router Discovery client\n"
 argument_list|)
 expr_stmt|;
 name|rdisc_ok
@@ -1786,6 +1806,9 @@ argument_list|,
 name|rt
 operator|->
 name|rt_state
+operator|&
+operator|~
+name|RS_RDISC
 argument_list|,
 name|rt
 operator|->
@@ -1836,10 +1859,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|trace_msg
+name|trace_act
 argument_list|(
-literal|"turn on Router Discovery using"
-literal|" %s via %s\n"
+literal|"turn on Router Discovery client"
+literal|" using %s via %s\n"
 argument_list|,
 name|naddr_ntoa
 argument_list|(
@@ -1859,13 +1882,10 @@ name|rdisc_ok
 operator|=
 literal|1
 expr_stmt|;
-name|rip_off
-argument_list|()
-expr_stmt|;
 block|}
 else|else
 block|{
-name|trace_msg
+name|trace_act
 argument_list|(
 literal|"switch Router Discovery from"
 literal|" %s via %s to %s via %s\n"
@@ -1967,6 +1987,10 @@ name|dr_ifp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Now turn off RIP and delete RIP routes, 			 * which might otherwise include the default 			 * we just modified. 			 */
+name|rip_off
+argument_list|()
+expr_stmt|;
 block|}
 name|cur_drp
 operator|=
@@ -1994,7 +2018,7 @@ parameter_list|,
 name|n_long
 name|pref
 parameter_list|,
-name|int
+name|u_short
 name|life
 parameter_list|,
 name|struct
@@ -2015,11 +2039,6 @@ decl_stmt|,
 modifier|*
 name|new_drp
 decl_stmt|;
-name|NTOHL
-argument_list|(
-name|gate
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|gate
@@ -2077,13 +2096,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
-name|trace_msg
+name|trace_pkt
 argument_list|(
-literal|"discard our own packet\n"
+literal|"\tdiscard our own Router Discovery Ad\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2105,18 +2120,15 @@ name|int_mask
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
-name|trace_msg
+name|trace_pkt
 argument_list|(
-literal|"discard packet from unreachable net\n"
+literal|"\tdiscard Router Discovery Ad"
+literal|" from unreachable net\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Convert preference to an unsigned value 	 * and bias it by the metric of the interface. 	 */
+comment|/* Convert preference to an unsigned value 	 * and later bias it by the metric of the interface. 	 */
 name|pref
 operator|=
 name|ntohl
@@ -2126,11 +2138,31 @@ argument_list|)
 operator|^
 name|MIN_PreferenceLevel
 expr_stmt|;
+if|if
+condition|(
+name|pref
+operator|==
+literal|0
+operator|||
+name|life
+operator|==
+literal|0
+condition|)
+block|{
+name|pref
+operator|=
+literal|0
+expr_stmt|;
+name|life
+operator|=
+literal|0
+expr_stmt|;
+block|}
 for|for
 control|(
 name|new_drp
 operator|=
-name|drs
+literal|0
 operator|,
 name|drp
 operator|=
@@ -2148,6 +2180,30 @@ name|drp
 operator|++
 control|)
 block|{
+comment|/* accept new info for a familiar entry 		 */
+if|if
+condition|(
+name|drp
+operator|->
+name|dr_gate
+operator|==
+name|gate
+condition|)
+block|{
+name|new_drp
+operator|=
+name|drp
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|life
+operator|==
+literal|0
+condition|)
+continue|continue;
+comment|/* do not worry about dead ads */
 if|if
 condition|(
 name|drp
@@ -2161,52 +2217,107 @@ name|new_drp
 operator|=
 name|drp
 expr_stmt|;
-continue|continue;
+comment|/* use unused entry */
 block|}
+elseif|else
 if|if
 condition|(
-name|drp
-operator|->
-name|dr_gate
-operator|==
-name|gate
-condition|)
-block|{
-comment|/* Zap an entry we are being told is kaput */
-if|if
-condition|(
-name|pref
+name|new_drp
 operator|==
 literal|0
+condition|)
+block|{
+comment|/* look for an entry worse than the new one to 			 * reuse. 			 */
+if|if
+condition|(
+operator|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|int_state
+operator|&
+name|IS_SICK
+operator|)
+operator|&&
+operator|(
+name|drp
+operator|->
+name|dr_ifp
+operator|->
+name|int_state
+operator|&
+name|IS_SICK
+operator|)
+operator|)
 operator|||
-name|life
-operator|==
-literal|0
+operator|(
+name|pref
+operator|>
+name|drp
+operator|->
+name|dr_pref
+operator|&&
+operator|!
+operator|(
+operator|(
+name|ifp
+operator|->
+name|int_state
+operator|^
+name|drp
+operator|->
+name|dr_ifp
+operator|->
+name|int_state
+operator|)
+operator|&
+name|IS_SICK
+operator|)
+operator|)
 condition|)
-block|{
-name|drp
-operator|->
-name|dr_recv_pref
-operator|=
-literal|0
-expr_stmt|;
-name|drp
-operator|->
-name|dr_life
-operator|=
-literal|0
-expr_stmt|;
-return|return;
-block|}
 name|new_drp
 operator|=
 name|drp
 expr_stmt|;
-break|break;
 block|}
-comment|/* look for least valueable entry */
+elseif|else
 if|if
 condition|(
+name|new_drp
+operator|->
+name|dr_ts
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* look for the least valueable entry to reuse 			 */
+if|if
+condition|(
+operator|(
+operator|!
+operator|(
+name|new_drp
+operator|->
+name|dr_ifp
+operator|->
+name|int_state
+operator|&
+name|IS_SICK
+operator|)
+operator|&&
+operator|(
+name|drp
+operator|->
+name|dr_ifp
+operator|->
+name|int_state
+operator|&
+name|IS_SICK
+operator|)
+operator|)
+operator|||
+operator|(
 name|new_drp
 operator|->
 name|dr_pref
@@ -2214,20 +2325,37 @@ operator|>
 name|drp
 operator|->
 name|dr_pref
+operator|&&
+operator|!
+operator|(
+operator|(
+name|new_drp
+operator|->
+name|dr_ifp
+operator|->
+name|int_state
+operator|^
+name|drp
+operator|->
+name|dr_ifp
+operator|->
+name|int_state
+operator|)
+operator|&
+name|IS_SICK
+operator|)
+operator|)
 condition|)
 name|new_drp
 operator|=
 name|drp
 expr_stmt|;
 block|}
-comment|/* ignore zap of an entry we do not know about. */
+block|}
+comment|/* forget it if all of the current entries are better */
 if|if
 condition|(
-name|pref
-operator|==
-literal|0
-operator|||
-name|life
+name|new_drp
 operator|==
 literal|0
 condition|)
@@ -2256,7 +2384,7 @@ name|new_drp
 operator|->
 name|dr_life
 operator|=
-name|ntohl
+name|ntohs
 argument_list|(
 name|life
 argument_list|)
@@ -2267,6 +2395,7 @@ name|dr_recv_pref
 operator|=
 name|pref
 expr_stmt|;
+comment|/* bias functional preference by metric of the interface */
 name|new_drp
 operator|->
 name|dr_pref
@@ -2278,6 +2407,18 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* after hearing a good advertisement, stop asking 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|int_state
+operator|&
+name|IS_SICK
+operator|)
+condition|)
 name|ifp
 operator|->
 name|int_rdisc_cnt
@@ -2490,7 +2631,7 @@ else|else
 block|{
 name|msg
 operator|=
-literal|"Broadcast"
+literal|"Send broadcast"
 expr_stmt|;
 name|sin
 operator|.
@@ -2510,8 +2651,29 @@ case|:
 comment|/* multicast */
 name|msg
 operator|=
-literal|"Multicast"
+literal|"Send multicast"
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|int_state
+operator|&
+name|IS_DUP
+condition|)
+block|{
+name|trace_act
+argument_list|(
+literal|"abort multicast output via %s"
+literal|" with duplicate address\n"
+argument_list|,
+name|ifp
+operator|->
+name|int_name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|rdisc_sock_mcast
@@ -2549,6 +2711,8 @@ name|int_addr
 expr_stmt|;
 if|if
 condition|(
+literal|0
+operator|>
 name|setsockopt
 argument_list|(
 name|rdisc_sock
@@ -2567,13 +2731,15 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|DBGERR
+name|LOGERR
 argument_list|(
-literal|1
-argument_list|,
 literal|"setsockopt(rdisc_sock,"
 literal|"IP_MULTICAST_IF)"
 argument_list|)
+expr_stmt|;
+name|rdisc_sock_mcast
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -2588,10 +2754,6 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
 name|trace_rdisc
 argument_list|(
 name|msg
@@ -2642,6 +2804,21 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ifp
+operator|==
+literal|0
+operator|||
+operator|!
+operator|(
+name|ifp
+operator|->
+name|int_state
+operator|&
+name|IS_BROKE
+operator|)
+condition|)
 name|msglog
 argument_list|(
 literal|"sendto(%s%s%s): %s"
@@ -2683,11 +2860,9 @@ name|ifp
 operator|!=
 literal|0
 condition|)
-name|ifbad
+name|if_sick
 argument_list|(
 name|ifp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2783,26 +2958,7 @@ name|stopint
 condition|?
 literal|0
 else|:
-name|htonl
-argument_list|(
-name|ifp
-operator|->
-name|int_rdisc_int
-operator|*
-literal|3
-argument_list|)
-expr_stmt|;
-name|u
-operator|.
-name|ad
-operator|.
-name|icmp_ad_life
-operator|=
-name|stopint
-condition|?
-literal|0
-else|:
-name|htonl
+name|htons
 argument_list|(
 name|ifp
 operator|->
@@ -2993,12 +3149,15 @@ name|send_adv
 argument_list|(
 name|ifp
 argument_list|,
+name|htonl
+argument_list|(
 name|INADDR_ALLHOSTS_GROUP
+argument_list|)
 argument_list|,
 operator|(
 name|ifp
 operator|->
-name|int_if_flags
+name|int_state
 operator|&
 name|IS_BCAST_RDISC
 operator|)
@@ -3258,7 +3417,7 @@ operator|(
 operator|(
 name|ifp
 operator|->
-name|int_if_flags
+name|int_state
 operator|&
 name|IS_BCAST_RDISC
 operator|)
@@ -3440,11 +3599,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
-name|msglog
+name|trace_pkt
 argument_list|(
 literal|"unrecognized ICMP Router"
 literal|" %s code=%d from %s to %s\n"
@@ -3472,10 +3627,6 @@ return|return
 literal|0
 return|;
 block|}
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
 name|trace_rdisc
 argument_list|(
 name|act
@@ -3496,10 +3647,8 @@ condition|(
 name|ifp
 operator|==
 literal|0
-operator|&&
-name|TRACEPACKETS
 condition|)
-name|msglog
+name|trace_pkt
 argument_list|(
 literal|"unknown interface for router-discovery %s"
 literal|" from %s to %s"
@@ -3760,9 +3909,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|trace_msg
+name|trace_pkt
 argument_list|(
-literal|"\tdiscard our own packet\n"
+literal|"\tdiscard our own Router Discovery msg\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3847,11 +3996,7 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
-name|trace_msg
+name|trace_pkt
 argument_list|(
 literal|"\tempty?\n"
 argument_list|)
@@ -4001,11 +4146,14 @@ index|[
 literal|1
 index|]
 argument_list|,
+name|ntohs
+argument_list|(
 name|p
 operator|->
 name|ad
 operator|.
 name|icmp_ad_life
+argument_list|)
 argument_list|,
 name|ifp
 argument_list|)

@@ -3,14 +3,7 @@ begin_comment
 comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_decl_stmt
-specifier|static
 name|char
 name|copyright
 index|[]
@@ -18,6 +11,22 @@ init|=
 literal|"@(#) Copyright (c) 1983, 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|sgi
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -37,10 +46,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_empty
-empty|#ident "$Revision: 1.1.3.1 $"
-end_empty
 
 begin_include
 include|#
@@ -170,16 +175,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* 1=reduce host routes */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ppp_noage
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* do not age routes on quiet links */
 end_comment
 
 begin_decl_stmt
@@ -407,7 +402,7 @@ name|struct
 name|timeval
 name|wtime
 decl_stmt|,
-name|wtime2
+name|t2
 decl_stmt|;
 name|time_t
 name|dt
@@ -416,19 +411,18 @@ name|fd_set
 name|ibits
 decl_stmt|;
 name|naddr
-name|p_addr_h
+name|p_addr
 decl_stmt|,
 name|p_mask
-decl_stmt|;
-name|struct
-name|parm
-modifier|*
-name|parmp
 decl_stmt|;
 name|struct
 name|interface
 modifier|*
 name|ifp
+decl_stmt|;
+name|struct
+name|parm
+name|parm
 decl_stmt|;
 name|char
 modifier|*
@@ -581,6 +575,45 @@ break|break;
 case|case
 literal|'g'
 case|:
+name|bzero
+argument_list|(
+operator|&
+name|parm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|parm
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|parm
+operator|.
+name|parm_d_metric
+operator|=
+literal|1
+expr_stmt|;
+name|p
+operator|=
+name|check_parms
+argument_list|(
+operator|&
+name|parm
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+literal|0
+condition|)
+name|msglog
+argument_list|(
+literal|"bad -g: %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+else|else
 name|default_gateway
 operator|=
 literal|1
@@ -604,16 +637,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* on multi-homed hosts */
-break|break;
-case|case
-literal|'p'
-case|:
-comment|/* do not age routes on quiet */
-name|ppp_noage
-operator|=
-literal|1
-expr_stmt|;
-comment|/* point-to-point links */
 break|break;
 case|case
 literal|'A'
@@ -696,7 +719,7 @@ name|n
 operator|<=
 name|HOPCNT_INFINITY
 operator|-
-literal|2
+literal|1
 operator|&&
 name|n
 operator|>=
@@ -716,7 +739,7 @@ argument_list|(
 name|optarg
 argument_list|,
 operator|&
-name|p_addr_h
+name|p_addr
 argument_list|,
 operator|&
 name|p_mask
@@ -725,68 +748,65 @@ condition|)
 block|{
 name|msglog
 argument_list|(
-literal|"routed:  bad network;"
-literal|" \"-F %s\" ignored"
+literal|"bad network; \"-F %s\""
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|parmp
-operator|=
-operator|(
-expr|struct
-name|parm
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|parmp
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|bzero
 argument_list|(
-name|parmp
+operator|&
+name|parm
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
-name|parmp
+name|parm
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|parmp
-operator|->
-name|parm_next
+name|parm
+operator|.
+name|parm_addr_h
 operator|=
-name|parms
+name|ntohl
+argument_list|(
+name|p_addr
+argument_list|)
 expr_stmt|;
-name|parms
-operator|=
-name|parmp
-expr_stmt|;
-name|parmp
-operator|->
-name|parm_a_h
-operator|=
-name|p_addr_h
-expr_stmt|;
-name|parmp
-operator|->
-name|parm_m
+name|parm
+operator|.
+name|parm_mask
 operator|=
 name|p_mask
 expr_stmt|;
-name|parmp
-operator|->
+name|parm
+operator|.
 name|parm_d_metric
 operator|=
 name|n
+expr_stmt|;
+name|p
+operator|=
+name|check_parms
+argument_list|(
+operator|&
+name|parm
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+literal|0
+condition|)
+name|msglog
+argument_list|(
+literal|"bad -F: %s"
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -806,17 +826,15 @@ name|p
 operator|!=
 literal|0
 condition|)
-block|{
 name|msglog
 argument_list|(
-literal|"routed: bad \"%s\" in \"%s\""
+literal|"bad \"%s\" in \"%s\""
 argument_list|,
 name|p
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 default|default:
 goto|goto
@@ -871,6 +889,20 @@ literal|" [-F net[,metric]] [-P parms]"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|logbad
+argument_list|(
+literal|0
+argument_list|,
+literal|"requires UID 0"
+argument_list|)
+expr_stmt|;
 name|mib
 index|[
 literal|0
@@ -1013,19 +1045,33 @@ directive|ifdef
 name|sgi
 if|if
 condition|(
+literal|0
+operator|>
 name|_daemonize
 argument_list|(
 name|_DF_NOCHDIR
 argument_list|,
+name|new_tracelevel
+operator|==
+literal|0
+condition|?
+operator|-
+literal|1
+else|:
 name|STDOUT_FILENO
 argument_list|,
+name|new_tracelevel
+operator|==
+literal|0
+condition|?
+operator|-
+literal|1
+else|:
 name|STDERR_FILENO
 argument_list|,
 operator|-
 literal|1
 argument_list|)
-operator|<
-literal|0
 condition|)
 name|BADERR
 argument_list|(
@@ -1228,6 +1274,7 @@ name|new_tracelevel
 operator|==
 literal|0
 condition|)
+comment|/* use stdout if file is bad */
 name|new_tracelevel
 operator|=
 literal|1
@@ -1325,32 +1372,6 @@ argument_list|,
 name|sigtrace_off
 argument_list|)
 expr_stmt|;
-comment|/* If we have an interface to the wide, wide world, add an entry for 	 * an Internet default route to the internal tables and advertise it. 	 * This route is not added to the kernel routes, but this entry 	 * prevents us from listening to default routes from other 	 * systems and installing them in the kernel. 	 */
-if|if
-condition|(
-name|default_gateway
-operator|>
-literal|0
-condition|)
-name|rtadd
-argument_list|(
-name|RIP_DEFAULT
-argument_list|,
-literal|0
-argument_list|,
-name|myaddr
-argument_list|,
-name|myaddr
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-name|RS_GW
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Collect an initial view of the world by checking the interface 	 * configuration and the kludge file. 	 */
 name|gwkludge
 argument_list|()
@@ -1395,7 +1416,7 @@ expr_stmt|;
 name|timevalsub
 argument_list|(
 operator|&
-name|wtime2
+name|t2
 argument_list|,
 operator|&
 name|clk
@@ -1406,13 +1427,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|wtime2
+name|t2
 operator|.
 name|tv_sec
 operator|<
 literal|0
 operator|||
-name|wtime2
+name|t2
 operator|.
 name|tv_sec
 operator|>
@@ -1426,7 +1447,7 @@ block|{
 comment|/* Deal with time changes before other housekeeping to 			 * keep everything straight. 			 */
 name|dt
 operator|=
-name|wtime2
+name|t2
 operator|.
 name|tv_sec
 expr_stmt|;
@@ -1442,7 +1463,7 @@ name|wtime
 operator|.
 name|tv_sec
 expr_stmt|;
-name|trace_msg
+name|trace_act
 argument_list|(
 literal|"time changed by %d sec\n"
 argument_list|,
@@ -1511,9 +1532,9 @@ expr_stmt|;
 block|}
 name|trace_off
 argument_list|(
-literal|"exiting"
+literal|"exiting with signal %d\n"
 argument_list|,
-literal|""
+name|stopint
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1546,6 +1567,12 @@ operator|<=
 literal|0
 condition|)
 block|{
+name|wtime
+operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
 name|ifinit
 argument_list|()
 expr_stmt|;
@@ -1565,7 +1592,7 @@ block|{
 name|timevalsub
 argument_list|(
 operator|&
-name|wtime2
+name|t2
 argument_list|,
 operator|&
 name|next_bcast
@@ -1576,7 +1603,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|wtime2
+name|t2
 operator|.
 name|tv_sec
 operator|<=
@@ -1602,7 +1629,7 @@ operator|+
 operator|(
 literal|0
 operator|-
-name|wtime2
+name|t2
 operator|.
 name|tv_sec
 operator|)
@@ -1624,7 +1651,7 @@ condition|(
 name|timercmp
 argument_list|(
 operator|&
-name|wtime2
+name|t2
 argument_list|,
 operator|&
 name|wtime
@@ -1634,7 +1661,7 @@ argument_list|)
 condition|)
 name|wtime
 operator|=
-name|wtime2
+name|t2
 expr_stmt|;
 block|}
 comment|/* If we need a flash update, either do it now or 		 * set the delay to end when it is time. 		 * 		 * If we are within MIN_WAITTIME seconds of a full update, 		 * do not bother. 		 */
@@ -1678,7 +1705,7 @@ expr_stmt|;
 name|timevalsub
 argument_list|(
 operator|&
-name|wtime2
+name|t2
 argument_list|,
 operator|&
 name|no_flash
@@ -1692,7 +1719,7 @@ condition|(
 name|timercmp
 argument_list|(
 operator|&
-name|wtime2
+name|t2
 argument_list|,
 operator|&
 name|wtime
@@ -1702,14 +1729,14 @@ argument_list|)
 condition|)
 name|wtime
 operator|=
-name|wtime2
+name|t2
 expr_stmt|;
 block|}
 comment|/* trigger the main aging timer. 		 */
 name|timevalsub
 argument_list|(
 operator|&
-name|wtime2
+name|t2
 argument_list|,
 operator|&
 name|age_timer
@@ -1720,7 +1747,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|wtime2
+name|t2
 operator|.
 name|tv_sec
 operator|<=
@@ -1739,7 +1766,7 @@ condition|(
 name|timercmp
 argument_list|(
 operator|&
-name|wtime2
+name|t2
 argument_list|,
 operator|&
 name|wtime
@@ -1749,13 +1776,13 @@ argument_list|)
 condition|)
 name|wtime
 operator|=
-name|wtime2
+name|t2
 expr_stmt|;
 comment|/* update the kernel routing table 		 */
 name|timevalsub
 argument_list|(
 operator|&
-name|wtime2
+name|t2
 argument_list|,
 operator|&
 name|need_kern
@@ -1766,7 +1793,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|wtime2
+name|t2
 operator|.
 name|tv_sec
 operator|<=
@@ -1785,7 +1812,7 @@ condition|(
 name|timercmp
 argument_list|(
 operator|&
-name|wtime2
+name|t2
 argument_list|,
 operator|&
 name|wtime
@@ -1795,7 +1822,7 @@ argument_list|)
 condition|)
 name|wtime
 operator|=
-name|wtime2
+name|t2
 expr_stmt|;
 comment|/* take care of router discovery, 		 * but do it to the millisecond 		 */
 if|if
@@ -1823,7 +1850,7 @@ block|}
 name|timevalsub
 argument_list|(
 operator|&
-name|wtime2
+name|t2
 argument_list|,
 operator|&
 name|rdisc_timer
@@ -1837,7 +1864,7 @@ condition|(
 name|timercmp
 argument_list|(
 operator|&
-name|wtime2
+name|t2
 argument_list|,
 operator|&
 name|wtime
@@ -1847,15 +1874,15 @@ argument_list|)
 condition|)
 name|wtime
 operator|=
-name|wtime2
+name|t2
 expr_stmt|;
 comment|/* wait for input or a timer to expire. 		 */
+name|trace_flush
+argument_list|()
+expr_stmt|;
 name|ibits
 operator|=
 name|fdbits
-expr_stmt|;
-name|trace_flush
-argument_list|()
 expr_stmt|;
 name|n
 operator|=
@@ -2048,6 +2075,11 @@ operator|=
 name|now
 operator|.
 name|tv_sec
+expr_stmt|;
+name|trace_act
+argument_list|(
+literal|"SIGALRM\n"
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2406,7 +2438,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|trace_msg
+name|trace_act
 argument_list|(
 literal|"RCVBUF=%d\n"
 argument_list|,
@@ -2655,9 +2687,12 @@ condition|(
 name|rip_sock
 operator|>=
 literal|0
+operator|&&
+operator|!
+name|mhome
 condition|)
 block|{
-name|trace_msg
+name|trace_act
 argument_list|(
 literal|"turn off RIP\n"
 argument_list|)
@@ -2757,12 +2792,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* Prepare socket used for RIP.  */
+comment|/* turn on RIP multicast input via an interface  */
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|rip_on
+name|rip_mcast_on
 parameter_list|(
 name|struct
 name|interface
@@ -2776,30 +2812,13 @@ name|m
 decl_stmt|;
 if|if
 condition|(
-name|rip_sock
-operator|>=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|ifp
-operator|!=
-literal|0
-operator|&&
-literal|0
-operator|==
-operator|(
+operator|!
+name|IS_RIP_IN_OFF
+argument_list|(
 name|ifp
 operator|->
 name|int_state
-operator|&
-operator|(
-name|IS_NO_RIP_IN
-operator||
-name|IS_PASSIVE
-operator|)
-operator|)
+argument_list|)
 operator|&&
 operator|(
 name|ifp
@@ -2889,16 +2908,51 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|DBGERR
+name|LOGERR
 argument_list|(
-literal|1
-argument_list|,
 literal|"setsockopt(IP_ADD_MEMBERSHIP RIP)"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Prepare socket used for RIP.  */
+end_comment
+
+begin_function
+name|void
+name|rip_on
+parameter_list|(
+name|struct
+name|interface
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+comment|/* If the main RIP socket is already alive, only start receiving 	 * multicasts for this interface. 	 */
+if|if
+condition|(
+name|rip_sock
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|ifp
+operator|!=
+literal|0
+condition|)
+name|rip_mcast_on
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+comment|/* If the main RIP socket is off, and it makes sense to turn it on, 	 * turn it on for all of the interfaces. 	 */
 if|if
 condition|(
 name|rip_interfaces
@@ -2909,7 +2963,7 @@ operator|!
 name|rdisc_ok
 condition|)
 block|{
-name|trace_msg
+name|trace_act
 argument_list|(
 literal|"turn on RIP\n"
 argument_list|)
@@ -3015,15 +3069,13 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
+operator|!
+name|IS_RIP_IN_OFF
+argument_list|(
 name|ifp
 operator|->
 name|int_state
-operator|&
-name|IS_NO_RIP_IN
-operator|)
-operator|!=
-name|IS_NO_RIP_IN
+argument_list|)
 condition|)
 name|ifp
 operator|->
@@ -3032,76 +3084,11 @@ operator|&=
 operator|~
 name|IS_RIP_QUERIED
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ifp
-operator|->
-name|int_if_flags
-operator|&
-name|IFF_MULTICAST
-operator|)
-operator|&&
-operator|!
-operator|(
-name|ifp
-operator|->
-name|int_state
-operator|&
-name|IS_ALIAS
-operator|)
-condition|)
-block|{
-name|m
-operator|.
-name|imr_multiaddr
-operator|.
-name|s_addr
-operator|=
-name|htonl
+name|rip_mcast_on
 argument_list|(
-name|INADDR_RIP_GROUP
+name|ifp
 argument_list|)
 expr_stmt|;
-name|m
-operator|.
-name|imr_interface
-operator|.
-name|s_addr
-operator|=
-name|ifp
-operator|->
-name|int_addr
-expr_stmt|;
-if|if
-condition|(
-name|setsockopt
-argument_list|(
-name|rip_sock
-argument_list|,
-name|IPPROTO_IP
-argument_list|,
-name|IP_ADD_MEMBERSHIP
-argument_list|,
-operator|&
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|DBGERR
-argument_list|(
-literal|1
-argument_list|,
-literal|"setsockopt(IP_ADD_MEMBERSHIP RIP)"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|ifinit_timer
 operator|.

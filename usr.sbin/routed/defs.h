@@ -1,11 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)defs.h	8.1 (Berkeley) 6/5/93  */
+comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)defs.h	8.1 (Berkeley) 6/5/93  *	$Id$  */
 end_comment
-
-begin_empty
-empty|#ident "$Revision: 1.1.3.1 $"
-end_empty
 
 begin_comment
 comment|/* Definitions for RIPv2 routing process.  *  * This code is based on the 4.4BSD `routed` daemon, with extensions to  * support:  *	RIPv2, including variable length subnet masks.  *	Router Discovery  *	aggregate routes in the kernel tables.  *	aggregate advertised routes.  *	maintain spare routes for faster selection of another gateway  *		when the current gateway dies.  *	timers on routes with second granularity so that selection  *		of a new route does not wait 30-60 seconds.  *	tolerance of static routes.  *	tell the kernel hop counts  *	do not advertise if ipforwarding=0  *  * The vestigual support for other protocols has been removed.  There  * is no likelihood that IETF RIPv1 or RIPv2 will ever be used with  * other protocols.  The result is far smaller, faster, cleaner, and  * perhaps understandable.  *  * The accumulation of special flags and kludges added over the many  * years have been simplified and integrated.  */
@@ -230,26 +226,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
-
 begin_comment
 comment|/* Turn on if IP_DROP_MEMBERSHIP and IP_ADD_MEMBERSHIP do not look at  * the dstaddr of point-to-point interfaces.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MCAST_PPP_BUG
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #define MCAST_PPP_BUG */
+end_comment
 
 begin_define
 define|#
@@ -308,28 +291,6 @@ end_define
 
 begin_comment
 comment|/* when not */
-end_comment
-
-begin_comment
-comment|/* set times to this to continue poisoning a route */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POISON_SECS
-value|(GARBAGE_TIME - POISON_TIME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NET_S_METRIC
-value|1
-end_define
-
-begin_comment
-comment|/* metric used on synthetic routes */
 end_comment
 
 begin_define
@@ -497,53 +458,47 @@ value|0x001
 comment|/* for network interface */
 define|#
 directive|define
-name|RS_NET_SUB
-value|0x002
-comment|/* fake net route for subnet */
-define|#
-directive|define
-name|RS_NET_HOST
-value|0x004
-comment|/* fake net route for host */
-define|#
-directive|define
 name|RS_NET_INT
-value|0x008
+value|0x002
 comment|/* authority route */
 define|#
 directive|define
-name|RS_NET_S
-value|(RS_NET_SUB | RS_NET_HOST | RS_NET_INT)
+name|RS_NET_SYN
+value|0x004
+comment|/* fake net route for subnet */
+define|#
+directive|define
+name|RS_NO_NET_SYN
+value|(RS_LOCAL | RS_LOCAL | RS_IF)
 define|#
 directive|define
 name|RS_SUBNET
-value|0x010
+value|0x008
 comment|/* subnet route from any source */
 define|#
 directive|define
 name|RS_LOCAL
-value|0x020
+value|0x010
 comment|/* loopback for pt-to-pt */
 define|#
 directive|define
 name|RS_MHOME
-value|0x040
+value|0x020
 comment|/* from -m */
 define|#
 directive|define
-name|RS_GW
-value|0x080
-comment|/* from -g */
-define|#
-directive|define
 name|RS_STATIC
-value|0x100
+value|0x040
 comment|/* from the kernel */
 define|#
 directive|define
 name|RS_RDISC
-value|0x200
+value|0x080
 comment|/* from router discovery */
+define|#
+directive|define
+name|RS_PERMANENT
+value|(RS_MHOME | RS_STATIC | RS_NET_SYN | RS_RDISC)
 name|struct
 name|sockaddr_in
 name|rt_dst_sock
@@ -592,11 +547,13 @@ name|rt_seqno
 decl_stmt|;
 comment|/* when last changed */
 name|char
-name|rt_hold_metric
+name|rt_poison_metric
 decl_stmt|;
+comment|/* to notice maximum recently */
 name|time_t
-name|rt_hold_down
+name|rt_poison_time
 decl_stmt|;
+comment|/*	advertised metric */
 block|}
 struct|;
 end_struct
@@ -680,11 +637,11 @@ name|rt
 parameter_list|,
 name|ifp
 parameter_list|)
-value|(0 == ((rt)->rt_state& (RS_GW | RS_MHOME | RS_STATIC \ 						| RS_NET_SUB | RS_NET_HOST \ 						| RS_RDISC))		\&& (!((rt)->rt_state& RS_IF)			\ 			    || (ifp) == 0				\ 			    || (((ifp)->int_state& IS_REMOTE)		\&& !((ifp)->int_state& IS_PASSIVE))))
+value|(0 == ((rt)->rt_state& RS_PERMANENT)		\&& (!((rt)->rt_state& RS_IF)			\ 			    || (ifp) == 0				\ 			    || (((ifp)->int_state& IS_REMOTE)		\&& !((ifp)->int_state& IS_PASSIVE))))
 end_define
 
 begin_comment
-comment|/* true if A is better than B  * Better if  *	- A is not a poisoned route  *	- and A is not stale  *	- and A has a shorter path  *		- or is the router speaking for itself  *		- or the current route is equal but stale  */
+comment|/* true if A is better than B  * Better if  *	- A is not a poisoned route  *	- and A is not stale  *	- and A has a shorter path  *		- or is the router speaking for itself  *		- or the current route is equal but stale  *		- or it is a host route advertised by a system for itself  */
 end_comment
 
 begin_define
@@ -692,11 +649,13 @@ define|#
 directive|define
 name|BETTER_LINK
 parameter_list|(
+name|rt
+parameter_list|,
 name|A
 parameter_list|,
 name|B
 parameter_list|)
-value|((A)->rts_metric != HOPCNT_INFINITY		\&& now_stale<= (A)->rts_time		\&& ((A)->rts_metric< (B)->rts_metric	\ 			       || ((A)->rts_gate == (A)->rts_router	\&& (B)->rts_gate != (B)->rts_router)	\ 			       || ((A)->rts_metric == (B)->rts_metric	\&& now_stale> (B)->rts_time)))
+value|((A)->rts_metric< HOPCNT_INFINITY	\&& now_stale<= (A)->rts_time		\&& ((A)->rts_metric< (B)->rts_metric	\ 				 || ((A)->rts_gate == (A)->rts_router	\&& (B)->rts_gate != (B)->rts_router) \ 				 || ((A)->rts_metric == (B)->rts_metric	\&& now_stale> (B)->rts_time)	\ 				 || (RT_ISHOST(rt)			\&& (rt)->rt_dst == (A)->rts_router	\&& (A)->rts_metric == (B)->rts_metric)))
 end_define
 
 begin_comment
@@ -750,6 +709,10 @@ name|int_mask
 decl_stmt|;
 comment|/* working net mask (host order) */
 name|naddr
+name|int_ripv1_mask
+decl_stmt|;
+comment|/* for inferring a mask (n) */
+name|naddr
 name|int_std_addr
 decl_stmt|;
 comment|/* class A/B/C address (n) */
@@ -761,14 +724,6 @@ name|naddr
 name|int_std_mask
 decl_stmt|;
 comment|/* class A/B/C netmask (h) */
-name|naddr
-name|int_host_addr
-decl_stmt|;
-comment|/* RIPv1 net for pt-to-pt link (h) */
-name|naddr
-name|int_host_mask
-decl_stmt|;
-comment|/* RIPv1 mask for pt-to-pt (h) */
 name|int
 name|int_rip_sock
 decl_stmt|;
@@ -784,10 +739,6 @@ name|time_t
 name|int_act_time
 decl_stmt|;
 comment|/* last thought healthy */
-name|time_t
-name|int_quiet_time
-decl_stmt|;
-comment|/* last inactive */
 name|u_short
 name|int_transitions
 decl_stmt|;
@@ -799,31 +750,37 @@ name|char
 name|int_d_metric
 decl_stmt|;
 comment|/* for faked default route */
+struct|struct
+name|int_data
+block|{
 name|u_int
-name|int_data_ipackets
+name|ipackets
 decl_stmt|;
 comment|/* previous network stats */
 name|u_int
-name|int_data_ierrors
+name|ierrors
 decl_stmt|;
 name|u_int
-name|int_data_opackets
+name|opackets
 decl_stmt|;
 name|u_int
-name|int_data_oerrors
+name|oerrors
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|sgi
 name|u_int
-name|int_data_odrops
+name|odrops
 decl_stmt|;
 endif|#
 directive|endif
 name|time_t
-name|int_data_ts
+name|ts
 decl_stmt|;
 comment|/* timestamp on network stats */
+block|}
+name|int_data
+struct|;
 name|char
 name|int_passwd
 index|[
@@ -963,8 +920,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IS_ACTIVE
+name|IS_SICK
 value|0x0000400
+end_define
+
+begin_comment
+comment|/* seems to be broken */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_DUP
+value|0x0000800
+end_define
+
+begin_comment
+comment|/* has a duplicate address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_ACTIVE
+value|0x0001000
 end_define
 
 begin_comment
@@ -974,30 +953,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IS_QUIET
-value|0x0000800
+name|IS_NEED_NET_SYN
+value|0x0002000
 end_define
 
 begin_comment
-comment|/* have not heard from it recently */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IS_NEED_NET_SUB
-value|0x0001000
-end_define
-
-begin_comment
-comment|/* need RS_NET_SUB route */
+comment|/* need RS_NET_SYN route */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IS_NO_AG
-value|0x0002000
+value|0x0004000
 end_define
 
 begin_comment
@@ -1008,7 +976,7 @@ begin_define
 define|#
 directive|define
 name|IS_NO_SUPER_AG
-value|0x0004000
+value|0x0008000
 end_define
 
 begin_comment
@@ -1019,7 +987,7 @@ begin_define
 define|#
 directive|define
 name|IS_NO_RIPV1_IN
-value|0x0008000
+value|0x0010000
 end_define
 
 begin_comment
@@ -1030,7 +998,7 @@ begin_define
 define|#
 directive|define
 name|IS_NO_RIPV2_IN
-value|0x0010000
+value|0x0020000
 end_define
 
 begin_comment
@@ -1041,14 +1009,24 @@ begin_define
 define|#
 directive|define
 name|IS_NO_RIP_IN
-value|(IS_NO_RIPV2_IN | IS_NO_RIPV2_IN)
+value|(IS_NO_RIPV1_IN | IS_NO_RIPV2_IN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_RIP_IN_OFF
+parameter_list|(
+name|s
+parameter_list|)
+value|(((s)& IS_NO_RIP_IN) == IS_NO_RIP_IN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IS_NO_RIPV1_OUT
-value|0x0020000
+value|0x0040000
 end_define
 
 begin_comment
@@ -1059,7 +1037,7 @@ begin_define
 define|#
 directive|define
 name|IS_NO_RIPV2_OUT
-value|0x0040000
+value|0x0080000
 end_define
 
 begin_comment
@@ -1076,15 +1054,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|IS_NO_RIP
+value|(IS_NO_RIP_OUT | IS_NO_RIP_IN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_RIP_OUT_OFF
+parameter_list|(
+name|s
+parameter_list|)
+value|(((s)& IS_NO_RIP_OUT) == IS_NO_RIP_OUT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_RIP_OFF
+parameter_list|(
+name|s
+parameter_list|)
+value|(((s)& IS_NO_RIP) == IS_NO_RIP)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_NO_ADV_IN
-value|0x0080000
+value|0x0100000
 end_define
 
 begin_define
 define|#
 directive|define
 name|IS_NO_SOL_OUT
-value|0x0100000
+value|0x0200000
 end_define
 
 begin_comment
@@ -1095,7 +1100,7 @@ begin_define
 define|#
 directive|define
 name|IS_SOL_OUT
-value|0x0200000
+value|0x0400000
 end_define
 
 begin_comment
@@ -1113,7 +1118,7 @@ begin_define
 define|#
 directive|define
 name|IS_NO_ADV_OUT
-value|0x0400000
+value|0x0800000
 end_define
 
 begin_comment
@@ -1124,7 +1129,7 @@ begin_define
 define|#
 directive|define
 name|IS_ADV_OUT
-value|0x0800000
+value|0x1000000
 end_define
 
 begin_comment
@@ -1142,11 +1147,29 @@ begin_define
 define|#
 directive|define
 name|IS_BCAST_RDISC
-value|0x1000000
+value|0x2000000
 end_define
 
 begin_comment
 comment|/* broadcast instead of multicast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_NO_RDISC
+value|(IS_NO_ADV_IN | IS_NO_SOL_OUT | IS_NO_ADV_OUT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_PM_RDISC
+value|0x4000000
+end_define
+
+begin_comment
+comment|/* poor-man's router discovery */
 end_comment
 
 begin_ifdef
@@ -1226,6 +1249,9 @@ decl_stmt|;
 name|naddr
 name|ag_gate
 decl_stmt|;
+name|naddr
+name|ag_nhop
+decl_stmt|;
 name|char
 name|ag_metric
 decl_stmt|;
@@ -1246,7 +1272,7 @@ decl_stmt|;
 define|#
 directive|define
 name|AGS_SUPPRESS
-value|0x01
+value|0x001
 comment|/* combine with coaser mask */
 define|#
 directive|define
@@ -1276,19 +1302,34 @@ value|0x010
 comment|/* tell kernel RTF_GATEWAY */
 define|#
 directive|define
-name|AGS_RIPV2
+name|AGS_IF
 value|0x020
+comment|/* for an interface */
+define|#
+directive|define
+name|AGS_RIPV2
+value|0x040
 comment|/* send only as RIPv2 */
 define|#
 directive|define
-name|AGS_DEAD
+name|AGS_FINE_GATE
 value|0x080
-comment|/* dead--ignore differing gate */
+comment|/* ignore differing ag_gate when this 					 * has the finer netmask */
 define|#
 directive|define
-name|AGS_RDISC
+name|AGS_CORS_GATE
 value|0x100
-comment|/* suppresses most routes */
+comment|/* ignore differing gate when this 					 * has the coarser netmaks */
+define|#
+directive|define
+name|AGS_SPLIT_HZ
+value|0x200
+comment|/* suppress for split horizon */
+comment|/* some bits are set if they are set on either route */
+define|#
+directive|define
+name|AGS_PROMOTE_EITHER
+value|(AGS_RIPV2 | AGS_GATEWAY |   \ 				AGS_SUPPRESS | AGS_CORS_GATE)
 block|}
 struct|;
 end_struct
@@ -1316,10 +1357,10 @@ literal|1
 index|]
 decl_stmt|;
 name|naddr
-name|parm_a_h
+name|parm_addr_h
 decl_stmt|;
 name|naddr
-name|parm_m
+name|parm_mask
 decl_stmt|;
 name|char
 name|parm_d_metric
@@ -1366,6 +1407,9 @@ name|intnet_addr
 decl_stmt|;
 name|naddr
 name|intnet_mask
+decl_stmt|;
+name|char
+name|intnet_metric
 decl_stmt|;
 block|}
 modifier|*
@@ -1487,17 +1531,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|default_gateway
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1=advertise default */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|lookforinterfaces
 decl_stmt|;
 end_decl_stmt
@@ -1526,17 +1559,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* 1=reduce host routes */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ppp_noage
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1=do not age quiet link routes */
 end_comment
 
 begin_decl_stmt
@@ -1730,13 +1752,20 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|have_ripv1
+name|have_ripv1_out
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* have a RIPv1 interface */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|have_ripv1_in
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1791,23 +1820,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|TRACEPACKETS
-value|(tracelevel>= 2)
-end_define
-
-begin_comment
-comment|/* note packets */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TRACECONTENTS
 value|(tracelevel>= 3)
 end_define
 
 begin_comment
 comment|/* display packet contents */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRACEPACKETS
+value|(tracelevel>= 2)
+end_define
+
+begin_comment
+comment|/* note packets */
 end_comment
 
 begin_define
@@ -1925,6 +1954,10 @@ block|,
 name|OUT_BROADCAST
 block|,
 name|OUT_MULTICAST
+block|,
+name|NO_OUT_MULTICAST
+block|,
+name|NO_OUT_RIPV2
 block|}
 enum|;
 end_enum
@@ -2259,6 +2292,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|char
+modifier|*
+name|check_parms
+parameter_list|(
+name|struct
+name|parm
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|get_parms
 parameter_list|(
@@ -2300,8 +2346,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|char
-modifier|*
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2329,7 +2374,20 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|trace_msg
+name|trace_act
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|trace_pkt
 parameter_list|(
 name|char
 modifier|*
@@ -2510,7 +2568,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|ifbad_rdisc
+name|if_bad_rdisc
 parameter_list|(
 name|struct
 name|interface
@@ -2522,7 +2580,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|ifok_rdisc
+name|if_ok_rdisc
 parameter_list|(
 name|struct
 name|interface
@@ -2628,16 +2686,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|fix_kern
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|flush_kern
 parameter_list|(
 name|void
@@ -2682,6 +2730,8 @@ specifier|extern
 name|void
 name|ag_check
 parameter_list|(
+name|naddr
+parameter_list|,
 name|naddr
 parameter_list|,
 name|naddr
@@ -2883,14 +2933,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|rt_addrinfo
-name|rtinfo
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -2904,56 +2946,81 @@ end_define
 begin_define
 define|#
 directive|define
-name|RTINFO_DST
-value|rtinfo.rti_info[RTAX_DST]
+name|INFO_DST
+parameter_list|(
+name|I
+parameter_list|)
+value|((I)->rti_info[RTAX_DST])
 end_define
 
 begin_define
 define|#
 directive|define
-name|RTINFO_GATE
-value|rtinfo.rti_info[RTAX_GATEWAY]
+name|INFO_GATE
+parameter_list|(
+name|I
+parameter_list|)
+value|((I)->rti_info[RTAX_GATEWAY])
 end_define
 
 begin_define
 define|#
 directive|define
-name|RTINFO_NETMASK
-value|rtinfo.rti_info[RTAX_NETMASK]
+name|INFO_MASK
+parameter_list|(
+name|I
+parameter_list|)
+value|((I)->rti_info[RTAX_NETMASK])
 end_define
 
 begin_define
 define|#
 directive|define
-name|RTINFO_IFA
-value|rtinfo.rti_info[RTAX_IFA]
+name|INFO_IFA
+parameter_list|(
+name|I
+parameter_list|)
+value|((I)->rti_info[RTAX_IFA])
 end_define
 
 begin_define
 define|#
 directive|define
-name|RTINFO_AUTHOR
-value|rtinfo.rti_info[RTAX_AUTHOR]
+name|INFO_IFP
+parameter_list|(
+name|I
+parameter_list|)
+value|((I)->rti_info[RTAX_IFP])
 end_define
 
 begin_define
 define|#
 directive|define
-name|RTINFO_BRD
-value|rtinfo.rti_info[RTAX_BRD]
+name|INFO_AUTHOR
+parameter_list|(
+name|I
+parameter_list|)
+value|((I)->rti_info[RTAX_AUTHOR])
 end_define
 
 begin_define
 define|#
 directive|define
-name|RTINFO_IFP
-value|((struct sockaddr_dl *)rtinfo.rti_info[RTAX_IFP])
+name|INFO_BRD
+parameter_list|(
+name|I
+parameter_list|)
+value|((I)->rti_info[RTAX_BRD])
 end_define
 
 begin_function_decl
 name|void
 name|rt_xaddrs
 parameter_list|(
+name|struct
+name|rt_addrinfo
+modifier|*
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
@@ -2987,10 +3054,6 @@ parameter_list|,
 name|struct
 name|interface
 modifier|*
-parameter_list|,
-name|struct
-name|interface
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3005,10 +3068,6 @@ parameter_list|,
 name|struct
 name|interface
 modifier|*
-parameter_list|,
-name|struct
-name|interface
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3018,13 +3077,13 @@ define|#
 directive|define
 name|on_net
 parameter_list|(
-name|tgt
+name|a
 parameter_list|,
 name|net
 parameter_list|,
 name|mask
 parameter_list|)
-value|((ntohl(tgt)& mask) == (net& mask))
+value|(((ntohl(a) ^ (net))& (mask)) == 0)
 end_define
 
 begin_function_decl
@@ -3114,7 +3173,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|ifok
+name|if_ok
 parameter_list|(
 name|struct
 name|interface
@@ -3129,13 +3188,22 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|ifbad
+name|if_sick
 parameter_list|(
 name|struct
 name|interface
 modifier|*
-parameter_list|,
-name|char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|if_bad
+parameter_list|(
+name|struct
+name|interface
 modifier|*
 parameter_list|)
 function_decl|;

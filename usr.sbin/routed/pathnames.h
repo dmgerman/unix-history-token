@@ -17,14 +17,14 @@ value|"/etc/gateways"
 end_define
 
 begin_comment
-comment|/* all remotely requested trace files must either start with this prefix  * or be the same as the tracefile specified when the daemon was started.  */
+comment|/* All remotely requested trace files must either start with this prefix  * or be the same as the tracefile specified when the daemon was started.  * If this is a directory, routed will create log files in it.  That  * might be a security problem.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|_PATH_TRACE
-value|"/tmp"
+value|"/tmp/routed.log"
 end_define
 
 end_unit

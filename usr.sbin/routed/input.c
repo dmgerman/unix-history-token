@@ -3,19 +3,34 @@ begin_comment
 comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|lint
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|sgi
+argument_list|)
+end_if
+
+begin_comment
+comment|/* static char sccsid[] = "@(#)input.c	8.1 (Berkeley) 6/5/93"; */
+end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)input.c	8.1 (Berkeley) 6/5/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,10 +42,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_empty
-empty|#ident "$Revision: 1.1.3.1 $"
-end_empty
 
 begin_include
 include|#
@@ -77,9 +88,9 @@ name|naddr
 parameter_list|,
 name|naddr
 parameter_list|,
-name|int
-parameter_list|,
-name|u_short
+name|struct
+name|netinfo
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -325,10 +336,6 @@ name|int_state
 operator||=
 name|IS_ACTIVE
 expr_stmt|;
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
 name|trace_rip
 argument_list|(
 literal|"Recv"
@@ -505,11 +512,7 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
-name|trace_msg
+name|trace_pkt
 argument_list|(
 literal|"discard authenticated RIPv2 message\n"
 argument_list|)
@@ -539,7 +542,7 @@ name|RIP_PORT
 argument_list|)
 condition|)
 block|{
-comment|/* yes, ignore it if RIP is off 			 */
+comment|/* yes, ignore it if RIP is off so that it does not 			 * depend on us. 			 */
 if|if
 condition|(
 name|rip_sock
@@ -547,16 +550,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|trace_msg
+name|trace_pkt
 argument_list|(
-literal|"ignore request while RIP off"
+literal|"ignore request while RIP off\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 comment|/* Ignore the request if we talking to ourself 			 * (and not a remote gateway). 			 */
-name|ifp1
-operator|=
+if|if
+condition|(
 name|ifwithaddr
 argument_list|(
 name|FROM_NADDR
@@ -565,44 +568,19 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp1
 operator|!=
 literal|0
-operator|&&
-operator|(
-operator|!
-operator|(
-name|ifp1
-operator|->
-name|int_state
-operator|&
-name|IS_REMOTE
-operator|)
-operator|||
-name|ifp
-operator|->
-name|int_metric
-operator|!=
-literal|0
-operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
-name|trace_msg
+name|trace_pkt
 argument_list|(
-literal|"discard our own packet\n"
+literal|"discard our own RIP request\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* According to RFC 1723, we should ignore unathenticated 		 * queries.  That is too silly to bother with. 		 */
+comment|/* According to RFC 1723, we should ignore unathenticated 		 * queries.  That is too silly to bother with.  Sheesh! 		 * Are forwarding tables supposed to be secret?  When 		 * a bad guy can infer them with test traffic? 		 * Maybe on firewalls you'd care, but not enough to 		 * give up the diagnostic facilities of remote probing. 		 */
 if|if
 condition|(
 name|n
@@ -876,22 +854,10 @@ operator|->
 name|rip_vers
 operator|==
 name|RIPv1
-condition|)
-block|{
-name|mask
-operator|=
-name|ripv1_mask_host
-argument_list|(
-name|dst
-argument_list|,
-name|ifp
-argument_list|,
+operator|||
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
+operator|==
+operator|(
 name|mask
 operator|=
 name|ntohl
@@ -900,12 +866,7 @@ name|n
 operator|->
 name|n_mask
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mask
-operator|==
-literal|0
+operator|)
 condition|)
 name|mask
 operator|=
@@ -914,11 +875,8 @@ argument_list|(
 name|dst
 argument_list|,
 name|ifp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|rt
 operator|=
 name|rtget
@@ -973,21 +931,25 @@ name|n
 operator|->
 name|n_metric
 operator|=
-operator|(
 name|rt
 operator|->
 name|rt_metric
 operator|+
-operator|(
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|ifp
-condition|?
+operator|!=
+literal|0
+condition|)
+name|n
+operator|->
+name|n_metric
+operator|+=
 name|ifp
 operator|->
 name|int_metric
-else|:
-literal|1
-operator|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1248,7 +1210,7 @@ else|else
 block|{
 name|trace_off
 argument_list|(
-literal|"tracing turned off by "
+literal|"tracing turned off by %s\n"
 argument_list|,
 name|naddr_ntoa
 argument_list|(
@@ -1328,14 +1290,9 @@ name|RIP_PORT
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
-name|trace_msg
+name|trace_pkt
 argument_list|(
-literal|"discard response"
-literal|" from unknown port\n"
+literal|"discard RIP response from unknown port\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1347,13 +1304,9 @@ operator|<
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
-name|trace_msg
+name|trace_pkt
 argument_list|(
-literal|"discard response while RIP off"
+literal|"discard response while RIP off\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1381,13 +1334,22 @@ name|ifp1
 operator|->
 name|int_state
 operator|&
+name|IS_REMOTE
+condition|)
+block|{
+if|if
+condition|(
+name|ifp1
+operator|->
+name|int_state
+operator|&
 name|IS_PASSIVE
 condition|)
 block|{
 name|msglog
 argument_list|(
-literal|"bogus input from %s on supposedly"
-literal|" passive interface %s"
+literal|"bogus input from %s on"
+literal|" supposedly passive %s"
 argument_list|,
 name|naddr_ntoa
 argument_list|(
@@ -1400,15 +1362,7 @@ name|int_name
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ifp1
-operator|->
-name|int_state
-operator|&
-name|IS_REMOTE
-condition|)
+else|else
 block|{
 name|ifp1
 operator|->
@@ -1420,7 +1374,7 @@ name|tv_sec
 expr_stmt|;
 if|if
 condition|(
-name|ifok
+name|if_ok
 argument_list|(
 name|ifp1
 argument_list|,
@@ -1433,15 +1387,12 @@ name|ifp1
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
+block|}
+else|else
 block|{
-name|trace_msg
+name|trace_pkt
 argument_list|(
-literal|"discard our own packet\n"
+literal|"discard our own RIP response\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1452,14 +1403,6 @@ if|if
 condition|(
 operator|!
 name|ifp
-operator|||
-operator|(
-name|ifp
-operator|->
-name|int_state
-operator|&
-name|IS_PASSIVE
-operator|)
 condition|)
 block|{
 if|if
@@ -1475,6 +1418,7 @@ condition|)
 name|msglog
 argument_list|(
 literal|"packet from unknown router %s"
+literal|" or via unidentified interface"
 argument_list|,
 name|naddr_ntoa
 argument_list|(
@@ -1489,6 +1433,31 @@ operator|->
 name|sin_addr
 operator|.
 name|s_addr
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|ifp
+operator|->
+name|int_state
+operator|&
+name|IS_PASSIVE
+condition|)
+block|{
+name|trace_act
+argument_list|(
+literal|"packet from %s via passive interface %s\n"
+argument_list|,
+name|naddr_ntoa
+argument_list|(
+name|FROM_NADDR
+argument_list|)
+argument_list|,
+name|ifp
+operator|->
+name|int_name
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -1528,11 +1497,7 @@ name|RIPv1
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
-name|trace_msg
+name|trace_pkt
 argument_list|(
 literal|"discard RIPv%d response\n"
 argument_list|,
@@ -1553,14 +1518,9 @@ operator|&
 name|IS_BROKE
 condition|)
 block|{
-if|if
-condition|(
-name|TRACEPACKETS
-condition|)
-name|trace_msg
+name|trace_pkt
 argument_list|(
-literal|"discard response via"
-literal|" broken interface %s\n"
+literal|"discard response via broken interface %s\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1979,15 +1939,6 @@ name|s_addr
 expr_stmt|;
 block|}
 block|}
-name|mask
-operator|=
-name|ntohl
-argument_list|(
-name|n
-operator|->
-name|n_mask
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rip
@@ -1996,9 +1947,18 @@ name|rip_vers
 operator|==
 name|RIPv1
 operator|||
-name|mask
-operator|==
 literal|0
+operator|==
+operator|(
+name|mask
+operator|=
+name|ntohl
+argument_list|(
+name|n
+operator|->
+name|n_mask
+argument_list|)
+operator|)
 condition|)
 block|{
 name|mask
@@ -2008,8 +1968,6 @@ argument_list|(
 name|dst
 argument_list|,
 name|ifp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2069,23 +2027,6 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
-name|v1_mask
-operator|=
-operator|(
-name|have_ripv1
-condition|?
-name|ripv1_mask_host
-argument_list|(
-name|dst
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-else|:
-name|mask
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|rip
@@ -2100,7 +2041,7 @@ name|n_tag
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Adjust metric according to incoming interface. 			 */
+comment|/* Adjust metric according to incoming interface.. 			 */
 name|n
 operator|->
 name|n_metric
@@ -2123,7 +2064,7 @@ name|n_metric
 operator|=
 name|HOPCNT_INFINITY
 expr_stmt|;
-comment|/* Recognize and ignore a default route we faked 			 * which is being sent back to us by a machine with 			 * broken split-horizon. 			 */
+comment|/* Recognize and ignore a default route we faked 			 * which is being sent back to us by a machine with 			 * broken split-horizon. 			 * Be a little more paranoid than that, and reject 			 * default routes with the same metric we advertised. 			 */
 if|if
 condition|(
 name|ifp
@@ -2138,35 +2079,54 @@ name|RIP_DEFAULT
 operator|&&
 name|n
 operator|->
-name|n_family
-operator|==
-name|RIP_AF_UNSPEC
-operator|&&
-name|n
-operator|->
 name|n_metric
-operator|>
+operator|>=
 name|ifp
 operator|->
 name|int_d_metric
 condition|)
 continue|continue;
-comment|/* We can receive aggregated RIPv2 routes via one 			 * interface that must be broken down before 			 * they are transmitted by RIPv1 via an interface 			 * on a subnet.  We might receive the same routes 			 * aggregated otherwise via other RIPv2 interfaces. 			 * This could cause duplicate routes to be sent on 			 * the RIPv1 interfaces.  "Longest matching variable 			 * length netmasks" lets RIPv2 listeners understand, 			 * but breaking down the aggregated routes for RIPv1 			 * listeners can produce duplicate routes. 			 * 			 * Breaking down aggregated routes here bloats 			 * the daemon table, but does not hurt the kernel 			 * table, since routes are always aggregated for 			 * the kernel. 			 * 			 * Notice that this does not break down network 			 * routes corresponding to subnets.  This is part 			 * of the defense against RS_NET_SUB. 			 */
+comment|/* We can receive aggregated RIPv2 routes that must 			 * be broken down before they are transmitted by 			 * RIPv1 via an interface on a subnet. 			 * We might also receive the same routes aggregated 			 * via other RIPv2 interfaces. 			 * This could cause duplicate routes to be sent on 			 * the RIPv1 interfaces.  "Longest matching variable 			 * length netmasks" lets RIPv2 listeners understand, 			 * but breaking down the aggregated routes for RIPv1 			 * listeners can produce duplicate routes. 			 * 			 * Breaking down aggregated routes here bloats 			 * the daemon table, but does not hurt the kernel 			 * table, since routes are always aggregated for 			 * the kernel. 			 * 			 * Notice that this does not break down network 			 * routes corresponding to subnets.  This is part 			 * of the defense against RS_NET_SYN. 			 */
 if|if
 condition|(
-literal|0
-operator|!=
-operator|(
-name|ntohl
-argument_list|(
-name|dst
-argument_list|)
-operator|&
+name|have_ripv1_out
+operator|&&
 operator|(
 name|v1_mask
-operator|&
-operator|~
+operator|=
+name|ripv1_mask_net
+argument_list|(
+name|dst
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|>
 name|mask
+operator|&&
+operator|(
+operator|(
+operator|(
+name|rt
+operator|=
+name|rtget
+argument_list|(
+name|dst
+argument_list|,
+name|mask
+argument_list|)
+operator|)
+operator|==
+literal|0
+operator|||
+operator|!
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RS_NET_SYN
+operator|)
 operator|)
 operator|)
 condition|)
@@ -2263,12 +2223,6 @@ argument_list|,
 name|gate
 argument_list|,
 name|n
-operator|->
-name|n_metric
-argument_list|,
-name|n
-operator|->
-name|n_tag
 argument_list|)
 expr_stmt|;
 if|if
@@ -2324,11 +2278,10 @@ parameter_list|,
 name|naddr
 name|gate
 parameter_list|,
-name|int
-name|metric
-parameter_list|,
-name|u_short
-name|tag
+name|struct
+name|netinfo
+modifier|*
+name|n
 parameter_list|)
 block|{
 name|int
@@ -2401,10 +2354,12 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Usually ignore routes being poisoned. 		 */
+comment|/* Ignore unknown routes being poisoned. 		 */
 if|if
 condition|(
-name|metric
+name|n
+operator|->
+name|n_metric
 operator|==
 name|HOPCNT_INFINITY
 condition|)
@@ -2419,9 +2374,13 @@ name|gate
 argument_list|,
 name|from
 argument_list|,
-name|metric
+name|n
+operator|->
+name|n_metric
 argument_list|,
-name|tag
+name|n
+operator|->
+name|n_tag
 argument_list|,
 literal|0
 argument_list|,
@@ -2430,7 +2389,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* We already know about the route.  Consider 	 * this update. 	 * 	 * If (rt->rt_state& RS_NET_SUB), then this route 	 * is the same as a network route we have inferred 	 * for subnets we know, in order to tell RIPv1 routers 	 * about the subnets. 	 * 	 * It is impossible to tell if the route is coming 	 * from a distant RIPv2 router with the standard 	 * netmask because that router knows about the entire 	 * network, or if it is a round-about echo of a 	 * synthetic, RIPv1 network route of our own. 	 * The worst is that both kinds of routes might be 	 * received, and the bad one might have the smaller 	 * metric.  Partly solve this problem by faking the 	 * RIPv1 route with a metric that reflects the most 	 * distant part of the subnet.  Also never 	 * aggregate into such a route.  Also keep it 	 * around as long as the interface exists. 	 */
+comment|/* We already know about the route.  Consider this update. 	 * 	 * If (rt->rt_state& RS_NET_SYN), then this route 	 * is the same as a network route we have inferred 	 * for subnets we know, in order to tell RIPv1 routers 	 * about the subnets. 	 * 	 * It is impossible to tell if the route is coming 	 * from a distant RIPv2 router with the standard 	 * netmask because that router knows about the entire 	 * network, or if it is a round-about echo of a 	 * synthetic, RIPv1 network route of our own. 	 * The worst is that both kinds of routes might be 	 * received, and the bad one might have the smaller 	 * metric.  Partly solve this problem by faking the 	 * RIPv1 route with a metric that reflects the most 	 * distant part of the subnet.  Also never 	 * aggregate into such a route.  Also keep it 	 * around as long as the interface exists. 	 */
 name|rts0
 operator|=
 name|rt
@@ -2478,6 +2437,8 @@ name|rt_spares
 operator|||
 name|BETTER_LINK
 argument_list|(
+name|rt
+argument_list|,
 name|rts0
 argument_list|,
 name|rts
@@ -2503,48 +2464,19 @@ name|rts
 operator|->
 name|rts_metric
 decl_stmt|;
+comment|/* Keep poisoned routes around only long 		 * enough to pass the poison on. 		 */
 if|if
 condition|(
 name|old_metric
 operator|<
 name|HOPCNT_INFINITY
 condition|)
-block|{
 name|new_time
 operator|=
 name|now
 operator|.
 name|tv_sec
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Keep poisoned routes around only long 			 * enough to pass the poison on. 			 */
-name|new_time
-operator|=
-name|rts
-operator|->
-name|rts_time
-expr_stmt|;
-if|if
-condition|(
-name|new_time
-operator|>
-name|now
-operator|.
-name|tv_sec
-operator|-
-name|POISON_SECS
-condition|)
-name|new_time
-operator|=
-name|now
-operator|.
-name|tv_sec
-operator|-
-name|POISON_SECS
-expr_stmt|;
-block|}
 comment|/* If this is an update for the router we currently prefer, 		 * then note it. 		 */
 if|if
 condition|(
@@ -2567,9 +2499,13 @@ name|rt
 operator|->
 name|rt_router
 argument_list|,
-name|metric
+name|n
+operator|->
+name|n_metric
 argument_list|,
-name|tag
+name|n
+operator|->
+name|n_tag
 argument_list|,
 name|ifp
 argument_list|,
@@ -2581,7 +2517,9 @@ expr_stmt|;
 comment|/* If the route got worse, check for something better. 			 */
 if|if
 condition|(
-name|metric
+name|n
+operator|->
+name|n_metric
 operator|>
 name|old_metric
 condition|)
@@ -2605,13 +2543,17 @@ name|gate
 operator|&&
 name|old_metric
 operator|==
-name|metric
+name|n
+operator|->
+name|n_metric
 operator|&&
 name|rts
 operator|->
 name|rts_tag
 operator|==
-name|tag
+name|n
+operator|->
+name|n_tag
 condition|)
 block|{
 name|rts
@@ -2630,10 +2572,12 @@ name|rts
 operator|=
 name|rts0
 expr_stmt|;
-comment|/* Save the route as a spare only if it has 		 * a better metric than our worst spare. 		 * This also ignores poisoned routes (those 		 * with metric HOPCNT_INFINITY). 		 */
+comment|/* Save the route as a spare only if it has 		 * a better metric than our worst spare. 		 * This also ignores poisoned routes (those 		 * received with metric HOPCNT_INFINITY). 		 */
 if|if
 condition|(
-name|metric
+name|n
+operator|->
+name|n_metric
 operator|>=
 name|rts
 operator|->
@@ -2647,10 +2591,6 @@ operator|.
 name|tv_sec
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|TRACEACTIONS
-condition|)
 name|trace_upslot
 argument_list|(
 name|rt
@@ -2663,9 +2603,13 @@ name|from
 argument_list|,
 name|ifp
 argument_list|,
-name|metric
+name|n
+operator|->
+name|n_metric
 argument_list|,
-name|tag
+name|n
+operator|->
+name|n_tag
 argument_list|,
 name|new_time
 argument_list|)
@@ -2686,13 +2630,17 @@ name|rts
 operator|->
 name|rts_metric
 operator|=
-name|metric
+name|n
+operator|->
+name|n_metric
 expr_stmt|;
 name|rts
 operator|->
 name|rts_tag
 operator|=
-name|tag
+name|n
+operator|->
+name|n_tag
 expr_stmt|;
 name|rts
 operator|->
