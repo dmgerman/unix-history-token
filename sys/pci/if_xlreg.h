@@ -3336,6 +3336,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TC_DEVICEID_HURRICANE_575A
+value|0x5057
+end_define
+
+begin_define
+define|#
+directive|define
 name|TC_DEVICEID_HURRICANE_575B
 value|0x5157
 end_define

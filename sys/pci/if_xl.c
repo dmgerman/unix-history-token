@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu
 end_comment
 
 begin_comment
-comment|/*  * 3Com 3c90x Etherlink XL PCI NIC driver  *  * Supports the 3Com "boomerang", "cyclone" and "hurricane" PCI  * bus-master chips (3c90x cards and embedded controllers) including  * the following:  *  * 3Com 3c900-TPO	10Mbps/RJ-45  * 3Com 3c900-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905-TX	10/100Mbps/RJ-45  * 3Com 3c905-T4	10/100Mbps/RJ-45  * 3Com 3c900B-TPO	10Mbps/RJ-45  * 3Com 3c900B-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c900B-TPC	10Mbps/RJ-45,BNC  * 3Com 3c900B-FL	10Mbps/Fiber-optic  * 3Com 3c905B-COMBO	10/100Mbps/RJ-45,AUI,BNC  * 3Com 3c905B-TX	10/100Mbps/RJ-45  * 3Com 3c905B-FL/FX	10/100Mbps/Fiber-optic  * 3Com 3c905C-TX	10/100Mbps/RJ-45 (Tornado ASIC)  * 3Com 3c980-TX	10/100Mbps server adapter (Hurricane ASIC)  * 3Com 3c980C-TX	10/100Mbps server adapter (Tornado ASIC)  * 3Com 3cSOHO100-TX	10/100Mbps/RJ-45 (Hurricane ASIC)  * 3Com 3c450-TX	10/100Mbps/RJ-45 (Tornado ASIC)  * 3Com 3c556		10/100Mbps/RJ-45 (MiniPCI, Hurricane ASIC)  * 3Com 3c556B		10/100Mbps/RJ-45 (MiniPCI, Hurricane ASIC)  * 3Com 3c575B		10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * 3Com 3c575C		10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * Dell Optiplex GX1 on-board 3c918 10/100Mbps/RJ-45  * Dell on-board 3c920 10/100Mbps/RJ-45  * Dell Precision on-board 3c905B 10/100Mbps/RJ-45  * Dell Latitude laptop docking station embedded 3c905-TX  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * 3Com 3c90x Etherlink XL PCI NIC driver  *  * Supports the 3Com "boomerang", "cyclone" and "hurricane" PCI  * bus-master chips (3c90x cards and embedded controllers) including  * the following:  *  * 3Com 3c900-TPO	10Mbps/RJ-45  * 3Com 3c900-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905-TX	10/100Mbps/RJ-45  * 3Com 3c905-T4	10/100Mbps/RJ-45  * 3Com 3c900B-TPO	10Mbps/RJ-45  * 3Com 3c900B-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c900B-TPC	10Mbps/RJ-45,BNC  * 3Com 3c900B-FL	10Mbps/Fiber-optic  * 3Com 3c905B-COMBO	10/100Mbps/RJ-45,AUI,BNC  * 3Com 3c905B-TX	10/100Mbps/RJ-45  * 3Com 3c905B-FL/FX	10/100Mbps/Fiber-optic  * 3Com 3c905C-TX	10/100Mbps/RJ-45 (Tornado ASIC)  * 3Com 3c980-TX	10/100Mbps server adapter (Hurricane ASIC)  * 3Com 3c980C-TX	10/100Mbps server adapter (Tornado ASIC)  * 3Com 3cSOHO100-TX	10/100Mbps/RJ-45 (Hurricane ASIC)  * 3Com 3c450-TX	10/100Mbps/RJ-45 (Tornado ASIC)  * 3Com 3c556		10/100Mbps/RJ-45 (MiniPCI, Hurricane ASIC)  * 3Com 3c556B		10/100Mbps/RJ-45 (MiniPCI, Hurricane ASIC)  * 3Com 3c575TX		10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * 3Com 3c575B		10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * 3Com 3c575C		10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * Dell Optiplex GX1 on-board 3c918 10/100Mbps/RJ-45  * Dell on-board 3c920 10/100Mbps/RJ-45  * Dell Precision on-board 3c905B 10/100Mbps/RJ-45  * Dell Latitude laptop docking station embedded 3c905-TX  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -399,6 +399,14 @@ block|,
 name|TC_DEVICEID_HURRICANE_556B
 block|,
 literal|"3Com 3c556B Fast Etherlink XL"
+block|}
+block|,
+block|{
+name|TC_VENDORID
+block|,
+name|TC_DEVICEID_HURRICANE_575A
+block|,
+literal|"3Com 3c575TX Fast Etherlink XL"
 block|}
 block|,
 block|{
@@ -4861,6 +4869,10 @@ name|TC_DEVICEID_HURRICANE_556B
 case|:
 comment|/* 3c556B */
 case|case
+name|TC_DEVICEID_HURRICANE_575A
+case|:
+comment|/* 3c575TX */
+case|case
 name|TC_DEVICEID_HURRICANE_575B
 case|:
 comment|/* 3c575B */
@@ -5159,6 +5171,13 @@ name|XL_FLAG_8BITROM
 expr_stmt|;
 if|if
 condition|(
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|TC_DEVICEID_HURRICANE_575A
+operator|||
 name|pci_get_device
 argument_list|(
 name|dev
