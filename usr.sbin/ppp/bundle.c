@@ -34,7 +34,7 @@ file|<net/if_tun.h>
 end_include
 
 begin_comment
-comment|/* For TUNSIFMODE& TUNSLMODE */
+comment|/* For TUNSIFMODE, TUNSLMODE& TUNSIFPID*/
 end_comment
 
 begin_include
@@ -9833,6 +9833,11 @@ expr_stmt|;
 name|setsid
 argument_list|()
 expr_stmt|;
+name|bundle_ChangedPID
+argument_list|(
+name|bundle
+argument_list|)
+expr_stmt|;
 name|log_Printf
 argument_list|(
 name|LogPHASE
@@ -10885,6 +10890,37 @@ block|}
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|bundle_ChangedPID
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
+name|bundle
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|TUNSIFPID
+name|ioctl
+argument_list|(
+name|bundle
+operator|->
+name|dev
+operator|.
+name|fd
+argument_list|,
+name|TUNSIFPID
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

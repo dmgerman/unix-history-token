@@ -2261,6 +2261,11 @@ literal|1
 index|]
 expr_stmt|;
 block|}
+name|bundle_ChangedPID
+argument_list|(
+name|bundle
+argument_list|)
+expr_stmt|;
 name|bundle_LockTun
 argument_list|(
 name|bundle

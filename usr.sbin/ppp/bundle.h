@@ -1058,5 +1058,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|bundle_ChangedPID
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
