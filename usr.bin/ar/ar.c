@@ -798,7 +798,7 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* -dmqr require a list of archive elements. */
+comment|/* -dmr require a list of archive elements. */
 if|if
 condition|(
 name|options
@@ -807,8 +807,6 @@ operator|(
 name|AR_D
 operator||
 name|AR_M
-operator||
-name|AR_Q
 operator||
 name|AR_R
 operator|)
