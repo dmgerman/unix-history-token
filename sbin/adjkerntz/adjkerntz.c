@@ -579,6 +579,14 @@ return|return
 literal|1
 return|;
 block|}
+name|stv
+operator|=
+name|NULL
+expr_stmt|;
+name|stz
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* correct the kerneltime for this diffs */
 comment|/* subtract kernel offset, if present, old offset too */
 name|diff
@@ -758,17 +766,7 @@ operator|&
 name|tv
 expr_stmt|;
 block|}
-else|else
-name|stv
-operator|=
-name|NULL
-expr_stmt|;
 block|}
-else|else
-name|stv
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|tz
@@ -801,29 +799,10 @@ operator|&
 name|tz
 expr_stmt|;
 block|}
-else|else
-name|stz
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|stz
-operator|!=
-name|NULL
-operator|||
-name|stv
-operator|!=
-name|NULL
-condition|)
-block|{
+comment|/* if init, don't touch RTC at all */
 if|if
 condition|(
 name|init
-operator|&&
-name|stv
-operator|!=
-name|NULL
 condition|)
 block|{
 name|mib
@@ -931,16 +910,32 @@ return|;
 block|}
 block|}
 block|}
-comment|/* stz means that kernel zone shifted */
-comment|/* clock needs adjustment even if !init */
 if|if
 condition|(
 operator|(
+operator|(
 name|init
+operator|&&
+operator|(
+name|stv
+operator|!=
+name|NULL
 operator|||
 name|stz
 operator|!=
 name|NULL
+operator|)
+operator|)
+operator|||
+operator|(
+name|stz
+operator|!=
+name|NULL
+operator|&&
+name|stv
+operator|==
+name|NULL
+operator|)
 operator|)
 operator|&&
 name|settimeofday
@@ -962,7 +957,7 @@ return|return
 literal|1
 return|;
 block|}
-block|}
+comment|/* init: don't write RTC, !init: write RTC */
 if|if
 condition|(
 name|kern_offset
@@ -1041,6 +1036,13 @@ expr_stmt|;
 name|disrtcset
 operator|=
 literal|0
+expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|disrtcset
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
