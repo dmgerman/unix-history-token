@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.25 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1415,6 +1415,43 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|T_TXT
+case|:
+if|if
+condition|(
+name|n
+operator|=
+operator|*
+name|cp
+operator|++
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"\tTEXT=%.*s\n"
+argument_list|,
+name|n
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+name|n
+expr_stmt|;
+block|}
+else|else
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"\tTEXT=\"\"\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|T_MINFO
 case|:
 name|fprintf
@@ -1456,9 +1493,6 @@ expr_stmt|;
 break|break;
 case|case
 name|T_UINFO
-case|:
-case|case
-name|T_TXT
 case|:
 name|fprintf
 argument_list|(
@@ -1804,7 +1838,7 @@ return|;
 case|case
 name|T_CNAME
 case|:
-comment|/* connonical name */
+comment|/* canonical name */
 return|return
 operator|(
 literal|"CNAME"
@@ -2037,10 +2071,10 @@ return|;
 case|case
 name|C_HS
 case|:
-comment|/* internet class */
+comment|/* hesiod class */
 return|return
 operator|(
-literal|"HESIOD"
+literal|"HS"
 operator|)
 return|;
 case|case
@@ -2177,9 +2211,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|p
-operator|!=
-name|nbuf
+name|value
 condition|)
 operator|*
 name|p
@@ -2217,9 +2249,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|p
-operator|!=
-name|nbuf
+name|value
+operator|||
+name|hours
 condition|)
 operator|*
 name|p
@@ -2253,13 +2285,24 @@ block|}
 if|if
 condition|(
 name|secs
+operator|||
+operator|!
+operator|(
+name|value
+operator|||
+name|hours
+operator|||
+name|mins
+operator|)
 condition|)
 block|{
 if|if
 condition|(
-name|p
-operator|!=
-name|nbuf
+name|value
+operator|||
+name|hours
+operator|||
+name|mins
 condition|)
 operator|*
 name|p
@@ -2282,13 +2325,6 @@ name|secs
 argument_list|)
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|*
-operator|++
-name|p
-condition|)
-empty_stmt|;
 block|}
 return|return
 operator|(
