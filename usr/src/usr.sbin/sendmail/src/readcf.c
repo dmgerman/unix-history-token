@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.37 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5146,6 +5146,7 @@ name|s_map
 operator|.
 name|map_class
 operator|=
+operator|&
 name|class
 operator|->
 name|s_mapclass
@@ -5168,7 +5169,7 @@ modifier|*
 name|class
 operator|->
 name|s_mapclass
-operator|->
+operator|.
 name|map_parse
 call|)
 argument_list|(
@@ -5184,7 +5185,7 @@ name|map
 operator|->
 name|s_map
 operator|.
-name|map_flags
+name|map_mflags
 operator||=
 name|MF_VALID
 expr_stmt|;

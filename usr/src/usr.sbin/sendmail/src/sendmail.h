@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.65 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.66 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.65		%G%"
+literal|"@(#)sendmail.h	6.66		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2334,7 +2334,7 @@ name|map_mname
 decl_stmt|;
 comment|/* name of this map */
 name|int
-name|map_flags
+name|map_mflags
 decl_stmt|;
 comment|/* flags, see below */
 name|char
@@ -2458,6 +2458,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MF_ALIAS
+value|0x0080
+end_define
+
+begin_comment
+comment|/* this is an alias file */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MF_IMPL_HASH
 value|0x1000
 end_define
@@ -2497,6 +2508,10 @@ modifier|*
 name|map_ext
 decl_stmt|;
 comment|/* extension for database file */
+name|short
+name|map_cflags
+decl_stmt|;
+comment|/* flag bits, see below */
 name|bool
 argument_list|(
 argument|*map_parse
@@ -2557,24 +2572,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* store function */
-name|void
-argument_list|(
-argument|*map_rebuild
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|MAP
-operator|*
-operator|,
-name|FILE
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* rebuild function */
 name|bool
 argument_list|(
 argument|*map_open
@@ -2609,6 +2606,43 @@ end_block
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/* bit values for map_cflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCF_ALIASOK
+value|0x0001
+end_define
+
+begin_comment
+comment|/* can be used for aliases */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCF_ALIASONLY
+value|0x0002
+end_define
+
+begin_comment
+comment|/* usable only for aliases */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCF_REBUILDABLE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* can rebuild alias files */
+end_comment
 
 begin_escape
 end_escape
@@ -2658,7 +2692,6 @@ name|sv_alias
 decl_stmt|;
 comment|/* alias */
 name|MAPCLASS
-modifier|*
 name|sv_mapclass
 decl_stmt|;
 comment|/* mapping function class */
