@@ -20236,9 +20236,8 @@ argument_list|,
 literal|"Message: "
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|message
@@ -20247,7 +20246,24 @@ name|MAXMSG
 argument_list|,
 name|stdin
 argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|nchars
+operator|=
+literal|0
 expr_stmt|;
+name|message
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+else|else
+block|{
 name|nchars
 operator|=
 name|strlen
@@ -20255,15 +20271,27 @@ argument_list|(
 name|message
 argument_list|)
 expr_stmt|;
+comment|/* Get rid of newline. */
+if|if
+condition|(
 name|message
 index|[
 name|nchars
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+name|message
+index|[
 operator|--
+name|nchars
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* get rid of newline */
+block|}
 block|}
 comment|/* some debugging print statements */
 if|if
