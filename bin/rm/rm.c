@@ -950,6 +950,8 @@ operator|->
 name|fts_accpath
 argument_list|)
 operator|)
+operator|==
+literal|0
 operator|||
 operator|(
 name|fflag
