@@ -69,7 +69,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.10 $"
+empty|#ident "$Revision: 1.11 $"
 end_empty
 
 begin_include
@@ -577,7 +577,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|int
+name|void
 name|main
 parameter_list|(
 name|int
@@ -1235,7 +1235,7 @@ name|stderr
 argument_list|,
 literal|"%s: [-np1v] [-r tgt_rt] [-w wtime]"
 literal|" [-a type=passwd] host1 [host2 ...]\n"
-literal|"or\t-t {on=filename|more|off|on=dump/../table}"
+literal|"or\t-t {on=filename|more|off|dump}"
 literal|" host1 [host2 ...]\n"
 argument_list|,
 name|pgmname

@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.19 $"
+empty|#ident "$Revision: 1.20 $"
 end_empty
 
 begin_include
@@ -3796,6 +3796,16 @@ name|bad_asize
 decl_stmt|,
 name|bad_len
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PASSIFNAME
+specifier|static
+name|struct
+name|msg_limit
+name|bad_name
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sockaddr_in
 name|from
@@ -3811,10 +3821,6 @@ name|hlen
 decl_stmt|;
 struct|struct
 block|{
-undef|#
-directive|undef
-name|USE_PASSIFNAME
-comment|/* it is too bad it does not work on raw sockets */
 ifdef|#
 directive|ifdef
 name|USE_PASSIFNAME
@@ -4048,29 +4054,6 @@ name|ifp
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* maybe it is a new interface */
-name|ifinit
-argument_list|()
-expr_stmt|;
-name|ifp
-operator|=
-name|ifwithname
-argument_list|(
-name|buf
-operator|.
-name|ifname
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|==
-literal|0
-condition|)
-block|{
 name|msglim
 argument_list|(
 operator|&
@@ -4091,8 +4074,6 @@ operator|.
 name|ifname
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 else|#
 directive|else
 comment|/* If we could tell the interface on which a packet from 		 * address 0 arrived, we could deal with such solicitations. 		 */
@@ -4177,8 +4158,8 @@ condition|)
 block|{
 name|trace_pkt
 argument_list|(
-literal|"    discard our own Router Discovery"
-literal|" message"
+literal|"    "
+literal|"discard our own Router Discovery message"
 argument_list|)
 expr_stmt|;
 continue|continue;

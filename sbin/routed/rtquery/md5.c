@@ -8,20 +8,20 @@ comment|/* Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All  * ri
 end_comment
 
 begin_empty
-empty|#ident "$Revision: 1.3 $"
+empty|#ident "$Revision: 1.4 $"
 end_empty
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<strings.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sgi
+end_ifdef
 
 begin_include
 include|#

@@ -10,7 +10,7 @@ name|__NetBSD__
 end_ifndef
 
 begin_empty
-empty|#ident "$Revision: 1.19 $"
+empty|#ident "$Revision: 1.21 $"
 end_empty
 
 begin_endif
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -199,23 +205,6 @@ include|#
 directive|include
 file|<protocols/routed.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|USE_PASSIFNAME
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Type of an IP address.  *	Some systems do not like to pass structures, so do not use in_addr.  *	Some systems think a long has 64 bits, which would be a gross waste.  * So define it here so it can be changed for the target system.  * It should be defined somewhere netinet/in.h, but it is not.  */

@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.19 $"
+empty|#ident "$Revision: 1.20 $"
 end_empty
 
 begin_include
@@ -385,28 +385,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* maybe it is a new interface */
-name|ifinit
-argument_list|()
-expr_stmt|;
-name|aifp
-operator|=
-name|ifwithname
-argument_list|(
-name|inbuf
-operator|.
-name|ifname
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|aifp
-operator|==
-literal|0
-condition|)
-block|{
 name|msglim
 argument_list|(
 operator|&
@@ -418,8 +396,7 @@ name|sin_addr
 operator|.
 name|s_addr
 argument_list|,
-literal|"impossible interface name"
-literal|" %.*s"
+literal|"impossible interface name %.*s"
 argument_list|,
 name|IFNAMSIZ
 argument_list|,
@@ -429,8 +406,7 @@ name|ifname
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* If it came via the wrong interface, do not 			 * trust it. 			 */
+elseif|else
 if|if
 condition|(
 operator|(
@@ -482,10 +458,13 @@ name|int_mask
 argument_list|)
 operator|)
 condition|)
+block|{
+comment|/* If it came via the wrong interface, do not 				 * trust it. 				 */
 name|aifp
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 else|#
 directive|else

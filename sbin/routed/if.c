@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.21 $"
+empty|#ident "$Revision: 1.22 $"
 end_empty
 
 begin_include
@@ -168,7 +168,7 @@ comment|/* remote interfaces */
 end_comment
 
 begin_comment
-comment|/* hash for physical interface names.  * Assume there are never more 100 or 200 real interfaces, and that  * aliases put on the end of the hash chains.  */
+comment|/* hash for physical interface names.  * Assume there are never more 100 or 200 real interfaces, and that  * aliases are put on the end of the hash chains.  */
 end_comment
 
 begin_define
@@ -237,6 +237,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|struct
+name|timeval
+name|last_ifinit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|have_ripv1_out
 decl_stmt|;
@@ -251,6 +259,10 @@ name|int
 name|have_ripv1_in
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Link a new interface into the lists and hash tables.  */
+end_comment
 
 begin_function
 name|void
@@ -507,6 +519,7 @@ operator|&
 name|IS_ALIAS
 condition|)
 block|{
+comment|/* put aliases on the end of the hash chain */
 while|while
 condition|(
 operator|*
@@ -795,6 +808,12 @@ name|p
 decl_stmt|;
 for|for
 control|(
+init|;
+condition|;
+control|)
+block|{
+for|for
+control|(
 name|i
 operator|=
 literal|0
@@ -816,8 +835,6 @@ operator|+=
 operator|*
 name|p
 expr_stmt|;
-for|for
-control|(
 name|ifp
 operator|=
 name|nhash
@@ -826,19 +843,15 @@ name|i
 operator|%
 name|NHASH_LEN
 index|]
-init|;
+expr_stmt|;
+while|while
+condition|(
 name|ifp
 operator|!=
 literal|0
-condition|;
-name|ifp
-operator|=
-name|ifp
-operator|->
-name|int_nhash
-control|)
+condition|)
 block|{
-comment|/* If the network address is not specified, 		 * ignore any alias interfaces.  Otherwise, look 		 * for the interface with the target name and address. 		 */
+comment|/* If the network address is not specified, 			 * ignore any alias interfaces.  Otherwise, look 			 * for the interface with the target name and address. 			 */
 if|if
 condition|(
 operator|!
@@ -879,10 +892,39 @@ condition|)
 return|return
 name|ifp
 return|;
+name|ifp
+operator|=
+name|ifp
+operator|->
+name|int_nhash
+expr_stmt|;
 block|}
+comment|/* If there is no known interface, maybe there is a 		 * new interface.  So just once look for new interfaces. 		 */
+if|if
+condition|(
+name|last_ifinit
+operator|.
+name|tv_sec
+operator|==
+name|now
+operator|.
+name|tv_sec
+operator|&&
+name|last_ifinit
+operator|.
+name|tv_usec
+operator|==
+name|now
+operator|.
+name|tv_usec
+condition|)
 return|return
 literal|0
 return|;
+name|ifinit
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -957,11 +999,6 @@ name|ifp
 decl_stmt|,
 modifier|*
 name|maybe
-decl_stmt|;
-specifier|static
-name|struct
-name|timeval
-name|retried
 decl_stmt|;
 name|maybe
 operator|=
@@ -1067,7 +1104,7 @@ operator|!=
 literal|0
 operator|||
 operator|(
-name|retried
+name|last_ifinit
 operator|.
 name|tv_sec
 operator|==
@@ -1075,7 +1112,7 @@ name|now
 operator|.
 name|tv_sec
 operator|&&
-name|retried
+name|last_ifinit
 operator|.
 name|tv_usec
 operator|==
@@ -1090,10 +1127,6 @@ return|;
 comment|/* If there is no known interface, maybe there is a 		 * new interface.  So just once look for new interfaces. 		 */
 name|ifinit
 argument_list|()
-expr_stmt|;
-name|retried
-operator|=
-name|now
 expr_stmt|;
 block|}
 block|}
@@ -2805,6 +2838,10 @@ name|ifr
 decl_stmt|;
 endif|#
 directive|endif
+name|last_ifinit
+operator|=
+name|now
+expr_stmt|;
 name|ifinit_timer
 operator|.
 name|tv_sec
