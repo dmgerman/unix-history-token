@@ -382,11 +382,6 @@ modifier|*
 name|context
 parameter_list|)
 block|{
-name|device_t
-name|dev
-init|=
-name|context
-decl_stmt|;
 switch|switch
 condition|(
 name|notify
