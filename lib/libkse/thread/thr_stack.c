@@ -394,6 +394,11 @@ expr_stmt|;
 comment|/* Map the stack, but not the guard page: */
 if|if
 condition|(
+operator|(
+name|attr
+operator|->
+name|stackaddr_attr
+operator|=
 name|mmap
 argument_list|(
 name|attr
@@ -413,6 +418,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 operator|==
 name|MAP_FAILED
 condition|)
