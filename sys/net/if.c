@@ -2339,6 +2339,9 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+name|IFNET_RLOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|ifp
@@ -2364,6 +2367,9 @@ name|if_attachdomain1
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|IFNET_RUNLOCK
+argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(
