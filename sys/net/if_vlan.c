@@ -814,9 +814,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|,
-modifier|*
-name|m0
 decl_stmt|;
 name|ifv
 operator|=
@@ -932,7 +929,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* M_PREPEND takes care of m_len, m_pkthdr.len for us */
-name|m0
+name|m
 operator|=
 name|m_pullup
 argument_list|(
@@ -945,7 +942,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m0
+name|m
 operator|==
 name|NULL
 condition|)
@@ -964,17 +961,8 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
-name|m
-operator|=
-name|m0
-expr_stmt|;
 comment|/* 			 * Transform the Ethernet header into an Ethernet header 			 * with 802.1Q encapsulation. 			 */
 name|bcopy
 argument_list|(
