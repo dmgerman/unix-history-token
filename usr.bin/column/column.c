@@ -1614,7 +1614,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: column [-tx] [-c columns] [file ...]\n"
+literal|"usage: column [-tx] [-c columns] [-s sep] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
