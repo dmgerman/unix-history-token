@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ah_output.c,v 1.31 2001/07/26 06:53:15 jinmei Exp $	*/
+comment|/*	$KAME: ah_output.c,v 1.38 2003/09/06 05:15:43 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -408,7 +408,7 @@ name|hdrsiz
 return|;
 name|estimate
 label|:
-comment|/* ASSUMING: 	 *	sizeof(struct newah)> sizeof(struct ah). 	 *	16 = (16 + 3)& ~(4 - 1). 	 */
+comment|/* ASSUMING: 	 *	sizeof(struct newah)> sizeof(struct ah). 	 *	AH_MAXSUMSIZE is multiple of 4. 	 */
 return|return
 sizeof|sizeof
 argument_list|(
@@ -416,7 +416,7 @@ expr|struct
 name|newah
 argument_list|)
 operator|+
-literal|16
+name|AH_MAXSUMSIZE
 return|;
 block|}
 end_function
@@ -472,7 +472,7 @@ name|u_char
 modifier|*
 name|ahdrpos
 decl_stmt|;
-name|u_char
+name|u_int8_t
 modifier|*
 name|ahsumpos
 init|=
@@ -1153,6 +1153,8 @@ operator|->
 name|replay
 operator|->
 name|count
+operator|&
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1269,9 +1271,6 @@ name|ah4_calccksum
 argument_list|(
 name|m
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|ahsumpos
 argument_list|,
 name|plen
@@ -1579,7 +1578,7 @@ decl_stmt|;
 name|u_int32_t
 name|spi
 decl_stmt|;
-name|u_char
+name|u_int8_t
 modifier|*
 name|ahsumpos
 init|=
@@ -1815,7 +1814,7 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ip6_output: AH with IPv6 jumbogram is not supported\n"
+literal|"ah6_output: AH with IPv6 jumbogram is not supported\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2231,9 +2230,6 @@ name|ah6_calccksum
 argument_list|(
 name|m
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|ahsumpos
 argument_list|,
 name|plen
