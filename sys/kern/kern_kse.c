@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -283,154 +277,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|int
-name|virtual_cpu
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_kern_threads
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_function
-specifier|static
-name|int
-name|sysctl_kse_virtual_cpu
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-block|{
-name|int
-name|error
-decl_stmt|,
-name|new_val
-decl_stmt|;
-name|int
-name|def_val
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|def_val
-operator|=
-name|mp_ncpus
-expr_stmt|;
-else|#
-directive|else
-name|def_val
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|virtual_cpu
-operator|==
-literal|0
-condition|)
-name|new_val
-operator|=
-name|def_val
-expr_stmt|;
-else|else
-name|new_val
-operator|=
-name|virtual_cpu
-expr_stmt|;
-name|error
-operator|=
-name|sysctl_handle_int
-argument_list|(
-name|oidp
-argument_list|,
-operator|&
-name|new_val
-argument_list|,
-literal|0
-argument_list|,
-name|req
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-operator|||
-name|req
-operator|->
-name|newptr
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-if|if
-condition|(
-name|new_val
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-name|virtual_cpu
-operator|=
-name|new_val
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* DEBUG ONLY */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_PROC
-argument_list|(
-name|_kern_threads
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|virtual_cpu
-argument_list|,
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|virtual_cpu
-argument_list|)
-argument_list|,
-name|sysctl_kse_virtual_cpu
-argument_list|,
-literal|"I"
-argument_list|,
-literal|"debug virtual cpus"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 name|struct
@@ -1187,6 +1033,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
+comment|/*  	 * Ensure that this is only called from the UTS 	 */
 if|if
 condition|(
 operator|(
@@ -1219,6 +1066,7 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Calculate the existing non-exiting upcalls in this ksegroup. 	 * If we are the last upcall but there are still other threads, 	 * then do not exit. We need the other threads to be able to  	 * complete whatever they are doing. 	 * XXX This relies on the userland knowing what to do if we return. 	 * It may be a better choice to convert ourselves into a kse_release 	 * ( or similar) and wait in the kernel to be needed. 	 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1304,6 +1152,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+comment|/*  	 * Mark the UTS mailbox as having been finished with. 	 * If that fails then just go for a segfault. 	 * XXX need to check it that can be deliverred without a mailbox. 	 */
 name|error
 operator|=
 name|suword
@@ -2292,22 +2141,10 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/* Too bad, why hasn't kernel always a cpu counter !? */
-ifdef|#
-directive|ifdef
-name|SMP
 name|ncpus
 operator|=
 name|mp_ncpus
 expr_stmt|;
-else|#
-directive|else
-name|ncpus
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|virtual_cpu
@@ -2970,7 +2807,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize global kse related resources.  */
+comment|/*  * Initialize global thread allocation resources.  */
 end_comment
 
 begin_function
@@ -3069,14 +2906,12 @@ decl_stmt|;
 comment|/* 	 * Don't even bother to lock if none at this instant, 	 * we really don't care about the next instant.. 	 */
 if|if
 condition|(
-operator|(
 operator|!
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|zombie_upcalls
 argument_list|)
-operator|)
 condition|)
 block|{
 name|mtx_lock_spin
@@ -4252,7 +4087,7 @@ operator|->
 name|ku_ksegrp
 argument_list|)
 expr_stmt|;
-comment|/* inherit blocked thread's context */
+comment|/* inherit parts of blocked thread's context as a good template */
 name|cpu_set_upcall
 argument_list|(
 name|td2
