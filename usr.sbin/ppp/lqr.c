@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.21 1998/01/11 17:50:40 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
+comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.22 1998/01/21 02:15:19 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -365,6 +371,39 @@ name|sequence
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* careful not to update gotseq with older values */
+if|if
+condition|(
+operator|(
+name|gotseq
+operator|>
+operator|(
+name|u_int32_t
+operator|)
+literal|0
+operator|-
+literal|5
+operator|&&
+name|seq
+operator|<
+literal|5
+operator|)
+operator|||
+operator|(
+name|gotseq
+operator|<=
+operator|(
+name|u_int32_t
+operator|)
+literal|0
+operator|-
+literal|5
+operator|&&
+name|seq
+operator|>
+name|gotseq
+operator|)
+condition|)
 name|gotseq
 operator|=
 name|seq
@@ -431,7 +470,7 @@ argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 condition|;
 name|n
@@ -491,14 +530,21 @@ name|LogPrintf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"** 1 Too many ECHO packets are lost. **\n"
+literal|"** Too many LQR packets lost **\n"
+argument_list|)
+expr_stmt|;
+name|LogPrintf
+argument_list|(
+name|LogLQM
+argument_list|,
+literal|"LqrOutput: Too many LQR packets lost\n"
 argument_list|)
 expr_stmt|;
 name|lqmmethod
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Prevent rcursion via LcpClose() */
+comment|/* Prevent recursion via LcpClose() */
 name|reconnect
 argument_list|(
 name|RECON_TRUE
@@ -547,25 +593,50 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|echoseq
-operator|-
-name|gotseq
 operator|>
 literal|5
+operator|&&
+name|echoseq
+operator|-
+literal|5
+operator|>
+name|gotseq
+operator|)
+operator|||
+operator|(
+name|echoseq
+operator|<=
+literal|5
+operator|&&
+name|echoseq
+operator|>
+name|gotseq
+operator|+
+literal|5
+operator|)
 condition|)
 block|{
 name|LogPrintf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"** 2 Too many ECHO packets are lost. **\n"
+literal|"** Too many ECHO LQR packets lost **\n"
+argument_list|)
+expr_stmt|;
+name|LogPrintf
+argument_list|(
+name|LogLQM
+argument_list|,
+literal|"LqrOutput: Too many ECHO LQR packets lost\n"
 argument_list|)
 expr_stmt|;
 name|lqmmethod
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Prevent rcursion via LcpClose() */
+comment|/* Prevent recursion via LcpClose() */
 name|reconnect
 argument_list|(
 name|RECON_TRUE
@@ -584,10 +655,9 @@ if|if
 condition|(
 name|lqmmethod
 operator|&&
-name|Enabled
-argument_list|(
-name|ConfLqr
-argument_list|)
+name|LqrTimer
+operator|.
+name|load
 condition|)
 name|StartTimer
 argument_list|(
@@ -762,7 +832,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* we have received LQR from peer */
-comment|/*      * Generate LQR responce to peer, if i) We are not running LQR timer. ii)      * Two successive LQR's PeerInLQRs are same.      */
+comment|/*      * Generate an LQR response to peer we're not running LQR timer OR      * two successive LQR's PeerInLQRs are same OR we're not going to      * send our next one before the peers max timeout.      */
 if|if
 condition|(
 name|LqrTimer
@@ -776,6 +846,27 @@ operator|==
 name|HisLqrData
 operator|.
 name|PeerInLQRs
+operator|||
+operator|(
+name|LqrTimer
+operator|.
+name|arg
+operator|&&
+name|LqrTimer
+operator|.
+name|rest
+operator|*
+literal|100
+operator|/
+name|SECTICKS
+operator|>
+operator|(
+name|u_int32_t
+operator|)
+name|LqrTimer
+operator|.
+name|arg
+operator|)
 condition|)
 block|{
 name|lqmmethod
@@ -784,7 +875,9 @@ name|LQM_LQR
 expr_stmt|;
 name|SendLqrReport
 argument_list|(
-literal|0
+name|LqrTimer
+operator|.
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -820,9 +913,6 @@ init|=
 operator|&
 name|LcpInfo
 decl_stmt|;
-name|int
-name|period
-decl_stmt|;
 name|lqrsendcnt
 operator|=
 literal|0
@@ -835,6 +925,17 @@ expr_stmt|;
 name|gotseq
 operator|=
 literal|0
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|HisLqrData
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+name|HisLqrData
+argument_list|)
 expr_stmt|;
 name|lqmmethod
 operator|=
@@ -857,45 +958,63 @@ operator|&
 name|LqrTimer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lcp
+operator|->
+name|his_lqrperiod
+condition|)
 name|LogPrintf
 argument_list|(
 name|LogLQM
 argument_list|,
-literal|"LQM method = %d\n"
+literal|"Expecting LQR every %d.%02d secs\n"
 argument_list|,
-name|lqmmethod
+name|lcp
+operator|->
+name|his_lqrperiod
+operator|/
+literal|100
+argument_list|,
+name|lcp
+operator|->
+name|his_lqrperiod
+operator|%
+literal|100
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|lcp
 operator|->
-name|his_lqrperiod
-operator|||
-name|lcp
-operator|->
 name|want_lqrperiod
 condition|)
 block|{
-comment|/*      * We need to run timer. Let's figure out period.      */
-name|period
-operator|=
-name|lcp
-operator|->
-name|his_lqrperiod
+name|LogPrintf
+argument_list|(
+name|LogLQM
+argument_list|,
+literal|"Will send %s every %d.%02d secs\n"
+argument_list|,
+name|lqmmethod
+operator|&
+name|LQM_LQR
 condition|?
-name|lcp
-operator|->
-name|his_lqrperiod
+literal|"LQR"
 else|:
+literal|"ECHO LQR"
+argument_list|,
 name|lcp
 operator|->
 name|want_lqrperiod
-expr_stmt|;
-name|StopTimer
-argument_list|(
-operator|&
-name|LqrTimer
+operator|/
+literal|100
+argument_list|,
+name|lcp
+operator|->
+name|want_lqrperiod
+operator|%
+literal|100
 argument_list|)
 expr_stmt|;
 name|LqrTimer
@@ -908,7 +1027,9 @@ name|LqrTimer
 operator|.
 name|load
 operator|=
-name|period
+name|lcp
+operator|->
+name|want_lqrperiod
 operator|*
 name|SECTICKS
 operator|/
@@ -920,40 +1041,46 @@ name|func
 operator|=
 name|SendLqrReport
 expr_stmt|;
+name|LqrTimer
+operator|.
+name|arg
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|lcp
+operator|->
+name|his_lqrperiod
+expr_stmt|;
 name|SendLqrReport
 argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|StartTimer
-argument_list|(
-operator|&
 name|LqrTimer
-argument_list|)
-expr_stmt|;
-name|LogPrintf
-argument_list|(
-name|LogLQM
-argument_list|,
-literal|"Will send LQR every %d.%d secs\n"
-argument_list|,
-name|period
-operator|/
-literal|100
-argument_list|,
-name|period
-operator|%
-literal|100
+operator|.
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
+name|LqrTimer
+operator|.
+name|load
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|lcp
+operator|->
+name|his_lqrperiod
+condition|)
 name|LogPrintf
 argument_list|(
 name|LogLQM
 argument_list|,
-literal|"LQR is not activated.\n"
+literal|"LQR/ECHO LQR not negotiated\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1028,7 +1155,9 @@ name|lqmmethod
 condition|)
 name|SendLqrReport
 argument_list|(
-literal|0
+name|LqrTimer
+operator|.
+name|arg
 argument_list|)
 expr_stmt|;
 else|else
