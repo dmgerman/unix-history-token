@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shutdown.c	5.4 (Berkeley) %G%"
+literal|"@(#)shutdown.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -578,6 +578,17 @@ name|FILE
 modifier|*
 name|termf
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|strcat
+parameter_list|()
+function_decl|;
+specifier|extern
+name|uid_t
+name|geteuid
+parameter_list|()
+function_decl|;
 name|shutter
 operator|=
 name|getlogin
@@ -815,6 +826,9 @@ operator|>
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|nolog2
@@ -822,6 +836,9 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|nolog2
