@@ -194,11 +194,17 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|==
+operator|-
+literal|1
 operator|||
 name|chroot
 argument_list|(
 literal|"."
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
