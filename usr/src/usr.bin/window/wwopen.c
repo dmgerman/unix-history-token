@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwopen.c	3.8 83/08/26"
+literal|"@(#)wwopen.c	3.9 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -783,6 +783,21 @@ argument_list|(
 name|w
 operator|->
 name|ww_cov
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|ww_fmap
+operator|!=
+literal|0
+condition|)
+name|wwfree
+argument_list|(
+name|w
+operator|->
+name|ww_fmap
 argument_list|)
 expr_stmt|;
 if|if
