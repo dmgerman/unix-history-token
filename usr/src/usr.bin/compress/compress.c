@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.19 (Berkeley) %G%"
+literal|"@(#)compress.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3495,6 +3495,15 @@ name|ferror
 argument_list|(
 name|stdout
 argument_list|)
+operator|||
+operator|(
+name|fclose
+argument_list|(
+name|stdout
+argument_list|)
+operator|==
+name|EOF
+operator|)
 condition|)
 name|writeerr
 argument_list|()
@@ -3968,6 +3977,30 @@ operator|-=
 name|nwritten
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|zcat_flg
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|close
+argument_list|(
+name|fileno
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|)
+condition|)
+name|writeerr
+argument_list|()
+expr_stmt|;
 block|}
 comment|/*-  * Read one code from the standard input.  If EOF, return -1.  * Inputs:  * 	stdin  * Outputs:  * 	code or -1 is returned.  */
 name|code_int
