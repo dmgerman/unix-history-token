@@ -1,33 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Paul Corbett.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)skeleton.c	5.6 (Berkeley) 1/27/91"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -35,11 +6,15 @@ file|"defs.h"
 end_include
 
 begin_comment
-comment|/*  The banner used here should be replaced with an #ident directive	*/
+comment|/*  The definition of yysccsid in the banner should be replaced with	*/
 end_comment
 
 begin_comment
-comment|/*  if the target C compiler supports #ident directives.		*/
+comment|/*  a #pragma ident directive if the target C compiler supports		*/
+end_comment
+
+begin_comment
+comment|/*  #pragma ident directives.						*/
 end_comment
 
 begin_comment
@@ -51,7 +26,27 @@ comment|/*  If the skeleton is changed, the banner should be changed so that	*/
 end_comment
 
 begin_comment
-comment|/*  the altered version can easily be distinguished from the original.	*/
+comment|/*  the altered version can be easily distinguished from the original.	*/
+end_comment
+
+begin_comment
+comment|/*									*/
+end_comment
+
+begin_comment
+comment|/*  The #defines included with the banner are there because they are	*/
+end_comment
+
+begin_comment
+comment|/*  useful in subsequent code.  The macros #defined in the header or	*/
+end_comment
+
+begin_comment
+comment|/*  the body either are not useful outside of semantic actions or	*/
+end_comment
+
+begin_comment
+comment|/*  are conditional.							*/
 end_comment
 
 begin_decl_stmt
@@ -63,11 +58,21 @@ init|=
 block|{
 literal|"#ifndef lint"
 block|,
-literal|"static char yysccsid[] = \"@(#)yaccpar	1.8 (Berkeley) 01/20/90\";"
+literal|"static char yysccsid[] = \"@(#)yaccpar	1.9 (Berkeley) 02/21/93\";"
 block|,
 literal|"#endif"
 block|,
 literal|"#define YYBYACC 1"
+block|,
+literal|"#define YYMAJOR 1"
+block|,
+literal|"#define YYMINOR 9"
+block|,
+literal|"#define yyclearin (yychar=(-1))"
+block|,
+literal|"#define yyerrok (yyerrflag=0)"
+block|,
+literal|"#define YYRECOVERING (yyerrflag!=0)"
 block|,
 literal|0
 block|}
@@ -119,17 +124,11 @@ name|header
 index|[]
 init|=
 block|{
-literal|"#define yyclearin (yychar=(-1))"
-block|,
-literal|"#define yyerrok (yyerrflag=0)"
-block|,
 literal|"#ifdef YYSTACKSIZE"
 block|,
-literal|"#ifndef YYMAXDEPTH"
+literal|"#undef YYMAXDEPTH"
 block|,
 literal|"#define YYMAXDEPTH YYSTACKSIZE"
-block|,
-literal|"#endif"
 block|,
 literal|"#else"
 block|,
@@ -182,6 +181,8 @@ index|[]
 init|=
 block|{
 literal|"#define YYABORT goto yyabort"
+block|,
+literal|"#define YYREJECT goto yyabort"
 block|,
 literal|"#define YYACCEPT goto yyaccept"
 block|,
@@ -257,9 +258,9 @@ literal|"            if (yychar<= YYMAXTOKEN) yys = yyname[yychar];"
 block|,
 literal|"            if (!yys) yys = \"illegal-symbol\";"
 block|,
-literal|"            printf(\"yydebug: state %d, reading %d (%s)\\n\", yystate,"
+literal|"            printf(\"%sdebug: state %d, reading %d (%s)\\n\","
 block|,
-literal|"                    yychar, yys);"
+literal|"                    YYPREFIX, yystate, yychar, yys);"
 block|,
 literal|"        }"
 block|,
@@ -277,9 +278,9 @@ literal|"#if YYDEBUG"
 block|,
 literal|"        if (yydebug)"
 block|,
-literal|"            printf(\"yydebug: state %d, shifting to state %d\\n\","
+literal|"            printf(\"%sdebug: state %d, shifting to state %d\\n\","
 block|,
-literal|"                    yystate, yytable[yyn]);"
+literal|"                    YYPREFIX, yystate, yytable[yyn]);"
 block|,
 literal|"#endif"
 block|,
@@ -359,9 +360,9 @@ literal|"#if YYDEBUG"
 block|,
 literal|"                if (yydebug)"
 block|,
-literal|"                    printf(\"yydebug: state %d, error recovery shifting\\"
+literal|"                    printf(\"%sdebug: state %d, error recovery shifting\\"
 block|,
-literal|" to state %d\\n\", *yyssp, yytable[yyn]);"
+literal|" to state %d\\n\", YYPREFIX, *yyssp, yytable[yyn]);"
 block|,
 literal|"#endif"
 block|,
@@ -389,9 +390,9 @@ literal|"#if YYDEBUG"
 block|,
 literal|"                if (yydebug)"
 block|,
-literal|"                    printf(\"yydebug: error recovery discarding state %d\ \\n\","
+literal|"                    printf(\"%sdebug: error recovery discarding state %d\ \\n\","
 block|,
-literal|"                            *yyssp);"
+literal|"                            YYPREFIX, *yyssp);"
 block|,
 literal|"#endif"
 block|,
@@ -425,9 +426,9 @@ literal|"            if (yychar<= YYMAXTOKEN) yys = yyname[yychar];"
 block|,
 literal|"            if (!yys) yys = \"illegal-symbol\";"
 block|,
-literal|"            printf(\"yydebug: state %d, error recovery discards token %d\  (%s)\\n\","
+literal|"            printf(\"%sdebug: state %d, error recovery discards token %d\  (%s)\\n\","
 block|,
-literal|"                    yystate, yychar, yys);"
+literal|"                    YYPREFIX, yystate, yychar, yys);"
 block|,
 literal|"        }"
 block|,
@@ -445,9 +446,9 @@ literal|"#if YYDEBUG"
 block|,
 literal|"    if (yydebug)"
 block|,
-literal|"        printf(\"yydebug: state %d, reducing by rule %d (%s)\\n\","
+literal|"        printf(\"%sdebug: state %d, reducing by rule %d (%s)\\n\","
 block|,
-literal|"                yystate, yyn, yyrule[yyn]);"
+literal|"                YYPREFIX, yystate, yyn, yyrule[yyn]);"
 block|,
 literal|"#endif"
 block|,
@@ -489,9 +490,9 @@ literal|"#if YYDEBUG"
 block|,
 literal|"        if (yydebug)"
 block|,
-literal|"            printf(\"yydebug: after reduction, shifting from state 0 to\\"
+literal|"            printf(\"%sdebug: after reduction, shifting from state 0 to\\"
 block|,
-literal|" state %d\\n\", YYFINAL);"
+literal|" state %d\\n\", YYPREFIX, YYFINAL);"
 block|,
 literal|"#endif"
 block|,
@@ -519,9 +520,9 @@ literal|"                if (yychar<= YYMAXTOKEN) yys = yyname[yychar];"
 block|,
 literal|"                if (!yys) yys = \"illegal-symbol\";"
 block|,
-literal|"                printf(\"yydebug: state %d, reading %d (%s)\\n\","
+literal|"                printf(\"%sdebug: state %d, reading %d (%s)\\n\","
 block|,
-literal|"                        YYFINAL, yychar, yys);"
+literal|"                        YYPREFIX, YYFINAL, yychar, yys);"
 block|,
 literal|"            }"
 block|,
@@ -549,9 +550,9 @@ literal|"#if YYDEBUG"
 block|,
 literal|"    if (yydebug)"
 block|,
-literal|"        printf(\"yydebug: after reduction, shifting from state %d \\"
+literal|"        printf(\"%sdebug: after reduction, shifting from state %d \\"
 block|,
-literal|"to state %d\\n\", *yyssp, yystate);"
+literal|"to state %d\\n\", YYPREFIX, *yyssp, yystate);"
 block|,
 literal|"#endif"
 block|,
@@ -607,14 +608,23 @@ begin_block
 block|{
 specifier|register
 name|int
+name|c
+decl_stmt|;
+specifier|register
+name|int
 name|i
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|s
 decl_stmt|;
 specifier|register
 name|FILE
 modifier|*
-name|fp
+name|f
 decl_stmt|;
-name|fp
+name|f
 operator|=
 name|code_file
 expr_stmt|;
@@ -624,6 +634,8 @@ name|i
 operator|=
 literal|0
 init|;
+name|s
+operator|=
 name|section
 index|[
 name|i
@@ -636,16 +648,30 @@ block|{
 operator|++
 name|outline
 expr_stmt|;
-name|fprintf
+while|while
+condition|(
+name|c
+operator|=
+operator|*
+name|s
+condition|)
+block|{
+name|putc
 argument_list|(
-name|fp
+name|c
 argument_list|,
-literal|"%s\n"
+name|f
+argument_list|)
+expr_stmt|;
+operator|++
+name|s
+expr_stmt|;
+block|}
+name|putc
+argument_list|(
+literal|'\n'
 argument_list|,
-name|section
-index|[
-name|i
-index|]
+name|f
 argument_list|)
 expr_stmt|;
 block|}
