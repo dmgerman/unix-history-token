@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_debug.c	4.9	83/02/10	*/
+comment|/*	tcp_debug.c	4.10	83/05/14	*/
 end_comment
 
 begin_include
@@ -386,6 +386,16 @@ case|:
 case|case
 name|TA_OUTPUT
 case|:
+case|case
+name|TA_DROP
+case|:
+if|if
+condition|(
+name|ti
+operator|==
+literal|0
+condition|)
+break|break;
 name|seq
 operator|=
 name|ti
@@ -475,9 +485,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"@%x"
+literal|"@%x, urp=%x"
 argument_list|,
 name|ack
+argument_list|,
+name|ti
+operator|->
+name|ti_urp
 argument_list|)
 expr_stmt|;
 name|flags
@@ -527,6 +541,16 @@ expr_stmt|;
 name|pf
 argument_list|(
 name|RST
+argument_list|)
+expr_stmt|;
+name|pf
+argument_list|(
+name|PUSH
+argument_list|)
+expr_stmt|;
+name|pf
+argument_list|(
+name|URG
 argument_list|)
 expr_stmt|;
 endif|#
@@ -608,7 +632,7 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"\trcv_(nxt,wnd) (%x,%x) snd_(una,nxt,max) (%x,%x,%x)\n"
+literal|"\trcv_(nxt,wnd,up) (%x,%x,%x) snd_(una,nxt,max) (%x,%x,%x)\n"
 argument_list|,
 name|tp
 operator|->
@@ -617,6 +641,10 @@ argument_list|,
 name|tp
 operator|->
 name|rcv_wnd
+argument_list|,
+name|tp
+operator|->
+name|rcv_up
 argument_list|,
 name|tp
 operator|->
