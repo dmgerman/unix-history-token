@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: strings.c,v 1.7 1999/03/29 13:18:16 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,6 +527,8 @@ operator|(
 name|u_int
 operator|)
 name|minlen
+operator|+
+literal|1
 argument_list|)
 operator|)
 condition|)
