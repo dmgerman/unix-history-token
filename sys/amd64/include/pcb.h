@@ -78,10 +78,6 @@ name|union
 name|savefpu
 name|pcb_save
 decl_stmt|;
-define|#
-directive|define
-name|pcb_savefpu
-value|pcb_save.sv_87
 name|u_char
 name|pcb_flags
 decl_stmt|;
