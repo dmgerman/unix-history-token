@@ -497,7 +497,7 @@ value|0x1440
 end_define
 
 begin_comment
-comment|/* PCI a slot 1 clear int regs 0..3 */
+comment|/* PCI a slot 2 clear int regs 0..3 */
 end_comment
 
 begin_define
@@ -508,7 +508,7 @@ value|0x1460
 end_define
 
 begin_comment
-comment|/* PCI a slot 1 clear int regs 0..3 */
+comment|/* PCI a slot 3 clear int regs 0..3 */
 end_comment
 
 begin_define
