@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)pow.c	4.1	%G%	*/
+comment|/*	@(#)pow.c	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -49,7 +49,12 @@ decl_stmt|;
 name|long
 name|l
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
 asm|asm("	bispsw	$0xe0");
+endif|#
+directive|endif
 if|if
 condition|(
 name|arg1
