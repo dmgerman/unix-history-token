@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)io.c	5.1 (Berkeley) 85/06/07"
+literal|"@(#)io.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,7 +25,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * io.c  *  * Routines to generate code for I/O statements.  * Some corrections and improvements due to David Wasley, U. C. Berkeley  *  * University of Utah CS Dept modification history:  *  * $Header: io.c,v 2.4 85/02/23 21:09:02 donn Exp $  * $Log:	io.c,v $  * Revision 2.4  85/02/23  21:09:02  donn  * Jerry Berkman's compiled format fixes move setfmt into a separate file.  *   * Revision 2.3  85/01/10  22:33:41  donn  * Added some strategic cpexpr()s to prevent memory management bugs.  *   * Revision 2.2  84/08/04  21:15:47  donn  * Removed code that creates extra statement labels, per Jerry Berkman's  * fixes to make ASSIGNs work right.  *   * Revision 2.1  84/07/19  12:03:33  donn  * Changed comment headers for UofU.  *   * Revision 1.2  84/02/26  06:35:57  donn  * Added Berkeley changes necessary for shortening offsets to data.  *   */
+comment|/*  * io.c  *  * Routines to generate code for I/O statements.  * Some corrections and improvements due to David Wasley, U. C. Berkeley  *  * University of Utah CS Dept modification history:  *  * $Header: io.c,v 5.2 85/12/19 17:22:35 donn Exp $  * $Log:	io.c,v $  * Revision 5.2  85/12/19  17:22:35  donn  * Don't permit more than one 'positional iocontrol' parameter unless we  * are doing a READ or a WRITE.  *   * Revision 5.1  85/08/10  03:47:42  donn  * 4.3 alpha  *   * Revision 2.4  85/02/23  21:09:02  donn  * Jerry Berkman's compiled format fixes move setfmt into a separate file.  *   * Revision 2.3  85/01/10  22:33:41  donn  * Added some strategic cpexpr()s to prevent memory management bugs.  *   * Revision 2.2  84/08/04  21:15:47  donn  * Removed code that creates extra statement labels, per Jerry Berkman's  * fixes to make ASSIGNs work right.  *   * Revision 2.1  84/07/19  12:03:33  donn  * Changed comment headers for UofU.  *   * Revision 1.2  84/02/26  06:35:57  donn  * Added Berkeley changes necessary for shortening offsets to data.  *   */
 end_comment
 
 begin_comment
@@ -1719,6 +1719,21 @@ condition|(
 name|nioctl
 operator|>
 name|IOSFMT
+operator|||
+name|nioctl
+operator|>
+name|IOSUNIT
+operator|&&
+operator|!
+operator|(
+name|iostmt
+operator|==
+name|IOREAD
+operator|||
+name|iostmt
+operator|==
+name|IOWRITE
+operator|)
 condition|)
 block|{
 name|err
