@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdr_array.c,v 1.2 1995/05/30 05:42:04 rgrimes Exp $"
+literal|"$Id: xdr_array.c,v 1.3 1995/10/22 14:53:54 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|LASTUNSIGNED
-value|((u_int)0-1)
+value|((u_int) 0-1)
 end_define
 
 begin_comment
@@ -269,9 +269,11 @@ name|FALSE
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|target
+argument_list|,
+literal|0
 argument_list|,
 name|nodesize
 argument_list|)

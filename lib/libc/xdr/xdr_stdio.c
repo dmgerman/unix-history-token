@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdr_stdio.c,v 1.1 1994/08/07 18:39:35 wollman Exp $"
+literal|"$Id: xdr_stdio.c,v 1.2 1995/05/30 05:42:12 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,7 +113,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|long
+name|int32_t
 modifier|*
 name|xdrstdio_inline
 parameter_list|()
@@ -266,10 +266,6 @@ comment|/* xx should we close the file ?? */
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 name|bool_t
@@ -300,7 +296,7 @@ name|lp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 argument_list|,
 literal|1
@@ -321,20 +317,21 @@ operator|(
 name|FALSE
 operator|)
 return|;
-ifndef|#
-directive|ifndef
-name|mc68000
 operator|*
 name|lp
 operator|=
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
+operator|(
+name|int32_t
+operator|)
 operator|*
 name|lp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|TRUE
@@ -361,25 +358,21 @@ modifier|*
 name|lp
 decl_stmt|;
 block|{
-ifndef|#
-directive|ifndef
-name|mc68000
 name|long
 name|mycopy
 init|=
+operator|(
+name|long
+operator|)
 name|htonl
 argument_list|(
+operator|(
+name|int32_t
+operator|)
 operator|*
 name|lp
 argument_list|)
 decl_stmt|;
-name|lp
-operator|=
-operator|&
-name|mycopy
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|fwrite
@@ -387,11 +380,12 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|lp
+operator|&
+name|mycopy
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 argument_list|,
 literal|1
@@ -637,7 +631,7 @@ end_function
 
 begin_function
 specifier|static
-name|long
+name|int32_t
 modifier|*
 name|xdrstdio_inline
 parameter_list|(

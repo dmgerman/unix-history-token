@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdr_rec.c,v 1.3 1995/05/30 05:42:09 rgrimes Exp $"
+literal|"$Id: xdr_rec.c,v 1.4 1995/10/22 14:53:56 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,7 +171,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|long
+name|int32_t
 modifier|*
 name|xdrrec_inline
 parameter_list|()
@@ -220,7 +220,7 @@ begin_define
 define|#
 directive|define
 name|LAST_FRAG
-value|((u_long)(1<< 31))
+value|((u_int32_t)(1<< 31))
 end_define
 
 begin_typedef
@@ -236,12 +236,20 @@ name|the_buffer
 decl_stmt|;
 comment|/* 	 * out-goung bits 	 */
 name|int
-function_decl|(
-modifier|*
-name|writeit
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*writeit
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+name|caddr_t
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 name|caddr_t
 name|out_base
 decl_stmt|;
@@ -254,23 +262,31 @@ name|caddr_t
 name|out_boundry
 decl_stmt|;
 comment|/* data cannot up to this address */
-name|u_long
+name|u_int32_t
 modifier|*
 name|frag_header
 decl_stmt|;
-comment|/* beginning of curren fragment */
+comment|/* beginning of current fragment */
 name|bool_t
 name|frag_sent
 decl_stmt|;
 comment|/* true if buffer sent in middle of record */
 comment|/* 	 * in-coming bits 	 */
 name|int
-function_decl|(
-modifier|*
-name|readit
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*readit
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+name|caddr_t
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 name|u_long
 name|in_size
 decl_stmt|;
@@ -486,7 +502,7 @@ operator|->
 name|the_buffer
 init|;
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|rstrm
 operator|->
@@ -564,7 +580,7 @@ operator|->
 name|frag_header
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|rstrm
@@ -577,7 +593,7 @@ name|out_finger
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|rstrm
@@ -671,12 +687,12 @@ name|x_private
 operator|)
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 modifier|*
 name|buflp
 init|=
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|(
@@ -685,7 +701,7 @@ operator|->
 name|in_finger
 operator|)
 decl_stmt|;
-name|long
+name|int32_t
 name|mylong
 decl_stmt|;
 comment|/* first try the inline, fast case */
@@ -698,28 +714,28 @@ name|fbtbc
 operator|>=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 operator|)
 operator|&&
 operator|(
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|rstrm
 operator|->
 name|in_boundry
 operator|-
 operator|(
-name|int
+name|long
 operator|)
 name|buflp
 operator|)
 operator|>=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 operator|)
 condition|)
@@ -733,7 +749,7 @@ operator|)
 name|ntohl
 argument_list|(
 call|(
-name|u_long
+name|u_int32_t
 call|)
 argument_list|(
 operator|*
@@ -747,7 +763,7 @@ name|fbtbc
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 name|rstrm
@@ -756,7 +772,7 @@ name|in_finger
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 block|}
@@ -777,7 +793,7 @@ name|mylong
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 argument_list|)
 condition|)
@@ -795,7 +811,7 @@ operator|)
 name|ntohl
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|)
 name|mylong
 argument_list|)
@@ -843,13 +859,13 @@ name|x_private
 operator|)
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 modifier|*
 name|dest_lp
 init|=
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|(
@@ -868,7 +884,7 @@ name|out_finger
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 operator|)
 operator|>
@@ -884,7 +900,7 @@ name|out_finger
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 name|rstrm
@@ -912,7 +928,7 @@ name|dest_lp
 operator|=
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|(
@@ -928,7 +944,7 @@ name|out_finger
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 block|}
@@ -936,12 +952,12 @@ operator|*
 name|dest_lp
 operator|=
 operator|(
-name|long
+name|int32_t
 operator|)
 name|htonl
 argument_list|(
 call|(
-name|u_long
+name|u_int32_t
 call|)
 argument_list|(
 operator|*
@@ -1139,7 +1155,7 @@ name|x_private
 operator|)
 decl_stmt|;
 specifier|register
-name|int
+name|long
 name|current
 decl_stmt|;
 while|while
@@ -1152,14 +1168,14 @@ block|{
 name|current
 operator|=
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|rstrm
 operator|->
 name|out_boundry
 operator|-
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|rstrm
 operator|->
@@ -1177,13 +1193,13 @@ name|len
 else|:
 name|current
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|addr
-argument_list|,
 name|rstrm
 operator|->
 name|out_finger
+argument_list|,
+name|addr
 argument_list|,
 name|current
 argument_list|)
@@ -1281,12 +1297,15 @@ argument_list|(
 operator|(
 name|int
 operator|)
+operator|(
+name|long
+operator|)
 name|rstrm
 operator|->
 name|tcp_handle
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 literal|0
 argument_list|,
@@ -1338,9 +1357,6 @@ break|break;
 default|default:
 name|pos
 operator|=
-operator|(
-name|u_int
-operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -1544,7 +1560,7 @@ end_function
 
 begin_function
 specifier|static
-name|long
+name|int32_t
 modifier|*
 name|xdrrec_inline
 parameter_list|(
@@ -1574,7 +1590,7 @@ name|xdrs
 operator|->
 name|x_private
 decl_stmt|;
-name|long
+name|int32_t
 modifier|*
 name|buf
 init|=
@@ -1608,7 +1624,7 @@ block|{
 name|buf
 operator|=
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 name|rstrm
@@ -1654,7 +1670,7 @@ block|{
 name|buf
 operator|=
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 name|rstrm
@@ -2026,7 +2042,7 @@ name|out_finger
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 operator|>=
 operator|(
@@ -2077,7 +2093,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2102,7 +2118,7 @@ operator|->
 name|frag_header
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|rstrm
@@ -2115,7 +2131,7 @@ name|out_finger
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 return|return
@@ -2163,7 +2179,7 @@ else|:
 literal|0
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 name|len
 init|=
 call|(
@@ -2186,7 +2202,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 decl_stmt|;
 operator|*
@@ -2263,7 +2279,7 @@ operator|->
 name|frag_header
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|rstrm
@@ -2283,7 +2299,7 @@ name|out_base
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 return|return
@@ -2312,11 +2328,11 @@ specifier|register
 name|caddr_t
 name|where
 decl_stmt|;
-name|u_int
+name|u_long
 name|i
 decl_stmt|;
 specifier|register
-name|int
+name|long
 name|len
 decl_stmt|;
 name|where
@@ -2328,7 +2344,7 @@ expr_stmt|;
 name|i
 operator|=
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|rstrm
 operator|->
@@ -2431,7 +2447,7 @@ name|len
 decl_stmt|;
 block|{
 specifier|register
-name|int
+name|long
 name|current
 decl_stmt|;
 while|while
@@ -2444,14 +2460,14 @@ block|{
 name|current
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|rstrm
 operator|->
 name|in_boundry
 operator|-
 operator|(
-name|int
+name|long
 operator|)
 name|rstrm
 operator|->
@@ -2491,13 +2507,13 @@ name|len
 else|:
 name|current
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
+name|addr
+argument_list|,
 name|rstrm
 operator|->
 name|in_finger
-argument_list|,
-name|addr
 argument_list|,
 name|current
 argument_list|)
@@ -2539,7 +2555,7 @@ modifier|*
 name|rstrm
 decl_stmt|;
 block|{
-name|u_long
+name|u_int32_t
 name|header
 decl_stmt|;
 if|if
@@ -2633,7 +2649,7 @@ name|cnt
 decl_stmt|;
 block|{
 specifier|register
-name|int
+name|long
 name|current
 decl_stmt|;
 while|while
@@ -2646,14 +2662,14 @@ block|{
 name|current
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|rstrm
 operator|->
 name|in_boundry
 operator|-
 operator|(
-name|int
+name|long
 operator|)
 name|rstrm
 operator|->
