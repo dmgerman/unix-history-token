@@ -3681,6 +3681,19 @@ operator||=
 name|RTF_HOST
 expr_stmt|;
 block|}
+comment|/* 	 * XXX: A route to network should never point to a carp(4) 	 * interface. Use only host route for CARP address. 	 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_type
+operator|==
+name|IFT_CARP
+condition|)
+name|flags
+operator||=
+name|RTF_HOST
+expr_stmt|;
 if|if
 condition|(
 operator|(
