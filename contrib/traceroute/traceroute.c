@@ -5432,6 +5432,9 @@ operator|*
 operator|)
 name|icp
 argument_list|,
+operator|(
+name|u_char
+operator|)
 name|seq
 argument_list|)
 condition|)
@@ -5521,6 +5524,9 @@ call|)
 argument_list|(
 name|inner
 argument_list|,
+operator|(
+name|u_char
+operator|)
 name|seq
 argument_list|)
 condition|)
