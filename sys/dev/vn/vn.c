@@ -136,19 +136,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_pageout.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/swap_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_extern.h>
 end_include
 
 begin_decl_stmt
@@ -376,6 +364,8 @@ begin_decl_stmt
 specifier|static
 name|u_long
 name|vn_options
+init|=
+name|VN_LABELS
 decl_stmt|;
 end_decl_stmt
 
