@@ -973,7 +973,7 @@ name|kvar
 block|,
 name|NULL
 block|,
-literal|6
+literal|8
 block|,
 name|KOFF
 argument_list|(
@@ -1031,7 +1031,7 @@ name|kvar
 block|,
 name|NULL
 block|,
-literal|6
+literal|8
 block|,
 name|KOFF
 argument_list|(
