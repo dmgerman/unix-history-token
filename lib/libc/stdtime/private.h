@@ -92,15 +92,9 @@ directive|ifndef
 name|NOID
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|privatehid
-index|[]
-init|=
-literal|"@(#)private.h	7.5"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*static char	privatehid[] = "@(#)private.h	7.33";*/
+end_comment
 
 begin_endif
 endif|#
@@ -121,25 +115,20 @@ comment|/* !defined lint */
 end_comment
 
 begin_comment
-comment|/* ** const */
+comment|/* ** Defaults for preprocessor symbols. ** You can override these in your C compiler options, e.g. `-DHAVE_ADJTIME=0'. */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|const
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
+name|HAVE_ADJTIME
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|const
+name|HAVE_ADJTIME
+value|1
 end_define
 
 begin_endif
@@ -148,51 +137,20 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined __STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined const */
-end_comment
-
-begin_comment
-comment|/* ** void */
+comment|/* !defined HAVE_ADJTIME */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|void
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|vax
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|sun
+name|HAVE_SETTIMEOFDAY
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|void
-value|char
+name|HAVE_SETTIMEOFDAY
+value|3
 end_define
 
 begin_endif
@@ -201,60 +159,20 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined sun */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined vax */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined __STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined void */
-end_comment
-
-begin_comment
-comment|/* ** P((args)) */
+comment|/* !defined HAVE_SETTIMEOFDAY */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|P
+name|HAVE_UNISTD_H
 end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_define
 define|#
 directive|define
-name|P
-parameter_list|(
-name|x
-parameter_list|)
-value|x
+name|HAVE_UNISTD_H
+value|1
 end_define
 
 begin_endif
@@ -263,98 +181,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined __STDC__ */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ASTERISK
-value|*
-end_define
-
-begin_define
-define|#
-directive|define
-name|P
-parameter_list|(
-name|x
-parameter_list|)
-value|( /ASTERISK x ASTERISK/ )
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined __STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined P */
+comment|/* !defined HAVE_UNISTD_H */
 end_comment
 
 begin_comment
-comment|/* ** genericptr_t */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|genericptr_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined __STDC__ */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|genericptr_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined __STDC__ */
+comment|/* ** Nested includes */
 end_comment
 
 begin_include
@@ -401,17 +232,35 @@ begin_comment
 comment|/* for CHAR_BIT */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_TIME_
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|"time.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"stdlib.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|HAVE_UNISTD_H
+operator|-
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|"unistd.h"
+end_include
+
+begin_comment
+comment|/* for F_OK and R_OK */
+end_comment
 
 begin_endif
 endif|#
@@ -419,36 +268,31 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined _TIME_ */
+comment|/* HAVE_UNISTD_H - 0 */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|HAVE_UNISTD_H
+operator|-
+literal|0
+operator|)
+end_if
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|remove
+name|F_OK
 end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|unlink
-name|P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|filename
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|remove
-value|unlink
+name|F_OK
+value|0
 end_define
 
 begin_endif
@@ -457,7 +301,207 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined remove */
+comment|/* !defined F_OK */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|R_OK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|R_OK
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined R_OK */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !(HAVE_UNISTD_H - 0) */
+end_comment
+
+begin_comment
+comment|/* ** Workarounds for compilers/systems. */
+end_comment
+
+begin_comment
+comment|/* ** SunOS 4.1.1 cc lacks const. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|const
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|const
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined __STDC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined const */
+end_comment
+
+begin_comment
+comment|/* ** SunOS 4.1.1 cc lacks prototypes. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|P
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|P
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined __STDC__ */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|P
+parameter_list|(
+name|x
+parameter_list|)
+value|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined __STDC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined P */
+end_comment
+
+begin_comment
+comment|/* ** SunOS 4.1.1 headers lack EXIT_SUCCESS. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXIT_SUCCESS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EXIT_SUCCESS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined EXIT_SUCCESS */
+end_comment
+
+begin_comment
+comment|/* ** SunOS 4.1.1 headers lack EXIT_FAILURE. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXIT_FAILURE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EXIT_FAILURE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined EXIT_FAILURE */
+end_comment
+
+begin_comment
+comment|/* ** SunOS 4.1.1 headers lack FILENAME_MAX. */
 end_comment
 
 begin_ifndef
@@ -559,388 +603,38 @@ begin_comment
 comment|/* !defined FILENAME_MAX */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXIT_SUCCESS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|EXIT_SUCCESS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* !defined EXIT_SUCCESS */
+comment|/* ** SunOS 4.1.1 libraries lack remove. */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|EXIT_FAILURE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|EXIT_FAILURE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined EXIT_FAILURE */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|alloc_size_t
-value|size_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|qsort_size_t
-value|size_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|fwrite_size_t
-value|size_t
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined __STDC__ */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|alloc_size_t
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|alloc_size_t
-value|unsigned
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined alloc_size_t */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|qsort_size_t
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|qsort_size_t
-value|unsigned
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined USG */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|qsort_size_t
-value|int
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined USG */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined qsort_size_t */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|fwrite_size_t
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|fwrite_size_t
-value|int
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined fwrite_size_t */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USG
+name|remove
 end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|sprintf
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-name|buf
-operator|,
-specifier|const
-name|char
-operator|*
-name|format
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined USG */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined __STDC__ */
-end_comment
-
-begin_comment
-comment|/* ** Ensure that these are declared--redundantly declaring them shouldn't hurt. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|getenv
-name|P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|name
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|genericptr_t
-name|malloc
-name|P
-argument_list|(
-operator|(
-name|alloc_size_t
-name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|genericptr_t
-name|calloc
-name|P
-argument_list|(
-operator|(
-name|alloc_size_t
-name|nelem
-operator|,
-name|alloc_size_t
-name|elsize
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|genericptr_t
-name|realloc
-name|P
-argument_list|(
-operator|(
-name|genericptr_t
-name|oldptr
-operator|,
-name|alloc_size_t
-name|newsize
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USG
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|exit
-name|P
-argument_list|(
-operator|(
 name|int
-name|s
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|qsort
-name|P
-argument_list|(
-operator|(
-name|genericptr_t
-name|base
-operator|,
-name|qsort_size_t
-name|nelem
-operator|,
-name|qsort_size_t
-name|elsize
-operator|,
-name|int
-argument_list|(
-operator|*
-name|comp
-argument_list|)
-argument_list|()
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|perror
+name|unlink
 name|P
 argument_list|(
 operator|(
 specifier|const
 name|char
 operator|*
-name|string
+name|filename
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|free
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-name|buf
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|remove
+value|unlink
+end_define
 
 begin_endif
 endif|#
@@ -948,7 +642,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined USG */
+comment|/* !defined remove */
+end_comment
+
+begin_comment
+comment|/* ** Finally, some convenience items. */
 end_comment
 
 begin_ifndef
@@ -1026,7 +724,147 @@ comment|/* !defined INT_STRLEN_MAXIMUM */
 end_comment
 
 begin_comment
-comment|/* ** UNIX is a registered trademark of AT&T. ** VAX is a trademark of Digital Equipment Corporation. */
+comment|/* ** INITIALIZE(x) */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GNUC_or_lint
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GNUC_or_lint
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GNUC_or_lint
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined __GNUC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined lint */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined GNUC_or_lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INITIALIZE
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNUC_or_lint
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) = 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined GNUC_or_lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GNUC_or_lint
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined GNUC_or_lint */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined INITIALIZE */
+end_comment
+
+begin_comment
+comment|/* ** UNIX was a registered trademark of UNIX System Laboratories in 1993. */
 end_comment
 
 begin_endif

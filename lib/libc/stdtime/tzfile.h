@@ -31,15 +31,9 @@ directive|ifndef
 name|NOID
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|tzfilehid
-index|[]
-init|=
-literal|"@(#)tzfile.h	7.4"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*static char	tzfilehid[] = "@(#)tzfile.h	7.6";*/
+end_comment
 
 begin_endif
 endif|#
@@ -144,10 +138,17 @@ block|{
 name|char
 name|tzh_reserved
 index|[
-literal|24
+literal|20
 index|]
 decl_stmt|;
 comment|/* reserved for future use */
+name|char
+name|tzh_ttisgmtcnt
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* coded number of trans. time flags */
 name|char
 name|tzh_ttisstdcnt
 index|[
@@ -188,7 +189,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* ** . . .followed by. . . ** **	tzh_timecnt (char [4])s		coded transition times a la time(2) **	tzh_timecnt (unsigned char)s	types of local time starting at above **	tzh_typecnt repetitions of **		one (char [4])		coded GMT offset in seconds **		one (unsigned char)	used to set tm_isdst **		one (unsigned char)	that's an abbreviation list index **	tzh_charcnt (char)s		'\0'-terminated zone abbreviations **	tzh_leapcnt repetitions of **		one (char [4])		coded leap second transition times **		one (char [4])		total correction after above **	tzh_ttisstdcnt (char)s		indexed by type; if TRUE, transition **					time is standard time, if FALSE, **					transition time is wall clock time **					if absent, transition times are **					assumed to be wall clock time */
+comment|/* ** . . .followed by. . . ** **	tzh_timecnt (char [4])s		coded transition times a la time(2) **	tzh_timecnt (unsigned char)s	types of local time starting at above **	tzh_typecnt repetitions of **		one (char [4])		coded GMT offset in seconds **		one (unsigned char)	used to set tm_isdst **		one (unsigned char)	that's an abbreviation list index **	tzh_charcnt (char)s		'\0'-terminated zone abbreviations **	tzh_leapcnt repetitions of **		one (char [4])		coded leap second transition times **		one (char [4])		total correction after above **	tzh_ttisstdcnt (char)s		indexed by type; if TRUE, transition **					time is standard time, if FALSE, **					transition time is wall clock time **					if absent, transition times are **					assumed to be wall clock time **	tzh_ttisgmtcnt (char)s		indexed by type; if TRUE, transition **					time is GMT, if FALSE, **					transition time is local time **					if absent, transition times are **					assumed to be local time */
 end_comment
 
 begin_comment
@@ -259,11 +260,15 @@ directive|ifdef
 name|NOSOLAR
 end_ifdef
 
+begin_comment
+comment|/* ** Must be at least 14 for Europe/Riga as of Jan 12 1995, ** as noted by Earl Chew<earl@hpato.aus.hp.com>. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TZ_MAX_TYPES
-value|10
+value|20
 end_define
 
 begin_comment
