@@ -69,6 +69,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_DEVICE_UPD871
+value|0x00ce
+end_define
+
+begin_define
+define|#
+directive|define
 name|FW_DEVICE_TITSB22
 value|0x8009
 end_define
