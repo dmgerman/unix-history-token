@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * John Heidemann of the UCLA Ficus project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)null_vnops.c	8.6 (Berkeley) 5/27/95  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: null_vnops.c,v 1.23 1997/10/15 09:21:07 phk Exp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  *  * $Id: null_vnops.c,v 1.23 1997/10/15 09:21:07 phk Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * John Heidemann of the UCLA Ficus project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)null_vnops.c	8.6 (Berkeley) 5/27/95  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: null_vnops.c,v 1.24 1997/10/15 10:04:31 phk Exp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  *  * $Id: null_vnops.c,v 1.24 1997/10/15 10:04:31 phk Exp $  */
 end_comment
 
 begin_comment
@@ -1432,7 +1432,44 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-comment|/* 	 * Do nothing (and _don't_ bypass). 	 * Wait to vrele lowervp until reclaim, 	 * so that until then our null_node is in the 	 * cache and reusable. 	 * 	 * NEEDSWORK: Someday, consider inactive'ing 	 * the lowervp and then trying to reactivate it 	 * with capabilities (v_id) 	 * like they do in the name lookup cache code. 	 * That's too much work for now. 	 */
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+name|struct
+name|null_node
+modifier|*
+name|xp
+init|=
+name|VTONULL
+argument_list|(
+name|vp
+argument_list|)
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|lowervp
+init|=
+name|xp
+operator|->
+name|null_lowervp
+decl_stmt|;
+comment|/* 	 * Do nothing (and _don't_ bypass). 	 * Wait to vrele lowervp until reclaim, 	 * so that until then our null_node is in the 	 * cache and reusable. 	 * We still have to tell the lower layer the vnode 	 * is now inactive though. 	 * 	 * NEEDSWORK: Someday, consider inactive'ing 	 * the lowervp and then trying to reactivate it 	 * with capabilities (v_id) 	 * like they do in the name lookup cache code. 	 * That's too much work for now. 	 */
+name|VOP_INACTIVE
+argument_list|(
+name|lowervp
+argument_list|,
+name|ap
+operator|->
+name|a_p
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|ap
