@@ -2251,13 +2251,20 @@ block|{
 comment|/* EOF detection for line mode!!!! */
 if|if
 condition|(
+operator|(
 name|c
 operator|==
 literal|0
+operator|)
 operator|&&
 name|MODE_LOCAL_CHARS
 argument_list|(
 name|globalmode
+argument_list|)
+operator|&&
+name|isatty
+argument_list|(
+name|tin
 argument_list|)
 condition|)
 block|{
