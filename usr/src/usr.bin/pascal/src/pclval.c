@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pclval.c 1.8 %G%"
+literal|"@(#)pclval.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -613,6 +613,33 @@ return|return
 name|NLNIL
 return|;
 block|}
+comment|/* 		 * If we haven't seen enough subscripts, and the next 		 * qualification isn't array reference, then it's an error. 		 */
+if|if
+condition|(
+name|s
+operator|&&
+name|co
+operator|->
+name|tag
+operator|!=
+name|T_ARY
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Too few subscripts (%d given, %d required)"
+argument_list|,
+name|s
+argument_list|,
+name|p
+operator|->
+name|value
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|co
@@ -882,6 +909,31 @@ literal|"lval2"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|s
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Too few subscripts (%d given, %d required)"
+argument_list|,
+name|s
+argument_list|,
+name|p
+operator|->
+name|type
+operator|->
+name|value
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+name|NLNIL
+return|;
 block|}
 if|if
 condition|(
