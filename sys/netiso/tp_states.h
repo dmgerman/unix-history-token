@@ -1,7 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: tp_states.h,v 1.2 1994/08/02 07:51:24 davidg Exp $  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_ERROR
+value|0x0
+end_define
 
 begin_define
 define|#
