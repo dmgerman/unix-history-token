@@ -101,6 +101,9 @@ name|u_long
 name|offset
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__ia64__
 if|if
 condition|(
 operator|!
@@ -122,6 +125,9 @@ condition|)
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
+comment|/* __ia64__ */
 return|return
 literal|1
 return|;
@@ -142,6 +148,9 @@ name|u_long
 name|offset
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__ia64__
 if|if
 condition|(
 operator|!
@@ -165,6 +174,13 @@ name|d
 operator|->
 name|bios_sect
 return|;
+else|#
+directive|else
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -182,6 +198,9 @@ name|u_long
 name|offset
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__ia64__
 if|if
 condition|(
 operator|!
@@ -206,6 +225,13 @@ operator|-
 literal|1
 argument_list|)
 return|;
+else|#
+directive|else
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -224,6 +250,9 @@ name|u_long
 name|offset
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__ia64__
 if|if
 condition|(
 operator|!
@@ -256,6 +285,8 @@ condition|)
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
 return|return
 literal|1
 return|;
@@ -276,6 +307,9 @@ name|u_long
 name|offset
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__ia64__
 if|if
 condition|(
 operator|!
@@ -314,6 +348,13 @@ name|d
 operator|->
 name|bios_hd
 return|;
+else|#
+directive|else
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -331,6 +372,9 @@ name|u_long
 name|offset
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__ia64__
 if|if
 condition|(
 operator|!
@@ -366,6 +410,13 @@ operator|-
 literal|1
 argument_list|)
 return|;
+else|#
+directive|else
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
