@@ -21,7 +21,7 @@ operator|)
 name|dofile
 operator|.
 name|c
-literal|1.2
+literal|1.3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -219,7 +219,7 @@ name|dp
 operator|=
 name|readdir
 argument_list|(
-name|dp
+name|dir
 argument_list|)
 condition|)
 block|{
