@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.30	(Berkeley) %G%"
+literal|"@(#)ftpd.c	5.31	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1554,7 +1554,7 @@ comment|/* had user command, ask for passwd */
 end_comment
 
 begin_comment
-comment|/*  * USER command.  * Sets global passwd pointer pw if named account exists  * and is acceptable; sets askpasswd if a PASS command is  * expected. If logged in previously, need to reset state.  * If name is "ftp" or "anonymous" and ftp account exists,  * set guest and pw, then just return.  * If account doesn't exist, ask for passwd anyway.  * Otherwise, check user requesting login privileges.  * Disallow anyone who does not have a standard  * shell as returned by getusershell().  * Disallow anyone mentioned in the file _PATH_FTPUSERS  * to allow people such as root and uucp to be avoided.  */
+comment|/*  * USER command.  * Sets global passwd pointer pw if named account exists  * and is acceptable; sets askpasswd if a PASS command is  * expected. If logged in previously, need to reset state.  * If name is "ftp" or "anonymous", the name is not in /etc/ftpusers,  * and ftp account exists, set guest and pw, then just return.  * If account doesn't exist, ask for passwd anyway.  * Otherwise, check user requesting login privileges.  * Disallow anyone who does not have a standard  * shell as returned by getusershell().  * Disallow anyone mentioned in the file _PATH_FTPUSERS  * to allow people such as root and uucp to be avoided.  */
 end_comment
 
 begin_macro
@@ -1644,6 +1644,30 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|checkuser
+argument_list|(
+literal|"ftp"
+argument_list|)
+operator|||
+operator|!
+name|checkuser
+argument_list|(
+literal|"anonymous"
+argument_list|)
+condition|)
+name|reply
+argument_list|(
+literal|530
+argument_list|,
+literal|"User %s access denied."
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|(
