@@ -1893,7 +1893,7 @@ name|DMenu
 name|MenuMouseType
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -2078,7 +2078,7 @@ name|DMenu
 name|MenuMousePort
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -7441,7 +7441,7 @@ name|DMenu
 name|MenuMBRType
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -8431,7 +8431,7 @@ name|DMenu
 name|MenuNTP
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -8829,7 +8829,7 @@ name|DMenu
 name|MenuSysconsKeymap
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -8893,7 +8893,7 @@ name|DMenu
 name|MenuSysconsKeymap
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -9630,7 +9630,7 @@ name|DMenu
 name|MenuSysconsKeyrate
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -9713,7 +9713,7 @@ name|DMenu
 name|MenuSysconsSaver
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -9902,7 +9902,7 @@ name|DMenu
 name|MenuSysconsScrnmap
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -9994,7 +9994,7 @@ name|DMenu
 name|MenuSysconsFont
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
