@@ -436,6 +436,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|BIO_FORMAT
+value|BIO_CMD2
+end_define
+
 begin_typedef
 typedef|typedef
 name|int

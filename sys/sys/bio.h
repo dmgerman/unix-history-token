@@ -241,22 +241,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|BIO_FORMAT
+name|BIO_GETATTR
 value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
-name|BIO_GETATTR
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
 name|BIO_SETATTR
-value|0x00000020
+value|0x00000010
 end_define
 
 begin_define

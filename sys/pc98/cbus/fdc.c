@@ -754,6 +754,13 @@ name|BIO_RDSECTID
 value|BIO_CMD1
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIO_FORMAT
+value|BIO_CMD2
+end_define
+
 begin_comment
 comment|/*  * List of native drive densities.  Order must match enum fd_drivetype  * in<sys/fdcio.h>.  Upon attaching the drive, each of the  * programmable subdevices is initialized with the native density  * definition.  */
 end_comment

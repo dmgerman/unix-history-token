@@ -1021,9 +1021,6 @@ case|:
 case|case
 name|BIO_DELETE
 case|:
-case|case
-name|BIO_FORMAT
-case|:
 if|if
 condition|(
 operator|(
