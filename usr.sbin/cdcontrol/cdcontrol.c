@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Compact Disc Control Utility by Serge V. Vakulenko,<vak@cronyx.ru>.  * Based on the non-X based CD player by Jean-Marc Zucconi and  * Andrew A. Chernov.  */
+comment|/*  * Compact Disc Control Utility by Serge V. Vakulenko,<vak@cronyx.ru>.  * Based on the non-X based CD player by Jean-Marc Zucconi and  * Andrey A. Chernov.  */
 end_comment
 
 begin_include
@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.0"
+value|"1.1"
 end_define
 
 begin_comment
@@ -223,9 +223,9 @@ value|6
 block|{
 name|CMD_PLAY
 block|,
-literal|"P"
+literal|"Play"
 block|,
-literal|0
+literal|"min1:sec1[.fr1] [min2:sec2[.fr2]]"
 block|, }
 block|,
 block|{
@@ -233,7 +233,7 @@ name|CMD_PLAY
 block|,
 literal|"Play"
 block|,
-literal|"min1:sec1.fr1 [ min2:sec2.fr2 ]"
+literal|"track1[.index1] [track2.[index2]]"
 block|, }
 block|,
 block|{
@@ -241,15 +241,7 @@ name|CMD_PLAY
 block|,
 literal|"Play"
 block|,
-literal|"track1.index1 [ track2.index2 ]"
-block|, }
-block|,
-block|{
-name|CMD_PLAY
-block|,
-literal|"Play"
-block|,
-literal|"#block [ len ]"
+literal|"[#block [len]]"
 block|, }
 block|,
 define|#
@@ -3602,6 +3594,13 @@ name|cmd
 operator|!=
 operator|-
 literal|1
+operator|&&
+operator|*
+name|cmd
+operator|!=
+name|c
+operator|->
+name|command
 condition|)
 block|{
 name|fprintf
