@@ -242,6 +242,18 @@ name|knote
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * Note: d_thread_t is provided as a transition aid for those drivers  * that treat struct proc/struct thread as an opaque data type and  * exist in substantially the same form in both 4.x and 5.x.  Writers  * of drivers that dips into the d_thread_t structure should use  * struct thread or struct proc as appropriate for the version of the  * OS they are using.  It is provided in lieu of each device driver  * inventing its own way of doing this.  While it does violate style(9)  * in a number of ways, this violation is deemed to be less  * important than the benefits that a uniform API between releases  * gives.  *  * Users of struct thread/struct proc that aren't device drivers should  * not use d_thread_t.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|proc
+name|d_thread_t
+typedef|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 name|int
@@ -256,8 +268,8 @@ name|oflags
 typedef|,
 name|int
 name|devtype
-typedef|, struct
-name|proc
+typedef|,
+name|d_thread_t
 modifier|*
 name|p
 typedef|));
@@ -277,8 +289,8 @@ name|fflag
 typedef|,
 name|int
 name|devtype
-typedef|, struct
-name|proc
+typedef|,
+name|d_thread_t
 modifier|*
 name|p
 typedef|));
@@ -331,8 +343,8 @@ name|data
 typedef|,
 name|int
 name|fflag
-typedef|, struct
-name|proc
+typedef|,
+name|d_thread_t
 modifier|*
 name|p
 typedef|));
@@ -407,8 +419,8 @@ name|dev
 typedef|,
 name|int
 name|events
-typedef|, struct
-name|proc
+typedef|,
+name|d_thread_t
 modifier|*
 name|p
 typedef|));
@@ -532,8 +544,8 @@ name|data
 typedef|,
 name|int
 name|flag
-typedef|, struct
-name|proc
+typedef|,
+name|d_thread_t
 modifier|*
 name|p
 typedef|));
