@@ -415,6 +415,10 @@ name|pci_map_int
 argument_list|(
 name|config_id
 argument_list|,
+operator|(
+name|pci_inthand_t
+operator|*
+operator|)
 name|vxintr
 argument_list|,
 operator|(
