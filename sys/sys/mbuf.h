@@ -168,7 +168,8 @@ name|len
 decl_stmt|;
 comment|/* total packet length */
 comment|/* variables for ip and tcp reassembly */
-name|caddr_t
+name|void
+modifier|*
 name|header
 decl_stmt|;
 comment|/* pointer to packet header */
