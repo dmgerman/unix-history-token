@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: arp.c,v 1.4.2.3 1997/09/04 11:35:44 charnier Exp $"
+literal|"$Id: arp.c,v 1.4.2.4 1997/11/13 01:37:28 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -362,7 +368,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ether_aton
+name|my_ether_aton
 parameter_list|(
 name|char
 modifier|*
@@ -398,13 +404,6 @@ name|hwaddr
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1529,7 +1528,7 @@ else|else
 block|{
 if|if
 condition|(
-name|ether_aton
+name|my_ether_aton
 argument_list|(
 name|eaddr
 argument_list|,
@@ -2912,7 +2911,7 @@ end_function
 
 begin_function
 name|int
-name|ether_aton
+name|my_ether_aton
 parameter_list|(
 name|char
 modifier|*
