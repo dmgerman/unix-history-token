@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_xxx.c	6.2	84/08/29	*/
+comment|/*	kern_xxx.c	6.3	85/03/12	*/
 end_comment
 
 begin_include
@@ -1883,9 +1883,9 @@ literal|0
 expr_stmt|;
 name|sv
 operator|->
-name|sv_onstack
+name|sv_flags
 operator|=
-literal|0
+name|SV_INTERRUPT
 expr_stmt|;
 name|u
 operator|.
