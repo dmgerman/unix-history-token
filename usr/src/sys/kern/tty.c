@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	6.1	83/07/29	*/
+comment|/*	tty.c	6.2	83/09/09	*/
 end_comment
 
 begin_include
@@ -5419,11 +5419,11 @@ name|c_cc
 operator|&&
 name|uio
 operator|->
-name|uio_iovcnt
+name|uio_resid
 condition|)
 name|error
 operator|=
-name|passuc
+name|ureadc
 argument_list|(
 name|getc
 argument_list|(
@@ -5707,7 +5707,7 @@ break|break;
 comment|/* 		 * Give user character. 		 */
 name|error
 operator|=
-name|passuc
+name|ureadc
 argument_list|(
 name|c
 operator|&
@@ -5725,7 +5725,7 @@ if|if
 condition|(
 name|uio
 operator|->
-name|uio_iovcnt
+name|uio_resid
 operator|==
 literal|0
 condition|)
