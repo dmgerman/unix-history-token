@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sys-bsd.c,v 1.2 1994/09/25 02:32:15 wollman Exp $"
+literal|"$Id: sys-bsd.c,v 1.4 1995/10/03 10:50:42 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2997,6 +2997,21 @@ comment|/* RTM_VERSION */
 end_comment
 
 begin_comment
+comment|/*  * How to find the next ifreq structure in the stuff returned by SIOCGIFCONF.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|next_ifreq
+parameter_list|(
+name|ifr
+parameter_list|)
+define|\
+value|((struct ifreq *) ((char *)&(ifr)->ifr_addr + (ifr)->ifr_addr.sa_len))
+end_define
+
+begin_comment
 comment|/*  * get_ether_addr - get the hardware address of an interface on the  * the same subnet as ipaddr.  */
 end_comment
 
@@ -3131,6 +3146,12 @@ name|ifr
 operator|<
 name|ifend
 condition|;
+name|ifr
+operator|=
+name|next_ifreq
+argument_list|(
+name|ifr
+argument_list|)
 control|)
 block|{
 if|if
@@ -3248,8 +3269,8 @@ name|sockaddr_in
 operator|*
 operator|)
 operator|&
-name|ifr
-operator|->
+name|ifreq
+operator|.
 name|ifr_addr
 operator|)
 operator|->
@@ -3274,30 +3295,6 @@ condition|)
 continue|continue;
 break|break;
 block|}
-name|ifr
-operator|=
-operator|(
-expr|struct
-name|ifreq
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|ifr
-operator|->
-name|ifr_addr
-operator|+
-name|ifr
-operator|->
-name|ifr_addr
-operator|.
-name|sa_len
-operator|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3336,6 +3333,12 @@ name|ifr
 operator|<
 name|ifend
 condition|;
+name|ifr
+operator|=
+name|next_ifreq
+argument_list|(
+name|ifr
+argument_list|)
 control|)
 block|{
 if|if
@@ -3390,30 +3393,6 @@ return|return
 literal|1
 return|;
 block|}
-name|ifr
-operator|=
-operator|(
-expr|struct
-name|ifreq
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|ifr
-operator|->
-name|ifr_addr
-operator|+
-name|ifr
-operator|->
-name|ifr_addr
-operator|.
-name|sa_len
-operator|)
-expr_stmt|;
 block|}
 return|return
 literal|0
