@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -605,6 +605,11 @@ argument_list|(
 name|is68k
 argument_list|)
 expr|\
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 operator|||
 name|defined
 argument_list|(
