@@ -56,5 +56,34 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|ad198x_patch
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+name|codec
+parameter_list|)
+block|{
+name|ac97_wrcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x76
+argument_list|,
+name|ac97_rdcd
+argument_list|(
+name|codec
+argument_list|,
+literal|0x76
+argument_list|)
+operator||
+literal|0x0420
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 
