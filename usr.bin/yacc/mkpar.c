@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkpar.c,v 1.7 1997/08/28 06:33:53 charnier Exp $"
+literal|"$Id: mkpar.c,v 1.8 1999/07/04 17:26:16 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,12 @@ name|action
 modifier|*
 modifier|*
 name|parser
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|SRexpect
 decl_stmt|;
 end_decl_stmt
 
@@ -1463,6 +1469,18 @@ name|void
 name|total_conflicts
 parameter_list|()
 block|{
+comment|/* Warn if s/r != expect or if any r/r */
+if|if
+condition|(
+operator|(
+name|SRtotal
+operator|!=
+name|SRexpect
+operator|)
+operator|||
+name|RRtotal
+condition|)
+block|{
 if|if
 condition|(
 name|SRtotal
@@ -1488,6 +1506,7 @@ argument_list|,
 name|SRtotal
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|RRtotal
