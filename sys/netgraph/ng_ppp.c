@@ -398,7 +398,7 @@ parameter_list|,
 name|seq
 parameter_list|)
 define|\
-value|(((seq) + 1)& ((priv)->conf.recvShortSeq ? \ 				    MP_SHORT_SEQ_MASK : MP_LONG_SEQ_MASK))
+value|((priv)->conf.recvShortSeq ?		\ 				    MP_SHORT_EXTEND((seq) + 1) :	\ 				    MP_LONG_EXTEND((seq) + 1))
 end_define
 
 begin_comment
