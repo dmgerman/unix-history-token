@@ -1100,19 +1100,6 @@ name|toc
 name|toc
 decl_stmt|;
 comment|/* table of disc contents */
-struct|struct
-block|{
-name|u_int32_t
-name|volsize
-decl_stmt|;
-comment|/* volume size in blocks */
-name|u_int32_t
-name|blksize
-decl_stmt|;
-comment|/* block size in bytes */
-block|}
-name|info
-struct|;
 name|struct
 name|audiopage
 name|au
@@ -1182,6 +1169,10 @@ name|time_t
 name|timestamp
 decl_stmt|;
 comment|/* this instance timestamp */
+name|int
+name|disk_size
+decl_stmt|;
+comment|/* size of current media */
 name|int
 name|block_size
 decl_stmt|;
