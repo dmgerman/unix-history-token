@@ -1877,7 +1877,7 @@ name|IGNORE_LOCK
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)->v_type == VCHR)
+value|((vp)->v_type == VCHR || (vp)->v_type == VBAD)
 end_define
 
 begin_define
