@@ -10655,9 +10655,6 @@ name|kdpc
 modifier|*
 name|dpc
 decl_stmt|;
-name|uint8_t
-name|irql
-decl_stmt|;
 name|dpc
 operator|=
 name|arg
@@ -10667,13 +10664,6 @@ operator|=
 name|dpc
 operator|->
 name|k_deferedfunc
-expr_stmt|;
-name|irql
-operator|=
-name|KeRaiseIrql
-argument_list|(
-name|DISPATCH_LEVEL
-argument_list|)
 expr_stmt|;
 name|MSCALL4
 argument_list|(
@@ -10692,11 +10682,6 @@ argument_list|,
 name|dpc
 operator|->
 name|k_sysarg2
-argument_list|)
-expr_stmt|;
-name|KeLowerIrql
-argument_list|(
-name|irql
 argument_list|)
 expr_stmt|;
 return|return;
