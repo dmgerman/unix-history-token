@@ -3493,7 +3493,7 @@ name|PVFS
 argument_list|,
 literal|"vnlock"
 argument_list|,
-literal|0
+name|VLKTIMEOUT
 argument_list|,
 name|LK_NOPAUSE
 argument_list|)

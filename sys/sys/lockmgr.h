@@ -201,7 +201,7 @@ begin_define
 define|#
 directive|define
 name|LK_EXTFLG_MASK
-value|0x01000070
+value|0x03000070
 end_define
 
 begin_comment
@@ -261,6 +261,17 @@ end_define
 
 begin_comment
 comment|/* no spinloop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_TIMELOCK
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* use lk_timo, else no timeout */
 end_comment
 
 begin_comment
