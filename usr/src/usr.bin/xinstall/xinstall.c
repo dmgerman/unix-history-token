@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.12 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -576,8 +576,7 @@ begin_comment
 comment|/*  * install --  *	build a path name and install the file  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|install
 argument_list|(
 argument|from_name
@@ -586,14 +585,17 @@ argument|to_name
 argument_list|,
 argument|isdir
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|from_name
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|to_name
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -958,7 +960,6 @@ comment|/*  * strip --  *	copy file, strip(1)'ing it at the same time  */
 end_comment
 
 begin_expr_stmt
-specifier|static
 name|strip
 argument_list|(
 name|from_fd
@@ -1288,7 +1289,6 @@ comment|/*  * copy --  *	copy from one file to another  */
 end_comment
 
 begin_expr_stmt
-specifier|static
 name|copy
 argument_list|(
 name|from_fd
@@ -1401,7 +1401,6 @@ comment|/*  * atoo --  *	octal string to int  */
 end_comment
 
 begin_expr_stmt
-specifier|static
 name|atoo
 argument_list|(
 name|str
@@ -1457,10 +1456,12 @@ begin_comment
 comment|/*  * bad --  *	remove created target and die  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|bad
 argument_list|()
+end_macro
+
+begin_block
 block|{
 operator|(
 name|void
@@ -1469,16 +1470,25 @@ name|unlink
 argument_list|(
 name|pathbuf
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * usage --  *	print a usage message and die  */
-specifier|static
+end_comment
+
+begin_macro
 name|usage
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|fputs
 argument_list|(
@@ -1486,13 +1496,14 @@ literal|"usage: install [-cs] [-g group] [-m mode] [-o owner] file1 file2;\n\tor
 argument_list|,
 name|stderr
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
