@@ -797,7 +797,7 @@ literal|"proc_dtor: bad ke pointer"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We want to make sure we know the initial linkages. 	 * so for now tear them down and remake them. 	 * his is probably un-needed as we can probably rely 	 * on the state coming in here from wait4(). 	 */
+comment|/* 	 * We want to make sure we know the initial linkages. 	 * so for now tear them down and remake them. 	 * This is probably un-needed as we can probably rely 	 * on the state coming in here from wait4(). 	 */
 name|proc_linkup
 argument_list|(
 name|p
