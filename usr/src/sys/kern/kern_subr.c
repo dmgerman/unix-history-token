@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_subr.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_subr.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_expr_stmt
@@ -720,9 +726,17 @@ block|{
 name|long
 name|hashsize
 decl_stmt|;
-name|void
-modifier|*
+name|LIST_HEAD
+argument_list|(
+name|generic
+argument_list|,
+name|generic
+argument_list|)
+operator|*
 name|hashtbl
+expr_stmt|;
+name|int
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -765,8 +779,8 @@ name|hashsize
 operator|*
 sizeof|sizeof
 argument_list|(
-name|void
 operator|*
+name|hashtbl
 argument_list|)
 argument_list|,
 name|type
@@ -774,17 +788,26 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|hashtbl
-argument_list|,
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
 name|hashsize
-operator|*
-sizeof|sizeof
+condition|;
+name|i
+operator|++
+control|)
+name|LIST_INIT
 argument_list|(
-name|void
-operator|*
-argument_list|)
+operator|&
+name|hashtbl
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 operator|*

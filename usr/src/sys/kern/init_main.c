@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1236,7 +1236,9 @@ if|if
 condition|(
 name|VFS_ROOT
 argument_list|(
-name|rootfs
+name|mountlist
+operator|.
+name|tqh_first
 argument_list|,
 operator|&
 name|rootvnode

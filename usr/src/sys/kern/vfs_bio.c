@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_bio.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_bio.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -54,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libkern/libkern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ufs/quota.h>
 end_include
 
@@ -86,15 +86,19 @@ define|\
 value|(&bufhashtbl[((int)(dvp) / sizeof(*(dvp)) + (int)(lbn))& bufhash])
 end_define
 
-begin_decl_stmt
-name|struct
-name|list_entry
-modifier|*
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|bufhashhdr
+argument_list|,
+name|buf
+argument_list|)
+operator|*
 name|bufhashtbl
-decl_stmt|,
+operator|,
 name|invalhash
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|u_long
@@ -115,7 +119,7 @@ name|bp
 parameter_list|,
 name|dp
 parameter_list|)
-value|list_enter_head(dp, bp, struct buf *, b_hash)
+value|LIST_INSERT_HEAD(dp, bp, b_hash)
 end_define
 
 begin_define
@@ -125,7 +129,7 @@ name|bremhash
 parameter_list|(
 name|bp
 parameter_list|)
-value|list_remove(bp, struct buf *, b_hash)
+value|LIST_REMOVE(bp, b_hash)
 end_define
 
 begin_comment
@@ -187,15 +191,22 @@ begin_comment
 comment|/* buffer headers with no memory */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|queue_entry
+begin_macro
+name|TAILQ_HEAD
+argument_list|(
+argument|bqueues
+argument_list|,
+argument|buf
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|bufqueues
 index|[
 name|BQUEUES
 index|]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -216,8 +227,7 @@ name|bp
 parameter_list|,
 name|dp
 parameter_list|)
-define|\
-value|queue_enter_head(dp, bp, struct buf *, b_freelist)
+value|TAILQ_INSERT_HEAD(dp, bp, b_freelist)
 end_define
 
 begin_define
@@ -229,8 +239,7 @@ name|bp
 parameter_list|,
 name|dp
 parameter_list|)
-define|\
-value|queue_enter_tail(dp, bp, struct buf *, b_freelist)
+value|TAILQ_INSERT_TAIL(dp, bp, b_freelist)
 end_define
 
 begin_function
@@ -246,18 +255,20 @@ name|bp
 decl_stmt|;
 block|{
 name|struct
-name|queue_entry
+name|bqueues
 modifier|*
 name|dp
+init|=
+name|NULL
 decl_stmt|;
-comment|/* 	 * We only calculate the head of the freelist when removing 	 * the last element of the list as that is the only time that 	 * it is needed (e.g. to reset the tail pointer). 	 */
+comment|/* 	 * We only calculate the head of the freelist when removing 	 * the last element of the list as that is the only time that 	 * it is needed (e.g. to reset the tail pointer). 	 * 	 * NB: This makes an assumption about how tailq's are implemented. 	 */
 if|if
 condition|(
 name|bp
 operator|->
 name|b_freelist
 operator|.
-name|qe_next
+name|tqe_next
 operator|==
 name|NULL
 condition|)
@@ -283,14 +294,14 @@ if|if
 condition|(
 name|dp
 operator|->
-name|qe_prev
+name|tqh_last
 operator|==
 operator|&
 name|bp
 operator|->
 name|b_freelist
 operator|.
-name|qe_next
+name|tqe_next
 condition|)
 break|break;
 if|if
@@ -309,15 +320,11 @@ literal|"bremfree: lost tail"
 argument_list|)
 expr_stmt|;
 block|}
-name|queue_remove
+name|TAILQ_REMOVE
 argument_list|(
 name|dp
 argument_list|,
 name|bp
-argument_list|,
-expr|struct
-name|buf
-operator|*
 argument_list|,
 name|b_freelist
 argument_list|)
@@ -341,7 +348,7 @@ modifier|*
 name|bp
 decl_stmt|;
 name|struct
-name|queue_entry
+name|bqueues
 modifier|*
 name|dp
 decl_stmt|;
@@ -371,18 +378,13 @@ condition|;
 name|dp
 operator|++
 control|)
-name|queue_init
+name|TAILQ_INIT
 argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
 name|bufhashtbl
 operator|=
-operator|(
-expr|struct
-name|list_entry
-operator|*
-operator|)
 name|hashinit
 argument_list|(
 name|nbuf
@@ -1766,7 +1768,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|queue_entry
+name|bqueues
 modifier|*
 name|flist
 decl_stmt|;
@@ -2096,7 +2098,7 @@ argument_list|,
 name|blkno
 argument_list|)
 operator|->
-name|le_next
+name|lh_first
 init|;
 name|bp
 condition|;
@@ -2106,7 +2108,7 @@ name|bp
 operator|->
 name|b_hash
 operator|.
-name|qe_next
+name|le_next
 control|)
 if|if
 condition|(
@@ -2214,7 +2216,7 @@ modifier|*
 name|bp
 decl_stmt|;
 name|struct
-name|list_entry
+name|bufhashhdr
 modifier|*
 name|dp
 decl_stmt|;
@@ -2252,7 +2254,7 @@ name|bp
 operator|=
 name|dp
 operator|->
-name|le_next
+name|lh_first
 init|;
 name|bp
 condition|;
@@ -2262,7 +2264,7 @@ name|bp
 operator|->
 name|b_hash
 operator|.
-name|qe_next
+name|le_next
 control|)
 block|{
 if|if
@@ -2707,7 +2709,7 @@ index|[
 name|BQ_EMPTY
 index|]
 operator|.
-name|qe_next
+name|tqh_first
 operator|)
 operator|==
 name|NULL
@@ -3012,7 +3014,7 @@ name|bp
 decl_stmt|;
 specifier|register
 name|struct
-name|queue_entry
+name|bqueues
 modifier|*
 name|dp
 decl_stmt|;
@@ -3616,7 +3618,7 @@ index|[
 name|BQ_LOCKED
 index|]
 operator|.
-name|qe_next
+name|tqh_first
 init|;
 name|bp
 condition|;
@@ -3631,7 +3633,7 @@ name|bp
 operator|->
 name|b_freelist
 operator|.
-name|qe_next
+name|tqe_next
 control|)
 operator|++
 name|ret
@@ -3676,7 +3678,7 @@ name|bp
 decl_stmt|;
 specifier|register
 name|struct
-name|queue_entry
+name|bqueues
 modifier|*
 name|dp
 decl_stmt|;
@@ -3770,7 +3772,7 @@ name|bp
 operator|=
 name|dp
 operator|->
-name|qe_next
+name|tqh_first
 init|;
 name|bp
 condition|;
@@ -3780,7 +3782,7 @@ name|bp
 operator|->
 name|b_freelist
 operator|.
-name|qe_next
+name|tqe_next
 control|)
 block|{
 name|counts
