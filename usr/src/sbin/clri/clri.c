@@ -9,19 +9,13 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c 1.1 %G%"
+literal|"@(#)clri.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)clri.c	4.1 (Berkeley) 10/1/80"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static char *sccsid = "@(#)clri.c	4.1 (Berkeley) 10/1/80"; */
+end_comment
 
 begin_comment
 comment|/*  * clri filsys inumber ...  */
@@ -30,13 +24,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"../h/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ino.h>
+file|"../h/inode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/fs.h"
 end_include
 
 begin_define
@@ -50,7 +50,7 @@ begin_define
 define|#
 directive|define
 name|NI
-value|(BSIZE/ISIZE)
+value|(MAXBSIZE/ISIZE)
 end_define
 
 begin_struct
@@ -77,6 +77,31 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_union
+union|union
+block|{
+name|char
+name|dummy
+index|[
+name|SBSIZE
+index|]
+decl_stmt|;
+name|struct
+name|fs
+name|sblk
+decl_stmt|;
+block|}
+name|sb_un
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|sblock
+value|sb_un.sblk
+end_define
+
 begin_decl_stmt
 name|int
 name|status
@@ -90,6 +115,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -152,6 +180,48 @@ block|{
 name|printf
 argument_list|(
 literal|"cannot open %s\n"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+name|lseek
+argument_list|(
+name|f
+argument_list|,
+name|SBLOCK
+operator|*
+name|DEV_BSIZE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|read
+argument_list|(
+name|f
+argument_list|,
+operator|&
+name|sblock
+argument_list|,
+name|SBSIZE
+argument_list|)
+operator|!=
+name|SBSIZE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cannot read %s\n"
 argument_list|,
 name|argv
 index|[
@@ -242,12 +312,21 @@ continue|continue;
 block|}
 name|off
 operator|=
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|itod
 argument_list|(
 name|n
+argument_list|,
+operator|&
+name|sblock
+argument_list|)
 argument_list|)
 operator|*
-name|BSIZE
+name|DEV_BSIZE
 expr_stmt|;
 name|lseek
 argument_list|(
@@ -270,10 +349,14 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-name|BSIZE
+name|sblock
+operator|.
+name|fs_bsize
 argument_list|)
 operator|!=
-name|BSIZE
+name|sblock
+operator|.
+name|fs_bsize
 condition|)
 block|{
 name|printf
@@ -334,12 +417,21 @@ argument_list|)
 expr_stmt|;
 name|off
 operator|=
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|itod
 argument_list|(
 name|n
+argument_list|,
+operator|&
+name|sblock
+argument_list|)
 argument_list|)
 operator|*
-name|BSIZE
+name|DEV_BSIZE
 expr_stmt|;
 name|lseek
 argument_list|(
@@ -360,7 +452,9 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-name|BSIZE
+name|sblock
+operator|.
+name|fs_bsize
 argument_list|)
 expr_stmt|;
 name|j
@@ -368,6 +462,9 @@ operator|=
 name|itoo
 argument_list|(
 name|n
+argument_list|,
+operator|&
+name|sblock
 argument_list|)
 expr_stmt|;
 for|for
@@ -414,7 +511,9 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-name|BSIZE
+name|sblock
+operator|.
+name|fs_bsize
 argument_list|)
 expr_stmt|;
 block|}
