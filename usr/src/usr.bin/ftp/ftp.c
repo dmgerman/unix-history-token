@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.38 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,19 +97,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -127,6 +115,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -134,6 +128,30 @@ begin_include
 include|#
 directive|include
 file|<varargs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -189,24 +207,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|uid_t
-name|getuid
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|sig_t
 name|lostpeer
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strerror
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -3810,17 +3812,8 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
 name|void
 name|abortrecv
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
-name|malloc
 parameter_list|()
 function_decl|;
 name|is_retr
