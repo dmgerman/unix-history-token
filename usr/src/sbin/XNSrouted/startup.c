@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.13 (Berkeley) %G%"
+literal|"@(#)startup.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
