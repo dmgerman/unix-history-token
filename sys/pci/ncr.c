@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.23 1995/02/14 23:33:36 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.24 1995/02/15 20:06:38 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NCR_PATCHLEVEL
-value|"pl14 95/02/15"
+value|"pl15 95/02/15"
 end_define
 
 begin_define
@@ -195,6 +195,17 @@ define|#
 directive|define
 name|MAX_SIZE
 value|((MAX_SCATTER-1) * NBPG)
+end_define
+
+begin_comment
+comment|/* **	other */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCR_SNOOP_TIMEOUT
+value|(1000000)
 end_define
 
 begin_escape
@@ -2639,7 +2650,13 @@ decl_stmt|;
 name|ncrcmd
 name|snooptest
 index|[
-literal|11
+literal|9
+index|]
+decl_stmt|;
+name|ncrcmd
+name|snoopend
+index|[
+literal|2
 index|]
 decl_stmt|;
 block|}
@@ -3225,7 +3242,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.23 1995/02/14 23:33:36 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.24 1995/02/15 20:06:38 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -7518,7 +7535,10 @@ name|RADDR
 argument_list|(
 name|temp
 argument_list|)
+block|, }
+comment|/*-------------------------< SNOOPEND>-------------------*/
 block|,
+block|{
 comment|/* 	**	And stop. 	*/
 name|SCR_INT
 block|,
@@ -11031,7 +11051,7 @@ argument|pc
 argument_list|,
 argument|err=
 literal|0
-argument|;
+argument|; 	int	i;
 ifndef|#
 directive|ifndef
 name|NCR_IOMAPPED
@@ -11048,14 +11068,32 @@ comment|/* 	**	Set memory and register. 	*/
 argument|ncr_cache = host_wr; 	OUTL (nc_temp, ncr_wr);
 comment|/* 	**	Start script (exchange values) 	*/
 argument|OUTL (nc_dsp, pc);
-comment|/* 	**	Wait 'til done 	*/
-argument|while (!(INB(nc_istat)& (INTF|SIP|DIP)));
+comment|/* 	**	Wait 'til done (with timeout) 	*/
+argument|for (i=
+literal|0
+argument|; i<NCR_SNOOP_TIMEOUT; i++) 		if (INB(nc_istat)& (INTF|SIP|DIP)) 			break;
+comment|/* 	**	Save termination position. 	*/
+argument|pc = INL (nc_dsp);
 comment|/* 	**	Read memory and register. 	*/
 argument|host_rd = ncr_cache; 	ncr_rd  = INL (nc_scratcha); 	ncr_bk  = INL (nc_temp);
 comment|/* 	**	Reset ncr chip 	*/
 argument|OUTB (nc_istat,  SRST); 	OUTB (nc_istat,
 literal|0
 argument|);
+comment|/* 	**	check for timeout 	*/
+argument|if (i>=NCR_SNOOP_TIMEOUT) { 		printf (
+literal|"CACHE TEST FAILED: timeout.\n"
+argument|); 		return (
+literal|0x20
+argument|); 	};
+comment|/* 	**	Check termination position. 	*/
+argument|if (pc != vtophys (&np->script->snoopend)+
+literal|8
+argument|) { 		printf (
+literal|"CACHE TEST FAILED: script execution failed.\n"
+argument|); 		return (
+literal|0x40
+argument|); 	};
 comment|/* 	**	Show results. 	*/
 argument|if (host_wr != ncr_rd) { 		printf (
 literal|"CACHE TEST FAILED: host wrote %d, ncr read %d.\n"
