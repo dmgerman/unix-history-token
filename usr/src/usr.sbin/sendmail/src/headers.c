@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.25 (Berkeley) %G%"
+literal|"@(#)headers.c	6.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1742,9 +1742,41 @@ name|sprintf
 argument_list|(
 name|hbuf
 argument_list|,
-literal|"%.80s (%s)"
+literal|"%.80s"
 argument_list|,
 name|RealHostName
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|RealHostAddr
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|!=
+literal|0
+condition|)
+block|{
+name|p
+operator|=
+operator|&
+name|hbuf
+index|[
+name|strlen
+argument_list|(
+name|hbuf
+argument_list|)
+index|]
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|" (%s)"
 argument_list|,
 name|anynet_ntoa
 argument_list|(
@@ -1753,6 +1785,7 @@ name|RealHostAddr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* some versions of syslog only take 5 printf args */
 name|sprintf

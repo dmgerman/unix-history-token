@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.24 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.25 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.24 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.25 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1808,6 +1808,15 @@ name|bool
 name|getcanonname
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|9
+argument_list|,
+literal|1
+argument_list|)
+condition|)
 name|printf
 argument_list|(
 literal|"maphostname(%s, %d) => "
@@ -2068,6 +2077,29 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+comment|/* check for null/zero family */
+if|if
+condition|(
+name|sap
+operator|==
+name|NULL
+condition|)
+return|return
+literal|"NULLADDR"
+return|;
+if|if
+condition|(
+name|sap
+operator|->
+name|sa
+operator|.
+name|sa_family
+operator|==
+literal|0
+condition|)
+return|return
+literal|"0"
+return|;
 ifdef|#
 directive|ifdef
 name|NETINET
