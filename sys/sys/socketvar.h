@@ -172,6 +172,10 @@ name|selinfo
 name|sb_sel
 decl_stmt|;
 comment|/* process selecting read/write */
+define|#
+directive|define
+name|sb_startzero
+value|sb_mb
 name|struct
 name|mbuf
 modifier|*

@@ -5506,14 +5506,26 @@ operator|=
 operator|*
 name|sb
 expr_stmt|;
+comment|/* 	 * Invalidate/clear most of the sockbuf structure, but keep 	 * its selinfo structure valid. 	 */
 name|bzero
 argument_list|(
+operator|&
 name|sb
+operator|->
+name|sb_startzero
 argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
 name|sb
+argument_list|)
+operator|-
+name|offsetof
+argument_list|(
+expr|struct
+name|sockbuf
+argument_list|,
+name|sb_startzero
 argument_list|)
 argument_list|)
 expr_stmt|;
