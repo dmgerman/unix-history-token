@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tisink.c	7.8 (Berkeley) %G%"
+literal|"@(#)tisink.c	7.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,6 +148,12 @@ name|dbprintf
 value|if(verbose)printf
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -159,8 +165,32 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|{x = (a b); dbprintf("%s%s returns %d\n",c,"a",x);\ 		if(x<0) {perror("a"); myexit(0);}}
+value|{x = (a b); dbprintf("%s%s returns %d\n",c,#a,x);\ 		if (x<0) {perror(#a); myexit(0);}}
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|try
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|{x = (a b); dbprintf("%s%s returns %d\n",c,"a",x);\ 		if (x<0) {perror("a"); myexit(0);}}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -218,11 +248,9 @@ begin_decl_stmt
 name|long
 name|size
 decl_stmt|,
-name|count
-init|=
-literal|10
-decl_stmt|,
 name|forkp
+init|=
+literal|0
 decl_stmt|,
 name|confp
 decl_stmt|,
@@ -231,8 +259,6 @@ decl_stmt|,
 name|verbose
 init|=
 literal|1
-decl_stmt|,
-name|playtag
 decl_stmt|,
 name|echop
 init|=
@@ -257,6 +283,18 @@ init|=
 literal|0
 decl_stmt|,
 name|tp0mode
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|dumpnodata
+init|=
+literal|0
+decl_stmt|,
+name|playtag
 init|=
 literal|0
 decl_stmt|;
@@ -416,38 +454,6 @@ argument_list|(
 operator|*
 name|av
 argument_list|,
-literal|"count"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|av
-operator|++
-expr_stmt|;
-name|sscanf
-argument_list|(
-operator|*
-name|av
-argument_list|,
-literal|"%ld"
-argument_list|,
-operator|&
-name|count
-argument_list|)
-expr_stmt|;
-name|argc
-operator|--
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-operator|*
-name|av
-argument_list|,
 literal|"port"
 argument_list|)
 operator|==
@@ -502,6 +508,24 @@ argument_list|)
 expr_stmt|;
 name|argc
 operator|--
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"echo"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|echop
+operator|++
 expr_stmt|;
 block|}
 elseif|else
@@ -1461,12 +1485,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-block|}
 name|myexit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block
@@ -1780,6 +1804,11 @@ name|count
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|dumpnodata
+condition|)
+return|return;
 name|printf
 argument_list|(
 name|what
