@@ -40,6 +40,10 @@ decl_stmt|;
 name|bus_space_handle_t
 name|bsh
 decl_stmt|;
+name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
 name|int
 name|pages_wanted
 decl_stmt|;
