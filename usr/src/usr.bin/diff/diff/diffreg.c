@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.14 %G%"
+literal|"@(#)diffreg.c 4.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4901,6 +4901,8 @@ name|c
 block|}
 if|if
 condition|(
+name|anychange
+operator|&&
 name|opt
 operator|==
 name|D_CONTEXT
