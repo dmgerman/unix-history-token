@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -698,13 +698,6 @@ name|seg_flags
 operator|=
 name|SEGM_CKP
 expr_stmt|;
-name|lfs_initseg
-argument_list|(
-name|fs
-argument_list|,
-name|sp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Keep a cumulative count of the outstanding I/O operations.  If the 	 * disk drive catches up with us it could go to zero before we finish, 	 * so we artificially increment it by one until we've scheduled all of 	 * the writes we intend to do. 	 */
 name|s
 operator|=
@@ -730,6 +723,13 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+name|lfs_initseg
+argument_list|(
+name|fs
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -2339,13 +2339,13 @@ name|daddr
 operator|>=
 name|fs
 operator|->
-name|lfs_curseg
+name|lfs_lastpseg
 operator|&&
 name|daddr
 operator|<=
-name|ifp
+name|bp
 operator|->
-name|if_daddr
+name|b_blkno
 operator|)
 condition|)
 block|{
@@ -4036,7 +4036,11 @@ name|cksum
 argument_list|(
 name|datap
 argument_list|,
+operator|(
 name|nblocks
+operator|-
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4133,6 +4137,12 @@ argument_list|(
 expr|struct
 name|dinode
 argument_list|)
+expr_stmt|;
+name|sup
+operator|->
+name|su_nbytes
+operator|+=
+name|LFS_SUMMARY_SIZE
 expr_stmt|;
 name|sup
 operator|->
