@@ -3237,6 +3237,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|msg_perror
 argument_list|(
 literal|"Can't chdir to %s"
@@ -3244,6 +3245,12 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_BADDIR
+argument_list|)
+expr_stmt|;
+block|}
 name|q
 operator|=
 literal|0
@@ -4246,6 +4253,7 @@ operator|->
 name|change_dir
 argument_list|)
 condition|)
+block|{
 name|msg_perror
 argument_list|(
 literal|"Can't change to directory %s"
@@ -4255,6 +4263,12 @@ operator|->
 name|change_dir
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_BADDIR
+argument_list|)
+expr_stmt|;
+block|}
 name|namelist
 operator|=
 literal|0
@@ -4367,6 +4381,7 @@ operator|->
 name|change_dir
 argument_list|)
 condition|)
+block|{
 name|msg_perror
 argument_list|(
 literal|"Can't change to directory %s"
@@ -4376,6 +4391,12 @@ operator|->
 name|change_dir
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_BADDIR
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|1
 return|;
@@ -4470,6 +4491,7 @@ operator|->
 name|change_dir
 argument_list|)
 condition|)
+block|{
 name|msg_perror
 argument_list|(
 literal|"Can't change to directory %s"
@@ -4479,6 +4501,12 @@ operator|->
 name|change_dir
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_BADDIR
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|f_fast_read
@@ -5035,6 +5063,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|msg_perror
 argument_list|(
 literal|"can't chdir to %s"
@@ -5044,6 +5073,12 @@ operator|->
 name|change_dir
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_BADDIR
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|gnu_list_name
 operator|->

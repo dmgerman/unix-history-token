@@ -588,6 +588,17 @@ begin_comment
 comment|/* Special error code means 				   Tape volume doesn't match the one 				   specified on the command line */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EX_BADDIR
+value|6
+end_define
+
+begin_comment
+comment|/* bad directory name */
+end_comment
+
 begin_comment
 comment|/*  * Global variables  */
 end_comment
