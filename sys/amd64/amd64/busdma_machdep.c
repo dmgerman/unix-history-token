@@ -349,15 +349,6 @@ name|bounce_zone_list
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|bus_addr_t
-name|bounce_lowaddr
-init|=
-name|BUS_SPACE_MAXADDR
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -1283,21 +1274,6 @@ name|bounce_zone
 expr_stmt|;
 if|if
 condition|(
-name|lowaddr
-operator|>
-name|bounce_lowaddr
-condition|)
-block|{
-comment|/* 			 * Go through the pool and kill any pages 			 * that don't reside below lowaddr. 			 */
-name|panic
-argument_list|(
-literal|"bus_dma_tag_create: page reallocation "
-literal|"not implemented"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|ptoa
 argument_list|(
 name|bz
@@ -1775,23 +1751,6 @@ block|{
 name|int
 name|pages
 decl_stmt|;
-if|if
-condition|(
-name|dmat
-operator|->
-name|lowaddr
-operator|>
-name|bounce_lowaddr
-condition|)
-block|{
-comment|/* 				 * Go through the pool and kill any pages 				 * that don't reside below lowaddr. 				 */
-name|panic
-argument_list|(
-literal|"bus_dmamap_create: page reallocation "
-literal|"not implemented"
-argument_list|)
-expr_stmt|;
-block|}
 name|pages
 operator|=
 name|MAX
