@@ -789,6 +789,13 @@ name|fu_config
 value|fu_cmn.cu_config
 end_define
 
+begin_define
+define|#
+directive|define
+name|fu_softc
+value|fu_cmn.cu_softc
+end_define
+
 begin_comment
 comment|/*  * Device flags (in addition to CUF_* flags)  */
 end_comment

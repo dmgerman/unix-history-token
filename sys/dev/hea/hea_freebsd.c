@@ -680,6 +680,16 @@ name|eu_pcitag
 operator|=
 name|dev
 expr_stmt|;
+name|eup
+operator|->
+name|eu_softc
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+expr_stmt|;
 comment|/* 	 * Map memory structures into adapter space 	 */
 name|eup
 operator|->

@@ -620,6 +620,16 @@ name|fu_output
 operator|=
 name|fore_output
 expr_stmt|;
+name|fup
+operator|->
+name|fu_softc
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+expr_stmt|;
 name|callout_handle_init
 argument_list|(
 operator|&

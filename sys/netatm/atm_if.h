@@ -854,6 +854,11 @@ name|Atm_config
 name|cu_config
 decl_stmt|;
 comment|/* Device configuration data */
+name|void
+modifier|*
+name|cu_softc
+decl_stmt|;
+comment|/* pointer to driver state */
 block|}
 struct|;
 end_struct

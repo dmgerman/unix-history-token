@@ -1999,6 +1999,13 @@ name|eu_config
 value|eu_cmn.cu_config
 end_define
 
+begin_define
+define|#
+directive|define
+name|eu_softc
+value|eu_cmn.cu_softc
+end_define
+
 begin_endif
 endif|#
 directive|endif

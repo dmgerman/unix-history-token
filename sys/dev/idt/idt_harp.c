@@ -372,6 +372,13 @@ name|iu_config
 value|iu_cmn.cu_config
 end_define
 
+begin_define
+define|#
+directive|define
+name|iu_softc
+value|iu_cmn.cu_softc
+end_define
+
 begin_comment
 comment|/*  * ATM Interface services  */
 end_comment
@@ -1056,6 +1063,16 @@ operator|->
 name|iu_nif_zone
 operator|=
 name|idt_nif_zone
+expr_stmt|;
+name|idt
+operator|->
+name|iu_softc
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|idt
 expr_stmt|;
 comment|/* 	 * Copy serial number into config space 	 */
 name|idt
