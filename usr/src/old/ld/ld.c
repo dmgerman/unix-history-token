@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.6 (Berkeley) %G%"
+literal|"@(#)ld.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7022,7 +7022,7 @@ begin_decl_stmt
 name|long
 name|creloc
 decl_stmt|,
-name|offset
+name|position
 decl_stmt|;
 end_decl_stmt
 
