@@ -31,6 +31,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_PCIC_CLPD6834
+value|0x11121013ul
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_PCIC_OZ6729
 value|0x67291217ul
 end_define
@@ -57,11 +64,11 @@ begin_define
 define|#
 directive|define
 name|PCI_DEVICE_ID_PCIC_OZ6860
-value|0x68361216ul
+value|0x68361217ul
 end_define
 
 begin_comment
-comment|/* Also 6836? */
+comment|/* Also 6836 */
 end_comment
 
 begin_define
@@ -79,31 +86,26 @@ begin_define
 define|#
 directive|define
 name|PCI_DEVICE_ID_PCIC_OZ6912
+value|0x69721217ul
 end_define
 
 begin_comment
-comment|/* Unknown */
+comment|/* Also 6972? */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PCI_DEVICE_ID_PCIC_OZ6922
+value|0x69251217ul
 end_define
-
-begin_comment
-comment|/* Unknown */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|PCI_DEVICE_ID_PCIC_OZ6933
+value|0x69331217ul
 end_define
-
-begin_comment
-comment|/* Unknown */
-end_comment
 
 begin_define
 define|#
@@ -213,6 +215,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_PCIC_TI1260
+value|0xac18104cul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_PCIC_TI1260B
+value|0xac30104cul
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_PCIC_TI1251
 value|0xac1d104cul
 end_define
@@ -236,6 +252,13 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_PCIC_TI1420
 value|0xac51104cul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_PCIC_TI1421
+value|0xac53104cul
 end_define
 
 begin_define
@@ -300,6 +323,10 @@ directive|define
 name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
 value|0x06171179ul
 end_define
+
+begin_comment
+comment|/*  * Other ID, from sources too vague to be reliable  *	Mfg		  model		PCI ID  *   Intel		82092AA		0x12218086	16bit  *   smc/Databook	DB87144		0x310610b3  *   SMC/databook	smc34c90	0xb10610b3  *   Omega/Trident	82c094		0x00940123?  *   Omega/Trident	82c194		0x01941023  *   Omega/Trident	82c722		0x07221023?  *   Opti		82c814		0xc8141045  *   Opti		82c824		0xc8241045  *   NEC		uPD66369	0x003e1033  */
+end_comment
 
 end_unit
 
