@@ -6800,27 +6800,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"f"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"i"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"losw]"
+literal|"efilosw]"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -6840,7 +6820,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[[#%%] file/directory/all]\n"
+literal|" [[N%%] file/directory/all]\n"
 argument_list|)
 expr_stmt|;
 name|exit

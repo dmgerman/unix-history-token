@@ -1369,7 +1369,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"strfile [-Ciorsx] [-c char] sourcefile [datafile]\n"
+literal|"strfile [-Ciorsx] [-c char] source_file [output_file]\n"
 argument_list|)
 expr_stmt|;
 name|exit

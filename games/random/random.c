@@ -633,7 +633,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: random [-elruUw] [-f filename] [denominator]\n"
+literal|"usage: random [-elrUuw] [-f filename] [denominator]\n"
 argument_list|)
 expr_stmt|;
 name|exit
