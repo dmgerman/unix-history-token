@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	5.3 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * C shell - process structure declarations  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -68,7 +64,7 @@ name|struct
 name|rusage
 name|p_rusage
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|p_command
 decl_stmt|;
@@ -424,40 +420,6 @@ end_decl_stmt
 begin_comment
 comment|/* current maximum job index */
 end_comment
-
-begin_function_decl
-name|int
-name|psigint
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|process
-modifier|*
-name|pgetcurr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|process
-modifier|*
-name|plookup
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|process
-modifier|*
-name|pfind
-parameter_list|()
-function_decl|;
-end_function_decl
 
 end_unit
 

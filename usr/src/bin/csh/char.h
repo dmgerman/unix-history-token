@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)char.h	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)char.h	5.6 (Berkeley) %G%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -12,11 +18,34 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NLS
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|_cmap_lower
+index|[]
+decl_stmt|,
+name|_cmap_upper
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|_Q
-value|0x001
+value|0x0001
 end_define
 
 begin_comment
@@ -27,7 +56,7 @@ begin_define
 define|#
 directive|define
 name|_Q1
-value|0x002
+value|0x0002
 end_define
 
 begin_comment
@@ -38,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|_SP
-value|0x004
+value|0x0004
 end_define
 
 begin_comment
@@ -49,7 +78,7 @@ begin_define
 define|#
 directive|define
 name|_NL
-value|0x008
+value|0x0008
 end_define
 
 begin_comment
@@ -60,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|_META
-value|0x010
+value|0x0010
 end_define
 
 begin_comment
@@ -71,7 +100,7 @@ begin_define
 define|#
 directive|define
 name|_GLOB
-value|0x020
+value|0x0020
 end_define
 
 begin_comment
@@ -82,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|_ESC
-value|0x040
+value|0x0040
 end_define
 
 begin_comment
@@ -93,7 +122,7 @@ begin_define
 define|#
 directive|define
 name|_DOL
-value|0x080
+value|0x0080
 end_define
 
 begin_comment
@@ -104,7 +133,7 @@ begin_define
 define|#
 directive|define
 name|_DIG
-value|0x100
+value|0x0100
 end_define
 
 begin_comment
@@ -115,11 +144,66 @@ begin_define
 define|#
 directive|define
 name|_LET
-value|0x200
+value|0x0200
 end_define
 
 begin_comment
 comment|/* a-z, A-Z, _ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_UP
+value|0x0400
+end_define
+
+begin_comment
+comment|/* A-Z */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_LOW
+value|0x0800
+end_define
+
+begin_comment
+comment|/* a-z */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_XD
+value|0x1000
+end_define
+
+begin_comment
+comment|/* 0-9, a-f, A-F */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_CMD
+value|0x2000
+end_define
+
+begin_comment
+comment|/* lex end of command chars, ;&(|` */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_CTR
+value|0x4000
+end_define
+
+begin_comment
+comment|/* control */
 end_comment
 
 begin_define
@@ -131,7 +215,8 @@ name|c
 parameter_list|,
 name|bits
 parameter_list|)
-value|(_cmap[(unsigned char)(c)]& (bits))
+define|\
+value|(((c)& QUOTE) ? 0 : (_cmap[(unsigned char)(c)]& (bits)))
 end_define
 
 begin_define
@@ -147,21 +232,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|isspace
+name|isspc
 parameter_list|(
 name|c
 parameter_list|)
 value|cmap(c, _SP)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isspnl
-parameter_list|(
-name|c
-parameter_list|)
-value|cmap(c, _SP|_NL)
 end_define
 
 begin_define
@@ -177,11 +252,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|digit
+name|iscmdmeta
 parameter_list|(
 name|c
 parameter_list|)
-value|cmap(c, _DIG)
+value|cmap(c, _CMD)
 end_define
 
 begin_define
@@ -191,7 +266,7 @@ name|letter
 parameter_list|(
 name|c
 parameter_list|)
-value|cmap(c, _LET)
+value|(((c)& QUOTE) ? 0 : \ 			 (isalpha((unsigned char) (c)) || (c) == '_'))
 end_define
 
 begin_define
@@ -201,35 +276,244 @@ name|alnum
 parameter_list|(
 name|c
 parameter_list|)
-value|(digit(c) || letter(c))
+value|(((c)& QUOTE) ? 0 : \ 		         (isalnum((unsigned char) (c)) || (c) == '_'))
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NLS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|Isspace
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& QUOTE) ? 0 : isspace((unsigned char) (c)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINELEN
-value|128
+name|Isdigit
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& QUOTE) ? 0 : isdigit((unsigned char) (c)))
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|linp
-decl_stmt|,
-name|linbuf
-index|[
-name|LINELEN
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|CSHPUTCHAR
-value|{ \ 	if (!(ch&QUOTE)&& (ch == 0177 || ch< ' '&& ch != '\t'&& \ 	    ch != '\n')) { \ 		*linp++ = '^'; \ 		if (ch == 0177) \ 			ch = '?'; \ 		else \ 			ch |= 'A' - 1; \ 		if (linp>=&linbuf[sizeof linbuf - 2]) \ 			flush(); \ 	} \ 	ch&= TRIM; \ 	*linp++ = ch; \ 	if (ch == '\n' || linp>=&linbuf[sizeof(linbuf) - 2]) \ 		flush(); \ }
+name|Isalpha
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& QUOTE) ? 0 : isalpha((unsigned char) (c)))
 end_define
+
+begin_define
+define|#
+directive|define
+name|Islower
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& QUOTE) ? 0 : islower((unsigned char) (c)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Isupper
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& QUOTE) ? 0 : isupper((unsigned char) (c)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Tolower
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& QUOTE) ? 0 : tolower((unsigned char) (c)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Toupper
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& QUOTE) ? 0 : toupper((unsigned char) (c)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Isxdigit
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& QUOTE) ? 0 : isxdigit((unsigned char) (c)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Isalnum
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& QUOTE) ? 0 : isalnum((unsigned char) (c)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Iscntrl
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& QUOTE) ? 0 : iscntrl((unsigned char) (c)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Isprint
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& QUOTE) ? 0 : isprint((unsigned char) (c)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|Isspace
+parameter_list|(
+name|c
+parameter_list|)
+value|cmap(c, _SP|_NL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Isdigit
+parameter_list|(
+name|c
+parameter_list|)
+value|cmap(c, _DIG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Isalpha
+parameter_list|(
+name|c
+parameter_list|)
+value|(cmap(c,_LET)&& !(((c)& META)&& AsciiOnly))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Islower
+parameter_list|(
+name|c
+parameter_list|)
+value|(cmap(c,_LOW)&& !(((c)& META)&& AsciiOnly))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Isupper
+parameter_list|(
+name|c
+parameter_list|)
+value|(cmap(c, _UP)&& !(((c)& META)&& AsciiOnly))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Tolower
+parameter_list|(
+name|c
+parameter_list|)
+value|(_cmap_lower[(unsigned char)(c)])
+end_define
+
+begin_define
+define|#
+directive|define
+name|Toupper
+parameter_list|(
+name|c
+parameter_list|)
+value|(_cmap_upper[(unsigned char)(c)])
+end_define
+
+begin_define
+define|#
+directive|define
+name|Isxdigit
+parameter_list|(
+name|c
+parameter_list|)
+value|cmap(c, _XD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Isalnum
+parameter_list|(
+name|c
+parameter_list|)
+value|(cmap(c, _DIG|_LET)&& !(((c)& META)&& AsciiOnly))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Iscntrl
+parameter_list|(
+name|c
+parameter_list|)
+value|(cmap(c,_CTR)&& !(((c)& META)&& AsciiOnly))
+end_define
+
+begin_define
+define|#
+directive|define
+name|Isprint
+parameter_list|(
+name|c
+parameter_list|)
+value|(!cmap(c,_CTR)&& !(((c)& META)&& AsciiOnly))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

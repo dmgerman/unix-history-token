@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.7 (Berkeley) %G%"
+literal|"@(#)init.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,460 +34,11 @@ directive|include
 file|"sh.h"
 end_include
 
-begin_comment
-comment|/*  * C shell  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|doalias
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dobg
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dobreak
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dochngd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|docontin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dodirs
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doecho
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doelse
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doend
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doendif
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doendsw
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doeval
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doexit
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dofg
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doforeach
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doglob
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dogoto
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dohash
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dohist
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doif
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dojobs
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dokill
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dolet
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dolimit
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dologin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dologout
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|donice
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|donotify
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|donohup
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doonintr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dopopd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dopushd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dorepeat
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doset
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dosetenv
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dosource
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dostop
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dosuspend
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doswbrk
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doswitch
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dotime
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dounlimit
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|doumask
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dowait
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dowhile
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dozip
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|execash
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|goodbye
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VFORK
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|int
-name|hashstat
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|extern
-name|int
-name|shift
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|showall
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|unalias
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dounhash
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|unset
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dounsetenv
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"sh.local.h"
+end_include
 
 begin_define
 define|#
@@ -565,7 +116,7 @@ name|dochngd
 block|,
 literal|0
 block|,
-literal|1
+name|INF
 block|,
 literal|"chdir"
 block|,
@@ -573,7 +124,7 @@ name|dochngd
 block|,
 literal|0
 block|,
-literal|1
+name|INF
 block|,
 literal|"continue"
 block|,
@@ -597,7 +148,7 @@ name|dodirs
 block|,
 literal|0
 block|,
-literal|1
+name|INF
 block|,
 literal|"echo"
 block|,
@@ -748,6 +299,14 @@ literal|0
 block|,
 literal|3
 block|,
+literal|"linedit"
+block|,
+name|doecho
+block|,
+literal|0
+block|,
+name|INF
+block|,
 literal|"login"
 block|,
 name|dologin
@@ -802,7 +361,7 @@ name|dopopd
 block|,
 literal|0
 block|,
-literal|1
+name|INF
 block|,
 literal|"pushd"
 block|,
@@ -810,7 +369,7 @@ name|dopushd
 block|,
 literal|0
 block|,
-literal|1
+name|INF
 block|,
 literal|"rehash"
 block|,
@@ -1070,138 +629,171 @@ name|mesg
 index|[]
 init|=
 block|{
+comment|/*  0 */
 literal|0
 block|,
-literal|0
+literal|""
 block|,
+comment|/*  1 */
 literal|"HUP"
 block|,
 literal|"Hangup"
 block|,
+comment|/*  2 */
 literal|"INT"
 block|,
 literal|"Interrupt"
 block|,
+comment|/*  3 */
 literal|"QUIT"
 block|,
 literal|"Quit"
 block|,
+comment|/*  4 */
 literal|"ILL"
 block|,
 literal|"Illegal instruction"
 block|,
+comment|/*  5 */
 literal|"TRAP"
 block|,
 literal|"Trace/BPT trap"
 block|,
+comment|/*  6 */
 literal|"IOT"
 block|,
 literal|"IOT trap"
 block|,
+comment|/*  7 */
 literal|"EMT"
 block|,
 literal|"EMT trap"
 block|,
+comment|/*  8 */
 literal|"FPE"
 block|,
 literal|"Floating exception"
 block|,
+comment|/*  9 */
 literal|"KILL"
 block|,
 literal|"Killed"
 block|,
+comment|/* 10 */
 literal|"BUS"
 block|,
 literal|"Bus error"
 block|,
+comment|/* 11 */
 literal|"SEGV"
 block|,
 literal|"Segmentation fault"
 block|,
+comment|/* 12 */
 literal|"SYS"
 block|,
 literal|"Bad system call"
 block|,
+comment|/* 13 */
 literal|"PIPE"
 block|,
 literal|"Broken pipe"
 block|,
+comment|/* 14 */
 literal|"ALRM"
 block|,
 literal|"Alarm clock"
 block|,
+comment|/* 15 */
 literal|"TERM"
 block|,
 literal|"Terminated"
 block|,
+comment|/* 16 */
 literal|"URG"
 block|,
-literal|"Urgent I/O condition"
+literal|"Urgent condition on IO channel"
 block|,
+comment|/* 17 */
 literal|"STOP"
 block|,
 literal|"Suspended (signal)"
 block|,
+comment|/* 18 */
 literal|"TSTP"
 block|,
 literal|"Suspended"
 block|,
+comment|/* 19 */
 literal|"CONT"
 block|,
 literal|"Continued"
 block|,
+comment|/* 20 */
 literal|"CHLD"
 block|,
 literal|"Child exited"
 block|,
+comment|/* 21 */
 literal|"TTIN"
 block|,
 literal|"Suspended (tty input)"
 block|,
+comment|/* 22 */
 literal|"TTOU"
 block|,
 literal|"Suspended (tty output)"
 block|,
+comment|/* 23 */
 literal|"IO"
 block|,
-literal|"I/O possible"
+literal|"IO possible interrupt"
 block|,
+comment|/* 24 */
 literal|"XCPU"
 block|,
 literal|"Cputime limit exceeded"
 block|,
+comment|/* 25 */
 literal|"XFSZ"
 block|,
 literal|"Filesize limit exceeded"
 block|,
+comment|/* 26 */
 literal|"VTALRM"
 block|,
-literal|"Virtual timer expired"
+literal|"Virtual time alarm"
 block|,
+comment|/* 27 */
 literal|"PROF"
 block|,
-literal|"Profiling timer expired"
+literal|"Profiling time alarm"
 block|,
+comment|/* 28 */
 literal|"WINCH"
 block|,
-literal|"Window size changed"
+literal|"Window changed"
 block|,
-literal|0
+comment|/* 29 */
+literal|"INFO"
 block|,
-literal|"Signal 29"
+literal|"Information request"
 block|,
+comment|/* 30 */
 literal|"USR1"
 block|,
-literal|"User defined signal 1"
+literal|"User signal 1"
 block|,
+comment|/* 31 */
 literal|"USR2"
 block|,
-literal|"User defined signal 2"
+literal|"User signal 2"
 block|,
+comment|/* 32 */
 literal|0
 block|,
 literal|"Signal 32"
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

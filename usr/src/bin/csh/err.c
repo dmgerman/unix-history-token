@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.5 (Berkeley) %G%"
+literal|"@(#)err.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,16 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_h_tc_err
+end_define
+
+begin_comment
+comment|/* Don't redefine the errors	 */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -37,92 +47,905 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<varargs.h>
 end_include
 
-begin_comment
-comment|/*  * C Shell  */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|errspl
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Argument to error was spliced by seterr2 */
-end_comment
-
 begin_decl_stmt
 name|char
-name|one
-index|[
-literal|2
-index|]
+modifier|*
+name|seterr
 init|=
-block|{
-literal|'1'
-block|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Holds last error if there was one */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERR_FLAGS
+value|0xf0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_NAME
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_SILENT
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_OLD
+value|0x40000000
+end_define
+
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
-name|onev
-index|[
-literal|2
-index|]
+name|errorlist
+index|[]
 init|=
 block|{
-name|one
+define|#
+directive|define
+name|ERR_SYNTAX
+value|0
+literal|"Syntax Error"
 block|,
-name|NOSTR
+define|#
+directive|define
+name|ERR_NOTALLOWED
+value|1
+literal|"%s is not allowed"
+block|,
+define|#
+directive|define
+name|ERR_WTOOLONG
+value|2
+literal|"Word too long"
+block|,
+define|#
+directive|define
+name|ERR_LTOOLONG
+value|3
+literal|"$< line too long"
+block|,
+define|#
+directive|define
+name|ERR_DOLZERO
+value|4
+literal|"No file for $0"
+block|,
+define|#
+directive|define
+name|ERR_DOLQUEST
+value|5
+literal|"$? not allowed here"
+block|,
+define|#
+directive|define
+name|ERR_INCBR
+value|6
+literal|"Incomplete [] modifier"
+block|,
+define|#
+directive|define
+name|ERR_EXPORD
+value|7
+literal|"$ expansion must end before ]"
+block|,
+define|#
+directive|define
+name|ERR_BADMOD
+value|8
+literal|"Bad : modifier in $ (%c)"
+block|,
+define|#
+directive|define
+name|ERR_SUBSCRIPT
+value|9
+literal|"Subscript error"
+block|,
+define|#
+directive|define
+name|ERR_BADNUM
+value|10
+literal|"Badly formed number"
+block|,
+define|#
+directive|define
+name|ERR_NOMORE
+value|11
+literal|"No more words"
+block|,
+define|#
+directive|define
+name|ERR_FILENAME
+value|12
+literal|"Missing file name"
+block|,
+define|#
+directive|define
+name|ERR_GLOB
+value|13
+literal|"Internal glob error"
+block|,
+define|#
+directive|define
+name|ERR_COMMAND
+value|14
+literal|"Command not found"
+block|,
+define|#
+directive|define
+name|ERR_TOOFEW
+value|15
+literal|"Too few arguments"
+block|,
+define|#
+directive|define
+name|ERR_TOOMANY
+value|16
+literal|"Too many arguments"
+block|,
+define|#
+directive|define
+name|ERR_DANGER
+value|17
+literal|"Too dangerous to alias that"
+block|,
+define|#
+directive|define
+name|ERR_EMPTYIF
+value|18
+literal|"Empty if"
+block|,
+define|#
+directive|define
+name|ERR_IMPRTHEN
+value|19
+literal|"Improper then"
+block|,
+define|#
+directive|define
+name|ERR_NOPAREN
+value|20
+literal|"Words not parenthesized"
+block|,
+define|#
+directive|define
+name|ERR_NOTFOUND
+value|21
+literal|"%s not found"
+block|,
+define|#
+directive|define
+name|ERR_MASK
+value|22
+literal|"Improper mask"
+block|,
+define|#
+directive|define
+name|ERR_LIMIT
+value|23
+literal|"No such limit"
+block|,
+define|#
+directive|define
+name|ERR_TOOLARGE
+value|24
+literal|"Argument too large"
+block|,
+define|#
+directive|define
+name|ERR_SCALEF
+value|25
+literal|"Improper or unknown scale factor"
+block|,
+define|#
+directive|define
+name|ERR_UNDVAR
+value|26
+literal|"Undefined variable"
+block|,
+define|#
+directive|define
+name|ERR_DEEP
+value|27
+literal|"Directory stack not that deep"
+block|,
+define|#
+directive|define
+name|ERR_BADSIG
+value|28
+literal|"Bad signal number"
+block|,
+define|#
+directive|define
+name|ERR_UNKSIG
+value|29
+literal|"Unknown signal; kill -l lists signals"
+block|,
+define|#
+directive|define
+name|ERR_VARBEGIN
+value|30
+literal|"Variable name must begin with a letter"
+block|,
+define|#
+directive|define
+name|ERR_VARTOOLONG
+value|31
+literal|"Variable name too long"
+block|,
+define|#
+directive|define
+name|ERR_VARALNUM
+value|32
+literal|"Variable name must contain alphanumeric characters"
+block|,
+define|#
+directive|define
+name|ERR_JOBCONTROL
+value|33
+literal|"No job control in this shell"
+block|,
+define|#
+directive|define
+name|ERR_EXPRESSION
+value|34
+literal|"Expression Syntax"
+block|,
+define|#
+directive|define
+name|ERR_NOHOMEDIR
+value|35
+literal|"No home directory"
+block|,
+define|#
+directive|define
+name|ERR_CANTCHANGE
+value|36
+literal|"Can't change to home directory"
+block|,
+define|#
+directive|define
+name|ERR_NULLCOM
+value|37
+literal|"Invalid null command"
+block|,
+define|#
+directive|define
+name|ERR_ASSIGN
+value|38
+literal|"Assignment missing expression"
+block|,
+define|#
+directive|define
+name|ERR_UNKNOWNOP
+value|39
+literal|"Unknown operator"
+block|,
+define|#
+directive|define
+name|ERR_AMBIG
+value|40
+literal|"Ambiguous"
+block|,
+define|#
+directive|define
+name|ERR_EXISTS
+value|41
+literal|"%s: File exists"
+block|,
+define|#
+directive|define
+name|ERR_INTR
+value|42
+literal|"Interrupted"
+block|,
+define|#
+directive|define
+name|ERR_RANGE
+value|43
+literal|"Subscript out of range"
+block|,
+define|#
+directive|define
+name|ERR_OVERFLOW
+value|44
+literal|"Line overflow"
+block|,
+define|#
+directive|define
+name|ERR_VARMOD
+value|45
+literal|"Unknown variable modifier"
+block|,
+define|#
+directive|define
+name|ERR_NOSUCHJOB
+value|46
+literal|"No such job"
+block|,
+define|#
+directive|define
+name|ERR_TERMINAL
+value|47
+literal|"Can't from terminal"
+block|,
+define|#
+directive|define
+name|ERR_NOTWHILE
+value|48
+literal|"Not in while/foreach"
+block|,
+define|#
+directive|define
+name|ERR_NOPROC
+value|49
+literal|"No more processes"
+block|,
+define|#
+directive|define
+name|ERR_NOMATCH
+value|50
+literal|"No match"
+block|,
+define|#
+directive|define
+name|ERR_MISSING
+value|51
+literal|"Missing %c"
+block|,
+define|#
+directive|define
+name|ERR_UNMATCHED
+value|52
+literal|"Unmatched %c"
+block|,
+define|#
+directive|define
+name|ERR_NOMEM
+value|53
+literal|"Out of memory"
+block|,
+define|#
+directive|define
+name|ERR_PIPE
+value|54
+literal|"Can't make pipe"
+block|,
+define|#
+directive|define
+name|ERR_SYSTEM
+value|55
+literal|"%s: %s"
+block|,
+define|#
+directive|define
+name|ERR_STRING
+value|56
+literal|"%s"
+block|,
+define|#
+directive|define
+name|ERR_JOBS
+value|57
+literal|"Usage: jobs [ -l ]"
+block|,
+define|#
+directive|define
+name|ERR_JOBARGS
+value|58
+literal|"Arguments should be jobs or process id's"
+block|,
+define|#
+directive|define
+name|ERR_JOBCUR
+value|59
+literal|"No current job"
+block|,
+define|#
+directive|define
+name|ERR_JOBPREV
+value|60
+literal|"No previous job"
+block|,
+define|#
+directive|define
+name|ERR_JOBPAT
+value|61
+literal|"No job matches pattern"
+block|,
+define|#
+directive|define
+name|ERR_NESTING
+value|62
+literal|"Fork nesting> %d; maybe `...` loop"
+block|,
+define|#
+directive|define
+name|ERR_JOBCTRLSUB
+value|63
+literal|"No job control in subshells"
+block|,
+define|#
+directive|define
+name|ERR_BADPLPS
+value|64
+literal|"Badly placed ()'s"
+block|,
+define|#
+directive|define
+name|ERR_STOPPED
+value|65
+literal|"%sThere are suspended jobs"
+block|,
+define|#
+directive|define
+name|ERR_NODIR
+value|66
+literal|"No other directory"
+block|,
+define|#
+directive|define
+name|ERR_EMPTY
+value|67
+literal|"Directory stack empty"
+block|,
+define|#
+directive|define
+name|ERR_BADDIR
+value|68
+literal|"Bad directory"
+block|,
+define|#
+directive|define
+name|ERR_DIRUS
+value|69
+literal|"Usage: %s [-lvn]%s"
+block|,
+define|#
+directive|define
+name|ERR_HFLAG
+value|70
+literal|"No operand for -h flag"
+block|,
+define|#
+directive|define
+name|ERR_NOTLOGIN
+value|71
+literal|"Not a login shell"
+block|,
+define|#
+directive|define
+name|ERR_DIV0
+value|72
+literal|"Division by 0"
+block|,
+define|#
+directive|define
+name|ERR_MOD0
+value|73
+literal|"Mod by 0"
+block|,
+define|#
+directive|define
+name|ERR_BADSCALE
+value|74
+literal|"Bad scaling; did you mean \"%s\"?"
+block|,
+define|#
+directive|define
+name|ERR_SUSPLOG
+value|75
+literal|"Can't suspend a login shell (yet)"
+block|,
+define|#
+directive|define
+name|ERR_UNKUSER
+value|76
+literal|"Unknown user: %s"
+block|,
+define|#
+directive|define
+name|ERR_NOHOME
+value|77
+literal|"No $home variable set"
+block|,
+define|#
+directive|define
+name|ERR_HISTUS
+value|78
+literal|"Usage: history [-rht] [# number of events]"
+block|,
+define|#
+directive|define
+name|ERR_SPDOLLT
+value|79
+literal|"$ or< not allowed with $# or $?"
+block|,
+define|#
+directive|define
+name|ERR_NEWLINE
+value|80
+literal|"Newline in variable name"
+block|,
+define|#
+directive|define
+name|ERR_SPSTAR
+value|81
+literal|"* not allowed with $# or $?"
+block|,
+define|#
+directive|define
+name|ERR_DIGIT
+value|82
+literal|"$?<digit> or $#<digit> not allowed"
+block|,
+define|#
+directive|define
+name|ERR_VARILL
+value|83
+literal|"Illegal variable name"
+block|,
+define|#
+directive|define
+name|ERR_NLINDEX
+value|84
+literal|"Newline in variable index"
+block|,
+define|#
+directive|define
+name|ERR_EXPOVFL
+value|85
+literal|"Expansion buffer overflow"
+block|,
+define|#
+directive|define
+name|ERR_VARSYN
+value|86
+literal|"Variable syntax"
+block|,
+define|#
+directive|define
+name|ERR_BADBANG
+value|87
+literal|"Bad ! form"
+block|,
+define|#
+directive|define
+name|ERR_NOSUBST
+value|88
+literal|"No previous substitute"
+block|,
+define|#
+directive|define
+name|ERR_BADSUBST
+value|89
+literal|"Bad substitute"
+block|,
+define|#
+directive|define
+name|ERR_LHS
+value|90
+literal|"No previous left hand side"
+block|,
+define|#
+directive|define
+name|ERR_RHSLONG
+value|91
+literal|"Right hand side too long"
+block|,
+define|#
+directive|define
+name|ERR_BADBANGMOD
+value|92
+literal|"Bad ! modifier: %c"
+block|,
+define|#
+directive|define
+name|ERR_MODFAIL
+value|93
+literal|"Modifier failed"
+block|,
+define|#
+directive|define
+name|ERR_SUBOVFL
+value|94
+literal|"Substitution buffer overflow"
+block|,
+define|#
+directive|define
+name|ERR_BADBANGARG
+value|95
+literal|"Bad ! arg selector"
+block|,
+define|#
+directive|define
+name|ERR_NOSEARCH
+value|96
+literal|"No prev search"
+block|,
+define|#
+directive|define
+name|ERR_NOEVENT
+value|97
+literal|"%s: Event not found"
+block|,
+define|#
+directive|define
+name|ERR_TOOMANYRP
+value|98
+literal|"Too many )'s"
+block|,
+define|#
+directive|define
+name|ERR_TOOMANYLP
+value|99
+literal|"Too many ('s"
+block|,
+define|#
+directive|define
+name|ERR_BADPLP
+value|100
+literal|"Badly placed ("
+block|,
+define|#
+directive|define
+name|ERR_MISRED
+value|101
+literal|"Missing name for redirect"
+block|,
+define|#
+directive|define
+name|ERR_OUTRED
+value|102
+literal|"Ambiguous output redirect"
+block|,
+define|#
+directive|define
+name|ERR_REDPAR
+value|103
+literal|"Can't<< within ()'s"
+block|,
+define|#
+directive|define
+name|ERR_INRED
+value|104
+literal|"Ambiguous input redirect"
+block|,
+define|#
+directive|define
+name|ERR_ALIASLOOP
+value|105
+literal|"Alias loop"
+block|,
+define|#
+directive|define
+name|ERR_HISTLOOP
+value|106
+literal|"!# History loop"
+block|,
+define|#
+directive|define
+name|ERR_ARCH
+value|107
+literal|"%s: %s. Wrong Architecture"
+block|,
+define|#
+directive|define
+name|ERR_FILEINQ
+value|108
+literal|"Malformed file inquiry"
+block|,
+define|#
+directive|define
+name|ERR_SELOVFL
+value|109
+literal|"Selector overflow"
+block|,
+define|#
+directive|define
+name|ERR_INVALID
+value|110
+literal|"Invalid Error"
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Print error string s with optional argument arg.  * This routine always resets or exits.  The flag haderr  * is set so the routine who catches the unwind can propogate  * it if they want.  *  * Note that any open files at the point of error will eventually  * be closed in the routine process in sh.c which is the only  * place error unwinds are ever caught.  */
+comment|/*  * The parser and scanner set up errors for later by calling seterr,  * which sets the variable err as a side effect; later to be tested,  * e.g. in process.  */
 end_comment
+
+begin_function
+name|void
+comment|/*VARARGS1*/
+name|seterror
+parameter_list|(
+name|id
+parameter_list|,
+name|va_alist
+parameter_list|)
+name|int
+name|id
+decl_stmt|;
+function|va_dcl
+block|{
+if|if
+condition|(
+name|seterr
+operator|==
+literal|0
+condition|)
+block|{
+name|va_list
+name|va
+decl_stmt|;
+name|char
+name|berr
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|id
+operator|<
+literal|0
+operator|||
+name|id
+operator|>
+sizeof|sizeof
+argument_list|(
+name|errorlist
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|errorlist
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+name|id
+operator|=
+name|ERR_INVALID
+expr_stmt|;
+name|va_start
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+name|xvsprintf
+argument_list|(
+name|berr
+argument_list|,
+name|errorlist
+index|[
+name|id
+index|]
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+name|seterr
+operator|=
+name|strsave
+argument_list|(
+name|berr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
-comment|/*VARARGS1*/
+comment|/*  * Print the error with the given id.  *  * Special ids:  *	ERR_SILENT: Print nothing.  *	ERR_OLD: Print the previously set error if one was there.  *	         otherwise return.  *	ERR_NAME: If this bit is set, print the name of the function  *		  in bname  *  * This routine always resets or exits.  The flag haderr  * is set so the routine who catches the unwind can propogate  * it if they want.  *  * Note that any open files at the point of error will eventually  * be closed in the routine process in sh.c which is the only  * place error unwinds are ever caught.  */
 end_comment
 
-begin_macro
-name|error
-argument_list|(
-argument|s
-argument_list|,
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|s
+begin_function
+name|void
+comment|/*VARARGS*/
+name|stderror
+parameter_list|(
+name|id
+parameter_list|,
+name|va_alist
+parameter_list|)
+name|int
+name|id
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+function|va_dcl
 block|{
+name|va_list
+name|va
+decl_stmt|;
 specifier|register
-name|char
+name|Char
 modifier|*
 modifier|*
 name|v
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|ep
+name|int
+name|flags
+init|=
+name|id
+operator|&
+name|ERR_FLAGS
 decl_stmt|;
-comment|/* 	 * Must flush before we print as we wish output before the error 	 * to go on (some form of) standard output, while output after 	 * goes on (some form of) diagnostic output. 	 * If didfds then output will go to 1/2 else to FSHOUT/FSHDIAG. 	 * See flush in sh.print.c. 	 */
+name|id
+operator|&=
+operator|~
+name|ERR_FLAGS
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|ERR_OLD
+operator|)
+operator|&&
+name|seterr
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+name|id
+operator|<
+literal|0
+operator|||
+name|id
+operator|>
+sizeof|sizeof
+argument_list|(
+name|errorlist
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|errorlist
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+name|id
+operator|=
+name|ERR_INVALID
+expr_stmt|;
+comment|/*      * Must flush before we print as we wish output before the error to go on      * (some form of) standard output, while output after goes on (some form      * of) diagnostic output. If didfds then output will go to 1/2 else to      * FSHOUT/FSHDIAG. See flush in sh.print.c.      */
 name|flush
 argument_list|()
 expr_stmt|;
@@ -138,49 +961,122 @@ expr_stmt|;
 comment|/* This isn't otherwise reset */
 if|if
 condition|(
-name|v
-operator|=
-name|pargv
+operator|!
+operator|(
+name|flags
+operator|&
+name|ERR_SILENT
+operator|)
 condition|)
-name|pargv
-operator|=
-literal|0
-operator|,
-name|blkfree
-argument_list|(
-name|v
-argument_list|)
-expr_stmt|;
+block|{
 if|if
 condition|(
-name|v
-operator|=
-name|gargv
+name|flags
+operator|&
+name|ERR_NAME
 condition|)
-name|gargv
-operator|=
-literal|0
-operator|,
-name|blkfree
+name|xprintf
 argument_list|(
-name|v
-argument_list|)
-expr_stmt|;
-comment|/* 	 * A zero arguments causes no printing, else print 	 * an error diagnostic here. 	 */
-if|if
-condition|(
-name|s
-condition|)
-name|printf
-argument_list|(
-name|s
+literal|"%s: "
 argument_list|,
-name|arg
+name|bname
 argument_list|)
-operator|,
-name|printf
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|ERR_OLD
+operator|)
+condition|)
+comment|/* Old error. */
+name|xprintf
+argument_list|(
+literal|"%s.\n"
+argument_list|,
+name|seterr
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|va_start
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+name|xvprintf
+argument_list|(
+name|errorlist
+index|[
+name|id
+index|]
+argument_list|,
+name|va
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+name|xprintf
 argument_list|(
 literal|".\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|seterr
+condition|)
+block|{
+name|xfree
+argument_list|(
+operator|(
+name|ptr_t
+operator|)
+name|seterr
+argument_list|)
+expr_stmt|;
+name|seterr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|v
+operator|=
+name|pargv
+condition|)
+name|pargv
+operator|=
+literal|0
+operator|,
+name|blkfree
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|v
+operator|=
+name|gargv
+condition|)
+name|gargv
+operator|=
+literal|0
+operator|,
+name|blkfree
+argument_list|(
+name|v
 argument_list|)
 expr_stmt|;
 name|didfds
@@ -188,55 +1084,30 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Forget about 0,1,2 */
-if|if
-condition|(
-operator|(
-name|ep
-operator|=
-name|err
-operator|)
-operator|&&
-name|errspl
-condition|)
-block|{
-name|errspl
-operator|=
-literal|0
-expr_stmt|;
-name|xfree
-argument_list|(
-name|ep
-argument_list|)
-expr_stmt|;
-block|}
-name|errspl
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 	 * Go away if -e or we are a child shell 	 */
+comment|/*      * Go away if -e or we are a child shell      */
 if|if
 condition|(
 name|exiterr
 operator|||
 name|child
 condition|)
-name|exit
+name|xexit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Reset the state of the input. 	 * This buffered seek to end of file will also 	 * clear the while/foreach stack. 	 */
+comment|/*      * Reset the state of the input. This buffered seek to end of file will      * also clear the while/foreach stack.      */
 name|btoeof
 argument_list|()
 expr_stmt|;
-name|setq
+name|set
 argument_list|(
-literal|"status"
+name|STRstatus
 argument_list|,
-name|onev
-argument_list|,
-operator|&
-name|shvhed
+name|Strsave
+argument_list|(
+name|STR1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -248,266 +1119,19 @@ condition|)
 operator|(
 name|void
 operator|)
-name|ioctl
+name|tcsetpgrp
 argument_list|(
 name|FSHTTY
 argument_list|,
-name|TIOCSPGRP
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|tpgrp
 argument_list|)
 expr_stmt|;
-name|longjmp
-argument_list|(
-name|reslab
-argument_list|,
-literal|0
-argument_list|)
+name|reset
+argument_list|()
 expr_stmt|;
 comment|/* Unwind */
 block|}
-end_block
-
-begin_comment
-comment|/*  * Perror is the shells version of perror which should otherwise  * never be called.  */
-end_comment
-
-begin_macro
-name|Perror
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-comment|/* 	 * Perror uses unit 2, thus if we didn't set up the fd's 	 * we must set up unit 2 now else the diagnostic will disappear 	 */
-if|if
-condition|(
-operator|!
-name|didfds
-condition|)
-block|{
-specifier|register
-name|int
-name|oerrno
-init|=
-name|errno
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|dcopy
-argument_list|(
-name|SHDIAG
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|oerrno
-expr_stmt|;
-block|}
-name|perror
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-name|NOSTR
-argument_list|)
-expr_stmt|;
-comment|/* To exit or unwind */
-block|}
-end_block
-
-begin_macro
-name|bferr
-argument_list|(
-argument|cp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|flush
-argument_list|()
-expr_stmt|;
-name|haderr
-operator|=
-literal|1
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: "
-argument_list|,
-name|bname
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * The parser and scanner set up errors for later by calling seterr,  * which sets the variable err as a side effect; later to be tested,  * e.g. in process.  */
-end_comment
-
-begin_macro
-name|seterr
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-name|err
-operator|=
-name|s
-operator|,
-name|errspl
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/* Set err to a splice of cp and dp, to be freed later in error() */
-end_comment
-
-begin_macro
-name|seterr2
-argument_list|(
-argument|cp
-argument_list|,
-argument|dp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|cp
-decl_stmt|,
-modifier|*
-name|dp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|err
-condition|)
-return|return;
-name|err
-operator|=
-name|strspl
-argument_list|(
-name|cp
-argument_list|,
-name|dp
-argument_list|)
-expr_stmt|;
-name|errspl
-operator|++
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/* Set err to a splice of cp with a string form of character d */
-end_comment
-
-begin_macro
-name|seterrc
-argument_list|(
-argument|cp
-argument_list|,
-argument|d
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|cp
-decl_stmt|,
-name|d
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|char
-name|chbuf
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|chbuf
-index|[
-literal|0
-index|]
-operator|=
-name|d
-expr_stmt|;
-name|chbuf
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|seterr2
-argument_list|(
-name|cp
-argument_list|,
-name|chbuf
-argument_list|)
-expr_stmt|;
-block|}
-end_block
+end_function
 
 end_unit
 

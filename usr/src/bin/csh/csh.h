@@ -1,12 +1,97 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.11 (Berkeley) %G%  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SHORT_STRINGS
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|short
+name|Char
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SAVE
+parameter_list|(
+name|a
+parameter_list|)
+value|(Strsave(str2short(a)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|char
+name|Char
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SAVE
+parameter_list|(
+name|a
+parameter_list|)
+value|(strsave(a))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|ioctl_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Third arg of ioctl */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|sigmask_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* What a signal mask is */
 end_comment
 
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -24,13 +109,60 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<sys/file.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NLS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_include
@@ -48,6 +180,146 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|ptr_t
+typedef|;
+end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSMALLOC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|xmalloc
+parameter_list|(
+name|i
+parameter_list|)
+value|Malloc(i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xrealloc
+parameter_list|(
+name|p
+parameter_list|,
+name|i
+parameter_list|)
+value|Realloc(p, i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xcalloc
+parameter_list|(
+name|n
+parameter_list|,
+name|s
+parameter_list|)
+value|Calloc(n, s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xfree
+parameter_list|(
+name|p
+parameter_list|)
+value|Free(p)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|xmalloc
+parameter_list|(
+name|i
+parameter_list|)
+value|malloc(i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xrealloc
+parameter_list|(
+name|p
+parameter_list|,
+name|i
+parameter_list|)
+value|realloc(p, i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xcalloc
+parameter_list|(
+name|n
+parameter_list|,
+name|s
+parameter_list|)
+value|calloc(n, s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xfree
+parameter_list|(
+name|p
+parameter_list|)
+value|free(p)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSMALLOC */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"tc.const.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sh.local.h"
 end_include
 
@@ -57,13 +329,46 @@ directive|include
 file|"sh.char.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"sh.err.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_comment
 comment|/*  * C shell  *  * Bill Joy, UC Berkeley  * October, 1978; May 1980  *  * Jim Kulp, IIASA, Laxenburg Austria  * April, 1980  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|isdir
+parameter_list|(
+name|d
+parameter_list|)
+value|((d.st_mode& S_IFMT) == S_IFDIR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGN_EXTEND_CHAR
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|((a)& 0x80 ? ((int) (a)) | 0xffffff00 : ((int) a)& 0x000000ff)
+end_define
+
 begin_typedef
 typedef|typedef
-name|char
+name|int
 name|bool
 typedef|;
 end_typedef
@@ -77,8 +382,45 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(strcmp(a, b) == 0)
+value|(Strcmp(a, b) == 0)
 end_define
+
+begin_comment
+comment|/* globone() flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_ERROR
+value|0
+end_define
+
+begin_comment
+comment|/* default action: error if multiple words */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_IGNORE
+value|1
+end_define
+
+begin_comment
+comment|/* ignore the rest of the words		   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_APPEND
+value|2
+end_define
+
+begin_comment
+comment|/* make a sentence by cat'ing the words    */
+end_comment
 
 begin_comment
 comment|/*  * Global flags  */
@@ -270,7 +612,7 @@ comment|/*  * Global i/o info  */
 end_comment
 
 begin_decl_stmt
-name|char
+name|Char
 modifier|*
 name|arginp
 decl_stmt|;
@@ -291,9 +633,9 @@ comment|/* 2 -> need line for -t, 1 -> exit on read */
 end_comment
 
 begin_decl_stmt
-name|char
+name|Char
 modifier|*
-name|file
+name|ffile
 decl_stmt|;
 end_decl_stmt
 
@@ -304,7 +646,7 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|err
+name|seterr
 decl_stmt|;
 end_decl_stmt
 
@@ -313,17 +655,7 @@ comment|/* Error message from scanner/parser */
 end_comment
 
 begin_decl_stmt
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Error from C library routines */
-end_comment
-
-begin_decl_stmt
-name|char
+name|Char
 modifier|*
 name|shtemp
 decl_stmt|;
@@ -356,7 +688,7 @@ comment|/*  * Miscellany  */
 end_comment
 
 begin_decl_stmt
-name|char
+name|Char
 modifier|*
 name|doldol
 decl_stmt|;
@@ -374,6 +706,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* Invokers uid */
+end_comment
+
+begin_decl_stmt
+name|int
+name|gid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Invokers gid */
 end_comment
 
 begin_decl_stmt
@@ -425,6 +767,7 @@ comment|/*  * These are declared here because they want to be  * initialized in 
 end_comment
 
 begin_struct
+specifier|extern
 struct|struct
 name|biltins
 block|{
@@ -432,7 +775,7 @@ name|char
 modifier|*
 name|bname
 decl_stmt|;
-name|int
+name|void
 function_decl|(
 modifier|*
 name|bfunct
@@ -458,6 +801,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|extern
 struct|struct
 name|srch
 block|{
@@ -535,8 +879,24 @@ name|reslab
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|setexit
+parameter_list|()
+value|(setjmp(reslab))
+end_define
+
+begin_define
+define|#
+directive|define
+name|reset
+parameter_list|()
+value|longjmp(reslab, 1)
+end_define
+
 begin_comment
-comment|/* Should use structure assignment here. */
+comment|/* Should use structure assignment here */
 end_comment
 
 begin_define
@@ -546,7 +906,7 @@ name|getexit
 parameter_list|(
 name|a
 parameter_list|)
-value|bcopy((void *)reslab, (void *)(a), sizeof(reslab))
+value|bcopy((char *)reslab, ((char *)(a)), sizeof reslab)
 end_define
 
 begin_define
@@ -556,11 +916,11 @@ name|resexit
 parameter_list|(
 name|a
 parameter_list|)
-value|bcopy(((void *)(a)), (void *)reslab, sizeof(reslab))
+value|bcopy((char *)(a), (char *)reslab, sizeof reslab)
 end_define
 
 begin_decl_stmt
-name|char
+name|Char
 modifier|*
 name|gointr
 decl_stmt|;
@@ -591,8 +951,69 @@ comment|/* Parents terminate catch */
 end_comment
 
 begin_comment
-comment|/*  * Lexical definitions.  *  * All lexical space is allocated dynamically.  * The eighth bit of characters is used to prevent recognition,  * and eventually stripped.  */
+comment|/*  * Lexical definitions.  *  * All lexical space is allocated dynamically.  * The eighth/sizteenth bit of characters is used to prevent recognition,  * and eventually stripped.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|META
+value|0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASCII
+value|0177
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SHORT_STRINGS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CHAR
+value|0377
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUOTE
+value|0100000
+end_define
+
+begin_comment
+comment|/* 16nth char bit used for 'ing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRIM
+value|0077777
+end_define
+
+begin_comment
+comment|/* Mask to strip quote bit */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CHAR
+value|0177
+end_define
 
 begin_define
 define|#
@@ -602,7 +1023,7 @@ value|0200
 end_define
 
 begin_comment
-comment|/* Eighth char bit used internally for 'ing */
+comment|/* Eighth char bit used for 'ing */
 end_comment
 
 begin_define
@@ -614,6 +1035,21 @@ end_define
 
 begin_comment
 comment|/* Mask to strip quote bit */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|int
+name|AsciiOnly
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If set only 7 bits is expected in characters */
 end_comment
 
 begin_comment
@@ -640,7 +1076,7 @@ name|short
 name|Bfblocks
 decl_stmt|;
 comment|/* Number of buffer blocks */
-name|char
+name|Char
 modifier|*
 modifier|*
 name|Bfbuf
@@ -694,24 +1130,6 @@ parameter_list|()
 value|fseekp
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|btell
-end_ifndef
-
-begin_function_decl
-name|off_t
-name|btell
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * The shell finds commands in loops by reseeking the input  * For whiles, in particular, it reseeks to the beginning of the  * line the while was on; hence the while placement restrictions.  */
 end_comment
@@ -744,6 +1162,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* TELL */
+end_comment
+
+begin_comment
 comment|/*  * Input lines are parsed into doubly linked circular  * lists of words of the following form.  */
 end_comment
 
@@ -751,7 +1173,7 @@ begin_struct
 struct|struct
 name|wordent
 block|{
-name|char
+name|Char
 modifier|*
 name|word
 decl_stmt|;
@@ -795,170 +1217,162 @@ value|DODOL|DOEXCL
 end_define
 
 begin_comment
-comment|/*  * Labuf implements a general buffer for lookahead during lexical operations.  * Text which is to be placed in the input stream can be stuck here.  We stick  * parsed ahead $ constructs during initial input, process id's from `$$',  * and modified variable values (from qualifiers during expansion in sh.dol.c)  * here.  */
+comment|/*  * Labuf implements a general buffer for lookahead during lexical operations.  * Text which is to be placed in the input stream can be stuck here.  * We stick parsed ahead $ constructs during initial input,  * process id's from `$$', and modified variable values (from qualifiers  * during expansion in sh.dol.c) here.  */
 end_comment
 
 begin_decl_stmt
-name|char
-name|labuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
+name|Char
 modifier|*
 name|lap
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Parser structure  *  * Each command is parsed to a tree of command structures and flags are set  * bottom up during this process, to be propagated down as needed during the  * semantics/exeuction pass (sh.sem.c).  */
+comment|/*  * Parser structure  *  * Each command is parsed to a tree of command structures and  * flags are set bottom up during this process, to be propagated down  * as needed during the semantics/exeuction pass (sh.sem.c).  */
 end_comment
 
 begin_struct
 struct|struct
 name|command
 block|{
+name|short
+name|t_dtyp
+decl_stmt|;
+comment|/* Type of node 		 */
 define|#
 directive|define
 name|NODE_COMMAND
 value|1
-comment|/* t_dcom<t_dlef>t_drit	*/
+comment|/* t_dcom<t_dlef>t_drit	 */
 define|#
 directive|define
 name|NODE_PAREN
 value|2
-comment|/* ( t_dspr )<t_dlef>t_drit	*/
+comment|/* ( t_dspr )<t_dlef>t_drit	 */
 define|#
 directive|define
 name|NODE_PIPE
 value|3
-comment|/* t_dlef | t_drit		*/
+comment|/* t_dlef | t_drit		 */
 define|#
 directive|define
 name|NODE_LIST
 value|4
-comment|/* t_dlef ; t_drit		*/
+comment|/* t_dlef ; t_drit		 */
 define|#
 directive|define
 name|NODE_OR
 value|5
-comment|/* t_dlef || t_drit		*/
+comment|/* t_dlef || t_drit		 */
 define|#
 directive|define
 name|NODE_AND
 value|6
-comment|/* t_dlef&& t_drit		*/
+comment|/* t_dlef&& t_drit		 */
 name|short
-name|t_dtyp
+name|t_dflg
 decl_stmt|;
-comment|/* Node type */
+comment|/* Flags, e.g. F_AMPERSAND|... 	 */
 define|#
 directive|define
 name|F_SAVE
 value|(F_NICE|F_TIME|F_NOHUP)
-comment|/* save these when re-doing */
+comment|/* save these when re-doing 	 */
 define|#
 directive|define
 name|F_AMPERSAND
-value|0x0001
-comment|/* executes in background	*/
+value|(1<<0)
+comment|/* executes in background	 */
 define|#
 directive|define
 name|F_APPEND
-value|0x0002
-comment|/* output is redirected>>	*/
-define|#
-directive|define
-name|F_NICE
-value|0x0004
-comment|/* t_nice is meaningful */
-define|#
-directive|define
-name|F_NOFORK
-value|0x0008
-comment|/* don't fork, last ()ized cmd	*/
-define|#
-directive|define
-name|F_NOHUP
-value|0x0010
-comment|/* nohup this command */
-define|#
-directive|define
-name|F_NOINTERRUPT
-value|0x0020
-comment|/* should be immune from intr's */
-define|#
-directive|define
-name|F_OVERWRITE
-value|0x0040
-comment|/* output was !			*/
+value|(1<<1)
+comment|/* output is redirected>>	 */
 define|#
 directive|define
 name|F_PIPEIN
-value|0x0080
-comment|/* input is a pipe		*/
+value|(1<<2)
+comment|/* input is a pipe		 */
 define|#
 directive|define
 name|F_PIPEOUT
-value|0x0100
-comment|/* output is a pipe		*/
+value|(1<<3)
+comment|/* output is a pipe		 */
 define|#
 directive|define
-name|F_READ
-value|0x0200
-comment|/* input redirection is<<	*/
+name|F_NOFORK
+value|(1<<4)
+comment|/* don't fork, last ()ized cmd	 */
 define|#
 directive|define
-name|F_REPEAT
-value|0x0400
-comment|/* reexec aft if, repeat,...	*/
+name|F_NOINTERRUPT
+value|(1<<5)
+comment|/* should be immune from intr's */
+comment|/* spare */
 define|#
 directive|define
 name|F_STDERR
-value|0x0800
-comment|/* redirect unit 2 with unit 1	*/
+value|(1<<7)
+comment|/* redirect unit 2 with unit 1	 */
+define|#
+directive|define
+name|F_OVERWRITE
+value|(1<<8)
+comment|/* output was !			 */
+define|#
+directive|define
+name|F_READ
+value|(1<<9)
+comment|/* input redirection is<<	 */
+define|#
+directive|define
+name|F_REPEAT
+value|(1<<10)
+comment|/* reexec aft if, repeat,...	 */
+define|#
+directive|define
+name|F_NICE
+value|(1<<11)
+comment|/* t_nice is meaningful 	 */
+define|#
+directive|define
+name|F_NOHUP
+value|(1<<12)
+comment|/* nohup this command 		 */
 define|#
 directive|define
 name|F_TIME
-value|0x1000
-comment|/* time this command */
-name|short
-name|t_dflg
-decl_stmt|;
-comment|/* flags */
+value|(1<<13)
+comment|/* time this command 		 */
 union|union
 block|{
-name|char
+name|Char
 modifier|*
 name|T_dlef
 decl_stmt|;
-comment|/* Input redirect word */
+comment|/* Input redirect word 		 */
 name|struct
 name|command
 modifier|*
 name|T_dcar
 decl_stmt|;
-comment|/* Left part of list/pipe */
+comment|/* Left part of list/pipe 	 */
 block|}
 name|L
 union|;
 union|union
 block|{
-name|char
+name|Char
 modifier|*
 name|T_drit
 decl_stmt|;
-comment|/* Output redirect word */
+comment|/* Output redirect word 	 */
 name|struct
 name|command
 modifier|*
 name|T_dcdr
 decl_stmt|;
-comment|/* Right part of list/pipe */
+comment|/* Right part of list/pipe 	 */
 block|}
 name|R
 union|;
@@ -978,18 +1392,18 @@ define|#
 directive|define
 name|t_dcdr
 value|R.T_dcdr
-name|char
+name|Char
 modifier|*
 modifier|*
 name|t_dcom
 decl_stmt|;
-comment|/* Command/argument vector */
+comment|/* Command/argument vector 	 */
 name|struct
 name|command
 modifier|*
 name|t_dspr
 decl_stmt|;
-comment|/* Pointer to ()'d subtree */
+comment|/* Pointer to ()'d subtree 	 */
 name|short
 name|t_nice
 decl_stmt|;
@@ -998,7 +1412,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Parser tokens. */
+comment|/*  * The keywords for the parser  */
 end_comment
 
 begin_define
@@ -1150,7 +1564,7 @@ name|off_t
 name|w_end
 decl_stmt|;
 comment|/* End of loop (0 if unknown) */
-name|char
+name|Char
 modifier|*
 modifier|*
 name|w_fe
@@ -1160,7 +1574,7 @@ modifier|*
 name|w_fe0
 decl_stmt|;
 comment|/* Current/initial wordlist for fe */
-name|char
+name|Char
 modifier|*
 name|w_fename
 decl_stmt|;
@@ -1185,13 +1599,13 @@ begin_struct
 struct|struct
 name|varent
 block|{
-name|char
+name|Char
 modifier|*
 modifier|*
 name|vec
 decl_stmt|;
 comment|/* Array of words which is the value */
-name|char
+name|Char
 modifier|*
 name|v_name
 decl_stmt|;
@@ -1295,7 +1709,7 @@ comment|/* Node after last in arg list */
 end_comment
 
 begin_decl_stmt
-name|char
+name|Char
 modifier|*
 modifier|*
 name|alvec
@@ -1320,23 +1734,24 @@ begin_comment
 comment|/* After tglob -> is globbing needed? */
 end_comment
 
-begin_comment
-comment|/*  * A reasonable limit on number of arguments would seem to be  * the maximum number of characters in an arg list / 6.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|GAVSIZ
-value|NCARGS / 6
+name|MAXVARLEN
+value|30
 end_define
+
+begin_comment
+comment|/* Maximum number of char in a variable name */
+end_comment
 
 begin_comment
 comment|/*  * Variables for filename expansion  */
 end_comment
 
 begin_decl_stmt
-name|char
+specifier|extern
+name|Char
 modifier|*
 modifier|*
 name|gargv
@@ -1348,7 +1763,8 @@ comment|/* Pointer to the (stack) arglist */
 end_comment
 
 begin_decl_stmt
-name|short
+specifier|extern
+name|long
 name|gargc
 decl_stmt|;
 end_decl_stmt
@@ -1362,7 +1778,8 @@ comment|/*  * Variables for command expansion.  */
 end_comment
 
 begin_decl_stmt
-name|char
+specifier|extern
+name|Char
 modifier|*
 modifier|*
 name|pargv
@@ -1374,7 +1791,18 @@ comment|/* Pointer to the argv list space */
 end_comment
 
 begin_decl_stmt
-name|char
+specifier|extern
+name|long
+name|pargc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Count of arguments in pargv */
+end_comment
+
+begin_decl_stmt
+name|Char
 modifier|*
 name|pargs
 decl_stmt|;
@@ -1385,17 +1813,7 @@ comment|/* Pointer to start current word */
 end_comment
 
 begin_decl_stmt
-name|short
-name|pargc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Count of arguments in pargv */
-end_comment
-
-begin_decl_stmt
-name|short
+name|long
 name|pnleft
 decl_stmt|;
 end_decl_stmt
@@ -1405,7 +1823,7 @@ comment|/* Number of chars left in pargs */
 end_comment
 
 begin_decl_stmt
-name|char
+name|Char
 modifier|*
 name|pargcp
 decl_stmt|;
@@ -1432,6 +1850,9 @@ name|Hnum
 decl_stmt|;
 name|int
 name|Href
+decl_stmt|;
+name|long
+name|Htime
 decl_stmt|;
 name|struct
 name|Hist
@@ -1475,7 +1896,7 @@ comment|/* Last event reference (default) */
 end_comment
 
 begin_decl_stmt
-name|char
+name|Char
 name|HIST
 decl_stmt|;
 end_decl_stmt
@@ -1485,7 +1906,7 @@ comment|/* history invocation character */
 end_comment
 
 begin_decl_stmt
-name|char
+name|Char
 name|HISTSUB
 decl_stmt|;
 end_decl_stmt
@@ -1495,548 +1916,386 @@ comment|/* auto-substitute character */
 end_comment
 
 begin_comment
-comment|/*  * In lines for frequently called functions  */
+comment|/*  * strings.h:  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XFREE
-parameter_list|(
-name|cp
-parameter_list|)
-value|{ \ 	extern char end[]; \ 	char stack; \ 	if ((cp)>= end&& (cp)<&stack) \ 		free(cp); \ }
-end_define
-
-begin_decl_stmt
-name|char
-modifier|*
-name|alloctmp
-decl_stmt|;
-end_decl_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SHORT_STRINGS
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|xalloc
+name|Strchr
 parameter_list|(
-name|i
-parameter_list|)
-define|\
-value|((alloctmp = malloc(i)) ? alloctmp : (char *)nomem(i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|xrealloc
-parameter_list|(
-name|p
+name|a
 parameter_list|,
-name|i
+name|b
 parameter_list|)
-define|\
-value|((alloctmp = realloc(p, i)) ? alloctmp : (char *)nomem(i))
+value|strchr(a, b)
 end_define
-
-begin_function_decl
-name|char
-modifier|*
-name|Dfix1
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-modifier|*
-name|blkcat
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-modifier|*
-name|blkcpy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-modifier|*
-name|blkend
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-modifier|*
-name|blkspl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|calloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|realloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|cname
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-modifier|*
-name|copyblk
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-modifier|*
-name|dobackp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|domod
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|wordent
-modifier|*
-name|dosub
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|exp3
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|exp3a
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|exp4
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|exp5
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|exp6
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|Hist
-modifier|*
-name|enthist
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|Hist
-modifier|*
-name|findev
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|wordent
-modifier|*
-name|freenod
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|getinx
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|varent
-modifier|*
-name|getvx
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
-name|getpwnam
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|wordent
-modifier|*
-name|gethent
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|wordent
-modifier|*
-name|getsub
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|getwd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-modifier|*
-name|globall
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|globone
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|biltins
-modifier|*
-name|isbfunc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|operate
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|phup
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pintr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pchild
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|putn
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-modifier|*
-name|saveblk
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|savestr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|strcat
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|strend
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|strings
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|strip
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|strspl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|subword
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|command
-modifier|*
-name|syntax
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|command
-modifier|*
-name|syn0
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|command
-modifier|*
-name|syn1
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|command
-modifier|*
-name|syn1a
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|command
-modifier|*
-name|syn1b
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|command
-modifier|*
-name|syn2
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|command
-modifier|*
-name|syn3
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|value1
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|xhome
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|xname
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|xset
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
 directive|define
-name|NOSTR
-value|((char *) 0)
+name|Strrchr
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|strrchr(a, b)
 end_define
+
+begin_define
+define|#
+directive|define
+name|Strcat
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|strcat(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strncat
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|strncat(a, b, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strcpy
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|strcpy(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strncpy
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|strncpy(a, b, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strlen
+parameter_list|(
+name|a
+parameter_list|)
+value|strlen(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strcmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|strcmp(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strncmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|strncmp(a, b, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strspl
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|strspl(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strsave
+parameter_list|(
+name|a
+parameter_list|)
+value|strsave(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strend
+parameter_list|(
+name|a
+parameter_list|)
+value|strend(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strstr
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|strstr(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|str2short
+parameter_list|(
+name|a
+parameter_list|)
+value|(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|blk2short
+parameter_list|(
+name|a
+parameter_list|)
+value|saveblk(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|short2blk
+parameter_list|(
+name|a
+parameter_list|)
+value|saveblk(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|short2str
+parameter_list|(
+name|a
+parameter_list|)
+value|(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|short2qstr
+parameter_list|(
+name|a
+parameter_list|)
+value|(a)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|Strchr
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|s_strchr(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strrchr
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|s_strrchr(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strcat
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|s_strcat(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strncat
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|s_strncat(a, b, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strcpy
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|s_strcpy(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strncpy
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|s_strncpy(a, b, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strlen
+parameter_list|(
+name|a
+parameter_list|)
+value|s_strlen(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strcmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|s_strcmp(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strncmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|s_strncmp(a, b, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strspl
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|s_strspl(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strsave
+parameter_list|(
+name|a
+parameter_list|)
+value|s_strsave(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strend
+parameter_list|(
+name|a
+parameter_list|)
+value|s_strend(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Strstr
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|s_strstr(a, b)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * setname is a macro to save space (see sh.err.c)  */
@@ -2066,24 +2325,31 @@ name|VFORK
 end_ifdef
 
 begin_decl_stmt
-name|char
+name|Char
 modifier|*
 name|Vsav
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|Char
 modifier|*
+name|Vdp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Char
 modifier|*
-name|Vav
+name|Vexpath
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|Vdp
+modifier|*
+name|Vt
 decl_stmt|;
 end_decl_stmt
 
@@ -2092,8 +2358,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* VFORK */
+end_comment
+
 begin_decl_stmt
-name|char
+name|Char
 modifier|*
 modifier|*
 name|evalvec
@@ -2101,13 +2371,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|Char
 modifier|*
 name|evalp
 decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|extern
 struct|struct
 name|mesg
 block|{
@@ -2126,6 +2397,83 @@ name|mesg
 index|[]
 struct|;
 end_struct
+
+begin_comment
+comment|/* word_chars is set by default to WORD_CHARS but can be overridden by    the worchars variable--if unset, reverts to WORD_CHARS */
+end_comment
+
+begin_decl_stmt
+name|Char
+modifier|*
+name|word_chars
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|WORD_CHARS
+value|"*?_-.[]~="
+end_define
+
+begin_comment
+comment|/* default chars besides alnums in words */
+end_comment
+
+begin_decl_stmt
+name|Char
+modifier|*
+name|STR_SHELLPATH
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PATH_BSHELL
+end_ifdef
+
+begin_decl_stmt
+name|Char
+modifier|*
+name|STR_BSHELL
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|Char
+modifier|*
+name|STR_WORD_CHARS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Char
+modifier|*
+modifier|*
+name|STR_environ
+decl_stmt|;
+end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|"sh.decls.h"
+end_include
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getwd
+parameter_list|()
+function_decl|;
+end_function_decl
 
 end_unit
 
