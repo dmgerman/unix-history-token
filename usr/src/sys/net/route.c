@@ -6,73 +6,73 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|"user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|"if.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/af.h"
+file|"af.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|"route.h"
 end_include
 
 begin_decl_stmt

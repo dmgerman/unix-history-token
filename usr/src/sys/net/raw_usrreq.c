@@ -6,67 +6,67 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/domain.h"
+file|"domain.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socketvar.h"
+file|"socketvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|"if.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|"route.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/netisr.h"
+file|"netisr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/raw_cb.h"
+file|"raw_cb.h"
 end_include
 
 begin_include
