@@ -413,6 +413,27 @@ begin_comment
 comment|/* really max datagram size */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_graph
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|maxdgram
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ngpdg_sendspace
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum outgoing Netgraph datagram size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -423,6 +444,27 @@ operator|*
 literal|1024
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_graph
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|recvspace
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ngpdg_recvspace
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum space for incoming Netgraph datagrams"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* List of all sockets */
