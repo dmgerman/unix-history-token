@@ -2129,7 +2129,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -2331,7 +2331,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(

@@ -963,7 +963,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -1212,7 +1212,7 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -1348,7 +1348,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -1530,7 +1530,7 @@ operator|->
 name|ih
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -1638,6 +1638,23 @@ argument_list|(
 name|i_dev
 argument_list|)
 expr_stmt|;
+name|MIDI_DEBUG
+argument_list|(
+name|printf
+argument_list|(
+literal|"mpu_ioctl: unit %d, cmd %s.\n"
+argument_list|,
+name|unit
+argument_list|,
+name|midi_cmdname
+argument_list|(
+name|cmd
+argument_list|,
+name|cmdtab_midiioctl
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|devinfo
 operator|=
 name|get_mididev_info
@@ -1655,7 +1672,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -2069,7 +2086,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(

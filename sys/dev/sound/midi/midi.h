@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -332,6 +338,18 @@ name|int
 name|unit
 decl_stmt|;
 comment|/* unit number of the device */
+name|int
+name|midiunit
+decl_stmt|;
+comment|/* unit number for midi devices */
+name|int
+name|synthunit
+decl_stmt|;
+comment|/* unit number for synth devices */
+name|int
+name|mdtype
+decl_stmt|;
+comment|/* MDT_MIDI or MDT_SYNTH */
 name|void
 modifier|*
 name|softc
@@ -344,7 +362,7 @@ comment|/* device_t for the device */
 name|int
 name|bd_id
 decl_stmt|;
-comment|/* used to hold board-id info, eg. sb version, 			 * mss codec type, etc. etc. 			 */
+comment|/* used to hold board-id info, eg. sb version, 				 * mss codec type, etc. etc. 				 */
 name|struct
 name|mtx
 name|flagqueue_mtx
@@ -447,7 +465,7 @@ directive|define
 name|mrsel
 value|midi_dbuf_in.sel
 name|u_long
-name|interrupts
+name|nterrupts
 decl_stmt|;
 comment|/* counter of interrupts */
 name|u_long
@@ -626,53 +644,11 @@ begin_comment
 comment|/* XXX */
 end_comment
 
-begin_comment
-comment|/*  * some macros for debugging purposes  * DDB/DEB to enable/disable debugging stuff  * BVDDB   to enable debugging when bootverbose  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDB
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BVDDB
-parameter_list|(
-name|x
-parameter_list|)
-value|if (bootverbose) x
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DEB
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DEB
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_comment
 comment|/* This is the generic midi drvier initializer. */
@@ -725,6 +701,28 @@ end_function_decl
 begin_function_decl
 name|mididev_info
 modifier|*
+name|get_mididev_midi_unit
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|mididev_info
+modifier|*
+name|get_mididev_synth_unit
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|mididev_info
+modifier|*
 name|create_mididev_info_unit
 parameter_list|(
 name|int
@@ -744,6 +742,24 @@ end_function_decl
 begin_function_decl
 name|int
 name|mididev_info_number
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mididev_midi_number
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mididev_synth_number
 parameter_list|(
 name|void
 parameter_list|)
@@ -831,6 +847,87 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct
+struct|struct
+name|_midi_cmdtab
+block|{
+name|int
+name|cmd
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_midi_cmdtab
+name|midi_cmdtab
+typedef|;
+end_typedef
+
+begin_function_decl
+name|char
+modifier|*
+name|midi_cmdname
+parameter_list|(
+name|int
+name|cmd
+parameter_list|,
+name|midi_cmdtab
+modifier|*
+name|tab
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_midi
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|midi_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MIDI_DEBUG
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|do {				\ 		if (midi_debug) {	\ 			(x);		\ 		}			\ 	} while(0)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|midi_cmdtab
+name|cmdtab_midiioctl
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Minor numbers for the midi driver.  */

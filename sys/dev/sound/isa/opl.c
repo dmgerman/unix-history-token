@@ -2524,7 +2524,7 @@ name|scp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -2576,7 +2576,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* We try the defaults in opl_defaultiobase. */
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -2711,7 +2711,7 @@ operator|)
 return|;
 block|}
 comment|/* We now have some kind of OPL. */
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -3013,7 +3013,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -3701,7 +3701,7 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -3709,7 +3709,7 @@ literal|"opl: attached.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -3788,7 +3788,7 @@ argument_list|(
 name|i_dev
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -3815,7 +3815,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -3983,7 +3983,7 @@ name|mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -4038,7 +4038,7 @@ argument_list|(
 name|i_dev
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -4065,7 +4065,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -4144,7 +4144,7 @@ operator|->
 name|devinfo
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -4207,6 +4207,7 @@ name|midiinfo
 decl_stmt|;
 name|struct
 name|sbi_instrument
+modifier|*
 name|ins
 decl_stmt|;
 name|unit
@@ -4216,18 +4217,20 @@ argument_list|(
 name|i_dev
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
-literal|"opl%d: ioctlling, cmd 0x%x.\n"
+literal|"opl_ioctl: unit %d, cmd %s.\n"
 argument_list|,
 name|unit
 argument_list|,
-operator|(
-name|int
-operator|)
+name|midi_cmdname
+argument_list|(
 name|cmd
+argument_list|,
+name|cmdtab_midiioctl
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4248,7 +4251,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -4421,29 +4424,25 @@ break|break;
 case|case
 name|SNDCTL_FM_LOAD_INSTR
 case|:
-name|bcopy
-argument_list|(
+name|ins
+operator|=
+operator|(
+expr|struct
+name|sbi_instrument
+operator|*
+operator|)
 name|arg
-argument_list|,
-operator|&
-name|ins
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ins
-argument_list|)
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ins
-operator|.
+operator|->
 name|channel
 operator|<
 literal|0
 operator|||
 name|ins
-operator|.
+operator|->
 name|channel
 operator|>=
 name|SBFM_MAXINSTR
@@ -4454,7 +4453,7 @@ argument_list|(
 literal|"opl_ioctl: Instrument number %d is not valid.\n"
 argument_list|,
 name|ins
-operator|.
+operator|->
 name|channel
 argument_list|)
 expr_stmt|;
@@ -4474,7 +4473,7 @@ argument_list|,
 name|PM_E_PATCH_LOADED
 argument_list|,
 name|inc
-operator|.
+operator|->
 name|channel
 argument_list|,
 literal|0
@@ -4492,10 +4491,9 @@ argument_list|(
 name|scp
 argument_list|,
 name|ins
-operator|.
+operator|->
 name|channel
 argument_list|,
-operator|&
 name|ins
 argument_list|)
 expr_stmt|;
@@ -4508,8 +4506,19 @@ break|break;
 case|case
 name|SNDCTL_SYNTH_MEMAVL
 case|:
-return|return
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|=
 literal|0x7fffffff
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 break|break;
 case|case
@@ -4598,7 +4607,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -4624,7 +4633,7 @@ name|devinfo
 operator|->
 name|softc
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -4850,7 +4859,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -4957,7 +4966,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -5033,7 +5042,7 @@ name|md
 operator|->
 name|unit
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -5290,7 +5299,7 @@ name|md
 operator|->
 name|unit
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -5432,7 +5441,7 @@ name|md
 operator|->
 name|unit
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -6628,7 +6637,7 @@ name|md
 operator|->
 name|unit
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -7358,7 +7367,7 @@ name|md
 operator|->
 name|unit
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -7659,7 +7668,7 @@ name|md
 operator|->
 name|unit
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -7981,7 +7990,7 @@ name|md
 operator|->
 name|unit
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -8245,12 +8254,14 @@ name|md
 operator|->
 name|softc
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
 literal|"opl%d: allocating a voice, chn %d, note %d.\n"
 argument_list|,
+name|md
+operator|->
 name|unit
 argument_list|,
 name|chn
@@ -8591,12 +8602,14 @@ name|md
 operator|->
 name|softc
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
 literal|"opl%d: setting up a voice, voice %d, chn %d.\n"
 argument_list|,
+name|md
+operator|->
 name|unit
 argument_list|,
 name|voice
@@ -8800,15 +8813,17 @@ block|{
 name|int
 name|model
 decl_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
-literal|"opl%d: sending a command, iobase 0x%x, addr 0x%x, val 0x%x.\n"
+literal|"opl%d: sending a command, addr 0x%x, val 0x%x.\n"
 argument_list|,
+name|scp
+operator|->
+name|devinfo
+operator|->
 name|unit
-argument_list|,
-name|iobase
 argument_list|,
 name|addr
 argument_list|,
@@ -9014,12 +9029,16 @@ name|sc_p
 name|scp
 parameter_list|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
 literal|"opl%d: reading the status.\n"
 argument_list|,
+name|scp
+operator|->
+name|devinfo
+operator|->
 name|unit
 argument_list|)
 argument_list|)
@@ -9102,12 +9121,14 @@ name|scp
 operator|->
 name|devinfo
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
 literal|"opl%d: entering 4 OP mode.\n"
 argument_list|,
+name|devinfo
+operator|->
 name|unit
 argument_list|)
 argument_list|)

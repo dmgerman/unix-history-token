@@ -4345,7 +4345,7 @@ name|scp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -4442,7 +4442,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -4502,7 +4502,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -5660,7 +5660,7 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -5804,18 +5804,20 @@ argument_list|(
 name|i_dev
 argument_list|)
 expr_stmt|;
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
-literal|"emu%d: ioctlling, cmd 0x%x.\n"
+literal|"emu_ioctl: unit %d, cmd %s.\n"
 argument_list|,
 name|unit
 argument_list|,
-operator|(
-name|int
-operator|)
+name|midi_cmdname
+argument_list|(
 name|cmd
+argument_list|,
+name|cmdtab_midiioctl
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5836,7 +5838,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -5983,8 +5985,19 @@ break|break;
 case|case
 name|SNDCTL_SYNTH_MEMAVL
 case|:
-return|return
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|=
 literal|0x7fffffff
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 break|break;
 default|default:
@@ -6123,7 +6136,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(
@@ -6230,7 +6243,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEB
+name|MIDI_DEBUG
 argument_list|(
 name|printf
 argument_list|(

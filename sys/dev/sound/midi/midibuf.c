@@ -492,6 +492,7 @@ name|data
 operator|+=
 name|lwrt
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cb
@@ -508,7 +509,6 @@ argument_list|,
 name|reason
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Have we got still more data to write? */
 if|if
 condition|(
