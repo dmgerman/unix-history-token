@@ -52,6 +52,9 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
@@ -65,6 +68,9 @@ parameter_list|,
 name|int
 parameter_list|,
 name|obr_callback_t
+modifier|*
+parameter_list|,
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

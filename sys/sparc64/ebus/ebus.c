@@ -358,6 +358,8 @@ name|ebus_devinfo
 modifier|*
 name|ebus_setup_dinfo
 parameter_list|(
+name|device_t
+parameter_list|,
 name|struct
 name|ebus_softc
 modifier|*
@@ -839,6 +841,8 @@ name|edi
 operator|=
 name|ebus_setup_dinfo
 argument_list|(
+name|dev
+argument_list|,
 name|sc
 argument_list|,
 name|node
@@ -1592,6 +1596,9 @@ name|ebus_devinfo
 modifier|*
 name|ebus_setup_dinfo
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
 name|struct
 name|ebus_softc
 modifier|*
@@ -1846,6 +1853,8 @@ name|i
 index|]
 argument_list|,
 name|ofw_pci_orb_callback
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 if|if

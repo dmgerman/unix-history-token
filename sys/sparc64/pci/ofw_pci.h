@@ -151,17 +151,6 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
-name|u_int32_t
-name|ofw_pci_route_intr
-parameter_list|(
-name|phandle_t
-parameter_list|,
-name|u_int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|obr_callback_t
 name|ofw_pci_orb_callback

@@ -525,6 +525,8 @@ argument_list|,
 name|ino
 argument_list|,
 name|ofw_pci_orb_callback
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 block|}

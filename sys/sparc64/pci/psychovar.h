@@ -65,6 +65,10 @@ define|#
 directive|define
 name|PSYCHO_MODE_PSYCHO
 value|2
+comment|/* Bus A or B of a psycho pair? */
+name|int
+name|sc_half
+decl_stmt|;
 name|struct
 name|iommu_state
 modifier|*

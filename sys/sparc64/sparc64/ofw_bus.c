@@ -502,6 +502,10 @@ parameter_list|,
 name|obr_callback_t
 modifier|*
 name|cb
+parameter_list|,
+name|void
+modifier|*
+name|cookie
 parameter_list|)
 block|{
 name|u_int8_t
@@ -751,6 +755,8 @@ name|tintr
 argument_list|,
 operator|&
 name|found
+argument_list|,
+name|cookie
 argument_list|)
 expr_stmt|;
 if|if
