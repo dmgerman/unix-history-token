@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.6 (Berkeley) %G%"
+literal|"@(#)cico.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,13 +23,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"uucp.h"
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|"uucp.h"
 end_include
 
 begin_include
@@ -120,6 +120,48 @@ directive|include
 file|"uusub.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VMS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|BSDTCP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NOGETPEER
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD2_9
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NOGETPEER
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|jmp_buf
 name|Sjbuf
@@ -188,14 +230,6 @@ name|SS_FAIL
 block|,
 name|SS_BADSEQ
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|Errorrate
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -395,19 +429,11 @@ name|ttyn
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VMS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|BSDTCP
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOGETPEER
+end_ifdef
 
 begin_decl_stmt
 name|u_long
@@ -420,7 +446,7 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|VMS&& BSDTCP
+endif|NOGETPEER
 end_endif
 
 begin_expr_stmt
@@ -429,14 +455,6 @@ argument_list|(
 name|Progname
 argument_list|,
 literal|"uucico"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|uucpname
-argument_list|(
-name|Myname
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -526,6 +544,14 @@ argument_list|(
 name|Loginuser
 argument_list|,
 name|User
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|uucpname
+argument_list|(
+name|Myname
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -698,11 +724,9 @@ break|break;
 case|case
 literal|'s'
 case|:
-name|sprintf
+name|strncpy
 argument_list|(
 name|Rmtname
-argument_list|,
-literal|"%.7s"
 argument_list|,
 operator|&
 name|argv
@@ -712,7 +736,16 @@ index|]
 index|[
 literal|2
 index|]
+argument_list|,
+name|MAXBASENAME
 argument_list|)
+expr_stmt|;
+name|Rmtname
+index|[
+name|MAXBASENAME
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -805,17 +838,9 @@ name|LocalOnly
 operator|++
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VMS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|BSDTCP
-argument_list|)
+ifdef|#
+directive|ifdef
+name|NOGETPEER
 case|case
 literal|'h'
 case|:
@@ -836,7 +861,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|VMS&& BSDTCP
+endif|NOGETPEER
 default|default:
 name|printf
 argument_list|(
@@ -1061,6 +1086,8 @@ expr_stmt|;
 if|if
 condition|(
 name|Debug
+operator|>
+literal|4
 condition|)
 name|logent
 argument_list|(
@@ -1104,6 +1131,11 @@ name|CNULL
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|IsTcpIp
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 endif|TCPIP
@@ -1234,6 +1266,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|VMS
 name|freopen
 argument_list|(
 name|file
@@ -1324,11 +1357,9 @@ operator|&
 name|Savettyb
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|USG
+else|#
+directive|else
+else|!USG
 name|ret
 operator|=
 name|ioctl
@@ -1343,6 +1374,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|!USG
 block|}
 name|cleanup
 argument_list|(
@@ -1398,11 +1430,9 @@ operator|&
 name|Savettyb
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|USG
+else|#
+directive|else
+else|!USG
 name|ret
 operator|=
 name|ioctl
@@ -1417,6 +1447,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|!USG
 block|}
 name|cleanup
 argument_list|(
@@ -1455,14 +1486,21 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|strncpy
 argument_list|(
 name|Rmtname
 argument_list|,
-literal|"%.7s"
-argument_list|,
 name|q
+argument_list|,
+name|MAXBASENAME
 argument_list|)
+expr_stmt|;
+name|Rmtname
+index|[
+name|MAXBASENAME
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -1507,6 +1545,44 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|NOSTRANGERS
+comment|/* If we don't know them, we won't talk to them... */
+if|if
+condition|(
+name|versys
+argument_list|(
+operator|&
+name|Rmtname
+argument_list|)
+condition|)
+block|{
+name|logent
+argument_list|(
+name|Rmtname
+argument_list|,
+literal|"UNKNOWN HOST"
+argument_list|)
+expr_stmt|;
+name|omsg
+argument_list|(
+literal|'R'
+argument_list|,
+literal|"You are unknown to me"
+argument_list|,
+name|Ofn
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|NOSTRANGERS
+ifdef|#
+directive|ifdef
 name|BSDTCP
 comment|/* we must make sure they are really who they say they 		 * are. We compare the hostnumber with the number in the hosts 		 * table for the site they claim to be. 		 */
 if|if
@@ -1534,9 +1610,26 @@ name|struct
 name|sockaddr_in
 name|from
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|VMS
+ifdef|#
+directive|ifdef
+name|NOGETPEER
+name|from
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|Hostnumber
+expr_stmt|;
+name|from
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+else|#
+directive|else
+else|!NOGETPEER
 name|fromlen
 operator|=
 sizeof|sizeof
@@ -1582,26 +1675,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-else|VMS
-name|from
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-operator|=
-name|Hostnumber
-expr_stmt|;
-name|from
-operator|.
-name|sin_family
-operator|=
-name|AF_INET
-expr_stmt|;
 endif|#
 directive|endif
-endif|VMS
+endif|!NOGETPEER
 name|hp
 operator|=
 name|gethostbyaddr
@@ -1703,7 +1779,7 @@ name|hp
 operator|->
 name|h_name
 argument_list|,
-literal|7
+name|MAXBASENAME
 argument_list|)
 operator|==
 literal|0
@@ -1746,7 +1822,7 @@ argument_list|,
 operator|*
 name|alias
 argument_list|,
-literal|7
+name|MAXBASENAME
 argument_list|)
 operator|!=
 literal|0
@@ -1764,7 +1840,7 @@ argument_list|,
 operator|*
 name|alias
 argument_list|,
-literal|7
+name|MAXBASENAME
 argument_list|)
 operator|!=
 literal|0
@@ -1794,6 +1870,8 @@ argument_list|(
 literal|'R'
 argument_list|,
 literal|"You're not who you claim to be"
+argument_list|,
+name|Ofn
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -1820,49 +1898,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|DEBUG
 block|}
 block|}
 endif|#
 directive|endif
 endif|BSDTCP
-ifdef|#
-directive|ifdef
-name|NOSTRANGERS
-comment|/* If we don't know them, we won't talk to them... */
-if|if
-condition|(
-name|versys
-argument_list|(
-operator|&
-name|Rmtname
-argument_list|)
-condition|)
-block|{
-name|logent
-argument_list|(
-name|Rmtname
-argument_list|,
-literal|"UNKNOWN HOST"
-argument_list|)
-expr_stmt|;
-name|omsg
-argument_list|(
-literal|'R'
-argument_list|,
-literal|"You are unknown to me"
-argument_list|,
-name|Ofn
-argument_list|)
-expr_stmt|;
-name|cleanup
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|NOSTRANGERS
 if|if
 condition|(
 name|mlock
@@ -2053,6 +2094,46 @@ name|MaxGrade
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'v'
+case|:
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|p
+argument_list|,
+literal|"grade"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|p
+operator|+=
+literal|6
+expr_stmt|;
+name|MaxGrade
+operator|=
+name|DefMaxGrade
+operator|=
+operator|*
+name|p
+operator|++
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|4
+argument_list|,
+literal|"MaxGrade set to %c\n"
+argument_list|,
+name|MaxGrade
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 default|default:
 break|break;
 block|}
@@ -2167,7 +2248,7 @@ name|logent
 argument_list|(
 literal|"BAD SEQ"
 argument_list|,
-literal|"HANDSHAKE FAIL"
+literal|"FAILED HANDSHAKE"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2387,7 +2468,7 @@ if|if
 condition|(
 name|ret
 operator|==
-literal|0
+name|SUCCESS
 condition|)
 name|cleanup
 argument_list|(
@@ -2427,9 +2508,11 @@ name|sprintf
 argument_list|(
 name|wkpre
 argument_list|,
-literal|"%c.%.7s"
+literal|"%c.%.*s"
 argument_list|,
 name|CMDPRE
+argument_list|,
+name|SYSNSIZE
 argument_list|,
 name|Rmtname
 argument_list|)
@@ -2475,6 +2558,8 @@ expr_stmt|;
 if|if
 condition|(
 name|Debug
+operator|>
+literal|4
 condition|)
 name|logent
 argument_list|(
@@ -2498,39 +2583,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|MaxGrade
-operator|=
-name|DefMaxGrade
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|iswrk
-argument_list|(
-name|file
-argument_list|,
-literal|"chk"
-argument_list|,
-name|Spool
-argument_list|,
-name|wkpre
-argument_list|)
-operator|&&
-operator|!
-name|onesys
-condition|)
-block|{
-name|logent
-argument_list|(
-name|Rmtname
-argument_list|,
-literal|"NO WORK"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|next
-goto|;
-block|}
 if|if
 condition|(
 name|Ifn
@@ -2660,16 +2712,6 @@ name|Ofn
 index|]
 operator|!=
 name|SS_WRONGTIME
-operator|||
-name|argv
-index|[
-literal|0
-index|]
-index|[
-literal|0
-index|]
-operator|!=
-literal|'U'
 condition|)
 block|{
 name|systat
@@ -2754,6 +2796,11 @@ name|CNULL
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|IsTcpIp
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -2871,7 +2918,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|" -p%c"
+literal|" -p%c -vgrade=%c"
+argument_list|,
+name|MaxGrade
 argument_list|,
 name|MaxGrade
 argument_list|)
@@ -2888,13 +2937,28 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"%.7s -Q%d %s"
+literal|"%s -Q%d %s"
 argument_list|,
 name|Myname
 argument_list|,
 name|seq
 argument_list|,
 name|rflags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MaxGrade
+operator|!=
+literal|'\177'
+condition|)
+name|DEBUG
+argument_list|(
+literal|2
+argument_list|,
+literal|"Max Grade this transfer is %c\n"
+argument_list|,
+name|MaxGrade
 argument_list|)
 expr_stmt|;
 name|omsg
@@ -2993,7 +3057,7 @@ name|logent
 argument_list|(
 literal|"BAD SEQ"
 argument_list|,
-literal|"HANDSHAKE FAIL"
+literal|"FAILED HANDSHAKE"
 argument_list|)
 expr_stmt|;
 name|US_SST
@@ -3050,7 +3114,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|"HANDSHAKE FAIL"
+literal|"FAILED HANDSHAKE"
 argument_list|)
 expr_stmt|;
 name|US_SST
@@ -3088,7 +3152,7 @@ name|SAME
 condition|?
 literal|"AWAITING CALLBACK"
 else|:
-literal|"HANDSHAKE FAIL"
+literal|"FAILED HANDSHAKE"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3461,10 +3525,6 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|int
-name|ret
-decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|ttyn
@@ -3526,8 +3586,9 @@ name|c_cflag
 operator||=
 name|HUPCL
 expr_stmt|;
-name|ret
-operator|=
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -3541,8 +3602,9 @@ expr_stmt|;
 else|#
 directive|else
 else|!USG
-name|ret
-operator|=
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -3555,8 +3617,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TIOCSDTR
-name|ret
-operator|=
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -3571,8 +3634,9 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -3585,8 +3649,9 @@ expr_stmt|;
 else|#
 directive|else
 else|!TIOCSDTR
-name|ret
-operator|=
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -3612,8 +3677,9 @@ name|sg_ospeed
 operator|=
 name|B0
 expr_stmt|;
-name|ret
-operator|=
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -3629,8 +3695,9 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -3642,8 +3709,9 @@ name|Savettyb
 argument_list|)
 expr_stmt|;
 comment|/* make *sure* exclusive access is off */
-name|ret
-operator|=
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 literal|0
@@ -3656,15 +3724,6 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|!USG
-name|DEBUG
-argument_list|(
-literal|4
-argument_list|,
-literal|"ret ioctl - %d\n"
-argument_list|,
-name|ret
-argument_list|)
-expr_stmt|;
 block|}
 name|ttyn
 operator|=
@@ -3874,7 +3933,7 @@ name|Rmtname
 argument_list|,
 name|Myname
 argument_list|,
-literal|7
+name|MAXBASENAME
 argument_list|)
 condition|)
 name|systat
@@ -3937,6 +3996,29 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+name|code
+condition|)
+block|{
+if|if
+condition|(
+name|Debug
+operator|==
+literal|0
+condition|)
+name|Debug
+operator|=
+literal|30
+expr_stmt|;
+else|else
+name|Debug
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Debug
+operator|&&
 operator|!
 name|StdErrIsTty
 condition|)
@@ -3988,27 +4070,6 @@ endif|#
 directive|endif
 endif|!BSD4_2
 block|}
-if|if
-condition|(
-name|code
-condition|)
-block|{
-if|if
-condition|(
-name|Debug
-operator|==
-literal|0
-condition|)
-name|Debug
-operator|=
-literal|30
-expr_stmt|;
-else|else
-name|Debug
-operator|=
-literal|0
-expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -4047,10 +4108,6 @@ name|ttbuf
 decl_stmt|;
 endif|#
 directive|endif
-specifier|register
-name|int
-name|ret
-decl_stmt|;
 if|if
 condition|(
 name|IsTcpIp
@@ -4059,8 +4116,6 @@ return|return;
 ifdef|#
 directive|ifdef
 name|USG
-name|ret
-operator|=
 name|ioctl
 argument_list|(
 name|tty
@@ -4124,8 +4179,6 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-name|ret
-operator|=
 name|ioctl
 argument_list|(
 name|tty
@@ -4161,8 +4214,6 @@ operator||
 name|RAW
 operator|)
 expr_stmt|;
-name|ret
-operator|=
 name|ioctl
 argument_list|(
 name|tty
@@ -4175,12 +4226,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*	ASSERT(ret>= 0, "STTY FAILED", CNULL, ret); */
 ifndef|#
 directive|ifndef
 name|USG
-name|ret
-operator|=
 name|ioctl
 argument_list|(
 name|tty
@@ -4196,7 +4244,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	timeout()	catch SIGALRM routine  */
+comment|/*  *	timeout()	catch SIGALRM routine  */
 end_comment
 
 begin_macro
@@ -4205,6 +4253,16 @@ argument_list|()
 end_macro
 
 begin_block
+block|{
+specifier|extern
+name|int
+name|HaveSentHup
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|HaveSentHup
+condition|)
 block|{
 name|logent
 argument_list|(
@@ -4224,7 +4282,7 @@ name|Rmtname
 argument_list|,
 name|Myname
 argument_list|,
-literal|7
+name|MAXBASENAME
 argument_list|)
 condition|)
 block|{
@@ -4242,6 +4300,7 @@ argument_list|,
 literal|"TIMEOUT"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|longjmp
 argument_list|(
@@ -4280,10 +4339,15 @@ condition|)
 operator|++
 name|p
 expr_stmt|;
-if|if
+while|while
 condition|(
 operator|*
 name|p
+operator|&&
+operator|*
+name|p
+operator|==
+literal|' '
 condition|)
 operator|*
 name|p
