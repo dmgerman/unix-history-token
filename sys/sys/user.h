@@ -181,10 +181,34 @@ begin_comment
 comment|/* the correct size for kinfo_proc */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ia64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KINFO_PROC_SIZE
+value|888
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
 
 begin_define
 define|#
@@ -196,6 +220,23 @@ end_define
 begin_comment
 comment|/* the correct size for kinfo_proc */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KINFO_PROC_SIZE
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"Unknown architecture"
+end_error
 
 begin_endif
 endif|#
