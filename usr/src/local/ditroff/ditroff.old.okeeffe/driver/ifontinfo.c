@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"ifontinfo.c	1.2	(Berkeley)	83/10/22"
+literal|"ifontinfo.c	1.3	(Berkeley)	84/02/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,13 +356,6 @@ index|]
 condition|)
 block|{
 case|case
-literal|'v'
-case|:
-name|verbose
-operator|++
-expr_stmt|;
-break|break;
-case|case
 literal|'z'
 case|:
 name|zoom
@@ -376,6 +369,13 @@ literal|2
 index|]
 operator|-
 literal|'0'
+expr_stmt|;
+comment|/* zoom implies verbose */
+case|case
+literal|'v'
+case|:
+name|verbose
+operator|++
 expr_stmt|;
 break|break;
 case|case
