@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.7 (Berkeley) %G%"
+literal|"@(#)main.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -366,6 +366,11 @@ argument_list|,
 name|outbuf
 argument_list|)
 expr_stmt|;
+name|setlinebuf
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"dbx version %d of %s.\nType 'help' for help.\n"
@@ -478,6 +483,34 @@ name|SIGINT
 argument_list|,
 name|catchintr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isterm
+argument_list|(
+name|stdin
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"(%s) "
+argument_list|,
+name|cmdname
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
+name|endshellmode
+argument_list|()
+expr_stmt|;
+comment|/* after an error longjmp */
+name|startaliasing
+argument_list|()
 expr_stmt|;
 name|yyparse
 argument_list|()
@@ -1458,22 +1491,10 @@ break|break;
 case|case
 literal|'l'
 case|:
-ifdef|#
-directive|ifdef
-name|LEXDEBUG
 name|lexdebug
 operator|=
 name|true
 expr_stmt|;
-else|#
-directive|else
-name|fatal
-argument_list|(
-literal|"\"-l\" only applicable when compiled with LEXDEBUG"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 default|default:
 name|fatal
@@ -1507,12 +1528,14 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-name|gtty
+name|ioctl
 argument_list|(
 name|fileno
 argument_list|(
 name|f
 argument_list|)
+argument_list|,
+name|TIOCGETP
 argument_list|,
 name|t
 argument_list|)
@@ -1536,12 +1559,14 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-name|stty
+name|ioctl
 argument_list|(
 name|fileno
 argument_list|(
 name|f
 argument_list|)
+argument_list|,
+name|TIOCSETN
 argument_list|,
 name|t
 argument_list|)
