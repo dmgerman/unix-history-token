@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.43.2.12 1995/06/08 09:40:43 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.43.2.13 1995/06/09 11:00:52 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -683,23 +683,14 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-block|}
-name|strcpy
-argument_list|(
 name|oldfile
-argument_list|,
-name|buf
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|oldlang
-argument_list|,
-literal|"/stand/%s"
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
+block|}
 name|snprintf
 argument_list|(
 name|extract
@@ -727,9 +718,27 @@ argument_list|(
 name|buf
 argument_list|)
 condition|)
+block|{
+name|strcpy
+argument_list|(
+name|oldfile
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|oldlang
+argument_list|,
+literal|"/stand/%s"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
 return|return
 name|buf
 return|;
+block|}
 if|if
 condition|(
 name|cp
