@@ -120,18 +120,18 @@ comment|/* nothing */
 end_comment
 
 begin_comment
-comment|/* Issue a skey challenge for user 'name'. If successful,  * fill in the caller's skey structure and return 0. If unsuccessful  * (e.g., if name is unknown) return -1.  *  * The file read/write pointer is left at the start of the  * record.  */
+comment|/* Look up skey info for user 'name'. If successful, fill in the caller's  * skey structure and return 0. If unsuccessful (e.g., if name is unknown)  * return -1. If an optional challenge string buffer is given, update it.  *  * The file read/write pointer is left at the start of the  * record.  */
 end_comment
 
 begin_function
 name|int
-name|getskeyprompt
+name|skeyinfo
 parameter_list|(
 name|mp
 parameter_list|,
 name|name
 parameter_list|,
-name|prompt
+name|ss
 parameter_list|)
 name|struct
 name|skey
@@ -144,17 +144,12 @@ name|name
 decl_stmt|;
 name|char
 modifier|*
-name|prompt
+name|ss
 decl_stmt|;
 block|{
 name|int
 name|rval
 decl_stmt|;
-name|sevenbit
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
 name|rval
 operator|=
 name|skeylookup
@@ -162,13 +157,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|name
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|prompt
-argument_list|,
-literal|"s/key 55 latour1\n"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -188,12 +176,19 @@ return|;
 case|case
 literal|0
 case|:
-comment|/* Lookup succeeded, return challenge */
+comment|/* Lookup succeeded */
+if|if
+condition|(
+name|ss
+operator|!=
+literal|0
+condition|)
+block|{
 name|sprintf
 argument_list|(
-name|prompt
+name|ss
 argument_list|,
-literal|"s/key %d %s\n"
+literal|"s/key %d %s"
 argument_list|,
 name|mp
 operator|->
@@ -206,6 +201,14 @@ operator|->
 name|seed
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|mp
+operator|->
+name|keyfile
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -779,9 +782,6 @@ name|struct
 name|timeval
 name|endval
 decl_stmt|;
-name|long
-name|microsec
-decl_stmt|;
 name|char
 name|key
 index|[
@@ -951,7 +951,6 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*   gettimeofday(&startval, (char *)0 ); */
 comment|/* reread the file record NOW*/
 name|fseek
 argument_list|(
@@ -1232,7 +1231,6 @@ argument_list|,
 name|tbuf
 argument_list|)
 expr_stmt|;
-comment|/* gettimeofday(&endval, (char *)0 );  microsec = (endval.tv_sec - startval.tv_sec) * 1000000 + (endval.tv_usec - startval.tv_usec); fprintf(stderr, "window= %d micro seconds \n"  , microsec); */
 name|fclose
 argument_list|(
 name|mp

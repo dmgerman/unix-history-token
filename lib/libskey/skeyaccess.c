@@ -273,6 +273,24 @@ name|DENY
 value|0
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONSOLE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CONSOLE
+value|"console"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|login_info
@@ -700,7 +718,7 @@ name|login_info
 operator|->
 name|port
 argument_list|,
-literal|"console"
+name|CONSOLE
 argument_list|)
 operator|==
 literal|0

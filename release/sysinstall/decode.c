@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: decode.c,v 1.4 1995/05/17 14:39:35 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: decode.c,v 1.5.2.3 1995/06/02 15:30:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -49,21 +49,6 @@ name|strcmp
 argument_list|(
 name|name
 argument_list|,
-operator|(
-operator|*
-name|tmp
-operator|->
-name|title
-operator|==
-literal|'*'
-operator|)
-condition|?
-name|tmp
-operator|->
-name|title
-operator|+
-literal|1
-else|:
 name|tmp
 operator|->
 name|title
@@ -111,14 +96,6 @@ operator|->
 name|type
 condition|)
 block|{
-comment|/* User whapped ESC twice and wants a sub-shell */
-case|case
-name|DMENU_SHELL_ESCAPE
-case|:
-name|systemShellEscape
-argument_list|()
-expr_stmt|;
-break|break;
 comment|/* We want to simply display a file */
 case|case
 name|DMENU_DISPLAY_FILE
@@ -139,6 +116,9 @@ comment|/* It's a sub-menu; recurse on it */
 case|case
 name|DMENU_SUBMENU
 case|:
+operator|(
+name|void
+operator|)
 name|dmenuOpenSimple
 argument_list|(
 operator|(
@@ -277,6 +257,26 @@ name|parm
 expr_stmt|;
 break|break;
 case|case
+name|DMENU_SET_VALUE
+case|:
+operator|*
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+name|tmp
+operator|->
+name|ptr
+operator|)
+operator|=
+name|tmp
+operator|->
+name|parm
+expr_stmt|;
+break|break;
+case|case
 name|DMENU_NOP
 case|:
 break|break;
@@ -330,6 +330,39 @@ name|string_skipwhite
 argument_list|(
 name|names
 argument_list|)
+expr_stmt|;
+comment|/* KLUDGE ALERT:      * To make multi-choice flag arrays work this assumes that ALL items in      * a menu appear in the same mask!!  If you need mixed masks, use      * submenus.      */
+if|if
+condition|(
+name|menu
+operator|->
+name|items
+index|[
+literal|0
+index|]
+operator|.
+name|type
+operator|==
+name|DMENU_SET_FLAG
+condition|)
+operator|*
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+name|menu
+operator|->
+name|items
+index|[
+literal|0
+index|]
+operator|.
+name|ptr
+operator|)
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(

@@ -52,14 +52,6 @@ name|p_inf
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|StartDir
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Local prototypes  */
 end_comment
@@ -700,10 +692,6 @@ name|fname
 operator|=
 name|dialog_fselect
 argument_list|(
-name|StartDir
-condition|?
-name|StartDir
-else|:
 literal|"."
 argument_list|,
 literal|"*.tgz"
@@ -829,10 +817,6 @@ name|fname
 operator|=
 name|dialog_fselect
 argument_list|(
-name|StartDir
-condition|?
-name|StartDir
-else|:
 literal|"."
 argument_list|,
 literal|"*.tgz"
@@ -892,15 +876,6 @@ operator|!
 name|quit
 condition|)
 block|{
-if|if
-condition|(
-name|StartDir
-condition|)
-name|install_pkgs_indir
-argument_list|()
-expr_stmt|;
-else|else
-block|{
 name|use_helpline
 argument_list|(
 literal|"Select directory where the pkg's reside"
@@ -915,11 +890,14 @@ argument_list|,
 literal|"*.tgz"
 argument_list|)
 condition|)
+block|{
 name|quit
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 else|else
+block|{
 name|install_pkgs_indir
 argument_list|()
 expr_stmt|;
@@ -1232,10 +1210,6 @@ comment|/* now build a list of the packages in the chosen directory */
 comment|/* and display them in a list */
 name|get_dir
 argument_list|(
-name|StartDir
-condition|?
-name|StartDir
-else|:
 literal|"."
 argument_list|,
 literal|"*.tgz"
@@ -1499,9 +1473,16 @@ name|sprintf
 argument_list|(
 name|tmp_dir
 argument_list|,
-literal|"/tmp/%s"
+literal|"/usr/tmp/%s"
 argument_list|,
 name|tmp_file
+argument_list|)
+expr_stmt|;
+name|mkdir
+argument_list|(
+literal|"/usr/tmp"
+argument_list|,
+name|S_IRWXU
 argument_list|)
 expr_stmt|;
 block|}
@@ -1522,7 +1503,7 @@ condition|)
 block|{
 name|dialog_notify
 argument_list|(
-literal|"Could not create temporary directory in /tmp, exiting"
+literal|"Could not create temporary directory in /usr/tmp, exiting"
 argument_list|)
 expr_stmt|;
 name|free
@@ -2610,6 +2591,11 @@ condition|(
 name|install
 condition|)
 block|{
+name|int
+name|ninstalled
+init|=
+literal|0
+decl_stmt|;
 comment|/* check if any of the packages marked for installation are */
 comment|/* already installed */
 name|i
@@ -2768,14 +2754,11 @@ call|(
 name|int
 call|)
 argument_list|(
-call|(
+operator|(
 name|float
-call|)
-argument_list|(
-name|i
-operator|+
-literal|1
-argument_list|)
+operator|)
+operator|++
+name|ninstalled
 operator|/
 name|n
 operator|*

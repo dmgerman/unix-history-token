@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.12 1995/04/12 20:47:48 wollman Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.13.2.1 1995/06/09 18:12:09 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -3801,6 +3801,7 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
 case|case
 name|SIOCSIFMTU
 case|:

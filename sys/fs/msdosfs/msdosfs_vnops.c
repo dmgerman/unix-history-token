@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.15 1995/05/09 16:30:45 bde Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.16.2.3 1995/06/02 11:03:15 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -3756,7 +3756,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Renames on files require moving the denode to a new hash queue since the  * denode's location is used to compute which hash queue to put the file  * in. Unless it is a rename in place.  For example "mv a b".  *  * What follows is the basic algorithm:  *  * if (file move) {  *	if (dest file exists) {  *		remove dest file  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing directory slot  *	} else {  *		write new entry in dest directory  *		update offset and dirclust in denode  *		move denode to new hash chain  *		clear old directory entry  *	}  * } else {  *	directory move  *	if (dest directory exists) {  *		if (dest is not empty) {  *			return ENOTEMPTY  *		}  *		remove dest directory  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing entry  *	} else {  *		be sure dest is not a child of src directory  *		write entry in dest directory  *		update "." and ".." in moved directory  *		update offset and dirclust in denode  *		move denode to new hash chain  *		clear old directory entry for moved directory  *	}  * }  *  * On entry:  *	source's parent directory is unlocked  *	source file or directory is unlocked  *	destination's parent directory is locked  *	destination file or directory is locked if it exists  *  * On exit:  *	all denodes should be released  *  * Notes:  * I'm not sure how the memory containing the pathnames pointed at by the  * componentname structures is freed, there may be some memory bleeding  * for each rename done.  */
+comment|/*  * Renames on files require moving the denode to a new hash queue since the  * denode's location is used to compute which hash queue to put the file  * in. Unless it is a rename in place.  For example "mv a b".  *  * What follows is the basic algorithm:  *  * if (file move) {  *	if (dest file exists) {  *		remove dest file  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing directory slot  *	} else {  *		write new entry in dest directory  *		update offset and dirclust in denode  *		move denode to new hash chain  *		clear old directory entry  *	}  * } else {  *	directory move  *	if (dest directory exists) {  *		if (dest is not empty) {  *			return ENOTEMPTY  *		}  *		remove dest directory  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing entry  *	} else {  *		be sure dest is not a child of src directory  *		write entry in dest directory  *		update "." and ".." in moved directory  *		clear old directory entry for moved directory  *	}  * }  *  * On entry:  *	source's parent directory is unlocked  *	source file or directory is unlocked  *	destination's parent directory is locked  *	destination file or directory is locked if it exists  *  * On exit:  *	all denodes should be released  *  * Notes:  * I'm not sure how the memory containing the pathnames pointed at by the  * componentname structures is freed, there may be some memory bleeding  * for each rename done.  */
 end_comment
 
 begin_function
@@ -3790,12 +3790,6 @@ name|int
 name|sourceisadirectory
 init|=
 literal|0
-decl_stmt|;
-name|u_long
-name|to_dirclust
-decl_stmt|;
-name|u_long
-name|to_diroffset
 decl_stmt|;
 name|u_long
 name|cn
@@ -4243,6 +4237,14 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|cache_purge
+argument_list|(
+name|DETOV
+argument_list|(
+name|tddep
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -4261,18 +4263,6 @@ name|bad
 goto|;
 block|}
 block|}
-name|to_dirclust
-operator|=
-name|tdep
-operator|->
-name|de_dirclust
-expr_stmt|;
-name|to_diroffset
-operator|=
-name|tdep
-operator|->
-name|de_diroffset
-expr_stmt|;
 name|error
 operator|=
 name|removede
@@ -4299,19 +4289,6 @@ expr_stmt|;
 name|tdep
 operator|=
 name|NULL
-expr_stmt|;
-comment|/* 		 * Remember where the slot was for createde(). 		 */
-name|tddep
-operator|->
-name|de_fndclust
-operator|=
-name|to_dirclust
-expr_stmt|;
-name|tddep
-operator|->
-name|de_fndoffset
-operator|=
-name|to_diroffset
 expr_stmt|;
 block|}
 comment|/* 	 * If the source and destination are in the same directory then 	 * just read in the directory entry, change the name in the 	 * directory entry and write it back to disk. 	 */
@@ -4609,6 +4586,12 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+operator|!
+name|sourceisadirectory
+condition|)
+block|{
 name|fdep
 operator|->
 name|de_dirclust
@@ -4630,6 +4613,7 @@ argument_list|(
 name|fdep
 argument_list|)
 expr_stmt|;
+block|}
 name|VOP_UNLOCK
 argument_list|(
 name|ap

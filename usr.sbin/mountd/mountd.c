@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.6 1995/05/21 19:31:09 phk Exp $"
+literal|"$Id: mountd.c,v 1.7.2.1 1995/06/08 04:34:11 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1377,7 +1377,10 @@ decl_stmt|;
 block|{
 name|SVCXPRT
 modifier|*
-name|transp
+name|udptransp
+decl_stmt|,
+modifier|*
+name|tcptransp
 decl_stmt|;
 name|int
 name|c
@@ -1728,11 +1731,26 @@ block|}
 if|if
 condition|(
 operator|(
-name|transp
+name|udptransp
 operator|=
 name|svcudp_create
 argument_list|(
 name|RPC_ANYSOCK
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+operator|(
+name|tcptransp
+operator|=
+name|svctcp_create
+argument_list|(
+name|RPC_ANYSOCK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -1764,7 +1782,7 @@ condition|(
 operator|!
 name|svc_register
 argument_list|(
-name|transp
+name|udptransp
 argument_list|,
 name|RPCPROG_MNT
 argument_list|,
@@ -1773,6 +1791,20 @@ argument_list|,
 name|mntsrv
 argument_list|,
 name|IPPROTO_UDP
+argument_list|)
+operator|||
+operator|!
+name|svc_register
+argument_list|(
+name|tcptransp
+argument_list|,
+name|RPCPROG_MNT
+argument_list|,
+name|RPCMNT_VER1
+argument_list|,
+name|mntsrv
+argument_list|,
+name|IPPROTO_TCP
 argument_list|)
 condition|)
 block|{

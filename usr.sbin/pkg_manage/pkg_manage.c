@@ -701,11 +701,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|dialog_notify
-argument_list|(
-literal|"No packages installed or no info available"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|dialog_notify("No packages installed or no info available");
+endif|#
+directive|endif
 name|fclose
 argument_list|(
 name|f

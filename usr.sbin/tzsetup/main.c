@@ -10,7 +10,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.1 1995/04/24 21:04:33 wollman Exp $"
+literal|"$Id: main.c,v 1.2.2.1 1995/06/06 04:51:22 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,11 +538,11 @@ init|=
 block|{
 literal|"1"
 block|,
-literal|"CMOS clock is set to local time"
+literal|"CMOS clock is set to Universal time (UTC)"
 block|,
 literal|"2"
 block|,
-literal|"CMOS clock is set to Universal time (UTC)"
+literal|"CMOS clock is set to local time"
 block|,
 literal|"3"
 block|,

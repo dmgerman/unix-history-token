@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.29 1995/05/28 20:28:09 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.30.2.7 1995/06/08 09:48:31 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -180,6 +180,52 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|(
+operator|!
+name|d
+operator|->
+name|bios_cyl
+operator|||
+name|d
+operator|->
+name|bios_cyl
+operator|>
+literal|65536
+operator|)
+operator|||
+operator|(
+operator|!
+name|d
+operator|->
+name|bios_hd
+operator|||
+name|d
+operator|->
+name|bios_hd
+operator|>
+literal|256
+operator|)
+operator|||
+operator|(
+operator|!
+name|d
+operator|->
+name|bios_sect
+operator|||
+name|d
+operator|->
+name|bios_sect
+operator|>=
+literal|64
+operator|)
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"WARNING:  The detected geometry is incorrect!  Please adjust it to\nthe correct values manually with the (G)eometry command.  If you are\nunsure about the correct geometry (which may be \"translated\"), please\nconsult the Hardware Guide in the Documentation submenu."
+argument_list|)
+expr_stmt|;
 name|attrset
 argument_list|(
 name|A_NORMAL
@@ -225,7 +271,7 @@ literal|0
 argument_list|,
 literal|55
 argument_list|,
-literal|"Master Partition Editor"
+literal|"FDISK Partition Editor"
 argument_list|)
 expr_stmt|;
 name|attrset
@@ -318,7 +364,7 @@ name|row
 argument_list|,
 literal|2
 argument_list|,
-literal|"%10ld %10lu %10lu %8s %8d %8s %8d %6lx"
+literal|"%10ld %10lu %10lu %8s %8d %8s %8d\t%-6s"
 argument_list|,
 name|chunk_info
 index|[
@@ -372,12 +418,13 @@ index|]
 operator|->
 name|subtype
 argument_list|,
+name|ShowChunkFlags
+argument_list|(
 name|chunk_info
 index|[
 name|i
 index|]
-operator|->
-name|flags
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -434,7 +481,7 @@ literal|18
 argument_list|,
 literal|0
 argument_list|,
-literal|"U = Undo All Changes   ESC = Exit this screen"
+literal|"U = Undo All Changes   Q = Finish"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1136,9 +1183,8 @@ literal|"Wise choice!"
 expr_stmt|;
 break|break;
 case|case
-literal|27
+literal|'Q'
 case|:
-comment|/* ESC */
 name|chunking
 operator|=
 name|FALSE
@@ -1366,6 +1412,86 @@ name|DMenu
 modifier|*
 name|menu
 decl_stmt|;
+name|Device
+modifier|*
+modifier|*
+name|devs
+decl_stmt|;
+name|int
+name|cnt
+decl_stmt|;
+name|devs
+operator|=
+name|deviceFind
+argument_list|(
+name|NULL
+argument_list|,
+name|DEVICE_TYPE_DISK
+argument_list|)
+expr_stmt|;
+name|cnt
+operator|=
+name|deviceCount
+argument_list|(
+name|devs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cnt
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"No disks found!  Please verify that your disk controller is being\nproperly probed at boot time.  See the Hardware Guide on the Documentation menu\nfor clues on diagnosing this type of problem."
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cnt
+operator|==
+literal|1
+condition|)
+block|{
+name|devs
+index|[
+literal|0
+index|]
+operator|->
+name|private
+operator|=
+name|diskPartition
+argument_list|(
+operator|(
+name|Disk
+operator|*
+operator|)
+name|devs
+index|[
+literal|0
+index|]
+operator|->
+name|private
+argument_list|)
+expr_stmt|;
+name|devs
+index|[
+literal|0
+index|]
+operator|->
+name|enabled
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
 name|menu
 operator|=
 name|deviceCreateMenu
@@ -1383,13 +1509,11 @@ condition|(
 operator|!
 name|menu
 condition|)
-block|{
 name|msgConfirm
 argument_list|(
 literal|"No devices suitable for installation found!\n\nPlease verify that your disk controller (and attached drives) were detected properly.  This can be done by selecting the ``Bootmsg'' option on the main menu and reviewing the boot messages carefully."
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|dmenuOpenSimple
@@ -1402,6 +1526,7 @@ argument_list|(
 name|menu
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 literal|0

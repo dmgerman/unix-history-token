@@ -44,7 +44,7 @@ name|char
 name|inetd_c_rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.4 1994/12/21 19:08:45 wollman Exp $"
+literal|"$Id: inetd.c,v 1.5.2.1 1995/06/05 01:01:19 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1780,7 +1780,12 @@ operator|)
 name|tcpmux
 condition|)
 block|{
-name|sep
+name|struct
+name|servtab
+modifier|*
+name|tsep
+decl_stmt|;
+name|tsep
 operator|=
 name|tcpmux
 argument_list|(
@@ -1789,7 +1794,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sep
+name|tsep
 operator|==
 name|NULL
 condition|)
@@ -1801,6 +1806,10 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|sep
+operator|=
+name|tsep
+expr_stmt|;
 block|}
 block|}
 else|else

@@ -22,13 +22,6 @@ name|p_inf
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|char
-modifier|*
-name|StartDir
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Main  */
 end_comment
@@ -56,30 +49,43 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Initialize p_inf */
+name|get_pkginfo
+argument_list|()
+expr_stmt|;
+comment|/* start in the pkg add menu when giving the -add option */
 if|if
 condition|(
 name|argc
 operator|>
 literal|1
 condition|)
-name|StartDir
-operator|=
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
 name|argv
 index|[
 literal|1
 index|]
-expr_stmt|;
-else|else
-name|StartDir
-operator|=
-name|NULL
-expr_stmt|;
-name|get_pkginfo
+argument_list|,
+literal|"-add"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|install_pkgs_indir
 argument_list|()
 expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|run_menu
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|p_inf

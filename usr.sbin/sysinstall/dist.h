@@ -60,9 +60,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_DES
+name|DIST_HELP
 value|0x0040
 end_define
+
+begin_comment
+comment|/* Not yet used; reserved */
+end_comment
 
 begin_define
 define|#
@@ -102,6 +106,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIST_DES
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_EXPERIMENTAL
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_ALL
 value|0x0FFF
 end_define
@@ -115,15 +133,7 @@ define|#
 directive|define
 name|_DIST_DEVELOPER
 define|\
-value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_SRC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_DIST_XDEVELOPER
-define|\
-value|(_DIST_DEVELOPER | DIST_XF86)
+value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_INFO | DIST_SRC)
 end_define
 
 begin_define
@@ -134,12 +144,36 @@ define|\
 value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_COMPAT1X | DIST_COMPAT20)
 end_define
 
+begin_comment
+comment|/* Subtypes for DES distribution */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|_DIST_XUSER
-define|\
-value|(_DIST_USER | DIST_XF86)
+name|DIST_DES_DES
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_DES_SEBONES
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_DES_SSECURE
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_DES_KERBEROS
+value|0x0008
 end_define
 
 begin_comment
@@ -247,20 +281,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_SRC_XF86
-value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_SRC_ALL
-value|0x3FFF
+value|0xFFFF
 end_define
-
-begin_comment
-comment|/* Don't include XFree86 source by default */
-end_comment
 
 begin_comment
 comment|/* Subtypes for XFree86 distribution */
@@ -277,56 +300,77 @@ begin_define
 define|#
 directive|define
 name|DIST_XF86_LIB
-value|0x0004
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_DOC
-value|0x0008
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_MAN
-value|0x0010
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_PROG
-value|0x0020
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_LINK
-value|0x0040
+value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_PEX
-value|0x0080
+value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_XF86_LBX
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_XINIT
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER
+name|DIST_XF86_XDMCF
 value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_SRC
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_SERVER
+value|0x0800
 end_define
 
 begin_define
@@ -346,78 +390,78 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_MACH32
+name|DIST_XF86_SERVER_MACH8
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_MACH8
+name|DIST_XF86_SERVER_MACH32
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_MONO
+name|DIST_XF86_SERVER_MACH64
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_P9000
+name|DIST_XF86_SERVER_MONO
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_S3
+name|DIST_XF86_SERVER_P9000
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_SVGA
+name|DIST_XF86_SERVER_S3
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_VGA16
+name|DIST_XF86_SERVER_SVGA
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER_W32
+name|DIST_XF86_SERVER_VGA16
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
+name|DIST_XF86_SERVER_W32
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_XF86_SERVER_NEST
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_XF86_XINIT
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_XF86_XDMCF
 value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_SERVER_ALL
+value|0x0FFF
 end_define
 
 begin_define
@@ -460,6 +504,13 @@ define|#
 directive|define
 name|DIST_XF86_FONTS_SERVER
 value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_FONTS_ALL
+value|0x00FF
 end_define
 
 begin_define
