@@ -294,6 +294,12 @@ range|:
 literal|2
 decl_stmt|;
 comment|/* Microsoft (LANMan) CHAP */
+name|unsigned
+name|chap81
+range|:
+literal|2
+decl_stmt|;
+comment|/* Microsoft CHAP v2 */
 endif|#
 directive|endif
 name|unsigned

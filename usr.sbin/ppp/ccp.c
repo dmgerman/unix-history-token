@@ -228,6 +228,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"mppe.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -497,9 +514,10 @@ comment|/* 16: Hewlett-Packard PPC */
 literal|"STAC"
 block|,
 comment|/* 17: Stac Electronics LZS (rfc1974) */
-literal|"MPPC"
+literal|"MPPE"
 block|,
-comment|/* 18: Microsoft PPC (rfc2118) */
+comment|/* 18: Microsoft PPC (rfc2118) and */
+comment|/*     Microsoft PPE (draft-ietf-pppext-mppe) */
 literal|"GAND"
 block|,
 comment|/* 19: Gandalf FZA (rfc1993) */
@@ -590,6 +608,14 @@ name|Pred1Algorithm
 block|,
 operator|&
 name|PppdDeflateAlgorithm
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+block|,
+operator|&
+name|MPPEAlgorithm
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -905,6 +931,49 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|"           MPPE:       %s\n"
+argument_list|,
+name|command_ShowNegval
+argument_list|(
+name|ccp
+operator|->
+name|cfg
+operator|.
+name|neg
+index|[
+name|CCP_NEG_MPPE
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|"Key Size = %d-bits\n"
+argument_list|,
+name|ccp
+operator|->
+name|cfg
+operator|.
+name|mppe
+operator|.
+name|keybits
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -1119,6 +1188,32 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+name|ccp
+operator|->
+name|cfg
+operator|.
+name|mppe
+operator|.
+name|keybits
+operator|=
+literal|128
+expr_stmt|;
+name|ccp
+operator|->
+name|cfg
+operator|.
+name|neg
+index|[
+name|CCP_NEG_MPPE
+index|]
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|ccp_Setup
 argument_list|(
 name|ccp
