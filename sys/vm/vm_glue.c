@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_rlimit.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_vm.h"
 end_include
 
@@ -1041,7 +1035,7 @@ index|]
 operator|.
 name|rlim_cur
 operator|=
-name|DFLSSIZ
+name|dflssiz
 expr_stmt|;
 name|p
 operator|->
@@ -1052,7 +1046,7 @@ index|]
 operator|.
 name|rlim_max
 operator|=
-name|MAXSSIZ
+name|maxssiz
 expr_stmt|;
 name|p
 operator|->
@@ -1063,7 +1057,7 @@ index|]
 operator|.
 name|rlim_cur
 operator|=
-name|DFLDSIZ
+name|dfldsiz
 expr_stmt|;
 name|p
 operator|->
@@ -1074,7 +1068,7 @@ index|]
 operator|.
 name|rlim_max
 operator|=
-name|MAXDSIZ
+name|maxdsiz
 expr_stmt|;
 comment|/* limit the limit to no less than 2MB */
 name|rss_limit

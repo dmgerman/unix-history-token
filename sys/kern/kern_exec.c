@@ -2344,7 +2344,7 @@ call|)
 argument_list|(
 name|USRSTACK
 operator|-
-name|MAXSSIZ
+name|maxssiz
 argument_list|)
 decl_stmt|;
 name|vm_map_t
@@ -2451,7 +2451,7 @@ argument_list|,
 operator|(
 name|vm_size_t
 operator|)
-name|MAXSSIZ
+name|maxssiz
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
@@ -2483,7 +2483,7 @@ name|USRSTACK
 operator|-
 literal|2
 operator|*
-name|MAXSSIZ
+name|maxssiz
 expr_stmt|;
 name|error
 operator|=
@@ -2534,7 +2534,7 @@ name|vmspace
 operator|->
 name|vm_ssize
 operator|=
-name|SGROWSIZ
+name|sgrowsiz
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
@@ -2548,7 +2548,7 @@ operator|*
 operator|)
 name|USRSTACK
 operator|-
-name|MAXSSIZ
+name|maxssiz
 expr_stmt|;
 return|return
 operator|(

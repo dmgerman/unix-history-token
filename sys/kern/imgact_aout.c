@@ -546,7 +546,7 @@ name|a_out
 operator|->
 name|a_text
 operator|>
-name|MAXTSIZ
+name|maxtsiz
 operator|||
 comment|/* data + bss can't exceed rlimit */
 name|a_out
