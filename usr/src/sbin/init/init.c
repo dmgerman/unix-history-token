@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.13 (Berkeley) %G%"
+literal|"@(#)init.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,25 +28,43 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<setjmp.h>
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
 end_include
 
 begin_include
@@ -64,25 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ttyent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -139,7 +145,7 @@ name|char
 name|shell
 index|[]
 init|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 decl_stmt|;
 end_decl_stmt
 
@@ -157,7 +163,7 @@ name|char
 name|runc
 index|[]
 init|=
-literal|"/etc/rc"
+name|_PATH_RC
 decl_stmt|;
 end_decl_stmt
 
@@ -166,7 +172,7 @@ name|char
 name|utmpf
 index|[]
 init|=
-literal|"/etc/utmp"
+name|_PATH_UTMP
 decl_stmt|;
 end_decl_stmt
 
@@ -175,7 +181,7 @@ name|char
 name|ctty
 index|[]
 init|=
-literal|"/dev/console"
+name|_PATH_CONSOLE
 decl_stmt|;
 end_decl_stmt
 
