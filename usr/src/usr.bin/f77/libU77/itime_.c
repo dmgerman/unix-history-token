@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_itime[] = "@(#)itime_.c	1.1";  *  * return the current time in numerical form  *  * calling sequence:  *	integer iarray(3)  *	call itime(iarray)  * where:  *	iarray will receive the current time; hour, min, sec.  */
+comment|/* char id_itime[] = "@(#)itime_.c	1.2";  *  * return the current time in numerical form  *  * calling sequence:  *	integer iarray(3)  *	call itime(iarray)  * where:  *	iarray will receive the current time; hour, min, sec.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_macro
