@@ -3447,12 +3447,6 @@ name|npx_devclass
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_ISA
-end_ifdef
-
 begin_comment
 comment|/*  * We prefer to attach to the root nexus so that the usual case (exception 16)  * doesn't describe the processor as being `on isa'.  */
 end_comment
@@ -3474,6 +3468,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
 
 begin_comment
 comment|/*  * This sucks up the legacy ISA support assignments from PNPBIOS/ACPI.  */
