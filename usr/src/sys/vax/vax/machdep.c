@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.33	81/04/22	*/
+comment|/*	machdep.c	4.34	81/04/28	*/
 end_comment
 
 begin_include
@@ -163,6 +163,12 @@ begin_include
 include|#
 directive|include
 file|<frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/port.h"
 end_include
 
 begin_decl_stmt
@@ -536,6 +542,16 @@ argument_list|,
 name|ntext
 argument_list|,
 name|textNTEXT
+argument_list|)
+expr_stmt|;
+name|valloc
+argument_list|(
+name|port
+argument_list|,
+expr|struct
+name|port
+argument_list|,
+name|nport
 argument_list|)
 expr_stmt|;
 name|valloc
