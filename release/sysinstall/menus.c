@@ -5716,6 +5716,29 @@ name|DIST_SRC_SYS
 block|}
 block|,
 block|{
+literal|" tools"
+block|,
+literal|"/usr/src/tools (miscellaneous tools)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|SrcDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_SRC_TOOLS
+block|}
+block|,
+block|{
 literal|" ubin"
 block|,
 literal|"/usr/src/usr.bin (user binaries)"
