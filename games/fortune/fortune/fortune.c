@@ -1783,7 +1783,8 @@ literal|"aDefilm:osw"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 else|#
 directive|else
@@ -1802,7 +1803,8 @@ literal|"aefilm:osw"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 endif|#
 directive|endif
