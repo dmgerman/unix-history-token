@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -580,6 +580,10 @@ name|int
 modifier|*
 name|lp
 decl_stmt|;
+specifier|register
+name|u_int
+name|ngrp
+decl_stmt|;
 name|int
 name|groups
 index|[
@@ -591,9 +595,13 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|ngrp
+operator|=
 name|uap
 operator|->
 name|gidsetsize
+operator|)
 operator|==
 literal|0
 condition|)
@@ -615,9 +623,7 @@ return|;
 block|}
 if|if
 condition|(
-name|uap
-operator|->
-name|gidsetsize
+name|ngrp
 operator|<
 name|u
 operator|.
@@ -630,9 +636,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|uap
-operator|->
-name|gidsetsize
+name|ngrp
 operator|=
 name|u
 operator|.
@@ -640,6 +644,8 @@ name|u_cred
 operator|->
 name|cr_ngroups
 expr_stmt|;
+for|for
+control|(
 name|gp
 operator|=
 name|u
@@ -647,9 +653,7 @@ operator|.
 name|u_cred
 operator|->
 name|cr_groups
-expr_stmt|;
-for|for
-control|(
+operator|,
 name|lp
 operator|=
 name|groups
@@ -659,9 +663,7 @@ operator|<
 operator|&
 name|groups
 index|[
-name|uap
-operator|->
-name|gidsetsize
+name|ngrp
 index|]
 condition|;
 control|)
@@ -691,9 +693,7 @@ name|uap
 operator|->
 name|gidset
 argument_list|,
-name|uap
-operator|->
-name|gidsetsize
+name|ngrp
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -712,9 +712,7 @@ return|;
 operator|*
 name|retval
 operator|=
-name|uap
-operator|->
-name|gidsetsize
+name|ngrp
 expr_stmt|;
 return|return
 operator|(
@@ -2047,7 +2045,7 @@ name|gp
 decl_stmt|;
 specifier|register
 name|u_int
-name|ngrps
+name|ngrp
 decl_stmt|;
 specifier|register
 name|int
@@ -2086,7 +2084,7 @@ return|;
 if|if
 condition|(
 operator|(
-name|ngrps
+name|ngrp
 operator|=
 name|uap
 operator|->
@@ -2118,7 +2116,7 @@ name|caddr_t
 operator|)
 name|groups
 argument_list|,
-name|ngrps
+name|ngrp
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -2140,7 +2138,7 @@ name|u_cred
 operator|->
 name|cr_ngroups
 operator|=
-name|ngrps
+name|ngrp
 expr_stmt|;
 comment|/* convert from int's to gid_t's */
 for|for
@@ -2157,9 +2155,10 @@ name|lp
 operator|=
 name|groups
 init|;
-name|ngrps
+name|ngrp
 operator|--
 condition|;
+control|)
 operator|*
 name|gp
 operator|++
@@ -2167,9 +2166,7 @@ operator|=
 operator|*
 name|lp
 operator|++
-control|)
-comment|/* void */
-empty_stmt|;
+expr_stmt|;
 return|return
 operator|(
 literal|0
