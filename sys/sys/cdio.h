@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.3 1993/10/16 17:16:25 rgrimes Exp $  */
+comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.4 1993/11/07 17:52:24 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -543,6 +543,20 @@ define|#
 directive|define
 name|CDIOCEJECT
 value|_IO('c',24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDIOCALLOW
+value|_IO('c',25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDIOCPREVENT
+value|_IO('c',26)
 end_define
 
 begin_struct
