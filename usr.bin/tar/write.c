@@ -1993,24 +1993,9 @@ operator|->
 name|next_line_is_dir
 condition|)
 block|{
-if|if
-condition|(
-name|chdir
-argument_list|(
-name|line
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|bsdtar_errc
+name|set_chdir
 argument_list|(
 name|bsdtar
-argument_list|,
-literal|1
-argument_list|,
-name|errno
-argument_list|,
-literal|"chdir(%s) failed"
 argument_list|,
 name|line
 argument_list|)
@@ -2046,6 +2031,20 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+operator|*
+name|line
+operator|!=
+literal|'/'
+condition|)
+name|do_chdir
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
+comment|/* Handle a deferred -C */
 name|write_heirarchy
 argument_list|(
 name|bsdtar
@@ -2057,6 +2056,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
