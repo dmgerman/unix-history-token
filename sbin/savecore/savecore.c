@@ -360,6 +360,20 @@ comment|/* Types match kernel declarations. */
 end_comment
 
 begin_decl_stmt
+name|u_long
+name|dumpmag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* magic number in dump */
+end_comment
+
+begin_comment
+comment|/* Based on kernel variables, but with more convenient types. */
+end_comment
+
+begin_decl_stmt
 name|off_t
 name|dumplo
 decl_stmt|;
@@ -367,16 +381,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* where dump starts on dumpdev */
-end_comment
-
-begin_decl_stmt
-name|int
-name|dumpmag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* magic number in dump */
 end_comment
 
 begin_decl_stmt
@@ -3016,9 +3020,8 @@ name|void
 name|get_dumpsize
 parameter_list|()
 block|{
-name|unsigned
 name|int
-name|dumppages
+name|kdumpsize
 decl_stmt|;
 comment|/* Read the dump size. */
 name|DumpRead
@@ -3026,11 +3029,11 @@ argument_list|(
 name|dumpfd
 argument_list|,
 operator|&
-name|dumppages
+name|kdumpsize
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|dumppages
+name|kdumpsize
 argument_list|)
 argument_list|,
 call|(
@@ -3055,7 +3058,7 @@ argument_list|)
 expr_stmt|;
 name|dumpsize
 operator|=
-name|dumppages
+name|kdumpsize
 operator|*
 name|getpagesize
 argument_list|()
