@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.17	83/02/16	*/
+comment|/*	conf.c	4.18	83/04/30	*/
 end_comment
 
 begin_include
@@ -463,6 +463,20 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
+end_if
+
 begin_decl_stmt
 name|int
 name|rlstrategy
@@ -475,6 +489,11 @@ name|rlioctl
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -659,6 +678,17 @@ block|}
 block|,
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
 block|{
 literal|"rl"
 block|,
@@ -671,6 +701,8 @@ block|,
 name|rlioctl
 block|}
 block|,
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|BOOT
