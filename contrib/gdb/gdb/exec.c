@@ -687,6 +687,15 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
+name|fcntl
+argument_list|(
+name|scratch_chan
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|exec_bfd
 operator|=
 name|bfd_fdopenr

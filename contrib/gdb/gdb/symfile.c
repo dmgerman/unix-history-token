@@ -2708,6 +2708,15 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+name|fcntl
+argument_list|(
+name|desc
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|name
