@@ -85,6 +85,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|utmp_len
+init|=
+name|MAXHOSTNAMELEN
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -96,18 +104,6 @@ include|#
 directive|include
 file|<initreq.h>
 end_include
-
-begin_decl_stmt
-name|int
-name|utmp_len
-init|=
-name|MAXHOSTNAMELEN
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sizeof(init_request.host) */
-end_comment
 
 begin_else
 else|#
@@ -164,24 +160,31 @@ begin_comment
 comment|/* UTMPX */
 end_comment
 
-begin_decl_stmt
-name|int
-name|utmp_len
-init|=
-sizeof|sizeof
-argument_list|(
-name|wtmp
-operator|.
-name|ut_host
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|PARENT_DOES_UTMP
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PATH_WTMP
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|wtmpf
+index|[]
+init|=
+name|_PATH_WTMP
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 name|char
@@ -192,6 +195,31 @@ literal|"/usr/adm/wtmp"
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PATH_UTMP
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|utmpf
+index|[]
+init|=
+name|_PATH_UTMP
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|char
 name|utmpf
@@ -200,6 +228,11 @@ init|=
 literal|"/etc/utmp"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
