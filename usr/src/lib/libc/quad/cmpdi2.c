@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmpdi2.c	5.1 (Berkeley) %G%"
+literal|"@(#)cmpdi2.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,8 @@ file|"longlong.h"
 end_include
 
 begin_function
-name|SItype
+name|long
+name|int
 name|__cmpdi2
 parameter_list|(
 name|a
