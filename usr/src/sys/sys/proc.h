@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.9	81/10/17	*/
+comment|/*	proc.h	4.10	82/01/30	*/
 end_comment
 
 begin_comment
@@ -587,15 +587,8 @@ begin_comment
 comment|/* timing out during sleep */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SDETACH
-value|0x080000
-end_define
-
 begin_comment
-comment|/* detached inherited by init */
+comment|/* was SDETACH */
 end_comment
 
 begin_define
