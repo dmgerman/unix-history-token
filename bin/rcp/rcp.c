@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rcp.c,v 1.19 1998/05/18 06:36:03 charnier Exp $"
+literal|"$Id: rcp.c,v 1.20 1998/08/02 14:25:24 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,6 +185,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -592,6 +598,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+name|char
+modifier|*
+name|k
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Prepare for execing ourselves. 	 */
 name|argc_copy
 operator|=
@@ -866,6 +881,29 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KERBEROS
+name|k
+operator|=
+name|auth_getval
+argument_list|(
+literal|"auth_list"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|&&
+operator|!
+name|strstr
+argument_list|(
+name|k
+argument_list|,
+literal|"kerberos"
+argument_list|)
+condition|)
+name|use_kerberos
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|use_kerberos
