@@ -116,9 +116,9 @@ operator|==
 name|y
 condition|)
 return|return
-name|x
+name|y
 return|;
-comment|/* x=y, return x */
+comment|/* x=y, return y */
 if|if
 condition|(
 name|ix
