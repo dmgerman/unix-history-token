@@ -2785,6 +2785,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+break|break;
 case|case
 name|SIOCGIFADDR
 case|:
@@ -2858,6 +2859,10 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 break|break;
 block|}
 return|return
