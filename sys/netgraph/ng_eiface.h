@@ -125,43 +125,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|ng_eiface_par
-block|{
-name|u_char
-name|oct0
-decl_stmt|;
-name|u_char
-name|oct1
-decl_stmt|;
-name|u_char
-name|oct2
-decl_stmt|;
-name|u_char
-name|oct3
-decl_stmt|;
-name|u_char
-name|oct4
-decl_stmt|;
-name|u_char
-name|oct5
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Keep this in sync with the above structure definition */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_EIFACE_PAR_FIELDS
-value|{				\     { "oct0",&ng_parse_int8_type	},		\     { "oct1",&ng_parse_int8_type	},		\     { "oct2",&ng_parse_int8_type	},		\     { "oct3",&ng_parse_int8_type	},		\     { "oct4",&ng_parse_int8_type	},		\     { "oct5",&ng_parse_int8_type	},		\     { NULL }							\ }
-end_define
-
 begin_endif
 endif|#
 directive|endif
