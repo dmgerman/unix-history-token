@@ -5226,6 +5226,12 @@ directive|ifdef
 name|UNIXWARE
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/mkdev.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -6920,12 +6926,6 @@ ifdef|#
 directive|ifdef
 name|__svr4__
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/mkdev.h>
-end_include
 
 begin_define
 define|#
