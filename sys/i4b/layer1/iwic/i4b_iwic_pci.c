@@ -6,24 +6,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"iwic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_i4b.h"
 end_include
-
-begin_if
-if|#
-directive|if
-operator|(
-name|NIWIC
-operator|>
-literal|0
-operator|)
-end_if
 
 begin_include
 include|#
@@ -1232,11 +1216,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

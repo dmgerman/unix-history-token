@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"isic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_i4b.h"
 end_include
 
@@ -22,10 +16,6 @@ name|defined
 argument_list|(
 name|SEDLBAUER
 argument_list|)
-operator|&&
-name|NISIC
-operator|>
-literal|0
 end_if
 
 begin_define
@@ -988,7 +978,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(SEDLBAUER)&& NISIC> 0 */
+comment|/* defined(SEDLBAUER) */
 end_comment
 
 end_unit

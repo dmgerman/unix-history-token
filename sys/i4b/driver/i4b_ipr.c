@@ -9,14 +9,6 @@ directive|include
 file|"i4bipr.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NI4BIPR
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -4069,15 +4061,6 @@ end_function
 
 begin_comment
 comment|/*===========================================================================*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NI4BIPR> 0 */
 end_comment
 
 end_unit

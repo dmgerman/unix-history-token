@@ -6,22 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ifpi.h"
-end_include
-
-begin_if
-if|#
-directive|if
-operator|(
-name|NIFPI
-operator|>
-literal|0
-operator|)
-end_if
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -2504,15 +2488,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NIFPI> 0 */
-end_comment
 
 end_unit
 

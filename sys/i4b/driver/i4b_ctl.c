@@ -6,39 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"i4bctl.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NI4BCTL
-operator|>
-literal|1
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"only 1 (one) i4bctl device allowed!"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|NI4BCTL
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -815,15 +782,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NI4BCTL> 0 */
-end_comment
 
 end_unit
 

@@ -6,24 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"isic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_i4b.h"
 end_include
 
 begin_if
 if|#
 directive|if
-operator|(
-name|NISIC
-operator|>
-literal|0
-operator|)
-operator|&&
 name|defined
 argument_list|(
 name|USR_STI
@@ -2078,7 +2066,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ISIC> 0 */
+comment|/* defined(USR_STI) */
 end_comment
 
 end_unit

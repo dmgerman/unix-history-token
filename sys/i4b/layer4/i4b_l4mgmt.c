@@ -6,20 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"i4b.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NI4B
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1718,15 +1704,6 @@ end_endif
 
 begin_comment
 comment|/* I4B_CD_DEBUG_PRINT */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NI4BQ931> 0 */
 end_comment
 
 end_unit

@@ -6,20 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"isic.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NISIC
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -2496,15 +2482,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NISIC> 0 */
-end_comment
 
 end_unit
 

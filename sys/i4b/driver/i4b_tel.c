@@ -9,14 +9,6 @@ directive|include
 file|"i4btel.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NI4BTEL
-operator|>
-literal|0
-end_if
-
 begin_undef
 undef|#
 directive|undef
@@ -22115,15 +22107,6 @@ end_decl_stmt
 
 begin_comment
 comment|/*===========================================================================*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NI4BTEL> 0 */
 end_comment
 
 end_unit

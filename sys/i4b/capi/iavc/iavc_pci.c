@@ -6,34 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"iavc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i4bcapi.h"
-end_include
-
-begin_if
-if|#
-directive|if
-operator|(
-name|NIAVC
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
-name|NI4BCAPI
-operator|>
-literal|0
-operator|)
-end_if
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1173,11 +1145,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -6,22 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"itjc.h"
-end_include
-
-begin_if
-if|#
-directive|if
-operator|(
-name|NITJC
-operator|>
-literal|0
-operator|)
-end_if
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -765,15 +749,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NITJC> 0 */
-end_comment
 
 end_unit
 

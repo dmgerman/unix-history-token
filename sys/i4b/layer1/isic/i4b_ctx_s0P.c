@@ -6,24 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"isic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_i4b.h"
 end_include
 
 begin_if
 if|#
 directive|if
-operator|(
-name|NISIC
-operator|>
-literal|0
-operator|)
-operator|&&
 operator|(
 name|defined
 argument_list|(
@@ -1314,7 +1302,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (NISIC> 0)&& (defined(CRTX_S0_P) || defined(TEL_S0_16_3_P) || defined(COMPAQ_M610)) */
+comment|/* (defined(CRTX_S0_P) || defined(TEL_S0_16_3_P) || defined(COMPAQ_M610)) */
 end_comment
 
 end_unit

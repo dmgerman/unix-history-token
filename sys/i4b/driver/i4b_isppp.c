@@ -9,25 +9,6 @@ directive|include
 file|"i4bisppp.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NI4BISPPP
-operator|==
-literal|0
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"You need to define `device sppp<N>' with options ISPPP"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include

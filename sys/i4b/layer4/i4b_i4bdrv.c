@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"i4b.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"i4bipr.h"
 end_include
 
@@ -20,33 +14,6 @@ include|#
 directive|include
 file|"i4btel.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NI4B
-operator|>
-literal|1
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"only 1 (one) i4b device possible!"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|NI4B
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -3452,15 +3419,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NI4B> 0 */
-end_comment
 
 end_unit
 

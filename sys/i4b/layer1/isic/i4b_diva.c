@@ -6,22 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"isic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_i4b.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NISIC
-operator|>
-literal|0
-operator|&&
 name|defined
 name|EICON_DIVA
 end_if
@@ -1788,7 +1778,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NISIC> 0&& defined EICON_DIVA */
+comment|/* defined EICON_DIVA */
 end_comment
 
 end_unit
