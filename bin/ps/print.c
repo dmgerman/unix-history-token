@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print.c,v 1.27 1998/05/28 09:29:43 phk Exp $"
+literal|"$Id: print.c,v 1.28 1998/05/31 12:09:50 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1692,6 +1692,9 @@ specifier|static
 name|time_t
 name|now
 decl_stmt|;
+name|time_t
+name|then
+decl_stmt|;
 name|struct
 name|tm
 modifier|*
@@ -1735,11 +1738,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|tp
+name|then
 operator|=
-name|localtime
-argument_list|(
-operator|&
 name|k
 operator|->
 name|ki_u
@@ -1747,6 +1747,13 @@ operator|.
 name|u_start
 operator|.
 name|tv_sec
+expr_stmt|;
+name|tp
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|then
 argument_list|)
 expr_stmt|;
 if|if
@@ -1922,6 +1929,9 @@ name|VAR
 modifier|*
 name|v
 decl_stmt|;
+name|time_t
+name|then
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -1960,6 +1970,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|then
+operator|=
+name|k
+operator|->
+name|ki_u
+operator|.
+name|u_start
+operator|.
+name|tv_sec
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1979,13 +1999,7 @@ argument_list|,
 name|localtime
 argument_list|(
 operator|&
-name|k
-operator|->
-name|ki_u
-operator|.
-name|u_start
-operator|.
-name|tv_sec
+name|then
 argument_list|)
 argument_list|)
 expr_stmt|;
