@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	fromL Id: sys.c,v 1.21 1997/06/09 05:10:56 bde Exp  *	$Id$  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	fromL Id: sys.c,v 1.21 1997/06/09 05:10:56 bde Exp  *	$Id: sys.c,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  */
 end_comment
 
 begin_include
@@ -38,6 +38,12 @@ include|#
 directive|include
 file|<sys/dirent.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|COMPAT_UFS
+end_define
 
 begin_decl_stmt
 name|struct
@@ -189,7 +195,7 @@ end_function_decl
 
 begin_function
 name|int
-name|read
+name|readit
 parameter_list|(
 name|char
 modifier|*
@@ -832,6 +838,184 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_UFS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|max
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)> (b) ? (a) : (b))
+end_define
+
+begin_comment
+comment|/*  * Sanity checks for old file systems.  *  * XXX - goes away some day.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ffs_oldfscompat
+parameter_list|(
+name|fs
+parameter_list|)
+name|struct
+name|fs
+modifier|*
+name|fs
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+name|fs
+operator|->
+name|fs_npsect
+operator|=
+name|max
+argument_list|(
+name|fs
+operator|->
+name|fs_npsect
+argument_list|,
+name|fs
+operator|->
+name|fs_nsect
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_interleave
+operator|=
+name|max
+argument_list|(
+name|fs
+operator|->
+name|fs_interleave
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_postblformat
+operator|==
+name|FS_42POSTBLFMT
+condition|)
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_nrpos
+operator|=
+literal|8
+expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_inodefmt
+operator|<
+name|FS_44INODEFMT
+condition|)
+block|{
+comment|/* XXX */
+name|quad_t
+name|sizepb
+init|=
+name|fs
+operator|->
+name|fs_bsize
+decl_stmt|;
+comment|/* XXX */
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_maxfilesize
+operator|=
+name|fs
+operator|->
+name|fs_bsize
+operator|*
+name|NDADDR
+operator|-
+literal|1
+expr_stmt|;
+comment|/* XXX */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NIADDR
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* XXX */
+name|sizepb
+operator|*=
+name|NINDIR
+argument_list|(
+name|fs
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_maxfilesize
+operator|+=
+name|sizepb
+expr_stmt|;
+comment|/* XXX */
+block|}
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_qbmask
+operator|=
+operator|~
+name|fs
+operator|->
+name|fs_bmask
+expr_stmt|;
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_qfmask
+operator|=
+operator|~
+name|fs
+operator|->
+name|fs_fmask
+expr_stmt|;
+comment|/* XXX */
+block|}
+comment|/* XXX */
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|openrd
@@ -843,6 +1027,12 @@ parameter_list|)
 block|{
 name|int
 name|ret
+decl_stmt|;
+name|char
+name|namecopy
+index|[
+literal|128
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -877,12 +1067,29 @@ argument_list|,
 name|SBSIZE
 argument_list|)
 expr_stmt|;
-comment|/*      * Find the actual FILE on the mounted device.      */
+ifdef|#
+directive|ifdef
+name|COMPAT_UFS
+name|ffs_oldfscompat
+argument_list|(
+name|fs
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*      * Find the actual FILE on the mounted device.      * Make a copy of the name since find() is destructive.      */
+name|strcpy
+argument_list|(
+name|namecopy
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|find
 argument_list|(
-name|name
+name|namecopy
 argument_list|)
 expr_stmt|;
 if|if

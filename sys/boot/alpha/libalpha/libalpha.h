@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: libalpha.h,v 1.2 1998/08/31 21:10:40 msmith Exp $ */
+comment|/* $Id: libalpha.h,v 1.3 1998/09/20 21:46:19 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -77,10 +77,12 @@ modifier|*
 modifier|*
 name|vdev
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|devspec
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*

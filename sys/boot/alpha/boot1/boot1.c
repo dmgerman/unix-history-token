@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  * From	$NetBSD: bootxx.c,v 1.4 1997/09/06 14:08:29 drochner Exp $   */
+comment|/*  * $Id: boot1.c,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  * From	$NetBSD: bootxx.c,v 1.4 1997/09/06 14:08:29 drochner Exp $   */
 end_comment
 
 begin_comment
@@ -491,7 +491,7 @@ do|do
 block|{
 name|n
 operator|=
-name|read
+name|readit
 argument_list|(
 name|addr
 argument_list|,
