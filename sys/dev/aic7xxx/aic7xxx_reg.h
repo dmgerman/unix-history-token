@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id$  */
+comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.1 1995/11/05 04:37:25 gibbs Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * This header should be shared by the sequencer code and the kernel  * level driver.  Unfortuanetly I haven't mangled the sequencer assembler  * into using cpp yet. Someday...  *  * All page numbers refer to the Adaptec AIC-7770 Data Book availible from  * Adaptec's Technical Documents Department 1-800-934-2766  */
+comment|/*  * This header is shared by the sequencer code and the kernel level driver.  *  * All page numbers refer to the Adaptec AIC-7770 Data Book availible from  * Adaptec's Technical Documents Department 1-800-934-2766  */
 end_comment
 
 begin_comment
@@ -337,6 +337,59 @@ value|0x01
 end_define
 
 begin_comment
+comment|/*  * Possible phases in SCSISIGI  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHASE_MASK
+value|0xe0
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_DATAOUT
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_DATAIN
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_COMMAND
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_MESGOUT
+value|0xa0
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_STATUS
+value|0xc0
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_MESGIN
+value|0xe0
+end_define
+
+begin_comment
 comment|/*  * SCSI Contol Signal Write Register (p. 3-16).  * Writing to this register modifies the control signals on the bus.  Only  * those signals that are allowed in the current mode (Initiator/Target) are  * asserted.  */
 end_comment
 
@@ -448,7 +501,7 @@ comment|/* Sync offset */
 end_comment
 
 begin_comment
-comment|/*  * SCSI ID (p. 3-18).  * Contains the ID of the board and the current target on the  * selected channel  */
+comment|/*  * SCSI ID (p. 3-18).  * Contains the ID of the board and the current target on the  * selected channel.  */
 end_comment
 
 begin_define
@@ -481,6 +534,24 @@ comment|/* Our ID mask */
 end_comment
 
 begin_comment
+comment|/*  * SCSI Latched Data (p. 3-19).  * Read/Write latchs used to transfer data on the SCSI bus during  * Automatic or Manual PIO mode.  SCSIDATH can be used for the  * upper byte of a 16bit wide asyncronouse data phase transfer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSIDATL
+value|0x006
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSIDATH
+value|0x007
+end_define
+
+begin_comment
 comment|/*  * SCSI Transfer Count (pp. 3-19,20)  * These registers count down the number of bytes transfered  * across the SCSI bus.  The counter is decremented only once  * the data has been safely transfered.  SDONE in SSTAT0 is  * set when STCNT goes to 0  */
 end_comment
 
@@ -490,6 +561,81 @@ directive|define
 name|STCNT
 value|0x008
 end_define
+
+begin_define
+define|#
+directive|define
+name|STCNT0
+value|0x008
+end_define
+
+begin_define
+define|#
+directive|define
+name|STCNT1
+value|0x009
+end_define
+
+begin_define
+define|#
+directive|define
+name|STCNT2
+value|0x00a
+end_define
+
+begin_comment
+comment|/*  * Clear SCSI Interrupt 0 (p. 3-20)  * Writing a 1 to a bit clears the associated SCSI Interrupt in SSTAT0.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLRSINT0
+value|0x00b
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLRSELDO
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLRSELDI
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLRSELINGO
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLRSWRAP
+value|0x08
+end_define
+
+begin_comment
+comment|/*  UNUSED			0x04 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLRSPIORDY
+value|0x02
+end_define
+
+begin_comment
+comment|/*  UNUSED			0x01 */
+end_comment
 
 begin_comment
 comment|/*  * SCSI Status 0 (p. 3-21)  * Contains one set of SCSI Interrupt codes  * These are most likely of interest to the sequencer  */
@@ -510,7 +656,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* Board is a target */
+comment|/* Board acting as target */
 end_comment
 
 begin_define
@@ -655,7 +801,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * SCSI Status 1 (p. 3-24)  * These interrupt bits are of interest to the kernel driver  */
+comment|/*  * SCSI Status 1 (p. 3-24)  */
 end_comment
 
 begin_define
@@ -722,6 +868,91 @@ value|0x01
 end_define
 
 begin_comment
+comment|/*  * SCSI Interrupt Mode 1 (pp. 3-28,29)  * Setting any bit will enable the corresponding function  * in SIMODE1 to interrupt via the IRQ pin.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIMODE1
+value|0x011
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENSELTIMO
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENATNTARG
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENSCSIRST
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENPHASEMIS
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENBUSFREE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENSCSIPERR
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENPHASECHG
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENREQINIT
+value|0x01
+end_define
+
+begin_comment
+comment|/*  * SCSI Data Bus (High) (p. 3-29)  * This register reads data on the SCSI Data bus directly.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSIBUSL
+value|0x012
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSIBUSH
+value|0x013
+end_define
+
+begin_comment
 comment|/*  * SCSI/Host Address (p. 3-30)  * These registers hold the host address for the byte about to be  * transfered on the SCSI bus.  They are counted up in the same  * manner as STCNT is counted down.  SHADDR should always be used  * to determine the address of the last byte transfered since HADDR  * can be squewed by write ahead.  */
 end_comment
 
@@ -772,8 +1003,26 @@ name|SBLKCTL
 value|0x01f
 end_define
 
+begin_define
+define|#
+directive|define
+name|DIAGLEDEN
+value|0x80
+end_define
+
 begin_comment
-comment|/*  UNUSED			0xc0 */
+comment|/* Aic78X0 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIAGLEDON
+value|0x40
+end_define
+
+begin_comment
+comment|/* Aic78X0 only */
 end_comment
 
 begin_define
@@ -930,6 +1179,126 @@ name|SINDEX
 value|0x065
 end_define
 
+begin_define
+define|#
+directive|define
+name|DINDEX
+value|0x066
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALLZEROS
+value|0x06a
+end_define
+
+begin_define
+define|#
+directive|define
+name|NONE
+value|0x06a
+end_define
+
+begin_define
+define|#
+directive|define
+name|SINDIR
+value|0x06c
+end_define
+
+begin_define
+define|#
+directive|define
+name|DINDIR
+value|0x06d
+end_define
+
+begin_define
+define|#
+directive|define
+name|FUNCTION1
+value|0x06e
+end_define
+
+begin_comment
+comment|/*  * Host Address (p. 3-48)  * This register contains the address of the byte about  * to be transfered across the host bus.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HADDR
+value|0x088
+end_define
+
+begin_define
+define|#
+directive|define
+name|HADDR0
+value|0x088
+end_define
+
+begin_define
+define|#
+directive|define
+name|HADDR1
+value|0x089
+end_define
+
+begin_define
+define|#
+directive|define
+name|HADDR2
+value|0x08a
+end_define
+
+begin_define
+define|#
+directive|define
+name|HADDR3
+value|0x08b
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCNT
+value|0x08c
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCNT0
+value|0x08c
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCNT1
+value|0x08d
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCNT2
+value|0x08e
+end_define
+
+begin_comment
+comment|/*  * SCB Pointer (p. 3-49)  * Gate one of the four SCBs into the SCBARRAY window.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCBPTR
+value|0x090
+end_define
+
 begin_comment
 comment|/*  * Board Control (p. 3-43)  */
 end_comment
@@ -992,6 +1361,13 @@ name|BON
 value|0x0f
 end_define
 
+begin_define
+define|#
+directive|define
+name|BOFF_60BCLKS
+value|0xf0
+end_define
+
 begin_comment
 comment|/*  * Bus Speed (p. 3-45)  */
 end_comment
@@ -1022,6 +1398,13 @@ define|#
 directive|define
 name|STBON
 value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFTHRSH_100
+value|0xc0
 end_define
 
 begin_comment
@@ -1086,28 +1469,6 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * Host Address (p. 3-48)  * This register contains the address of the byte about  * to be transfered across the host bus.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HADDR
-value|0x088
-end_define
-
-begin_comment
-comment|/*  * SCB Pointer (p. 3-49)  * Gate one of the four SCBs into the SCBARRAY window.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCBPTR
-value|0x090
-end_define
-
-begin_comment
 comment|/*  * Interrupt Status (p. 3-50)  * Status for system interrupts  */
 end_comment
 
@@ -1122,7 +1483,7 @@ begin_define
 define|#
 directive|define
 name|SEQINT_MASK
-value|0xf0
+value|0xf1
 end_define
 
 begin_comment
@@ -1133,85 +1494,155 @@ begin_define
 define|#
 directive|define
 name|BAD_PHASE
-value|0x00
+value|0x01
 end_define
+
+begin_comment
+comment|/* unknown scsi bus phase */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SEND_REJECT
-value|0x10
+value|0x11
 end_define
+
+begin_comment
+comment|/* sending a message reject */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NO_IDENT
-value|0x20
+value|0x21
 end_define
+
+begin_comment
+comment|/* no IDENTIFY after reconnect*/
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NO_MATCH
-value|0x30
+value|0x31
 end_define
+
+begin_comment
+comment|/* no cmd match for reconnect */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MSG_SDTR
-value|0x40
+name|SDTR_MSG
+value|0x41
 end_define
+
+begin_comment
+comment|/* SDTR message recieved */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MSG_WDTR
-value|0x50
+name|WDTR_MSG
+value|0x51
 end_define
+
+begin_comment
+comment|/* WDTR message recieved */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MSG_REJECT
-value|0x60
+name|REJECT_MSG
+value|0x61
 end_define
+
+begin_comment
+comment|/* Reject message recieved */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|BAD_STATUS
-value|0x70
+value|0x71
 end_define
+
+begin_comment
+comment|/* Bad status from target */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|RESIDUAL
-value|0x80
+value|0x81
 end_define
+
+begin_comment
+comment|/* Residual byte count != 0 */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ABORT_TAG
-value|0x90
+value|0x91
 end_define
+
+begin_comment
+comment|/* Sent an ABORT_TAG message */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|AWAITING_MSG
-value|0xa0
+value|0xa1
 end_define
+
+begin_comment
+comment|/* 						 * Kernel requested to specify                                                  * a message to this target                                                  * (command was null), so tell                                                  * it that it can fill the                                                  * message buffer.                                                  */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|IMMEDDONE
-value|0xb0
+value|0xb1
 end_define
+
+begin_comment
+comment|/* 						 * An immediate command has 						 * completed 						 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_BUFFER_BUSY
+value|0xc1
+end_define
+
+begin_comment
+comment|/* 						 * Sequencer wants to use the 						 * message buffer, but it 						 * already contains a message 						 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSGIN_PHASEMIS
+value|0xd1
+end_define
+
+begin_comment
+comment|/* 						 * Target changed phase on us 						 * when we were expecting 						 * another msgin byte. 						 */
+end_comment
 
 begin_define
 define|#
@@ -1330,6 +1761,104 @@ name|CLRSEQINT
 value|0x01
 end_define
 
+begin_define
+define|#
+directive|define
+name|DFCNTRL
+value|0x093
+end_define
+
+begin_define
+define|#
+directive|define
+name|WIDEODD
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSIEN
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDMAEN
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDMAENACK
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMAEN
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDMAENACK
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIRECTION
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFOFLUSH
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFORESET
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFSTATUS
+value|0x094
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDONE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFOEMP
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFDAT
+value|0x099
+end_define
+
 begin_comment
 comment|/*  * SCB Auto Increment (p. 3-59)  * Byte offset into the SCB Array and an optional bit to allow auto  * incrementing of the address during download and upload operations  */
 end_comment
@@ -1399,12 +1928,371 @@ name|QOUTCNT
 value|0x09e
 end_define
 
+begin_comment
+comment|/*  * SCB Definition (p. 5-4)  * The two reserved bytes at SCBARRAY+1[23] are expected to be set to  * zero. Bit 3 in SCBARRAY+0 is used as an internal flag to indicate  * whether or not to DMA an SCB from host ram. This flag prevents the  * "re-fetching" of transactions that are requed because the target is  * busy with another command. We also use bits 6& 7 to indicate whether  * or not to initiate SDTR or WDTR repectively when starting this command.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SCBARRAY
 value|0x0a0
 end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_CONTROL
+value|0x0a0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEEDWDTR
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISCENB
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_ENB
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEEDSDTR
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEEDDMA
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISCONNECTED
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_TAG_TYPE
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_TCL
+value|0x0a1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_TARGET_STATUS
+value|0x0a2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_SGCOUNT
+value|0x0a3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_SGPTR
+value|0x0a4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_SGPTR0
+value|0x0a4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_SGPTR1
+value|0x0a5
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_SGPTR2
+value|0x0a6
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_SGPTR3
+value|0x0a7
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_RESID_SGCNT
+value|0x0a8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_RESID_DCNT
+value|0x0a9
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_RESID_DCNT0
+value|0x0a9
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_RESID_DCNT1
+value|0x0aa
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_RESID_DCNT2
+value|0x0ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_DATAPTR
+value|0x0ac
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_DATAPTR0
+value|0x0ac
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_DATAPTR1
+value|0x0ad
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_DATAPTR2
+value|0x0ae
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_DATAPTR3
+value|0x0af
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_DATACNT
+value|0x0b0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_DATACNT0
+value|0x0b0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_DATACNT1
+value|0x0b1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_DATACNT2
+value|0x0b2
+end_define
+
+begin_comment
+comment|/* UNUSED - QUAD PADDING	0x0b3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCB_CMDPTR
+value|0x0b4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_CMDPTR0
+value|0x0b4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_CMDPTR1
+value|0x0b5
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_CMDPTR2
+value|0x0b6
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_CMDPTR3
+value|0x0b7
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_CMDLEN
+value|0x0b8
+end_define
+
+begin_comment
+comment|/* RESERVED - MUST BE ZERO	0x0b9 */
+end_comment
+
+begin_comment
+comment|/* RESERVED - MUST BE ZERO	0x0ba */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCB_NEXT_WAITING
+value|0x0bb
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_PHYSADDR
+value|0x0bc
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_PHYSADDR0
+value|0x0bc
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_PHYSADDR1
+value|0x0bd
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_PHYSADDR2
+value|0x0be
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_PHYSADDR3
+value|0x0bf
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LINUX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SG_SIZEOF
+value|0x0c
+end_define
+
+begin_comment
+comment|/* sizeof(struct scatterlist) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SG_SIZEOF
+value|0x08
+end_define
+
+begin_comment
+comment|/* sizeof(struct ahc_dma) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SCB_SIZEOF
+value|0x1a
+end_define
+
+begin_comment
+comment|/* sizeof SCB to DMA */
+end_comment
 
 begin_comment
 comment|/* --------------------- AIC-7870-only definitions -------------------- */
@@ -1489,7 +2377,7 @@ comment|/* ---------------------- Scratch RAM Offsets ------------------------- 
 end_comment
 
 begin_comment
-comment|/* These offsets are either to values that are initialized by the board's  * BIOS or are specified by the Linux sequencer code.  If I can figure out  * how to read the EISA configuration info at probe time, the cards could  * be run without BIOS support installed  */
+comment|/* These offsets are either to values that are initialized by the board's  * BIOS or are specified by the sequencer code.  *  * The host adapter card (at least the BIOS) uses 20-2f for SCSI  * device information, 32-33 and 5a-5f as well. As it turns out, the  * BIOS trashes 20-2f, writing the synchronous negotiation results  * on top of the BIOS values, so we re-use those for our per-target  * scratchspace (actually a value that can be copied directly into  * SCSIRATE).  The kernel driver will enable synchronous negotiation  * for all targets that have a value other than 0 in the lower four  * bits of the target scratch space.  This should work regardless of  * whether the bios has been installed.  */
 end_comment
 
 begin_comment
@@ -1499,7 +2387,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HA_TARG_SCRATCH
+name|TARG_SCRATCH
 value|0x020
 end_define
 
@@ -1510,7 +2398,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HA_REJBYTE
+name|REJBYTE
 value|0x031
 end_define
 
@@ -1521,8 +2409,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HA_DISC_DSB
+name|DISC_DSB
 value|0x032
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISC_DSB_A
+value|0x032
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISC_DSB_B
+value|0x033
 end_define
 
 begin_comment
@@ -1532,24 +2434,62 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HA_MSG_LEN
+name|MSG_LEN
 value|0x034
 end_define
 
+begin_define
+define|#
+directive|define
+name|MSG0
+value|0x035
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMP_MSG0
+value|0xcb
+end_define
+
 begin_comment
-comment|/*  * message body  */
+comment|/* 2's complement of MSG0 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HA_MSG_START
-value|0x035
+name|MSG1
+value|0x036
 end_define
 
-begin_comment
-comment|/* outgoing message body */
-end_comment
+begin_define
+define|#
+directive|define
+name|MSG2
+value|0x037
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG3
+value|0x038
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG4
+value|0x039
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG5
+value|0x03a
+end_define
 
 begin_comment
 comment|/*  * These are offsets into the card's scratch ram.  Some of the values are  * specified in the AHA2742 technical reference manual and are initialized  * by the BIOS at boot time.  */
@@ -1558,14 +2498,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HA_ARG_1
+name|ARG_1
 value|0x04a
 end_define
 
 begin_define
 define|#
 directive|define
-name|HA_RETURN_1
+name|RETURN_1
 value|0x04a
 end_define
 
@@ -1600,6 +2540,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIGSTATE
+value|0x04b
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAPARAMS
+value|0x04c
+end_define
+
+begin_comment
+comment|/* Parameters for DMA Logic */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SG_COUNT
 value|0x04d
 end_define
@@ -1611,24 +2569,53 @@ name|SG_NEXT
 value|0x04e
 end_define
 
+begin_comment
+comment|/* working value of SG pointer */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|HA_SIGSTATE
-value|0x04b
+name|SG_NEXT0
+value|0x04e
 end_define
 
 begin_define
 define|#
 directive|define
-name|HA_SCBCOUNT
+name|SG_NEXT1
+value|0x04f
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG_NEXT2
+value|0x050
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG_NEXT3
+value|0x051
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCBCOUNT
 value|0x052
 end_define
 
+begin_comment
+comment|/* 					 * Number of SCBs supported by 					 * this card. 					 */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|HA_FLAGS
+name|FLAGS
 value|0x053
 end_define
 
@@ -1656,8 +2643,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACTIVE_MSG
-value|0x20
+name|DPHASE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXOFFSET
+value|0x08
 end_define
 
 begin_define
@@ -1670,21 +2664,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|RESELECTING
+name|RESELECTED
 value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|HA_ACTIVE0
+name|ACTIVE_A
 value|0x054
 end_define
 
 begin_define
 define|#
 directive|define
-name|HA_ACTIVE1
+name|ACTIVE_B
 value|0x055
 end_define
 
@@ -1695,12 +2689,20 @@ name|SAVED_TCL
 value|0x056
 end_define
 
+begin_comment
+comment|/* 					 * Temporary storage for the 					 * target/channel/lun of a 					 * reconnecting target 					 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|WAITING_SCBH
 value|0x057
 end_define
+
+begin_comment
+comment|/* 					 * head of list of SCBs awaiting 					 * selection 					 */
+end_comment
 
 begin_define
 define|#
@@ -1709,17 +2711,35 @@ name|WAITING_SCBT
 value|0x058
 end_define
 
+begin_comment
+comment|/* 					 * tail of list of SCBs awaiting 					 * selection 					 */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|HA_SCSICONF
+name|COMP_SCBCOUNT
+value|0x059
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_LIST_NULL
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSICONF
 value|0x05a
 end_define
 
 begin_define
 define|#
 directive|define
-name|HA_HOSTCONF
+name|HOSTCONF
 value|0x05d
 end_define
 
@@ -1744,6 +2764,59 @@ name|BIOSDISABLED
 value|0x30
 end_define
 
+begin_comment
+comment|/* Message codes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_EXTENDED
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_SDTR
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_WDTR
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_SDPTRS
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_RDPTRS
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_DISCONNECT
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_INITIATOR_DET_ERROR
+value|0x05
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1754,9 +2827,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSG_REJECT
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_NOP
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_MSG_PARITY_ERROR
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSG_BUS_DEVICE_RESET
 value|0x0c
 end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_SIMPLE_TAG
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_IDENTIFY
+value|0x80
+end_define
+
+begin_comment
+comment|/* WDTR Message values */
+end_comment
 
 begin_define
 define|#
@@ -1777,6 +2889,20 @@ define|#
 directive|define
 name|BUS_32_BIT
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_OFFSET_8BIT
+value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_OFFSET_16BIT
+value|0x08
 end_define
 
 end_unit
