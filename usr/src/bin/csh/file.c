@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)file.c 1.3 (Berkeley from Hp Labs) %G%"
+literal|"@(#)file.c 1.4 (Berkeley from Hp Labs) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Tenex style file name recognition, .. and more.  * History:  *	Author: Ken Greer, Sept. 1975, CMU.  *	Finally got around to adding to the Cshell., Ken Greer, Dec. 1981.  */
@@ -146,10 +157,20 @@ name|setup_tty
 argument_list|(
 argument|on
 argument_list|)
+name|int
+name|on
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
+name|struct
+name|sgttyb
+name|sgtty
+decl_stmt|;
 name|int
 name|omask
-block|;
+decl_stmt|;
 name|omask
 operator|=
 name|sigblock
@@ -159,16 +180,12 @@ argument_list|(
 name|SIGINT
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|on
 condition|)
 block|{
-name|struct
-name|sgttyb
-name|sgtty
-decl_stmt|;
 name|ioctl
 argument_list|(
 name|SHIN
@@ -195,7 +212,7 @@ operator|&
 name|tchars
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is a useful feature in it's own right... 	 * The shell makes sure that the tty is not in some weird state 	 * and fixes it if it is.  But it should be noted that the 	 * tenex routine will not work correctly in CBREAK or RAW mode 	 * so this code below is, therefore, mandatory. 	 */
+comment|/* 		 * This is a useful feature in it's own right... 		 * The shell makes sure that the tty is not in some weird state 		 * and fixes it if it is.  But it should be noted that the 		 * tenex routine will not work correctly in CBREAK or RAW mode 		 * so this code below is, therefore, mandatory. 		 */
 name|ioctl
 argument_list|(
 name|SHIN
@@ -241,10 +258,8 @@ name|sgtty
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_block
-unit|}     else
+block|}
+else|else
 block|{
 name|tchars
 operator|.
@@ -264,38 +279,31 @@ name|tchars
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_expr_stmt
 name|sigsetmask
 argument_list|(
 name|omask
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * Move back to beginning of current line  */
 end_comment
 
-begin_macro
-unit|static
+begin_expr_stmt
+specifier|static
 name|back_to_col_1
 argument_list|()
-end_macro
-
-begin_block
-block|{
-name|struct
+block|{ 	struct
 name|sgttyb
 name|tty
-decl_stmt|,
+block|,
 name|tty_normal
-decl_stmt|;
+block|;
 name|int
 name|omask
-decl_stmt|;
+block|;
 name|omask
 operator|=
 name|sigblock
@@ -305,7 +313,7 @@ argument_list|(
 name|SIGINT
 argument_list|)
 argument_list|)
-expr_stmt|;
+block|;
 name|ioctl
 argument_list|(
 name|SHIN
@@ -315,18 +323,18 @@ argument_list|,
 operator|&
 name|tty
 argument_list|)
-expr_stmt|;
+block|;
 name|tty_normal
 operator|=
 name|tty
-expr_stmt|;
+block|;
 name|tty
 operator|.
 name|sg_flags
 operator|&=
 operator|~
 name|CRMOD
-expr_stmt|;
+block|;
 name|ioctl
 argument_list|(
 name|SHIN
@@ -336,7 +344,7 @@ argument_list|,
 operator|&
 name|tty
 argument_list|)
-expr_stmt|;
+block|;
 operator|(
 name|void
 operator|)
@@ -348,7 +356,7 @@ literal|"\r"
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+block|;
 name|ioctl
 argument_list|(
 name|SHIN
@@ -358,20 +366,13 @@ argument_list|,
 operator|&
 name|tty_normal
 argument_list|)
-expr_stmt|;
+block|;
 name|sigsetmask
 argument_list|(
 name|omask
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
+block|; }
 comment|/*  * Push string contents back into tty queue  */
-end_comment
-
-begin_expr_stmt
 specifier|static
 name|pushback
 argument_list|(
@@ -480,7 +481,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Concatonate src onto tail of des.  * Des is a string whose maximum length is count.  * Always null terminate.  */
+comment|/*  * Concatenate src onto tail of des.  * Des is a string whose maximum length is count.  * Always null terminate.  */
 end_comment
 
 begin_expr_stmt
@@ -562,41 +563,33 @@ argument_list|,
 argument|b
 argument_list|)
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|a
 operator|>
 name|b
-condition|)
-return|return
-operator|(
+operator|?
 name|a
-operator|)
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-operator|(
+operator|:
 name|b
 operator|)
 return|;
-end_return
+block|}
+end_expr_stmt
 
 begin_comment
-unit|}
-comment|/*  * like strncpy but always leave room for trailing \0  * and always null terminate.  */
+comment|/*  * Like strncpy but always leave room for trailing \0  * and always null terminate.  */
 end_comment
 
 begin_expr_stmt
-unit|copyn
-operator|(
+name|copyn
+argument_list|(
 name|des
-operator|,
+argument_list|,
 name|src
-operator|,
+argument_list|,
 name|count
-operator|)
+argument_list|)
 specifier|register
 name|char
 operator|*
@@ -705,11 +698,6 @@ end_function
 
 begin_block
 block|{
-if|if
-condition|(
-name|dir
-condition|)
-block|{
 name|char
 name|path
 index|[
@@ -726,6 +714,11 @@ modifier|*
 name|strcpy
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|dir
+condition|)
+block|{
 name|catn
 argument_list|(
 name|strcpy
@@ -955,20 +948,16 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* '/' or '*' or ' ' */
 if|if
 condition|(
 name|c
 operator|<
-operator|(
 name|columns
 operator|-
 literal|1
-operator|)
 condition|)
-comment|/* Not last column? */
-for|for
-control|(
+block|{
+comment|/* last column? */
 name|w
 operator|=
 name|strlen
@@ -980,6 +969,9 @@ index|]
 argument_list|)
 operator|+
 literal|1
+expr_stmt|;
+for|for
+control|(
 init|;
 name|w
 operator|<
@@ -995,6 +987,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -1005,7 +998,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * expand file name with possible tilde usage  *		~person/mumble  * expands to  *		home_directory_of_person/mumble  *  * Usage: tilde (new, old) char *new, *old;  */
+comment|/*  * Expand file name with possible tilde usage  *	~person/mumble  * expands to  *	home_directory_of_person/mumble  */
 end_comment
 
 begin_function
@@ -1028,23 +1021,6 @@ end_function
 
 begin_block
 block|{
-specifier|extern
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
-function_decl|;
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getpwnam
-argument_list|()
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -1065,10 +1041,23 @@ name|person
 index|[
 literal|40
 index|]
-init|=
-block|{
-literal|0
-block|}
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|strcpy
+parameter_list|()
+function_decl|;
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|getpwuid
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getpwnam
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -1292,7 +1281,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * parse full path in file into 2 parts: directory and file names  * Should leave final slash (/) at end of dir.  */
+comment|/*  * Parse full path in file into 2 parts: directory and file names  * Should leave final slash (/) at end of dir.  */
 end_comment
 
 begin_expr_stmt
@@ -1319,17 +1308,17 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
 name|rindex
 parameter_list|()
 function_decl|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
 name|p
 operator|=
 name|rindex
@@ -1365,13 +1354,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|p
-operator|++
-expr_stmt|;
 name|copyn
 argument_list|(
 name|name
 argument_list|,
+operator|++
 name|p
 argument_list|,
 name|MAXNAMLEN
@@ -1406,12 +1393,18 @@ modifier|*
 name|dir_fd
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|looking_for_lognames
-condition|)
-comment|/* Is it login names we want? */
-block|{
+specifier|register
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
+specifier|register
+name|struct
+name|direct
+modifier|*
+name|dirp
+decl_stmt|;
 specifier|extern
 name|struct
 name|passwd
@@ -1419,12 +1412,11 @@ modifier|*
 name|getpwent
 parameter_list|()
 function_decl|;
-specifier|register
-name|struct
-name|passwd
-modifier|*
-name|pw
-decl_stmt|;
+if|if
+condition|(
+name|looking_for_lognames
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1449,15 +1441,6 @@ name|pw_name
 operator|)
 return|;
 block|}
-else|else
-comment|/* It's a dir entry we want */
-block|{
-specifier|register
-name|struct
-name|direct
-modifier|*
-name|dirp
-decl_stmt|;
 if|if
 condition|(
 name|dirp
@@ -1479,7 +1462,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -1540,8 +1522,7 @@ name|FREE_ITEMS
 parameter_list|(
 name|items
 parameter_list|)
-define|\
-value|{   int omask;\     omask = sigblock (sigmask(SIGINT));\     free_items (items);\     items = NULL;\     sigsetmask (omask);\ }
+value|{ \ 	int omask;\  	omask = sigblock(sigmask(SIGINT));\ 	free_items(items);\ 	items = NULL;\ 	sigsetmask(omask);\ }
 end_define
 
 begin_comment
@@ -1572,10 +1553,14 @@ end_decl_stmt
 
 begin_block
 block|{
-define|#
-directive|define
-name|MAXITEMS
-value|1024
+specifier|static
+name|char
+modifier|*
+modifier|*
+name|items
+init|=
+name|NULL
+decl_stmt|;
 specifier|register
 name|DIR
 modifier|*
@@ -1586,10 +1571,8 @@ name|numitems
 operator|,
 name|name_length
 operator|,
-comment|/* Length of prefix (file name) */
 name|looking_for_lognames
 expr_stmt|;
-comment|/* True if looking for login names */
 name|char
 name|tilded_dir
 index|[
@@ -1598,15 +1581,14 @@ operator|+
 literal|1
 index|]
 decl_stmt|,
-comment|/* dir after ~ expansion */
 name|dir
 index|[
 name|FILSIZ
 operator|+
 literal|1
 index|]
-decl_stmt|,
-comment|/* /x/y/z/ part in /x/y/z/f */
+decl_stmt|;
+name|char
 name|name
 index|[
 name|MAXNAMLEN
@@ -1614,7 +1596,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|,
-comment|/* f part in /d/d/d/f */
 name|extended_name
 index|[
 name|MAXNAMLEN
@@ -1622,20 +1603,14 @@ operator|+
 literal|1
 index|]
 decl_stmt|,
-comment|/* the recognized (extended) name */
+name|char
 modifier|*
 name|entry
 decl_stmt|;
-comment|/* single directory entry or logname */
-specifier|static
-name|char
-modifier|*
-modifier|*
-name|items
-init|=
-name|NULL
-decl_stmt|;
-comment|/* file names when doing a LIST */
+define|#
+directive|define
+name|MAXITEMS
+value|1024
 if|if
 condition|(
 name|items
@@ -1671,12 +1646,10 @@ if|if
 condition|(
 name|looking_for_lognames
 condition|)
-comment|/* Looking for login names? */
 block|{
 name|setpwent
 argument_list|()
 expr_stmt|;
-comment|/* Open passwd file */
 name|copyn
 argument_list|(
 name|name
@@ -1694,7 +1667,6 @@ comment|/* name sans ~ */
 block|}
 else|else
 block|{
-comment|/* Open directory */
 name|extract_dir_and_name
 argument_list|(
 name|word
@@ -1715,15 +1687,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* expand ~user/... stuff */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-operator|(
 name|dir_fd
 operator|=
 name|opendir
@@ -1735,7 +1703,10 @@ name|tilded_dir
 else|:
 literal|"."
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|dir_fd
 operator|==
 name|NULL
 condition|)
@@ -1804,7 +1775,6 @@ name|command
 operator|==
 name|LIST
 condition|)
-comment|/* LIST command */
 block|{
 specifier|extern
 name|char
@@ -1867,9 +1837,6 @@ name|NULL
 condition|)
 break|break;
 block|}
-if|if
-condition|(
-operator|(
 name|items
 index|[
 name|numitems
@@ -1884,7 +1851,13 @@ argument_list|)
 operator|+
 literal|1
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|items
+index|[
+name|numitems
+index|]
 operator|==
 name|NULL
 condition|)
@@ -1968,6 +1941,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
+comment|/* put back dir part */
 name|copyn
 argument_list|(
 name|word
@@ -1977,7 +1951,7 @@ argument_list|,
 name|max_word_length
 argument_list|)
 expr_stmt|;
-comment|/* put back dir part */
+comment|/* add extended name */
 name|catn
 argument_list|(
 name|word
@@ -1987,7 +1961,6 @@ argument_list|,
 name|max_word_length
 argument_list|)
 expr_stmt|;
-comment|/* add extended name */
 return|return
 operator|(
 name|numitems
@@ -2101,8 +2074,8 @@ name|MAXNAMLEN
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* 2nd and subsequent matches */
 block|{
+comment|/* 2nd and subsequent matches */
 specifier|register
 name|char
 modifier|*
@@ -2117,12 +2090,12 @@ name|len
 init|=
 literal|0
 decl_stmt|;
-for|for
-control|(
 name|x
 operator|=
 name|extended_name
-operator|,
+expr_stmt|;
+for|for
+control|(
 name|ent
 operator|=
 name|entry
@@ -2174,7 +2147,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * return true if check items initial chars in template  * This differs from PWB imatch in that if check is null  * it items anything  */
+comment|/*  * Return true if check items initial chars in template  * This differs from PWB imatch in that if check is null  * it items anything  */
 end_comment
 
 begin_expr_stmt
@@ -2385,13 +2358,13 @@ condition|)
 operator|--
 name|str_end
 expr_stmt|;
-comment|/* wipeout trailing command character */
+comment|/* wipeout trailing cmd char */
 operator|*
 name|str_end
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * Find LAST occurence of a delimiter in the inputline. 	 * The word start is one character past it. 	 */
+comment|/* 		 * Find LAST occurence of a delimiter in the inputline. 		 * The word start is one character past it. 		 */
 for|for
 control|(
 name|word_start
@@ -2449,12 +2422,12 @@ operator|==
 name|RECOGNIZE
 condition|)
 block|{
+comment|/* print from str_end on */
 name|print_recognized_stuff
 argument_list|(
 name|str_end
 argument_list|)
 expr_stmt|;
-comment|/* Print from str_end on */
 if|if
 condition|(
 name|numitems
@@ -2466,7 +2439,7 @@ name|beep
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * Tabs in the input line cause trouble after a pushback. 	 * tty driver won't backspace over them because column positions 	 * are now incorrect. This is solved by retyping over current line. 	 */
+comment|/* 		 * Tabs in the input line cause trouble after a pushback. 		 * tty driver won't backspace over them because column 		 * positions are now incorrect. This is solved by retyping 		 * over current line. 		 */
 name|should_retype
 operator|=
 name|FALSE
@@ -2480,8 +2453,8 @@ argument_list|,
 literal|'\t'
 argument_list|)
 condition|)
-comment|/* tab char in input line? */
 block|{
+comment|/* tab char in input line? */
 name|back_to_col_1
 argument_list|()
 expr_stmt|;

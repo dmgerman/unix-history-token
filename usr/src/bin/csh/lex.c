@@ -1,29 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c 4.3 %G%"
+literal|"@(#)lex.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_include
+begin_function_decl
+name|endif
 include|#
 directive|include
 file|"sh.h"
-end_include
-
-begin_comment
 comment|/*  * C shell  */
-end_comment
-
-begin_comment
 comment|/*  * These lexical routines read input and form lists of words.  * There is some involved processing here, because of the complications  * of input buffering, and especially because of history substitution.  */
-end_comment
-
-begin_function_decl
 name|char
 modifier|*
 name|word
@@ -5385,7 +5383,6 @@ name|roomleft
 decl_stmt|;
 endif|#
 directive|endif
-endif|FILEC
 ifdef|#
 directive|ifdef
 name|TELL
@@ -5625,7 +5622,6 @@ name|off
 expr_stmt|;
 endif|#
 directive|endif
-endif|FILEC
 do|do
 ifndef|#
 directive|ifndef
@@ -5650,10 +5646,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|FILEC
 do|if (intty
 block|)
-comment|/* then use tenex routine */
 block|{
 name|c
 operator|=
@@ -5674,7 +5668,6 @@ name|c
 operator|>
 name|roomleft
 condition|)
-comment|/* No room in this buffer? */
 block|{
 comment|/* start with fresh buffer */
 name|feobp
@@ -5737,7 +5730,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|FILEC
 while|while
 condition|(
 name|c
@@ -5773,7 +5765,6 @@ name|again
 goto|;
 else|#
 directive|else
-else|FILEC
 if|if
 condition|(
 operator|!
@@ -5784,7 +5775,6 @@ name|again
 goto|;
 endif|#
 directive|endif
-endif|FILEC
 block|}
 end_block
 
