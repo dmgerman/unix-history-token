@@ -4089,9 +4089,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bt_isa_probe: Invalid baseport of 0x%x specified.\n"
-literal|"bt_isa_probe: Nearest valid baseport is 0x%x.\n"
-literal|"bt_isa_probe: Failing probe.\n"
+literal|"bt_find_probe_range: Invalid baseport of 0x%x specified.\n"
+literal|"bt_find_probe_range: Nearest valid baseport is 0x%x.\n"
+literal|"bt_find_probe_range: Failing probe.\n"
 argument_list|,
 name|ioport
 argument_list|,
