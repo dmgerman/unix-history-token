@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.1 (Berkeley) %G%"
+literal|"@(#)hash.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -681,6 +681,20 @@ name|error0
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|hashp
+operator|->
+name|fp
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|new_table
