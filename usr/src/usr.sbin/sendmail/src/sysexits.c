@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sysexits.c	3.1	%G%"
+literal|"@(#)sysexits.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,9 @@ literal|"Can't create output"
 block|,
 comment|/* 74 */
 literal|"I/O error"
+block|,
+comment|/* 75 */
+literal|"Temporary failure"
 block|, }
 decl_stmt|;
 end_decl_stmt
