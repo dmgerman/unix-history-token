@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.51 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.52 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.51 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.52 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,12 +59,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
 
 begin_include
 include|#
