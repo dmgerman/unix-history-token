@@ -49,15 +49,19 @@ begin_define
 define|#
 directive|define
 name|DEFSWAPSIZE
-value|32
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEFUSRSIZE
-value|120
+value|80
 end_define
+
+begin_comment
+comment|/* My disk is not that big Paul ! */
+end_comment
 
 begin_define
 define|#
