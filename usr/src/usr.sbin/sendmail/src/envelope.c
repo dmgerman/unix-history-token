@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.39 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -571,6 +571,11 @@ operator|+
 name|TimeOuts
 operator|.
 name|to_q_return
+index|[
+name|e
+operator|->
+name|e_timeoutclass
+index|]
 condition|)
 block|{
 operator|(
@@ -587,6 +592,11 @@ argument_list|(
 name|TimeOuts
 operator|.
 name|to_q_return
+index|[
+name|e
+operator|->
+name|e_timeoutclass
+index|]
 argument_list|,
 name|FALSE
 argument_list|)
@@ -644,6 +654,11 @@ argument_list|(
 name|TimeOuts
 operator|.
 name|to_q_return
+index|[
+name|e
+operator|->
+name|e_timeoutclass
+index|]
 argument_list|,
 name|FALSE
 argument_list|)
@@ -702,6 +717,11 @@ condition|(
 name|TimeOuts
 operator|.
 name|to_q_warning
+index|[
+name|e
+operator|->
+name|e_timeoutclass
+index|]
 operator|>
 literal|0
 operator|&&
@@ -715,6 +735,11 @@ operator|+
 name|TimeOuts
 operator|.
 name|to_q_warning
+index|[
+name|e
+operator|->
+name|e_timeoutclass
+index|]
 condition|)
 block|{
 if|if
@@ -819,6 +844,11 @@ argument_list|(
 name|TimeOuts
 operator|.
 name|to_q_warning
+index|[
+name|e
+operator|->
+name|e_timeoutclass
+index|]
 argument_list|,
 name|FALSE
 argument_list|)
@@ -877,6 +907,11 @@ argument_list|(
 name|TimeOuts
 operator|.
 name|to_q_warning
+index|[
+name|e
+operator|->
+name|e_timeoutclass
+index|]
 argument_list|,
 name|FALSE
 argument_list|)
@@ -895,6 +930,11 @@ argument_list|(
 name|TimeOuts
 operator|.
 name|to_q_return
+index|[
+name|e
+operator|->
+name|e_timeoutclass
+index|]
 argument_list|,
 name|FALSE
 argument_list|)

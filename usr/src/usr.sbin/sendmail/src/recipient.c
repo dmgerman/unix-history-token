@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.47 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -852,15 +852,6 @@ operator|)
 return|;
 block|}
 comment|/* 	**  Finish setting up address structure. 	*/
-comment|/* set the queue timeout */
-name|a
-operator|->
-name|q_timeout
-operator|=
-name|TimeOuts
-operator|.
-name|to_q_return
-expr_stmt|;
 comment|/* get unquoted user for file, program or user.name check */
 name|i
 operator|=
