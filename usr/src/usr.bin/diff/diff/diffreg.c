@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.11 %G%"
+literal|"@(#)diffreg.c 4.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6258,6 +6258,10 @@ name|lowc
 decl_stmt|,
 name|upd
 decl_stmt|;
+specifier|register
+name|int
+name|do_output
+decl_stmt|;
 if|if
 condition|(
 name|cvp
@@ -6339,31 +6343,24 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" ****\n--- "
+literal|" ****\n"
 argument_list|)
 expr_stmt|;
-name|range
-argument_list|(
-name|lowc
-argument_list|,
-name|upd
-argument_list|,
-literal|","
-argument_list|)
+comment|/* 	 * output changes to the "old" file.  The first loop suppresses 	 * output if there were no changes to the "old" file (we'll see 	 * the "old" lines as context in the "new" list). 	 */
+name|do_output
+operator|=
+literal|0
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" ----\n"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * output changes to the "old" file.  The first loop is a 	 * hack that suppresses the output if there were no changes to 	 * the "old" file (we'll see the "old" lines as context in the 	 * "new" list). 	 */
-while|while
-condition|(
+for|for
+control|(
+init|;
 name|cvp
 operator|<=
 name|context_vec_ptr
-condition|)
-block|{
+condition|;
+name|cvp
+operator|++
+control|)
 if|if
 condition|(
 name|cvp
@@ -6379,12 +6376,16 @@ name|cvp
 operator|=
 name|context_vec_start
 expr_stmt|;
-break|break;
-block|}
-name|cvp
+name|do_output
 operator|++
 expr_stmt|;
+break|break;
 block|}
+if|if
+condition|(
+name|do_output
+condition|)
+block|{
 while|while
 condition|(
 name|cvp
@@ -6502,9 +6503,9 @@ name|ch
 operator|==
 literal|'c'
 condition|?
-literal|"!<"
+literal|"! "
 else|:
-literal|"-<"
+literal|"- "
 argument_list|)
 expr_stmt|;
 block|}
@@ -6536,23 +6537,44 @@ argument_list|,
 literal|"  "
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* output changes to the "new" file */
 name|printf
 argument_list|(
-literal|"---------------\n"
+literal|"--- "
 argument_list|)
 expr_stmt|;
+name|range
+argument_list|(
+name|lowc
+argument_list|,
+name|upd
+argument_list|,
+literal|","
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" ----\n"
+argument_list|)
+expr_stmt|;
+name|do_output
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
 name|cvp
 operator|=
 name|context_vec_start
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|cvp
 operator|<=
 name|context_vec_ptr
-condition|)
-block|{
+condition|;
+name|cvp
+operator|++
+control|)
 if|if
 condition|(
 name|cvp
@@ -6568,12 +6590,16 @@ name|cvp
 operator|=
 name|context_vec_start
 expr_stmt|;
-break|break;
-block|}
-name|cvp
+name|do_output
 operator|++
 expr_stmt|;
+break|break;
 block|}
+if|if
+condition|(
+name|do_output
+condition|)
+block|{
 while|while
 condition|(
 name|cvp
@@ -6691,9 +6717,9 @@ name|ch
 operator|==
 literal|'c'
 condition|?
-literal|"!>"
+literal|"! "
 else|:
-literal|"+>"
+literal|"+ "
 argument_list|)
 expr_stmt|;
 block|}
@@ -6725,6 +6751,7 @@ argument_list|,
 literal|"  "
 argument_list|)
 expr_stmt|;
+block|}
 name|context_vec_ptr
 operator|=
 name|context_vec_start
