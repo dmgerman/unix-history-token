@@ -152,7 +152,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// *not* a function decl
+comment|/* *not* a function decl */
 end_comment
 
 begin_function_decl
