@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.35 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2818,6 +2818,7 @@ name|f
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|fdavail
 argument_list|(
 name|p
