@@ -911,6 +911,9 @@ name|again
 goto|;
 block|}
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1040,6 +1043,9 @@ name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 		 * We've found a contiguous chunk that meets are requirements. 		 * Allocate kernel VM, unfree and assign the physical pages to it and 		 * return kernel VM pointer. 		 */
 name|vm_map_lock
 argument_list|(
