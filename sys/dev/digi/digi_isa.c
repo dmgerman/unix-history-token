@@ -436,7 +436,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|100
+literal|10
 condition|;
 name|i
 operator|++
@@ -463,6 +463,8 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"digirst"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -470,7 +472,7 @@ if|if
 condition|(
 name|i
 operator|==
-literal|100
+literal|10
 condition|)
 return|return
 operator|(
@@ -1965,7 +1967,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|100
+literal|10
 condition|;
 name|i
 operator|++
@@ -1992,6 +1994,8 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"digirst1"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1999,7 +2003,7 @@ if|if
 condition|(
 name|i
 operator|==
-literal|100
+literal|10
 condition|)
 block|{
 name|device_printf
@@ -2130,7 +2134,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|100
+literal|10
 condition|;
 name|i
 operator|++
@@ -2157,6 +2161,8 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"digirst2"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2164,7 +2170,7 @@ if|if
 condition|(
 name|i
 operator|==
-literal|100
+literal|10
 condition|)
 block|{
 name|device_printf

@@ -707,6 +707,9 @@ specifier|const
 name|char
 modifier|*
 name|_txt
+parameter_list|,
+name|u_long
+name|_timo
 parameter_list|)
 function_decl|;
 end_function_decl

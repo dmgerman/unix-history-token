@@ -1171,6 +1171,9 @@ specifier|const
 name|char
 modifier|*
 name|txt
+parameter_list|,
+name|u_long
+name|timo
 parameter_list|)
 block|{
 if|if
@@ -1179,7 +1182,11 @@ name|cold
 condition|)
 name|DELAY
 argument_list|(
-literal|1000
+name|timo
+operator|*
+literal|1000000
+operator|/
+name|hz
 argument_list|)
 expr_stmt|;
 else|else
@@ -1193,7 +1200,7 @@ name|PCATCH
 argument_list|,
 name|txt
 argument_list|,
-literal|5
+name|timo
 argument_list|)
 expr_stmt|;
 block|}
@@ -1643,6 +1650,8 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"digiinit0"
+argument_list|,
+literal|5
 argument_list|)
 expr_stmt|;
 block|}
@@ -2001,6 +2010,8 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"digibios0"
+argument_list|,
+literal|5
 argument_list|)
 expr_stmt|;
 block|}
@@ -2085,6 +2096,8 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"digibios1"
+argument_list|,
+literal|5
 argument_list|)
 expr_stmt|;
 block|}
@@ -2356,6 +2369,8 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"digifep0"
+argument_list|,
+literal|5
 argument_list|)
 expr_stmt|;
 block|}
@@ -2876,6 +2891,8 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"digifep1"
+argument_list|,
+literal|5
 argument_list|)
 expr_stmt|;
 block|}
