@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -47,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
 end_include
 
 begin_include
@@ -3683,6 +3671,14 @@ expr_stmt|;
 case|case
 literal|1
 case|:
+if|if
+condition|(
+name|adv
+operator|->
+name|ccb_infos
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|adv
