@@ -7217,7 +7217,10 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|chrootdir
 index|[
 literal|0
@@ -7225,7 +7228,6 @@ index|]
 operator|!=
 literal|'/'
 condition|)
-block|{
 name|asprintf
 argument_list|(
 operator|&
@@ -7240,6 +7242,15 @@ argument_list|,
 name|chrootdir
 argument_list|)
 expr_stmt|;
+else|else
+name|chrootdir
+operator|=
+name|strdup
+argument_list|(
+name|chrootdir
+argument_list|)
+expr_stmt|;
+comment|/* so it can be freed */
 if|if
 condition|(
 name|chrootdir
