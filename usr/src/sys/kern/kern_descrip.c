@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_descrip.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_descrip.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2215,10 +2215,8 @@ name|int
 name|indx
 decl_stmt|,
 name|dfd
-decl_stmt|,
-name|rwmode
 decl_stmt|;
-comment|/* 	 * Note the horrid kludge here: u.u_r.r_val1 contains the value 	 * of the new file descriptor, which was set before the call to 	 * vn_open() by copen() in vfs_syscalls.c 	 */
+comment|/* 	 * XXX 	 * Horrid kludge: u.u_r.r_val1 contains the value of the new file 	 * descriptor, which was set before the call to vn_open() by copen() 	 * in vfs_syscalls.c. 	 */
 name|indx
 operator|=
 name|u
@@ -2227,17 +2225,6 @@ name|u_r
 operator|.
 name|r_val1
 expr_stmt|;
-comment|/* XXX from copen */
-if|if
-condition|(
-operator|(
-name|unsigned
-operator|)
-name|indx
-operator|>=
-name|NOFILE
-operator|||
-operator|(
 name|fp
 operator|=
 name|u
@@ -2246,15 +2233,8 @@ name|u_ofile
 index|[
 name|indx
 index|]
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|EBADF
-operator|)
-return|;
+expr_stmt|;
+comment|/* 	 * File system device minor number is the to-be-dup'd fd number. 	 * If it is greater than the allowed number of file descriptors, 	 * or the fd to be dup'd has already been closed, reject.  Note,  	 * check for new == old is necessary as u_falloc could allocate 	 * an already closed to-be-dup'd descriptor as the new descriptor. 	 */
 name|dfd
 operator|=
 name|minor
@@ -2265,7 +2245,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|dfd
 operator|>=
@@ -2283,15 +2263,7 @@ index|]
 operator|)
 operator|==
 name|NULL
-condition|)
-return|return
-operator|(
-name|EBADF
-operator|)
-return|;
-comment|/* 	 * We must explicitly test for this case because ufalloc() may 	 * have allocated us the same file desriptor we are referring 	 * to, if the proccess referred to an invalid (closed) descriptor. 	 * Ordinarily this would be caught by the check for NULL above, 	 * but by the time we reach this routine u_pofile[minor(dev)] 	 * could already be set to point to our file struct. 	 */
-if|if
-condition|(
+operator|||
 name|fp
 operator|==
 name|wfp
@@ -2301,9 +2273,10 @@ operator|(
 name|EBADF
 operator|)
 return|;
-comment|/* 	 * Fake a ``dup()'' sys call. 	 * Check that the mode the file is being opened 	 * for is consistent with the mode of the existing 	 * descriptor. This isn't as clean as it should be, 	 * but this entire driver is a real kludge anyway. 	 */
-name|rwmode
-operator|=
+comment|/* 	 * Check that the mode the file is being opened for is a subset  	 * of the mode of the existing descriptor. 	 */
+if|if
+condition|(
+operator|(
 name|mode
 operator|&
 operator|(
@@ -2311,25 +2284,21 @@ name|FREAD
 operator||
 name|FWRITE
 operator|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
+operator||
 name|wfp
 operator|->
 name|f_flag
-operator|&
-name|rwmode
 operator|)
 operator|!=
-name|rwmode
+name|wfp
+operator|->
+name|f_flag
 condition|)
 return|return
 operator|(
 name|EACCES
 operator|)
 return|;
-comment|/*  	 * Dup the file descriptor.  	 */
 name|dupit
 argument_list|(
 name|indx
@@ -2344,7 +2313,7 @@ name|dfd
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Delete references to this pseudo-device by returning 	 * a special error (EJUSTRETURN) that will cause all resources to 	 * be freed, then detected and cleared by copen. 	 */
+comment|/* 	 * Delete references to this pseudo-device by returning a special 	 * error (EJUSTRETURN) that will cause all resources to be freed, 	 * then detected and cleared by copen(). 	 */
 return|return
 operator|(
 name|EJUSTRETURN
