@@ -407,6 +407,12 @@ name|indent
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|nflag
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -434,12 +440,20 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"#\t   user: %s\n#\tmachine: %s\n#\t   tree: %s\n#\t   date: %s"
+literal|"#\t   user: %s\n#\tmachine: %s\n"
 argument_list|,
 name|getlogin
 argument_list|()
 argument_list|,
 name|host
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"#\t   tree: %s\n#\t   date: %s"
 argument_list|,
 name|fullpath
 argument_list|,
@@ -450,6 +464,7 @@ name|cl
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|argv
 index|[
 literal|0
