@@ -3410,6 +3410,20 @@ name|EIO
 operator|)
 return|;
 break|break;
+case|case
+name|USB_GET_REPORT_ID
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|addr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: we only support reportid 0? */
+break|break;
 default|default:
 return|return
 operator|(
