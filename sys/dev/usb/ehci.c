@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ehci.c,v 1.46 2003/03/09 19:51:13 augustss Exp $	*/
-end_comment
-
-begin_comment
-comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  *	    up to  *	$NetBSD: ehci.c,v 1.64 2004/06/23 06:45:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.66 2004/06/30 03:11:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.67 2004/07/06 04:18:05 mycroft Exp $  *	$NetBSD: ehci.c,v 1.68 2004/07/09 05:07:06 mycroft Exp $  *	$NetBSD: ehci.c,v 1.69 2004/07/17 20:12:02 mycroft Exp $  */
+comment|/*	$NetBSD: ehci.c,v 1.87 2004/10/25 10:29:49 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -34,7 +30,7 @@ comment|/*  * USB Enhanced Host Controller Driver, a.k.a. USB 2.0 controller.  *
 end_comment
 
 begin_comment
-comment|/*  * TODO:  * 1) hold off explorations by companion controllers until ehci has started.  *  * 2) The EHCI driver lacks support for interrupt isochronous transfers, so  *    devices using them don't work.  *    Interrupt transfers are not difficult, it's just not done.   *  * 3) The meaty part to implement is the support for USB 2.0 hubs.  *    They are quite compolicated since the need to be able to do  *    "transaction translation", i.e., converting to/from USB 2 and USB 1.  *    So the hub driver needs to handle and schedule these things, to  *    assign place in frame where different devices get to go. See chapter  *    on hubs in USB 2.0 for details.   *  * 4) command failures are not recovered correctly */
+comment|/*  * TODO:  * 1) hold off explorations by companion controllers until ehci has started.  *  * 2) The EHCI driver lacks support for interrupt isochronous transfers, so  *    devices using them don't work.  *    Interrupt transfers are not difficult, it's just not done.   *  * 3) The meaty part to implement is the support for USB 2.0 hubs.  *    They are quite complicated since the need to be able to do  *    "transaction translation", i.e., converting to/from USB 2 and USB 1.  *    So the hub driver needs to handle and schedule these things, to  *    assign place in frame where different devices get to go. See chapter  *    on hubs in USB 2.0 for details.   *  * 4) command failures are not recovered correctly */
 end_comment
 
 begin_include
@@ -289,7 +285,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (ehcidebug) logprintf x
+value|do { if (ehcidebug) logprintf x; } while (0)
 end_define
 
 begin_define
@@ -301,7 +297,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (ehcidebug>(n)) logprintf x
+value|do { if (ehcidebug>(n)) logprintf x; } while (0)
 end_define
 
 begin_decl_stmt
@@ -1253,15 +1249,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|ehci_dump
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|Static
 name|ehci_softc_t
@@ -1988,8 +1975,6 @@ operator|->
 name|sc_flsize
 operator|=
 literal|1024
-operator|*
-literal|4
 expr_stmt|;
 break|break;
 case|case
@@ -2000,8 +1985,6 @@ operator|->
 name|sc_flsize
 operator|=
 literal|512
-operator|*
-literal|4
 expr_stmt|;
 break|break;
 case|case
@@ -2012,8 +1995,6 @@ operator|->
 name|sc_flsize
 operator|=
 literal|256
-operator|*
-literal|4
 expr_stmt|;
 break|break;
 case|case
@@ -2037,6 +2018,11 @@ argument_list|,
 name|sc
 operator|->
 name|sc_flsize
+operator|*
+sizeof|sizeof
+argument_list|(
+name|ehci_link_t
+argument_list|)
 argument_list|,
 name|EHCI_FLALIGN_ALIGN
 argument_list|,
@@ -2396,8 +2382,6 @@ operator|<
 name|sc
 operator|->
 name|sc_flsize
-operator|/
-literal|4
 condition|;
 name|i
 operator|++
@@ -2621,9 +2605,9 @@ name|sc
 argument_list|,
 name|EHCI_USBCMD
 argument_list|,
-name|EHCI_CMD_ITC_8
+name|EHCI_CMD_ITC_2
 operator||
-comment|/* 8 microframes */
+comment|/* 2 microframes interrupt delay */
 operator|(
 name|EOREAD4
 argument_list|(
@@ -2793,12 +2777,43 @@ operator|.
 name|use_polling
 condition|)
 block|{
+name|u_int32_t
+name|intrs
+init|=
+name|EHCI_STS_INTRS
+argument_list|(
+name|EOREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBSTS
+argument_list|)
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|intrs
+condition|)
+name|EOWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBSTS
+argument_list|,
+name|intrs
+argument_list|)
+expr_stmt|;
+comment|/* Acknowledge */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-name|printf
+name|DPRINTFN
 argument_list|(
+literal|16
+argument_list|,
+operator|(
 literal|"ehci_intr: ignored interrupt while polling\n"
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2857,7 +2872,7 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"ehci_intr: sc == NULL\n"
+literal|"ehci_intr1: sc == NULL\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2903,7 +2918,7 @@ argument_list|(
 literal|7
 argument_list|,
 operator|(
-literal|"ehci_intr: sc=%p intrs=0x%x(0x%x) eintrs=0x%x\n"
+literal|"ehci_intr1: sc=%p intrs=0x%x(0x%x) eintrs=0x%x\n"
 operator|,
 name|sc
 operator|,
@@ -3607,7 +3622,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ehci_check_intr: sqtd==0\n"
+literal|"ehci_check_intr: lsqtd==0\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3788,14 +3803,24 @@ decl_stmt|;
 name|ehci_soft_qtd_t
 modifier|*
 name|sqtd
+decl_stmt|,
+modifier|*
+name|lsqtd
 decl_stmt|;
 name|u_int32_t
 name|status
+init|=
+literal|0
 decl_stmt|,
 name|nstatus
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|actlen
+decl_stmt|;
+name|u_int
+name|pkts_left
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -3930,15 +3955,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* The transfer is done, compute actual length and status. */
+name|lsqtd
+operator|=
+name|ex
+operator|->
+name|sqtdend
+expr_stmt|;
 name|actlen
-operator|=
-literal|0
-expr_stmt|;
-name|nstatus
-operator|=
-literal|0
-expr_stmt|;
-name|status
 operator|=
 literal|0
 expr_stmt|;
@@ -3952,7 +3975,9 @@ name|sqtdstart
 init|;
 name|sqtd
 operator|!=
-name|NULL
+name|lsqtd
+operator|->
+name|nextqtd
 condition|;
 name|sqtd
 operator|=
@@ -4027,21 +4052,37 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If there are left over TDs we need to update the toggle. */
+comment|/* 	 * If there are left over TDs we need to update the toggle. 	 * The default pipe doesn't need it since control transfers 	 * start the toggle at 0 every time. 	 */
 if|if
 condition|(
 name|sqtd
 operator|!=
-name|NULL
+name|lsqtd
+operator|->
+name|nextqtd
+operator|&&
+name|xfer
+operator|->
+name|pipe
+operator|->
+name|device
+operator|->
+name|default_pipe
+operator|!=
+name|xfer
+operator|->
+name|pipe
 condition|)
 block|{
-name|printf
+name|DPRINTF
 argument_list|(
+operator|(
 literal|"ehci_idone: need toggle update status=%08x nstatus=%08x\n"
-argument_list|,
+operator|,
 name|status
-argument_list|,
+operator|,
 name|nstatus
+operator|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -4060,6 +4101,35 @@ name|nstatus
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * For a short transfer we need to update the toggle for the missing 	 * packets within the qTD. 	 */
+name|pkts_left
+operator|=
+name|EHCI_QTD_GET_BYTES
+argument_list|(
+name|status
+argument_list|)
+operator|/
+name|UGETW
+argument_list|(
+name|xfer
+operator|->
+name|pipe
+operator|->
+name|endpoint
+operator|->
+name|edesc
+operator|->
+name|wMaxPacketSize
+argument_list|)
+expr_stmt|;
+name|epipe
+operator|->
+name|nexttoggle
+operator|^=
+name|pkts_left
+operator|%
+literal|2
+expr_stmt|;
 name|status
 operator|&=
 name|EHCI_QTD_STATERRS
@@ -4129,9 +4199,10 @@ name|status
 operator|==
 name|EHCI_QTD_HALTED
 operator|)
-operator|*
-comment|/*10*/
+condition|?
 literal|2
+else|:
+literal|0
 argument_list|,
 operator|(
 literal|"ehci_idone: error, addr=%d, endpt=0x%02x, "
@@ -4799,6 +4870,12 @@ name|why
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ehcidebug
+operator|>
+literal|0
+condition|)
 name|ehci_dump_regs
 argument_list|(
 name|sc
@@ -5625,7 +5702,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"uhci_allocx: xfer=%p not free, 0x%08x\n"
+literal|"ehci_allocx: xfer=%p not free, 0x%08x\n"
 argument_list|,
 name|xfer
 argument_list|,
@@ -5986,6 +6063,15 @@ begin_comment
 comment|/*  * Unused function - this is meant to be called from a kernel  * debugger.  */
 end_comment
 
+begin_function_decl
+name|void
+name|ehci_dump
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|ehci_dump
@@ -6159,7 +6245,10 @@ name|qtd
 operator|.
 name|qtd_next
 operator|&
+name|htole32
+argument_list|(
 name|EHCI_LINK_TERMINATE
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -6684,6 +6773,11 @@ name|speed
 decl_stmt|,
 name|naks
 decl_stmt|;
+name|int
+name|hshubaddr
+decl_stmt|,
+name|hshubport
+decl_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|1
@@ -6705,6 +6799,43 @@ name|sc_addr
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|myhsport
+condition|)
+block|{
+name|hshubaddr
+operator|=
+name|dev
+operator|->
+name|myhsport
+operator|->
+name|parent
+operator|->
+name|address
+expr_stmt|;
+name|hshubport
+operator|=
+name|dev
+operator|->
+name|myhsport
+operator|->
+name|portno
+expr_stmt|;
+block|}
+else|else
+block|{
+name|hshubaddr
+operator|=
+literal|0
+expr_stmt|;
+name|hshubport
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -6818,6 +6949,51 @@ name|speed
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|speed
+operator|!=
+name|EHCI_QH_SPEED_HIGH
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: *** WARNING: opening low/full speed device, this "
+literal|"does not work yet.\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"ehci_open: hshubaddr=%d hshubport=%d\n"
+operator|,
+name|hshubaddr
+operator|,
+name|hshubport
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xfertype
+operator|!=
+name|UE_CONTROL
+condition|)
+return|return
+name|USBD_INVAL
+return|;
+block|}
 name|naks
 operator|=
 literal|8
@@ -6913,7 +7089,22 @@ argument_list|(
 literal|1
 argument_list|)
 operator||
-comment|/* XXX TT stuff */
+name|EHCI_QH_SET_HUBA
+argument_list|(
+name|hshubaddr
+argument_list|)
+operator||
+name|EHCI_QH_SET_PORT
+argument_list|(
+name|hshubport
+argument_list|)
+operator||
+name|EHCI_QH_SET_CMASK
+argument_list|(
+literal|0xf0
+argument_list|)
+operator||
+comment|/* XXX */
 name|EHCI_QH_SET_SMASK
 argument_list|(
 name|xfertype
@@ -7363,7 +7554,15 @@ modifier|*
 name|sqtd
 parameter_list|)
 block|{
-comment|/* Halt while we are messing. */
+name|int
+name|i
+decl_stmt|;
+name|u_int32_t
+name|status
+decl_stmt|;
+comment|/* Save toggle bit and ping status. */
+name|status
+operator|=
 name|sqh
 operator|->
 name|qh
@@ -7371,10 +7570,32 @@ operator|.
 name|qh_qtd
 operator|.
 name|qtd_status
-operator||=
+operator|&
 name|htole32
 argument_list|(
+name|EHCI_QTD_TOGGLE_MASK
+operator||
+name|EHCI_QTD_SET_STATUS
+argument_list|(
+name|EHCI_QTD_PINGSTATE
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Set HALTED to make hw leave it alone. */
+name|sqh
+operator|->
+name|qh
+operator|.
+name|qh_qtd
+operator|.
+name|qtd_status
+operator|=
+name|htole32
+argument_list|(
+name|EHCI_QTD_SET_STATUS
+argument_list|(
 name|EHCI_QTD_HALTED
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sqh
@@ -7402,11 +7623,47 @@ argument_list|)
 expr_stmt|;
 name|sqh
 operator|->
+name|qh
+operator|.
+name|qh_qtd
+operator|.
+name|qtd_altnext
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|EHCI_QTD_NBUFFERS
+condition|;
+name|i
+operator|++
+control|)
+name|sqh
+operator|->
+name|qh
+operator|.
+name|qh_qtd
+operator|.
+name|qtd_buffer
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|sqh
+operator|->
 name|sqtd
 operator|=
 name|sqtd
 expr_stmt|;
-comment|/* Clear halt */
+comment|/* Set !HALTED&& !ACTIVE to start execution, preserve some fields */
 name|sqh
 operator|->
 name|qh
@@ -7414,12 +7671,8 @@ operator|.
 name|qh_qtd
 operator|.
 name|qtd_status
-operator|&=
-name|htole32
-argument_list|(
-operator|~
-name|EHCI_QTD_HALTED
-argument_list|)
+operator|=
+name|status
 expr_stmt|;
 block|}
 end_function
@@ -7842,23 +8095,17 @@ name|Static
 name|int
 name|ehci_str
 parameter_list|(
-name|p
-parameter_list|,
-name|l
-parameter_list|,
-name|s
-parameter_list|)
 name|usb_string_descriptor_t
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|int
 name|l
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -8124,7 +8371,7 @@ argument_list|(
 literal|4
 argument_list|,
 operator|(
-literal|"ehci_root_ctrl_control type=0x%02x request=%02x\n"
+literal|"ehci_root_ctrl_start: type=0x%02x request=%02x\n"
 operator|,
 name|req
 operator|->
@@ -8275,7 +8522,7 @@ argument_list|(
 literal|8
 argument_list|,
 operator|(
-literal|"ehci_root_ctrl_control wValue=0x%04x\n"
+literal|"ehci_root_ctrl_start: wValue=0x%04x\n"
 operator|,
 name|value
 operator|)
@@ -8554,6 +8801,22 @@ operator|&
 literal|0xff
 condition|)
 block|{
+case|case
+literal|0
+case|:
+comment|/* Language table */
+name|totlen
+operator|=
+name|ehci_str
+argument_list|(
+name|buf
+argument_list|,
+name|len
+argument_list|,
+literal|"\001"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|1
 case|:
@@ -8855,7 +9118,7 @@ argument_list|(
 literal|8
 argument_list|,
 operator|(
-literal|"ehci_root_ctrl_control: UR_CLEAR_PORT_FEATURE "
+literal|"ehci_root_ctrl_start: UR_CLEAR_PORT_FEATURE "
 literal|"port=%d feature=%d\n"
 operator|,
 name|index
@@ -8965,7 +9228,7 @@ argument_list|(
 literal|2
 argument_list|,
 operator|(
-literal|"ehci_root_ctrl_transfer: clear port test "
+literal|"ehci_root_ctrl_start: clear port test "
 literal|"%d\n"
 operator|,
 name|index
@@ -8981,7 +9244,7 @@ argument_list|(
 literal|2
 argument_list|,
 operator|(
-literal|"ehci_root_ctrl_transfer: clear port ind "
+literal|"ehci_root_ctrl_start: clear port ind "
 literal|"%d\n"
 operator|,
 name|index
@@ -9142,7 +9405,7 @@ name|UHD_PWR_INDIVIDUAL
 else|:
 name|UHD_PWR_NO_SWITCH
 operator||
-name|EHCI_HCS_P_INCICATOR
+name|EHCI_HCS_P_INDICATOR
 argument_list|(
 name|EREAD4
 argument_list|(
@@ -9287,7 +9550,7 @@ argument_list|(
 literal|8
 argument_list|,
 operator|(
-literal|"ehci_root_ctrl_transfer: get port status i=%d\n"
+literal|"ehci_root_ctrl_start: get port status i=%d\n"
 operator|,
 name|index
 operator|)
@@ -9346,7 +9609,7 @@ argument_list|(
 literal|8
 argument_list|,
 operator|(
-literal|"ehci_root_ctrl_transfer: port status=0x%04x\n"
+literal|"ehci_root_ctrl_start: port status=0x%04x\n"
 operator|,
 name|v
 operator|)
@@ -9618,7 +9881,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"ehci_root_ctrl_transfer: reset port %d\n"
+literal|"ehci_root_ctrl_start: reset port %d\n"
 operator|,
 name|index
 operator|)
@@ -9820,7 +10083,7 @@ argument_list|(
 literal|2
 argument_list|,
 operator|(
-literal|"ehci_root_ctrl_transfer: set port power "
+literal|"ehci_root_ctrl_start: set port power "
 literal|"%d\n"
 operator|,
 name|index
@@ -9847,7 +10110,7 @@ argument_list|(
 literal|2
 argument_list|,
 operator|(
-literal|"ehci_root_ctrl_transfer: set port test "
+literal|"ehci_root_ctrl_start: set port test "
 literal|"%d\n"
 operator|,
 name|index
@@ -9863,7 +10126,7 @@ argument_list|(
 literal|2
 argument_list|,
 operator|(
-literal|"ehci_root_ctrl_transfer: set port ind "
+literal|"ehci_root_ctrl_start: set port ind "
 literal|"%d\n"
 operator|,
 name|index
@@ -12819,7 +13082,7 @@ argument_list|(
 literal|3
 argument_list|,
 operator|(
-literal|"ehci_device_control type=0x%02x, request=0x%02x, "
+literal|"ehci_device_request: type=0x%02x, request=0x%02x, "
 literal|"wValue=0x%04x, wIndex=0x%04x len=%d, addr=%d, endpt=%d\n"
 operator|,
 name|req
@@ -13018,6 +13281,18 @@ condition|)
 goto|goto
 name|bad3
 goto|;
+name|end
+operator|->
+name|qtd
+operator|.
+name|qtd_status
+operator|&=
+name|htole32
+argument_list|(
+operator|~
+name|EHCI_QTD_IOC
+argument_list|)
+expr_stmt|;
 name|end
 operator|->
 name|nextqtd
@@ -13636,7 +13911,7 @@ argument_list|(
 literal|2
 argument_list|,
 operator|(
-literal|"ehci_device_bulk_transfer: xfer=%p len=%d flags=%d\n"
+literal|"ehci_device_bulk_start: xfer=%p len=%d flags=%d\n"
 operator|,
 name|xfer
 operator|,
@@ -13674,7 +13949,7 @@ name|URQ_REQUEST
 condition|)
 name|panic
 argument_list|(
-literal|"ehci_device_bulk_transfer: a request"
+literal|"ehci_device_bulk_start: a request"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -13754,7 +14029,7 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-literal|"ehci_device_bulk_transfer: no memory\n"
+literal|"ehci_device_bulk_start: no memory\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -13788,7 +14063,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ehci_device_bulk_transfer: data(1)\n"
+literal|"ehci_device_bulk_start: data(1)\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -13831,7 +14106,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ehci_device_bulk_transfer: not done, ex=%p\n"
+literal|"ehci_device_bulk_start: not done, ex=%p\n"
 argument_list|,
 name|exfer
 argument_list|)
@@ -13921,7 +14196,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ehci_device_bulk_transfer: data(2)\n"
+literal|"ehci_device_bulk_start: data(2)\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -13933,7 +14208,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ehci_device_bulk_transfer: data(3)\n"
+literal|"ehci_device_bulk_start: data(3)\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -14206,7 +14481,7 @@ name|ival
 condition|)
 break|break;
 comment|/* Pick an interrupt slot at the right level. */
-comment|/* XXX, could do better than picking at random. */
+comment|/* XXX could do better than picking at random. */
 name|islot
 operator|=
 name|EHCI_IQHIDX
@@ -14230,8 +14505,6 @@ name|sc
 operator|->
 name|sc_islots
 index|[
-name|sqh
-operator|->
 name|islot
 index|]
 expr_stmt|;
