@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2618,6 +2618,13 @@ operator|)
 name|va
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("trap: %s (%d) breakpoint %x at %x: (adr %x ins %x)\n", 			p->p_comm, p->p_pid, instr, pc, 			p->p_md.md_ss_addr, p->p_md.md_ss_instr);
+comment|/* XXX */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|KADB
@@ -2790,13 +2797,23 @@ name|i
 operator|<
 literal|0
 condition|)
-block|{
-name|i
-operator|=
-name|SIGTRAP
+name|printf
+argument_list|(
+literal|"Warning: can't restore instruction at %x: %x\n"
+argument_list|,
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_ss_addr
+argument_list|,
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_ss_instr
+argument_list|)
 expr_stmt|;
-break|break;
-block|}
 name|p
 operator|->
 name|p_md
@@ -2805,9 +2822,11 @@ name|md_ss_addr
 operator|=
 literal|0
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+name|i
+operator|=
+name|SIGTRAP
+expr_stmt|;
+break|break;
 block|}
 case|case
 name|T_RES_INST
@@ -6967,12 +6986,6 @@ name|unsigned
 name|GetBranchDest
 parameter_list|()
 function_decl|;
-if|#
-directive|if
-literal|0
-block|printf("regsPtr=%x PC=%x Inst=%x fpcCsr=%x\n", regsPtr, instPC, 		*instPC, fpcCSR);
-endif|#
-directive|endif
 name|inst
 operator|=
 operator|*
@@ -6982,6 +6995,13 @@ operator|*
 operator|)
 name|instPC
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("regsPtr=%x PC=%x Inst=%x fpcCsr=%x\n", regsPtr, instPC, 		inst.word, fpcCSR);
+comment|/* XXX */
+endif|#
+directive|endif
 switch|switch
 condition|(
 operator|(
@@ -7460,6 +7480,7 @@ if|#
 directive|if
 literal|0
 block|printf("Target addr=%x\n", retAddr);
+comment|/* XXX */
 endif|#
 directive|endif
 return|return
@@ -7556,7 +7577,10 @@ index|[
 name|PC
 index|]
 argument_list|,
-literal|0
+name|locr0
+index|[
+name|FSR
+index|]
 argument_list|,
 literal|1
 argument_list|)
@@ -7770,37 +7794,13 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-name|printf
-argument_list|(
-literal|"SS %s (%d): breakpoint set at %x: %x (pc %x)\n"
-argument_list|,
-name|p
-operator|->
-name|p_comm
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|p
-operator|->
-name|p_md
-operator|.
-name|md_ss_addr
-argument_list|,
-name|p
-operator|->
-name|p_md
-operator|.
-name|md_ss_instr
-argument_list|,
-name|locr0
-index|[
-name|PC
-index|]
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("SS %s (%d): breakpoint set at %x: %x (pc %x) br %x\n", 		p->p_comm, p->p_pid, p->p_md.md_ss_addr, 		p->p_md.md_ss_instr, locr0[PC], fuword((caddr_t)va));
 comment|/* XXX */
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
