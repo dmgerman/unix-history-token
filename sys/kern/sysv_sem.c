@@ -5036,8 +5036,6 @@ name|struct
 name|sembuf
 modifier|*
 name|sops
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|semid_ds
@@ -6206,6 +6204,13 @@ label|:
 name|mtx_unlock
 argument_list|(
 name|sema_mtxp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sops
+argument_list|,
+name|M_SEM
 argument_list|)
 expr_stmt|;
 return|return
