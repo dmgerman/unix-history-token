@@ -3464,7 +3464,8 @@ expr_stmt|;
 comment|/* setrunqueue(td); */
 block|}
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|ke
@@ -3483,7 +3484,7 @@ argument_list|,
 name|ke
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We will not be on the run queue. So we must be 	 * sleeping or similar. 	 */
+comment|/* 		 * We will not be on the run queue. So we must be 		 * sleeping or similar. 		 */
 if|if
 condition|(
 name|td
@@ -3499,6 +3500,7 @@ argument_list|(
 name|ke
 argument_list|)
 expr_stmt|;
+block|}
 name|sched_nest
 operator|=
 name|sched_lock
