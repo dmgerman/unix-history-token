@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.17 1997/05/31 10:13:46 peter Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.18 1997/06/02 08:19:06 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -2902,6 +2902,8 @@ while|while
 condition|(
 name|len
 operator|--
+operator|>
+literal|0
 condition|)
 name|fcs
 operator|=
