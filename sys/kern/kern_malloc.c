@@ -1004,6 +1004,8 @@ specifier|const
 name|char
 operator|*
 operator|)
+name|freep
+operator|->
 name|type
 operator|->
 name|ks_shortdesc
