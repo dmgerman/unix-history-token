@@ -357,6 +357,8 @@ name|NULL
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 name|zs_cngetc
 block|,
 name|NULL
@@ -881,15 +883,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|consdev
-modifier|*
-name|cn_tab
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|zs_cnattach
@@ -1012,20 +1005,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|zs_cnpollc
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|int
-name|onoff
-parameter_list|)
-block|{ }
 end_function
 
 begin_function
@@ -1948,10 +1927,6 @@ name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
-name|void
-modifier|*
-name|ih
 decl_stmt|;
 name|cdevsw_add
 argument_list|(
