@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_ip.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_ip.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -726,11 +726,33 @@ name|level
 operator|!=
 name|IPPROTO_IP
 condition|)
+block|{
+if|if
+condition|(
+name|m
+operator|!=
+literal|0
+operator|&&
+operator|*
+name|m
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|m_free
+argument_list|(
+operator|*
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 switch|switch
 condition|(
 name|optname
