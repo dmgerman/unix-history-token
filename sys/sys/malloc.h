@@ -18,19 +18,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vm/uma.h>
+file|<sys/queue.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/_lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/_mutex.h>
 end_include
 
 begin_define
