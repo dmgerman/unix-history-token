@@ -1,6 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1996  *      Michael Smith.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Michael Smith AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Michael Smith OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: wlconfig.c,v 1.4 1997/08/06 00:45:23 rgrimes Exp $  *  */
+comment|/*  * Copyright (C) 1996  *      Michael Smith.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Michael Smith AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Michael Smith OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_comment
@@ -970,98 +996,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|syntax
-parameter_list|(
-name|char
-modifier|*
-name|pname
-parameter_list|)
+name|usage
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s<ifname> [<param><value> ...]\n"
-argument_list|,
-name|pname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"<ifname>    Wavelan interface name.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"<param>     Parameter name (see below)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"<value>     New value for parameter.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" Parameter name:        Value:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"     irq		3,4,5,6,10,11,12,15\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"     mac		soft ethernet address\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"     macsel		soft or default\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"     nwid		default NWID (0x0-0xffff)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"     currnwid       current NWID (0x0-0xffff) or 'get'\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"     cache          signal strength cache\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"     cache values = { raw, scale, zero }\n"
+literal|"usage: wlconfig ifname [param value ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1100,18 +1044,13 @@ operator|)
 name|ifr
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"SIOCGWLCITEM - get cache count"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|w_sigitems
 operator|=
 operator|(
@@ -1146,18 +1085,13 @@ operator|)
 name|ifr
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"SIOCGWLCACHE - get cache count"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1527,7 +1461,7 @@ value|dump_cache(0)
 end_define
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|int
@@ -1596,13 +1530,8 @@ operator|%
 literal|2
 operator|)
 condition|)
-name|syntax
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 comment|/* get a socket */
 name|sd
@@ -1685,7 +1614,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Get PSA"
+literal|"get PSA"
 argument_list|)
 expr_stmt|;
 comment|/* get the current NWID */
@@ -1708,7 +1637,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Get NWID"
+literal|"get NWID"
 argument_list|)
 expr_stmt|;
 name|currnwid
@@ -1822,7 +1751,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Bad NWID '%s'"
+literal|"bad NWID '%s'"
 argument_list|,
 name|value
 argument_list|)
@@ -1855,7 +1784,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Set NWID (interface not up?)"
+literal|"set NWID (interface not up?)"
 argument_list|)
 expr_stmt|;
 continue|continue ;
@@ -1908,7 +1837,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Bad IRQ '%s'"
+literal|"bad IRQ '%s'"
 argument_list|,
 name|value
 argument_list|)
@@ -1957,7 +1886,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Bad ethernet address '%s'"
+literal|"bad ethernet address '%s'"
 argument_list|,
 name|value
 argument_list|)
@@ -2059,7 +1988,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Bad macsel value '%s'"
+literal|"bad macsel value '%s'"
 argument_list|,
 name|value
 argument_list|)
@@ -2112,7 +2041,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Bad NWID '%s'"
+literal|"bad NWID '%s'"
 argument_list|,
 name|value
 argument_list|)
@@ -2241,7 +2170,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Zero cache"
+literal|"zero cache"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2250,7 +2179,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Unknown value '%s'"
+literal|"unknown value '%s'"
 argument_list|,
 name|value
 argument_list|)
@@ -2260,7 +2189,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Unknown parameter '%s'"
+literal|"unknown parameter '%s'"
 argument_list|,
 name|param
 argument_list|)
@@ -2299,10 +2228,15 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Set PSA"
+literal|"set PSA"
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
