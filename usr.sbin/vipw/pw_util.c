@@ -177,8 +177,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
-name|mppath
+name|_default_mppath
 index|[]
 init|=
 name|_PATH_PWD
@@ -186,11 +187,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
-name|masterpasswd
+name|_default_masterpasswd
 index|[]
 init|=
 name|_PATH_MASTERPASSWD
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|mppath
+init|=
+name|_default_mppath
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|masterpasswd
+init|=
+name|_default_masterpasswd
 decl_stmt|;
 end_decl_stmt
 
