@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.6 (Berkeley) %G%"
+literal|"@(#)slave.c	2.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2058,7 +2058,7 @@ name|answer
 operator|->
 name|tsp_name
 argument_list|,
-name|TSP_MASTERACK
+name|TSP_ACK
 argument_list|,
 operator|(
 expr|struct

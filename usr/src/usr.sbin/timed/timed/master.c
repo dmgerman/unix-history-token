@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	2.4 (Berkeley) %G%"
+literal|"@(#)master.c	2.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -956,7 +956,7 @@ name|answer
 operator|->
 name|tsp_name
 argument_list|,
-name|TSP_MASTERACK
+name|TSP_ACK
 argument_list|,
 operator|(
 expr|struct
