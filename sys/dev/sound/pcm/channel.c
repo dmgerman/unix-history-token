@@ -493,10 +493,10 @@ name|b
 operator|->
 name|bufsize
 operator|*
-literal|3
+literal|15
 operator|)
 operator|/
-literal|4
+literal|16
 operator|)
 condition|)
 block|{
