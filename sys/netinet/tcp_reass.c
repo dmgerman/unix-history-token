@@ -10710,6 +10710,12 @@ operator|->
 name|snd_una
 operator|)
 expr_stmt|;
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_ACKNOW
+expr_stmt|;
 operator|(
 name|void
 operator|)
