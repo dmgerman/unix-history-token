@@ -5277,6 +5277,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * We shouldn't need locks here as we're doing a read and this should  * be a natural race.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
