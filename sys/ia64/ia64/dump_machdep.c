@@ -439,7 +439,7 @@ name|priv
 argument_list|,
 name|buffer
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|dumplo
 argument_list|,
@@ -508,7 +508,7 @@ name|priv
 argument_list|,
 name|buffer
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|dumplo
 argument_list|,
@@ -689,7 +689,7 @@ operator|*
 operator|)
 name|pa
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|dumplo
 argument_list|,
@@ -1417,7 +1417,7 @@ argument_list|,
 operator|&
 name|kdh
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|dumplo
 argument_list|,
@@ -1530,7 +1530,7 @@ argument_list|,
 operator|&
 name|kdh
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|dumplo
 argument_list|,
@@ -1558,7 +1558,7 @@ name|priv
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 literal|0
 argument_list|,
