@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.26 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -881,8 +881,6 @@ name|a
 operator|->
 name|q_flags
 operator||=
-name|QDONTSEND
-operator||
 name|QBADADDR
 expr_stmt|;
 name|usrerr
@@ -1060,6 +1058,8 @@ name|bitset
 argument_list|(
 name|QDONTSEND
 operator||
+name|QBADADDR
+operator||
 name|QVERIFIED
 argument_list|,
 name|a
@@ -1098,8 +1098,6 @@ name|a
 operator|->
 name|q_flags
 operator||=
-name|QDONTSEND
-operator||
 name|QBADADDR
 expr_stmt|;
 name|usrerr
@@ -1199,8 +1197,6 @@ name|a
 operator|->
 name|q_flags
 operator||=
-name|QDONTSEND
-operator||
 name|QBADADDR
 expr_stmt|;
 name|usrerr
@@ -1259,8 +1255,6 @@ name|a
 operator|->
 name|q_flags
 operator||=
-name|QDONTSEND
-operator||
 name|QBADADDR
 expr_stmt|;
 name|giveresponse
@@ -1561,8 +1555,6 @@ name|a
 operator|->
 name|q_flags
 operator||=
-name|QDONTSEND
-operator||
 name|QBADADDR
 expr_stmt|;
 name|giveresponse
@@ -1614,8 +1606,6 @@ name|a
 operator|->
 name|q_flags
 operator||=
-name|QDONTSEND
-operator||
 name|QBADADDR
 expr_stmt|;
 name|usrerr
@@ -2592,9 +2582,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* don't do any more now */
-name|fclose
+name|xfclose
 argument_list|(
 name|fp
+argument_list|,
+literal|"include"
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 return|return
@@ -2794,9 +2788,13 @@ block|}
 operator|(
 name|void
 operator|)
-name|fclose
+name|xfclose
 argument_list|(
 name|fp
+argument_list|,
+literal|"include"
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 name|FileName

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.28 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.27		%G%"
+literal|"@(#)sendmail.h	6.28		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1179,16 +1179,6 @@ name|ADDRESS
 name|e_from
 decl_stmt|;
 comment|/* the person it is from */
-name|char
-modifier|*
-name|e_sender
-decl_stmt|;
-comment|/* string version of from person */
-name|char
-modifier|*
-name|e_returnpath
-decl_stmt|;
-comment|/* string version of return path */
 name|char
 modifier|*
 modifier|*

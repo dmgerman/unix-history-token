@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.15 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.16 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.15 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.16 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -693,9 +693,31 @@ name|mci_state
 operator|=
 name|MCIS_ACTIVE
 expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_RESPONSE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+else|else
 name|expand
 argument_list|(
-literal|"\201<"
+literal|"\201g"
 argument_list|,
 name|buf
 argument_list|,
@@ -2020,6 +2042,21 @@ operator|(
 name|SMTPCLOSING
 operator|)
 return|;
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_out
+operator|!=
+name|NULL
+condition|)
+name|fflush
+argument_list|(
+name|mci
+operator|->
+name|mci_out
+argument_list|)
+expr_stmt|;
 comment|/* get the line from the other side */
 name|p
 operator|=
@@ -2494,6 +2531,7 @@ name|mci_out
 operator|!=
 name|NULL
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|mci
@@ -2513,6 +2551,37 @@ else|:
 name|m
 operator|->
 name|m_eol
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|mci
+operator|->
+name|mci_out
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|mci
+operator|->
+name|mci_out
+argument_list|)
+condition|)
+name|syserr
+argument_list|(
+literal|"smtpmessage: ERROR mci_out"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|syserr
+argument_list|(
+literal|"smtpmessage: NULL mci_out"
 argument_list|)
 expr_stmt|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	6.5 (Berkeley) %G%"
+literal|"@(#)mci.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -466,11 +466,15 @@ name|mci_in
 operator|!=
 name|NULL
 condition|)
-name|fclose
+name|xfclose
 argument_list|(
 name|mci
 operator|->
 name|mci_in
+argument_list|,
+literal|"mci_uncache"
+argument_list|,
+literal|"mci_in"
 argument_list|)
 expr_stmt|;
 if|if
@@ -481,11 +485,15 @@ name|mci_out
 operator|!=
 name|NULL
 condition|)
-name|fclose
+name|xfclose
 argument_list|(
 name|mci
 operator|->
 name|mci_out
+argument_list|,
+literal|"mci_uncache"
+argument_list|,
+literal|"mci_out"
 argument_list|)
 expr_stmt|;
 name|mci

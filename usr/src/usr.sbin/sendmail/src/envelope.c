@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.20 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -323,7 +323,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dropenvelope %x id="
+literal|"dropenvelope %x: id="
 argument_list|,
 name|e
 argument_list|)
@@ -337,7 +337,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" flags=%o\n"
+literal|", flags=%o\n"
 argument_list|,
 name|e
 operator|->
@@ -345,16 +345,14 @@ name|e_flags
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* we must have an id to remove disk files */
 if|if
 condition|(
 name|id
 operator|==
 name|NULL
 condition|)
-name|id
-operator|=
-literal|"(none)"
-expr_stmt|;
+return|return;
 ifdef|#
 directive|ifdef
 name|LOG
@@ -383,16 +381,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOG */
-comment|/* we must have an id to remove disk files */
-if|if
-condition|(
-name|e
-operator|->
-name|e_id
-operator|==
-name|NULL
-condition|)
-return|return;
 comment|/* 	**  Extract state information from dregs of send list. 	*/
 for|for
 control|(
@@ -620,16 +608,6 @@ name|e
 argument_list|)
 expr_stmt|;
 comment|/* make sure that this envelope is marked unused */
-name|e
-operator|->
-name|e_id
-operator|=
-name|e
-operator|->
-name|e_df
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|e
@@ -641,16 +619,32 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fclose
+name|xfclose
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+literal|"dropenvelope"
+argument_list|,
+name|e
+operator|->
+name|e_df
 argument_list|)
 expr_stmt|;
 name|e
 operator|->
 name|e_dfp
+operator|=
+name|NULL
+expr_stmt|;
+name|e
+operator|->
+name|e_id
+operator|=
+name|e
+operator|->
+name|e_df
 operator|=
 name|NULL
 expr_stmt|;
@@ -740,11 +734,17 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fclose
+name|xfclose
 argument_list|(
 name|e
 operator|->
 name|e_xfp
+argument_list|,
+literal|"clearenvelope xfp"
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -758,12 +758,28 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fclose
+name|xfclose
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+literal|"clearenvelope dfp"
+argument_list|,
+name|e
+operator|->
+name|e_df
 argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_xfp
+operator|=
+name|e
+operator|->
+name|e_dfp
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* now clear out the data */
@@ -1422,11 +1438,17 @@ return|return;
 operator|(
 name|void
 operator|)
-name|fclose
+name|xfclose
 argument_list|(
 name|e
 operator|->
 name|e_xfp
+argument_list|,
+literal|"closexscript"
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 name|e
@@ -2146,38 +2168,15 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|cataddr
-argument_list|(
-name|pvp
-argument_list|,
-name|buf
-argument_list|,
-sizeof|sizeof
-name|buf
-argument_list|,
-literal|'\0'
-argument_list|)
-expr_stmt|;
-name|e
-operator|->
-name|e_sender
-operator|=
-name|e
-operator|->
-name|e_returnpath
-operator|=
-name|newstr
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 name|define
 argument_list|(
 literal|'f'
 argument_list|,
 name|e
 operator|->
-name|e_sender
+name|e_from
+operator|.
+name|q_paddr
 argument_list|,
 name|e
 argument_list|)

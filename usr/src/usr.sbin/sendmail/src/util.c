@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.11 (Berkeley) %G%"
+literal|"@(#)util.c	6.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1950,6 +1950,92 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOG */
+block|}
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  XFCLOSE -- close a file, doing logging as appropriate. ** **	Parameters: **		fp -- file pointer for the file to close **		a, b -- miscellaneous crud to print for debugging ** **	Returns: **		none. ** **	Side Effects: **		fp is closed. */
+end_comment
+
+begin_macro
+name|xfclose
+argument_list|(
+argument|fp
+argument_list|,
+argument|a
+argument_list|,
+argument|b
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|a
+decl_stmt|,
+modifier|*
+name|b
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|9
+argument_list|,
+literal|99
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"xfclose(%x) %s %s\n"
+argument_list|,
+name|fp
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|tTd
+argument_list|(
+literal|9
+argument_list|,
+literal|99
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"xfclose FAILURE: %s\n"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

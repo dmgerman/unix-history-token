@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.27 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5110,7 +5110,6 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|strcasecmp
 argument_list|(
 operator|*
@@ -5118,6 +5117,8 @@ name|tv
 argument_list|,
 literal|"error"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -5363,7 +5364,6 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
 name|strcasecmp
 argument_list|(
 name|m
@@ -5373,6 +5373,8 @@ argument_list|,
 operator|*
 name|tv
 argument_list|)
+operator|==
+literal|0
 condition|)
 break|break;
 block|}

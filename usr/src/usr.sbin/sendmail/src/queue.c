@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.25 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.26 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.25 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.26 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -621,9 +621,15 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fclose
+name|xfclose
 argument_list|(
 name|tfp
+argument_list|,
+literal|"queueup tfp"
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 return|return;
@@ -654,9 +660,15 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|xfclose
 argument_list|(
 name|dfp
+argument_list|,
+literal|"queueup dfp"
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 name|e
@@ -867,6 +879,8 @@ operator|!
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QBADADDR
 argument_list|,
 name|q
 operator|->
@@ -977,6 +991,8 @@ operator|!
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QBADADDR
 operator||
 name|QSENT
 argument_list|,
@@ -1495,11 +1511,17 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fclose
+name|xfclose
 argument_list|(
 name|e
 operator|->
 name|e_lockfp
+argument_list|,
+literal|"queueup lockfp"
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 name|e
@@ -4917,11 +4939,13 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+specifier|static
 name|char
 name|c1
 init|=
 literal|'A'
 decl_stmt|;
+specifier|static
 name|char
 name|c2
 init|=
@@ -5341,6 +5365,24 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|51
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"unlockqueue(%s)\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
 comment|/* if there is a lock file in the envelope, close it */
 if|if
 condition|(
@@ -5350,11 +5392,17 @@ name|e_lockfp
 operator|!=
 name|NULL
 condition|)
-name|fclose
+name|xfclose
 argument_list|(
 name|e
 operator|->
 name|e_lockfp
+argument_list|,
+literal|"unlockqueue"
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 name|e
@@ -5394,7 +5442,7 @@ name|tTd
 argument_list|(
 literal|51
 argument_list|,
-literal|4
+literal|104
 argument_list|)
 condition|)
 name|xunlink
