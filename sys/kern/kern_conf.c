@@ -1146,7 +1146,9 @@ operator|==
 name|NODEV
 condition|)
 return|return
+operator|(
 name|NOUDEV
+operator|)
 return|;
 return|return
 operator|(
@@ -1189,6 +1191,7 @@ case|case
 literal|0
 case|:
 return|return
+operator|(
 name|makedev
 argument_list|(
 name|umajor
@@ -1201,13 +1204,6 @@ argument_list|(
 name|x
 argument_list|)
 argument_list|)
-return|;
-case|case
-literal|1
-case|:
-return|return
-operator|(
-name|NODEV
 operator|)
 return|;
 default|default:
@@ -1217,7 +1213,9 @@ literal|"udev2dev(...,X)"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NODEV
+operator|)
 return|;
 block|}
 block|}
