@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.4 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,6 +430,22 @@ name|SYSMAP
 value|27
 block|{
 literal|"_Sysmap"
+block|}
+block|,
+define|#
+directive|define
+name|SDMZ
+value|28
+block|{
+literal|"_dmz_tty"
+block|}
+block|,
+define|#
+directive|define
+name|SNDMZ
+value|29
+block|{
+literal|"_ndmz"
 block|}
 block|,
 block|{
@@ -2620,6 +2636,26 @@ argument_list|,
 name|SDHU
 argument_list|,
 name|SNDHU
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nl
+index|[
+name|SNDMZ
+index|]
+operator|.
+name|n_type
+operator|!=
+literal|0
+condition|)
+name|dottytype
+argument_list|(
+literal|"dmz"
+argument_list|,
+name|SDMZ
+argument_list|,
+name|SNDMZ
 argument_list|)
 expr_stmt|;
 if|if
