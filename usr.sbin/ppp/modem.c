@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.50 1997/08/31 22:59:41 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.51 1997/09/10 02:20:30 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -1022,14 +1022,14 @@ expr_stmt|;
 block|}
 block|}
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 operator|!
 name|Online
 condition|)
 block|{
+comment|/* mbits was set to zero in OpenModem() */
 name|time
 argument_list|(
 operator|&
@@ -1067,7 +1067,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 end_function
 
 begin_function
@@ -1098,6 +1097,15 @@ operator|.
 name|func
 operator|=
 name|ModemTimeout
+expr_stmt|;
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"ModemTimer using ModemTimeout() - %p\n"
+argument_list|,
+name|ModemTimeout
+argument_list|)
 expr_stmt|;
 name|StartTimer
 argument_list|(
@@ -1626,10 +1634,21 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|mbits
-operator|=
+if|if
+condition|(
+name|modem
+operator|>=
 literal|0
+condition|)
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"OpenModem: Modem is already open!\n"
+argument_list|)
 expr_stmt|;
+comment|/* We're going back into "term" mode */
+elseif|else
 if|if
 condition|(
 name|mode
@@ -1645,10 +1664,16 @@ literal|0
 argument_list|)
 condition|)
 block|{
+name|char
+modifier|*
+name|dev
+decl_stmt|;
 name|modem
 operator|=
 name|open
 argument_list|(
+name|dev
+operator|=
 name|ctermid
 argument_list|(
 name|NULL
@@ -1668,25 +1693,43 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LogPHASE
+name|LogERROR
 argument_list|,
-literal|"Open Failed %s\n"
+literal|"OpenModem(direct) failed: %s: %s\n"
 argument_list|,
-name|ctermid
+name|dev
+argument_list|,
+name|strerror
 argument_list|(
-name|NULL
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|modem
+operator|-
+literal|1
 operator|)
 return|;
 block|}
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"OpenModem(direct): Modem is a tty\n"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
+block|{
 comment|/* must be a tcp connection */
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"OpenModem(direct): Modem is not a tty\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|modem
 operator|=
@@ -1696,13 +1739,8 @@ literal|1
 argument_list|)
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|modem
-operator|<
-literal|0
-condition|)
+block|}
+else|else
 block|{
 if|if
 condition|(
@@ -1789,11 +1827,16 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LogPHASE
+name|LogERROR
 argument_list|,
-literal|"Open Failed %s\n"
+literal|"OpenModem failed: %s: %s\n"
 argument_list|,
 name|VarDevice
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1806,10 +1849,20 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|modem
+operator|-
+literal|1
 operator|)
 return|;
 block|}
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"OpenModem: Modem is %s\n"
+argument_list|,
+name|VarDevice
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1879,6 +1932,15 @@ operator|-
 literal|1
 operator|)
 return|;
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"OpenModem: Modem is socket %s\n"
+argument_list|,
+name|VarDevice
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1888,6 +1950,15 @@ operator|=
 literal|':'
 expr_stmt|;
 comment|/* Don't destroy VarDevice */
+name|LogPrintf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"Invalid host:port: \"%s\"\n"
+argument_list|,
+name|VarDevice
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -1897,6 +1968,16 @@ return|;
 block|}
 block|}
 else|else
+block|{
+name|LogPrintf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"Device (%s) must be in /dev or be a host:port pair\n"
+argument_list|,
+name|VarDevice
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -1905,7 +1986,12 @@ operator|)
 return|;
 block|}
 block|}
+block|}
 comment|/*    * If we are working on tty device, change it's mode into the one desired    * for further operation. In this implementation, we assume that modem is    * configuted to use CTS/RTS flow control.    */
+name|mbits
+operator|=
+literal|0
+expr_stmt|;
 name|dev_is_modem
 operator|=
 name|isatty
@@ -2140,12 +2226,33 @@ operator|&
 name|mbits
 argument_list|)
 condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"OpenModem: Cannot get modem status: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|modem
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
+name|modem
+operator|=
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|LogPrintf
 argument_list|(
 name|LogDEBUG
@@ -2172,12 +2279,33 @@ name|oldflag
 operator|<
 literal|0
 condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"OpenModem: Cannot get modem flags: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|modem
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
+name|modem
+operator|=
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 operator|(
 name|void
 operator|)
@@ -2623,7 +2751,7 @@ name|ModemTimer
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/*      * ModemTimeout() may call DownConection() to close the modem resulting      * in modem == 0.      */
+comment|/*      * ModemTimeout() may call DownConection() to close the modem resulting      * in modem == -1.      */
 if|if
 condition|(
 name|modem
@@ -3453,6 +3581,10 @@ name|int
 name|ShowModemStatus
 parameter_list|()
 block|{
+name|char
+modifier|*
+name|dev
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TIOCOUTQ
@@ -3469,13 +3601,43 @@ condition|)
 return|return
 literal|1
 return|;
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_DIRECT
+condition|)
+if|if
+condition|(
+name|isatty
+argument_list|(
+literal|0
+argument_list|)
+condition|)
+name|dev
+operator|=
+name|ctermid
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+name|dev
+operator|=
+literal|"network"
+expr_stmt|;
+else|else
+name|dev
+operator|=
+name|VarDevice
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|VarTerm
 argument_list|,
 literal|"device: %s  speed: "
 argument_list|,
-name|VarDevice
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
