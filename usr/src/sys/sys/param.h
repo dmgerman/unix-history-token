@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -482,45 +482,6 @@ begin_comment
 comment|/* clist rounding; sizeof(int *) + CBSIZE -1*/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * File system parameters and macros.  *  * The file system is made out of blocks of at most MAXBSIZE units,  * with smaller units (fragments) only in the last direct block.  * MAXBSIZE primarily determines the size of buffers in the buffer  * pool. It may be made larger without any effect on existing  * file systems; however making it smaller make make some file  * systems unmountable.  *  * Note that the blocked devices are assumed to have DEV_BSIZE  * "sectors" and that fragments must be some multiple of this size.  * Block devices are read in BLKDEV_IOSIZE units. This number must  * be a power of two and in the range of  *	DEV_BSIZE<= BLKDEV_IOSIZE<= MAXBSIZE  * This size has no effect upon the file system, but is usually set  * to the block size of the root file system, so as to maximize the  * speed of ``fsck''.  */
 end_comment
@@ -729,15 +690,54 @@ value|((((x)+((y)-1))/(y))*(y))
 end_define
 
 begin_comment
-comment|/*  * Maximum size of hostname recognized and stroed in the kernel.  */
+comment|/*  * Maximum size of hostname recognized and stored in the kernel.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXHOSTNAMELEN
-value|32
+value|64
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"types.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
