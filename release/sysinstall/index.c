@@ -428,6 +428,10 @@ literal|"tcl80"
 block|,
 literal|"TCL v8.0 and packages that depend on it."
 block|,
+literal|"tcl81"
+block|,
+literal|"TCL v8.1 and packages that depend on it."
+block|,
 literal|"tcl82"
 block|,
 literal|"TCL v8.2 and packages that depend on it."
