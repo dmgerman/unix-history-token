@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.38 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.39 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -120,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"machine/reg.h"
+file|"vm/vm.h"
 end_include
 
 begin_include
@@ -2689,6 +2683,24 @@ name|constty
 operator|=
 name|NULL
 expr_stmt|;
+break|break;
+case|case
+name|TIOCDRAIN
+case|:
+if|if
+condition|(
+name|error
+operator|=
+name|ttywait
+argument_list|(
+name|tp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 break|break;
 comment|/* allow old ioctls for now */
 case|case
@@ -5836,6 +5848,11 @@ name|s
 decl_stmt|,
 name|oldsig
 decl_stmt|;
+specifier|extern
+name|int
+name|wakeup
+parameter_list|()
+function_decl|;
 name|hiwat
 operator|=
 name|tp
@@ -7670,6 +7687,55 @@ name|t_rawq
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  * Look up a code for a specified speed in a conversion table;  * used by drivers to map software speed values to hardware parameters.  */
+name|ttspeedtab
+argument_list|(
+name|speed
+argument_list|,
+name|table
+argument_list|)
+specifier|register
+expr|struct
+name|speedtab
+operator|*
+name|table
+expr_stmt|;
+block|{
+for|for
+control|(
+init|;
+name|table
+operator|->
+name|sp_speed
+operator|!=
+operator|-
+literal|1
+condition|;
+name|table
+operator|++
+control|)
+if|if
+condition|(
+name|table
+operator|->
+name|sp_speed
+operator|==
+name|speed
+condition|)
+return|return
+operator|(
+name|table
+operator|->
+name|sp_code
+operator|)
+return|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/*  * set tty hi and low water marks  *  * Try to arrange the dynamics so there's about one second  * from hi to low water.  *   */
 name|ttsetwater
 argument_list|(
@@ -7945,13 +8011,21 @@ name|p_pid
 argument_list|,
 name|pick
 operator|->
+name|p_stat
+operator|==
+name|SRUN
+condition|?
+literal|"running"
+else|:
+name|pick
+operator|->
 name|p_wmesg
 condition|?
 name|pick
 operator|->
 name|p_wmesg
 else|:
-literal|"running"
+literal|"iowait"
 argument_list|)
 expr_stmt|;
 comment|/*  		 * cpu time  		 */
