@@ -91,6 +91,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|"opt_devfs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
