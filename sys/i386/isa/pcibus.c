@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcibus.c,v 1.15 1995/09/22 19:10:54 se Exp $ ** **  pci bus subroutines for i386 architecture. ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcibus.c,v 1.16 1995/10/09 21:56:24 se Exp $ ** **  pci bus subroutines for i386 architecture. ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -386,6 +386,10 @@ name|device
 operator|++
 control|)
 block|{
+name|unsigned
+name|long
+name|id
+decl_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -397,8 +401,8 @@ argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|id
+operator|=
 name|pcibus_read
 argument_list|(
 name|pcibus_tag
@@ -412,6 +416,10 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|id
 operator|!=
 literal|0xfffffffful
 condition|)
@@ -422,7 +430,9 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"is there\n"
+literal|"is there (id=%08lx)\n"
+argument_list|,
+name|id
 argument_list|)
 expr_stmt|;
 return|return
@@ -496,6 +506,13 @@ operator|=
 name|inb
 argument_list|(
 name|CONF2_ENABLE_PORT
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|CONF2_ENABLE_PORT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|outl
@@ -660,7 +677,7 @@ operator|&
 name|CONF1_ENABLE_MSK1
 operator|)
 operator|==
-name|CONF1_ENABLE_CHK1
+name|CONF1_ENABLE_RES1
 condition|)
 block|{
 if|if
@@ -672,6 +689,15 @@ return|return;
 block|}
 empty_stmt|;
 comment|/*--------------------------------------- 	**      Try configuration mechanism 2 ... 	**--------------------------------------- 	*/
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"pcibus_setup(4):\tnow trying mechanism 2\n"
+argument_list|)
+expr_stmt|;
 name|pci_mechanism
 operator|=
 literal|2
