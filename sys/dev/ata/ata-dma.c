@@ -2433,7 +2433,7 @@ name|parent
 argument_list|,
 literal|0x31471106
 argument_list|,
-literal|0x40
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -2566,7 +2566,7 @@ name|parent
 argument_list|,
 literal|0x06861106
 argument_list|,
-literal|0x0
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -3057,7 +3057,7 @@ name|parent
 argument_list|,
 literal|0x06331039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 comment|/* SiS 633 */
@@ -3067,7 +3067,7 @@ name|parent
 argument_list|,
 literal|0x06351039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 comment|/* SiS 635 */
@@ -3077,7 +3077,7 @@ name|parent
 argument_list|,
 literal|0x06401039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 comment|/* SiS 640 */
@@ -3087,7 +3087,7 @@ name|parent
 argument_list|,
 literal|0x06451039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 comment|/* SiS 645 */
@@ -3097,7 +3097,7 @@ name|parent
 argument_list|,
 literal|0x06501039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 comment|/* SiS 650 */
@@ -3107,7 +3107,7 @@ name|parent
 argument_list|,
 literal|0x07301039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 comment|/* SiS 730 */
@@ -3117,7 +3117,7 @@ name|parent
 argument_list|,
 literal|0x07331039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 comment|/* SiS 733 */
@@ -3127,7 +3127,7 @@ name|parent
 argument_list|,
 literal|0x07351039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 comment|/* SiS 735 */
@@ -3137,7 +3137,7 @@ name|parent
 argument_list|,
 literal|0x07401039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 comment|/* SiS 740 */
@@ -3147,7 +3147,7 @@ name|parent
 argument_list|,
 literal|0x07451039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 operator|||
 comment|/* SiS 745 */
@@ -3157,7 +3157,7 @@ name|parent
 argument_list|,
 literal|0x07501039
 argument_list|,
-literal|0x00
+literal|0
 argument_list|)
 condition|)
 block|{
