@@ -1388,7 +1388,7 @@ operator|->
 name|lens
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|db
 argument_list|,
@@ -1470,7 +1470,7 @@ name|db
 operator|->
 name|lens
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|db
 operator|->
@@ -1479,7 +1479,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|db
 argument_list|,

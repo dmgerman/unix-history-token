@@ -957,7 +957,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|tp
 argument_list|,

@@ -557,7 +557,7 @@ modifier|*
 name|ptr
 decl_stmt|;
 block|{
-name|FREE
+name|free
 argument_list|(
 name|ptr
 argument_list|,
@@ -745,7 +745,7 @@ operator|!=
 name|Z_OK
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|state
 argument_list|,
@@ -819,7 +819,7 @@ operator|->
 name|strm
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|state
 argument_list|,
@@ -2039,7 +2039,7 @@ operator|!=
 name|Z_OK
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|state
 argument_list|,
@@ -2113,7 +2113,7 @@ operator|->
 name|strm
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|state
 argument_list|,

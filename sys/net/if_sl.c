@@ -809,7 +809,7 @@ operator|*
 name|st_unit_max
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|st_unit_list
 argument_list|,
@@ -938,7 +938,7 @@ argument_list|(
 literal|"sl: can't allocate buffer\n"
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sc
 argument_list|,
@@ -1468,7 +1468,7 @@ name|sc
 operator|->
 name|bpfbuf
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|sc
 operator|->
@@ -1477,7 +1477,7 @@ argument_list|,
 name|M_SL
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sc
 argument_list|,

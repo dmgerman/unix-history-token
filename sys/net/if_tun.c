@@ -1040,7 +1040,7 @@ literal|"Missing make_dev"
 operator|)
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|tp
 argument_list|,

@@ -530,7 +530,7 @@ argument_list|,
 name|sc_next
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|sc
 argument_list|,

@@ -1255,7 +1255,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|sc
 operator|->
@@ -1294,7 +1294,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|sc
 operator|->
@@ -1337,7 +1337,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|sc
 operator|->
@@ -2438,7 +2438,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|newcode
 argument_list|,
@@ -2460,7 +2460,7 @@ name|bf_len
 argument_list|)
 condition|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|newcode
 argument_list|,
@@ -2533,7 +2533,7 @@ name|oldcode
 operator|!=
 literal|0
 condition|)
-name|FREE
+name|free
 argument_list|(
 name|oldcode
 argument_list|,
