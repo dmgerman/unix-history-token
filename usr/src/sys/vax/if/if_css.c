@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      if_css.c     4.6     82/12/17     */
+comment|/*      if_css.c     4.7     82/12/22     */
 end_comment
 
 begin_include
@@ -279,11 +279,6 @@ operator|*
 operator|)
 name|reg
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|CSSPROBE
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -442,11 +437,6 @@ block|}
 modifier|*
 name|ifimp
 struct|;
-name|COUNT
-argument_list|(
-name|CSSATTACH
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -568,11 +558,6 @@ name|css_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|CSSCLR
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -676,11 +661,6 @@ name|x
 decl_stmt|,
 name|info
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|CSSINIT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -1052,11 +1032,6 @@ decl_stmt|;
 name|u_short
 name|cmd
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|CSSSTART
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1266,11 +1241,6 @@ name|cssdevice
 modifier|*
 name|addr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|CSSXINT
-argument_list|)
-expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -1451,11 +1421,6 @@ name|len
 decl_stmt|,
 name|info
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|CSSRINT
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|css_if
