@@ -852,7 +852,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: md5 [-ptx] [-s string] [files ...]\n"
+literal|"usage: md5 [-pqrtx] [-s string] [files ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
