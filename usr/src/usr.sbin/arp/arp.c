@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arp.c	5.11.1.1 (Berkeley) %G%"
+literal|"@(#)arp.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2477,7 +2477,11 @@ name|rtm
 operator|->
 name|rtm_flags
 operator||=
+operator|(
 name|RTF_HOST
+operator||
+name|RTF_STATIC
+operator|)
 expr_stmt|;
 name|sin_m
 operator|.
