@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reboot.c	5.6 (Berkeley) %G%"
+literal|"@(#)reboot.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syscall.h>
 end_include
 
 begin_function
@@ -496,7 +502,7 @@ expr_stmt|;
 block|}
 name|syscall
 argument_list|(
-literal|55
+name|SYS_reboot
 argument_list|,
 name|howto
 argument_list|)
