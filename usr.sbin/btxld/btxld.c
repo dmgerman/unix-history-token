@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<elf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"btx.h"
 end_include
 
@@ -241,35 +235,35 @@ begin_struct
 struct|struct
 name|hdr
 block|{
-name|unsigned
+name|uint32_t
 name|fmt
 decl_stmt|;
 comment|/* Format */
-name|unsigned
+name|uint32_t
 name|flags
 decl_stmt|;
 comment|/* Bit flags */
-name|unsigned
+name|uint32_t
 name|size
 decl_stmt|;
 comment|/* Size of file */
-name|unsigned
+name|uint32_t
 name|text
 decl_stmt|;
 comment|/* Size of text segment */
-name|unsigned
+name|uint32_t
 name|data
 decl_stmt|;
 comment|/* Size of data segment */
-name|unsigned
+name|uint32_t
 name|bss
 decl_stmt|;
 comment|/* Size of bss segment */
-name|unsigned
+name|uint32_t
 name|org
 decl_stmt|;
 comment|/* Program origin */
-name|unsigned
+name|uint32_t
 name|entry
 decl_stmt|;
 comment|/* Program entry point */
@@ -408,6 +402,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|unsigned
+name|int
 name|format
 decl_stmt|;
 end_decl_stmt
@@ -625,6 +620,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|unsigned
+name|int
 name|optfmt
 parameter_list|(
 specifier|const
@@ -929,6 +925,7 @@ decl_stmt|,
 name|ohdr
 decl_stmt|;
 name|unsigned
+name|int
 name|ldr_size
 decl_stmt|,
 name|cwr
@@ -943,6 +940,10 @@ name|fdo
 decl_stmt|,
 name|i
 decl_stmt|;
+name|ldr_size
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1185,6 +1186,7 @@ name|IMPURE
 operator|)
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|wpage
@@ -1218,6 +1220,7 @@ name|cwr
 operator|=
 name|BTX_MAXCWR
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1834,6 +1837,7 @@ modifier|*
 name|p
 decl_stmt|;
 name|unsigned
+name|int
 name|fmt
 decl_stmt|,
 name|x
@@ -3010,6 +3014,7 @@ end_comment
 begin_function
 specifier|static
 name|unsigned
+name|int
 name|optfmt
 parameter_list|(
 specifier|const
@@ -3019,6 +3024,7 @@ name|arg
 parameter_list|)
 block|{
 name|unsigned
+name|int
 name|i
 decl_stmt|;
 for|for

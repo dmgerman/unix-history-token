@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<elf.h>
+file|<sys/elf32.h>
 end_include
 
 begin_struct
@@ -43,6 +43,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 specifier|const
 name|struct
 name|elfh
