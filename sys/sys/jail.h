@@ -126,6 +126,12 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_task.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -153,14 +159,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * Lock key:  *   (a) allprison_mutex  *   (p) locked by pr_mutex  *   (c) set only during creation before the structure is shared, no mutex  *       required to read  */
+comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * Lock key:  *   (a) allprison_mutex  *   (p) locked by pr_mutex  *   (c) set only during creation before the structure is shared, no mutex  *       required to read  *   (d) set only during destruction of jail, no mutex needed  */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|mtx
-struct_decl|;
-end_struct_decl
 
 begin_struct
 struct|struct
@@ -214,6 +214,11 @@ name|int
 name|pr_securelevel
 decl_stmt|;
 comment|/* (p) securelevel */
+name|struct
+name|task
+name|pr_task
+decl_stmt|;
+comment|/* (d) destroy task */
 name|struct
 name|mtx
 name|pr_mtx

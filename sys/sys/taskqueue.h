@@ -38,30 +38,17 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_task.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|taskqueue
 struct_decl|;
 end_struct_decl
-
-begin_comment
-comment|/*  * Each task includes a function which is called from  * taskqueue_run().  The first argument is taken from the 'ta_context'  * field of struct task and the second argument is a count of how many  * times the task was enqueued before the call to taskqueue_run().  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-name|task_fn_t
-parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|,
-name|int
-name|pending
-parameter_list|)
-function_decl|;
-end_typedef
 
 begin_comment
 comment|/*  * A notification callback function which is called from  * taskqueue_enqueue().  The context argument is given in the call to  * taskqueue_create().  This function would normally be used to allow the  * queue to arrange to run itself later (e.g., by scheduling a software  * interrupt or waking a kernel thread).  */
@@ -81,39 +68,6 @@ name|context
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_struct
-struct|struct
-name|task
-block|{
-name|STAILQ_ENTRY
-argument_list|(
-argument|task
-argument_list|)
-name|ta_link
-expr_stmt|;
-comment|/* link for queue */
-name|int
-name|ta_pending
-decl_stmt|;
-comment|/* count times queued */
-name|int
-name|ta_priority
-decl_stmt|;
-comment|/* priority of task in queue */
-name|task_fn_t
-modifier|*
-name|ta_func
-decl_stmt|;
-comment|/* task handler */
-name|void
-modifier|*
-name|ta_context
-decl_stmt|;
-comment|/* argument for handler */
-block|}
-struct|;
-end_struct
 
 begin_function_decl
 name|struct
