@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.19	81/11/08	*/
+comment|/*	init_main.c	4.20	81/11/14	*/
 end_comment
 
 begin_include
@@ -351,7 +351,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
-name|prinit
+name|pfinit
 argument_list|()
 expr_stmt|;
 endif|#

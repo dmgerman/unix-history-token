@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.44	81/11/08	*/
+comment|/*	machdep.c	4.45	81/11/14	*/
 end_comment
 
 begin_include
@@ -14,36 +14,6 @@ include|#
 directive|include
 file|"../h/systm.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../net/inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/inet_systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/inet_host.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|INET
-end_endif
 
 begin_include
 include|#
@@ -666,24 +636,6 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET
-name|valloclim
-argument_list|(
-name|host
-argument_list|,
-expr|struct
-name|host
-argument_list|,
-name|nhost
-argument_list|,
-name|hostNHOST
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|INET
 comment|/* 	 * Now allocate space for core map 	 */
 name|ncmap
 operator|=

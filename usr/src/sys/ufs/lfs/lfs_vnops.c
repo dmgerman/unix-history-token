@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.12	81/11/08	*/
+comment|/*	lfs_vnops.c	4.13	81/11/14	*/
 end_comment
 
 begin_include
@@ -155,11 +155,19 @@ name|f_flag
 operator|&
 name|FSOCKET
 condition|)
+name|u
+operator|.
+name|u_error
+operator|=
 name|sostat
 argument_list|(
 name|fp
 operator|->
 name|f_socket
+argument_list|,
+name|uap
+operator|->
+name|sb
 argument_list|)
 expr_stmt|;
 else|else

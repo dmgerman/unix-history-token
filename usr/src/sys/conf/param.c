@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.9	81/11/08	*/
+comment|/*	param.c	4.10	81/11/14	*/
 end_comment
 
 begin_include
@@ -14,36 +14,6 @@ include|#
 directive|include
 file|"../h/systm.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../net/inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/inet_systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/imp.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|INET
-end_endif
 
 begin_include
 include|#
@@ -240,34 +210,6 @@ name|NMBPAGES
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|nnetcon
-init|=
-name|NCON
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nhost
-init|=
-name|NHOST
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|INET
-end_endif
-
 begin_comment
 comment|/*  * These are initialized at bootstrap time  * to values dependent on memory size  */
 end_comment
@@ -386,43 +328,6 @@ modifier|*
 name|ecmap
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|host
-modifier|*
-name|host
-decl_stmt|,
-modifier|*
-name|hostNHOST
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|net_stat
-name|netstat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|impstat
-name|imp_stat
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|INET
-end_endif
 
 end_unit
 

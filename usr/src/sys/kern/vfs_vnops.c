@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.14	81/11/08	*/
+comment|/*	vfs_vnops.c	4.15	81/11/14	*/
 end_comment
 
 begin_include
@@ -218,7 +218,7 @@ operator|&
 name|FSOCKET
 condition|)
 block|{
-name|skclose
+name|soclose
 argument_list|(
 name|fp
 operator|->
