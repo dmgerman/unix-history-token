@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.5 (Berkeley) %G%"
+literal|"@(#)util.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -658,6 +658,17 @@ argument_list|,
 name|pw
 operator|->
 name|pw_name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"Password: %s\n"
+argument_list|,
+name|pw
+operator|->
+name|pw_passwd
 argument_list|)
 expr_stmt|;
 name|fprintf

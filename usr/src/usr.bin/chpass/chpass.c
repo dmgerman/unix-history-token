@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.5 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,10 +144,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|p_login
+name|p_change
 argument_list|()
 decl_stmt|,
-name|p_uid
+name|p_class
+argument_list|()
+decl_stmt|,
+name|p_expire
+argument_list|()
+decl_stmt|,
+name|p_gecos
 argument_list|()
 decl_stmt|,
 name|p_gid
@@ -155,24 +161,21 @@ argument_list|()
 decl_stmt|,
 name|p_hdir
 argument_list|()
-decl_stmt|,
-name|p_shell
-argument_list|()
-decl_stmt|,
-name|p_change
-argument_list|()
-decl_stmt|,
-name|p_class
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|p_expire
+name|p_login
 argument_list|()
 decl_stmt|,
-name|p_gecos
+name|p_passwd
+argument_list|()
+decl_stmt|,
+name|p_shell
+argument_list|()
+decl_stmt|,
+name|p_uid
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -192,6 +195,18 @@ block|,
 literal|1
 block|,
 literal|5
+block|,
+name|e1
+block|,   }
+block|,
+block|{
+literal|"Password"
+block|,
+name|p_passwd
+block|,
+literal|1
+block|,
+literal|8
 block|,
 name|e1
 block|,   }
@@ -1873,7 +1888,9 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
-literal|"NOLOGIN"
+name|pw
+operator|->
+name|pw_passwd
 argument_list|,
 name|pw
 operator|->
