@@ -2704,9 +2704,26 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+comment|/* 	 * right now we support clustered writing only to regular files 	 */
 if|if
 condition|(
-comment|/* (vp->v_type != VBLK)&& */
+operator|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VREG
+operator|)
+operator|&&
+operator|(
+name|vp
+operator|->
+name|v_mount
+operator|!=
+literal|0
+operator|)
+operator|&&
+comment|/* Only on nodes that have the size info */
 operator|(
 name|bp
 operator|->
