@@ -1198,7 +1198,7 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Connection attempt to UDP %s:%d from %s:%d\n"
+literal|"Connection attempt to UDP [%s]:%d from [%s]:%d\n"
 argument_list|,
 name|buf
 argument_list|,
