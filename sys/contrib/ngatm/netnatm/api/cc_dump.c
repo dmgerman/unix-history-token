@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003-2004  *	Hartmut Brandt  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *  * Redistribution of this software and documentation and use in source and  * binary forms, with or without modification, are permitted provided that  * the following conditions are met:  *  * 1. Redistributions of source code or documentation must retain the above  *    copyright notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE AND DOCUMENTATION IS PROVIDED BY THE AUTHOR  * AND ITS CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * THE AUTHOR OR ITS CONTRIBUTORS  BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Begemot: libunimsg/netnatm/api/cc_dump.c,v 1.1 2004/07/08 08:21:51 brandt Exp $  *  * ATM API as defined per af-saa-0108  */
+comment|/*  * Copyright (c) 2003-2004  *	Hartmut Brandt  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *  * Redistribution of this software and documentation and use in source and  * binary forms, with or without modification, are permitted provided that  * the following conditions are met:  *  * 1. Redistributions of source code or documentation must retain the above  *    copyright notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE AND DOCUMENTATION IS PROVIDED BY THE AUTHOR  * AND ITS CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * THE AUTHOR OR ITS CONTRIBUTORS  BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Begemot: libunimsg/netnatm/api/cc_dump.c,v 1.3 2004/08/05 07:10:56 brandt Exp $  *  * ATM API as defined per af-saa-0108  */
 end_comment
 
 begin_include
@@ -66,7 +66,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/stdarg.h>
+file|<machine/stdarg.h>
 end_include
 
 begin_endif
@@ -305,7 +305,8 @@ name|d
 operator|->
 name|ret
 operator|=
-name|errno
+name|CCGETERRNO
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -430,7 +431,8 @@ name|d
 operator|->
 name|ret
 operator|=
-name|errno
+name|CCGETERRNO
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -501,16 +503,19 @@ block|{
 index|[
 name|UNISVE_ABSENT
 index|]
+operator|=
 literal|"absent"
 block|,
 index|[
 name|UNISVE_ANY
 index|]
+operator|=
 literal|"any"
 block|,
 index|[
 name|UNISVE_PRESENT
 index|]
+operator|=
 literal|"present"
 block|}
 decl_stmt|;
@@ -526,11 +531,13 @@ block|{
 index|[
 name|UNI_ADDR_E164
 index|]
+operator|=
 literal|"E164"
 block|,
 index|[
 name|UNI_ADDR_ATME
 index|]
+operator|=
 literal|"ATME"
 block|, 	}
 decl_stmt|;
@@ -546,16 +553,19 @@ block|{
 index|[
 name|UNI_BHLI_ISO
 index|]
+operator|=
 literal|"ISO"
 block|,
 index|[
 name|UNI_BHLI_VENDOR
 index|]
+operator|=
 literal|"VENDOR"
 block|,
 index|[
 name|UNI_BHLI_USER
 index|]
+operator|=
 literal|"USER"
 block|}
 decl_stmt|;
