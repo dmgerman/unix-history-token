@@ -1232,7 +1232,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-g] [-r resolution] [-s pointsize FontMap\n"
+literal|"usage: %s [-g] [-r resolution] [-s pointsize] FontMap\n"
 argument_list|,
 name|prog
 argument_list|)

@@ -139,6 +139,10 @@ modifier|*
 name|next
 decl_stmt|;
 name|node
+modifier|*
+name|last
+decl_stmt|;
+name|node
 argument_list|()
 expr_stmt|;
 name|node

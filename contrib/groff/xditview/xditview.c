@@ -178,6 +178,21 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|String
+name|fallback_resources
+index|[]
+init|=
+block|{
+include|#
+directive|include
+file|"GXditview-ad.h"
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 specifier|static
 struct|struct
@@ -716,7 +731,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -757,6 +772,9 @@ name|pageLabel
 block|}
 block|,     }
 decl_stmt|;
+name|XtAppContext
+name|xtcontext
+decl_stmt|;
 name|Arg
 name|topLevelArgs
 index|[
@@ -777,9 +795,10 @@ name|page_number
 decl_stmt|;
 name|toplevel
 operator|=
-name|XtInitialize
+name|XtAppInitialize
 argument_list|(
-literal|"main"
+operator|&
+name|xtcontext
 argument_list|,
 literal|"GXditview"
 argument_list|,
@@ -794,6 +813,12 @@ operator|&
 name|argc
 argument_list|,
 name|argv
+argument_list|,
+name|fallback_resources
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -852,10 +877,7 @@ argument_list|)
 expr_stmt|;
 name|XtAppAddActions
 argument_list|(
-name|XtWidgetToApplicationContext
-argument_list|(
-name|toplevel
-argument_list|)
+name|xtcontext
 argument_list|,
 name|xditview_actions
 argument_list|,
@@ -1152,9 +1174,14 @@ argument_list|(
 name|page_number
 argument_list|)
 expr_stmt|;
-name|XtMainLoop
-argument_list|()
+name|XtAppMainLoop
+argument_list|(
+name|xtcontext
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -2422,13 +2449,13 @@ block|{
 block|{
 name|XtNlabel
 block|,
-name|NULL
+literal|0
 block|}
 block|,
 block|{
 name|XtNvalue
 block|,
-name|NULL
+literal|0
 block|}
 block|,     }
 decl_stmt|;
