@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	7.50 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	7.51 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1807,30 +1807,34 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|ttrstrt
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_decl_stmt
+parameter_list|(
+name|tp0
+parameter_list|)
+name|void
+modifier|*
+name|tp0
+decl_stmt|;
+block|{
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
 name|int
 name|s
 decl_stmt|;
+name|tp
+operator|=
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+name|tp0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -1870,7 +1874,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Common code for ioctls on tty devices.  * Called after line-discipline-specific ioctl  * has been called to do discipline-specific functions  * and/or reject any of these ioctl commands.  */
@@ -2430,7 +2434,7 @@ name|FIONREAD
 case|:
 operator|*
 operator|(
-name|off_t
+name|int
 operator|*
 operator|)
 name|data
@@ -6438,11 +6442,6 @@ name|s
 decl_stmt|,
 name|oldsig
 decl_stmt|;
-specifier|extern
-name|int
-name|wakeup
-parameter_list|()
-function_decl|;
 name|hiwat
 operator|=
 name|tp
@@ -6518,10 +6517,24 @@ return|;
 block|}
 name|timeout
 argument_list|(
+operator|(
+name|void
+argument_list|(
+argument|*
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+operator|)
 name|wakeup
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 operator|&
 name|tp
@@ -8584,39 +8597,17 @@ else|:
 literal|"iowait"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Lock out clock if process is running; get user/system 		 * cpu time. 		 */
-if|if
-condition|(
-name|curproc
-operator|==
-name|pick
-condition|)
-name|tmp
-operator|=
-name|splclock
-argument_list|()
-expr_stmt|;
-name|utime
-operator|=
-name|pick
-operator|->
-name|p_utime
-expr_stmt|;
-name|stime
-operator|=
-name|pick
-operator|->
-name|p_stime
-expr_stmt|;
-if|if
-condition|(
-name|curproc
-operator|==
-name|pick
-condition|)
-name|splx
+name|calcru
 argument_list|(
-name|tmp
+name|pick
+argument_list|,
+operator|&
+name|utime
+argument_list|,
+operator|&
+name|stime
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Print user time. */
