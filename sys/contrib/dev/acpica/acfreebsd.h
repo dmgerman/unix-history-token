@@ -232,10 +232,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_comment
-comment|/* #include<ctype.h> */
-end_comment
-
 begin_define
 define|#
 directive|define
