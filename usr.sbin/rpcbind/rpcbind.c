@@ -3423,6 +3423,21 @@ block|{
 name|int
 name|c
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WARMSTART
+define|#
+directive|define
+name|WSOP
+value|"w"
+else|#
+directive|else
+define|#
+directive|define
+name|WSOP
+value|""
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
@@ -3434,7 +3449,8 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dwah:ilLs"
+literal|"adh:iLls"
+name|WSOP
 argument_list|)
 operator|)
 operator|!=
@@ -3582,7 +3598,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rpcbind [-Idwils]\n"
+literal|"usage: rpcbind [-adiLls%s] [-h bindip]\n"
+argument_list|,
+name|WSOP
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3612,6 +3630,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+undef|#
+directive|undef
+name|WSOP
 block|}
 end_function
 
