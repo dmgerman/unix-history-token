@@ -1082,7 +1082,7 @@ name|so2
 operator|->
 name|so_cred
 operator|->
-name|cr_uid
+name|cr_uidinfo
 argument_list|,
 operator|&
 name|so2
@@ -1564,7 +1564,7 @@ name|so
 operator|->
 name|so_cred
 operator|->
-name|cr_uid
+name|cr_uidinfo
 argument_list|,
 operator|&
 name|so

@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -1219,15 +1225,14 @@ name|va_mode
 operator|&
 name|VSUID
 condition|)
+name|change_euid
+argument_list|(
 name|p
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-operator|=
+argument_list|,
 name|attr
 operator|.
 name|va_uid
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
