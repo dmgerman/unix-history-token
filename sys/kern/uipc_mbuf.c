@@ -882,9 +882,9 @@ name|nbytes
 argument_list|,
 name|how
 operator|==
-name|M_WAIT
+name|M_TRYWAIT
 condition|?
-name|M_WAIT
+name|M_WAITOK
 else|:
 name|M_NOWAIT
 argument_list|)
@@ -1090,7 +1090,7 @@ operator|*
 name|MSIZE
 argument_list|)
 expr_stmt|;
-comment|/* XXX: The letting go of the mmbfree lock here may eventually 	   be moved to only be done for M_WAIT calls to kmem_malloc() */
+comment|/* XXX: The letting go of the mmbfree lock here may eventually 	   be moved to only be done for M_TRYWAIT calls to kmem_malloc() */
 name|mtx_exit
 argument_list|(
 operator|&
@@ -1131,7 +1131,7 @@ literal|0
 operator|&&
 name|how
 operator|==
-name|M_WAIT
+name|M_TRYWAIT
 condition|)
 block|{
 name|atomic_add_long
@@ -1263,7 +1263,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Once the mb_map has been exhausted and if the call to the allocation macros  * (or, in some cases, functions) is with M_WAIT, then it is necessary to rely  * solely on reclaimed mbufs.  *  * Here we request for the protocols to free up some resources and, if we  * still cannot get anything, then we wait for an mbuf to be freed for a   * designated (mbuf_wait) time.   *  * Must be called with the mmbfree mutex held, and we will probably end  * up recursing into that lock from some of the drain routines, but  * this should be okay, as long as we don't block there, or attempt  * to allocate from them (theoretically impossible).  */
+comment|/*  * Once the mb_map has been exhausted and if the call to the allocation macros  * (or, in some cases, functions) is with M_TRYWAIT, then it is necessary to  * rely solely on reclaimed mbufs.  *  * Here we request for the protocols to free up some resources and, if we  * still cannot get anything, then we wait for an mbuf to be freed for a   * designated (mbuf_wait) time.   *  * Must be called with the mmbfree mutex held, and we will probably end  * up recursing into that lock from some of the drain routines, but  * this should be okay, as long as we don't block there, or attempt  * to allocate from them (theoretically impossible).  */
 end_comment
 
 begin_function
@@ -1489,12 +1489,12 @@ name|npg
 argument_list|)
 argument_list|,
 name|how
-operator|!=
-name|M_WAIT
+operator|==
+name|M_TRYWAIT
 condition|?
-name|M_NOWAIT
-else|:
 name|M_WAITOK
+else|:
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|mtx_exit
@@ -1613,7 +1613,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Once the mb_map submap has been exhausted and the allocation is called with  * M_WAIT, we rely on the mclfree list. If nothing is free, we will  * sleep for a designated amount of time (mbuf_wait) or until we're woken up  * due to sudden mcluster availability.  *  * Must be called with the mclfree lock held.  */
+comment|/*  * Once the mb_map submap has been exhausted and the allocation is called with  * M_TRYWAIT, we rely on the mclfree list. If nothing is free, we will  * sleep for a designated amount of time (mbuf_wait) or until we're woken up  * due to sudden mcluster availability.  *  * Must be called with the mclfree lock held.  */
 end_comment
 
 begin_function
@@ -2192,7 +2192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a copy of an mbuf chain starting "off0" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * The wait parameter is a choice of M_WAIT/M_DONTWAIT from caller.  * Note that the copy is read-only, because clusters are not copied,  * only their reference counts are incremented.  */
+comment|/*  * Make a copy of an mbuf chain starting "off0" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * The wait parameter is a choice of M_TRYWAIT/M_DONTWAIT from caller.  * Note that the copy is read-only, because clusters are not copied,  * only their reference counts are incremented.  */
 end_comment
 
 begin_define

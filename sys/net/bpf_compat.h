@@ -49,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|M_WAITOK
-value|M_WAIT
+value|M_TRYWAIT
 end_define
 
 begin_comment

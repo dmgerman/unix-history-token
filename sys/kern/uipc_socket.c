@@ -2601,7 +2601,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -2653,7 +2653,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -2689,7 +2689,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3197,7 +3197,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -4360,7 +4360,7 @@ literal|0
 argument_list|,
 name|len
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|m
@@ -6712,7 +6712,7 @@ name|sopt
 operator|->
 name|sopt_p
 condition|?
-name|M_WAIT
+name|M_TRYWAIT
 else|:
 name|M_DONTWAIT
 argument_list|,
@@ -6743,7 +6743,7 @@ name|sopt
 operator|->
 name|sopt_p
 condition|?
-name|M_WAIT
+name|M_TRYWAIT
 else|:
 name|M_DONTWAIT
 argument_list|)
@@ -6824,7 +6824,7 @@ name|sopt
 operator|->
 name|sopt_p
 condition|?
-name|M_WAIT
+name|M_TRYWAIT
 else|:
 name|M_DONTWAIT
 argument_list|,
@@ -6863,7 +6863,7 @@ name|sopt
 operator|->
 name|sopt_p
 condition|?
-name|M_WAIT
+name|M_TRYWAIT
 else|:
 name|M_DONTWAIT
 argument_list|)

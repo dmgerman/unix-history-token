@@ -158,7 +158,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -172,7 +172,7 @@ condition|)
 return|return
 name|ENOBUFS
 return|;
-comment|/* if M_WAIT ? */
+comment|/* if M_TRYWAIT ? */
 name|m
 operator|->
 name|m_pkthdr
@@ -438,7 +438,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -454,7 +454,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|mlen
@@ -591,7 +591,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -2456,7 +2456,7 @@ argument_list|)
 argument_list|,
 name|size
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 while|while
@@ -3088,7 +3088,7 @@ name|MGET
 argument_list|(
 name|mp
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -3101,7 +3101,7 @@ name|MCLGET
 argument_list|(
 name|mp
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|mp

@@ -4871,7 +4871,7 @@ name|sopt
 operator|->
 name|sopt_p
 condition|?
-name|M_WAIT
+name|M_TRYWAIT
 else|:
 name|M_DONTWAIT
 argument_list|,

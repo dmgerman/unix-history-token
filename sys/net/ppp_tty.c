@@ -1695,7 +1695,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)

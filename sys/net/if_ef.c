@@ -2061,7 +2061,7 @@ name|ETHER_HDR_LEN
 operator|+
 literal|3
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2169,7 +2169,7 @@ name|m
 argument_list|,
 literal|8
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if

@@ -2526,7 +2526,7 @@ name|caddr_t
 operator|)
 name|slp
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|nfs_slpunlock
@@ -3337,7 +3337,7 @@ name|m
 argument_list|,
 name|NFSX_UNSIGNED
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 operator|*

@@ -675,7 +675,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1345,7 +1345,7 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|,
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 name|rp

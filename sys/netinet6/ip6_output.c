@@ -5398,7 +5398,7 @@ name|sopt
 operator|->
 name|sopt_p
 condition|?
-name|M_WAIT
+name|M_TRYWAIT
 else|:
 name|M_DONTWAIT
 argument_list|,
@@ -7684,7 +7684,7 @@ name|mp
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_TRYWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)

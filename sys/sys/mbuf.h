@@ -1015,9 +1015,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_WAIT
+name|M_TRYWAIT
 value|0
 end_define
+
+begin_define
+define|#
+directive|define
+name|M_WAIT
+value|M_TRYWAIT
+end_define
+
+begin_comment
+comment|/* XXX: Deprecated. */
+end_comment
 
 begin_comment
 comment|/*  * Normal mbuf clusters are normally treated as character arrays  * after allocation, but use the first word of the buffer as a free list  * pointer while on the free list.  */
@@ -1228,7 +1239,7 @@ name|m_mget
 parameter_list|,
 name|m_get_how
 parameter_list|)
-value|do {					\ 	if (mmbfree.m_head == NULL)					\ 		m_mballoc(1, (m_get_how));				\ 	(m_mget) = mmbfree.m_head;					\ 	if ((m_mget) != NULL) {						\ 		mmbfree.m_head = (m_mget)->m_next;			\ 		mbtypes[MT_FREE]--;					\ 	} else {							\ 		if ((m_get_how) == M_WAIT)				\ 			(m_mget) = m_mballoc_wait();			\ 	}								\ } while (0)
+value|do {					\ 	if (mmbfree.m_head == NULL)					\ 		m_mballoc(1, (m_get_how));				\ 	(m_mget) = mmbfree.m_head;					\ 	if ((m_mget) != NULL) {						\ 		mmbfree.m_head = (m_mget)->m_next;			\ 		mbtypes[MT_FREE]--;					\ 	} else {							\ 		if ((m_get_how) == M_TRYWAIT)				\ 			(m_mget) = m_mballoc_wait();			\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1284,7 +1295,7 @@ name|p
 parameter_list|,
 name|how
 parameter_list|)
-value|do {						\ 	caddr_t _mp;							\ 	int _mhow = (how);						\ 									\ 	if (mclfree.m_head == NULL)					\ 		m_clalloc(1, _mhow);					\ 	_mp = (caddr_t)mclfree.m_head;					\ 	if (_mp != NULL) {						\ 		mbstat.m_clfree--;					\ 		mclfree.m_head = ((union mcluster *)_mp)->mcl_next;	\ 	} else {							\ 		if (_mhow == M_WAIT)					\ 			_mp = m_clalloc_wait();				\ 	}								\ 	(p) = _mp;							\ } while (0)
+value|do {						\ 	caddr_t _mp;							\ 	int _mhow = (how);						\ 									\ 	if (mclfree.m_head == NULL)					\ 		m_clalloc(1, _mhow);					\ 	_mp = (caddr_t)mclfree.m_head;					\ 	if (_mp != NULL) {						\ 		mbstat.m_clfree--;					\ 		mclfree.m_head = ((union mcluster *)_mp)->mcl_next;	\ 	} else {							\ 		if (_mhow == M_TRYWAIT)					\ 			_mp = m_clalloc_wait();				\ 	}								\ 	(p) = _mp;							\ } while (0)
 end_define
 
 begin_define
@@ -1318,7 +1329,7 @@ name|flags
 parameter_list|,
 name|type
 parameter_list|)
-value|do {		\ 	struct mbuf *_mm = (m);						\ 									\ 	MEXT_INIT_REF(_mm, M_WAIT);					\ 	if (_mm->m_ext.ref_cnt != NULL) {				\ 		_mm->m_flags |= (M_EXT | (flags));			\ 		_mm->m_ext.ext_buf = (caddr_t)(buf);			\ 		_mm->m_data = _mm->m_ext.ext_buf;			\ 		_mm->m_ext.ext_size = (size);				\ 		_mm->m_ext.ext_free = (free);				\ 		_mm->m_ext.ext_args = (args);				\ 		_mm->m_ext.ext_type = (type);				\ 	}								\ } while (0)
+value|do {		\ 	struct mbuf *_mm = (m);						\ 									\ 	MEXT_INIT_REF(_mm, M_TRYWAIT);					\ 	if (_mm->m_ext.ref_cnt != NULL) {				\ 		_mm->m_flags |= (M_EXT | (flags));			\ 		_mm->m_ext.ext_buf = (caddr_t)(buf);			\ 		_mm->m_data = _mm->m_ext.ext_buf;			\ 		_mm->m_ext.ext_size = (size);				\ 		_mm->m_ext.ext_free = (free);				\ 		_mm->m_ext.ext_args = (args);				\ 		_mm->m_ext.ext_type = (type);				\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1456,7 +1467,7 @@ value|((m)->m_flags& M_EXT ? (m)->m_ext.ext_buf +			\ 	    (m)->m_ext.ext_size -
 end_define
 
 begin_comment
-comment|/*  * Arrange to prepend space of size plen to mbuf m.  * If a new mbuf must be allocated, how specifies whether to wait.  * If how is M_DONTWAIT and allocation fails, the original mbuf chain  * is freed and m is set to NULL.  */
+comment|/*  * Arrange to prepend space of size plen to mbuf m.  * If a new mbuf must be allocated, how specifies whether to wait.  * If the allocation fails, the original mbuf chain is freed and m is  * set to NULL.  */
 end_comment
 
 begin_define
