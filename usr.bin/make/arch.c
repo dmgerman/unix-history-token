@@ -3,12 +3,6 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#)arch.c	8.2 (Berkeley) 1/2/94  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -16,21 +10,12 @@ file|<sys/cdefs.h>
 end_include
 
 begin_expr_stmt
-name|__RCSID
+name|__FBSDID
 argument_list|(
 literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/*-  * arch.c --  *	Functions to manipulate libraries, archives and their members.  *  *	Once again, cacheing/hashing comes into play in the manipulation  * of archives. The first time an archive is referenced, all of its members'  * headers are read and hashed and the archive closed again. All hashed  * archives are kept on a list which is searched each time an archive member  * is referenced.  *  * The interface to this module is:  *	Arch_ParseArchive   	Given an archive specification, return a list  *	    	  	    	of GNode's, one for each member in the spec.  *	    	  	    	FAILURE is returned if the specification is  *	    	  	    	invalid for some reason.  *  *	Arch_Touch	    	Alter the modification time of the archive  *	    	  	    	member described by the given node to be  *	    	  	    	the current time.  *  *	Arch_TouchLib	    	Update the modification time of the library  *	    	  	    	described by the given node. This is special  *	    	  	    	because it also updates the modification time  *	    	  	    	of the library's table of contents.  *  *	Arch_MTime	    	Find the modification time of a member of  *	    	  	    	an archive *in the archive*. The time is also  *	    	  	    	placed in the member's GNode. Returns the  *	    	  	    	modification time.  *  *	Arch_MemTime	    	Find the modification time of a member of  *	    	  	    	an archive. Called when the member doesn't  *	    	  	    	already exist. Looks in the archive for the  *	    	  	    	modification time. Returns the modification  *	    	  	    	time.  *  *	Arch_FindLib	    	Search for a library along a path. The  *	    	  	    	library name in the GNode should be in  *	    	  	    	-l<name> format.  *  *	Arch_LibOODate	    	Special function to decide if a library node  *	    	  	    	is out-of-date.  *  *	Arch_Init 	    	Initialize this module.  *  *	Arch_End 	    	Cleanup this module.  */

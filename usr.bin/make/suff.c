@@ -3,12 +3,6 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#)suff.c	8.4 (Berkeley) 3/21/94  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -16,21 +10,12 @@ file|<sys/cdefs.h>
 end_include
 
 begin_expr_stmt
-name|__RCSID
+name|__FBSDID
 argument_list|(
 literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/*-  * suff.c --  *	Functions to maintain suffix lists and find implicit dependents  *	using suffix transformation rules  *  * Interface:  *	Suff_Init 	    	Initialize all things to do with suffixes.  *  *	Suff_End 	    	Cleanup the module  *  *	Suff_DoPaths	    	This function is used to make life easier  *	    	  	    	when searching for a file according to its  *	    	  	    	suffix. It takes the global search path,  *	    	  	    	as defined using the .PATH: target, and appends  *	    	  	    	its directories to the path of each of the  *	    	  	    	defined suffixes, as specified using  *	    	  	    	.PATH<suffix>: targets. In addition, all  *	    	  	    	directories given for suffixes labeled as  *	    	  	    	include files or libraries, using the .INCLUDES  *	    	  	    	or .LIBS targets, are played with using  *	    	  	    	Dir_MakeFlags to create the .INCLUDES and  *	    	  	    	.LIBS global variables.  *  *	Suff_ClearSuffixes  	Clear out all the suffixes and defined  *	    	  	    	transformations.  *  *	Suff_IsTransform    	Return TRUE if the passed string is the lhs  *	    	  	    	of a transformation rule.  *  *	Suff_AddSuffix	    	Add the passed string as another known suffix.  *  *	Suff_GetPath	    	Return the search path for the given suffix.  *  *	Suff_AddInclude	    	Mark the given suffix as denoting an include  *	    	  	    	file.  *  *	Suff_AddLib	    	Mark the given suffix as denoting a library.  *  *	Suff_AddTransform   	Add another transformation to the suffix  *	    	  	    	graph. Returns  GNode suitable for framing, I  *	    	  	    	mean, tacking commands, attributes, etc. on.  *  *	Suff_SetNull	    	Define the suffix to consider the suffix of  *	    	  	    	any file that doesn't have a known one.  *  *	Suff_FindDeps	    	Find implicit sources for and the location of  *	    	  	    	a target based on its suffix. Returns the  *	    	  	    	bottom-most node added to the graph or NULL  *	    	  	    	if the target had no implicit sources.  */

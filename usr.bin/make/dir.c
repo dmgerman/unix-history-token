@@ -3,12 +3,6 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#)dir.c	8.2 (Berkeley) 1/2/94  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -16,21 +10,12 @@ file|<sys/cdefs.h>
 end_include
 
 begin_expr_stmt
-name|__RCSID
+name|__FBSDID
 argument_list|(
 literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/*-  * dir.c --  *	Directory searching using wildcards and/or normal names...  *	Used both for source wildcarding in the Makefile and for finding  *	implicit sources.  *  * The interface for this module is:  *	Dir_Init  	    Initialize the module.  *  *	Dir_End  	    Cleanup the module.  *  *	Dir_HasWildcards    Returns TRUE if the name given it needs to  *	    	  	    be wildcard-expanded.  *  *	Dir_Expand	    Given a pattern and a path, return a Lst of names  *	    	  	    which match the pattern on the search path.  *  *	Dir_FindFile	    Searches for a file on a given search path.  *	    	  	    If it exists, the entire path is returned.  *	    	  	    Otherwise NULL is returned.  *  *	Dir_MTime 	    Return the modification time of a node. The file  *	    	  	    is searched for along the default search path.  *	    	  	    The path and mtime fields of the node are filled  *	    	  	    in.  *  *	Dir_AddDir	    Add a directory to a search path.  *  *	Dir_MakeFlags	    Given a search path and a command flag, create  *	    	  	    a string with each of the directories in the path  *	    	  	    preceded by the command flag and all of them  *	    	  	    separated by a space.  *  *	Dir_Destroy	    Destroy an element of a search path. Frees up all  *	    	  	    things that can be freed for the element as long  *	    	  	    as the element is no longer referenced by any other  *	    	  	    search path.  *	Dir_ClearPath	    Resets a search path to the empty list.  *  * For debugging:  *	Dir_PrintDirectories	Print stats about the directory cache.  */
