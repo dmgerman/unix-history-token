@@ -3570,8 +3570,10 @@ literal|2
 expr_stmt|;
 name|text
 operator|=
-name|xmalloc
+name|xrealloc
 argument_list|(
+name|text
+argument_list|,
 name|asize
 argument_list|)
 expr_stmt|;
