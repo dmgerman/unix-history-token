@@ -3094,11 +3094,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|acpi_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|device_t
 name|child
 decl_stmt|,
@@ -3134,13 +3129,6 @@ name|error
 operator|)
 return|;
 comment|/*      * Now, set them into the appropriate power state, usually D3.  If the      * device has an _SxD method for the next sleep state, use that power      * state instead.      */
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|device_get_children
 argument_list|(
 name|dev
