@@ -2814,7 +2814,13 @@ name|sc
 argument_list|,
 literal|1
 argument_list|,
+name|sc
+operator|->
+name|hasmic
+condition|?
 literal|2
+else|:
+literal|1
 argument_list|)
 condition|)
 goto|goto
@@ -2871,7 +2877,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at io 0x%lx, 0x%lx irq %ld"
+literal|"at io 0x%lx, 0x%lx irq %ld bufsz %u"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -2893,6 +2899,10 @@ name|sc
 operator|->
 name|irq
 argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 expr_stmt|;
 name|pcm_setstatus
