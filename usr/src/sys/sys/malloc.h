@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -616,7 +616,7 @@ value|\ 	"VM pgdata",
 comment|/* 37 M_VMPGDATA */
 value|\ 	"file",
 comment|/* 38 M_FILE */
-value|\ 	"file descrip",
+value|\ 	"file desc",
 comment|/* 39 M_FILEDESC */
 value|\ 	"lockf",
 comment|/* 40 M_LOCKF */
