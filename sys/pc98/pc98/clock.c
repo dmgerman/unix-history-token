@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"apm.h"
+file|"opt_apm.h"
 end_include
 
 begin_include
@@ -3755,11 +3755,9 @@ argument_list|(
 name|SMP
 argument_list|)
 comment|/* 	 * We can not use the TSC in SMP mode, until we figure out a 	 * cheap (impossible), reliable and precise (yeah right!)  way 	 * to synchronize the TSCs of all the CPUs. 	 * Curse Intel for leaving the counter out of the I/O APIC. 	 */
-if|#
-directive|if
-name|NAPM
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_APM
 comment|/* 	 * We can not use the TSC if we support APM. Precise timekeeping 	 * on an APM'ed machine is at best a fools pursuit, since  	 * any and all of the time spent in various SMM code can't  	 * be reliably accounted for.  Reading the RTC is your only 	 * source of reliable time info.  The i8254 looses too of course 	 * but we need to have some kind of time... 	 * We don't know at this point whether APM is going to be used 	 * or not, nor when it might be activated.  Play it safe. 	 */
 block|{
 name|int
@@ -3789,7 +3787,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* NAPM> 0 */
+comment|/* DEV_APM */
 if|if
 condition|(
 name|tsc_present

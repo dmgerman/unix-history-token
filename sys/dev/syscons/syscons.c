@@ -30,7 +30,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"apm.h"
+file|"opt_apm.h"
 end_include
 
 begin_endif
@@ -16584,11 +16584,9 @@ expr_stmt|;
 endif|#
 directive|endif
 break|break;
-if|#
-directive|if
-name|NAPM
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_APM
 case|case
 name|SUSP
 case|:
