@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.16	81/05/12	*/
+comment|/*	init_main.c	4.17	81/08/13	*/
 end_comment
 
 begin_include
@@ -997,6 +997,22 @@ name|panic
 argument_list|(
 literal|"binit"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nswdev
+operator|>
+literal|1
+condition|)
+name|nswap
+operator|=
+operator|(
+name|nswap
+operator|/
+name|DMMAX
+operator|)
+operator|*
+name|DMMAX
 expr_stmt|;
 name|nswap
 operator|*=
