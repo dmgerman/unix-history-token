@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.23 1995/10/06 19:30:43 wollman Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.24 1995/10/29 15:32:35 phk Exp $  */
 end_comment
 
 begin_include
@@ -273,6 +273,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|ip_mrtproto
 init|=
@@ -849,7 +850,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|ip_mrtproto
 decl_stmt|;
@@ -905,6 +906,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|mrtdebug
 init|=
@@ -945,6 +947,7 @@ value|0x10
 end_define
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|tbfdebug
 init|=
@@ -957,6 +960,7 @@ comment|/* tbf debug level 	*/
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|rsvpdebug
 init|=
@@ -1052,6 +1056,7 @@ comment|/* prototype IP hdr for encapsulated packets */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ip
 name|multicast_encap_iphdr
@@ -1126,19 +1131,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|void
-function_decl|(
-modifier|*
-name|encap_oldrawip
-function_decl|)
-parameter_list|()
-init|=
-literal|0
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -1193,6 +1185,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ip_mrouter_init
 parameter_list|(
@@ -1623,6 +1616,7 @@ comment|/*  * Handle MRT setsockopt commands to modify the multicast routing tab
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|X_ip_mrouter_set
 parameter_list|(
@@ -1806,6 +1800,7 @@ comment|/*  * Handle MRT getsockopt commands  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|X_ip_mrouter_get
 parameter_list|(
@@ -1926,6 +1921,7 @@ comment|/*  * Handle ioctl commands to obtain information from the cache  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|X_mrt_ioctl
 parameter_list|(
@@ -2230,6 +2226,7 @@ comment|/*  * Enable multicast routing  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ip_mrouter_init
 parameter_list|(
@@ -2409,6 +2406,7 @@ comment|/*  * Disable multicast routing  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|X_ip_mrouter_done
 parameter_list|()
@@ -5080,6 +5078,7 @@ comment|/* # bytes of IP option for tunnel encapsulation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|X_ip_mforward
 parameter_list|(
@@ -5317,7 +5316,7 @@ name|vifi
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Sending IPPROTO_RSVP from %x to %x on vif %d (%s%s%d)\n"
+literal|"Sending IPPROTO_RSVP from %lx to %lx on vif %d (%s%s%d)\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -5393,7 +5392,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Warning: IPPROTO_RSVP from %x to %x without vif option\n"
+literal|"Warning: IPPROTO_RSVP from %lx to %lx without vif option\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -6992,6 +6991,7 @@ comment|/*  * check if a vif number is legal/ok. This is used by ip_output, to e
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|X_legal_vif_num
 parameter_list|(
@@ -7055,6 +7055,7 @@ comment|/*  * Return the local address used by this vif  */
 end_comment
 
 begin_function
+specifier|static
 name|u_long
 name|X_ip_mcast_src
 parameter_list|(
@@ -9440,7 +9441,7 @@ name|rsvpdebug
 condition|)
 name|printf
 argument_list|(
-literal|"ip_rsvp_vif_done: v_rsvpd = %x so = %x\n"
+literal|"ip_rsvp_vif_done: v_rsvpd = %p so = %p\n"
 argument_list|,
 name|viftable
 index|[
@@ -9875,7 +9876,7 @@ name|m
 condition|)
 name|printf
 argument_list|(
-literal|"rsvp_input: m->m_len = %d, sbspace() = %d\n"
+literal|"rsvp_input: m->m_len = %d, sbspace() = %ld\n"
 argument_list|,
 name|m
 operator|->
