@@ -3149,7 +3149,7 @@ name|found
 goto|;
 name|fp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for which we attempt reassembly; 		 * If maxnipq is -1, accept all fragments without limitation. 		 */
 if|if
@@ -4055,7 +4055,7 @@ if|if
 condition|(
 name|fp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -4970,7 +4970,7 @@ if|if
 condition|(
 name|fp
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|fp
 operator|->
