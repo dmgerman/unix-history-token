@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.1 82/08/25"
+literal|"@(#)main.c	4.2 82/10/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -554,6 +554,9 @@ operator|,
 name|argc
 operator|--
 expr_stmt|;
+name|iflag
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -766,6 +769,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Keep file descriptors open to avoid overhead 	 * of open/close on each call to get* routines. 	 */
+name|sethostent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|setnetent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|iflag
@@ -789,27 +803,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Keep file descriptors open to avoid overhead 	 * of open/close on each call to get* routines. 	 */
-name|setprotoent
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|sethostent
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|setnetent
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|setservent
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|hflag
@@ -859,6 +852,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|setprotoent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|setservent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|p
