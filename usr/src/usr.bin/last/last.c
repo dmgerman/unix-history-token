@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)last.c	4.1 (Berkeley) %G%"
+literal|"@(#)last.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -544,7 +544,10 @@ argument_list|)
 expr_stmt|;
 name|otime
 operator|=
-literal|0
+name|logouts
+index|[
+name|i
+index|]
 expr_stmt|;
 name|logouts
 index|[
@@ -704,22 +707,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|lineq
+operator|!
+name|strcmp
 argument_list|(
 name|bp
 operator|->
-name|ut_line
+name|ut_name
 argument_list|,
-literal|"~"
-argument_list|)
-operator|||
-name|lineq
-argument_list|(
-name|bp
-operator|->
-name|ut_line
-argument_list|,
-literal|"tty~"
+literal|"reboot"
 argument_list|)
 condition|)
 for|for
@@ -728,12 +723,6 @@ name|i
 operator|=
 literal|0
 init|;
-operator|*
-name|ttnames
-index|[
-name|i
-index|]
-operator|&&
 name|i
 operator|<
 name|MAXTTYS
