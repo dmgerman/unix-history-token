@@ -6013,11 +6013,13 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|devstat_start_transaction
+name|devstat_start_transaction_bio
 argument_list|(
 name|softc
 operator|->
 name|device_stats
+argument_list|,
+name|bp
 argument_list|)
 expr_stmt|;
 name|scsi_read_write

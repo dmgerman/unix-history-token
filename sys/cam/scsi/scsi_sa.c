@@ -7033,11 +7033,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|devstat_start_transaction
+name|devstat_start_transaction_bio
 argument_list|(
 name|softc
 operator|->
 name|device_stats
+argument_list|,
+name|bp
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Some people have theorized that we should 			 * suppress illegal length indication if we are 			 * running in variable block mode so that we don't 			 * have to request sense every time our requested 			 * block size is larger than the written block. 			 * The residual information from the ccb allows 			 * us to identify this situation anyway.  The only 			 * problem with this is that we will not get 			 * information about blocks that are larger than 			 * our read buffer unless we set the block size 			 * in the mode page to something other than 0. 			 * 			 * I believe that this is a non-issue. If user apps 			 * don't adjust their read size to match our record 			 * size, that's just life. Anyway, the typical usage 			 * would be to issue, e.g., 64KB reads and occasionally 			 * have to do deal with 512 byte or 1KB intermediate 			 * records. 			 */

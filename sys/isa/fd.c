@@ -7880,11 +7880,13 @@ name|toffhandle
 argument_list|)
 expr_stmt|;
 comment|/* a good idea */
-name|devstat_start_transaction
+name|devstat_start_transaction_bio
 argument_list|(
 name|fd
 operator|->
 name|device_stats
+argument_list|,
+name|bp
 argument_list|)
 expr_stmt|;
 name|device_busy

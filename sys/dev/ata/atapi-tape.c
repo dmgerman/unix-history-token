@@ -2710,11 +2710,13 @@ index|]
 operator|=
 name|blkcount
 expr_stmt|;
-name|devstat_start_transaction
+name|devstat_start_transaction_bio
 argument_list|(
 name|stp
 operator|->
 name|stats
+argument_list|,
+name|bp
 argument_list|)
 expr_stmt|;
 name|atapi_queue_cmd
