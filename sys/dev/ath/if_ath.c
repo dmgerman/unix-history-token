@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Driver for the Atheros Wireless LAN controller.  */
+comment|/*  * Driver for the Atheros Wireless LAN controller.  *  * This software is derived from work of Atsushi Onoe; his contribution  * is greatly appreciated.  */
 end_comment
 
 begin_include
