@@ -4622,7 +4622,12 @@ name|buf_ptr
 operator|!=
 literal|'\n'
 operator|||
+operator|(
 name|in_comment
+operator|&&
+operator|!
+name|had_eof
+operator|)
 condition|)
 block|{
 name|CHECK_SIZE_LAB
