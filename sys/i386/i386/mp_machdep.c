@@ -4369,7 +4369,13 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|logical_cpus
+operator|!=
+literal|0
+condition|)
 block|{
 name|u_int
 name|id
