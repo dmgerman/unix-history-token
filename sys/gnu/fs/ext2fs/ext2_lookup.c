@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/dir.h>
 end_include
 
@@ -97,6 +103,79 @@ directive|include
 file|<gnu/ext2fs/ext2_fs_sb.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dirchk
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dirchk
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|e2fs
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"EXT2FS filesystem"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_e2fs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dircheck
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|dirchk
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*     DIRBLKSIZE in ffs is DEV_BSIZE (in most cases 512)    while it is the native blocksize in ext2fs - thus, a #define    is no longer appropriate */
 end_comment
@@ -106,13 +185,6 @@ undef|#
 directive|undef
 name|DIRBLKSIZ
 end_undef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|dirchk
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1391,7 +1463,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 		 * Get pointer to next entry. 		 * Full validation checks are slow, so we only check 		 * enough to insure forward progress through the 		 * directory. Complete checks can be run by patching 		 * "dirchk" to be true. 		 */
+comment|/* 		 * Get pointer to next entry. 		 * Full validation checks are slow, so we only check 		 * enough to insure forward progress through the 		 * directory. Complete checks can be run by setting 		 * "vfs.e2fs.dirchk" to be true. 		 */
 name|ep
 operator|=
 operator|(
