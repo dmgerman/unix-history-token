@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: log.c,v 1.18 1997/11/04 01:17:00 brian Exp $  */
+comment|/*  * $Id: log.c,v 1.19 1997/11/09 06:22:42 brian Exp $  */
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"defs.h"
 end_include
 
 begin_include

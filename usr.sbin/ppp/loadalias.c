@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: loadalias.c,v 1.8 1997/10/26 01:03:01 brian Exp $  */
+comment|/*  * $Id: loadalias.c,v 1.9 1997/11/09 06:22:41 brian Exp $  */
 end_comment
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"loadalias.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"defs.h"
 end_include
 
 begin_include

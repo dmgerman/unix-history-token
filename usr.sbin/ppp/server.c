@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: server.c,v 1.6 1997/10/26 01:03:39 brian Exp $  */
+comment|/*  * $Id: server.c,v 1.7 1997/11/09 06:22:47 brian Exp $  */
 end_comment
 
 begin_include
@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vars.h"
 end_include
 
@@ -121,12 +127,6 @@ begin_include
 include|#
 directive|include
 file|"id.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"defs.h"
 end_include
 
 begin_decl_stmt
