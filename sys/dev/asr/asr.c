@@ -10195,6 +10195,12 @@ name|device_t
 name|tag
 parameter_list|)
 block|{
+name|PI2O_EXEC_STATUS_GET_REPLY
+name|status
+decl_stmt|;
+name|PI2O_LCT_ENTRY
+name|Device
+decl_stmt|;
 name|Asr_softc_t
 modifier|*
 name|sc
@@ -10208,7 +10214,16 @@ name|scsi_inquiry_data
 modifier|*
 name|iq
 decl_stmt|;
+name|union
+name|asr_ccb
+modifier|*
+name|ccb
+decl_stmt|;
 name|int
+name|bus
+decl_stmt|,
+name|size
+decl_stmt|,
 name|unit
 init|=
 name|device_get_unit
@@ -10323,14 +10338,7 @@ operator|)
 operator|=
 name|sc
 expr_stmt|;
-block|{
-name|PI2O_EXEC_STATUS_GET_REPLY
-name|status
-decl_stmt|;
-name|int
-name|size
-decl_stmt|;
-comment|/* 		 *	This is the real McCoy! 		 */
+comment|/* 	 *	This is the real McCoy! 	 */
 if|if
 condition|(
 operator|!
@@ -10772,7 +10780,6 @@ argument_list|(
 name|I2O_SGE_SIMPLE_ELEMENT
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 *	Only do a bus/HBA reset on the first time through. On this 	 * first time through, we do not send a flush to the devices. 	 */
 if|if
 condition|(
@@ -10894,10 +10901,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 *	Add in additional probe responses for more channels. We 	 * are reusing the variable `target' for a channel loop counter. 	 * Done here because of we need both the acquireLct and 	 * acquireHrt data. 	 */
-block|{
-name|PI2O_LCT_ENTRY
-name|Device
-decl_stmt|;
 for|for
 control|(
 name|Device
@@ -11035,7 +11038,6 @@ name|Device
 operator|->
 name|le_target
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* 	 *	Print the HBA model number as inquired from the card. 	 */
@@ -11526,15 +11528,6 @@ name|ha_QueueSize
 argument_list|)
 expr_stmt|;
 comment|/* 	 * fill in the prototype cam_path. 	 */
-block|{
-name|int
-name|bus
-decl_stmt|;
-name|union
-name|asr_ccb
-modifier|*
-name|ccb
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -11602,7 +11595,7 @@ operator|=
 name|MAX_INBOUND
 expr_stmt|;
 block|}
-comment|/* 			 *	Create the device queue for our SIM(s). 			 */
+comment|/* 		 *	Create the device queue for our SIM(s). 		 */
 if|if
 condition|(
 operator|(
@@ -11619,7 +11612,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/* 			 *	Construct our first channel SIM entry 			 */
+comment|/* 		 *	Construct our first channel SIM entry 		 */
 name|sc
 operator|->
 name|ha_sim
@@ -11779,7 +11772,6 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 *	Generate the device node information 	 */
 name|sc
 operator|->
