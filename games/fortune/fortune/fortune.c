@@ -7136,7 +7136,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[ [#%%] file/directory/all]\n"
+literal|"[[#%%] file/directory/all]\n"
 argument_list|)
 expr_stmt|;
 name|exit
