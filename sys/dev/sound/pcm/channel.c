@@ -1245,6 +1245,19 @@ name|dl
 condition|)
 block|{
 comment|/* DMA was active */
+name|chn_trigger
+argument_list|(
+name|c
+argument_list|,
+name|PCMTRIG_STOP
+argument_list|)
+expr_stmt|;
+name|b
+operator|->
+name|dl
+operator|=
+literal|0
+expr_stmt|;
 name|b
 operator|->
 name|underflow
