@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). */
+comment|/* ** This file is in the public domain, so clarified as of ** 1996-06-05 by Arthur David Olson (arthur_david_olson@nih.gov). */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ name|elsieid
 index|[]
 name|__unused
 init|=
-literal|"@(#)asctime.c	7.7"
+literal|"@(#)asctime.c	7.9"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,59 +87,8 @@ file|"tzfile.h"
 end_include
 
 begin_comment
-comment|/* ** A la X3J11, with core dump avoidance. */
+comment|/* ** A la ISO/IEC 9945-1, ANSI/IEEE Std 1003.1, Second Edition, 1996-07-12. */
 end_comment
-
-begin_function
-name|char
-modifier|*
-name|asctime
-parameter_list|(
-name|timeptr
-parameter_list|)
-specifier|const
-name|struct
-name|tm
-modifier|*
-name|timeptr
-decl_stmt|;
-block|{
-specifier|static
-name|char
-name|result
-index|[
-literal|3
-operator|*
-literal|2
-operator|+
-literal|5
-operator|*
-name|INT_STRLEN_MAXIMUM
-argument_list|(
-name|int
-argument_list|)
-operator|+
-literal|3
-operator|+
-literal|2
-operator|+
-literal|1
-operator|+
-literal|1
-index|]
-decl_stmt|;
-return|return
-operator|(
-name|asctime_r
-argument_list|(
-name|timeptr
-argument_list|,
-name|result
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 name|char
@@ -148,7 +97,7 @@ name|asctime_r
 parameter_list|(
 name|timeptr
 parameter_list|,
-name|result
+name|buf
 parameter_list|)
 specifier|const
 name|struct
@@ -158,7 +107,7 @@ name|timeptr
 decl_stmt|;
 name|char
 modifier|*
-name|result
+name|buf
 decl_stmt|;
 block|{
 specifier|static
@@ -221,7 +170,6 @@ block|,
 literal|"Dec"
 block|}
 decl_stmt|;
-comment|/* 	** Big enough for something such as 	** ??? ???-2147483648 -2147483648:-2147483648:-2147483648 -2147483648\n 	** (two three-character abbreviations, five strings denoting integers, 	** three explicit spaces, two explicit colons, a newline, 	** and a trailing ASCII nul). 	*/
 specifier|const
 name|char
 modifier|*
@@ -294,7 +242,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|result
+name|buf
 argument_list|,
 literal|"%.3s %.3s%3d %02d:%02d:%02d %d\n"
 argument_list|,
@@ -326,7 +274,61 @@ name|tm_year
 argument_list|)
 expr_stmt|;
 return|return
+name|buf
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ** A la X3J11, with core dump avoidance. */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|asctime
+parameter_list|(
+name|timeptr
+parameter_list|)
+specifier|const
+name|struct
+name|tm
+modifier|*
+name|timeptr
+decl_stmt|;
+block|{
+comment|/* 	** Big enough for something such as 	** ??? ???-2147483648 -2147483648:-2147483648:-2147483648 -2147483648\n 	** (two three-character abbreviations, five strings denoting integers, 	** three explicit spaces, two explicit colons, a newline, 	** and a trailing ASCII nul). 	*/
+specifier|static
+name|char
 name|result
+index|[
+literal|3
+operator|*
+literal|2
+operator|+
+literal|5
+operator|*
+name|INT_STRLEN_MAXIMUM
+argument_list|(
+name|int
+argument_list|)
+operator|+
+literal|3
+operator|+
+literal|2
+operator|+
+literal|1
+operator|+
+literal|1
+index|]
+decl_stmt|;
+return|return
+name|asctime_r
+argument_list|(
+name|timeptr
+argument_list|,
+name|result
+argument_list|)
 return|;
 block|}
 end_function

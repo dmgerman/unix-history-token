@@ -28,7 +28,7 @@ name|elsieid
 index|[]
 name|__unused
 init|=
-literal|"@(#)difftime.c	7.7"
+literal|"@(#)difftime.c	7.9"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,17 +151,23 @@ decl_stmt|;
 name|time_t
 name|hibit
 decl_stmt|;
+block|{
+name|time_t
+name|tt
+decl_stmt|;
+name|double
+name|d
+decl_stmt|;
+name|long_double
+name|ld
+decl_stmt|;
 if|if
 condition|(
 sizeof|sizeof
-argument_list|(
-name|time_t
-argument_list|)
+name|tt
 operator|<
 sizeof|sizeof
-argument_list|(
-name|double
-argument_list|)
+name|d
 condition|)
 return|return
 operator|(
@@ -177,14 +183,10 @@ return|;
 if|if
 condition|(
 sizeof|sizeof
-argument_list|(
-name|time_t
-argument_list|)
+name|tt
 operator|<
 sizeof|sizeof
-argument_list|(
-name|long_double
-argument_list|)
+name|ld
 condition|)
 return|return
 operator|(
@@ -197,6 +199,7 @@ name|long_double
 operator|)
 name|time0
 return|;
+block|}
 if|if
 condition|(
 name|time1

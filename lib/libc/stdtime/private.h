@@ -12,7 +12,7 @@ name|PRIVATE_H
 end_define
 
 begin_comment
-comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). ** ** $FreeBSD$ */
+comment|/* ** This file is in the public domain, so clarified as of ** 1996-06-05 by Arthur David Olson (arthur_david_olson@nih.gov). ** ** $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -118,7 +118,7 @@ name|NOID
 end_ifndef
 
 begin_comment
-comment|/* static char	privatehid[] = "@(#)private.h	7.43"; */
+comment|/* static char	privatehid[] = "@(#)private.h	7.53"; */
 end_comment
 
 begin_endif
@@ -190,6 +190,28 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HAVE_INCOMPATIBLE_CTIME_R
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_INCOMPATIBLE_CTIME_R
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined INCOMPATIBLE_CTIME_R */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_SETTIMEOFDAY
 end_ifndef
 
@@ -219,7 +241,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRERROR
-value|0
+value|1
 end_define
 
 begin_endif
@@ -229,6 +251,72 @@ end_endif
 
 begin_comment
 comment|/* !defined HAVE_STRERROR */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYMLINK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYMLINK
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_SYMLINK */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_STAT_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_SYS_STAT_H */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_WAIT_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_WAIT_H
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_SYS_WAIT_H */
 end_comment
 
 begin_ifndef
@@ -295,6 +383,35 @@ end_endif
 
 begin_comment
 comment|/* !defined LOCALE_HOME */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_INCOMPATIBLE_CTIME_R
+end_if
+
+begin_define
+define|#
+directive|define
+name|asctime_r
+value|_incompatible_asctime_r
+end_define
+
+begin_define
+define|#
+directive|define
+name|ctime_r
+value|_incompatible_ctime_r
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_INCOMPATIBLE_CTIME_R */
 end_comment
 
 begin_comment
@@ -372,6 +489,83 @@ end_endif
 
 begin_comment
 comment|/* HAVE_GETTEXT - 0 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_SYS_WAIT_H
+operator|-
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_comment
+comment|/* for WIFEXITED and WEXITSTATUS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_WAIT_H - 0 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIFEXITED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WIFEXITED
+parameter_list|(
+name|status
+parameter_list|)
+value|(((status)& 0xff) == 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined WIFEXITED */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WEXITSTATUS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WEXITSTATUS
+parameter_list|(
+name|status
+parameter_list|)
+value|(((status)>> 8)& 0xff)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined WEXITSTATUS */
 end_comment
 
 begin_if
@@ -581,6 +775,120 @@ end_endif
 begin_comment
 comment|/* !defined FILENAME_MAX */
 end_comment
+
+begin_comment
+comment|/* ** Private function declarations. */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|icalloc
+parameter_list|(
+name|int
+name|nelem
+parameter_list|,
+name|int
+name|elsize
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|icatalloc
+parameter_list|(
+name|char
+modifier|*
+name|old
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|new
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|icpyalloc
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|string
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|imalloc
+parameter_list|(
+name|int
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|irealloc
+parameter_list|(
+name|void
+modifier|*
+name|pointer
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|icfree
+parameter_list|(
+name|char
+modifier|*
+name|pointer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ifree
+parameter_list|(
+name|char
+modifier|*
+name|pointer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|scheck
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|string
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* ** Finally, some convenience items. */
@@ -937,8 +1245,66 @@ begin_comment
 comment|/* !defined TZ_DOMAIN */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|HAVE_INCOMPATIBLE_CTIME_R
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|asctime_r
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ctime_r
+end_undef
+
+begin_function_decl
+name|char
+modifier|*
+name|asctime_r
+parameter_list|(
+name|struct
+name|tm
+specifier|const
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|ctime_r
+parameter_list|(
+name|time_t
+specifier|const
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* ** UNIX was a registered trademark of UNIX System Laboratories in 1993. */
+comment|/* HAVE_INCOMPATIBLE_CTIME_R */
+end_comment
+
+begin_comment
+comment|/* ** UNIX was a registered trademark of The Open Group in 2003. */
 end_comment
 
 begin_endif
