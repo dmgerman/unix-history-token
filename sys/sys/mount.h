@@ -1599,7 +1599,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * New style VFS sysctls, do not reuse/conflict with the namespace for  * private sysctls.  * All "global" sysctl ops have the 33rd bit set:  * 0x...1....  * Priavte sysctl ops should have the 33rd bit unset.  */
+comment|/*  * New style VFS sysctls, do not reuse/conflict with the namespace for  * private sysctls.  * All "global" sysctl ops have the 33rd bit set:  * 0x...1....  * Private sysctl ops should have the 33rd bit unset.  */
 end_comment
 
 begin_define
