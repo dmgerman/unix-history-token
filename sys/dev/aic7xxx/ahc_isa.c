@@ -36,16 +36,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/eisa/eisaconf.h>
-end_include
-
-begin_comment
-comment|/* For EISA constants */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<isa/isavar.h>
 end_include
 
@@ -124,7 +114,7 @@ name|bus_space_handle_t
 name|bsh
 parameter_list|)
 block|{
-name|eisa_id_t
+name|uint32_t
 name|id
 decl_stmt|;
 name|u_int
@@ -276,7 +266,7 @@ operator|=
 operator|(
 name|slot
 operator|*
-name|EISA_SLOT_SIZE
+name|AHC_EISA_SLOT_SIZE
 operator|)
 operator|+
 name|AHC_EISA_SLOT_OFFSET
