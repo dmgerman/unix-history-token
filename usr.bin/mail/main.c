@@ -284,6 +284,11 @@ name|myname
 operator|=
 name|optarg
 expr_stmt|;
+name|unsetenv
+argument_list|(
+literal|"MAIL"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'i'
