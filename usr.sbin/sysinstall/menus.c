@@ -2624,37 +2624,7 @@ literal|"=other"
 block|}
 block|,
 block|{
-literal|" 5.0 SNAP Server"
-block|,
-literal|"current.freebsd.org"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_FTP_PATH
-literal|"=ftp://current.freebsd.org"
-block|}
-block|,
-block|{
-literal|" 4.x SNAP Server"
-block|,
-literal|"releng4.freebsd.org"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_FTP_PATH
-literal|"=ftp://releng4.freebsd.org"
-block|}
-block|,
-block|{
-literal|" jp.FreeBSD.org SNAP Server"
+literal|"Snapshots Server"
 block|,
 literal|"snapshots.jp.freebsd.org"
 block|,
@@ -2669,9 +2639,9 @@ literal|"=ftp://snapshots.jp.freebsd.org"
 block|}
 block|,
 block|{
-literal|"IPv6 Ready"
+literal|"IPv6 Ireland"
 block|,
-literal|"ftp4.us.freebsd.org"
+literal|"ftp3.ie.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -2680,11 +2650,11 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp4.us.freebsd.org"
+literal|"=ftp://ftp3.ie.freebsd.org"
 block|}
 block|,
 block|{
-literal|" IPv6 Ready #2"
+literal|" IPv6 Japan"
 block|,
 literal|"ftp2.jp.freebsd.org"
 block|,
@@ -2699,9 +2669,9 @@ literal|"=ftp://ftp2.jp.freebsd.org"
 block|}
 block|,
 block|{
-literal|" IPv6 Ready #3"
+literal|" IPv6 USA"
 block|,
-literal|"ftp3.ie.freebsd.org"
+literal|"ftp4.us.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -2710,7 +2680,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.ie.freebsd.org"
+literal|"=ftp://ftp4.us.freebsd.org"
 block|}
 block|,
 block|{
@@ -2966,6 +2936,21 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp2.au.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Australia #3"
+block|,
+literal|"ftp3.au.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp3.au.freebsd.org"
 block|}
 block|,
 block|{
@@ -3944,9 +3929,9 @@ literal|"=ftp://ftp2.ru.freebsd.org"
 block|}
 block|,
 block|{
-literal|" Russia #3"
+literal|" Russia #5"
 block|,
-literal|"ftp3.ru.freebsd.org"
+literal|"ftp5.ru.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -3955,13 +3940,13 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.ru.freebsd.org"
+literal|"=ftp://ftp5.ru.freebsd.org"
 block|}
 block|,
 block|{
-literal|" Russia #4"
+literal|" Russia #7"
 block|,
-literal|"ftp4.ru.freebsd.org"
+literal|"ftp7.ru.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -3970,7 +3955,37 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp4.ru.freebsd.org"
+literal|"=ftp://ftp7.ru.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Russia #8"
+block|,
+literal|"ftp8.ru.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp8.ru.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Russia #9"
+block|,
+literal|"ftp9.ru.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp9.ru.freebsd.org"
 block|}
 block|,
 block|{
@@ -4439,9 +4454,9 @@ literal|"=ftp://ftp2.ua.freebsd.org"
 block|}
 block|,
 block|{
-literal|" Ukraine #3"
+literal|" Ukraine #5"
 block|,
-literal|"ftp3.ua.freebsd.org"
+literal|"ftp5.ua.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -4450,7 +4465,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.ua.freebsd.org"
+literal|"=ftp://ftp5.ua.freebsd.org"
 block|}
 block|,
 block|{
@@ -4481,6 +4496,21 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp7.ua.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Ukraine #8"
+block|,
+literal|"ftp8.ua.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp8.ua.freebsd.org"
 block|}
 block|,
 block|{
