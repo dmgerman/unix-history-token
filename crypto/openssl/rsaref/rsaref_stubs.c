@@ -3,31 +3,38 @@ begin_comment
 comment|/*  * $FreeBSD$  *  * Copyright (c) 2000  *	Jordan Hubbard.  All rights reserved.  *  * Stub functions for RSA code.  If you link with this code, you will  * get a full set of weak symbol references to the rsaref library  * functions which are required by openssl.  These can then be occluded  * by the real rsaref library by explicitly linking with it or, failing  * that, these stub functions will also attempt to find an appropriate  * rsaref library in the search path and do the link-up at runtime.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE. SO THERE.  *  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NO_RSA
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|PIC
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<dlfcn.h>
-end_include
+end_ifndef
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|VERBOSE_STUBS
+end_define
+
+begin_comment
+comment|/* undef if you don't want missing rsaref reported */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PIC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dlfcn.h>
 end_include
 
 begin_define
@@ -39,16 +46,6 @@ end_define
 
 begin_comment
 comment|/* be more exact if you need to */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VERBOSE_STUBS
-end_define
-
-begin_comment
-comment|/* undef if you don't want missing rsaref reported */
 end_comment
 
 begin_function
@@ -148,15 +145,6 @@ return|;
 block|}
 end_function
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|RSAPrivateDecrypt
-name|=
-name|RSAPrivateDecrypt_stub
-end_pragma
-
 begin_function
 name|int
 name|RSAPrivateDecrypt_stub
@@ -242,14 +230,15 @@ return|;
 block|}
 end_function
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|RSAPrivateEncrypt
-name|=
-name|RSAPrivateEncrypt_stub
-end_pragma
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|RSAPrivateDecrypt_stub
+argument_list|,
+name|RSAPrivateDecrypt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -336,14 +325,15 @@ return|;
 block|}
 end_function
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|RSAPublicDecrypt
-name|=
-name|RSAPublicDecrypt_stub
-end_pragma
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|RSAPrivateEncrypt_stub
+argument_list|,
+name|RSAPrivateEncrypt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -430,14 +420,15 @@ return|;
 block|}
 end_function
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|RSAPublicEncrypt
-name|=
-name|RSAPublicEncrypt_stub
-end_pragma
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|RSAPublicDecrypt_stub
+argument_list|,
+name|RSAPublicDecrypt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -533,14 +524,15 @@ return|;
 block|}
 end_function
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|R_GetRandomBytesNeeded
-name|=
-name|R_GetRandomBytesNeeded_stub
-end_pragma
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|RSAPublicEncrypt_stub
+argument_list|,
+name|RSAPublicEncrypt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -598,14 +590,15 @@ return|;
 block|}
 end_function
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|R_RandomFinal
-name|=
-name|R_RandomFinal_stub
-end_pragma
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|R_GetRandomBytesNeeded_stub
+argument_list|,
+name|R_GetRandomBytesNeeded
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -648,14 +641,15 @@ expr_stmt|;
 block|}
 end_function
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|R_RandomInit
-name|=
-name|R_RandomInit_stub
-end_pragma
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|R_RandomFinal_stub
+argument_list|,
+name|R_RandomFinal
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -701,14 +695,15 @@ return|;
 block|}
 end_function
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|R_RandomUpdate
-name|=
-name|R_RandomUpdate_stub
-end_pragma
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|R_RandomInit_stub
+argument_list|,
+name|R_RandomInit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -774,13 +769,49 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|R_RandomUpdate_stub
+argument_list|,
+name|R_RandomUpdate
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !PIC */
+end_comment
+
+begin_comment
+comment|/* Failsafe glue for static linking.  Link but complain like hell. */
+end_comment
+
+begin_comment
+comment|/* actually, this creates all sorts of ld(1) problems, forget it for now */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !NO_RSA&& PIC */
+comment|/* !PIC */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !NO_RSA */
 end_comment
 
 end_unit
