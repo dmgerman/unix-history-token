@@ -5836,8 +5836,11 @@ name|char
 modifier|*
 modifier|*
 name|addarg
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|user
+decl_stmt|;
 comment|/* 	 * -h : pass on name of host. 	 *		WARNING:  -h is accepted by login if and only if 	 *			getuid() == 0. 	 * -p : don't clobber the environment (so terminal type stays set). 	 * 	 * -f : force this login, he has already been authenticated 	 */
 name|argv
 operator|=
@@ -5987,12 +5990,41 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|user
+operator|=
 name|getenv
 argument_list|(
 literal|"USER"
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|user
+argument_list|,
+literal|'-'
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"tried to pass user \"%s\" to login"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"invalid user"
+argument_list|)
+expr_stmt|;
+block|}
 name|argv
 operator|=
 name|addarg
