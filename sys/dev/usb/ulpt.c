@@ -2519,7 +2519,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|DEV_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|ulpt
 argument_list|,
@@ -2528,8 +2528,6 @@ argument_list|,
 name|ulpt_driver
 argument_list|,
 name|ulpt_devclass
-argument_list|,
-name|ulpt_cdevsw
 argument_list|,
 name|usbd_driver_load
 argument_list|,

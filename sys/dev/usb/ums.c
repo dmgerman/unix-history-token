@@ -4026,7 +4026,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|DEV_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|ums
 argument_list|,
@@ -4035,8 +4035,6 @@ argument_list|,
 name|ums_driver
 argument_list|,
 name|ums_devclass
-argument_list|,
-name|ums_cdevsw
 argument_list|,
 name|usbd_driver_load
 argument_list|,
