@@ -1757,7 +1757,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_HASPAGE() -	determine if we have good backing store for  *				the requested page.  *  *	We determine whether good backing store exists for the requested  *	page and return TRUE if it does, FALSE if it doesn't.  *  *	If TRUE, we also try to determine how much valid, contiguous backing  *	store exists before and after the requested page within a reasonable  *	distance.  We do not try to restrict it to the swap device stripe  *	(that is handled in getpages/putpages).  It probably isn't worth  *	doing here.  *  *	This routine must be called at splvm().  */
+comment|/*  * SWAP_PAGER_HASPAGE() -	determine if we have good backing store for  *				the requested page.  *  *	We determine whether good backing store exists for the requested  *	page and return TRUE if it does, FALSE if it doesn't.  *  *	If TRUE, we also try to determine how much valid, contiguous backing  *	store exists before and after the requested page within a reasonable  *	distance.  We do not try to restrict it to the swap device stripe  *	(that is handled in getpages/putpages).  It probably isn't worth  *	doing here.  */
 end_comment
 
 begin_function
@@ -1790,7 +1790,15 @@ block|{
 name|daddr_t
 name|blk0
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 comment|/* 	 * do we have good backing store at the requested index ? 	 */
+name|s
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
 name|blk0
 operator|=
 name|swp_pager_meta_ctl
@@ -1809,6 +1817,11 @@ operator|==
 name|SWAPBLK_NONE
 condition|)
 block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|before
@@ -1970,6 +1983,11 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
