@@ -4,7 +4,7 @@ comment|/****************************************************************  The a
 end_comment
 
 begin_comment
-comment|/* Please send bug reports to 	David M. Gay 	Bell Laboratories, Room 2C-463 	600 Mountain Avenue 	Murray Hill, NJ 07974-0636 	U.S.A. 	dmg@bell-labs.com  */
+comment|/* Please send bug reports to 	David M. Gay 	dmg@acm.org  */
 end_comment
 
 begin_include
@@ -12,6 +12,23 @@ include|#
 directive|include
 file|"gdtoaimp.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_LOCALE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"locale.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -128,6 +145,26 @@ name|e
 decl_stmt|,
 name|e1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_LOCALE
+name|char
+name|decimalpoint
+init|=
+operator|*
+name|localeconv
+argument_list|()
+operator|->
+name|decimal_point
+decl_stmt|;
+else|#
+directive|else
+define|#
+directive|define
+name|decimalpoint
+value|'.'
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -196,7 +233,7 @@ condition|(
 operator|*
 name|s
 operator|==
-literal|'.'
+name|decimalpoint
 condition|)
 block|{
 name|decpt
@@ -285,7 +322,7 @@ condition|(
 operator|*
 name|s
 operator|==
-literal|'.'
+name|decimalpoint
 operator|&&
 operator|!
 name|decpt
@@ -518,7 +555,7 @@ operator|*
 operator|--
 name|s1
 operator|==
-literal|'.'
+name|decimalpoint
 condition|)
 continue|continue;
 if|if
