@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.36 1998/06/07 17:12:07 dfr Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.37 1998/06/20 16:39:35 peter Exp $ */
 end_comment
 
 begin_include
@@ -101,27 +101,11 @@ directive|include
 file|<sys/uio.h>
 end_include
 
-begin_comment
-comment|/*  * XXX stop<sys/vnode.h> from including<vnode_if.h>.<vnode_if.h> doesn't  * exist if we are an LKM.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
-
 begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
 
 begin_ifdef
 ifdef|#

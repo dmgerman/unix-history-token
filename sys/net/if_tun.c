@@ -144,27 +144,11 @@ directive|include
 file|<sys/uio.h>
 end_include
 
-begin_comment
-comment|/*  * XXX stop<sys/vnode.h> from including<vnode_if.h>.<vnode_if.h> doesn't  * exist if we are an LKM.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
-
 begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
 
 begin_include
 include|#
