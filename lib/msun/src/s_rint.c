@@ -48,24 +48,11 @@ begin_comment
 comment|/*  * TWO23 is long double instead of double to avoid a bug in gcc.  Without  * this, gcc thinks that TWO23[sx]+x and w-TWO23[sx] already have double  * precision and doesn't clip them to double precision when they are  * assigned and returned.  Use long double even in the !__STDC__ case in  * case this is compiled with gcc -traditional.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|long
 name|double
-else|#
-directive|else
-specifier|static
-name|long
-name|double
-endif|#
-directive|endif
 name|TWO52
 index|[
 literal|2
@@ -83,12 +70,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__generic_rint
@@ -96,17 +77,6 @@ parameter_list|(
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|double __generic_rint
-parameter_list|(
-name|x
-parameter_list|)
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int32_t
 name|i0

@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|acosh
@@ -58,18 +52,6 @@ name|double
 name|x
 parameter_list|)
 comment|/* wrapper acosh */
-else|#
-directive|else
-function|double acosh
-parameter_list|(
-name|x
-parameter_list|)
-comment|/* wrapper acosh */
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 ifdef|#
 directive|ifdef

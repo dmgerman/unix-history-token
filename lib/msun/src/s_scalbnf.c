@@ -40,22 +40,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|float
-else|#
-directive|else
-specifier|static
-name|float
-endif|#
-directive|endif
 name|two25
 init|=
 literal|3.355443200e+07
@@ -76,12 +64,6 @@ literal|1.0e-30
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|scalbnf
@@ -92,22 +74,6 @@ parameter_list|,
 name|int
 name|n
 parameter_list|)
-else|#
-directive|else
-function|float scalbn
-parameter_list|(
-name|x
-parameter_list|,
-name|n
-parameter_list|)
-name|float
-name|x
-decl_stmt|;
-name|int
-name|n
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int32_t
 name|k

@@ -44,22 +44,10 @@ begin_comment
 comment|/* cbrt(x)  * Return cube root of x  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|u_int32_t
-else|#
-directive|else
-specifier|static
-name|u_int32_t
-endif|#
-directive|endif
 name|B1
 init|=
 literal|715094163
@@ -75,22 +63,10 @@ begin_comment
 comment|/* B2 = (664-0.03306235651)*2**20 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|C
 init|=
 literal|5.42857142857142815906e-01
@@ -122,12 +98,6 @@ begin_comment
 comment|/* 5/14      = 0x3FD6DB6D, 0xB6DB6DB7 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|cbrt
@@ -135,17 +105,6 @@ parameter_list|(
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|double cbrt
-parameter_list|(
-name|x
-parameter_list|)
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int32_t
 name|hx

@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -59,31 +53,6 @@ init|=
 literal|1.0
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|double
-name|one
-init|=
-literal|1.0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 name|double
@@ -96,28 +65,6 @@ name|double
 modifier|*
 name|iptr
 parameter_list|)
-else|#
-directive|else
-function|double modf
-parameter_list|(
-name|x
-parameter_list|,
-name|iptr
-parameter_list|)
-name|double
-name|x
-decl_stmt|,
-decl|*
-name|iptr
-decl_stmt|;
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
 block|{
 name|int32_t
 name|i0
@@ -400,7 +347,7 @@ return|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

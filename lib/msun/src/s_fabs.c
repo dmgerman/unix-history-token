@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|fabs
@@ -57,17 +51,6 @@ parameter_list|(
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|double fabs
-parameter_list|(
-name|x
-parameter_list|)
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|u_int32_t
 name|high

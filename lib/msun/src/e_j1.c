@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|double
@@ -64,44 +58,11 @@ name|double
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|double
-name|pone
-argument_list|()
-decl_stmt|,
-name|qone
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|huge
 init|=
 literal|1e300
@@ -173,12 +134,6 @@ begin_comment
 comment|/* 0x3DAB2ACF, 0xCFB97ED8 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -189,31 +144,6 @@ literal|0.0
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|double
-name|zero
-init|=
-literal|0.0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__ieee754_j1
@@ -221,17 +151,6 @@ parameter_list|(
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|double __ieee754_j1
-parameter_list|(
-name|x
-parameter_list|)
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|double
 name|z
@@ -538,12 +457,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -554,18 +467,6 @@ literal|5
 index|]
 init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|U0
-index|[
-literal|5
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 operator|-
 literal|1.96057090646238940668e-01
 block|,
@@ -585,10 +486,10 @@ literal|9.19099158039878874504e-08
 block|,
 comment|/* 0xBE78AC00, 0x569105B8 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -596,20 +497,8 @@ name|V0
 index|[
 literal|5
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|V0
-index|[
-literal|5
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|1.99167318236649903973e-02
 block|,
 comment|/* 0x3F94650D, 0x3F4DA9F0 */
@@ -626,50 +515,39 @@ literal|1.66559246207992079114e-11
 block|,
 comment|/* 0x3DB25039, 0xDACA772A */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_function
 name|double
 name|__ieee754_y1
-argument_list|(
-argument|double x
-argument_list|)
-else|#
-directive|else
-name|double
-name|__ieee754_y1
-argument_list|(
-argument|x
-argument_list|)
+parameter_list|(
 name|double
 name|x
-block|;
-endif|#
-directive|endif
+parameter_list|)
 block|{
 name|double
 name|z
-block|,
+decl_stmt|,
 name|s
-block|,
+decl_stmt|,
 name|c
-block|,
+decl_stmt|,
 name|ss
-block|,
+decl_stmt|,
 name|cc
-block|,
+decl_stmt|,
 name|u
-block|,
+decl_stmt|,
 name|v
-block|;
+decl_stmt|;
 name|int32_t
 name|hx
-block|,
+decl_stmt|,
 name|ix
-block|,
+decl_stmt|,
 name|lx
-block|;
+decl_stmt|;
 name|EXTRACT_WORDS
 argument_list|(
 name|hx
@@ -678,13 +556,13 @@ name|lx
 argument_list|,
 name|x
 argument_list|)
-block|;
+expr_stmt|;
 name|ix
 operator|=
 literal|0x7fffffff
 operator|&
 name|hx
-block|;
+expr_stmt|;
 comment|/* if Y1(NaN) is NaN, Y1(-inf) is NaN, Y1(inf) is 0 */
 if|if
 condition|(
@@ -730,9 +608,6 @@ name|zero
 operator|/
 name|zero
 return|;
-end_decl_stmt
-
-begin_if
 if|if
 condition|(
 name|ix
@@ -869,9 +744,6 @@ return|return
 name|z
 return|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|ix
@@ -889,18 +761,12 @@ name|x
 operator|)
 return|;
 block|}
-end_if
-
-begin_expr_stmt
 name|z
 operator|=
 name|x
 operator|*
 name|x
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|u
 operator|=
 name|U0
@@ -942,9 +808,6 @@ operator|)
 operator|)
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|v
 operator|=
 name|one
@@ -992,9 +855,6 @@ operator|)
 operator|)
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|x
@@ -1024,21 +884,15 @@ name|x
 operator|)
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/* For x>= 8, the asymptotic expansions of pone is  *	1 + 15/128 s^2 - 4725/2^15 s^4 - ...,	where s = 1/x.  * We approximate pone by  * 	pone(x) = 1 + (R/S)  * where  R = pr0 + pr1*s^2 + pr2*s^4 + ... + pr5*s^10  * 	  S = 1 + ps0*s^2 + ... + ps4*s^10  * and  *	| pone(x)-1-R/S |<= 2  ** ( -60.06)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
-unit|static
+specifier|static
 specifier|const
 name|double
 name|pr8
@@ -1048,19 +902,6 @@ index|]
 init|=
 block|{
 comment|/* for x in [inf, 8]=1/[0,0.125] */
-else|#
-directive|else
-specifier|static
-name|double
-name|pr8
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [inf, 8]=1/[0,0.125] */
-endif|#
-directive|endif
 literal|0.00000000000000000000e+00
 block|,
 comment|/* 0x00000000, 0x00000000 */
@@ -1080,10 +921,10 @@ literal|7.91447954031891731574e+03
 block|,
 comment|/* 0x40BEEA7A, 0xC32782DD */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1091,20 +932,8 @@ name|ps8
 index|[
 literal|5
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|ps8
-index|[
-literal|5
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|1.14207370375678408436e+02
 block|,
 comment|/* 0x405C8D45, 0x8E656CAC */
@@ -1121,10 +950,10 @@ literal|3.08042720627888811578e+04
 block|,
 comment|/* 0x40DE1511, 0x697A0B2D */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1132,22 +961,9 @@ name|pr5
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [8,4.5454]=1/[0.125,0.22001] */
-else|#
-directive|else
-specifier|static
-name|double
-name|pr5
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [8,4.5454]=1/[0.125,0.22001] */
-endif|#
-directive|endif
 literal|1.31990519556243522749e-11
 block|,
 comment|/* 0x3DAD0667, 0xDAE1CA7D */
@@ -1167,10 +983,10 @@ literal|5.28715201363337541807e+02
 block|,
 comment|/* 0x408085B8, 0xBB7E0CB7 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1178,20 +994,8 @@ name|ps5
 index|[
 literal|5
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|ps5
-index|[
-literal|5
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|5.92805987221131331921e+01
 block|,
 comment|/* 0x404DA3EA, 0xA8AF633D */
@@ -1208,10 +1012,10 @@ literal|1.50404688810361062679e+03
 block|,
 comment|/* 0x40978030, 0x036F5E51 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1219,21 +1023,8 @@ name|pr3
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|pr3
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [4.547,2.8571]=1/[0.2199,0.35001] */
-endif|#
-directive|endif
 literal|3.02503916137373618024e-09
 block|,
 comment|/* 0x3E29FC21, 0xA7AD9EDD */
@@ -1253,10 +1044,10 @@ literal|4.85590685197364919645e+01
 block|,
 comment|/* 0x4048478F, 0x8EA83EE5 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1264,20 +1055,8 @@ name|ps3
 index|[
 literal|5
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|ps3
-index|[
-literal|5
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|3.47913095001251519989e+01
 block|,
 comment|/* 0x40416549, 0xA134069C */
@@ -1294,10 +1073,10 @@ literal|1.03787932439639277504e+02
 block|,
 comment|/* 0x4059F26D, 0x7C2EED53 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1305,22 +1084,9 @@ name|pr2
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [2.8570,2]=1/[0.3499,0.5] */
-else|#
-directive|else
-specifier|static
-name|double
-name|pr2
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [2.8570,2]=1/[0.3499,0.5] */
-endif|#
-directive|endif
 literal|1.07710830106873743082e-07
 block|,
 comment|/* 0x3E7CE9D4, 0xF65544F4 */
@@ -1340,10 +1106,10 @@ literal|5.07352312588818499250e+00
 block|,
 comment|/* 0x40144B49, 0xA574C1FE */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1351,20 +1117,8 @@ name|ps2
 index|[
 literal|5
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|ps2
-index|[
-literal|5
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|2.14364859363821409488e+01
 block|,
 comment|/* 0x40356FBD, 0x8AD5ECDC */
@@ -1381,73 +1135,47 @@ literal|8.36463893371618283368e+00
 block|,
 comment|/* 0x4020BAB1, 0xF44E5192 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|double
 name|pone
-argument_list|(
-argument|double x
-argument_list|)
-else|#
-directive|else
-specifier|static
-name|double
-name|pone
-argument_list|(
-argument|x
-argument_list|)
+parameter_list|(
 name|double
 name|x
-block|;
-endif|#
-directive|endif
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__STDC__
 specifier|const
 name|double
-operator|*
+modifier|*
 name|p
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|q
-block|;
-else|#
-directive|else
-name|double
-operator|*
-name|p
-block|,
-operator|*
-name|q
-block|;
-endif|#
-directive|endif
+decl_stmt|;
 name|double
 name|z
-block|,
+decl_stmt|,
 name|r
-block|,
+decl_stmt|,
 name|s
-block|;
+decl_stmt|;
 name|int32_t
 name|ix
-block|;
+decl_stmt|;
 name|GET_HIGH_WORD
 argument_list|(
 name|ix
 argument_list|,
 name|x
 argument_list|)
-block|;
+expr_stmt|;
 name|ix
 operator|&=
 literal|0x7fffffff
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|ix
@@ -1574,7 +1302,7 @@ operator|)
 operator|)
 operator|)
 operator|)
-block|;
+expr_stmt|;
 name|s
 operator|=
 name|one
@@ -1621,7 +1349,7 @@ operator|)
 operator|)
 operator|)
 operator|)
-block|;
+expr_stmt|;
 return|return
 name|one
 operator|+
@@ -1630,10 +1358,13 @@ operator|/
 name|s
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* For x>= 8, the asymptotic expansions of qone is  *	3/8 s - 105/1024 s^3 - ..., where s = 1/x.  * We approximate pone by  * 	qone(x) = s*(0.375 + (R/S))  * where  R = qr1*s^2 + qr2*s^4 + ... + qr5*s^10  * 	  S = 1 + qs1*s^2 + ... + qs6*s^12  * and  *	| qone(x)/s -0.375-R/S |<= 2  ** ( -61.13)  */
-ifdef|#
-directive|ifdef
-name|__STDC__
+end_comment
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1641,22 +1372,9 @@ name|qr8
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [inf, 8]=1/[0,0.125] */
-else|#
-directive|else
-specifier|static
-name|double
-name|qr8
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [inf, 8]=1/[0,0.125] */
-endif|#
-directive|endif
 literal|0.00000000000000000000e+00
 block|,
 comment|/* 0x00000000, 0x00000000 */
@@ -1681,10 +1399,10 @@ literal|4.84385124285750353010e+04
 block|,
 comment|/* 0xC0E7A6D0, 0x65D09C6A */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1692,20 +1410,8 @@ name|qs8
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|qs8
-index|[
-literal|6
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|1.61395369700722909556e+02
 block|,
 comment|/* 0x40642CA6, 0xDE5BCDE5 */
@@ -1726,10 +1432,10 @@ literal|2.94490264303834643215e+05
 block|,
 comment|/* 0xC111F969, 0x0EA5AA18 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1737,22 +1443,9 @@ name|qr5
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [8,4.5454]=1/[0.125,0.22001] */
-else|#
-directive|else
-specifier|static
-name|double
-name|qr5
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [8,4.5454]=1/[0.125,0.22001] */
-endif|#
-directive|endif
 operator|-
 literal|2.08979931141764104297e-11
 block|,
@@ -1778,10 +1471,10 @@ literal|2.61244440453215656817e+03
 block|,
 comment|/* 0xC0A468E3, 0x88FDA79D */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1789,20 +1482,8 @@ name|qs5
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|qs5
-index|[
-literal|6
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|8.12765501384335777857e+01
 block|,
 comment|/* 0x405451B2, 0xFF5A11B2 */
@@ -1823,10 +1504,10 @@ literal|4.71918354795128470869e+03
 block|,
 comment|/* 0xC0B26F2E, 0xFCFFA004 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1834,21 +1515,8 @@ name|qr3
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|qr3
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [4.547,2.8571]=1/[0.2199,0.35001] */
-endif|#
-directive|endif
 operator|-
 literal|5.07831226461766561369e-09
 block|,
@@ -1874,10 +1542,10 @@ literal|2.19210128478909325622e+02
 block|,
 comment|/* 0xC06B66B9, 0x5F5C1BF6 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1885,20 +1553,8 @@ name|qs3
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|qs3
-index|[
-literal|6
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|4.76651550323729509273e+01
 block|,
 comment|/* 0x4047D523, 0xCCD367E4 */
@@ -1919,10 +1575,10 @@ literal|1.35201191444307340817e+02
 block|,
 comment|/* 0xC060E670, 0x290A311F */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1930,22 +1586,9 @@ name|qr2
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [2.8570,2]=1/[0.3499,0.5] */
-else|#
-directive|else
-specifier|static
-name|double
-name|qr2
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [2.8570,2]=1/[0.3499,0.5] */
-endif|#
-directive|endif
 operator|-
 literal|1.78381727510958865572e-07
 block|,
@@ -1971,10 +1614,10 @@ literal|2.13719211703704061733e+01
 block|,
 comment|/* 0xC0355F36, 0x39CF6E52 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1982,20 +1625,8 @@ name|qs2
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|qs2
-index|[
-literal|6
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|2.95333629060523854548e+01
 block|,
 comment|/* 0x403D888A, 0x78AE64FF */
@@ -2016,73 +1647,47 @@ literal|4.95949898822628210127e+00
 block|,
 comment|/* 0xC013D686, 0xE71BE86B */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|double
 name|qone
-argument_list|(
-argument|double x
-argument_list|)
-else|#
-directive|else
-specifier|static
-name|double
-name|qone
-argument_list|(
-argument|x
-argument_list|)
+parameter_list|(
 name|double
 name|x
-block|;
-endif|#
-directive|endif
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__STDC__
 specifier|const
 name|double
-operator|*
+modifier|*
 name|p
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|q
-block|;
-else|#
-directive|else
-name|double
-operator|*
-name|p
-block|,
-operator|*
-name|q
-block|;
-endif|#
-directive|endif
+decl_stmt|;
 name|double
 name|s
-block|,
+decl_stmt|,
 name|r
-block|,
+decl_stmt|,
 name|z
-block|;
+decl_stmt|;
 name|int32_t
 name|ix
-block|;
+decl_stmt|;
 name|GET_HIGH_WORD
 argument_list|(
 name|ix
 argument_list|,
 name|x
 argument_list|)
-block|;
+expr_stmt|;
 name|ix
 operator|&=
 literal|0x7fffffff
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|ix
@@ -2209,7 +1814,7 @@ operator|)
 operator|)
 operator|)
 operator|)
-block|;
+expr_stmt|;
 name|s
 operator|=
 name|one
@@ -2265,7 +1870,7 @@ operator|)
 operator|)
 operator|)
 operator|)
-block|;
+expr_stmt|;
 return|return
 operator|(
 literal|.375
@@ -2278,7 +1883,7 @@ operator|/
 name|x
 return|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 

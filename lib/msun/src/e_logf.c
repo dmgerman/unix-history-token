@@ -40,22 +40,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|float
-else|#
-directive|else
-specifier|static
-name|float
-endif|#
-directive|endif
 name|ln2_hi
 init|=
 literal|6.9313812256e-01
@@ -111,12 +99,6 @@ begin_comment
 comment|/* 3E178897 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -127,31 +109,6 @@ literal|0.0
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|float
-name|zero
-init|=
-literal|0.0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|__ieee754_logf
@@ -159,17 +116,6 @@ parameter_list|(
 name|float
 name|x
 parameter_list|)
-else|#
-directive|else
-function|float __ieee754_logf
-parameter_list|(
-name|x
-parameter_list|)
-name|float
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|float
 name|hfsq

@@ -40,12 +40,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|ynf
@@ -57,23 +51,6 @@ name|float
 name|x
 parameter_list|)
 comment|/* wrapper ynf */
-else|#
-directive|else
-function|float ynf
-parameter_list|(
-name|n
-parameter_list|,
-name|x
-parameter_list|)
-comment|/* wrapper ynf */
-name|float
-name|x
-decl_stmt|;
-name|int
-name|n
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 ifdef|#
 directive|ifdef

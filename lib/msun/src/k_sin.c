@@ -44,22 +44,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|half
 init|=
 literal|5.00000000000000000000e-01
@@ -103,12 +91,6 @@ begin_comment
 comment|/* 0x3DE5D93A, 0x5ACFD57C */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__kernel_sin
@@ -122,27 +104,6 @@ parameter_list|,
 name|int
 name|iy
 parameter_list|)
-else|#
-directive|else
-function|double __kernel_sin
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|,
-name|iy
-parameter_list|)
-name|double
-name|x
-decl_stmt|,
-name|y
-decl_stmt|;
-name|int
-name|iy
-decl_stmt|;
-comment|/* iy=0 if y is zero */
-endif|#
-directive|endif
 block|{
 name|double
 name|z

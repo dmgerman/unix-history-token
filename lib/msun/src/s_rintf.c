@@ -44,22 +44,10 @@ begin_comment
 comment|/*  * TWO23 is double instead of float to avoid a bug in gcc.  Without  * this, gcc thinks that TWO23[sx]+x and w-TWO23[sx] already have float  * precision and doesn't clip them to float precision when they are  * assigned and returned.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|TWO23
 index|[
 literal|2
@@ -77,12 +65,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|rintf
@@ -90,17 +72,6 @@ parameter_list|(
 name|float
 name|x
 parameter_list|)
-else|#
-directive|else
-function|float rintf
-parameter_list|(
-name|x
-parameter_list|)
-name|float
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int32_t
 name|i0

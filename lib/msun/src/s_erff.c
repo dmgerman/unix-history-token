@@ -40,22 +40,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|float
-else|#
-directive|else
-specifier|static
-name|float
-endif|#
-directive|endif
 name|tiny
 init|=
 literal|1e-30
@@ -391,12 +379,6 @@ begin_comment
 comment|/* 0xc1b38712 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|erff
@@ -404,17 +386,6 @@ parameter_list|(
 name|float
 name|x
 parameter_list|)
-else|#
-directive|else
-function|float erff
-parameter_list|(
-name|x
-parameter_list|)
-name|float
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int32_t
 name|hx
@@ -1040,12 +1011,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|erfcf
@@ -1053,17 +1018,6 @@ parameter_list|(
 name|float
 name|x
 parameter_list|)
-else|#
-directive|else
-function|float erfcf
-parameter_list|(
-name|x
-parameter_list|)
-name|float
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int32_t
 name|hx

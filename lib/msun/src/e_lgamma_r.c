@@ -44,22 +44,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|two52
 init|=
 literal|4.50359962737049600000e+15
@@ -405,12 +393,6 @@ begin_comment
 comment|/* 0xBF5AB89D, 0x0B9E43E4 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -421,31 +403,6 @@ literal|0.00000000000000000000e+00
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|double
-name|zero
-init|=
-literal|0.00000000000000000000e+00
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 specifier|static
 name|double
@@ -454,17 +411,6 @@ parameter_list|(
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|static double sin_pi
-parameter_list|(
-name|x
-parameter_list|)
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|double
 name|y
@@ -730,12 +676,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__ieee754_lgamma_r
@@ -747,23 +687,6 @@ name|int
 modifier|*
 name|signgamp
 parameter_list|)
-else|#
-directive|else
-function|double __ieee754_lgamma_r
-parameter_list|(
-name|x
-parameter_list|,
-name|signgamp
-parameter_list|)
-name|double
-name|x
-decl_stmt|;
-name|int
-modifier|*
-name|signgamp
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|double
 name|t

@@ -44,22 +44,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|o_threshold
 init|=
 literal|7.09782712893383973096e+02
@@ -76,12 +64,6 @@ begin_comment
 comment|/* 0xc0874910, 0xD52D3051 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|exp
@@ -90,18 +72,6 @@ name|double
 name|x
 parameter_list|)
 comment|/* wrapper exp */
-else|#
-directive|else
-function|double exp
-parameter_list|(
-name|x
-parameter_list|)
-comment|/* wrapper exp */
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 ifdef|#
 directive|ifdef

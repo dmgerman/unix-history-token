@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|log10f
@@ -58,18 +52,6 @@ name|float
 name|x
 parameter_list|)
 comment|/* wrapper log10f */
-else|#
-directive|else
-function|float log10f
-parameter_list|(
-name|x
-parameter_list|)
-comment|/* wrapper log10f */
-name|float
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 ifdef|#
 directive|ifdef

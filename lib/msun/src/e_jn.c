@@ -44,22 +44,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|invsqrtpi
 init|=
 literal|5.64189583547756279280e-01
@@ -80,12 +68,6 @@ begin_comment
 comment|/* 0x3FF00000, 0x00000000 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -95,31 +77,6 @@ init|=
 literal|0.00000000000000000000e+00
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|double
-name|zero
-init|=
-literal|0.00000000000000000000e+00
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 name|double
@@ -131,22 +88,6 @@ parameter_list|,
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|double __ieee754_jn
-parameter_list|(
-name|n
-parameter_list|,
-name|x
-parameter_list|)
-name|int
-name|n
-decl_stmt|;
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int32_t
 name|i
@@ -893,12 +834,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__ieee754_yn
@@ -909,22 +844,6 @@ parameter_list|,
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|double __ieee754_yn
-parameter_list|(
-name|n
-parameter_list|,
-name|x
-parameter_list|)
-name|int
-name|n
-decl_stmt|;
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int32_t
 name|i

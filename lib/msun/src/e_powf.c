@@ -40,22 +40,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|float
-else|#
-directive|else
-specifier|static
-name|float
-endif|#
-directive|endif
 name|bp
 index|[]
 init|=
@@ -223,12 +211,6 @@ begin_comment
 comment|/* 0x36eca570 =1/ln2 tail*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|__ieee754_powf
@@ -239,21 +221,6 @@ parameter_list|,
 name|float
 name|y
 parameter_list|)
-else|#
-directive|else
-function|float __ieee754_powf
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-name|float
-name|x
-decl_stmt|,
-name|y
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|float
 name|z

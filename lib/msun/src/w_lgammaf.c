@@ -47,12 +47,6 @@ name|signgam
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|lgammaf
@@ -60,17 +54,6 @@ parameter_list|(
 name|float
 name|x
 parameter_list|)
-else|#
-directive|else
-function|float lgammaf
-parameter_list|(
-name|x
-parameter_list|)
-name|float
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 ifdef|#
 directive|ifdef

@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|__ieee754_gammaf_r
@@ -61,23 +55,6 @@ name|int
 modifier|*
 name|signgamp
 parameter_list|)
-else|#
-directive|else
-function|float __ieee754_gammaf_r
-parameter_list|(
-name|x
-parameter_list|,
-name|signgamp
-parameter_list|)
-name|float
-name|x
-decl_stmt|;
-name|int
-modifier|*
-name|signgamp
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 return|return
 name|__ieee754_lgammaf_r

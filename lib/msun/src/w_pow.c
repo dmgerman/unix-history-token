@@ -23,11 +23,26 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|double
@@ -40,22 +55,6 @@ name|double
 name|y
 parameter_list|)
 comment|/* wrapper pow */
-else|#
-directive|else
-function|double pow
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-comment|/* wrapper pow */
-name|double
-name|x
-decl_stmt|,
-name|y
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 ifdef|#
 directive|ifdef

@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|hypot
@@ -61,22 +55,6 @@ name|double
 name|y
 parameter_list|)
 comment|/* wrapper hypot */
-else|#
-directive|else
-function|double hypot
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-comment|/* wrapper hypot */
-name|double
-name|x
-decl_stmt|,
-name|y
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 ifdef|#
 directive|ifdef

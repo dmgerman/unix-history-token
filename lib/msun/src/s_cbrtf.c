@@ -44,22 +44,10 @@ begin_comment
 comment|/* cbrtf(x)  * Return cube root of x  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|unsigned
-else|#
-directive|else
-specifier|static
-name|unsigned
-endif|#
-directive|endif
 name|B1
 init|=
 literal|709958130
@@ -75,22 +63,10 @@ begin_comment
 comment|/* B2 = (76+2/3-0.03306235651)*2**23 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|float
-else|#
-directive|else
-specifier|static
-name|float
-endif|#
-directive|endif
 name|C
 init|=
 literal|5.4285717010e-01
@@ -122,12 +98,6 @@ begin_comment
 comment|/* 5/14      = 0x3eb6db6e */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|cbrtf
@@ -135,17 +105,6 @@ parameter_list|(
 name|float
 name|x
 parameter_list|)
-else|#
-directive|else
-function|float cbrtf
-parameter_list|(
-name|x
-parameter_list|)
-name|float
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|float
 name|r

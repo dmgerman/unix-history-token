@@ -40,41 +40,15 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|matherr
-argument_list|(
-expr|struct
-name|exception
-operator|*
-name|x
-argument_list|)
-else|#
-directive|else
-name|int
-name|matherr
-argument_list|(
-name|x
-argument_list|)
-decl|struct
+parameter_list|(
+name|struct
 name|exception
 modifier|*
 name|x
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|n
@@ -98,7 +72,7 @@ return|return
 name|n
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|double
@@ -64,44 +58,11 @@ name|double
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|double
-name|pzero
-argument_list|()
-decl_stmt|,
-name|qzero
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|huge
 init|=
 literal|1e300
@@ -168,12 +129,6 @@ begin_comment
 comment|/* 0x3E1408BC, 0xF4745D8F */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -184,31 +139,6 @@ literal|0.0
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|double
-name|zero
-init|=
-literal|0.0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__ieee754_j0
@@ -216,17 +146,6 @@ parameter_list|(
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|double __ieee754_j0
-parameter_list|(
-name|x
-parameter_list|)
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|double
 name|z
@@ -577,22 +496,10 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|u00
 init|=
 operator|-
@@ -657,12 +564,6 @@ begin_comment
 comment|/* 0x3DFE5018, 0x3BD6D9EF */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__ieee754_y0
@@ -670,17 +571,6 @@ parameter_list|(
 name|double
 name|x
 parameter_list|)
-else|#
-directive|else
-function|double __ieee754_y0
-parameter_list|(
-name|x
-parameter_list|)
-name|double
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|double
 name|z
@@ -1020,12 +910,6 @@ begin_comment
 comment|/* The asymptotic expansions of pzero is  *	1 - 9/128 s^2 + 11025/98304 s^4 - ...,	where s = 1/x.  * For x>= 2, We approximate pzero by  * 	pzero(x) = 1 + (R/S)  * where  R = pR0 + pR1*s^2 + pR2*s^4 + ... + pR5*s^10  * 	  S = 1 + pS0*s^2 + ... + pS4*s^10  * and  *	| pzero(x)-1-R/S |<= 2  ** ( -60.26)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1037,19 +921,6 @@ index|]
 init|=
 block|{
 comment|/* for x in [inf, 8]=1/[0,0.125] */
-else|#
-directive|else
-specifier|static
-name|double
-name|pR8
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [inf, 8]=1/[0,0.125] */
-endif|#
-directive|endif
 literal|0.00000000000000000000e+00
 block|,
 comment|/* 0x00000000, 0x00000000 */
@@ -1074,10 +945,10 @@ literal|5.25304380490729545272e+03
 block|,
 comment|/* 0xC0B4850B, 0x36CC643D */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1085,20 +956,8 @@ name|pS8
 index|[
 literal|5
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|pS8
-index|[
-literal|5
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|1.16534364619668181717e+02
 block|,
 comment|/* 0x405D2233, 0x07A96751 */
@@ -1115,10 +974,10 @@ literal|4.76277284146730962675e+04
 block|,
 comment|/* 0x40E74177, 0x4F2C49DC */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1126,22 +985,9 @@ name|pR5
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [8,4.5454]=1/[0.125,0.22001] */
-else|#
-directive|else
-specifier|static
-name|double
-name|pR5
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [8,4.5454]=1/[0.125,0.22001] */
-endif|#
-directive|endif
 operator|-
 literal|1.14125464691894502584e-11
 block|,
@@ -1167,10 +1013,10 @@ literal|3.46433388365604912451e+02
 block|,
 comment|/* 0xC075A6EF, 0x28A38BD7 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1178,20 +1024,8 @@ name|pS5
 index|[
 literal|5
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|pS5
-index|[
-literal|5
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|6.07539382692300335975e+01
 block|,
 comment|/* 0x404E6081, 0x0C98C5DE */
@@ -1208,10 +1042,10 @@ literal|2.40605815922939109441e+03
 block|,
 comment|/* 0x40A2CC1D, 0xC70BE864 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1219,22 +1053,9 @@ name|pR3
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [4.547,2.8571]=1/[0.2199,0.35001] */
-else|#
-directive|else
-specifier|static
-name|double
-name|pR3
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [4.547,2.8571]=1/[0.2199,0.35001] */
-endif|#
-directive|endif
 operator|-
 literal|2.54704601771951915620e-09
 block|,
@@ -1260,10 +1081,10 @@ literal|3.14479470594888503854e+01
 block|,
 comment|/* 0xC03F72AC, 0xA892D80F */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1271,20 +1092,8 @@ name|pS3
 index|[
 literal|5
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|pS3
-index|[
-literal|5
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|3.58560338055209726349e+01
 block|,
 comment|/* 0x4041ED92, 0x84077DD3 */
@@ -1301,10 +1110,10 @@ literal|1.73580930813335754692e+02
 block|,
 comment|/* 0x4065B296, 0xFC379081 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1312,22 +1121,9 @@ name|pR2
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [2.8570,2]=1/[0.3499,0.5] */
-else|#
-directive|else
-specifier|static
-name|double
-name|pR2
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [2.8570,2]=1/[0.3499,0.5] */
-endif|#
-directive|endif
 operator|-
 literal|8.87534333032526411254e-08
 block|,
@@ -1353,10 +1149,10 @@ literal|3.23364579351335335033e+00
 block|,
 comment|/* 0xC009DE81, 0xAF8FE70F */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1364,20 +1160,8 @@ name|pS2
 index|[
 literal|5
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|pS2
-index|[
-literal|5
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|2.22202997532088808441e+01
 block|,
 comment|/* 0x40363865, 0x908B5959 */
@@ -1394,73 +1178,47 @@ literal|1.46576176948256193810e+01
 block|,
 comment|/* 0x402D50B3, 0x44391809 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|double
 name|pzero
-argument_list|(
-argument|double x
-argument_list|)
-else|#
-directive|else
-specifier|static
-name|double
-name|pzero
-argument_list|(
-argument|x
-argument_list|)
+parameter_list|(
 name|double
 name|x
-block|;
-endif|#
-directive|endif
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__STDC__
 specifier|const
 name|double
-operator|*
+modifier|*
 name|p
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|q
-block|;
-else|#
-directive|else
-name|double
-operator|*
-name|p
-block|,
-operator|*
-name|q
-block|;
-endif|#
-directive|endif
+decl_stmt|;
 name|double
 name|z
-block|,
+decl_stmt|,
 name|r
-block|,
+decl_stmt|,
 name|s
-block|;
+decl_stmt|;
 name|int32_t
 name|ix
-block|;
+decl_stmt|;
 name|GET_HIGH_WORD
 argument_list|(
 name|ix
 argument_list|,
 name|x
 argument_list|)
-block|;
+expr_stmt|;
 name|ix
 operator|&=
 literal|0x7fffffff
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|ix
@@ -1587,7 +1345,7 @@ operator|)
 operator|)
 operator|)
 operator|)
-block|;
+expr_stmt|;
 name|s
 operator|=
 name|one
@@ -1634,7 +1392,7 @@ operator|)
 operator|)
 operator|)
 operator|)
-block|;
+expr_stmt|;
 return|return
 name|one
 operator|+
@@ -1643,10 +1401,13 @@ operator|/
 name|s
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* For x>= 8, the asymptotic expansions of qzero is  *	-1/8 s + 75/1024 s^3 - ..., where s = 1/x.  * We approximate pzero by  * 	qzero(x) = s*(-1.25 + (R/S))  * where  R = qR0 + qR1*s^2 + qR2*s^4 + ... + qR5*s^10  * 	  S = 1 + qS0*s^2 + ... + qS5*s^12  * and  *	| qzero(x)/s +1.25-R/S |<= 2  ** ( -61.22)  */
-ifdef|#
-directive|ifdef
-name|__STDC__
+end_comment
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1654,22 +1415,9 @@ name|qR8
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [inf, 8]=1/[0,0.125] */
-else|#
-directive|else
-specifier|static
-name|double
-name|qR8
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [inf, 8]=1/[0,0.125] */
-endif|#
-directive|endif
 literal|0.00000000000000000000e+00
 block|,
 comment|/* 0x00000000, 0x00000000 */
@@ -1689,10 +1437,10 @@ literal|3.70146267776887834771e+04
 block|,
 comment|/* 0x40E212D4, 0x0E901566 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1700,20 +1448,8 @@ name|qS8
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|qS8
-index|[
-literal|6
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|1.63776026895689824414e+02
 block|,
 comment|/* 0x406478D5, 0x365B39BC */
@@ -1734,10 +1470,10 @@ literal|3.43899293537866615225e+05
 block|,
 comment|/* 0xC114FD6D, 0x2C9530C5 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1745,22 +1481,9 @@ name|qR5
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [8,4.5454]=1/[0.125,0.22001] */
-else|#
-directive|else
-specifier|static
-name|double
-name|qR5
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [8,4.5454]=1/[0.125,0.22001] */
-endif|#
-directive|endif
 literal|1.84085963594515531381e-11
 block|,
 comment|/* 0x3DB43D8F, 0x29CC8CD9 */
@@ -1780,10 +1503,10 @@ literal|1.98997785864605384631e+03
 block|,
 comment|/* 0x409F17E9, 0x53C6E3A6 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1791,20 +1514,8 @@ name|qS5
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|qS5
-index|[
-literal|6
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|8.27766102236537761883e+01
 block|,
 comment|/* 0x4054B1B3, 0xFB5E1543 */
@@ -1825,10 +1536,10 @@ literal|5.35434275601944773371e+03
 block|,
 comment|/* 0xC0B4EA57, 0xBEDBC609 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1836,22 +1547,9 @@ name|qR3
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [4.547,2.8571]=1/[0.2199,0.35001] */
-else|#
-directive|else
-specifier|static
-name|double
-name|qR3
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [4.547,2.8571]=1/[0.2199,0.35001] */
-endif|#
-directive|endif
 literal|4.37741014089738620906e-09
 block|,
 comment|/* 0x3E32CD03, 0x6ADECB82 */
@@ -1871,10 +1569,10 @@ literal|1.66733948696651168575e+02
 block|,
 comment|/* 0x4064D77C, 0x81FA21E0 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1882,20 +1580,8 @@ name|qS3
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|qS3
-index|[
-literal|6
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|4.87588729724587182091e+01
 block|,
 comment|/* 0x40486122, 0xBFE343A6 */
@@ -1916,10 +1602,10 @@ literal|1.49247451836156386662e+02
 block|,
 comment|/* 0xC062A7EB, 0x201CF40F */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1927,22 +1613,9 @@ name|qR2
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
 comment|/* for x in [2.8570,2]=1/[0.3499,0.5] */
-else|#
-directive|else
-specifier|static
-name|double
-name|qR2
-index|[
-literal|6
-index|]
-operator|=
-block|{
-comment|/* for x in [2.8570,2]=1/[0.3499,0.5] */
-endif|#
-directive|endif
 literal|1.50444444886983272379e-07
 block|,
 comment|/* 0x3E84313B, 0x54F76BDB */
@@ -1962,10 +1635,10 @@ literal|1.62527075710929267416e+01
 block|,
 comment|/* 0x403040B1, 0x71814BB4 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|double
@@ -1973,20 +1646,8 @@ name|qS2
 index|[
 literal|6
 index|]
-operator|=
+init|=
 block|{
-else|#
-directive|else
-specifier|static
-name|double
-name|qS2
-index|[
-literal|6
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
 literal|3.03655848355219184498e+01
 block|,
 comment|/* 0x403E5D96, 0xF7C07AED */
@@ -2007,73 +1668,47 @@ literal|5.31095493882666946917e+00
 block|,
 comment|/* 0xC0153E6A, 0xF8B32931 */
 block|}
-block|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|double
 name|qzero
-argument_list|(
-argument|double x
-argument_list|)
-else|#
-directive|else
-specifier|static
-name|double
-name|qzero
-argument_list|(
-argument|x
-argument_list|)
+parameter_list|(
 name|double
 name|x
-block|;
-endif|#
-directive|endif
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__STDC__
 specifier|const
 name|double
-operator|*
+modifier|*
 name|p
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|q
-block|;
-else|#
-directive|else
-name|double
-operator|*
-name|p
-block|,
-operator|*
-name|q
-block|;
-endif|#
-directive|endif
+decl_stmt|;
 name|double
 name|s
-block|,
+decl_stmt|,
 name|r
-block|,
+decl_stmt|,
 name|z
-block|;
+decl_stmt|;
 name|int32_t
 name|ix
-block|;
+decl_stmt|;
 name|GET_HIGH_WORD
 argument_list|(
 name|ix
 argument_list|,
 name|x
 argument_list|)
-block|;
+expr_stmt|;
 name|ix
 operator|&=
 literal|0x7fffffff
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|ix
@@ -2200,7 +1835,7 @@ operator|)
 operator|)
 operator|)
 operator|)
-block|;
+expr_stmt|;
 name|s
 operator|=
 name|one
@@ -2256,7 +1891,7 @@ operator|)
 operator|)
 operator|)
 operator|)
-block|;
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -2270,7 +1905,7 @@ operator|/
 name|x
 return|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 

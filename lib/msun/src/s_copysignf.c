@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|copysignf
@@ -60,21 +54,6 @@ parameter_list|,
 name|float
 name|y
 parameter_list|)
-else|#
-directive|else
-function|float copysignf
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-name|float
-name|x
-decl_stmt|,
-name|y
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|u_int32_t
 name|ix

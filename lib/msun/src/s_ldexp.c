@@ -46,12 +46,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|ldexp
@@ -62,22 +56,6 @@ parameter_list|,
 name|int
 name|exp
 parameter_list|)
-else|#
-directive|else
-function|double ldexp
-parameter_list|(
-name|value
-parameter_list|,
-name|exp
-parameter_list|)
-name|double
-name|value
-decl_stmt|;
-name|int
-name|exp
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 if|if
 condition|(

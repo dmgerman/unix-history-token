@@ -53,12 +53,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|_SCALB_INT
 end_ifdef
 
@@ -87,54 +81,6 @@ argument_list|)
 comment|/* wrapper scalbf */
 endif|#
 directive|endif
-else|#
-directive|else
-name|float
-name|scalbf
-argument_list|(
-name|x
-argument_list|,
-name|fn
-argument_list|)
-comment|/* wrapper scalbf */
-ifdef|#
-directive|ifdef
-name|_SCALB_INT
-name|float
-name|x
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fn
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|float
-name|x
-decl_stmt|,
-name|fn
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -270,7 +216,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_decl_stmt
 
 end_unit
 

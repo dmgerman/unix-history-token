@@ -44,22 +44,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|one
 init|=
 literal|1.00000000000000000000e+00
@@ -123,12 +111,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|double
 name|__kernel_tan
@@ -142,26 +124,6 @@ parameter_list|,
 name|int
 name|iy
 parameter_list|)
-else|#
-directive|else
-function|double __kernel_tan
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|,
-name|iy
-parameter_list|)
-name|double
-name|x
-decl_stmt|,
-name|y
-decl_stmt|;
-name|int
-name|iy
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|double
 name|z

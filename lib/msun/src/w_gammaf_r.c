@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|gammaf_r
@@ -62,24 +56,6 @@ modifier|*
 name|signgamp
 parameter_list|)
 comment|/* wrapper lgammaf_r */
-else|#
-directive|else
-function|float gammaf_r
-parameter_list|(
-name|x
-parameter_list|,
-name|signgamp
-parameter_list|)
-comment|/* wrapper lgammaf_r */
-name|float
-name|x
-decl_stmt|;
-name|int
-modifier|*
-name|signgamp
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 ifdef|#
 directive|ifdef

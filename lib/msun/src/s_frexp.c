@@ -44,22 +44,10 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-else|#
-directive|else
-specifier|static
-name|double
-endif|#
-directive|endif
 name|two54
 init|=
 literal|1.80143985094819840000e+16
@@ -69,12 +57,6 @@ end_decl_stmt
 begin_comment
 comment|/* 0x43500000, 0x00000000 */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 name|double
@@ -87,23 +69,6 @@ name|int
 modifier|*
 name|eptr
 parameter_list|)
-else|#
-directive|else
-function|double frexp
-parameter_list|(
-name|x
-parameter_list|,
-name|eptr
-parameter_list|)
-name|double
-name|x
-decl_stmt|;
-name|int
-modifier|*
-name|eptr
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int32_t
 name|hx

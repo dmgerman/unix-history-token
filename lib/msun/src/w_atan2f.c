@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|atan2f
@@ -61,22 +55,6 @@ name|float
 name|x
 parameter_list|)
 comment|/* wrapper atan2f */
-else|#
-directive|else
-function|float atan2f
-parameter_list|(
-name|y
-parameter_list|,
-name|x
-parameter_list|)
-comment|/* wrapper atan2 */
-name|float
-name|y
-decl_stmt|,
-name|x
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 ifdef|#
 directive|ifdef

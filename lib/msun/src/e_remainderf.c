@@ -40,12 +40,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -55,31 +49,6 @@ init|=
 literal|0.0
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|float
-name|zero
-init|=
-literal|0.0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 name|float
@@ -91,21 +60,6 @@ parameter_list|,
 name|float
 name|p
 parameter_list|)
-else|#
-directive|else
-function|float __ieee754_remainderf
-parameter_list|(
-name|x
-parameter_list|,
-name|p
-parameter_list|)
-name|float
-name|x
-decl_stmt|,
-name|p
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int32_t
 name|hx

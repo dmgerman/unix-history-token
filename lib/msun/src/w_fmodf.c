@@ -44,12 +44,6 @@ directive|include
 file|"math_private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|fmodf
@@ -61,22 +55,6 @@ name|float
 name|y
 parameter_list|)
 comment|/* wrapper fmodf */
-else|#
-directive|else
-function|float fmodf
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-comment|/* wrapper fmodf */
-name|float
-name|x
-decl_stmt|,
-name|y
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 ifdef|#
 directive|ifdef

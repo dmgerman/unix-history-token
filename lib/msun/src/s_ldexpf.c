@@ -46,12 +46,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|float
 name|ldexpf
@@ -62,22 +56,6 @@ parameter_list|,
 name|int
 name|exp
 parameter_list|)
-else|#
-directive|else
-function|float ldexpf
-parameter_list|(
-name|value
-parameter_list|,
-name|exp
-parameter_list|)
-name|float
-name|value
-decl_stmt|;
-name|int
-name|exp
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 if|if
 condition|(
