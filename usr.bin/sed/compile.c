@@ -2360,7 +2360,7 @@ name|repp
 argument_list|,
 name|re
 argument_list|,
-literal|0
+name|rflags
 argument_list|)
 operator|)
 operator|!=
