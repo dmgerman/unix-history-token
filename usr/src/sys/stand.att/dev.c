@@ -1,28 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dev.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dev.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|"stand/saio.h"
-end_include
-
-begin_comment
-comment|/* used from machine/stand dir */
-end_comment
 
 begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"saio.h"
 end_include
 
 begin_comment
@@ -488,6 +484,12 @@ name|errno
 operator|=
 name|EBADF
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
