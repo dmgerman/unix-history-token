@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.18 1995/05/08 02:08:28 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.19 1995/05/30 08:28:11 rgrimes Exp $  *  */
 end_comment
 
 begin_include
@@ -1037,6 +1037,23 @@ expr_stmt|;
 name|Fixup_Names
 argument_list|(
 name|d
+argument_list|)
+expr_stmt|;
+name|Bios_Limit_Chunk
+argument_list|(
+name|d
+operator|->
+name|chunks
+argument_list|,
+literal|1024
+operator|*
+name|d
+operator|->
+name|bios_hd
+operator|*
+name|d
+operator|->
+name|bios_sect
 argument_list|)
 expr_stmt|;
 return|return
