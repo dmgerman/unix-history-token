@@ -12,7 +12,7 @@ name|_DIALOG_H_INCLUDE
 end_define
 
 begin_comment
-comment|/*  *  dialog.h -- common declarations for all dialog modules  *  *  AUTHOR: Savio Lam (lam836@cs.cuhk.hk)  *  *	Substantial rennovation:  12/18/95, Jordan K. Hubbard  *  *  This program is free software; you can redistribute it and/or  *  modify it under the terms of the GNU General Public License  *  as published by the Free Software Foundation; either version 2  *  of the License, or (at your option) any later version.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *  GNU General Public License for more details.  *  *  You should have received a copy of the GNU General Public License  *  along with this program; if not, write to the Free Software  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*  *  dialog.h -- common declarations for all dialog modules  *  *  AUTHOR: Savio Lam (lam836@cs.cuhk.hk)  *  *	Substantial rennovation:  12/18/95, Jordan K. Hubbard  *  *  This program is free software; you can redistribute it and/or  *  modify it under the terms of the GNU General Public License  *  as published by the Free Software Foundation; either version 2  *  of the License, or (at your option) any later version.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *  GNU General Public License for more details.  *  *  You should have received a copy of the GNU General Public License  *  along with this program; if not, write to the Free Software  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_define
@@ -675,6 +675,29 @@ end_function_decl
 begin_function_decl
 name|int
 name|dialog_yesno
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|title
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|prompt
+parameter_list|,
+name|int
+name|height
+parameter_list|,
+name|int
+name|width
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dialog_noyes
 parameter_list|(
 name|unsigned
 name|char

@@ -57,12 +57,14 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|retval
+name|rval1
+decl_stmt|,
+name|rval2
 decl_stmt|;
 name|init_dialog
 argument_list|()
 expr_stmt|;
-name|retval
+name|rval1
 operator|=
 name|dialog_yesno
 argument_list|(
@@ -80,17 +82,44 @@ expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
+name|rval2
+operator|=
+name|dialog_noyes
+argument_list|(
+literal|"This is dialog_noyes() in action"
+argument_list|,
+literal|"Have you stopped beating your wife?"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|end_dialog
+argument_list|()
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"returned value for dialog_yesno was %d\n"
 argument_list|,
-name|retval
+name|rval1
 argument_list|)
 expr_stmt|;
-name|end_dialog
-argument_list|()
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"returned value for dialog_noyes was %d\n"
+argument_list|,
+name|rval2
+argument_list|)
 expr_stmt|;
 return|return
 literal|0

@@ -3,6 +3,28 @@ begin_comment
 comment|/*  *  yesno.c -- implements the yes/no box  *  *  AUTHOR: Savio Lam (lam836@cs.cuhk.hk)  *  *  This program is free software; you can redistribute it and/or  *  modify it under the terms of the GNU General Public License  *  as published by the Free Software Foundation; either version 2  *  of the License, or (at your option) any later version.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *  GNU General Public License for more details.  *  *  You should have received a copy of the GNU General Public License  *  along with this program; if not, write to the Free Software  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -14,6 +36,37 @@ include|#
 directive|include
 file|"dialog.priv.h"
 end_include
+
+begin_comment
+comment|/* Actual work function */
+end_comment
+
+begin_function_decl
+specifier|static
+name|int
+name|dialog_yesno_proc
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|title
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|prompt
+parameter_list|,
+name|int
+name|height
+parameter_list|,
+name|int
+name|width
+parameter_list|,
+name|int
+name|yesdefault
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Display a dialog box with two buttons - Yes and No  */
@@ -38,6 +91,90 @@ name|height
 parameter_list|,
 name|int
 name|width
+parameter_list|)
+block|{
+return|return
+name|dialog_yesno_proc
+argument_list|(
+name|title
+argument_list|,
+name|prompt
+argument_list|,
+name|height
+argument_list|,
+name|width
+argument_list|,
+name|TRUE
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Display a dialog box with two buttons - No and Yes  */
+end_comment
+
+begin_function
+name|int
+name|dialog_noyes
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|title
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|prompt
+parameter_list|,
+name|int
+name|height
+parameter_list|,
+name|int
+name|width
+parameter_list|)
+block|{
+return|return
+name|dialog_yesno_proc
+argument_list|(
+name|title
+argument_list|,
+name|prompt
+argument_list|,
+name|height
+argument_list|,
+name|width
+argument_list|,
+name|FALSE
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|dialog_yesno_proc
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|title
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|prompt
+parameter_list|,
+name|int
+name|height
+parameter_list|,
+name|int
+name|width
+parameter_list|,
+name|int
+name|yesdefault
 parameter_list|)
 block|{
 name|int
@@ -502,7 +639,11 @@ name|print_button
 argument_list|(
 name|dialog
 argument_list|,
+name|yesdefault
+condition|?
 literal|"  No  "
+else|:
+literal|" Yes "
 argument_list|,
 name|y
 argument_list|,
@@ -517,7 +658,11 @@ name|print_button
 argument_list|(
 name|dialog
 argument_list|,
+name|yesdefault
+condition|?
 literal|" Yes "
+else|:
+literal|"  No  "
 argument_list|,
 name|y
 argument_list|,
@@ -621,7 +766,11 @@ name|print_button
 argument_list|(
 name|dialog
 argument_list|,
+name|yesdefault
+condition|?
 literal|" Yes "
+else|:
+literal|"  No  "
 argument_list|,
 name|y
 argument_list|,
@@ -634,7 +783,11 @@ name|print_button
 argument_list|(
 name|dialog
 argument_list|,
+name|yesdefault
+condition|?
 literal|"  No  "
+else|:
+literal|" Yes "
 argument_list|,
 name|y
 argument_list|,
@@ -657,7 +810,11 @@ name|print_button
 argument_list|(
 name|dialog
 argument_list|,
+name|yesdefault
+condition|?
 literal|"  No  "
+else|:
+literal|" Yes "
 argument_list|,
 name|y
 argument_list|,
@@ -672,7 +829,11 @@ name|print_button
 argument_list|(
 name|dialog
 argument_list|,
+name|yesdefault
+condition|?
 literal|" Yes "
+else|:
+literal|"  No  "
 argument_list|,
 name|y
 argument_list|,
@@ -707,7 +868,16 @@ argument_list|(
 name|tmphlp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|yesdefault
+condition|)
 return|return
+name|button
+return|;
+else|else
+return|return
+operator|!
 name|button
 return|;
 case|case
