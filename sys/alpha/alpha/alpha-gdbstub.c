@@ -1865,6 +1865,9 @@ operator|-
 literal|1
 block|,
 comment|/*32*/
+operator|-
+literal|1
+block|,
 name|R_GP
 block|,
 name|R_A0
