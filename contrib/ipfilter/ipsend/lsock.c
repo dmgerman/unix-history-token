@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lsock.c (C) 1995 Darren Reed  *  * The author provides this program as-is, with no gaurantee for its  * suitability for any specific purpose.  The author takes no responsibility  * for the misuse/abuse of this program and provides it for the sole purpose  * of testing packet filter policies.  This file maybe distributed freely  * providing it is not modified and that this notice remains in tact.  */
+comment|/*  * lsock.c (C) 1995-1997 Darren Reed  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -11,20 +11,27 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
 literal|"@(#)lsock.c	1.2 1/11/96 (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: lsock.c,v 2.0.2.7 1997/09/28 07:13:32 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,7 +257,7 @@ if|#
 directive|if
 name|LINUX
 operator|<
-literal|0103
+literal|0200
 end_if
 
 begin_include
@@ -1102,8 +1109,6 @@ parameter_list|,
 name|ti
 parameter_list|,
 name|gwip
-parameter_list|,
-name|flags
 parameter_list|)
 name|char
 modifier|*
@@ -1120,9 +1125,6 @@ decl_stmt|;
 name|struct
 name|in_addr
 name|gwip
-decl_stmt|;
-name|int
-name|flags
 decl_stmt|;
 block|{
 name|struct
@@ -1348,6 +1350,8 @@ name|lsin
 operator|.
 name|sin_port
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1501,6 +1505,12 @@ name|sk
 operator|.
 name|rcv_ack_seq
 expr_stmt|;
+name|ti
+operator|->
+name|ti_flags
+operator|=
+name|TH_SYN
+expr_stmt|;
 if|if
 condition|(
 name|send_tcp
@@ -1509,11 +1519,13 @@ name|nfd
 argument_list|,
 name|mtu
 argument_list|,
+operator|(
+name|ip_t
+operator|*
+operator|)
 name|ti
 argument_list|,
 name|gwip
-argument_list|,
-name|TH_SYN
 argument_list|)
 operator|==
 operator|-

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993,1994,1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_comment
@@ -112,11 +112,22 @@ directive|include
 file|<netinet/in_systm.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -145,12 +156,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcpip.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -164,6 +169,12 @@ begin_include
 include|#
 directive|include
 file|"ip_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcpip.h>
 end_include
 
 begin_include
@@ -186,15 +197,11 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -205,11 +212,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipft_td.c,v 2.0.2.4 1997/04/30 13:55:12 darrenr Exp $"
+literal|"@(#)$Id: ipft_td.c,v 2.0.2.6.2.1 1997/11/12 10:56:10 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,14 +494,12 @@ name|struct
 name|tcpiphdr
 name|pkt
 decl_stmt|;
-name|struct
-name|ip
+name|ip_t
 modifier|*
 name|ip
 init|=
 operator|(
-expr|struct
-name|ip
+name|ip_t
 operator|*
 operator|)
 operator|&
@@ -864,8 +870,7 @@ name|ip_hl
 operator|=
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|ip
+name|ip_t
 argument_list|)
 expr_stmt|;
 name|s

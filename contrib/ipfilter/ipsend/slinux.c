@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright October 1992 Darren Reed. (from tcplog)  *  *   This software may be freely distributed as long as it is not altered  * in any way and that this messagge always accompanies it.  *  *   The author of this software makes no garuntee about the  * performance of this package or its suitability to fulfill any purpose.  *  */
+comment|/*  * (C)opyright 1992-1997 Darren Reed. (from tcplog)  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_include
@@ -131,20 +131,27 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
 literal|"@(#)slinux.c	1.2 8/25/95"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: slinux.c,v 2.0.2.6 1997/09/28 07:13:35 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,7 +203,7 @@ name|dev
 parameter_list|,
 name|sport
 parameter_list|,
-name|tout
+name|spare
 parameter_list|)
 name|char
 modifier|*
@@ -205,7 +212,7 @@ decl_stmt|;
 name|int
 name|sport
 decl_stmt|,
-name|tout
+name|spare
 decl_stmt|;
 block|{
 name|int

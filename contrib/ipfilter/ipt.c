@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993-1996 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_ifdef
@@ -38,6 +38,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -52,6 +58,12 @@ name|defined
 argument_list|(
 name|__svr4__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__sgi
+argument_list|)
 end_if
 
 begin_include
@@ -65,11 +77,26 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__sgi
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/byteorder.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -81,12 +108,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -142,11 +163,22 @@ directive|include
 file|<netinet/in_systm.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -170,12 +202,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_icmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcpip.h>
 end_include
 
 begin_include
@@ -242,6 +268,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcpip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ip_fil.h"
 end_include
 
@@ -265,15 +297,11 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -284,11 +312,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipt.c,v 2.0.2.5 1997/04/30 13:59:39 darrenr Exp $"
+literal|"@(#)$Id: ipt.c,v 2.0.2.12.2.1 1997/11/12 10:58:10 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,11 +445,6 @@ init|=
 operator|&
 name|iptext
 decl_stmt|;
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
 name|u_long
 name|buf
 index|[
@@ -431,9 +455,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|char
-name|c
 decl_stmt|;
 name|char
 modifier|*
@@ -451,6 +472,10 @@ name|iface
 init|=
 name|NULL
 decl_stmt|;
+name|ip_t
+modifier|*
+name|ip
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|,
@@ -459,15 +484,14 @@ decl_stmt|,
 name|dir
 init|=
 literal|0
+decl_stmt|,
+name|c
 decl_stmt|;
 while|while
 condition|(
 operator|(
 name|c
 operator|=
-operator|(
-name|char
-operator|)
 name|getopt
 argument_list|(
 name|argc
@@ -810,7 +834,10 @@ continue|continue;
 comment|/* fake an `ioctl' call :) */
 name|i
 operator|=
-name|iplioctl
+name|IPL_EXTERN
+argument_list|(
+name|ioctl
+argument_list|)
 argument_list|(
 literal|0
 argument_list|,
@@ -836,7 +863,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"iplioctl(SIOCADDFR,%x,1) = %d\n"
+literal|"iplioctl(SIOCADDFR,%p,1) = %d\n"
+argument_list|,
+name|fr
 argument_list|,
 name|i
 argument_list|)
@@ -904,8 +933,7 @@ expr_stmt|;
 name|ip
 operator|=
 operator|(
-expr|struct
-name|ip
+name|ip_t
 operator|*
 operator|)
 name|buf
@@ -994,13 +1022,28 @@ argument_list|,
 name|dir
 argument_list|,
 operator|(
-name|char
+name|mb_t
+operator|*
 operator|*
 operator|)
+operator|&
 name|buf
 argument_list|)
 condition|)
 block|{
+case|case
+operator|-
+literal|2
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"auth"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 operator|-
 literal|1
@@ -1057,8 +1100,7 @@ expr_stmt|;
 name|printpacket
 argument_list|(
 operator|(
-expr|struct
-name|ip
+name|ip_t
 operator|*
 operator|)
 name|buf
@@ -1070,6 +1112,9 @@ literal|"--------------"
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|linux
 if|if
 condition|(
 name|dir
@@ -1080,6 +1125,29 @@ name|ip
 operator|->
 name|ip_v
 condition|)
+ifdef|#
+directive|ifdef
+name|__sgi
+call|(
+modifier|*
+name|ifp
+operator|->
+name|if_output
+call|)
+argument_list|(
+name|ifp
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 call|(
 modifier|*
 name|ifp
@@ -1100,6 +1168,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 name|putchar
 argument_list|(
 literal|'\n'

@@ -85,6 +85,12 @@ directive|include
 file|"ipt.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ipf.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -301,13 +307,38 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_long
-name|optname
+name|u_32_t
+name|buildopts
 name|__P
 argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|addipopt
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+expr|struct
+name|ipopt_names
+operator|*
+operator|,
+name|int
 operator|,
 name|char
 operator|*
@@ -667,6 +698,13 @@ parameter_list|,
 name|c
 parameter_list|)
 value|kmemcpy((char *)(a), (void *)(b), (int)(c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_RAW
+value|0x80000
 end_define
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright October 1992 Darren Reed. (from tcplog)  *  *   This software may be freely distributed as long as it is not altered  * in any way and that this messagge always accompanies it.  *  *   The author of this software makes no garuntee about the  * performance of this package or its suitability to fulfill any purpose.  *  */
+comment|/*  * (C)opyright 1992-1997 Darren Reed. (from tcplog)  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_include
@@ -81,6 +81,12 @@ directive|include
 file|<sys/stropts.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -92,6 +98,11 @@ include|#
 directive|include
 file|<sys/bufmod.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -167,20 +178,27 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|snitid
+name|sccsid
 index|[]
 init|=
 literal|"@(#)sdlpi.c	1.3 10/30/95 (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: sdlpi.c,v 2.0.2.6 1997/10/15 14:49:14 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -410,6 +428,10 @@ name|buf
 argument_list|)
 expr_stmt|;
 comment|/* 	 * write full headers 	 */
+ifdef|#
+directive|ifdef
+name|sun
+comment|/* we require RAW DLPI mode, which is a Sun extension */
 if|if
 condition|(
 name|strioctl
@@ -444,6 +466,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|you
+name|lose
+endif|#
+directive|endif
 return|return
 name|fd
 return|;

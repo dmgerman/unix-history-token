@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * resend.c (C) 1995 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  */
+comment|/*  * resend.c (C) 1995-1997 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -11,20 +11,27 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
 literal|"@(#)resend.c	1.3 1/11/96 (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: resend.c,v 2.0.2.12 1997/10/23 11:42:46 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,6 +154,25 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -157,6 +183,13 @@ include|#
 directive|include
 file|"ipsend.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|opts
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -173,7 +206,6 @@ comment|/* 1 big packet */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|void
 name|printpacket
 name|__P
@@ -187,7 +219,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|void
 name|printpacket
 parameter_list|(
@@ -568,19 +599,11 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|&
-name|eh
-operator|->
-name|ether_shost
+argument|(char *)A_A eh->ether_shost
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|eh
-operator|->
-name|ether_shost
+argument|sizeof(eh->ether_shost)
 argument_list|)
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|gwip
@@ -643,6 +666,16 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|opts
+operator|&
+name|OPT_RAW
+operator|)
+condition|)
+block|{
 name|len
 operator|=
 name|ntohs
@@ -699,21 +732,9 @@ if|if
 condition|(
 name|arp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|gwip
+argument|(char *)&gwip
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|eh
-operator|->
-name|ether_dhost
+argument|(char *)A_A eh->ether_dhost
 argument_list|)
 operator|==
 operator|-
@@ -731,21 +752,37 @@ block|}
 else|else
 name|bcopy
 argument_list|(
-name|dhost
+argument|dhost
 argument_list|,
+argument|(char *)A_A eh->ether_dhost
+argument_list|,
+argument|sizeof(dhost)
+argument_list|)
+empty_stmt|;
+if|if
+condition|(
+operator|!
+name|ip
+operator|->
+name|ip_sum
+condition|)
+name|ip
+operator|->
+name|ip_sum
+operator|=
+name|chksum
+argument_list|(
 operator|(
-name|char
+name|u_short
 operator|*
 operator|)
-operator|&
-name|eh
-operator|->
-name|ether_dhost
+name|ip
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dhost
-argument_list|)
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -765,11 +802,35 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|len
+operator|+=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|eh
+argument_list|)
+expr_stmt|;
 name|printpacket
 argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|eh
+operator|=
+operator|(
+name|ether_header_t
+operator|*
+operator|)
+name|buf
+expr_stmt|;
+name|len
+operator|=
+name|i
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sendip
@@ -782,12 +843,6 @@ operator|*
 operator|)
 name|eh
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|eh
-argument_list|)
-operator|+
 name|len
 argument_list|)
 operator|==

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_proxy.h,v 2.0.2.2 1997/05/24 07:36:44 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_proxy.h,v 2.0.2.10 1997/10/19 15:39:23 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -33,12 +33,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|APR_LABELLEN
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|APR_LABELLEN
 value|16
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -50,6 +61,12 @@ end_define
 begin_struct_decl
 struct_decl|struct
 name|nat
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ipnat
 struct_decl|;
 end_struct_decl
 
@@ -67,18 +84,24 @@ name|apt_dport
 decl_stmt|;
 comment|/* destination port */
 name|short
+name|apt_sel
+decl_stmt|;
+comment|/* seqoff/after set selector */
+name|short
 name|apt_seqoff
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/* sequence # difference */
-name|short
-name|apt_ackoff
-decl_stmt|;
-comment|/* ack # difference */
 name|tcp_seq
 name|apt_after
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/* don't change seq-off until after this */
-name|char
+name|u_char
 name|apt_state
 index|[
 literal|2
@@ -156,7 +179,7 @@ name|QUAD_T
 name|aps_pkts
 decl_stmt|;
 comment|/* packets sent */
-name|time_t
+name|u_long
 name|aps_tout
 decl_stmt|;
 comment|/* time left before expiring */
@@ -196,6 +219,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|aps_sel
+value|aps_un.apu_tcp.apt_sel
+end_define
+
+begin_define
+define|#
+directive|define
 name|aps_seqoff
 value|aps_un.apu_tcp.apt_seqoff
 end_define
@@ -203,15 +233,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|aps_ackoff
-value|aps_un.apu_tcp.apt_ackoff
-end_define
-
-begin_define
-define|#
-directive|define
-name|aps_sumoff
-value|aps_un.apu_tcp.apt_sumoff
+name|aps_after
+value|aps_un.apu_tcp.apt_after
 end_define
 
 begin_define
@@ -219,13 +242,6 @@ define|#
 directive|define
 name|aps_state
 value|aps_un.apu_tcp.apt_state
-end_define
-
-begin_define
-define|#
-directive|define
-name|aps_after
-value|aps_un.apu_tcp.apt_after
 end_define
 
 begin_typedef
@@ -240,7 +256,7 @@ name|APR_LABELLEN
 index|]
 decl_stmt|;
 comment|/* Proxy label # */
-name|char
+name|u_char
 name|apr_p
 decl_stmt|;
 comment|/* protocol */
@@ -359,6 +375,27 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|ap_ok
+name|__P
+argument_list|(
+operator|(
+name|ip_t
+operator|*
+operator|,
+name|tcphdr_t
+operator|*
+operator|,
+expr|struct
+name|ipnat
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|ap_unload
 name|__P
@@ -430,7 +467,7 @@ name|ap_match
 name|__P
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|,
 name|char
 operator|*
