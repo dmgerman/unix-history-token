@@ -607,8 +607,6 @@ argument_list|(
 name|cmd
 argument_list|,
 name|data
-argument_list|,
-name|p
 argument_list|)
 operator|)
 return|;

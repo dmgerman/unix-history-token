@@ -1431,10 +1431,6 @@ operator|(
 name|int
 operator|,
 name|caddr_t
-operator|,
-expr|struct
-name|proc
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

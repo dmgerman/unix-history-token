@@ -1363,8 +1363,6 @@ parameter_list|(
 name|req
 parameter_list|,
 name|data
-parameter_list|,
-name|p
 parameter_list|)
 name|int
 name|req
@@ -1372,19 +1370,11 @@ decl_stmt|;
 name|caddr_t
 name|data
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
 name|INET
 comment|/* Multicast goop, grrr... */
-ifdef|#
-directive|ifdef
-name|MROUTING
 return|return
 name|mrt_ioctl
 argument_list|(
@@ -1393,20 +1383,6 @@ argument_list|,
 name|data
 argument_list|)
 return|;
-else|#
-directive|else
-return|return
-name|mrt_ioctl
-argument_list|(
-name|req
-argument_list|,
-name|data
-argument_list|,
-name|p
-argument_list|)
-return|;
-endif|#
-directive|endif
 else|#
 directive|else
 comment|/* INET */
