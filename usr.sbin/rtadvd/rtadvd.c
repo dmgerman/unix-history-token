@@ -268,7 +268,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|sockaddr_in6
-name|from
+name|rcvfrom
 decl_stmt|;
 end_decl_stmt
 
@@ -2911,7 +2911,7 @@ argument_list|(
 name|AF_INET6
 argument_list|,
 operator|&
-name|from
+name|rcvfrom
 operator|.
 name|sin6_addr
 argument_list|,
@@ -2957,7 +2957,7 @@ argument_list|(
 name|AF_INET6
 argument_list|,
 operator|&
-name|from
+name|rcvfrom
 operator|.
 name|sin6_addr
 argument_list|,
@@ -3003,7 +3003,7 @@ argument_list|(
 name|AF_INET6
 argument_list|,
 operator|&
-name|from
+name|rcvfrom
 operator|.
 name|sin6_addr
 argument_list|,
@@ -3040,7 +3040,7 @@ argument_list|,
 name|pi
 argument_list|,
 operator|&
-name|from
+name|rcvfrom
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3073,7 +3073,7 @@ argument_list|(
 name|AF_INET6
 argument_list|,
 operator|&
-name|from
+name|rcvfrom
 operator|.
 name|sin6_addr
 argument_list|,
@@ -3119,7 +3119,7 @@ argument_list|(
 name|AF_INET6
 argument_list|,
 operator|&
-name|from
+name|rcvfrom
 operator|.
 name|sin6_addr
 argument_list|,
@@ -3165,7 +3165,7 @@ argument_list|(
 name|AF_INET6
 argument_list|,
 operator|&
-name|from
+name|rcvfrom
 operator|.
 name|sin6_addr
 argument_list|,
@@ -3202,7 +3202,7 @@ argument_list|,
 name|pi
 argument_list|,
 operator|&
-name|from
+name|rcvfrom
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3242,7 +3242,7 @@ argument_list|,
 name|pi
 argument_list|,
 operator|&
-name|from
+name|rcvfrom
 argument_list|,
 operator|&
 name|dst
@@ -6469,7 +6469,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|from
+name|rcvfrom
 expr_stmt|;
 name|rcvmhdr
 operator|.
@@ -6477,7 +6477,7 @@ name|msg_namelen
 operator|=
 sizeof|sizeof
 argument_list|(
-name|from
+name|rcvfrom
 argument_list|)
 expr_stmt|;
 name|rcvmhdr
@@ -6607,7 +6607,7 @@ modifier|*
 name|if_indextorainfo
 parameter_list|(
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|struct
@@ -6638,7 +6638,7 @@ name|rai
 operator|->
 name|ifindex
 operator|==
-name|index
+name|idx
 condition|)
 return|return
 operator|(
@@ -6988,12 +6988,6 @@ name|sol
 operator|->
 name|next
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|sndmhdr.msg_name = (caddr_t)&sol->addr; 		i = sendmsg(sock,&sndmhdr, 0); 		if (i< 0 || i != rainfo->ra_datalen)  { 			if (i< 0) { 				syslog(LOG_ERR, 				    "<%s> unicast sendmsg on %s: %s", 				    __func__, rainfo->ifname, 				    strerror(errno)); 			} 		}
-endif|#
-directive|endif
 name|sol
 operator|->
 name|next
