@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_scan.c,v 1.10 1995/03/24 21:36:32 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_scan.c,v 1.12 1995/07/13 15:33:42 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -181,6 +181,11 @@ name|char
 modifier|*
 modifier|*
 name|pde
+decl_stmt|,
+name|md5
+index|[
+literal|33
+index|]
 decl_stmt|;
 name|npde
 operator|=
@@ -785,6 +790,8 @@ name|MD5End
 argument_list|(
 operator|&
 name|ctx
+argument_list|,
+name|md5
 argument_list|)
 argument_list|)
 expr_stmt|;
