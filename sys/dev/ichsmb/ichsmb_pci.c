@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Support for the SMBus controller logical device which is part of the  * Intel 81801AA/AB/BA/CA/DC (ICH/ICH[0234]) I/O controller hub chips.  */
+comment|/*  * Support for the SMBus controller logical device which is part of the  * Intel 81801AA/AB/BA/CA/DC/EB (ICH/ICH[02345]) I/O controller hub chips.  */
 end_comment
 
 begin_include
