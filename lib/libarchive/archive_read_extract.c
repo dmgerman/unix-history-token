@@ -4454,8 +4454,8 @@ name|name
 argument_list|,
 name|extract
 operator|->
-name|pst
-operator|->
+name|st
+operator|.
 name|st_flags
 argument_list|)
 operator|!=
