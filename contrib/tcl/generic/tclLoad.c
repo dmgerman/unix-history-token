@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclLoad.c --  *  *	This file provides the generic portion (those that are the same  *	on all platforms) of Tcl's dynamic loading facilities.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclLoad.c 1.10 96/04/02 18:44:22  */
+comment|/*   * tclLoad.c --  *  *	This file provides the generic portion (those that are the same  *	on all platforms) of Tcl's dynamic loading facilities.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclLoad.c 1.11 96/07/29 08:39:29  */
 end_comment
 
 begin_include
@@ -1388,6 +1388,27 @@ operator|==
 name|TCL_OK
 condition|)
 block|{
+comment|/* 	 * Refetch ipFirstPtr: loading the package may have introduced 	 * additional static packages at the head of the linked list! 	 */
+name|ipFirstPtr
+operator|=
+operator|(
+name|InterpPackage
+operator|*
+operator|)
+name|Tcl_GetAssocData
+argument_list|(
+name|target
+argument_list|,
+literal|"tclLoad"
+argument_list|,
+operator|(
+name|Tcl_InterpDeleteProc
+operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ipPtr
 operator|=
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclEnv.c --  *  *	Tcl support for environment variables, including a setenv  *	procedure.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclEnv.c 1.34 96/04/15 18:18:36  */
+comment|/*   * tclEnv.c --  *  *	Tcl support for environment variables, including a setenv  *	procedure.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclEnv.c 1.37 96/07/23 16:28:26  */
 end_comment
 
 begin_comment
@@ -563,7 +563,20 @@ name|i
 decl_stmt|;
 name|size_t
 name|len
+decl_stmt|,
+name|nameLen
 decl_stmt|;
+name|char
+modifier|*
+name|equal
+decl_stmt|;
+name|nameLen
+operator|=
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -581,16 +594,8 @@ name|i
 operator|++
 control|)
 block|{
-name|len
+name|equal
 operator|=
-call|(
-name|size_t
-call|)
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|strchr
 argument_list|(
 name|environ
@@ -600,6 +605,23 @@ index|]
 argument_list|,
 literal|'='
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|equal
+operator|==
+name|NULL
+condition|)
+block|{
+continue|continue;
+block|}
+name|len
+operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
+name|equal
 operator|-
 name|environ
 index|[
@@ -611,10 +633,11 @@ if|if
 condition|(
 operator|(
 name|len
-operator|>
-literal|0
+operator|==
+name|nameLen
+operator|)
 operator|&&
-operator|!
+operator|(
 name|strncmp
 argument_list|(
 name|name
@@ -626,13 +649,8 @@ index|]
 argument_list|,
 name|len
 argument_list|)
-operator|)
-operator|||
-operator|(
-operator|*
-name|name
 operator|==
-literal|'\0'
+literal|0
 operator|)
 condition|)
 block|{
@@ -1731,6 +1749,11 @@ operator|*
 operator|)
 name|environ
 argument_list|)
+expr_stmt|;
+comment|/*      * Note that we need to reset the environ global so the Borland C run-time      * doesn't choke on exit.      */
+name|environ
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function

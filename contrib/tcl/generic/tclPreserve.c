@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclPreserve.c --  *  *	This file contains a collection of procedures that are used  *	to make sure that widget records and other data structures  *	aren't reallocated when there are nested procedures that  *	depend on their existence.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclPreserve.c 1.14 96/03/20 08:24:37  */
+comment|/*   * tclPreserve.c --  *  *	This file contains a collection of procedures that are used  *	to make sure that widget records and other data structures  *	aren't reallocated when there are nested procedures that  *	depend on their existence.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclPreserve.c 1.17 96/07/23 16:15:34  */
 end_comment
 
 begin_include
@@ -376,6 +376,12 @@ operator|->
 name|mustFree
 operator|=
 literal|0
+expr_stmt|;
+name|refPtr
+operator|->
+name|freeProc
+operator|=
+name|TCL_STATIC
 expr_stmt|;
 name|inUse
 operator|+=

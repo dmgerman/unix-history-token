@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclPosixStr.c --  *  *	This file contains procedures that generate strings  *	corresponding to various POSIX-related codes, such  *	as errno and signals.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclPosixStr.c 1.30 96/02/08 16:33:34  */
+comment|/*   * tclPosixStr.c --  *  *	This file contains procedures that generate strings  *	corresponding to various POSIX-related codes, such  *	as errno and signals.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclPosixStr.c 1.31 96/07/28 16:25:29  */
 end_comment
 
 begin_include
@@ -353,9 +353,26 @@ literal|"EDEADLK"
 return|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|EDEADLOCK
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|EDEADLK
+argument_list|)
+operator|||
+operator|(
+name|EDEADLOCK
+operator|!=
+name|EDEADLK
+operator|)
+operator|)
 case|case
 name|EDEADLOCK
 case|:
@@ -2140,9 +2157,26 @@ literal|"resource deadlock avoided"
 return|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|EDEADLOCK
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|EDEADLK
+argument_list|)
+operator|||
+operator|(
+name|EDEADLOCK
+operator|!=
+name|EDEADLK
+operator|)
+operator|)
 case|case
 name|EDEADLOCK
 case|:

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUnixNotify.c --  *  *	This file contains Unix-specific procedures for the notifier,  *	which is the lowest-level part of the Tcl event loop.  This file  *	works together with ../generic/tclNotify.c.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixNotfy.c 1.30 96/03/22 12:45:31  */
+comment|/*   * tclUnixNotify.c --  *  *	This file contains Unix-specific procedures for the notifier,  *	which is the lowest-level part of the Tcl event loop.  This file  *	works together with ../generic/tclNotify.c.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixNotfy.c 1.31 96/07/23 16:17:29  */
 end_comment
 
 begin_include
@@ -790,7 +790,7 @@ decl_stmt|,
 name|after
 decl_stmt|;
 comment|/*      * The only trick here is that select appears to return early      * under some conditions, so we have to check to make sure that      * the right amount of time really has elapsed.  If it's too      * early, go back to sleep again.      */
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 operator|&
 name|before
@@ -959,7 +959,7 @@ operator|&
 name|delay
 argument_list|)
 expr_stmt|;
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 operator|&
 name|before

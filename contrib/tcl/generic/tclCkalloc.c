@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclCkalloc.c --  *  *    Interface to malloc and free that provides support for debugging problems  *    involving overwritten, double freeing memory and loss of memory.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * This code contributed by Karl Lehenbauer and Mark Diekhans  *  *  * SCCS: @(#) tclCkalloc.c 1.17 96/03/14 13:05:56  */
+comment|/*   * tclCkalloc.c --  *  *    Interface to malloc and free that provides support for debugging problems  *    involving overwritten, double freeing memory and loss of memory.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * This code contributed by Karl Lehenbauer and Mark Diekhans  *  *  * SCCS: @(#) tclCkalloc.c 1.20 96/06/06 13:48:27  */
 end_comment
 
 begin_include
@@ -1778,6 +1778,112 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_Alloc, et al. --  *  *	These functions are defined in terms of the debugging versions  *	when TCL_MEM_DEBUG is set.  *  * Results:  *	Same as the debug versions.  *  * Side effects:  *	Same as the debug versions.  *  *----------------------------------------------------------------------  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|Tcl_Alloc
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|Tcl_Free
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|Tcl_Realloc
+end_undef
+
+begin_function
+name|char
+modifier|*
+name|Tcl_Alloc
+parameter_list|(
+name|size
+parameter_list|)
+name|unsigned
+name|int
+name|size
+decl_stmt|;
+block|{
+return|return
+name|Tcl_DbCkalloc
+argument_list|(
+name|size
+argument_list|,
+literal|"unknown"
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|Tcl_Free
+parameter_list|(
+name|ptr
+parameter_list|)
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
+block|{
+name|Tcl_DbCkfree
+argument_list|(
+name|ptr
+argument_list|,
+literal|"unknown"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|Tcl_Realloc
+parameter_list|(
+name|ptr
+parameter_list|,
+name|size
+parameter_list|)
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
+name|unsigned
+name|int
+name|size
+decl_stmt|;
+block|{
+return|return
+name|Tcl_DbCkrealloc
+argument_list|(
+name|ptr
+argument_list|,
+name|size
+argument_list|,
+literal|"unknown"
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/*  *----------------------------------------------------------------------  *  * MemoryCmd --  *     Implements the TCL memory command:  *       memory info  *       memory display  *       break_on_malloc count  *       trace_on_at_malloc count  *       trace on|off  *       validate on|off  *  * Results:  *     Standard TCL results.  *  *----------------------------------------------------------------------  */
 end_comment
 
@@ -2482,13 +2588,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_Ckalloc --  *     Interface to malloc when TCL_MEM_DEBUG is disabled.  It does check  *     that memory was actually allocated.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_Alloc --  *     Interface to malloc when TCL_MEM_DEBUG is disabled.  It does check  *     that memory was actually allocated.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
-name|VOID
+name|char
 modifier|*
-name|Tcl_Ckalloc
+name|Tcl_Alloc
 parameter_list|(
 name|size
 parameter_list|)
@@ -2526,9 +2632,6 @@ name|result
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_function
 name|char
@@ -2592,6 +2695,63 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_Realloc --  *     Interface to realloc when TCL_MEM_DEBUG is disabled.  It does check  *     that memory was actually allocated.  *  *----------------------------------------------------------------------  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|Tcl_Realloc
+parameter_list|(
+name|ptr
+parameter_list|,
+name|size
+parameter_list|)
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
+name|unsigned
+name|int
+name|size
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|result
+decl_stmt|;
+name|result
+operator|=
+name|realloc
+argument_list|(
+name|ptr
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"unable to realloc %d bytes"
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 return|return
 name|result
 return|;
@@ -2674,13 +2834,16 @@ return|;
 block|}
 end_function
 
+begin_escape
+end_escape
+
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * TckCkfree --  *     Interface to free when TCL_MEM_DEBUG is disabled.  Done here rather  *     in the macro to keep some modules from being compiled with   *     TCL_MEM_DEBUG enabled and some with it disabled.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_Free --  *     Interface to free when TCL_MEM_DEBUG is disabled.  Done here rather  *     in the macro to keep some modules from being compiled with   *     TCL_MEM_DEBUG enabled and some with it disabled.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|void
-name|Tcl_Ckfree
+name|Tcl_Free
 parameter_list|(
 name|ptr
 parameter_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclGetdate.c --  *  *	This file is generated from a yacc grammar defined in  *	the file tclGetdate.y  *  * Copyright (c) 1992-1995 Karl Lehenbauer and Mark Diekhans.  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * @(#) tclDate.c 1.24 96/04/18 16:53:56  */
+comment|/*   * tclDate.c --  *  *	This file is generated from a yacc grammar defined in  *	the file tclGetDate.y  *  * Copyright (c) 1992-1995 Karl Lehenbauer and Mark Diekhans.  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * @(#) tclDate.c 1.25 96/07/23 16:10:50  */
 end_comment
 
 begin_include
@@ -67,16 +67,6 @@ directive|define
 name|END_OF_TIME
 value|2037
 end_define
-
-begin_function_decl
-specifier|extern
-name|struct
-name|tm
-modifier|*
-name|localtime
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#
@@ -2847,10 +2837,12 @@ name|DSTmode
 operator|==
 name|DSTmaybe
 operator|&&
-name|localtime
+name|TclpGetDate
 argument_list|(
 operator|&
 name|Julian
+argument_list|,
+literal|0
 argument_list|)
 operator|->
 name|tm_isdst
@@ -2898,10 +2890,12 @@ decl_stmt|;
 name|StartDay
 operator|=
 operator|(
-name|localtime
+name|TclpGetDate
 argument_list|(
 operator|&
 name|Start
+argument_list|,
+literal|0
 argument_list|)
 operator|->
 name|tm_hour
@@ -2914,10 +2908,12 @@ expr_stmt|;
 name|FutureDay
 operator|=
 operator|(
-name|localtime
+name|TclpGetDate
 argument_list|(
 operator|&
 name|Future
+argument_list|,
+literal|0
 argument_list|)
 operator|->
 name|tm_hour
@@ -2982,10 +2978,12 @@ name|Start
 expr_stmt|;
 name|tm
 operator|=
-name|localtime
+name|TclpGetDate
 argument_list|(
 operator|&
 name|now
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|now
@@ -3089,10 +3087,12 @@ return|;
 block|}
 name|tm
 operator|=
-name|localtime
+name|TclpGetDate
 argument_list|(
 operator|&
 name|Start
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|Month
@@ -4178,7 +4178,7 @@ name|p
 expr_stmt|;
 name|tm
 operator|=
-name|localtime
+name|TclpGetDate
 argument_list|(
 operator|(
 name|time_t
@@ -4186,6 +4186,8 @@ operator|*
 operator|)
 operator|&
 name|now
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|TclDateYear
