@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)os.c	5.2 (Berkeley) %G%"
+literal|"@(#)os.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -926,12 +926,6 @@ begin_comment
 comment|/*  * errno_message: Return an error message based on the value of "errno".  * okreadfail: Return true if the previous failure of a read  *	(on the input tty) should be considered ok.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|PERROR
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -1056,79 +1050,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-name|public
-name|char
-modifier|*
-name|errno_message
-parameter_list|(
-name|filename
-parameter_list|,
-name|message
-parameter_list|,
-name|len
-parameter_list|)
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-name|char
-modifier|*
-name|message
-decl_stmt|;
-name|unsigned
-name|int
-name|len
-decl_stmt|;
-block|{
-specifier|static
-name|char
-name|msg
-index|[]
-init|=
-literal|": cannot open"
-decl_stmt|;
-name|strtcpy
-argument_list|(
-name|message
-argument_list|,
-name|filename
-argument_list|,
-name|len
-operator|-
-sizeof|sizeof
-argument_list|(
-name|msg
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|message
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|message
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
