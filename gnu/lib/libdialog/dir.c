@@ -2102,7 +2102,12 @@ name|d_name
 argument_list|,
 name|buf
 argument_list|,
-literal|256
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
