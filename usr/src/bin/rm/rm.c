@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rm.c	4.25 (Berkeley) %G%"
+literal|"@(#)rm.c	4.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,6 +212,7 @@ case|:
 case|case
 literal|'r'
 case|:
+comment|/* compatibility */
 name|rflag
 operator|=
 literal|1
@@ -408,15 +409,8 @@ name|fts_info
 condition|)
 block|{
 case|case
-name|FTS_DC
-case|:
-case|case
 name|FTS_DNR
 case|:
-case|case
-name|FTS_DNX
-case|:
-break|break;
 case|case
 name|FTS_ERR
 case|:
@@ -434,7 +428,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 		 * FTS_NS: assume that if can't stat the file, it can't be 		 * unlinked.  If we need stat information, should never see 		 * FTS_NS (unless a file specified as an argument doesn't 		 * exist), since such files are in directories that will be 		 * returned FTS_DNX. 		 */
+comment|/* 		 * FTS_NS: assume that if can't stat the file, it can't be 		 * unlinked. 		 */
 case|case
 name|FTS_NS
 case|:
@@ -443,21 +437,6 @@ condition|(
 operator|!
 name|needstat
 condition|)
-break|break;
-if|if
-condition|(
-operator|!
-name|lstat
-argument_list|(
-name|p
-operator|->
-name|fts_accpath
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-condition|)
-comment|/* XXX */
 break|break;
 if|if
 condition|(
@@ -576,12 +555,6 @@ operator|->
 name|fts_info
 operator|==
 name|FTS_DNR
-operator|||
-name|p
-operator|->
-name|fts_info
-operator|==
-name|FTS_DNX
 condition|)
 block|{
 if|if
@@ -624,17 +597,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rm: unable to %s %s.\n"
-argument_list|,
-name|p
-operator|->
-name|fts_info
-operator|==
-name|FTS_DNR
-condition|?
-literal|"read"
-else|:
-literal|"search"
+literal|"rm: unable to read %s.\n"
 argument_list|,
 name|p
 operator|->
@@ -767,7 +730,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rm: %s: Is a directory.\n"
+literal|"rm: %s: is a directory\n"
 argument_list|,
 name|f
 argument_list|)
@@ -906,7 +869,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.  Symbolic links are excluded 		 * because the permissions are meaningless. 		 */
+comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.  Symbolic links are excluded 		 * because their permissions are meaningless. 		 */
 if|if
 condition|(
 name|S_ISLNK
