@@ -11006,7 +11006,7 @@ name|kid
 expr_stmt|;
 name|error
 operator|=
-name|ERESTART
+name|ENETRESET
 expr_stmt|;
 comment|/* push to hardware */
 break|break;
