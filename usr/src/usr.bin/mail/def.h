@@ -40,7 +40,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	1.4 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	1.5 %G%";  */
 end_comment
 
 begin_comment
@@ -1072,6 +1072,14 @@ begin_function_decl
 name|FILE
 modifier|*
 name|mespipe
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|FILE
+modifier|*
+name|popen
 parameter_list|()
 function_decl|;
 end_function_decl
