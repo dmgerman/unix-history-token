@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: nd6_rtr.c,v 1.43 2000/07/02 23:19:59 itojun Exp $	*/
+comment|/*	$KAME: nd6_rtr.c,v 1.47 2000/08/08 08:58:42 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -2628,17 +2628,19 @@ name|rt_refcnt
 operator|<=
 literal|0
 condition|)
+block|{
+comment|/* 			 * XXX: borrowed from the RTM_DELETE case of 			 * rtrequest(). 			 */
 name|oldrt
 operator|->
 name|rt_refcnt
 operator|++
 expr_stmt|;
-comment|/* XXX */
 name|rtfree
 argument_list|(
 name|oldrt
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
