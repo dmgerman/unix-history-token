@@ -1,19 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  *	from: hp300: @(#)pmap.h	7.2 (Berkeley) 12/16/90  *	from: @(#)pmap.h	7.4 (Berkeley) 5/12/91  * 	$Id: pmap.h,v 1.16 1994/08/23 16:27:15 davidg Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  *	from: hp300: @(#)pmap.h	7.2 (Berkeley) 12/16/90  *	from: @(#)pmap.h	7.4 (Berkeley) 5/12/91  * 	$Id: pmap.h,v 1.17 1994/10/08 22:21:34 phk Exp $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PMAP_MACHINE_
+name|_MACHINE_PMAP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PMAP_MACHINE_
-value|1
+name|_MACHINE_PMAP_H_
 end_define
 
 begin_include
@@ -336,15 +335,13 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|vm_offset_t
 name|pmap_kextract
 parameter_list|(
-name|va
-parameter_list|)
 name|vm_offset_t
 name|va
-decl_stmt|;
+parameter_list|)
 block|{
 name|vm_offset_t
 name|pa
@@ -612,49 +609,39 @@ parameter_list|)
 value|((pmap)->pm_stats.resident_count)
 end_define
 
-begin_function_decl
-specifier|extern
-specifier|inline
-name|pt_entry_t
-modifier|*
-name|pmap_pte
-parameter_list|(
-name|pmap_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct_decl
 struct_decl|struct
 name|pcb
 struct_decl|;
 end_struct_decl
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 name|pmap_activate
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|pmap_t
-parameter_list|,
-name|struct
+operator|,
+expr|struct
 name|pcb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|pmap_t
 name|pmap_kernel
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|boolean_t
@@ -669,6 +656,18 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|pt_entry_t
+modifier|*
+name|pmap_pte
+parameter_list|(
+name|pmap_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|vm_page_t
@@ -699,7 +698,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _PMAP_MACHINE_ */
+comment|/* !_MACHINE_PMAP_H_ */
 end_comment
 
 end_unit
