@@ -1888,7 +1888,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Both %s and %s claim to have installed %s\n"
+literal|"both %s and %s claim to have installed %s\n"
 argument_list|,
 name|wp
 operator|->
