@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hostname.c	1.1 1.1 82/04/08"
+literal|"@(#)hostname.c	1.2 1.2 83/01/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,8 +71,6 @@ argument_list|(
 operator|*
 name|argv
 argument_list|)
-operator|+
-literal|1
 argument_list|)
 condition|)
 name|perror
@@ -101,11 +99,11 @@ name|hostname
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|exit
+argument_list|(
 name|errno
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

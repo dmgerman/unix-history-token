@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)df.c	4.13 %G%"
+literal|"@(#)df.c	4.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,7 +179,7 @@ decl_stmt|;
 while|while
 condition|(
 name|argc
-operator|>=
+operator|>
 literal|1
 operator|&&
 name|argv
