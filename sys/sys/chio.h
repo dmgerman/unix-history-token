@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  *  *	$Id: chio.h,v 1.4 1993/11/18 05:03:24 rgrimes Exp $  */
+comment|/*  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  *  *	$Id: chio.h,v 1.5 1995/05/30 08:14:13 rgrimes Exp $  */
 end_comment
 
 begin_comment
-comment|/* This is a "convertet" mtio.h from 386BSD    Stefan Grefen grefen@goofy.zdv.uni-mainz.de  */
+comment|/* This is a "converted" mtio.h from 386BSD    Stefan Grefen grefen@goofy.zdv.uni-mainz.de  */
 end_comment
 
 begin_comment
@@ -189,7 +189,7 @@ struct|;
 name|short
 name|add_sense
 decl_stmt|;
-comment|/* WARINING LSB only */
+comment|/* WARNING LSB only */
 define|#
 directive|define
 name|CH_CHOLDER

@@ -16,7 +16,7 @@ comment|/*  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in
 end_comment
 
 begin_comment
-comment|/*    * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough    * divercity in the world.   *   * Regards,   * Hannu Savolainen   * hannu@voxware.pp.fi   */
+comment|/*    * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough    * diversity in the world.   *   * Regards,   * Hannu Savolainen   * hannu@voxware.pp.fi   */
 end_comment
 
 begin_define
@@ -575,7 +575,7 @@ value|_IOW ('T', 8, int)
 end_define
 
 begin_comment
-comment|/*  *	Sample loading mechanism for internal synthesizers (/dev/sequencer)  *	The following patch_info structure has been designed to support  *	Gravis UltraSound. It tries to be universal format for uploading  *	sample based patches but is propably too limited.  */
+comment|/*  *	Sample loading mechanism for internal synthesizers (/dev/sequencer)  *	The following patch_info structure has been designed to support  *	Gravis UltraSound. It tries to be universal format for uploading  *	sample based patches but is probably too limited.  */
 end_comment
 
 begin_struct
@@ -1306,7 +1306,7 @@ comment|/* least significant bytes of the controllers 0x00 to 0x1f. */
 end_comment
 
 begin_comment
-comment|/* These controllers are not recognised by the driver. */
+comment|/* These controllers are not recognized by the driver. */
 end_comment
 
 begin_comment
@@ -2552,7 +2552,7 @@ comment|/* Output gain */
 end_comment
 
 begin_comment
-comment|/*   * The AD1848 codec and compatibles have three line level inputs  * (line, aux1 and aux2). Since each card manufacturer have assigned  * different meanings to these inputs, it's inpractical to assign  * specific meanings (line, cd, synth etc.) to them.  */
+comment|/*   * The AD1848 codec and compatibles have three line level inputs  * (line, aux1 and aux2). Since each card manufacturer have assigned  * different meanings to these inputs, it's impractical to assign  * specific meanings (line, cd, synth etc.) to them.  */
 end_comment
 
 begin_define
@@ -3877,7 +3877,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Timing and syncronization macros  */
+comment|/*  * Timing and synchronization macros  */
 end_comment
 
 begin_define

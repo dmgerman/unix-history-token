@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: shm.h,v 1.5 1995/07/29 11:42:52 bde Exp $ */
+comment|/* $Id: shm.h,v 1.6 1995/08/30 00:33:35 bde Exp $ */
 end_comment
 
 begin_comment
@@ -63,7 +63,7 @@ value|CLBYTES
 end_define
 
 begin_comment
-comment|/* Segment low boundry address multiple */
+comment|/* Segment low boundary address multiple */
 end_comment
 
 begin_comment

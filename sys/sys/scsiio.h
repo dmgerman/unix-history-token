@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: scsiio.h,v 1.3 1995/01/08 13:39:46 dufault Exp $  */
+comment|/*  * $Id: scsiio.h,v 1.4 1995/04/28 19:26:02 dufault Exp $  */
 end_comment
 
 begin_ifndef
@@ -101,7 +101,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* bit defintions for flags */
+comment|/* bit definitions for flags */
 end_comment
 
 begin_define
@@ -290,7 +290,7 @@ value|_IO('Q', 5)
 end_define
 
 begin_comment
-comment|/* please dissappear */
+comment|/* please disappear */
 end_comment
 
 begin_define

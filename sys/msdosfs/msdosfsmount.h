@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfsmount.h,v 1.4 1995/11/07 14:06:45 phk Exp $ */
+comment|/*	$Id: msdosfsmount.h,v 1.5 1995/11/16 11:48:10 bde Exp $ */
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ comment|/* read only if non-zero */
 name|char
 name|pm_waitonfat
 decl_stmt|;
-comment|/* wait for writes of the fat to complt, when 0 use bdwrite, else use bwrite */
+comment|/* wait for writes of the fat to complete, when 0 use bdwrite, else use bwrite */
 name|struct
 name|netexport
 name|pm_export

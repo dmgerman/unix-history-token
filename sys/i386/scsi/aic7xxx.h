@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.19 1996/01/23 21:47:53 se Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.20 1996/01/29 03:17:39 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -204,7 +204,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 26 bytes of the structure need to be transfered to the card during  * normal operation.  The remaining fields (next_waiting and host_scb) are  * initialized the first time an SCB is allocated in get_scb().  The fields  * starting at byte 32 are used for kernel level bookeeping.    */
+comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 26 bytes of the structure need to be transfered to the card during  * normal operation.  The remaining fields (next_waiting and host_scb) are  * initialized the first time an SCB is allocated in get_scb().  The fields  * starting at byte 32 are used for kernel level bookkeeping.    */
 end_comment
 
 begin_struct
@@ -383,7 +383,7 @@ name|scb
 modifier|*
 name|immed_ecb
 decl_stmt|;
-comment|/* an outstanding immediete command */
+comment|/* an outstanding immediate command */
 name|struct
 name|scsi_link
 name|sc_link

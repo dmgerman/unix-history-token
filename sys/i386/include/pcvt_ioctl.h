@@ -1131,7 +1131,7 @@ comment|/* Video Graphics Adaptor/Array */
 end_comment
 
 begin_comment
-comment|/* Deifinitions of Monitor types */
+comment|/* Definitions of Monitor types */
 end_comment
 
 begin_define
@@ -2091,13 +2091,13 @@ name|vga_family
 decl_stmt|;
 comment|/* if adaptor_type = VGA, this reflects */
 comment|/* the chipset family after a read	*/
-comment|/* nothing happenes on write ...        */
+comment|/* nothing happens on write ...        */
 name|int
 name|vga_type
 decl_stmt|;
 comment|/* if adaptor_type = VGA, this reflects */
 comment|/* the chipset after a read		*/
-comment|/* nothing happenes on write ...        */
+comment|/* nothing happens on write ...        */
 name|int
 name|vga_132
 decl_stmt|;
@@ -2692,7 +2692,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* acknowledging VT acquiration */
+comment|/* acknowledging VT acquisition */
 end_comment
 
 begin_define

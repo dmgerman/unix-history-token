@@ -37,7 +37,7 @@ value|17
 end_define
 
 begin_comment
-comment|/* Hardrare type?  Always 0	*/
+comment|/* Hardware type?  Always 0	*/
 end_comment
 
 begin_define

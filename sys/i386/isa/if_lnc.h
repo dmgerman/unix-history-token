@@ -489,7 +489,7 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-comment|/* Mode setting at initialisation */
+comment|/* Mode setting at initialization */
 block|}
 struct|;
 end_struct

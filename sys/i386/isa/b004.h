@@ -388,7 +388,7 @@ value|b004_table[minor].boardtype
 end_define
 
 begin_comment
-comment|/*  * Additonal defines for B008-boards  */
+comment|/*  * Additional defines for B008-boards  */
 end_comment
 
 begin_define

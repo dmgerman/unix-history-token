@@ -996,7 +996,7 @@ comment|/* Volume flags */
 name|UCHAR
 name|vt_multi
 decl_stmt|;
-comment|/* Multi cartidge sequence no. */
+comment|/* Multi cartridge sequence no. */
 name|UCHAR
 name|vt_vext
 index|[
@@ -1086,7 +1086,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* Siguature "DCMS" */
+comment|/* Signature "DCMS" */
 name|USHORT
 name|dc_mlen
 decl_stmt|;

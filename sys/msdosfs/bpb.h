@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bpb.h,v 1.1 1994/09/19 15:41:37 dfr Exp $ */
+comment|/*	$Id: bpb.h,v 1.2 1995/05/30 08:07:30 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -122,7 +122,7 @@ comment|/* number of hidden sectors */
 name|u_long
 name|bpbHugeSectors
 decl_stmt|;
-comment|/* number of sectrs if bpbSectors == 0 */
+comment|/* number of sectors if bpbSectors == 0 */
 block|}
 struct|;
 end_struct
@@ -409,7 +409,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* number of sectrs if bpbSectors == 0 */
+comment|/* number of sectors if bpbSectors == 0 */
 block|}
 struct|;
 end_struct

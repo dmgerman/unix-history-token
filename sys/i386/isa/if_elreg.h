@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * $Id$  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * $Id: if_elreg.h,v 1.2 1994/08/02 07:39:34 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -129,7 +129,7 @@ value|0xe
 end_define
 
 begin_comment
-comment|/* Auxillary status register */
+comment|/* Auxiliary status register */
 end_comment
 
 begin_define
@@ -140,7 +140,7 @@ value|0xe
 end_define
 
 begin_comment
-comment|/* Auxillary command register */
+comment|/* Auxiliary command register */
 end_comment
 
 begin_define
@@ -446,7 +446,7 @@ comment|/* Detect success */
 end_comment
 
 begin_comment
-comment|/* Auxillary status register bits */
+comment|/* Auxiliary status register bits */
 end_comment
 
 begin_define
@@ -483,7 +483,7 @@ comment|/* Transmit busy */
 end_comment
 
 begin_comment
-comment|/* Auxillary command register bits */
+comment|/* Auxiliary command register bits */
 end_comment
 
 begin_define

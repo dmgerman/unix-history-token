@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_edreg.h,v 1.18 1995/05/30 08:02:00 rgrimes Exp $  */
+comment|/*  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_edreg.h,v 1.19 1995/09/26 08:57:45 phk Exp $  */
 end_comment
 
 begin_comment
@@ -804,7 +804,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/*  * OVW: OverWrite. Indicates a receive ring-buffer overrun. Incoming network  *	would exceed (has exceeded?) the boundry pointer, resulting in data  *	that was previously received and not yet read from the buffer to be  *	overwritten.  */
+comment|/*  * OVW: OverWrite. Indicates a receive ring-buffer overrun. Incoming network  *	would exceed (has exceeded?) the boundary pointer, resulting in data  *	that was previously received and not yet read from the buffer to be  *	overwritten.  */
 end_comment
 
 begin_define
@@ -896,7 +896,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/*  * OVWE: OverWrite error interrupt Enable. If set, an interrupt is generated whenever  *	the receive ring-buffer is overrun. i.e. when the boundry pointer is exceeded.  */
+comment|/*  * OVWE: OverWrite error interrupt Enable. If set, an interrupt is generated whenever  *	the receive ring-buffer is overrun. i.e. when the boundary pointer is exceeded.  */
 end_comment
 
 begin_define
@@ -981,7 +981,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/*  * AR: Auto-initialize Remote. When 0, data must be removed from ring-buffer  *	under program control. When 1, remote DMA is automatically initiated  *	and the boundry pointer is automatically updated  */
+comment|/*  * AR: Auto-initialize Remote. When 0, data must be removed from ring-buffer  *	under program control. When 1, remote DMA is automatically initiated  *	and the boundary pointer is automatically updated  */
 end_comment
 
 begin_define
@@ -1258,7 +1258,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/*  * FAE: Frame Alignment Error. Indicates that the incoming packet did not end on  *	a byte boundry and the CRC did not match at the last byte boundry.  */
+comment|/*  * FAE: Frame Alignment Error. Indicates that the incoming packet did not end on  *	a byte boundary and the CRC did not match at the last byte boundary.  */
 end_comment
 
 begin_define
@@ -1280,7 +1280,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/*  * MPA: Missed Packet. Indicates that the received packet couldn't be stored in  *	the ring-buffer because of insufficient buffer space (exceeding the  *	boundry pointer), or because the transfer to the ring-buffer was inhibited  *	by RCR_MON - monitor mode.  */
+comment|/*  * MPA: Missed Packet. Indicates that the received packet couldn't be stored in  *	the ring-buffer because of insufficient buffer space (exceeding the  *	boundary pointer), or because the transfer to the ring-buffer was inhibited  *	by RCR_MON - monitor mode.  */
 end_comment
 
 begin_define
@@ -1302,7 +1302,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/*  * DIS: Receiver Disabled. Set to indicate that the receiver has enetered monitor  *	mode. Cleared when the receiver exits monitor mode.  */
+comment|/*  * DIS: Receiver Disabled. Set to indicate that the receiver has entered monitor  *	mode. Cleared when the receiver exits monitor mode.  */
 end_comment
 
 begin_define
@@ -1324,7 +1324,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/*  * receive ring discriptor  *  * The National Semiconductor DS8390 Network interface controller uses  * the following receive ring headers.  The way this works is that the  * memory on the interface card is chopped up into 256 bytes blocks.  * A contiguous portion of those blocks are marked for receive packets  * by setting start and end block #'s in the NIC.  For each packet that  * is put into the receive ring, one of these headers (4 bytes each) is  * tacked onto the front. The first byte is a copy of the receiver status  * register at the time the packet was received.  */
+comment|/*  * receive ring descriptor  *  * The National Semiconductor DS8390 Network interface controller uses  * the following receive ring headers.  The way this works is that the  * memory on the interface card is chopped up into 256 bytes blocks.  * A contiguous portion of those blocks are marked for receive packets  * by setting start and end block #'s in the NIC.  For each packet that  * is put into the receive ring, one of these headers (4 bytes each) is  * tacked onto the front. The first byte is a copy of the receiver status  * register at the time the packet was received.  */
 end_comment
 
 begin_struct
@@ -1426,7 +1426,7 @@ comment|/*  * Compile-time config flags  */
 end_comment
 
 begin_comment
-comment|/*  * this sets the default for enabling/disablng the tranceiver  */
+comment|/*  * this sets the default for enabling/disabling the transceiver  */
 end_comment
 
 begin_define

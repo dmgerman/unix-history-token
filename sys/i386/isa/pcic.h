@@ -37,7 +37,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  * To access a register on the PCIC for a particular slot, you  * first write the correct OFFSET value for that slot in the  * INDEX register for the PCIC controller.  You then read or write  * the value from or to the DATA register for that controller.  *  * The first pair of chips shares I/O addresss for DATA and INDEX,  * as does the second pair.   (To the programmer, it looks like each  * pair is a single chip.)  The i/o port addresses are hard-wired  * into the PCIC; so the following addresses should be valid for  * any machine that uses this chip.  */
+comment|/*  * To access a register on the PCIC for a particular slot, you  * first write the correct OFFSET value for that slot in the  * INDEX register for the PCIC controller.  You then read or write  * the value from or to the DATA register for that controller.  *  * The first pair of chips shares I/O addresses for DATA and INDEX,  * as does the second pair.   (To the programmer, it looks like each  * pair is a single chip.)  The i/o port addresses are hard-wired  * into the PCIC; so the following addresses should be valid for  * any machine that uses this chip.  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: dc21040.h,v 1.4 1995/05/05 20:09:48 davidg Exp $  *  */
+comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: dc21040.h,v 1.5 1995/09/29 19:52:08 davidg Exp $  *  */
 end_comment
 
 begin_if
@@ -1091,7 +1091,7 @@ value|0x00000200L
 end_define
 
 begin_comment
-comment|/* (RW)  Receive Watchbog Timeout */
+comment|/* (RW)  Receive Watchdog Timeout */
 end_comment
 
 begin_define
@@ -1282,7 +1282,7 @@ value|0x00040000L
 end_define
 
 begin_comment
-comment|/* (RW)  Enhanced Capture Effecty (DC21041) */
+comment|/* (RW)  Enhanced Capture Effect (DC21041) */
 end_comment
 
 begin_define
@@ -1799,7 +1799,7 @@ comment|/* DC21041 only */
 end_comment
 
 begin_comment
-comment|/*  * These are the defintitions used for the DEC DC21140  * evaluation board.  */
+comment|/*  * These are the definitions used for the DEC DC21140  * evaluation board.  */
 end_comment
 
 begin_define
@@ -1886,7 +1886,7 @@ value|0x00000001L
 end_define
 
 begin_comment
-comment|/*  * These are the defintitions used for the Cogent EM100  * DC21140 board.  */
+comment|/*  * These are the definitions used for the Cogent EM100  * DC21140 board.  */
 end_comment
 
 begin_define
@@ -1940,7 +1940,7 @@ value|0x12
 end_define
 
 begin_comment
-comment|/*  * These are the defintitions used for the Znyx ZX342  * 10/100 board  */
+comment|/*  * These are the definitions used for the Znyx ZX342  * 10/100 board  */
 end_comment
 
 begin_define

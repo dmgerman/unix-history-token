@@ -424,7 +424,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* contiuously capture */
+comment|/* continuously capture */
 end_comment
 
 begin_define
@@ -435,7 +435,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* stop the continous capture */
+comment|/* stop the continuous capture */
 end_comment
 
 begin_comment

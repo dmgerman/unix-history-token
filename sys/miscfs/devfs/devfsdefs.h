@@ -35,7 +35,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.7 1995/10/04 11:05:09 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.8 1995/11/09 08:16:48 bde Exp $  */
 end_comment
 
 begin_comment
@@ -542,7 +542,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* must be allocated separatly */
+comment|/* must be allocated separately */
 name|int
 name|namelen
 decl_stmt|;
