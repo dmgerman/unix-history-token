@@ -37,13 +37,6 @@ name|IIR_DRIVER_SUBVERSION
 value|4
 end_define
 
-begin_define
-define|#
-directive|define
-name|IIR_CDEV_MAJOR
-value|164
-end_define
-
 begin_comment
 comment|/* OEM IDs */
 end_comment

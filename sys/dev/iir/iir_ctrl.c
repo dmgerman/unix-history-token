@@ -169,13 +169,6 @@ name|iir_ioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|IIR_CDEV_MAJOR
-end_define
-
 begin_comment
 comment|/* Normally, this is a static structure.  But we need it in pci/iir_pci.c */
 end_comment
@@ -216,11 +209,6 @@ operator|.
 name|d_name
 operator|=
 literal|"iir"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1569,7 +1557,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* static void iir_drvinit(void *unused) {     GDT_DPRINTF(GDT_D_DEBUG, ("iir_drvinit()\n"));                      if (!iir_devsw_installed) {         cdevsw_add(&iir_cdevsw);         iir_devsw_installed = 1;     } }  SYSINIT(iir_dev, SI_SUB_DRIVERS, SI_ORDER_MIDDLE + CDEV_MAJOR, iir_drvinit, NULL) */
+comment|/* static void iir_drvinit(void *unused) {     GDT_DPRINTF(GDT_D_DEBUG, ("iir_drvinit()\n"));                      if (!iir_devsw_installed) {         cdevsw_add(&iir_cdevsw);         iir_devsw_installed = 1;     } }  SYSINIT(iir_dev, SI_SUB_DRIVERS, SI_ORDER_MIDDLE, iir_drvinit, NULL) */
 end_comment
 
 end_unit
