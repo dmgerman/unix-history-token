@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.80 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.81 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1986,9 +1986,14 @@ name|sbp
 operator|->
 name|f_bfree
 operator|=
+name|dbtofsb
+argument_list|(
+name|fs
+argument_list|,
 name|fs
 operator|->
 name|lfs_bfree
+argument_list|)
 expr_stmt|;
 name|sbp
 operator|->
@@ -2032,9 +2037,9 @@ name|sbp
 operator|->
 name|f_ffree
 operator|=
-name|fs
+name|sbp
 operator|->
-name|lfs_bfree
+name|f_bfree
 operator|*
 name|INOPB
 argument_list|(
