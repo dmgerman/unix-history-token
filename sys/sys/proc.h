@@ -528,11 +528,11 @@ comment|/* (k) Syscall aux returns. */
 name|u_char
 name|td_base_pri
 decl_stmt|;
-comment|/* (j) Thread base kernel priority */
+comment|/* (j) Thread base kernel priority. */
 name|u_char
 name|td_priority
 decl_stmt|;
-comment|/* (j) Thread active priority */
+comment|/* (j) Thread active priority. */
 define|#
 directive|define
 name|td_endcopy
@@ -808,14 +808,14 @@ define|#
 directive|define
 name|kg_startcopy
 value|kg_endzero
-name|char
+name|u_char
 name|kg_pri_class
 decl_stmt|;
-comment|/* (j) */
-name|char
+comment|/* (j) Scheduling class. */
+name|u_char
 name|kg_user_pri
 decl_stmt|;
-comment|/* (j) priority when in userland */
+comment|/* (j) User pri from estcpu and nice. */
 name|char
 name|kg_nice
 decl_stmt|;
