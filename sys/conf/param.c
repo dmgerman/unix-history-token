@@ -332,7 +332,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* allocate same amount of virtual address space for mbufs XXX */
+comment|/* allocate 1/4th amount of virtual address space for mbufs XXX */
 end_comment
 
 begin_decl_stmt
@@ -341,11 +341,7 @@ name|nmbufs
 init|=
 name|NMBCLUSTERS
 operator|*
-operator|(
-name|MCLBYTES
-operator|/
-name|MSIZE
-operator|)
+literal|4
 decl_stmt|;
 end_decl_stmt
 

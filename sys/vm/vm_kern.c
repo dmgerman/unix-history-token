@@ -195,22 +195,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vm_map_t
-name|mcl_map
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mcl_map_full
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_map_t
 name|io_map
 init|=
 literal|0
@@ -824,14 +808,10 @@ operator|&&
 name|map
 operator|!=
 name|mb_map
-operator|&&
-name|map
-operator|!=
-name|mcl_map
 condition|)
 name|panic
 argument_list|(
-literal|"kmem_malloc: map != {kmem,mb,mcl}_map"
+literal|"kmem_malloc: map != {kmem,mb}_map"
 argument_list|)
 expr_stmt|;
 name|size
@@ -882,30 +862,6 @@ name|mb_map
 condition|)
 block|{
 name|mb_map_full
-operator|=
-name|TRUE
-expr_stmt|;
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Out of mbufs - increase maxusers!\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|map
-operator|==
-name|mcl_map
-condition|)
-block|{
-name|mcl_map_full
 operator|=
 name|TRUE
 expr_stmt|;

@@ -468,7 +468,7 @@ decl_stmt|;
 comment|/* 	 * Once we run out of map space, it will be impossible 	 * to get any more (nothing is ever freed back to the 	 * map). 	 */
 if|if
 condition|(
-name|mcl_map_full
+name|mb_map_full
 condition|)
 return|return
 operator|(
@@ -486,7 +486,7 @@ name|caddr_t
 operator|)
 name|kmem_malloc
 argument_list|(
-name|mcl_map
+name|mb_map
 argument_list|,
 name|ctob
 argument_list|(
