@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_clock.c	6.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_clock.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -75,16 +75,25 @@ directive|include
 file|"text.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|"../vax/mtpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/clock.h"
 end_include
 
 begin_endif
@@ -140,74 +149,9 @@ begin_comment
 comment|/*  * TODO:  *	time of day, system/user timing, timeouts, profiling on separate timers  *	allocate more timeout table slots when table overflows.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
 begin_comment
 comment|/*  * Bump a timeval by a small number of usec's.  */
 end_comment
-
-begin_expr_stmt
-name|bumptime
-argument_list|(
-name|tp
-argument_list|,
-name|usec
-argument_list|)
-specifier|register
-expr|struct
-name|timeval
-operator|*
-name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|usec
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|tp
-operator|->
-name|tv_usec
-operator|+=
-name|usec
-expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|tv_usec
-operator|>=
-literal|1000000
-condition|)
-block|{
-name|tp
-operator|->
-name|tv_usec
-operator|-=
-literal|1000000
-expr_stmt|;
-name|tp
-operator|->
-name|tv_sec
-operator|++
-expr_stmt|;
-block|}
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|notdef
-end_endif
 
 begin_define
 define|#
@@ -376,7 +320,6 @@ condition|(
 operator|!
 name|noproc
 condition|)
-block|{
 name|BUMPTIME
 argument_list|(
 operator|&
@@ -389,7 +332,6 @@ argument_list|,
 name|tick
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * If the cpu is currently scheduled to a process, then 	 * charge it with resource utilization for a tick, updating 	 * statistics which run in (user+system) virtual time, 	 * such as the cpu time limit and profiling timers. 	 * This assumes that the current process has been running 	 * the entire last tick. 	 */
 if|if
@@ -527,6 +469,9 @@ name|ru_idrss
 operator|+=
 name|s
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|u
 operator|.
 name|u_ru
@@ -535,7 +480,9 @@ name|ru_isrss
 operator|+=
 literal|0
 expr_stmt|;
-comment|/* XXX */
+comment|/* XXX (haven't got this) */
+endif|#
+directive|endif
 if|if
 condition|(
 name|u
@@ -838,6 +785,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|int
 name|cpstate
 decl_stmt|,
@@ -1033,7 +981,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|spl7
+name|splhigh
 argument_list|()
 expr_stmt|;
 if|if
@@ -1263,7 +1211,7 @@ specifier|register
 name|int
 name|s
 init|=
-name|spl7
+name|splhigh
 argument_list|()
 decl_stmt|;
 if|if
@@ -1430,7 +1378,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|spl7
+name|splhigh
 argument_list|()
 expr_stmt|;
 for|for
@@ -1553,7 +1501,7 @@ decl_stmt|;
 name|int
 name|s
 init|=
-name|spl7
+name|splhigh
 argument_list|()
 decl_stmt|;
 comment|/* 	 * If number of milliseconds will fit in 32 bit arithmetic, 	 * then compute number of milliseconds to time and scale to 	 * ticks.  Otherwise just compute number of hz in time, rounding 	 * times greater than representible to maximum value. 	 * 	 * Delta times less than 25 days can be computed ``exactly''. 	 * Maximum value for any timeout in 10ms ticks is 250 days. 	 */
@@ -1727,6 +1675,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT
+end_ifdef
+
 begin_macro
 name|opause
 argument_list|()
@@ -1752,6 +1706,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
