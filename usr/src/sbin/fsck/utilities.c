@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.5 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -770,6 +770,18 @@ operator|.
 name|b_bno
 operator|!=
 name|SBLOCK
+operator|*
+name|DEV_BSIZE
+operator|/
+name|dev_bsize
+operator|&&
+operator|!
+name|preen
+operator|&&
+name|reply
+argument_list|(
+literal|"UPDATE STANDARD SUPERBLOCK"
+argument_list|)
 condition|)
 block|{
 name|sblk
@@ -777,6 +789,10 @@ operator|.
 name|b_bno
 operator|=
 name|SBLOCK
+operator|*
+name|DEV_BSIZE
+operator|/
+name|dev_bsize
 expr_stmt|;
 name|sbdirty
 argument_list|()
@@ -1000,11 +1016,11 @@ name|size
 condition|;
 name|i
 operator|+=
-name|DEV_BSIZE
+name|dev_bsize
 operator|,
 name|cp
 operator|+=
-name|DEV_BSIZE
+name|dev_bsize
 control|)
 block|{
 if|if
@@ -1017,7 +1033,7 @@ name|rfdes
 argument_list|,
 name|cp
 argument_list|,
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|)
 operator|<
 literal|0
@@ -1039,7 +1055,7 @@ argument_list|)
 operator|+
 name|i
 operator|+
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)
@@ -1052,7 +1068,7 @@ name|blk
 operator|+
 name|i
 operator|/
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|)
 expr_stmt|;
 name|errs
@@ -1241,11 +1257,11 @@ name|size
 condition|;
 name|i
 operator|+=
-name|DEV_BSIZE
+name|dev_bsize
 operator|,
 name|cp
 operator|+=
-name|DEV_BSIZE
+name|dev_bsize
 control|)
 if|if
 condition|(
@@ -1257,7 +1273,7 @@ name|wfdes
 argument_list|,
 name|cp
 argument_list|,
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|)
 operator|<
 literal|0
@@ -1279,7 +1295,7 @@ argument_list|)
 operator|+
 name|i
 operator|+
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)
@@ -1292,7 +1308,7 @@ name|blk
 operator|+
 name|i
 operator|/
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|)
 expr_stmt|;
 block|}

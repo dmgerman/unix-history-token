@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.6 (Berkeley) %G%"
+literal|"@(#)setup.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1025,6 +1025,10 @@ operator|&
 name|asblk
 argument_list|)
 expr_stmt|;
+name|dev_bsize
+operator|=
+name|DEV_BSIZE
+expr_stmt|;
 if|if
 condition|(
 name|bread
@@ -1206,6 +1210,32 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Set all possible fields that could differ, then do check 	 * of whole super block against an alternate super block. 	 * When an alternate super-block is specified this check is skipped. 	 */
+name|dev_bsize
+operator|=
+name|sblock
+operator|.
+name|fs_fsize
+operator|/
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|sblk
+operator|.
+name|b_bno
+operator|=
+name|sblk
+operator|.
+name|b_bno
+operator|*
+name|DEV_BSIZE
+operator|/
+name|dev_bsize
+expr_stmt|;
 if|if
 condition|(
 name|bflag
