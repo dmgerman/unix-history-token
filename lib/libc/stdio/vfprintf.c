@@ -4944,6 +4944,11 @@ argument_list|()
 expr_stmt|;
 name|error
 label|:
+name|va_end
+argument_list|(
+name|orgap
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NO_FLOATING_POINT
