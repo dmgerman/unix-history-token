@@ -69,7 +69,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.17 $"
+empty|#ident "$Revision: 1.1.1.1 $"
 end_empty
 
 begin_include
@@ -565,7 +565,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sqdghmpAtT:F:P:"
+literal|"sqdghmAtT:F:P:"
 argument_list|)
 operator|)
 operator|!=
