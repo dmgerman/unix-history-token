@@ -703,6 +703,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|PLANEX2
+argument_list|,
+name|GWNS11H
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|PROXIM
 argument_list|,
 name|RANGELANDS_8430
