@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.14 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1600,7 +1600,7 @@ begin_decl_stmt
 name|int
 name|lockpausetime
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1615,6 +1615,12 @@ block|,
 operator|&
 name|lockpausetime
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|simplelockrecurse
 decl_stmt|;
 end_decl_stmt
 
@@ -1670,6 +1676,11 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+name|simplelockrecurse
+condition|)
+return|return;
+if|if
+condition|(
 name|alp
 operator|->
 name|lock_data
@@ -1693,13 +1704,6 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|lockpausetime
-operator|==
-literal|0
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%s:%d: simple_lock: lock held\n"
@@ -1709,6 +1713,13 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lockpausetime
+operator|==
+literal|1
+condition|)
+block|{
 name|BACKTRACE
 argument_list|(
 name|curproc
@@ -1720,7 +1731,7 @@ if|if
 condition|(
 name|lockpausetime
 operator|>
-literal|0
+literal|1
 condition|)
 block|{
 name|printf
@@ -1798,7 +1809,6 @@ name|int
 name|l
 decl_stmt|;
 block|{
-comment|/* 	if (alp->lock_data == 1) { 		if (lockpausetime == -1) 			panic("%s:%d: simple_lock_try: lock held", id, l); 		if (lockpausetime == 0) { 			printf("%s:%d: simple_lock_try: lock held\n", id, l); 			BACKTRACE(curproc); 		} else if (lockpausetime> 0) { 			printf("%s:%d: simple_lock_try: lock held...", id, l); 			tsleep(&lockpausetime, PCATCH | PPAUSE, "slock", 			    lockpausetime * hz); 			printf(" continuing\n"); 		} 	} 	*/
 if|if
 condition|(
 name|alp
@@ -1810,6 +1820,102 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|simplelockrecurse
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+name|alp
+operator|->
+name|lock_data
+operator|==
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|lockpausetime
+operator|==
+operator|-
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"%s:%d: simple_lock_try: lock held"
+argument_list|,
+name|id
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s:%d: simple_lock_try: lock held\n"
+argument_list|,
+name|id
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lockpausetime
+operator|==
+literal|1
+condition|)
+block|{
+name|BACKTRACE
+argument_list|(
+name|curproc
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|lockpausetime
+operator|>
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s:%d: simple_lock_try: lock held..."
+argument_list|,
+name|id
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+name|tsleep
+argument_list|(
+operator|&
+name|lockpausetime
+argument_list|,
+name|PCATCH
+operator||
+name|PPAUSE
+argument_list|,
+literal|"slock"
+argument_list|,
+name|lockpausetime
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" continuing\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|alp
 operator|->
 name|lock_data
@@ -1860,6 +1966,11 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+name|simplelockrecurse
+condition|)
+return|return;
+if|if
+condition|(
 name|alp
 operator|->
 name|lock_data
@@ -1883,13 +1994,6 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|lockpausetime
-operator|==
-literal|0
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%s:%d: simple_unlock: lock not held\n"
@@ -1899,6 +2003,13 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lockpausetime
+operator|==
+literal|1
+condition|)
+block|{
 name|BACKTRACE
 argument_list|(
 name|curproc
@@ -1910,7 +2021,7 @@ if|if
 condition|(
 name|lockpausetime
 operator|>
-literal|0
+literal|1
 condition|)
 block|{
 name|printf
