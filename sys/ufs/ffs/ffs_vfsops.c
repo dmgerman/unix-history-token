@@ -1980,6 +1980,13 @@ name|fs
 operator|->
 name|fs_active
 expr_stmt|;
+comment|/* The file system is still read-only. */
+name|newfs
+operator|->
+name|fs_ronly
+operator|=
+literal|1
+expr_stmt|;
 name|sblockloc
 operator|=
 name|fs
