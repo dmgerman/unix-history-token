@@ -1806,6 +1806,11 @@ name|device
 argument_list|,
 literal|"%llu total bytes transferred\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|ast_total
 argument_list|)
 expr_stmt|;

@@ -6577,6 +6577,10 @@ argument_list|)
 argument_list|,
 name|command
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|lba
 argument_list|,
 name|count
