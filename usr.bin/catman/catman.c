@@ -322,7 +322,7 @@ begin_define
 define|#
 directive|define
 name|GZ_CMD
-value|"gzip -n"
+value|"gzip"
 end_define
 
 begin_define
@@ -2042,7 +2042,7 @@ argument_list|,
 sizeof|sizeof
 name|cmd
 argument_list|,
-literal|"%scat %s | tbl | nroff -T%s -man | col | %s -c> %s.tmp"
+literal|"%scat %s | tbl | nroff -T%s -man | col | %s> %s.tmp"
 argument_list|,
 name|zipped
 operator|==
@@ -2064,11 +2064,17 @@ name|nroff_device
 argument_list|,
 name|zipped
 operator|==
+name|BZIP
+condition|?
+name|BZ2_CMD
+else|:
+name|zipped
+operator|==
 name|GZIP
 condition|?
 name|GZ_CMD
 else|:
-name|BZ2_CMD
+literal|"cat"
 argument_list|,
 name|cat
 argument_list|)
@@ -2466,13 +2472,11 @@ argument_list|,
 sizeof|sizeof
 name|cat_path
 argument_list|,
-literal|"%s/%s%s"
+literal|"%s/%s"
 argument_list|,
 name|cat_section
 argument_list|,
 name|page_name
-argument_list|,
-name|GZ_EXT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2491,11 +2495,9 @@ name|nexpected
 operator|++
 index|]
 argument_list|,
-literal|"%s%s"
+literal|"%s"
 argument_list|,
 name|page_name
-argument_list|,
-name|GZ_EXT
 argument_list|)
 expr_stmt|;
 block|}
