@@ -2060,6 +2060,22 @@ name|AF_ISO
 expr_stmt|;
 endif|#
 directive|endif
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"link"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|af
+operator|=
+name|AF_LINK
+expr_stmt|;
 else|else
 block|{
 name|errx
@@ -3763,7 +3779,8 @@ argument_list|,
 literal|"usage: netstat [-AaLnSW] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -i | -I interface [-abdnt] [-M core] [-N system]"
+literal|"       netstat -i | -I interface [-abdnt] [-f address_family]\n"
+literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -w wait [-I interface] [-d] [-M core] [-N system]"
 argument_list|,
