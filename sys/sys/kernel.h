@@ -476,7 +476,7 @@ name|SI_SUB_RAID
 init|=
 literal|0xb380000
 block|,
-comment|/* Configure RAIDframe or Vinum */
+comment|/* Configure GEOM classes */
 name|SI_SUB_MOUNT_ROOT
 init|=
 literal|0xb400000
