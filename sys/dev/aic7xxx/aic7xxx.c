@@ -19417,6 +19417,10 @@ argument_list|,
 name|scb
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|SEARCH_REMOVE
+case|:
 comment|/* 				 * The sequencer increments its position in 				 * the qinfifo as soon as it determines that 				 * an SCB needs to be DMA'ed down to the card. 				 * So, if we are aborting a command that is 				 * still in the process of being DMAed, we 				 * must move the sequencer's qinfifo pointer 				 * back as well. 				 */
 if|if
 condition|(
@@ -19469,10 +19473,6 @@ name|prev_scb
 operator|=
 name|scb
 expr_stmt|;
-break|break;
-case|case
-name|SEARCH_REMOVE
-case|:
 break|break;
 block|}
 block|}
