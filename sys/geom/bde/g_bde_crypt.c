@@ -1183,6 +1183,9 @@ index|]
 operator|&
 operator|~
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|kp
 operator|->
 name|sectorsize
