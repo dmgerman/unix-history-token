@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ranlib.c 4.6 %G%"
+literal|"@(#)ranlib.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,6 +413,26 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|tempnm
+argument_list|,
+name|archdr
+operator|.
+name|ar_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|archdr
+operator|.
+name|ar_name
+argument_list|)
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
 name|exp
 operator|.
 name|a_syms
@@ -470,7 +490,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ranlib: %s(%s): old format .o file\n"
+literal|"ranlib: warning: %s(%s): old format .o file\n"
 argument_list|,
 operator|*
 name|argv
@@ -480,11 +500,7 @@ operator|.
 name|ar_name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+continue|continue;
 block|}
 name|fseek
 argument_list|(
@@ -527,7 +543,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ranlib: %s(%s): mangled string table\n"
+literal|"ranlib: warning: %s(%s): mangled string table\n"
 argument_list|,
 operator|*
 name|argv
@@ -537,11 +553,7 @@ operator|.
 name|ar_name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+continue|continue;
 block|}
 name|strtab
 operator|=
