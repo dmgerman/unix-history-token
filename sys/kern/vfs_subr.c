@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ffs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1083,6 +1077,24 @@ literal|"Number of times the vnlru process ran without success"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Hook for calling soft updates */
+end_comment
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|softdep_process_worklist_hook
+function_decl|)
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -6245,16 +6257,20 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Do soft update processing. 		 */
-ifdef|#
-directive|ifdef
-name|SOFTUPDATES
-name|softdep_process_worklist
+if|if
+condition|(
+name|softdep_process_worklist_hook
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|softdep_process_worklist_hook
+call|)
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * The variable rushjob allows the kernel to speed up the 		 * processing of the filesystem syncer process. A rushjob 		 * value of N tells the filesystem syncer to process the next 		 * N seconds worth of work on its queue ASAP. Currently rushjob 		 * is used by the soft update code to speed up the filesystem 		 * syncer process when the incore state is getting so far 		 * ahead of the disk that the kernel memory pool is being 		 * threatened with exhaustion. 		 */
 if|if
 condition|(
