@@ -906,7 +906,7 @@ comment|/*  * /dev/devctl implementation  */
 end_comment
 
 begin_comment
-comment|/*  * This design allows only one reader for /dev/devctl.  This is not desirable  * in the long run, but will get a lot of hair out of this implementation.  * Maybe we should make this device a clonable device.  *  * Also note: we specifically do not attach a device to the device_t tree  * to avoid potential chicken and egg problems.  One could argue that all  * of this belongs to the root node.  One could also further argue that the  * sysctl interface that we have not might more properly be a ioctl  * interface, but at this stage of the game, I'm not inclinde to rock that  * boat.  *  * I'm also not sure that the SIGIO support is done correctly or not, as  * I copied it from a driver that had SIGIO support that likely hasn't been  * tested since 3.4 or 2.2.8!  */
+comment|/*  * This design allows only one reader for /dev/devctl.  This is not desirable  * in the long run, but will get a lot of hair out of this implementation.  * Maybe we should make this device a clonable device.  *  * Also note: we specifically do not attach a device to the device_t tree  * to avoid potential chicken and egg problems.  One could argue that all  * of this belongs to the root node.  One could also further argue that the  * sysctl interface that we have not might more properly be an ioctl  * interface, but at this stage of the game, I'm not inclined to rock that  * boat.  *  * I'm also not sure that the SIGIO support is done correctly or not, as  * I copied it from a driver that had SIGIO support that likely hasn't been  * tested since 3.4 or 2.2.8!  */
 end_comment
 
 begin_function_decl
@@ -1144,11 +1144,11 @@ name|dev_cdevsw
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|0
+name|GID_WHEEL
 argument_list|,
-literal|0644
+literal|0600
 argument_list|,
 literal|"devctl"
 argument_list|)
