@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.60
+literal|3.61
 operator|%
 name|G
 operator|%
@@ -156,7 +156,7 @@ expr_stmt|;
 comment|/* 	**  Try to read a UNIX-style From line 	*/
 if|if
 condition|(
-name|fgets
+name|sfgets
 argument_list|(
 name|buf
 argument_list|,
@@ -204,7 +204,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fgets
+name|sfgets
 argument_list|(
 name|buf
 argument_list|,
@@ -225,7 +225,7 @@ block|}
 endif|#
 directive|endif
 endif|NOTUNIX
-comment|/* 	**  Copy InChannel to temp file& do message editing. 	**	To keep certain mailers from getting confused, 	**	and to keep the output clean, lines that look 	**	like UNIX "From" lines are deleted in the header, 	**	and prepended with ">" in the body. 	*/
+comment|/* 	**  Copy InChannel to temp file& do message editing. 	**	To keep certain mailers from getting confused, 	**	and to keep the output clean, lines that look 	**	like UNIX "From" lines are deleted in the header. 	*/
 for|for
 control|(
 init|;
@@ -241,7 +241,13 @@ argument_list|(
 name|InChannel
 argument_list|)
 operator|&&
-name|fgets
+operator|!
+name|ferror
+argument_list|(
+name|InChannel
+argument_list|)
+operator|&&
+name|sfgets
 argument_list|(
 name|buf
 argument_list|,
@@ -352,7 +358,7 @@ name|c
 expr_stmt|;
 if|if
 condition|(
-name|fgets
+name|sfgets
 argument_list|(
 name|p
 argument_list|,
@@ -456,7 +462,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|fgets
+name|sfgets
 argument_list|(
 name|buf
 argument_list|,
@@ -489,7 +495,13 @@ argument_list|(
 name|InChannel
 argument_list|)
 operator|&&
-name|fgets
+operator|!
+name|ferror
+argument_list|(
+name|InChannel
+argument_list|)
+operator|&&
+name|sfgets
 argument_list|(
 name|buf
 argument_list|,

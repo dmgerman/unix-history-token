@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.54
+literal|3.55
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.54
+literal|3.55
 operator|%
 name|G
 operator|%
@@ -147,18 +147,6 @@ begin_comment
 comment|/* fd describing socket */
 end_comment
 
-begin_decl_stmt
-name|int
-name|MaxConnections
-init|=
-literal|4
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum simultaneous sendmails */
-end_comment
-
 begin_macro
 name|getrequests
 argument_list|()
@@ -172,11 +160,6 @@ decl_stmt|;
 name|union
 name|wait
 name|status
-decl_stmt|;
-name|int
-name|numconnections
-init|=
-literal|0
 decl_stmt|;
 specifier|register
 name|struct
