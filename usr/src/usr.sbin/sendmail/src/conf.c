@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.49
+literal|3.50
 operator|%
 name|G
 operator|%
@@ -99,17 +99,15 @@ literal|"bcc"
 block|,
 name|H_ADDR
 operator||
-name|H_ACHECK
-operator||
 name|H_RCPT
 block|,
 literal|0
 block|,
 literal|"message-id"
 block|,
-name|H_CHECK
+literal|0
 block|,
-name|M_MSGID
+literal|0
 block|,
 literal|"message"
 block|,
@@ -401,6 +399,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* timeout on external reads */
+end_comment
+
+begin_decl_stmt
+name|int
+name|LogLevel
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default logging level */
 end_comment
 
 begin_comment
