@@ -1205,12 +1205,12 @@ name|screenInitd
 condition|)
 block|{
 comment|/* not initialized */
-name|NumberLines
+name|MaxNumberLines
 operator|=
 literal|24
 expr_stmt|;
 comment|/* XXX */
-name|NumberColumns
+name|MaxNumberColumns
 operator|=
 literal|80
 expr_stmt|;
