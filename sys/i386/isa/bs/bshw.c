@@ -53,6 +53,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|"opt_pc98.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/ic/i8237.h>
 end_include
 
