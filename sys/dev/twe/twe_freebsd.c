@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<geom/geom_disk.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/twe/twereg.h>
 end_include
 

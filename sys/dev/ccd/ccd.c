@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<geom/geom_disk.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ccdvar.h>
 end_include
 

@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -61,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<geom/geom_disk.h>
 end_include
 
 begin_include
@@ -541,7 +541,7 @@ name|bio_disk
 operator|->
 name|d_drv1
 expr_stmt|;
-name|bioqdisksort
+name|bioq_disksort
 argument_list|(
 operator|&
 name|sc

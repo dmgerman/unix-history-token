@@ -1519,7 +1519,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|bioqdisksort
+name|bioq_disksort
 argument_list|(
 operator|&
 name|sc

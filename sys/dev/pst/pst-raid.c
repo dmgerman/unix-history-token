@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/eventhandler.h>
 end_include
 
@@ -121,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|<pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<geom/geom_disk.h>
 end_include
 
 begin_include
@@ -1087,7 +1087,7 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-name|bioqdisksort
+name|bioq_disksort
 argument_list|(
 operator|&
 name|psc

@@ -40,19 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/aac/aac_compat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/disk.h>
 end_include
 
 begin_include
@@ -65,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/aac/aac_compat.h>
 end_include
 
 begin_include

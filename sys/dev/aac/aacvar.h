@@ -33,6 +33,12 @@ directive|include
 file|<sys/selinfo.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_disk.h>
+end_include
+
 begin_comment
 comment|/*  * Driver Parameter Definitions  */
 end_comment

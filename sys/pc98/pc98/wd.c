@@ -2966,7 +2966,7 @@ operator|=
 name|WANTOPEN
 expr_stmt|;
 block|}
-name|bioqdisksort
+name|bioq_disksort
 argument_list|(
 operator|&
 name|drive_queue

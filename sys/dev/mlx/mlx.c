@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -89,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<geom/geom_disk.h>
 end_include
 
 begin_include
