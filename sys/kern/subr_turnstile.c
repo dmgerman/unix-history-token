@@ -2820,15 +2820,6 @@ name|td
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MPASS
-argument_list|(
-name|td
-operator|->
-name|td_turnstile
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td
