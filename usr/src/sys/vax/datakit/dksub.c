@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Datakit driver  * Common subroutines for all drivers  *	SCCSID[] = "@(#)dksub.c	1.2 Garage 84/03/27"  *		   "@(#)dksub.c	1.5 (Berkeley) %G%"  */
+comment|/*  * Datakit driver  * Common subroutines for all drivers  *	SCCSID[] = "@(#)dksub.c	1.2 Garage 84/03/27"  *		   "@(#)dksub.c	1.6 (Berkeley) %G%"  */
 end_comment
 
 begin_include
@@ -111,6 +111,18 @@ begin_include
 include|#
 directive|include
 file|"uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vnode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"specdev.h"
 end_include
 
 begin_include
@@ -1301,9 +1313,6 @@ if|if
 condition|(
 name|dkdevtype
 argument_list|(
-operator|(
-name|dev_t
-operator|)
 name|vp
 operator|->
 name|v_rdev
@@ -1315,9 +1324,9 @@ name|devnop
 operator|=
 name|minor
 argument_list|(
-name|ip
+name|vp
 operator|->
-name|i_rdev
+name|v_rdev
 argument_list|)
 expr_stmt|;
 return|return
