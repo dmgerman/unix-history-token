@@ -2422,6 +2422,8 @@ block|{
 if|if
 condition|(
 name|count
+operator|+
+literal|5
 operator|>=
 name|termwidth
 condition|)
