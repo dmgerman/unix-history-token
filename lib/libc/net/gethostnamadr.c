@@ -422,6 +422,13 @@ index|[
 literal|1
 index|]
 operator|=
+name|SERVICE_HOSTS
+expr_stmt|;
+name|service_order
+index|[
+literal|2
+index|]
+operator|=
 name|SERVICE_NONE
 expr_stmt|;
 block|}
