@@ -179,11 +179,11 @@ parameter_list|,
 name|execsw_arg
 parameter_list|)
 define|\
-value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		struct execsw *exec = (struct execsw *)data; \ 		int error = 0; \ 		switch (type) { \ 		case MOD_LOAD: \
+value|static int __CONCAT(name,_modevent)(module_t mod, int type, \ 	    void *data) \ 	{ \ 		struct execsw *exec = (struct execsw *)data; \ 		int error = 0; \ 		switch (type) { \ 		case MOD_LOAD: \
 comment|/* printf(#name " module loaded\n"); */
-value|\ 			error = exec_register(exec); \ 			if (error) \ 				printf(#name "register failed\n"); \ 			break; \ 		case MOD_UNLOAD: \
+value|\ 			error = exec_register(exec); \ 			if (error) \ 				printf(__XSTRING(name) "register failed\n"); \ 			break; \ 		case MOD_UNLOAD: \
 comment|/* printf(#name " module unloaded\n"); */
-value|\ 			error = exec_unregister(exec); \ 			if (error) \ 				printf(#name " unregister failed\n"); \ 			break; \ 		default: \ 			break; \ 		} \ 		return error; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)& execsw_arg \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_EXEC, SI_ORDER_ANY)
+value|\ 			error = exec_unregister(exec); \ 			if (error) \ 				printf(__XSTRING(name) " unregister failed\n");\ 			break; \ 		default: \ 			break; \ 		} \ 		return error; \ 	} \ 	static moduledata_t __CONCAT(name,_mod) = { \ 		__XSTRING(name), \ 		__CONCAT(name,_modevent), \ 		(void *)& execsw_arg \ 	}; \ 	DECLARE_MODULE(name, __CONCAT(name,_mod), SI_SUB_EXEC, SI_ORDER_ANY)
 end_define
 
 begin_endif
