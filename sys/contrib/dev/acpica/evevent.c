@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 42 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 43 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -426,7 +426,7 @@ argument_list|(
 name|TRACE_INTERRUPTS
 argument_list|,
 operator|(
-literal|"Fixed AcpiEvent Block: Enable = %08x\tStatus = %08x\n"
+literal|"Fixed AcpiEvent Block: Enable %08X Status %08X\n"
 operator|,
 name|EnableRegister
 operator|,
@@ -1572,7 +1572,7 @@ argument_list|(
 name|TRACE_INTERRUPTS
 argument_list|,
 operator|(
-literal|"GPE block at %x - Enable: %08x\tStatus: %08x\n"
+literal|"GPE block at %X - Enable %08X Status %08X\n"
 operator|,
 name|AcpiGbl_GpeRegisters
 index|[

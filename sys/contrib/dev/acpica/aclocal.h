@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 121 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 123 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -40,6 +40,27 @@ name|UINT32
 name|ACPI_MUTEX_HANDLE
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEMORY_MODE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOGICAL_ADDRESSING
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PHYSICAL_ADDRESSING
+value|0x01
+end_define
 
 begin_comment
 comment|/* Object descriptor types */
@@ -547,6 +568,13 @@ define|#
 directive|define
 name|ANOBJ_METHOD_SOME_NO_RETVAL
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANOBJ_IS_BIT_OFFSET
+value|0x80
 end_define
 
 begin_comment
@@ -2469,6 +2497,44 @@ index|]
 decl_stmt|;
 block|}
 name|ACPI_DEVICE_ID
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*****************************************************************************  *  * Debugger  *  ****************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|dbmethodinfo
+block|{
+name|ACPI_HANDLE
+name|ThreadGate
+decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+name|Name
+decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+modifier|*
+name|Args
+decl_stmt|;
+name|UINT32
+name|Flags
+decl_stmt|;
+name|UINT32
+name|NumLoops
+decl_stmt|;
+name|NATIVE_CHAR
+name|Pathname
+index|[
+literal|128
+index|]
+decl_stmt|;
+block|}
+name|DB_METHOD_INFO
 typedef|;
 end_typedef
 

@@ -674,6 +674,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|UINT32
+name|AcpiOsGetTimer
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Debug print routines  */
 end_comment

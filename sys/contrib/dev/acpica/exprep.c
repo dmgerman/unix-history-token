@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 89 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 90 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -322,7 +322,7 @@ name|AE_AML_OPERAND_VALUE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Setup granularity-based fields */
+comment|/* Setup width (access granularity) fields */
 name|ObjDesc
 operator|->
 name|CommonField
@@ -385,11 +385,10 @@ name|ROUND_DOWN
 argument_list|(
 name|NearestByteAddress
 argument_list|,
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|AccessByteWidth
+name|DIV_8
+argument_list|(
+name|AccessBitWidth
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*      * StartFieldBitOffset is the offset of the first bit of the field within a field datum.      * This is calculated as the number of bits from the BaseByteOffset.  In other words,      * the start of the field is relative to a byte address, regardless of the access type      * of the field.      */

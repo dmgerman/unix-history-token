@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 19 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 20 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -69,12 +69,12 @@ literal|0
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tIRQ Resource\n"
+literal|"IRQ Resource\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t%s Triggered\n"
+literal|"    %s Triggered\n"
 argument_list|,
 name|LEVEL_SENSITIVE
 operator|==
@@ -89,7 +89,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tActive %s\n"
+literal|"    Active %s\n"
 argument_list|,
 name|ACTIVE_LOW
 operator|==
@@ -104,7 +104,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t%s\n"
+literal|"    %s\n"
 argument_list|,
 name|SHARED
 operator|==
@@ -119,7 +119,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t%X Interrupts ( "
+literal|"    %X Interrupts ( "
 argument_list|,
 name|IrqData
 operator|->
@@ -194,7 +194,7 @@ literal|0
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tDMA Resource\n"
+literal|"DMA Resource\n"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -209,7 +209,7 @@ name|COMPATIBILITY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tCompatibility mode\n"
+literal|"    Compatibility mode\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -218,7 +218,7 @@ name|TYPE_A
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType A\n"
+literal|"    Type A\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -227,7 +227,7 @@ name|TYPE_B
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType B\n"
+literal|"    Type B\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -236,21 +236,21 @@ name|TYPE_F
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType F\n"
+literal|"    Type F\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tInvalid DMA type\n"
+literal|"    Invalid DMA type\n"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t%sBus Master\n"
+literal|"    %sBus Master\n"
 argument_list|,
 name|BUS_MASTER
 operator|==
@@ -275,7 +275,7 @@ name|TRANSFER_8
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t8-bit only transfer\n"
+literal|"    8-bit only transfer\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -284,7 +284,7 @@ name|TRANSFER_8_16
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t8 and 16-bit transfer\n"
+literal|"    8 and 16-bit transfer\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -293,21 +293,21 @@ name|TRANSFER_16
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t16 bit only transfer\n"
+literal|"    16 bit only transfer\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tInvalid transfer preference\n"
+literal|"    Invalid transfer preference\n"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tNumber of Channels: %X ( "
+literal|"    Number of Channels: %X ( "
 argument_list|,
 name|DmaData
 operator|->
@@ -377,7 +377,7 @@ name|Data
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tStart Dependent Functions Resource\n"
+literal|"Start Dependent Functions Resource\n"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -392,7 +392,7 @@ name|GOOD_CONFIGURATION
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tGood configuration\n"
+literal|"    Good configuration\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -401,7 +401,7 @@ name|ACCEPTABLE_CONFIGURATION
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAcceptable configuration\n"
+literal|"    Acceptable configuration\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -410,14 +410,14 @@ name|SUB_OPTIMAL_CONFIGURATION
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tSub-optimal configuration\n"
+literal|"    Sub-optimal configuration\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tInvalid compatibility priority\n"
+literal|"    Invalid compatibility priority\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -434,7 +434,7 @@ name|GOOD_CONFIGURATION
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tGood configuration\n"
+literal|"    Good configuration\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -443,7 +443,7 @@ name|ACCEPTABLE_CONFIGURATION
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAcceptable configuration\n"
+literal|"    Acceptable configuration\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -452,14 +452,14 @@ name|SUB_OPTIMAL_CONFIGURATION
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tSub-optimal configuration\n"
+literal|"    Sub-optimal configuration\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tInvalid performance "
+literal|"    Invalid performance "
 literal|"robustness preference\n"
 argument_list|)
 expr_stmt|;
@@ -494,12 +494,12 @@ name|Data
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tIo Resource\n"
+literal|"Io Resource\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t%d bit decode\n"
+literal|"    %d bit decode\n"
 argument_list|,
 name|DECODE_16
 operator|==
@@ -514,7 +514,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange minimum base: %08X\n"
+literal|"    Range minimum base: %08X\n"
 argument_list|,
 name|IoData
 operator|->
@@ -523,7 +523,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange maximum base: %08X\n"
+literal|"    Range maximum base: %08X\n"
 argument_list|,
 name|IoData
 operator|->
@@ -532,7 +532,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAlignment: %08X\n"
+literal|"    Alignment: %08X\n"
 argument_list|,
 name|IoData
 operator|->
@@ -541,7 +541,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange Length: %08X\n"
+literal|"    Range Length: %08X\n"
 argument_list|,
 name|IoData
 operator|->
@@ -577,12 +577,12 @@ name|Data
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tFixed Io Resource\n"
+literal|"Fixed Io Resource\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange base address: %08X"
+literal|"    Range base address: %08X"
 argument_list|,
 name|FixedIoData
 operator|->
@@ -591,7 +591,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange length: %08X"
+literal|"    Range length: %08X"
 argument_list|,
 name|FixedIoData
 operator|->
@@ -632,12 +632,12 @@ literal|0
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tVendor Specific Resource\n"
+literal|"Vendor Specific Resource\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tLength: %08X\n"
+literal|"    Length: %08X\n"
 argument_list|,
 name|VendorData
 operator|->
@@ -662,7 +662,7 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tByte %X: %08X\n"
+literal|"    Byte %X: %08X\n"
 argument_list|,
 name|Index
 argument_list|,
@@ -704,12 +704,12 @@ name|Data
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t24-Bit Memory Range Resource\n"
+literal|"24-Bit Memory Range Resource\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRead%s\n"
+literal|"    Read%s\n"
 argument_list|,
 name|READ_WRITE_MEMORY
 operator|==
@@ -724,7 +724,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange minimum base: %08X\n"
+literal|"    Range minimum base: %08X\n"
 argument_list|,
 name|Memory24Data
 operator|->
@@ -733,7 +733,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange maximum base: %08X\n"
+literal|"    Range maximum base: %08X\n"
 argument_list|,
 name|Memory24Data
 operator|->
@@ -742,7 +742,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAlignment: %08X\n"
+literal|"    Alignment: %08X\n"
 argument_list|,
 name|Memory24Data
 operator|->
@@ -751,7 +751,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange length: %08X\n"
+literal|"    Range length: %08X\n"
 argument_list|,
 name|Memory24Data
 operator|->
@@ -787,12 +787,12 @@ name|Data
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t32-Bit Memory Range Resource\n"
+literal|"32-Bit Memory Range Resource\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRead%s\n"
+literal|"    Read%s\n"
 argument_list|,
 name|READ_WRITE_MEMORY
 operator|==
@@ -807,7 +807,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange minimum base: %08X\n"
+literal|"    Range minimum base: %08X\n"
 argument_list|,
 name|Memory32Data
 operator|->
@@ -816,7 +816,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange maximum base: %08X\n"
+literal|"    Range maximum base: %08X\n"
 argument_list|,
 name|Memory32Data
 operator|->
@@ -825,7 +825,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAlignment: %08X\n"
+literal|"    Alignment: %08X\n"
 argument_list|,
 name|Memory32Data
 operator|->
@@ -834,7 +834,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange length: %08X\n"
+literal|"    Range length: %08X\n"
 argument_list|,
 name|Memory32Data
 operator|->
@@ -870,12 +870,12 @@ name|Data
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t32-Bit Fixed Location Memory Range Resource\n"
+literal|"32-Bit Fixed Location Memory Range Resource\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRead%s\n"
+literal|"    Read%s\n"
 argument_list|,
 name|READ_WRITE_MEMORY
 operator|==
@@ -890,7 +890,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange base address: %08X\n"
+literal|"    Range base address: %08X\n"
 argument_list|,
 name|FixedMemory32Data
 operator|->
@@ -899,7 +899,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange length: %08X\n"
+literal|"    Range length: %08X\n"
 argument_list|,
 name|FixedMemory32Data
 operator|->
@@ -935,12 +935,12 @@ name|Data
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t16-Bit Address Space Resource\n"
+literal|"16-Bit Address Space Resource\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Type: "
+literal|"    Resource Type: "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -974,7 +974,7 @@ name|NON_CACHEABLE_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Noncacheable memory\n"
 argument_list|)
 expr_stmt|;
@@ -984,7 +984,7 @@ name|CACHABLE_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Cacheable memory\n"
 argument_list|)
 expr_stmt|;
@@ -994,7 +994,7 @@ name|WRITE_COMBINING_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Write-combining memory\n"
 argument_list|)
 expr_stmt|;
@@ -1004,7 +1004,7 @@ name|PREFETCHABLE_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Prefetchable memory\n"
 argument_list|)
 expr_stmt|;
@@ -1012,7 +1012,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Invalid cache attribute\n"
 argument_list|)
 expr_stmt|;
@@ -1020,7 +1020,7 @@ break|break;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: Read%s\n"
+literal|"    Type Specific: Read%s\n"
 argument_list|,
 name|READ_WRITE_MEMORY
 operator|==
@@ -1062,7 +1062,7 @@ name|NON_ISA_ONLY_RANGES
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Non-ISA Io Addresses\n"
 argument_list|)
 expr_stmt|;
@@ -1072,7 +1072,7 @@ name|ISA_ONLY_RANGES
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"ISA Io Addresses\n"
 argument_list|)
 expr_stmt|;
@@ -1082,7 +1082,7 @@ name|ENTIRE_RANGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"ISA and non-ISA Io Addresses\n"
 argument_list|)
 expr_stmt|;
@@ -1090,7 +1090,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Invalid range attribute\n"
 argument_list|)
 expr_stmt|;
@@ -1116,7 +1116,7 @@ return|return;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource %s\n"
+literal|"    Resource %s\n"
 argument_list|,
 name|CONSUMER
 operator|==
@@ -1131,7 +1131,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t%s decode\n"
+literal|"    %s decode\n"
 argument_list|,
 name|SUB_DECODE
 operator|==
@@ -1146,7 +1146,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tMin address is %s fixed\n"
+literal|"    Min address is %s fixed\n"
 argument_list|,
 name|ADDRESS_FIXED
 operator|==
@@ -1161,7 +1161,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tMax address is %s fixed\n"
+literal|"    Max address is %s fixed\n"
 argument_list|,
 name|ADDRESS_FIXED
 operator|==
@@ -1176,7 +1176,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tGranularity: %08X\n"
+literal|"    Granularity: %08X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1185,7 +1185,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress range min: %08X\n"
+literal|"    Address range min: %08X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1194,7 +1194,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress range max: %08X\n"
+literal|"    Address range max: %08X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1203,7 +1203,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress translation offset: %08X\n"
+literal|"    Address translation offset: %08X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1212,7 +1212,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress Length: %08X\n"
+literal|"    Address Length: %08X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1232,7 +1232,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Source Index: %X\n"
+literal|"    Resource Source Index: %X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1243,7 +1243,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Source: %s\n"
+literal|"    Resource Source: %s\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1282,7 +1282,7 @@ name|Data
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t32-Bit Address Space Resource\n"
+literal|"32-Bit Address Space Resource\n"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1297,7 +1297,7 @@ name|MEMORY_RANGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Type: Memory Range\n"
+literal|"    Resource Type: Memory Range\n"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1316,7 +1316,7 @@ name|NON_CACHEABLE_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Noncacheable memory\n"
 argument_list|)
 expr_stmt|;
@@ -1326,7 +1326,7 @@ name|CACHABLE_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Cacheable memory\n"
 argument_list|)
 expr_stmt|;
@@ -1336,7 +1336,7 @@ name|WRITE_COMBINING_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Write-combining memory\n"
 argument_list|)
 expr_stmt|;
@@ -1346,7 +1346,7 @@ name|PREFETCHABLE_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Prefetchable memory\n"
 argument_list|)
 expr_stmt|;
@@ -1354,7 +1354,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Invalid cache attribute\n"
 argument_list|)
 expr_stmt|;
@@ -1362,7 +1362,7 @@ break|break;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: Read%s\n"
+literal|"    Type Specific: Read%s\n"
 argument_list|,
 name|READ_WRITE_MEMORY
 operator|==
@@ -1385,7 +1385,7 @@ name|IO_RANGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Type: Io Range\n"
+literal|"    Resource Type: Io Range\n"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1404,7 +1404,7 @@ name|NON_ISA_ONLY_RANGES
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Non-ISA Io Addresses\n"
 argument_list|)
 expr_stmt|;
@@ -1414,7 +1414,7 @@ name|ISA_ONLY_RANGES
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"ISA Io Addresses\n"
 argument_list|)
 expr_stmt|;
@@ -1424,7 +1424,7 @@ name|ENTIRE_RANGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"ISA and non-ISA Io Addresses\n"
 argument_list|)
 expr_stmt|;
@@ -1432,7 +1432,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Invalid Range attribute"
 argument_list|)
 expr_stmt|;
@@ -1444,21 +1444,21 @@ name|BUS_NUMBER_RANGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Type: Bus Number Range\n"
+literal|"    Resource Type: Bus Number Range\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tInvalid Resource Type..exiting.\n"
+literal|"    Invalid Resource Type..exiting.\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource %s\n"
+literal|"    Resource %s\n"
 argument_list|,
 name|CONSUMER
 operator|==
@@ -1473,7 +1473,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t%s decode\n"
+literal|"    %s decode\n"
 argument_list|,
 name|SUB_DECODE
 operator|==
@@ -1488,7 +1488,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tMin address is %s fixed\n"
+literal|"    Min address is %s fixed\n"
 argument_list|,
 name|ADDRESS_FIXED
 operator|==
@@ -1503,7 +1503,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tMax address is %s fixed\n"
+literal|"    Max address is %s fixed\n"
 argument_list|,
 name|ADDRESS_FIXED
 operator|==
@@ -1518,7 +1518,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tGranularity: %08X\n"
+literal|"    Granularity: %08X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1527,7 +1527,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress range min: %08X\n"
+literal|"    Address range min: %08X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1536,7 +1536,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress range max: %08X\n"
+literal|"    Address range max: %08X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1545,7 +1545,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress translation offset: %08X\n"
+literal|"    Address translation offset: %08X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1554,7 +1554,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress Length: %08X\n"
+literal|"    Address Length: %08X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1574,7 +1574,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Source Index: %X\n"
+literal|"    Resource Source Index: %X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1585,7 +1585,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Source: %s\n"
+literal|"    Resource Source: %s\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1624,7 +1624,7 @@ name|Data
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t64-Bit Address Space Resource\n"
+literal|"64-Bit Address Space Resource\n"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1639,7 +1639,7 @@ name|MEMORY_RANGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Type: Memory Range\n"
+literal|"    Resource Type: Memory Range\n"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1658,7 +1658,7 @@ name|NON_CACHEABLE_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Noncacheable memory\n"
 argument_list|)
 expr_stmt|;
@@ -1668,7 +1668,7 @@ name|CACHABLE_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Cacheable memory\n"
 argument_list|)
 expr_stmt|;
@@ -1678,7 +1678,7 @@ name|WRITE_COMBINING_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Write-combining memory\n"
 argument_list|)
 expr_stmt|;
@@ -1688,7 +1688,7 @@ name|PREFETCHABLE_MEMORY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Prefetchable memory\n"
 argument_list|)
 expr_stmt|;
@@ -1696,7 +1696,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Invalid cache attribute\n"
 argument_list|)
 expr_stmt|;
@@ -1704,7 +1704,7 @@ break|break;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: Read%s\n"
+literal|"    Type Specific: Read%s\n"
 argument_list|,
 name|READ_WRITE_MEMORY
 operator|==
@@ -1727,7 +1727,7 @@ name|IO_RANGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Type: Io Range\n"
+literal|"    Resource Type: Io Range\n"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1746,7 +1746,7 @@ name|NON_ISA_ONLY_RANGES
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Non-ISA Io Addresses\n"
 argument_list|)
 expr_stmt|;
@@ -1756,7 +1756,7 @@ name|ISA_ONLY_RANGES
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"ISA Io Addresses\n"
 argument_list|)
 expr_stmt|;
@@ -1766,7 +1766,7 @@ name|ENTIRE_RANGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"ISA and non-ISA Io Addresses\n"
 argument_list|)
 expr_stmt|;
@@ -1774,7 +1774,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tType Specific: "
+literal|"    Type Specific: "
 literal|"Invalid Range attribute"
 argument_list|)
 expr_stmt|;
@@ -1786,21 +1786,21 @@ name|BUS_NUMBER_RANGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Type: Bus Number Range\n"
+literal|"    Resource Type: Bus Number Range\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tInvalid Resource Type..exiting.\n"
+literal|"    Invalid Resource Type..exiting.\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource %s\n"
+literal|"    Resource %s\n"
 argument_list|,
 name|CONSUMER
 operator|==
@@ -1815,7 +1815,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t%s decode\n"
+literal|"    %s decode\n"
 argument_list|,
 name|SUB_DECODE
 operator|==
@@ -1830,7 +1830,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tMin address is %s fixed\n"
+literal|"    Min address is %s fixed\n"
 argument_list|,
 name|ADDRESS_FIXED
 operator|==
@@ -1845,7 +1845,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tMax address is %s fixed\n"
+literal|"    Max address is %s fixed\n"
 argument_list|,
 name|ADDRESS_FIXED
 operator|==
@@ -1860,7 +1860,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tGranularity: %16X\n"
+literal|"    Granularity: %16X\n"
 argument_list|,
 name|Address64Data
 operator|->
@@ -1869,7 +1869,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress range min: %16X\n"
+literal|"    Address range min: %16X\n"
 argument_list|,
 name|Address64Data
 operator|->
@@ -1878,7 +1878,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress range max: %16X\n"
+literal|"    Address range max: %16X\n"
 argument_list|,
 name|Address64Data
 operator|->
@@ -1887,7 +1887,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress translation offset: %16X\n"
+literal|"    Address translation offset: %16X\n"
 argument_list|,
 name|Address64Data
 operator|->
@@ -1896,7 +1896,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress Length: %16X\n"
+literal|"    Address Length: %16X\n"
 argument_list|,
 name|Address64Data
 operator|->
@@ -1916,7 +1916,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Source Index: %X\n"
+literal|"    Resource Source Index: %X\n"
 argument_list|,
 name|Address64Data
 operator|->
@@ -1927,7 +1927,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Source: %s\n"
+literal|"    Resource Source: %s\n"
 argument_list|,
 name|Address64Data
 operator|->
@@ -1971,12 +1971,12 @@ literal|0
 decl_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tExtended IRQ Resource\n"
+literal|"Extended IRQ Resource\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource %s\n"
+literal|"    Resource %s\n"
 argument_list|,
 name|CONSUMER
 operator|==
@@ -1991,7 +1991,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t%s\n"
+literal|"    %s\n"
 argument_list|,
 name|LEVEL_SENSITIVE
 operator|==
@@ -2006,7 +2006,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tActive %s\n"
+literal|"    Active %s\n"
 argument_list|,
 name|ACTIVE_LOW
 operator|==
@@ -2021,7 +2021,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t%s\n"
+literal|"    %s\n"
 argument_list|,
 name|SHARED
 operator|==
@@ -2036,7 +2036,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tInterrupts : %X ( "
+literal|"    Interrupts : %X ( "
 argument_list|,
 name|ExtIrqData
 operator|->
@@ -2090,7 +2090,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Source Index: %X"
+literal|"    Resource Source Index: %X"
 argument_list|,
 name|ExtIrqData
 operator|->
@@ -2101,7 +2101,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Source: %s"
+literal|"    Resource Source: %s"
 argument_list|,
 name|ExtIrqData
 operator|->
@@ -2157,7 +2157,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tResource structure %x.\n"
+literal|"Resource structure %x.\n"
 argument_list|,
 name|Count
 operator|++
@@ -2211,7 +2211,7 @@ name|ACPI_RSTYPE_END_DPF
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tEndDependentFunctions Resource\n"
+literal|"EndDependentFunctions Resource\n"
 argument_list|)
 expr_stmt|;
 comment|/* AcpiRsDumpEndDependentFunctions (Resource->Data);*/
@@ -2258,7 +2258,7 @@ case|:
 comment|/*RsDumpEndTag (Resource->Data);*/
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tEndTag Resource\n"
+literal|"EndTag Resource\n"
 argument_list|)
 expr_stmt|;
 name|Done
@@ -2437,7 +2437,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tPCI IRQ Routing Table structure %X.\n"
+literal|"PCI IRQ Routing Table structure %X.\n"
 argument_list|,
 name|Count
 operator|++
@@ -2445,7 +2445,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress: %X\n"
+literal|"    Address: %X\n"
 argument_list|,
 name|PrtElement
 operator|->
@@ -2454,7 +2454,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tPin: %X\n"
+literal|"    Pin: %X\n"
 argument_list|,
 name|PrtElement
 operator|->
@@ -2463,7 +2463,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tSource: %s\n"
+literal|"    Source: %s\n"
 argument_list|,
 name|PrtElement
 operator|->
@@ -2472,7 +2472,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tSourceIndex: %X\n"
+literal|"    SourceIndex: %X\n"
 argument_list|,
 name|PrtElement
 operator|->

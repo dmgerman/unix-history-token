@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 122 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 123 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -380,36 +380,41 @@ name|NSP_NEWSCOPE
 operator||
 name|NSP_LOCAL
 block|,
-comment|/* 24 Resource         */
-name|NSP_NORMAL
-block|,
-comment|/* 25 DefFieldDefn     */
-name|NSP_NORMAL
-block|,
-comment|/* 26 BankFieldDefn    */
-name|NSP_NORMAL
-block|,
-comment|/* 27 IndexFieldDefn   */
-name|NSP_NORMAL
-block|,
-comment|/* 28 If               */
-name|NSP_NORMAL
-block|,
-comment|/* 29 Else             */
-name|NSP_NORMAL
-block|,
-comment|/* 30 While            */
+comment|/* 24 Resource Desc    */
 name|NSP_NEWSCOPE
-block|,
-comment|/* 31 Scope            */
+operator||
 name|NSP_LOCAL
 block|,
-comment|/* 32 DefAny           */
+comment|/* 25 Resource Field   */
 name|NSP_NORMAL
 block|,
-comment|/* 33 Extra            */
+comment|/* 26 DefFieldDefn     */
 name|NSP_NORMAL
-comment|/* 34 Invalid          */
+block|,
+comment|/* 27 BankFieldDefn    */
+name|NSP_NORMAL
+block|,
+comment|/* 28 IndexFieldDefn   */
+name|NSP_NORMAL
+block|,
+comment|/* 29 If               */
+name|NSP_NORMAL
+block|,
+comment|/* 30 Else             */
+name|NSP_NORMAL
+block|,
+comment|/* 31 While            */
+name|NSP_NEWSCOPE
+block|,
+comment|/* 32 Scope            */
+name|NSP_LOCAL
+block|,
+comment|/* 33 DefAny           */
+name|NSP_NORMAL
+block|,
+comment|/* 34 Extra            */
+name|NSP_NORMAL
+comment|/* 35 Invalid          */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -805,36 +810,39 @@ comment|/* 23 */
 literal|"AddrHndlr"
 block|,
 comment|/* 24 */
-literal|"Resource"
+literal|"RsrcDesc"
 block|,
 comment|/* 25 */
-literal|"RgnFldDfn"
+literal|"RsrcField"
 block|,
 comment|/* 26 */
-literal|"BnkFldDfn"
+literal|"RgnFldDfn"
 block|,
 comment|/* 27 */
-literal|"IdxFldDfn"
+literal|"BnkFldDfn"
 block|,
 comment|/* 28 */
-literal|"If"
+literal|"IdxFldDfn"
 block|,
 comment|/* 29 */
-literal|"Else"
+literal|"If"
 block|,
 comment|/* 30 */
-literal|"While"
+literal|"Else"
 block|,
 comment|/* 31 */
-literal|"Scope"
+literal|"While"
 block|,
 comment|/* 32 */
-literal|"DefAny"
+literal|"Scope"
 block|,
 comment|/* 33 */
-literal|"Extra"
+literal|"DefAny"
 block|,
 comment|/* 34 */
+literal|"Extra"
+block|,
+comment|/* 35 */
 literal|"Invalid"
 block|}
 decl_stmt|;
