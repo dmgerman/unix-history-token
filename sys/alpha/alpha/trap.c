@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: trap.c,v 1.15 1999/06/08 16:42:17 dt Exp $ */
+comment|/* $Id: trap.c,v 1.16 1999/06/10 20:40:58 dt Exp $ */
 end_comment
 
 begin_comment
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_ktrace.h"
 end_include
 
 begin_include
@@ -182,6 +188,29 @@ include|#
 directive|include
 file|<machine/fpu.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTRACE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ktrace.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2532,7 +2561,9 @@ name|code
 argument_list|,
 name|error
 argument_list|,
-name|rval
+name|p
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]
