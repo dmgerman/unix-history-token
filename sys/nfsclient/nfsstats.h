@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.4 (Berkeley) 5/1/95  * $Id: nfs.h,v 1.33 1998/02/01 21:23:29 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.4 (Berkeley) 5/1/95  * $Id: nfs.h,v 1.34 1998/03/30 09:53:43 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -146,11 +146,11 @@ begin_define
 define|#
 directive|define
 name|NFS_MINATTRTIMO
-value|5
+value|3
 end_define
 
 begin_comment
-comment|/* Attribute cache timeout in sec */
+comment|/* VREG attrib cache timeout in sec */
 end_comment
 
 begin_endif
@@ -168,6 +168,46 @@ begin_define
 define|#
 directive|define
 name|NFS_MAXATTRTIMO
+value|60
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_MINDIRATTRTIMO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_MINDIRATTRTIMO
+value|30
+end_define
+
+begin_comment
+comment|/* VDIR attrib cache timeout in sec */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_MAXDIRATTRTIMO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_MAXDIRATTRTIMO
 value|60
 end_define
 
@@ -403,21 +443,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Set the attribute timeout based on how recently the file has been modified.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFS_ATTRTIMEO
-parameter_list|(
-name|np
-parameter_list|)
-define|\
-value|((((np)->n_flag& NMODIFIED) || \ 	 (time_second - (np)->n_mtime) / 10< NFS_MINATTRTIMO) ? NFS_MINATTRTIMO : \ 	 ((time_second - (np)->n_mtime) / 10> NFS_MAXATTRTIMO ? NFS_MAXATTRTIMO : \ 	  (time_second - (np)->n_mtime) / 10))
-end_define
-
-begin_comment
 comment|/*  * Expected allocation sizes for major data structures. If the actual size  * of the structure exceeds these sizes, then malloc() will be allocating  * almost twice the memory required. This is used in nfs_init() to warn  * the sysadmin that the size of a structure should be reduced.  * (These sizes are always a power of 2. If the kernel malloc() changes  *  to one that does not allocate space in powers of 2 size, then this all  *  becomes bunk!)  */
 end_comment
 
@@ -544,6 +569,22 @@ modifier|*
 name|hostname
 decl_stmt|;
 comment|/* server's name */
+name|int
+name|acregmin
+decl_stmt|;
+comment|/* cache attrs for reg files min time */
+name|int
+name|acregmax
+decl_stmt|;
+comment|/* cache attrs for reg files max time */
+name|int
+name|acdirmin
+decl_stmt|;
+comment|/* cache attrs for dirs min time */
+name|int
+name|acdirmax
+decl_stmt|;
+comment|/* cache attrs for dirs max time */
 block|}
 struct|;
 end_struct
@@ -753,18 +794,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_INTERNAL
-value|0xfffc0000
+name|NFSMNT_ACREGMIN
+value|0x00040000
 end_define
-
-begin_comment
-comment|/* Bits set internally */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|NFSMNT_HASWRITEVERF
+name|NFSMNT_ACREGMAX
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_ACDIRMIN
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_ACDIRMAX
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSSTA_HASWRITEVERF
 value|0x00040000
 end_define
 
@@ -775,7 +833,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_GOTPATHCONF
+name|NFSSTA_GOTPATHCONF
 value|0x00080000
 end_define
 
@@ -786,7 +844,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_GOTFSINFO
+name|NFSSTA_GOTFSINFO
 value|0x00100000
 end_define
 
@@ -797,7 +855,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_MNTD
+name|NFSSTA_MNTD
 value|0x00200000
 end_define
 
@@ -808,7 +866,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_DISMINPROG
+name|NFSSTA_DISMINPROG
 value|0x00400000
 end_define
 
@@ -819,7 +877,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_DISMNT
+name|NFSSTA_DISMNT
 value|0x00800000
 end_define
 
@@ -830,7 +888,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_SNDLOCK
+name|NFSSTA_SNDLOCK
 value|0x01000000
 end_define
 
@@ -841,7 +899,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_WANTSND
+name|NFSSTA_WANTSND
 value|0x02000000
 end_define
 
@@ -852,7 +910,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_RCVLOCK
+name|NFSSTA_RCVLOCK
 value|0x04000000
 end_define
 
@@ -863,7 +921,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_WANTRCV
+name|NFSSTA_WANTRCV
 value|0x08000000
 end_define
 
@@ -874,7 +932,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_WAITAUTH
+name|NFSSTA_WAITAUTH
 value|0x10000000
 end_define
 
@@ -885,7 +943,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_HASAUTH
+name|NFSSTA_HASAUTH
 value|0x20000000
 end_define
 
@@ -896,7 +954,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_WANTAUTH
+name|NFSSTA_WANTAUTH
 value|0x40000000
 end_define
 
@@ -907,7 +965,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_AUTHERR
+name|NFSSTA_AUTHERR
 value|0x80000000
 end_define
 
@@ -2641,6 +2699,9 @@ operator|(
 name|int
 operator|*
 operator|,
+name|int
+operator|*
+operator|,
 expr|struct
 name|nfsreq
 operator|*
@@ -2657,7 +2718,9 @@ argument_list|(
 operator|(
 name|int
 operator|*
-name|flagp
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
