@@ -1184,7 +1184,7 @@ name|FS_ACLS
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"%s set"
+literal|"%s clear"
 argument_list|,
 name|name
 argument_list|)
@@ -1395,7 +1395,7 @@ name|FS_MULTILABEL
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"%s set"
+literal|"%s clear"
 argument_list|,
 name|name
 argument_list|)
