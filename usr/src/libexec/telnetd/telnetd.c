@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.24 (Berkeley) 83/07/06"
+literal|"@(#)telnetd.c	4.25 (Berkeley) 83/07/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,6 +290,15 @@ name|reapchild
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -846,6 +855,20 @@ empty_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|char
+modifier|*
+name|envinit
+index|[]
+init|=
+block|{
+literal|"TERM=network"
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|cleanup
@@ -1204,6 +1227,10 @@ name|close
 argument_list|(
 name|t
 argument_list|)
+expr_stmt|;
+name|environ
+operator|=
+name|envinit
 expr_stmt|;
 name|execl
 argument_list|(
