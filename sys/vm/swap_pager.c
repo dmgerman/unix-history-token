@@ -318,10 +318,9 @@ begin_struct
 struct|struct
 name|swdevt
 block|{
-name|udev_t
+name|dev_t
 name|sw_dev
 decl_stmt|;
-comment|/* For quasibogus swapdev reporting */
 name|int
 name|sw_flags
 decl_stmt|;
@@ -335,9 +334,6 @@ name|struct
 name|vnode
 modifier|*
 name|sw_vp
-decl_stmt|;
-name|dev_t
-name|sw_device
 decl_stmt|;
 name|swblk_t
 name|sw_first
@@ -6056,7 +6052,7 @@ name|b_dev
 operator|=
 name|sp
 operator|->
-name|sw_device
+name|sw_dev
 expr_stmt|;
 comment|/* 	 * Convert from PAGE_SIZE'd to DEV_BSIZE'd chunks for the actual I/O 	 */
 name|bp
@@ -6839,15 +6835,6 @@ name|sp
 operator|->
 name|sw_dev
 operator|=
-name|dev2udev
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|sp
-operator|->
-name|sw_device
-operator|=
 name|dev
 expr_stmt|;
 name|sp
@@ -7493,9 +7480,12 @@ name|xs
 operator|.
 name|xsw_dev
 operator|=
+name|dev2udev
+argument_list|(
 name|sp
 operator|->
 name|sw_dev
+argument_list|)
 expr_stmt|;
 name|xs
 operator|.
