@@ -1288,6 +1288,10 @@ name|tmpaddr
 decl_stmt|;
 comment|/* VARIABLES PROTECTED BY rpcbaddr_cache_lock:  ad_cache */
 comment|/* Get the address of the rpcbind.  Check cache first */
+name|client
+operator|=
+name|NULL
+expr_stmt|;
 name|addr_to_delete
 operator|.
 name|len
@@ -4433,6 +4437,27 @@ name|client
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|parms
+operator|.
+name|r_addr
+operator|!=
+name|NULL
+operator|&&
+name|parms
+operator|.
+name|r_addr
+operator|!=
+name|nullstring
+condition|)
+name|free
+argument_list|(
+name|parms
+operator|.
+name|r_addr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|address
@@ -4950,6 +4975,10 @@ decl_stmt|;
 name|rpcvers_t
 name|rpcb_vers
 decl_stmt|;
+name|stat
+operator|=
+literal|0
+expr_stmt|;
 name|client
 operator|=
 name|getclnthandle
