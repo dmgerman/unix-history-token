@@ -3774,7 +3774,25 @@ value|0x03
 end_define
 
 begin_comment
-comment|/*  * AX88190 IOBASE registers.  */
+comment|/*  * AX88190 configuration status register.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_AX88790_CSR
+value|0x3c2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_AX88790_CSR_PWRDWN
+value|0x04
+end_define
+
+begin_comment
+comment|/*  * AX88190 IOBASE registers, I'm pretty sure these don't need to be written  * to to make the card work by ed.  */
 end_comment
 
 begin_define
@@ -3789,6 +3807,17 @@ define|#
 directive|define
 name|ED_AX88190_IOBASE1
 value|0x3cc
+end_define
+
+begin_comment
+comment|/*  * Test for AX88790 vs 88190 cards.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_ASIX_TEST
+value|0x05
 end_define
 
 begin_comment
