@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -982,6 +988,21 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|IO_NDELAY
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EWOULDBLOCK
+operator|)
+return|;
 return|return
 operator|(
 literal|0
