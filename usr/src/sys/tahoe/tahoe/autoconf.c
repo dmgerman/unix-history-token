@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	1.12.1.1	87/04/02	*/
+comment|/*	autoconf.c	1.13	87/04/02	*/
 end_comment
 
 begin_comment
@@ -59,6 +59,36 @@ begin_include
 include|#
 directive|include
 file|"reboot.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mtpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"scb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vba.h"
 end_include
 
 begin_ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	1.6.1.1	87/04/02	*/
+comment|/*	param.h	1.7	87/04/02	*/
 end_comment
 
 begin_comment
@@ -207,6 +207,24 @@ name|BTOPKERNBASE
 value|((u_long)KERNBASE>> PGSHIFT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|0xc0000000
+end_define
+
+begin_comment
+comment|/* start of kernel virtual */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BTOPKERNBASE
+value|((u_long)KERNBASE>> PGSHIFT)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -240,6 +258,17 @@ end_define
 
 begin_comment
 comment|/* NBPG for physical controllers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXPHYS
+value|(64 * 1024)
+end_define
+
+begin_comment
+comment|/* max raw I/O transfer size */
 end_comment
 
 begin_else
