@@ -1925,18 +1925,12 @@ name|p_ucred
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
-if|if
-condition|(
+name|pargs_hold
+argument_list|(
 name|p2
 operator|->
 name|p_args
-condition|)
-name|p2
-operator|->
-name|p_args
-operator|->
-name|ar_ref
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
