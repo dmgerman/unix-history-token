@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.27 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1165,6 +1165,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|pw
+operator|->
+name|pw_passwd
+operator|==
+literal|'\0'
+operator|||
 name|strcmp
 argument_list|(
 name|xpasswd
@@ -1173,8 +1180,6 @@ name|pw
 operator|->
 name|pw_passwd
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|reply
