@@ -1430,20 +1430,6 @@ operator|=
 name|tmp
 expr_stmt|;
 block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|3
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|rch
 operator|=
 operator|&
@@ -1451,7 +1437,7 @@ name|sc
 operator|->
 name|rch
 index|[
-name|i
+literal|0
 index|]
 expr_stmt|;
 name|tmp
@@ -1483,7 +1469,6 @@ name|rate
 operator|=
 name|tmp
 expr_stmt|;
-block|}
 name|RANGE
 argument_list|(
 name|rate
