@@ -181,6 +181,26 @@ end_define
 begin_elif
 elif|#
 directive|elif
+name|__sparc64__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|PTRDIFF_IS_LONG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_IS_ULONG
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|__vax__
 end_elif
 
