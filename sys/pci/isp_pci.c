@@ -4,10 +4,6 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* release_6_2_99 */
-end_comment
-
-begin_comment
 comment|/*  * PCI specific probe and attach routines for Qlogic ISP SCSI adapters.  * FreeBSD 2.X Version.  *  *---------------------------------------  * Copyright (c) 1997, 1998, 1999 by Matthew Jacob  * NASA/Ames Research Center  * All rights reserved.  *---------------------------------------  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -255,7 +251,7 @@ name|ISP_CODE_LENGTH
 block|,
 name|ISP_CODE_ORG
 block|,
-name|ISP_CODE_VERSION
+literal|0
 block|,
 name|BIU_BURST_ENABLE
 operator||
@@ -306,7 +302,7 @@ name|ISP1080_CODE_LENGTH
 block|,
 name|ISP1080_CODE_ORG
 block|,
-name|ISP1080_CODE_VERSION
+literal|0
 block|,
 name|BIU_BURST_ENABLE
 operator||
@@ -357,7 +353,7 @@ name|ISP2100_CODE_LENGTH
 block|,
 name|ISP2100_CODE_ORG
 block|,
-name|ISP2100_CODE_VERSION
+literal|0
 block|,
 literal|0
 block|,
@@ -407,7 +403,7 @@ name|ISP2200_CODE_LENGTH
 block|,
 name|ISP2100_CODE_ORG
 block|,
-name|ISP2200_CODE_VERSION
+literal|0
 block|,
 literal|0
 block|,
@@ -1118,9 +1114,8 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s Version %d.%d, Core Version %d.%d\n"
-argument_list|,
-name|PVS
+literal|"Qlogic ISP Driver, FreeBSD Version %d.%d, "
+literal|"Core Version %d.%d\n"
 argument_list|,
 name|ISP_PLATFORM_VERSION_MAJOR
 argument_list|,
@@ -2044,7 +2039,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|printf
+name|CFGPRINTF
 argument_list|(
 literal|"%s: set PCI line size to %d\n"
 argument_list|,
@@ -2055,7 +2050,7 @@ argument_list|,
 name|linesz
 argument_list|)
 expr_stmt|;
-name|printf
+name|CFGPRINTF
 argument_list|(
 literal|"%s: set PCI latency to %d\n"
 argument_list|,
@@ -3082,7 +3077,82 @@ decl_stmt|;
 name|int
 name|rseg
 decl_stmt|;
-comment|/* XXXX CHECK FOR ALIGNMENT */
+if|if
+condition|(
+name|isp
+operator|->
+name|isp_rquest
+condition|)
+comment|/* been here before? */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ISP_SCSI_XFER_T
+operator|*
+operator|*
+argument_list|)
+operator|*
+name|isp
+operator|->
+name|isp_maxcmds
+expr_stmt|;
+name|isp
+operator|->
+name|isp_xflist
+operator|=
+operator|(
+name|ISP_SCSI_XFER_T
+operator|*
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|len
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isp
+operator|->
+name|isp_xflist
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: can't alloc xflist array\n"
+argument_list|,
+name|isp
+operator|->
+name|isp_name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+name|bzero
+argument_list|(
+name|isp
+operator|->
+name|isp_xflist
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate and map the request queue. 	 */
 name|len
 operator|=
@@ -3113,6 +3183,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|isp
+operator|->
+name|isp_xflist
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s: cannot malloc request queue\n"
@@ -3175,6 +3254,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|isp
+operator|->
+name|isp_xflist
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|isp
@@ -3262,6 +3350,33 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|isp
+operator|->
+name|isp_xflist
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|isp
+operator|->
+name|isp_rquest
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|isp
+operator|->
+name|isp_result
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s: cannot alloc scratch\n"
