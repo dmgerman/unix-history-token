@@ -1753,6 +1753,13 @@ begin_define
 define|#
 directive|define
 name|BUS_TIME
+value|0x0204
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUSY_TIMEOUT
 value|0x0210
 end_define
 

@@ -4471,7 +4471,7 @@ name|htonl
 argument_list|(
 literal|0xf0000000
 operator||
-name|BUS_TIME
+name|BUSY_TIMEOUT
 argument_list|)
 expr_stmt|;
 name|fp
@@ -4484,6 +4484,16 @@ name|data
 operator|=
 name|htonl
 argument_list|(
+operator|(
+literal|1
+operator|<<
+operator|(
+literal|13
+operator|+
+literal|12
+operator|)
+operator|)
+operator||
 literal|0xf
 argument_list|)
 expr_stmt|;
@@ -6754,10 +6764,6 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
-name|SBP_DEBUG
-argument_list|(
-literal|0
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -6771,6 +6777,10 @@ block|{
 name|int
 name|status
 decl_stmt|;
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
 name|sbp_show_sdev_info
 argument_list|(
 name|sdev
@@ -6829,13 +6839,14 @@ name|orb_lo
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|END_DEBUG
 name|sbp_show_sdev_info
 argument_list|(
 name|sdev
 argument_list|,
 literal|2
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|status
 operator|=
 name|sbp_status
@@ -6868,7 +6879,13 @@ name|MAX_ORB_STATUS0
 index|]
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|status
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -6877,6 +6894,12 @@ name|orb_status0
 index|[
 name|status
 index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6907,17 +6930,38 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|2
+case|:
+name|printf
+argument_list|(
+literal|"Illegal request\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|printf
+argument_list|(
+literal|"Vendor dependent\n"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"unknown respose code\n"
+literal|"unknown respose code %d\n"
+argument_list|,
+name|sbp_status
+operator|->
+name|resp
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|END_DEBUG
 name|ocb
-init|=
+operator|=
 name|sbp_dequeue_ocb
 argument_list|(
 name|sdev
@@ -6929,7 +6973,7 @@ operator|->
 name|orb_lo
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* we have to reset the fetch agent if it's dead */
 if|if
 condition|(
