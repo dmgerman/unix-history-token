@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  *  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: random.c,v 1.8 1997/03/29 19:55:03 ache Exp $  *  */
 end_comment
 
 begin_if
@@ -35,6 +35,16 @@ end_endif
 
 begin_comment
 comment|/* LIBC_SCCS and not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* for srandomdev() */
 end_comment
 
 begin_include
@@ -754,12 +764,14 @@ comment|/*  * srandomdev:  *  * Many programs choose the seed value in a totally
 end_comment
 
 begin_function
-name|int
+name|void
 name|srandomdev
 parameter_list|()
 block|{
 name|int
 name|fd
+decl_stmt|,
+name|done
 decl_stmt|;
 name|size_t
 name|len
@@ -789,6 +801,10 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|done
+operator|=
+literal|0
+expr_stmt|;
 name|fd
 operator|=
 name|open
@@ -803,13 +819,10 @@ expr_stmt|;
 if|if
 condition|(
 name|fd
-operator|<
+operator|>=
 literal|0
 condition|)
-return|return
-operator|-
-literal|1
-return|;
+block|{
 if|if
 condition|(
 name|read
@@ -824,28 +837,56 @@ name|state
 argument_list|,
 name|len
 argument_list|)
-operator|<
+operator|==
 operator|(
 name|ssize_t
 operator|)
 name|len
 condition|)
-block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
+name|done
+operator|=
 literal|1
-return|;
-block|}
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|done
+condition|)
+block|{
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
+name|gettimeofday
+argument_list|(
+operator|&
+name|tv
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|srandom
+argument_list|(
+name|getpid
+argument_list|()
+operator|^
+name|tv
+operator|.
+name|tv_sec
+operator|^
+name|tv
+operator|.
+name|tv_usec
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|rand_type
@@ -870,9 +911,6 @@ literal|0
 index|]
 expr_stmt|;
 block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 

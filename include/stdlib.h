@@ -1319,7 +1319,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|srandomdev
 name|__P
 argument_list|(
