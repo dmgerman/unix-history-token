@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.14 (Berkeley) %G%"
+literal|"@(#)more.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2865,7 +2865,7 @@ name|printf
 argument_list|(
 name|fmt
 argument_list|,
-name|args
+name|va_alist
 argument_list|)
 specifier|register
 name|char
@@ -2874,18 +2874,14 @@ name|fmt
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|int
-name|args
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|va_dcl
+end_macro
 
 begin_block
 block|{
-specifier|register
-name|int
-modifier|*
-name|argp
+name|va_list
+name|ap
 decl_stmt|;
 specifier|register
 name|char
@@ -2899,10 +2895,10 @@ name|ccount
 operator|=
 literal|0
 expr_stmt|;
-name|argp
-operator|=
-operator|&
-name|args
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2957,8 +2953,12 @@ name|ccount
 operator|+=
 name|printd
 argument_list|(
-operator|*
-name|argp
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|int
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2969,12 +2969,13 @@ name|ccount
 operator|+=
 name|pr
 argument_list|(
-operator|(
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
 name|char
 operator|*
-operator|)
-operator|*
-name|argp
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2983,9 +2984,6 @@ literal|'%'
 case|:
 name|ccount
 operator|++
-expr_stmt|;
-name|argp
-operator|--
 expr_stmt|;
 name|putchar
 argument_list|(
@@ -3004,10 +3002,12 @@ return|;
 default|default:
 break|break;
 block|}
-operator|++
-name|argp
-expr_stmt|;
 block|}
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ccount
@@ -6457,6 +6457,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*VARARGS2*/
+end_comment
+
 begin_macro
 name|execute
 argument_list|(
@@ -6464,7 +6468,7 @@ argument|filename
 argument_list|,
 argument|cmd
 argument_list|,
-argument|args
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -6479,11 +6483,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|cmd
-decl_stmt|,
-modifier|*
-name|args
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|va_dcl
+end_macro
 
 begin_block
 block|{
@@ -6492,6 +6497,9 @@ name|id
 decl_stmt|;
 name|int
 name|n
+decl_stmt|;
+name|va_list
+name|argp
 decl_stmt|;
 name|fflush
 argument_list|(
@@ -6557,12 +6565,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|va_start
+argument_list|(
+name|argp
+argument_list|)
+expr_stmt|;
 name|execv
 argument_list|(
 name|cmd
 argument_list|,
-operator|&
-name|args
+name|argp
 argument_list|)
 expr_stmt|;
 name|write
