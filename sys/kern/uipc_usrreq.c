@@ -154,12 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_decl_stmt
 specifier|static
-name|vm_zone_t
+name|uma_zone_t
 name|unp_zone
 decl_stmt|;
 end_decl_stmt
@@ -2426,9 +2426,11 @@ return|;
 block|}
 name|unp
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|unp_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2679,7 +2681,7 @@ argument_list|,
 name|M_SONAME
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|unp_zone
 argument_list|,
@@ -5156,7 +5158,7 @@ parameter_list|)
 block|{
 name|unp_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"unpcb"
 argument_list|,
@@ -5166,11 +5168,17 @@ expr|struct
 name|unpcb
 argument_list|)
 argument_list|,
-name|nmbclusters
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 if|if
