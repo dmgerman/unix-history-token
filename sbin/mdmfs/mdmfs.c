@@ -595,7 +595,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:Cc:Dd:e:F:f:hi:LMm:Nn:O:o:p:Ss:t:Uw:X"
+literal|"a:b:Cc:Dd:e:F:f:hi:LMm:Nn:O:o:p:Ss:t:Uv:w:X"
 argument_list|)
 operator|)
 operator|!=
@@ -969,6 +969,20 @@ case|:
 name|softdep
 operator|=
 name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|argappend
+argument_list|(
+operator|&
+name|newfs_arg
+argument_list|,
+literal|"-O %s"
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
