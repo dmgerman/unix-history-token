@@ -1432,7 +1432,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * If the member's name doesn't take up the entire 			 * 'name' field, we have to be careful of matching 			 * prefixes. Names are space-padded to the right, so if 			 * the character in 'name' at the end of the matched 			 * string is anything but a space, this isn't the 			 * member we sought. 			 */
+comment|/* 			 * If the member's name doesn't take up the entire 			 * 'name' field, we have to be careful of matching 			 * prefixes. Names are space-padded to the right, so if 			 * the character in 'name' at the end of the matched 			 * string is anything but a space, this isn't the 			 * member we sought. Additionally there may be a 			 * slash at the end of the name (System 5 style). 			 */
 if|if
 condition|(
 name|tlen
@@ -1452,6 +1452,15 @@ name|tlen
 index|]
 operator|!=
 literal|' '
+operator|&&
+name|arhPtr
+operator|->
+name|ar_name
+index|[
+name|tlen
+index|]
+operator|!=
+literal|'/'
 condition|)
 block|{
 goto|goto
