@@ -623,6 +623,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|hints_loaded
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
