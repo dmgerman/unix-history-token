@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	scalech.c	(Berkeley)	1.4	84/04/12  *  * Font scaling for character format fonts.  *  *	Use:	scalech  [ -s# ]  charfile1> charfile2  *  *		Takes input from charfile1 (which must be in the format  *	written by rst2ch), scales by # (default = 50%) and writes to stdout.  *	If charfile1 is missing, stdin is read.  The -s flag sets the scaling  *	factor to # (which is a percentage REDUCTION - can't make fonts bigger)  */
+comment|/*	scalech.c	(Berkeley)	1.5	85/01/30  *  * Font scaling for character format fonts.  *  *	Use:	scalech  [ -s# ]  [ charfile1 ]> charfile2  *  *		Takes input from charfile1 (which must be in the format  *	written by any of the xxx2ch programs), scales by # (default = 50%)  *	and writes to stdout.  If charfile1 is missing, stdin is read.  The  *	-s flag sets the scaling factor to # (which is a percentage REDUCTION:  *	scalech can't make fonts bigger)  */
 end_comment
 
 begin_include
@@ -9,24 +9,18 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
 begin_define
 define|#
 directive|define
 name|MAXLINE
-value|200
+value|300
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAXHEIGHT
-value|200
+value|300
 end_define
 
 begin_define
@@ -35,6 +29,10 @@ directive|define
 name|SCALE
 value|50
 end_define
+
+begin_comment
+comment|/* don't ask, really */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -434,7 +432,7 @@ name|par
 operator|*
 name|scale
 operator|/
-literal|100
+literal|100.0
 operator|+
 literal|0.1
 argument_list|)
@@ -460,7 +458,7 @@ name|par
 operator|*
 name|scale
 operator|/
-literal|100
+literal|100.0
 operator|+
 literal|0.001
 argument_list|)
@@ -485,7 +483,7 @@ name|par
 operator|*
 name|scale
 operator|/
-literal|100
+literal|100.0
 operator|+
 literal|0.001
 argument_list|)
@@ -1291,16 +1289,22 @@ comment|/* while */
 block|}
 end_function
 
-begin_expr_stmt
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	outline (baseline)  |  | Results:	outputs a row of dots, based on gobs of information gathered  |		in the main program.  If "baseline" is set, then this line  |		should have the reference point on it.  |  | Bugs:	this method smells  *----------------------------------------------------------------------------*/
+end_comment
+
+begin_macro
 name|outline
 argument_list|(
-name|i
+argument|baseline
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
-name|i
-expr_stmt|;
-end_expr_stmt
+name|baseline
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1747,7 +1751,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|i
+name|baseline
 operator|||
 name|j
 operator|!=
@@ -1774,7 +1778,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|i
+name|baseline
 operator|||
 name|j
 operator|!=
@@ -1826,6 +1830,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	error (format_string, argument1, argument2.... )  |  | Results:	fprints a message to standard error, then exits with error  |		code 1.  |  | Side Efct:	This routine does NOT return  *----------------------------------------------------------------------------*/
+end_comment
 
 begin_comment
 comment|/*VARARGS1*/
@@ -1886,15 +1894,11 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|8
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 end_unit
 
