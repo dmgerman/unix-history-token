@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.36 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.37 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.36 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.37 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -6299,6 +6299,26 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|pw
+operator|->
+name|pw_dir
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|a
+operator|->
+name|q_home
+operator|=
+literal|""
+expr_stmt|;
+else|else
 name|a
 operator|->
 name|q_home

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.39 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1913,6 +1913,26 @@ goto|goto
 name|trylocaluser
 goto|;
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|pw
+operator|->
+name|pw_dir
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|a
+operator|->
+name|q_home
+operator|=
+literal|""
+expr_stmt|;
+else|else
 name|a
 operator|->
 name|q_home

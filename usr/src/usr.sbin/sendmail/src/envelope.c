@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.28 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2794,6 +2794,31 @@ condition|)
 block|{
 comment|/* 			**  Process passwd file entry. 			*/
 comment|/* extract home directory */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|pw
+operator|->
+name|pw_dir
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+operator|=
+name|newstr
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+else|else
 name|e
 operator|->
 name|e_from
@@ -2974,6 +2999,7 @@ name|q_home
 operator|==
 name|NULL
 condition|)
+block|{
 name|e
 operator|->
 name|e_from
@@ -2985,6 +3011,29 @@ argument_list|(
 literal|"HOME"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+operator|++
+expr_stmt|;
+block|}
 name|e
 operator|->
 name|e_from
