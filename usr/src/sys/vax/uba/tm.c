@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.7	%G%	*/
+comment|/*	tm.c	4.8	%G%	*/
 end_comment
 
 begin_include
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|"../h/vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/cmap.h"
 end_include
 
 begin_struct
@@ -2561,7 +2567,41 @@ value|20
 end_define
 
 begin_macro
-name|twall
+name|tmdump
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|tmwall
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|,
+name|maxfree
+argument_list|)
+expr_stmt|;
+comment|/* write out memory */
+name|tmeof
+argument_list|()
+expr_stmt|;
+name|tmeof
+argument_list|()
+expr_stmt|;
+name|tmrewind
+argument_list|()
+expr_stmt|;
+name|tmwait
+argument_list|()
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|tmwall
 argument_list|(
 argument|start
 argument_list|,
@@ -2647,7 +2687,7 @@ argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
-name|twait
+name|tmwait
 argument_list|()
 expr_stmt|;
 name|TMPHYS
@@ -2712,6 +2752,11 @@ index|]
 operator||=
 name|BNE
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -2741,7 +2786,7 @@ decl_stmt|;
 name|int
 name|bdp
 decl_stmt|;
-name|twait
+name|tmwait
 argument_list|()
 expr_stmt|;
 name|bdp
@@ -2849,7 +2894,7 @@ block|}
 end_block
 
 begin_macro
-name|twait
+name|tmwait
 argument_list|()
 end_macro
 
@@ -2880,13 +2925,13 @@ block|}
 end_block
 
 begin_macro
-name|rewind
+name|tmrewind
 argument_list|()
 end_macro
 
 begin_block
 block|{
-name|twait
+name|tmwait
 argument_list|()
 expr_stmt|;
 name|TMPHYS
@@ -2901,13 +2946,13 @@ block|}
 end_block
 
 begin_macro
-name|teof
+name|tmeof
 argument_list|()
 end_macro
 
 begin_block
 block|{
-name|twait
+name|tmwait
 argument_list|()
 expr_stmt|;
 name|TMPHYS
