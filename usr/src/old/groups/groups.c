@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	groups.c	4.4	83/02/10	*/
+comment|/*	groups.c	4.5	83/02/15	*/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ file|<pwd.h>
 end_include
 
 begin_decl_stmt
-name|short
+name|int
 name|groups
 index|[
 name|NGROUPS
