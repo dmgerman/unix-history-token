@@ -9626,7 +9626,7 @@ name|whochar
 operator|=
 literal|'v'
 expr_stmt|;
-comment|/* Fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|OUTS
 case|:
@@ -9880,7 +9880,7 @@ if|#
 directive|if
 literal|0
 block|case INS: 	g_out = ntohl(s->tr_pktcnt) - ntohl(r->tr_pktcnt); 	g_pps = g_out / timediff; 	whochar = 'v';
-comment|/* Fall through */
+comment|/* FALLTHROUGH */
 endif|#
 directive|endif
 case|case
