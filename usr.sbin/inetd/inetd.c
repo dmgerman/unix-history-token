@@ -44,7 +44,7 @@ name|char
 name|inetd_c_rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.5.2.1 1995/06/05 01:01:19 davidg Exp $"
+literal|"$Id: inetd.c,v 1.6 1995/06/11 19:32:39 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1306,6 +1306,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 name|daemon
 argument_list|(
 literal|0
@@ -1313,6 +1317,54 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|pid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|_PATH_INETDPID
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%ld\n"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|pid
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|_PATH_INETDPID
+literal|": %m"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|memset
 argument_list|(
