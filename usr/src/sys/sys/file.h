@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.12	82/08/10	*/
+comment|/*	file.h	4.13	82/10/10	*/
 end_comment
 
 begin_ifdef
@@ -497,6 +497,18 @@ end_define
 begin_comment
 comment|/* block special device */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GETF
+parameter_list|(
+name|fp
+parameter_list|,
+name|fd
+parameter_list|)
+value|{ \ 	if ((unsigned)(fd)>= NOFILE || ((fp) = u.u_ofile[fd]) == NULL) { \ 		u.u_error = EBADF; \ 		return; \ 	} \ }
+end_define
 
 end_unit
 

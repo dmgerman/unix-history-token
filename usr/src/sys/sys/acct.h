@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acct.h	4.4	82/07/12	*/
+comment|/*	acct.h	4.5	82/10/10	*/
 end_comment
 
 begin_comment
@@ -145,6 +145,32 @@ end_define
 begin_comment
 comment|/* acctg resumes at this level */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|acct
+name|acctbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|inode
+modifier|*
+name|acctp
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

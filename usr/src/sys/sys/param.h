@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.21	82/08/24	*/
+comment|/*	param.h	4.22	82/10/10	*/
 end_comment
 
 begin_comment
@@ -200,6 +200,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ISSIG
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->p_sig&& \ 	((p)->p_flag&STRC || ((p)->p_sig&~ (p)->p_ignsig))&& issig())
+end_define
 
 begin_comment
 comment|/*  * Return values from tsleep().  */

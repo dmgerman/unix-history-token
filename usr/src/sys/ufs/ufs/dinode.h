@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	4.14	82/08/10	*/
+comment|/*	dinode.h	4.15	82/10/10	*/
 end_comment
 
 begin_comment
@@ -512,7 +512,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ILOCK
+name|ILOCKED
 value|0x1
 end_define
 
@@ -756,6 +756,42 @@ define|#
 directive|define
 name|IEXEC
 value|0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ILOCK
+parameter_list|(
+name|ip
+parameter_list|)
+value|{ \ 	while ((ip)->i_flag& ILOCKED) { \ 		(ip)->i_flag |= IWANT; \ 		sleep((caddr_t)(ip), PINOD); \ 	} \ 	(ip)->i_flag |= ILOCKED; \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IUNLOCK
+parameter_list|(
+name|ip
+parameter_list|)
+value|{ \ 	(ip)->i_flag&= ~ILOCKED; \ 	if ((ip)->i_flag&IWANT) { \ 		(ip)->i_flag&= ~IWANT; \ 		wakeup((caddr_t)(ip)); \ 	} \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IUPDAT
+parameter_list|(
+name|ip
+parameter_list|,
+name|t1
+parameter_list|,
+name|t2
+parameter_list|,
+name|waitfor
+parameter_list|)
+value|{ \ 	if (ip->i_flag&(IUPD|IACC|ICHG)) \ 		iupdat(ip, t1, t2, waitfor); \ }
 end_define
 
 end_unit

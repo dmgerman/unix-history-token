@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.16	82/05/31	*/
+comment|/*	buf.h	4.17	82/10/10	*/
 end_comment
 
 begin_comment
@@ -756,6 +756,54 @@ name|bp
 parameter_list|)
 value|{ \ 	blkclr(bp->b_un.b_addr, bp->b_bcount); \ 	bp->b_resid = 0; \ }
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|buf
+name|bfreelist
+index|[
+name|BQUEUES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* buffer chain headers */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|buf
+name|bswlist
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* free list of swap headers */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|buf
+modifier|*
+name|bclnlist
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* header for list of cleaned pages */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
