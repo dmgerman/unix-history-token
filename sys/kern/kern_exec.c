@@ -710,14 +710,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|p
 operator|->
 name|p_flag
 operator|&
 name|P_KSES
-operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|thread_single
 argument_list|(
 name|SNGLE_EXIT
@@ -736,7 +737,25 @@ operator|)
 return|;
 comment|/* Try again later. */
 block|}
-comment|/* If we get here all other threads are dead. */
+comment|/* 		 * If we get here all other threads are dead, 		 * so unset the associated flags and lose KSE mode. 		 */
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_KSES
+expr_stmt|;
+name|td
+operator|->
+name|td_flags
+operator|&=
+operator|~
+name|TDF_UNBOUND
+expr_stmt|;
+name|thread_single_end
+argument_list|()
+expr_stmt|;
+block|}
 name|p
 operator|->
 name|p_flag

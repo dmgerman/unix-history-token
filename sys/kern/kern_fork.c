@@ -3081,6 +3081,30 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If other threads are waiting, let them continue now 	 */
+if|if
+condition|(
+name|p1
+operator|->
+name|p_flag
+operator|&
+name|P_KSES
+condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+name|thread_single_end
+argument_list|()
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Return child proc pointer to parent. 	 */
 operator|*
 name|procp
