@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sem.c	5.7 (Berkeley) %G%"
+literal|"@(#)sem.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|"sh.proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -2081,37 +2087,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 operator|(
 name|flags
 operator|&
 name|FCAT
 operator|)
-operator|&&
+operator|||
 name|open
 argument_list|(
 name|cp
 argument_list|,
-literal|1
+name|O_WRONLY
+operator||
+name|O_APPEND
+argument_list|,
+literal|0
 argument_list|)
-operator|>=
+operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|lseek
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-name|off_t
-operator|)
-literal|0
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-else|else
 block|{
 if|if
 condition|(
