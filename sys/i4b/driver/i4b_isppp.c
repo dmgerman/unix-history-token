@@ -2158,7 +2158,7 @@ name|sc_state
 operator|=
 name|ST_IDLE
 expr_stmt|;
-comment|/* 		 * Ahh, sppp does't like to get a down event when 		 * dialing fails. So first tell it that we are up 		 * (doesn't hurt us since sc_state != ST_CONNECTED) 		 * and then go down. 		 */
+comment|/* 		 * Ahh, sppp doesn't like to get a down event when 		 * dialing fails. So first tell it that we are up 		 * (doesn't hurt us since sc_state != ST_CONNECTED) 		 * and then go down. 		 */
 name|sp
 operator|->
 name|pp_up
