@@ -228,6 +228,8 @@ name|indouble
 decl_stmt|,
 name|insingle
 decl_stmt|,
+name|Jflag
+decl_stmt|,
 name|jfound
 decl_stmt|,
 name|lflag
@@ -238,6 +240,8 @@ decl_stmt|,
 name|nflag
 decl_stmt|,
 name|nline
+decl_stmt|,
+name|Rflag
 decl_stmt|,
 name|wasquoted
 decl_stmt|,
@@ -317,11 +321,15 @@ name|count
 operator|=
 name|Iflag
 operator|=
+name|Jflag
+operator|=
 name|jfound
 operator|=
 name|lflag
 operator|=
 name|nflag
+operator|=
+name|Rflag
 operator|=
 name|xflag
 operator|=
@@ -399,7 +407,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0E:I:J:L:n:ps:tx"
+literal|"0E:I:J:L:n:pR:s:tx"
 argument_list|)
 operator|)
 operator|!=
@@ -430,6 +438,10 @@ name|lflag
 operator|=
 literal|1
 expr_stmt|;
+name|Rflag
+operator|=
+literal|5
+expr_stmt|;
 name|replstr
 operator|=
 name|optarg
@@ -438,6 +450,10 @@ break|break;
 case|case
 literal|'J'
 case|:
+name|Jflag
+operator|=
+literal|1
+expr_stmt|;
 name|replstr
 operator|=
 name|optarg
@@ -488,6 +504,38 @@ case|:
 name|pflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+if|if
+condition|(
+operator|!
+name|Iflag
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|Rflag
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+operator|)
+operator|<=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"illegal number of replacements"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -645,10 +693,7 @@ do|do
 block|{
 if|if
 condition|(
-operator|!
-name|Iflag
-operator|&&
-name|replstr
+name|Jflag
 operator|&&
 name|strcmp
 argument_list|(
@@ -1152,7 +1197,7 @@ name|tmp
 expr_stmt|;
 name|repls
 operator|=
-literal|5
+name|Rflag
 expr_stmt|;
 for|for
 control|(
@@ -1841,8 +1886,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: xargs [-0pt] [-E eofstr] [-I replstr] [-J replstr] [-L number]\n"
-literal|"             [-n number [-x] [-s size] [utility [argument ...]]\n"
+literal|"usage: xargs [-0pt] [-E eofstr] [-I replstr [-R replacements]] [-J replstr]\n"
+literal|"             [-L number] [-n number [-x] [-s size] [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
