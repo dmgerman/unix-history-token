@@ -1,13 +1,47 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ttyent.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ttyent.h	5.2 (Berkeley) %G%  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_TTYS
+value|"/etc/ttys"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TTYS_OFF
+value|"off"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TTYS_ON
+value|"on"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TTYS_SECURE
+value|"secure"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TTYS_WINDOW
+value|"window"
+end_define
 
 begin_struct
 struct|struct
 name|ttyent
 block|{
-comment|/* see getttyent(3) */
 name|char
 modifier|*
 name|ty_name
@@ -22,11 +56,21 @@ name|char
 modifier|*
 name|ty_type
 decl_stmt|;
-comment|/* terminal type for termcap (3X) */
+comment|/* terminal type for termcap */
+define|#
+directive|define
+name|TTY_ON
+value|0x01
+comment|/* enable logins (start ty_getty program) */
+define|#
+directive|define
+name|TTY_SECURE
+value|0x02
+comment|/* allow uid of 0 to login */
 name|int
 name|ty_status
 decl_stmt|;
-comment|/* status flags (see below for defines) */
+comment|/* status flags */
 name|char
 modifier|*
 name|ty_window
@@ -36,52 +80,24 @@ name|char
 modifier|*
 name|ty_comment
 decl_stmt|;
-comment|/* usually the location of the terminal */
+comment|/* comment field */
 block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|TTY_ON
-value|0x1
-end_define
-
-begin_comment
-comment|/* enable logins (startup getty) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TTY_SECURE
-value|0x2
-end_define
-
-begin_comment
-comment|/* allow root to login */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|struct
 name|ttyent
 modifier|*
 name|getttyent
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|ttyent
+argument_list|()
+decl_stmt|,
 modifier|*
 name|getttynam
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
