@@ -218,12 +218,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/copyright.h>
 end_include
 
@@ -1778,6 +1772,13 @@ name|p_cpulimit
 operator|=
 name|RLIM_INFINITY
 expr_stmt|;
+name|p
+operator|->
+name|p_stats
+operator|=
+name|pstats_alloc
+argument_list|()
+expr_stmt|;
 comment|/* Allocate a prototype map so we have something to fork. */
 name|pmap_pinit0
 argument_list|(
@@ -1832,18 +1833,6 @@ argument_list|(
 operator|&
 name|vmspace0
 argument_list|)
-expr_stmt|;
-comment|/* 	 * We continue to place resource usage info 	 * in the user struct so that it's pageable. 	 */
-name|p
-operator|->
-name|p_stats
-operator|=
-operator|&
-name|p
-operator|->
-name|p_uarea
-operator|->
-name|u_stats
 expr_stmt|;
 comment|/* 	 * Charge root for one process. 	 */
 operator|(
