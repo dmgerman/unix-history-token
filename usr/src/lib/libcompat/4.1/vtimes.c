@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vtimes.c	5.2 (Berkeley) %G%"
+literal|"@(#)vtimes.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +123,11 @@ name|struct
 name|rusage
 name|ru
 decl_stmt|;
+specifier|static
+name|int
+name|getvtimes
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|par
@@ -222,6 +227,11 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|static
+name|int
+name|scale60
+parameter_list|()
+function_decl|;
 name|avt
 operator|->
 name|vm_utime

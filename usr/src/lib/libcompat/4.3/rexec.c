@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexec.c	5.8 (Berkeley) %G%"
+literal|"@(#)rexec.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,6 +303,11 @@ name|connect
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sin
 argument_list|,
@@ -452,7 +457,8 @@ argument_list|(
 name|s2
 argument_list|,
 operator|(
-name|char
+expr|struct
+name|sockaddr
 operator|*
 operator|)
 operator|&
@@ -545,13 +551,16 @@ name|accept
 argument_list|(
 name|s2
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|from
 argument_list|,
 operator|&
 name|len
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|close

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)close.c	5.1 (Berkeley) %G%"
+literal|"@(#)close.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,12 +37,10 @@ directive|include
 file|"hp7221.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|closepl
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* receive interupts */
 name|signal
@@ -64,7 +62,7 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|<arpa/inet.h>
 end_include
 
 begin_comment

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)close.c	5.2 (Berkeley) %G%"
+literal|"@(#)close.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,12 +37,10 @@ directive|include
 file|"bg.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|closepl
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* recieve interupts */
 name|signal
@@ -69,7 +67,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -923,8 +923,6 @@ argument_list|(
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
 argument_list|)
 argument_list|,
 name|INADDR_ANY
@@ -970,8 +968,6 @@ argument_list|(
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
 argument_list|)
 argument_list|,
 name|INADDR_ANY

@@ -234,6 +234,11 @@ name|bind
 argument_list|(
 name|sd
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 argument_list|,
 sizeof|sizeof

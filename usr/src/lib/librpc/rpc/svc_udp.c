@@ -731,6 +731,11 @@ decl_stmt|;
 name|u_long
 name|replylen
 decl_stmt|;
+specifier|static
+name|int
+name|cache_get
+parameter_list|()
+function_decl|;
 name|again
 label|:
 name|xprt
@@ -977,6 +982,11 @@ name|stat
 init|=
 name|FALSE
 decl_stmt|;
+specifier|static
+name|void
+name|cache_set
+parameter_list|()
+function_decl|;
 name|xdrs
 operator|->
 name|x_op
@@ -1672,27 +1682,22 @@ begin_comment
 comment|/*  * Set an entry in the cache  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|cache_set
-argument_list|(
-argument|xprt
-argument_list|,
-argument|replylen
-argument_list|)
-name|SVCXPRT
-operator|*
+parameter_list|(
 name|xprt
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|replylen
+parameter_list|)
+name|SVCXPRT
+modifier|*
+name|xprt
+decl_stmt|;
 name|u_long
 name|replylen
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|cache_ptr
@@ -2014,7 +2019,7 @@ operator|->
 name|uc_size
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Try to get an entry from the cache  * return 1 if found, 0 if not found  */

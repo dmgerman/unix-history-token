@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)open.c	5.2 (Berkeley) %G%"
+literal|"@(#)open.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +88,7 @@ end_macro
 
 begin_block
 block|{
-name|int
+name|void
 name|closepl
 parameter_list|()
 function_decl|;
