@@ -294,12 +294,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNSAFE_WARN
-end_ifdef
-
 begin_expr_stmt
 name|__warn_references
 argument_list|(
@@ -309,11 +303,6 @@ literal|"warning: mktemp() possibly used unsafely; consider using mkstemp()"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|char

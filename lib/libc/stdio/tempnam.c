@@ -294,7 +294,7 @@ condition|(
 operator|(
 name|f
 operator|=
-name|mktemp
+name|_mktemp
 argument_list|(
 name|name
 argument_list|)
@@ -331,7 +331,7 @@ condition|(
 operator|(
 name|f
 operator|=
-name|mktemp
+name|_mktemp
 argument_list|(
 name|name
 argument_list|)
@@ -367,7 +367,7 @@ condition|(
 operator|(
 name|f
 operator|=
-name|mktemp
+name|_mktemp
 argument_list|(
 name|name
 argument_list|)
