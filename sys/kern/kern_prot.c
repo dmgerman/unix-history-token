@@ -1668,7 +1668,7 @@ name|error
 operator|=
 name|p_cansee
 argument_list|(
-name|curthread
+name|td
 argument_list|,
 name|targp
 argument_list|)
