@@ -6140,7 +6140,9 @@ name|st
 operator|->
 name|domain
 argument_list|,
-name|name
+name|pwd
+operator|->
+name|pw_name
 argument_list|,
 operator|&
 name|buffer
