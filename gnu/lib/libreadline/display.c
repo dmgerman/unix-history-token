@@ -2767,10 +2767,14 @@ expr_stmt|;
 comment|/* If this is the first line and there are invisible characters in the      prompt string, and the prompt string has not changed, then redraw      the entire prompt string.  We can only do this reliably if the      terminal supports a `cr' capability.       This is more than just an efficiency hack -- there is a problem with      redrawing portions of the prompt string if they contain terminal      escape sequences (like drawing the `unbold' sequence without a      corresponding `bold') that manifests itself on certain terminals. */
 name|lendiff
 operator|=
+name|local_prompt
+condition|?
 name|strlen
 argument_list|(
 name|local_prompt
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 if|if
 condition|(
