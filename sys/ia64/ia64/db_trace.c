@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/inst.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/db_machdep.h>
 end_include
 
