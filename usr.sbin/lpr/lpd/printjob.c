@@ -3171,6 +3171,8 @@ decl_stmt|,
 name|stopped
 decl_stmt|,
 name|wstatus
+decl_stmt|,
+name|wstatus_set
 decl_stmt|;
 name|struct
 name|stat
@@ -4459,6 +4461,10 @@ argument_list|(
 name|fi
 argument_list|)
 expr_stmt|;
+name|wstatus_set
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|child
@@ -4516,6 +4522,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|wstatus_set
+operator|=
+literal|1
+expr_stmt|;
 name|retcode
 operator|=
 name|WEXITSTATUS
@@ -4523,6 +4534,7 @@ argument_list|(
 name|wstatus
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|child
 operator|=
@@ -4614,6 +4626,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|wstatus_set
+operator|&&
 operator|!
 name|WIFEXITED
 argument_list|(
