@@ -1247,17 +1247,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* mask of valid IRQs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WL_IRQS
-value|(IRQ3|IRQ4|IRQ5|IRQ7|IRQ10|IRQ11|IRQ12|IRQ15)
-end_define
-
-begin_comment
 comment|/*  * wlprobe:  *  *	This function "probes" or checks for the WaveLAN board on the bus to  *	see if it is there.  As far as I can tell, the best break between this  *	routine and the attach code is to simply determine whether the board  *	is configured in properly.  Currently my approach to this is to write  *	and read a word from the SRAM on the board being probed.  If the word  *	comes back properly then we assume the board is there.  The config  *	code expects to see a successful return from the probe routine before  *	attach will be called.  *  * input	: address device is mapped to, and unit # being checked  * output	: a '1' is returned if the board exists, and a 0 otherwise  *  */
 end_comment
 
