@@ -81,6 +81,17 @@ end_define
 
 begin_decl_stmt
 name|int
+name|_thread_thr_id_offset
+init|=
+name|OFF
+argument_list|(
+name|thr_id
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|_thread_next_offset
 init|=
 name|OFF
