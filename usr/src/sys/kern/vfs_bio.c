@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vfs_bio.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vfs_bio.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1267,6 +1267,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+comment|/* 	 * To prevent overflow of 32-bit ints when converting block 	 * numbers to byte offsets, blknos> 2^32 / DEV_BSIZE are set 	 * to the maximum number that can be converted to a byte offset 	 * without overflow. This is historic code; what bug it fixed, 	 * or whether it is still a reasonable thing to do is open to 	 * dispute. mkm 9/85 	 */
 if|if
 condition|(
 operator|(
@@ -1284,10 +1285,9 @@ argument_list|)
 operator|*
 name|NBBY
 operator|-
-name|PGSHIFT
+name|DEV_BSHIFT
 operator|)
 condition|)
-comment|/* XXX */
 name|blkno
 operator|=
 literal|1
@@ -1301,7 +1301,7 @@ argument_list|)
 operator|*
 name|NBBY
 operator|-
-name|PGSHIFT
+name|DEV_BSHIFT
 operator|)
 operator|+
 literal|1
