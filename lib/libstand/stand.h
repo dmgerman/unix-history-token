@@ -404,6 +404,14 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|fs_ops
+name|bzipfs_fsops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fs_ops
 name|dosfs_fsops
 decl_stmt|;
 end_decl_stmt

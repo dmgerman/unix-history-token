@@ -818,7 +818,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* If the name already ends in .gz, ignore it */
+comment|/* If the name already ends in .gz or .bz2, ignore it */
 if|if
 condition|(
 operator|(
@@ -832,6 +832,7 @@ literal|'.'
 argument_list|)
 operator|)
 operator|&&
+operator|(
 operator|!
 name|strcmp
 argument_list|(
@@ -839,6 +840,15 @@ name|cp
 argument_list|,
 literal|".gz"
 argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|".bz2"
+argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
