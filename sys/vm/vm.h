@@ -264,7 +264,6 @@ parameter_list|(
 name|struct
 name|kva_md_info
 modifier|*
-name|kmi
 parameter_list|)
 function_decl|;
 end_function_decl
