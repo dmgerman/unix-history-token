@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.19	%G%"
+literal|"@(#)main.c	3.20	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,13 +62,13 @@ comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the
 end_comment
 
 begin_decl_stmt
-name|bool
-name|ArpaFmt
+name|int
+name|ArpaMode
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* mail is expected to be in ARPANET format */
+comment|/* specifies the ARPANET mode */
 end_comment
 
 begin_decl_stmt
@@ -292,20 +292,6 @@ comment|/* header list */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|Macro
-index|[
-literal|128
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* macros */
-end_comment
-
-begin_decl_stmt
 name|long
 name|CurTime
 decl_stmt|;
@@ -388,12 +374,6 @@ name|fullname
 init|=
 name|NULL
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|collect
-parameter_list|()
-function_decl|;
 specifier|extern
 name|char
 modifier|*
@@ -921,19 +901,19 @@ case|case
 literal|'D'
 case|:
 comment|/* redefine internal macro */
-name|Macro
-index|[
+name|define
+argument_list|(
 name|p
 index|[
 literal|2
 index|]
-index|]
-operator|=
+argument_list|,
 operator|&
 name|p
 index|[
 literal|3
 index|]
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#
@@ -1036,9 +1016,39 @@ case|case
 literal|'a'
 case|:
 comment|/* arpanet format */
-name|ArpaFmt
-operator|++
+switch|switch
+condition|(
+name|p
+index|[
+literal|2
+index|]
+condition|)
+block|{
+case|case
+literal|'f'
+case|:
+comment|/* mail from file connection */
+name|ArpaMode
+operator|=
+name|ARPA_FILE
 expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+comment|/* mail over telnet connection */
+name|ArpaMode
+operator|=
+name|ARPA_MAIL
+expr_stmt|;
+break|break;
+default|default:
+name|ArpaMode
+operator|=
+name|ARPA_OLD
+expr_stmt|;
+break|break;
+block|}
 break|break;
 case|case
 literal|'s'
@@ -1061,19 +1071,6 @@ comment|/* at Eric Schmidt's suggestion, this will not be an error.... 			syserr
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|from
-operator|!=
-name|NULL
-operator|&&
-name|ArpaFmt
-condition|)
-name|syserr
-argument_list|(
-literal|"-f and -a are mutually exclusive"
-argument_list|)
-expr_stmt|;
 comment|/* 	**  Read control file and initialize system macros. 	**	Collect should be called first, so that the time 	**	corresponds to the time that the messages starts 	**	getting sent, rather than when it is first composed. 	*/
 comment|/* process id */
 operator|(
@@ -1482,8 +1479,9 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|ArpaFmt
+name|ArpaMode
+operator|==
+name|ARPA_NONE
 operator|&&
 name|from
 operator|==
@@ -1521,22 +1519,6 @@ argument_list|,
 name|fullname
 argument_list|)
 expr_stmt|;
-comment|/* 	** Get a temp file. 	*/
-name|p
-operator|=
-name|collect
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|from
-operator|==
-name|NULL
-condition|)
-name|from
-operator|=
-name|p
-expr_stmt|;
 name|setfrom
 argument_list|(
 name|from
@@ -1544,44 +1526,6 @@ argument_list|,
 name|realname
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|expand
-argument_list|(
-literal|"$l"
-argument_list|,
-name|FromLine
-argument_list|,
-operator|&
-name|FromLine
-index|[
-sizeof|sizeof
-name|FromLine
-operator|-
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|Debug
-condition|)
-name|printf
-argument_list|(
-literal|"From person = \"%s\"\n"
-argument_list|,
-name|From
-operator|.
-name|q_paddr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 if|if
 condition|(
 name|argc
@@ -1756,7 +1700,10 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
+name|newstr
+argument_list|(
 name|nbuf
+argument_list|)
 expr_stmt|;
 name|argv
 operator|+=
@@ -1801,6 +1748,10 @@ name|EX_USAGE
 expr_stmt|;
 if|if
 condition|(
+name|ArpaMode
+operator|>
+name|ARPA_OLD
+operator|&&
 name|ExitStat
 operator|!=
 name|EX_OK
@@ -1808,7 +1759,71 @@ condition|)
 name|finis
 argument_list|()
 expr_stmt|;
-comment|/* 	**  Do aliasing. 	**	First arrange that the person who is sending the mail 	**	will not be expanded (unless explicitly requested). 	*/
+comment|/* no errors, tell arpanet to go ahead */
+name|To
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|ArpaMode
+operator|==
+name|ARPA_MAIL
+condition|)
+name|message
+argument_list|(
+literal|"350"
+argument_list|,
+literal|"Enter mail, end with \".\" on a line by itself"
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	**  Read the input mail. 	*/
+name|collect
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|expand
+argument_list|(
+literal|"$l"
+argument_list|,
+name|FromLine
+argument_list|,
+operator|&
+name|FromLine
+index|[
+sizeof|sizeof
+name|FromLine
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+condition|)
+name|printf
+argument_list|(
+literal|"From person = \"%s\"\n"
+argument_list|,
+name|From
+operator|.
+name|q_paddr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+comment|/* 	**  Arrange that the person who is sending the mail 	**  will not be expanded (unless explicitly requested). 	*/
 name|From
 operator|.
 name|q_flags
@@ -1890,6 +1905,53 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	** All done. 	*/
+name|To
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|Errors
+operator|==
+literal|0
+condition|)
+block|{
+switch|switch
+condition|(
+name|ArpaMode
+condition|)
+block|{
+specifier|static
+name|char
+modifier|*
+name|okmsg
+init|=
+literal|"Mail accepted"
+decl_stmt|;
+case|case
+name|ARPA_FILE
+case|:
+name|message
+argument_list|(
+literal|"252"
+argument_list|,
+name|okmsg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ARPA_MAIL
+case|:
+name|message
+argument_list|(
+literal|"256"
+argument_list|,
+name|okmsg
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
 name|finis
 argument_list|()
 expr_stmt|;
@@ -1900,7 +1962,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETFROM -- set the person who this message is from ** **	Under certain circumstances allow the user to say who **	s/he is (using -f or -r).  These are: **	1.  The user's uid is zero (root). **	2.  The user's login name is "network" (mail from **	    a network server). **	3.  The user's login name is "uucp" (mail from the **	    uucp network). **	4.  The address the user is trying to claim has a **	    "!" character in it (since #3 doesn't do it for **	    us if we are dialing out). **	A better check to replace #3& #4 would be if the **	effective uid is "UUCP" -- this would require me **	to rewrite getpwent to "grab" uucp as it went by, **	make getname more nasty, do another passwd file **	scan, or compile the UID of "UUCP" into the code, **	all of which are reprehensible. ** **	Assuming all of these fail, we figure out something **	ourselves. ** **	Parameters: **		from -- the person it is from. **		realname -- the actual person executing sendmail. ** **	Returns: **		none. ** **	Side Effects: **		sets sendmail's notion of who the from person is. */
+comment|/* **  SETFROM -- set the person who this message is from ** **	Under certain circumstances allow the user to say who **	s/he is (using -f or -r).  These are: **	1.  The user's uid is zero (root). **	2.  The user's login name is "network" (mail from **	    a network server). **	3.  The user's login name is "uucp" (mail from the **	    uucp network). **	4.  The address the user is trying to claim has a **	    "!" character in it (since #3 doesn't do it for **	    us if we are dialing out). **	A better check to replace #3& #4 would be if the **	effective uid is "UUCP" -- this would require me **	to rewrite getpwent to "grab" uucp as it went by, **	make getname more nasty, do another passwd file **	scan, or compile the UID of "UUCP" into the code, **	all of which are reprehensible. ** **	Assuming all of these fail, we figure out something **	ourselves. ** **	Parameters: **		from -- the person it is from. **		realname -- the actual person executing sendmail. **			If NULL, then take whoever we previously **			thought was the from person. ** **	Returns: **		none. ** **	Side Effects: **		sets sendmail's notion of who the from person is. */
 end_comment
 
 begin_macro
@@ -1953,6 +2015,18 @@ modifier|*
 name|index
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|realname
+operator|==
+name|NULL
+condition|)
+name|realname
+operator|=
+name|From
+operator|.
+name|q_paddr
+expr_stmt|;
 if|if
 condition|(
 name|from

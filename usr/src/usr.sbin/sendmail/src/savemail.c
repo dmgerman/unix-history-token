@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.10	%G%"
+literal|"@(#)savemail.c	3.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,7 +280,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\r\nMessage from %s\r\n"
+literal|"\r\nMessage from %s...\r\n"
 argument_list|,
 name|buf
 argument_list|)
@@ -493,35 +493,15 @@ begin_comment
 comment|/* 	**  Save the message in dead.letter. 	**	If we weren't mailing back, and the user is local, we 	**	should save the message in dead.letter so that the 	**	poor person doesn't have to type it over again -- 	**	and we all know what poor typists programmers are. 	*/
 end_comment
 
-begin_expr_stmt
-operator|(
-name|void
-operator|)
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-operator|(
-name|void
-operator|)
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|setpwent
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+begin_if
+if|if
+condition|(
+name|ArpaMode
+operator|!=
+name|ARPA_NONE
+condition|)
+return|return;
+end_if
 
 begin_expr_stmt
 name|p

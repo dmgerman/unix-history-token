@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.24	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.25	%G% */
 end_comment
 
 begin_include
@@ -110,6 +110,54 @@ end_define
 
 begin_comment
 comment|/* configuration file */
+end_comment
+
+begin_comment
+comment|/* values for ArpaMode -- these are ordered!! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARPA_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* not in arpanet mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARPA_OLD
+value|1
+end_define
+
+begin_comment
+comment|/* in old arpanet mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARPA_MAIL
+value|2
+end_define
+
+begin_comment
+comment|/* in regular arpanet mail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARPA_FILE
+value|3
+end_define
+
+begin_comment
+comment|/* reading over data connection */
 end_comment
 
 begin_comment
@@ -921,13 +969,13 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|bool
-name|ArpaFmt
+name|int
+name|ArpaMode
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* if set, message is in arpanet fmt */
+comment|/* ARPANET handling mode */
 end_comment
 
 begin_decl_stmt

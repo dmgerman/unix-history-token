@@ -29,12 +29,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.14	%G%"
+literal|"@(#)collect.c	3.15	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  While it is doing it, it looks for **	"From:" and "Sender:" fields to use as the from-person **	(but only if the -a flag is specified).  It prefers to **	to use the "Sender:" field. ** **	MIT seems to like to produce "Sent-By:" fields instead **	of "Sender:" fields.  We used to catch this, but it turns **	out that the "Sent-By:" field doesn't always correspond **	to someone real ("___057", for instance), as required by **	the protocol.  So we limp by..... ** **	Parameters: **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. ** **	Called By: **		main ** **	Notes: **		This is broken off from main largely so that the **		temp buffer can be deallocated. */
+comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  While it is doing it, it looks for **	"From:" and "Sender:" fields to use as the from-person **	(but only if the -a flag is specified).  It prefers to **	to use the "Sender:" field. ** **	MIT seems to like to produce "Sent-By:" fields instead **	of "Sender:" fields.  We used to catch this, but it turns **	out that the "Sent-By:" field doesn't always correspond **	to someone real ("___057", for instance), as required by **	the protocol.  So we limp by..... ** **	Parameters: **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
 end_comment
 
 begin_decl_stmt
@@ -47,17 +47,21 @@ begin_comment
 comment|/* size of message in bytes */
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_macro
 name|maketemp
-parameter_list|(
-name|from
-parameter_list|)
+argument_list|(
+argument|from
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|from
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|FILE
@@ -167,11 +171,7 @@ argument_list|,
 name|InFileName
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+return|return;
 block|}
 comment|/* try to read a UNIX-style From line */
 if|if
@@ -188,11 +188,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+return|return;
 if|if
 condition|(
 name|strncmp
@@ -619,6 +615,19 @@ argument_list|(
 literal|"from"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ArpaMode
+operator|!=
+name|ARPA_NONE
+condition|)
+name|setfrom
+argument_list|(
+name|xfrom
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* full name of from person */
 name|p
 operator|=
@@ -751,17 +760,9 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
-return|return
-operator|(
-name|ArpaFmt
-condition|?
-name|xfrom
-else|:
-name|NULL
-operator|)
-return|;
+return|return;
 block|}
-end_function
+end_block
 
 begin_escape
 end_escape

@@ -41,7 +41,14 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.6	%G%"
+literal|"@(#)err.c	3.7	%G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|HasXscrpt
 decl_stmt|;
 end_decl_stmt
 
@@ -233,7 +240,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ArpaFmt
+name|ArpaMode
+operator|!=
+name|ARPA_NONE
+operator|&&
+operator|!
+name|HasXscrpt
 condition|)
 name|printf
 argument_list|(
@@ -453,7 +465,12 @@ block|}
 comment|/* print arpa format header if needed */
 if|if
 condition|(
-name|ArpaFmt
+name|ArpaMode
+operator|!=
+name|ARPA_NONE
+operator|&&
+operator|!
+name|HasXscrpt
 condition|)
 name|printf
 argument_list|(
@@ -499,7 +516,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ArpaFmt
+name|ArpaMode
+operator|!=
+name|ARPA_NONE
+operator|&&
+operator|!
+name|HasXscrpt
 condition|)
 name|printf
 argument_list|(
