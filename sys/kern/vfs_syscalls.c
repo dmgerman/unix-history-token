@@ -1043,12 +1043,13 @@ decl_stmt|,
 modifier|*
 name|pos
 decl_stmt|;
+name|size_t
+name|n
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
 name|i
-decl_stmt|,
-name|n
 decl_stmt|;
 name|len
 operator|=
