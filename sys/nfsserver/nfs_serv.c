@@ -4305,6 +4305,9 @@ operator|(
 operator|(
 name|int
 operator|)
+operator|(
+name|vm_offset_t
+operator|)
 name|vp
 operator|/
 sizeof|sizeof
