@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exec.c	6.8	84/11/20	*/
+comment|/*	kern_exec.c	6.9	85/03/12	*/
 end_comment
 
 begin_include
@@ -2577,6 +2577,25 @@ name|spl0
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* 	 * Reset stack state to the user stack. 	 * Clear set of signals caught on the signal stack. 	 */
+name|u
+operator|.
+name|u_onstack
+operator|=
+literal|0
+expr_stmt|;
+name|u
+operator|.
+name|u_sigsp
+operator|=
+literal|0
+expr_stmt|;
+name|u
+operator|.
+name|u_sigonstack
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
