@@ -3401,7 +3401,7 @@ name|ver
 operator|.
 name|wi_type
 operator|=
-name|WI_RID_CARDID
+name|WI_RID_CARD_ID
 expr_stmt|;
 name|ver
 operator|.

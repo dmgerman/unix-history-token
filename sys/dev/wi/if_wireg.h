@@ -685,7 +685,11 @@ value|3
 end_define
 
 begin_comment
-comment|/* Default network name: empty string implies any */
+comment|/* Default network name: ANY */
+end_comment
+
+begin_comment
+comment|/*  * [sommerfeld 1999/07/15] Changed from "ANY" to ""; according to Bill Fenner,  * ANY is used in MS driver user interfaces, while "" is used over the  * wire..  */
 end_comment
 
 begin_define
@@ -980,7 +984,7 @@ comment|/*  * The WaveLAN/IEEE cards contain an 802.11 MAC controller which Luce
 end_comment
 
 begin_comment
-comment|/*  * Size of Hermes I/O space.  */
+comment|/*  * Size of Hermes& Prism2 I/O space.  */
 end_comment
 
 begin_define
@@ -991,7 +995,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/*  * Hermes register definitions and what little I know about them.  */
+comment|/*  * Hermes& Prism2 register definitions   */
 end_comment
 
 begin_comment
@@ -1578,6 +1582,10 @@ name|WI_SW3
 value|0x2E
 end_define
 
+begin_comment
+comment|/* does not appear in Prism2 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1706,7 +1714,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|do {					\ 		struct wi_ltv_gen	g;	\ 						\ 		g.wi_len = 2;			\ 		g.wi_type = recno;		\ 		g.wi_val = val;			\ 		wi_write_record(sc,&g);	\ 	} while (0)
+value|do {					\ 		struct wi_ltv_gen	g;	\ 						\ 		g.wi_len = 2;			\ 		g.wi_type = recno;		\ 		g.wi_val = htole16(val);	\ 		wi_write_record(sc,&g);	\ 	} while (0)
 end_define
 
 begin_define
@@ -1719,19 +1727,12 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {							\ 		struct wi_ltv_str	s;			\ 		int			l;			\ 								\ 		l = (strlen(str) + 1)& ~0x1;			\ 		bzero((char *)&s, sizeof(s));			\ 		s.wi_len = (l / 2) + 2;				\ 		s.wi_type = recno;				\ 		s.wi_str[0] = strlen(str);			\ 		bcopy(str, (char *)&s.wi_str[1], strlen(str));	\ 		wi_write_record(sc, (struct wi_ltv_gen *)&s);	\ 	} while (0)
+value|do {							\ 		struct wi_ltv_str	s;			\ 		int			l;			\ 								\ 		l = (strlen(str) + 1)& ~0x1;			\ 		bzero((char *)&s, sizeof(s));			\ 		s.wi_len = (l / 2) + 2;				\ 		s.wi_type = recno;				\ 		s.wi_str[0] = htole16(strlen(str));		\ 		bcopy(str, (char *)&s.wi_str[1], strlen(str));	\ 		wi_write_record(sc, (struct wi_ltv_gen *)&s);	\ 	} while (0)
 end_define
 
 begin_comment
 comment|/*  * Download buffer location and length (0xFD01).  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_DNLD_BUF
-value|0xFD01
-end_define
 
 begin_struct
 struct|struct
@@ -1763,13 +1764,6 @@ begin_comment
 comment|/*  * Mem sizes (0xFD02).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|WI_RID_MEMSZ
-value|0xFD02
-end_define
-
 begin_struct
 struct|struct
 name|wi_ltv_memsz
@@ -1791,15 +1785,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * NIC Identification (0xFD0B)  */
+comment|/*  * NIC Identification (0xFD0B, 0xFD20)  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_CARDID
-value|0xFD0B
-end_define
 
 begin_struct
 struct|struct
@@ -1896,13 +1883,6 @@ begin_comment
 comment|/*  * List of intended regulatory domains (0xFD11).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|WI_RID_DOMAINS
-value|0xFD11
-end_define
-
 begin_struct
 struct|struct
 name|wi_ltv_domains
@@ -1927,13 +1907,6 @@ begin_comment
 comment|/*  * CIS struct (0xFD13).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|WI_RID_CIS
-value|0xFD13
-end_define
-
 begin_struct
 struct|struct
 name|wi_ltv_cis
@@ -1957,13 +1930,6 @@ end_struct
 begin_comment
 comment|/*  * Communications quality (0xFD43).  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_COMMQUAL
-value|0xFD43
-end_define
 
 begin_struct
 struct|struct
