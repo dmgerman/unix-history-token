@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rmjob.c	4.1	83/04/29	*/
+comment|/*	rmjob.c	4.2	83/05/13	*/
 end_comment
 
 begin_comment
@@ -150,10 +150,6 @@ modifier|*
 modifier|*
 name|files
 decl_stmt|;
-name|name
-operator|=
-literal|"rmjob"
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -264,7 +260,7 @@ name|NULL
 condition|)
 name|RP
 operator|=
-name|printer
+name|DEFLP
 expr_stmt|;
 if|if
 condition|(
@@ -1095,7 +1091,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * If root is removing a file on the local machine, allow it.  * If root is removing a file on a remote machine, only allow  * files sent from the local machine to be removed.  * Normal users can only remove the file from where it was sent.  */
+comment|/*  * If root is removing a file on the local machine, allow it.  * If root is removing a file from a remote machine, only allow  * files sent from the remote machine to be removed.  * Normal users can only remove the file from where it was sent.  */
 end_comment
 
 begin_macro
@@ -1119,31 +1115,8 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|r
-decl_stmt|;
 if|if
 condition|(
-name|from
-operator|==
-name|host
-condition|)
-name|r
-operator|=
-name|access
-argument_list|(
-name|file
-argument_list|,
-literal|2
-argument_list|)
-operator|==
-literal|0
-expr_stmt|;
-else|else
-name|r
-operator|=
-operator|(
 operator|!
 name|strcmp
 argument_list|(
@@ -1151,7 +1124,30 @@ name|person
 argument_list|,
 name|root
 argument_list|)
+operator|&&
+operator|(
+name|from
+operator|==
+name|host
 operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|from
+argument_list|,
+name|file
+operator|+
+literal|6
+argument_list|)
+operator|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
 operator|!
 name|strcmp
 argument_list|(
@@ -1159,7 +1155,6 @@ name|person
 argument_list|,
 name|owner
 argument_list|)
-operator|)
 operator|&&
 operator|!
 name|strcmp
@@ -1170,13 +1165,12 @@ name|file
 operator|+
 literal|6
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|r
 condition|)
-block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|from
@@ -1197,10 +1191,9 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
-name|r
+literal|0
 operator|)
 return|;
 block|}
@@ -1245,6 +1238,12 @@ name|NULL
 condition|)
 return|return;
 comment|/* not sending to a remote machine */
+comment|/* 	 * Flush stdout so the user can see what has been deleted 	 * while we wait (possibly) for the connection. 	 */
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|buf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	common.c	4.1	83/04/29	*/
+comment|/*	common.c	4.2	83/05/13	*/
 end_comment
 
 begin_comment
@@ -141,6 +141,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* name of input filter (created per job) */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|RF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of fortran text filter (per job) */
 end_comment
 
 begin_decl_stmt
@@ -293,6 +304,26 @@ end_comment
 
 begin_decl_stmt
 name|short
+name|PX
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* page width in pixels */
+end_comment
+
+begin_decl_stmt
+name|short
+name|PY
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* page length in pixels */
+end_comment
+
+begin_decl_stmt
+name|short
 name|BR
 decl_stmt|;
 end_decl_stmt
@@ -339,6 +370,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* flags to set for local mode */
+end_comment
+
+begin_decl_stmt
+name|short
+name|RS
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* restricted to those with local accounts */
 end_comment
 
 begin_decl_stmt
@@ -1380,121 +1421,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_block
-
-begin_comment
-comment|/*VARARGS1*/
-end_comment
-
-begin_macro
-name|status
-argument_list|(
-argument|msg
-argument_list|,
-argument|a1
-argument_list|,
-argument|a2
-argument_list|,
-argument|a3
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|int
-name|fd
-decl_stmt|;
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-name|umask
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fd
-operator|=
-name|open
-argument_list|(
-name|ST
-argument_list|,
-name|FWRONLY
-operator||
-name|FCREATE
-operator||
-name|FTRUNCATE
-operator||
-name|FEXLOCK
-argument_list|,
-literal|0664
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"cannot create status file"
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-name|msg
-argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
-name|a3
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|fd
-argument_list|,
-name|buf
-argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.h	4.1	83/04/29	*/
+comment|/*	lp.h	4.2	83/05/13	*/
 end_comment
 
 begin_comment
@@ -243,6 +243,18 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
+name|RF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of fortran text filter (per job) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
 name|TF
 decl_stmt|;
 end_decl_stmt
@@ -381,6 +393,28 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|short
+name|PX
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* page width in pixels */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|short
+name|PY
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* page length in pixels */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|short
 name|PL
 decl_stmt|;
 end_decl_stmt
@@ -442,6 +476,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* flags to set for local mode */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|short
+name|RS
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* restricted to those with local accounts */
 end_comment
 
 begin_decl_stmt

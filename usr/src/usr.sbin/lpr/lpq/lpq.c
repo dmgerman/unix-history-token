@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpq.c	4.1	83/04/29	*/
+comment|/*	lpq.c	4.2	83/05/13	*/
 end_comment
 
 begin_comment
@@ -269,6 +269,23 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+name|name
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|gethostname
+argument_list|(
+name|host
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|host
+argument_list|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|--
@@ -449,16 +466,6 @@ condition|)
 name|printer
 operator|=
 name|DEFLP
-expr_stmt|;
-name|gethostname
-argument_list|(
-name|host
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|host
-argument_list|)
-argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
