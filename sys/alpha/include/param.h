@@ -362,8 +362,14 @@ comment|/* total size of u-area */
 end_comment
 
 begin_comment
-comment|/*  * Constants related to network buffer management.  * MCLBYTES must be no larger than CLBYTES (the software page size), and,  * on machines that exchange pages of input or output buffers with mbuf  * clusters (MAPPED_MBUFS), MCLBYTES must also be an integral multiple  * of the hardware page size.  */
+comment|/*  * Constants related to network buffer management.  * MCLBYTES must be no larger than PAGE_SIZE.   */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSIZE
+end_ifndef
 
 begin_define
 define|#
@@ -374,6 +380,15 @@ end_define
 
 begin_comment
 comment|/* size of an mbuf */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MSIZE */
 end_comment
 
 begin_ifndef
@@ -390,11 +405,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* convert bytes to m_buf clusters */
-end_comment
-
-begin_comment
-comment|/* 2K cluster can hold Ether frame */
+comment|/* convert bytes to mbuf clusters */
 end_comment
 
 begin_endif
@@ -414,15 +425,8 @@ value|(1<< MCLSHIFT)
 end_define
 
 begin_comment
-comment|/* size of a m_buf cluster */
+comment|/* size of a mbuf cluster */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MCLOFSET
-value|(MCLBYTES - 1)
-end_define
 
 begin_comment
 comment|/* pages ("clicks") to disk blocks */
