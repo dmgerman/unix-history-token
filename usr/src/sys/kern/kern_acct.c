@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -151,13 +151,9 @@ begin_comment
 comment|/*  * Enable or disable process accounting.  *  * If a non-null filename is given, that file is used to store accounting  * records on process exit. If a null filename is given process accounting  * is suspended. If accounting is enabled, the system checks the amount  * of freespace on the filesystem at timeval intervals. If the amount of  * freespace is below acctsuspend percent, accounting is suspended. If  * accounting has been suspended, and freespace rises above acctresume,  * accounting is resumed.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_struct
 struct|struct
-name|sysacct_args
+name|acct_args
 block|{
 name|char
 modifier|*
@@ -168,7 +164,7 @@ struct|;
 end_struct
 
 begin_macro
-name|sysacct
+name|acct
 argument_list|(
 argument|p
 argument_list|,
@@ -188,7 +184,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|sysacct_args
+name|acct_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -595,7 +591,7 @@ comment|/*  * This routine calculates an accounting record for a process and,  *
 end_comment
 
 begin_expr_stmt
-name|acct
+name|acct_process
 argument_list|(
 name|p
 argument_list|)
