@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.1	81/03/15	*/
+comment|/*	ts.c	4.2	81/03/21	*/
 end_comment
 
 begin_comment
@@ -129,6 +129,11 @@ name|ts
 modifier|*
 name|ts_ubaddr
 decl_stmt|;
+name|long
+name|i
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|tsaddr
@@ -149,38 +154,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ts_ubaddr
-operator|==
-literal|0
-operator|||
-name|tsaddr
-operator|->
-name|tssr
-operator|&
-operator|(
-name|TS_OFL
-operator||
-name|TS_NBA
-operator|)
-operator|||
-operator|(
-name|tsaddr
-operator|->
-name|tssr
-operator|&
-name|TS_SSR
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|long
-name|i
-init|=
-literal|0
-decl_stmt|;
 name|tsaddr
 operator|->
 name|tssr
@@ -216,7 +189,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-block|}
 if|if
 condition|(
 name|tsaddr
@@ -242,6 +214,9 @@ operator|&
 name|TS_NBA
 condition|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|ctsbuf
 operator|.
 name|i_ma
@@ -279,7 +254,7 @@ argument_list|(
 operator|&
 name|ctsbuf
 argument_list|,
-literal|0
+literal|2
 argument_list|)
 expr_stmt|;
 name|ts_uba
@@ -298,7 +273,7 @@ operator|(
 operator|(
 name|long
 operator|)
-name|ubaddr
+name|ts_ubaddr
 operator|>>
 literal|16
 operator|)
@@ -342,7 +317,6 @@ name|char_mode
 operator|=
 name|TS_ESS
 expr_stmt|;
-comment|/* Stop on 2 tape marks */
 name|ts
 operator|.
 name|ts_cmd
@@ -353,12 +327,7 @@ name|TS_ACK
 operator||
 name|TS_SETCHR
 expr_stmt|;
-comment|/* write characteristics */
-name|ts
-operator|.
-name|ts_cmd
-operator|.
-name|c_addr
+name|i
 operator|=
 operator|(
 name|int
@@ -367,6 +336,28 @@ operator|&
 name|ts_ubaddr
 operator|->
 name|ts_char
+expr_stmt|;
+name|ts
+operator|.
+name|ts_cmd
+operator|.
+name|c_loba
+operator|=
+name|i
+expr_stmt|;
+name|ts
+operator|.
+name|ts_cmd
+operator|.
+name|c_hiba
+operator|=
+operator|(
+name|i
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|3
 expr_stmt|;
 name|ts
 operator|.
@@ -462,6 +453,8 @@ name|int
 name|errcnt
 decl_stmt|,
 name|info
+init|=
+literal|0
 decl_stmt|;
 name|errcnt
 operator|=
@@ -481,7 +474,33 @@ operator|)
 operator|==
 literal|0
 condition|)
-empty_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|func
+operator|==
+name|TS_REW
+operator|||
+name|func
+operator|==
+name|TS_SFORWF
+condition|)
+name|ts
+operator|.
+name|ts_cmd
+operator|.
+name|c_repcnt
+operator|=
+name|io
+operator|->
+name|i_cc
+expr_stmt|;
+else|else
+block|{
 name|info
 operator|=
 name|ubasetup
@@ -505,12 +524,25 @@ name|ts
 operator|.
 name|ts_cmd
 operator|.
-name|c_addr
+name|c_loba
 operator|=
 name|info
-operator|&
-literal|0777777
 expr_stmt|;
+name|ts
+operator|.
+name|ts_cmd
+operator|.
+name|c_hiba
+operator|=
+operator|(
+name|info
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|3
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|func
@@ -550,6 +582,11 @@ name|tsdb
 operator|=
 name|ts_uba
 expr_stmt|;
+do|do
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
 while|while
 condition|(
 operator|(
@@ -563,6 +600,11 @@ operator|==
 literal|0
 condition|)
 empty_stmt|;
+do|if (info
+block|)
+end_block
+
+begin_expr_stmt
 name|ubafree
 argument_list|(
 name|io
@@ -570,6 +612,9 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|ts
@@ -580,12 +625,14 @@ name|s_xs0
 operator|&
 name|TS_TMK
 condition|)
-comment|/* tape mark */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|tsaddr
@@ -650,6 +697,9 @@ goto|goto
 name|retry
 goto|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|errcnt
@@ -659,6 +709,9 @@ argument_list|(
 literal|" recovered by retry\n"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_return
 return|return
 operator|(
 name|io
@@ -672,8 +725,8 @@ operator|.
 name|s_rbpcr
 operator|)
 return|;
-block|}
-end_block
+end_return
 
+unit|}
 end_unit
 
