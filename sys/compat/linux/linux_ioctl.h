@@ -16,24 +16,6 @@ name|_LINUX_IOCTL_H_
 end_define
 
 begin_comment
-comment|/*  * NVIDIA driver  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LINUX_IOCTL_NVIDIA_MIN
-value|0x4600
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_IOCTL_NVIDIA_MAX
-value|0x46ff
-end_define
-
-begin_comment
 comment|/*  * disk  */
 end_comment
 
