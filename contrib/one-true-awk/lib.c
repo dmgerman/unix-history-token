@@ -1972,6 +1972,27 @@ literal|0
 condition|)
 block|{
 comment|/* if 0, it's a null field */
+comment|/* subtlecase : if length(FS) == 1&& length(RS> 0) 		 * \n is NOT a field separator (cf awk book 61,84). 		 * this variable is tested in the inner while loop. 		 */
+name|int
+name|rtest
+init|=
+literal|'\n'
+decl_stmt|;
+comment|/* normal case */
+if|if
+condition|(
+name|strlen
+argument_list|(
+operator|*
+name|RS
+argument_list|)
+operator|>
+literal|0
+condition|)
+name|rtest
+operator|=
+literal|'\0'
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2044,7 +2065,7 @@ operator|&&
 operator|*
 name|r
 operator|!=
-literal|'\n'
+name|rtest
 operator|&&
 operator|*
 name|r
