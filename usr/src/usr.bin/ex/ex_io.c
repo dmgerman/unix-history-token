@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	7.1	%G%"
+literal|"@(#)ex_io.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1673,12 +1673,27 @@ literal|" Archive"
 argument_list|)
 expr_stmt|;
 default|default:
+ifdef|#
+directive|ifdef
+name|mbb
+comment|/* C/70 has a 10 bit byte */
+if|if
+condition|(
+name|magic
+operator|&
+literal|03401600
+condition|)
+else|#
+directive|else
+comment|/* Everybody else has an 8 bit byte */
 if|if
 condition|(
 name|magic
 operator|&
 literal|0100200
 condition|)
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|" Non-ascii file"
