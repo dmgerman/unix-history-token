@@ -635,6 +635,12 @@ parameter_list|)
 value|splx(s)
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -649,6 +655,11 @@ parameter_list|)
 define|\
 value|if (IF_QFULL((q))) { \ 			IF_DROP((q)); \ 			m_freem((m)); \ 		} else { \ 			(ifp)->if_obytes += (m)->m_pkthdr.len; \ 			if ((m)->m_flags& M_MCAST) \ 				(ifp)->if_omcasts++; \ 			IF_ENQUEUE((q), (m)); \ 			if (((ifp)->if_flags& IFF_OACTIVE) == 0) \ 				(*(ifp)->if_start)((ifp)); \ 		}
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
