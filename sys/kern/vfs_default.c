@@ -426,17 +426,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_specstrategy_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|vop_panic
-block|}
-block|,
-block|{
-operator|&
 name|vop_strategy_desc
 block|,
 operator|(
