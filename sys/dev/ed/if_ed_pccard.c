@@ -216,6 +216,13 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+name|int
+name|linksys
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|device_method_t
 name|ed_pccard_methods
 index|[]
@@ -645,6 +652,13 @@ argument_list|)
 expr_stmt|;
 name|end
 label|:
+name|linksys
+operator|=
+name|ed_get_Linksys
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -815,10 +829,7 @@ return|;
 block|}
 if|if
 condition|(
-name|ed_get_Linksys
-argument_list|(
-name|sc
-argument_list|)
+name|linksys
 operator|==
 literal|0
 condition|)

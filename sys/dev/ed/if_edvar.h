@@ -677,9 +677,7 @@ name|ed_get_Linksys
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|ed_softc
-operator|*
+name|device_t
 operator|)
 argument_list|)
 decl_stmt|;
