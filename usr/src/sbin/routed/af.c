@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	4.3 %G%"
+literal|"@(#)af.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,6 +313,12 @@ operator|(
 name|port
 operator|==
 name|IPPORT_ROUTESERVER
+operator|||
+name|port
+operator|==
+name|IPPORT_ROUTESERVER
+operator|+
+literal|1
 operator|)
 return|;
 block|}
