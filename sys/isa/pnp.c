@@ -1505,7 +1505,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|PNP_TAG_LOGIGAL_DEVICE
+name|PNP_TAG_LOGICAL_DEVICE
 case|:
 comment|/*  				 * A new logical device. Scan 				 * resourcea and add device. 				 */
 name|bcopy

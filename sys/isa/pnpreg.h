@@ -465,7 +465,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PNP_TAG_LOGIGAL_DEVICE
+name|PNP_TAG_LOGICAL_DEVICE
 value|0x2
 end_define
 
