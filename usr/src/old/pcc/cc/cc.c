@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 3.2 %G%"
+literal|"@(#)cc.c 3.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -808,7 +808,7 @@ literal|0
 condition|)
 name|npassname
 operator|=
-literal|"/usr/c/"
+literal|"/usr/new/new"
 expr_stmt|;
 if|if
 condition|(
