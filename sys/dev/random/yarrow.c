@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/mutex.h>
 end_include
 
@@ -515,14 +521,15 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-name|TAILQ_FOREACH
+while|while
+condition|(
+operator|!
+name|TAILQ_EMPTY
 argument_list|(
-argument|event
-argument_list|,
-argument|&harvestqueue
-argument_list|,
-argument|harvest
+operator|&
+name|harvestqueue
 argument_list|)
+condition|)
 block|{
 ifdef|#
 directive|ifdef
@@ -994,7 +1001,7 @@ argument_list|,
 operator|&
 name|random_kthread_proc
 argument_list|,
-literal|0
+name|RFHIGHPID
 argument_list|,
 literal|"random"
 argument_list|)
