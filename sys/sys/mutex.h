@@ -272,7 +272,12 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|description
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|type
 parameter_list|,
 name|int
 name|opts
@@ -1313,6 +1318,17 @@ end_endif
 begin_comment
 comment|/* INVARIANTS */
 end_comment
+
+begin_comment
+comment|/*  * Common lock type names.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTX_NETWORK_LOCK
+value|"network driver"
+end_define
 
 begin_endif
 endif|#

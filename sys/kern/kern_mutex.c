@@ -3588,6 +3588,8 @@ name|margs
 operator|->
 name|ma_desc
 argument_list|,
+name|NULL
+argument_list|,
 name|margs
 operator|->
 name|ma_opts
@@ -3597,7 +3599,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mutex initialization routine; initialize lock `m' of type contained in  * `opts' with options contained in `opts' and description `description.'  */
+comment|/*  * Mutex initialization routine; initialize lock `m' of type contained in  * `opts' with options contained in `opts' and name `name.'  The optional  * lock type `type' is used as a general lock category name for use with  * witness.  */
 end_comment
 
 begin_function
@@ -3612,7 +3614,12 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|description
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|type
 parameter_list|,
 name|int
 name|opts
@@ -3680,7 +3687,7 @@ argument_list|,
 operator|(
 literal|"mutex %s %p already initialized"
 operator|,
-name|description
+name|name
 operator|,
 name|m
 operator|)
@@ -3722,7 +3729,19 @@ name|lock
 operator|->
 name|lo_name
 operator|=
-name|description
+name|name
+expr_stmt|;
+name|lock
+operator|->
+name|lo_type
+operator|=
+name|type
+operator|!=
+name|NULL
+condition|?
+name|type
+else|:
+name|name
 expr_stmt|;
 if|if
 condition|(
@@ -3931,6 +3950,8 @@ name|Giant
 argument_list|,
 literal|"Giant"
 argument_list|,
+name|NULL
+argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_RECURSE
@@ -3942,6 +3963,8 @@ operator|&
 name|sched_lock
 argument_list|,
 literal|"sched lock"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_SPIN
 operator||
@@ -3956,6 +3979,8 @@ operator|.
 name|p_mtx
 argument_list|,
 literal|"process lock"
+argument_list|,
+name|NULL
 argument_list|,
 name|MTX_DEF
 operator||
