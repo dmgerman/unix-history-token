@@ -87,7 +87,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|" -%c %s"
+literal|" -%c '%s'"
 argument_list|,
 name|c
 argument_list|,
