@@ -296,6 +296,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VT_GETACTIVE
+value|_IOR('v', 7, int)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VT_FALSE
 value|0
 end_define
