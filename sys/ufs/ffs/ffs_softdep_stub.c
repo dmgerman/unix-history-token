@@ -670,31 +670,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|softdep_fsync
-parameter_list|(
-name|vp
-parameter_list|)
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-block|{
-name|panic
-argument_list|(
-literal|"softdep_fsync called"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|softdep_fsync_mountdev
 parameter_list|(
