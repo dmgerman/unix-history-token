@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)mbuf.h	7.14 (Berkeley) 12/5/90  *	$Id: mbuf.h,v 1.2 1993/10/16 17:17:09 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)mbuf.h	7.14 (Berkeley) 12/5/90  *	$Id: mbuf.h,v 1.3 1993/11/07 17:52:48 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -1118,52 +1118,67 @@ block|{
 comment|/* XXX */
 name|M_FREE
 block|,
-comment|/* MT_FREE	0	/* should be on free list */
+comment|/* MT_FREE	0*/
+comment|/* should be on free list */
 name|M_MBUF
 block|,
-comment|/* MT_DATA	1	/* dynamic (data) allocation */
+comment|/* MT_DATA	1*/
+comment|/* dynamic (data) allocation */
 name|M_MBUF
 block|,
-comment|/* MT_HEADER	2	/* packet header */
+comment|/* MT_HEADER	2*/
+comment|/* packet header */
 name|M_SOCKET
 block|,
-comment|/* MT_SOCKET	3	/* socket structure */
+comment|/* MT_SOCKET	3*/
+comment|/* socket structure */
 name|M_PCB
 block|,
-comment|/* MT_PCB	4	/* protocol control block */
+comment|/* MT_PCB	4*/
+comment|/* protocol control block */
 name|M_RTABLE
 block|,
-comment|/* MT_RTABLE	5	/* routing tables */
+comment|/* MT_RTABLE	5*/
+comment|/* routing tables */
 name|M_HTABLE
 block|,
-comment|/* MT_HTABLE	6	/* IMP host tables */
+comment|/* MT_HTABLE	6*/
+comment|/* IMP host tables */
 literal|0
 block|,
-comment|/* MT_ATABLE	7	/* address resolution tables */
+comment|/* MT_ATABLE	7*/
+comment|/* address resolution tables */
 name|M_MBUF
 block|,
-comment|/* MT_SONAME	8	/* socket name */
+comment|/* MT_SONAME	8*/
+comment|/* socket name */
 literal|0
 block|,
 comment|/* 		9 */
 name|M_SOOPTS
 block|,
-comment|/* MT_SOOPTS	10	/* socket options */
+comment|/* MT_SOOPTS	10*/
+comment|/* socket options */
 name|M_FTABLE
 block|,
-comment|/* MT_FTABLE	11	/* fragment reassembly header */
+comment|/* MT_FTABLE	11*/
+comment|/* fragment reassembly header */
 name|M_MBUF
 block|,
-comment|/* MT_RIGHTS	12	/* access rights */
+comment|/* MT_RIGHTS	12*/
+comment|/* access rights */
 name|M_IFADDR
 block|,
-comment|/* MT_IFADDR	13	/* interface address */
+comment|/* MT_IFADDR	13*/
+comment|/* interface address */
 name|M_MBUF
 block|,
-comment|/* MT_CONTROL	14	/* extra-data protocol message */
+comment|/* MT_CONTROL	14*/
+comment|/* extra-data protocol message */
 name|M_MBUF
 block|,
-comment|/* MT_OOBDATA	15	/* expedited data  */
+comment|/* MT_OOBDATA	15*/
+comment|/* expedited data  */
 ifdef|#
 directive|ifdef
 name|DATAKIT
