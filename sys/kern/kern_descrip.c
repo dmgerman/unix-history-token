@@ -6493,6 +6493,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|openfiles
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|nfiles
+argument_list|,
+literal|0
+argument_list|,
+literal|"System-wide number of open files"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
