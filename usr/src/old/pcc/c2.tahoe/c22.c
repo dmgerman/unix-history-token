@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c22.c	1.7 (Berkeley/CCI) %G%"
+literal|"@(#)c22.c	1.8 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,7 +210,15 @@ name|p
 operator|->
 name|subop
 argument_list|,
-literal|1
+name|p
+operator|->
+name|op
+operator|!=
+name|CVT
+operator|||
+name|r
+operator|<
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
