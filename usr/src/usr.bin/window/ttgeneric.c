@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttgeneric.c	3.13 83/08/23"
+literal|"@(#)ttgeneric.c	3.14 83/08/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -997,7 +997,7 @@ name|gen_MI
 operator|&&
 name|gen_insert
 condition|)
-name|gen_setinsert
+name|gen_setinsert1
 argument_list|(
 literal|0
 argument_list|)
@@ -1009,7 +1009,7 @@ name|gen_MS
 operator|&&
 name|gen_modes
 condition|)
-name|gen_setmodes
+name|gen_setmodes1
 argument_list|(
 literal|0
 argument_list|)
