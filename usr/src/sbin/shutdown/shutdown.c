@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)shutdown.c	4.1 (Berkeley/Melbourne) 81/02/07	*/
+comment|/*	@(#)shutdown.c	4.2 (Berkeley/Melbourne) 81/02/28	*/
 end_comment
 
 begin_include
@@ -40,8 +40,38 @@ file|<sys/types.h>
 end_include
 
 begin_comment
-comment|/*  *	/etc/shutdown when [messages]  *  *	allow super users to tell users and remind users  *	of iminent shutdown of unix  *	and shut it down automatically  *	and even reboot or halt the machine if they desire  *  *		Ian Johnstone, Sydney, 1977  *		Robert Elz, Melbourne, 1978  *		Peter Lamb, Melbourne, 1980  *		William Joy, Berkeley, 1981  */
+comment|/*  *	/etc/shutdown when [messages]  *  *	allow super users to tell users and remind users  *	of iminent shutdown of unix  *	and shut it down automatically  *	and even reboot or halt the machine if they desire  *  *		Ian Johnstone, Sydney, 1977  *		Robert Elz, Melbourne, 1978  *		Peter Lamb, Melbourne, 1980  *		William Joy, Berkeley, 1981  *		Michael Toy, Berkeley, 1981  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOGFILE
+value|"shutdown.log"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LOGFILE
+value|"/usr/adm/shutdownlog"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -332,7 +362,13 @@ block|,
 literal|10
 name|MINUTES
 block|,
-literal|2
+literal|5
+name|MINUTES
+block|,
+literal|5
+name|MINUTES
+block|,
+literal|3
 name|MINUTES
 block|,
 literal|2
@@ -349,6 +385,17 @@ name|SECONDS
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+name|char
+modifier|*
+name|shutter
+decl_stmt|,
+modifier|*
+name|getlogin
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -399,6 +446,11 @@ name|FILE
 modifier|*
 name|termf
 decl_stmt|;
+name|shutter
+operator|=
+name|getlogin
+argument_list|()
+expr_stmt|;
 name|argc
 operator|--
 operator|,
@@ -605,16 +657,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shutdown at %5.5s\n"
+literal|"Shutdown at %5.5s (in "
 argument_list|,
 name|ts
 operator|+
 literal|11
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ie. in "
 argument_list|)
 expr_stmt|;
 if|if
@@ -640,7 +687,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d minute%s\n"
+literal|"%d minute%s) "
 argument_list|,
 name|m
 argument_list|,
@@ -699,6 +746,9 @@ operator|-
 literal|20
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|DEBUG
 if|if
 condition|(
 name|i
@@ -709,7 +759,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%d\n"
+literal|"[pid %d]\n"
 argument_list|,
 name|i
 argument_list|)
@@ -720,6 +770,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|sint
 operator|=
 literal|1
@@ -882,12 +934,7 @@ condition|(
 operator|(
 name|termf
 operator|=
-name|fopen
-argument_list|(
-literal|"/dev/tty"
-argument_list|,
-literal|"w"
-argument_list|)
+name|stdout
 operator|)
 operator|!=
 name|NULL
@@ -978,11 +1025,28 @@ argument_list|,
 name|termf
 argument_list|)
 expr_stmt|;
+name|alarm
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|fflush
+argument_list|(
+name|termf
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fclose
 argument_list|(
 name|termf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|alarm
 argument_list|(
 literal|0
@@ -1000,6 +1064,11 @@ block|{
 name|printf
 argument_list|(
 literal|"\n\007\007System shutdown time has arrived\007\007\n"
+argument_list|)
+expr_stmt|;
+name|log_entry
+argument_list|(
+name|sdt
 argument_list|)
 expr_stmt|;
 name|unlink
@@ -1448,6 +1517,15 @@ name|char
 modifier|*
 name|ts
 decl_stmt|;
+name|fprintf
+argument_list|(
+name|term
+argument_list|,
+literal|"\007\007*** System shutdown message from %s ***\n"
+argument_list|,
+name|shutter
+argument_list|)
+expr_stmt|;
 name|ts
 operator|=
 name|ctime
@@ -1535,7 +1613,7 @@ name|fprintf
 argument_list|(
 name|term
 argument_list|,
-literal|"System going down in %d seconds\n"
+literal|"System going down in %d second%s\n"
 argument_list|,
 name|sdt
 operator|-
@@ -1692,6 +1770,120 @@ argument_list|(
 name|SIGALRM
 argument_list|,
 name|do_nothing
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * make an entry in the shutdown log  */
+end_comment
+
+begin_macro
+name|log_entry
+argument_list|(
+argument|sdt
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|time_t
+name|sdt
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|FILE
+modifier|*
+name|logf
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|mess
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|logf
+operator|=
+name|fopen
+argument_list|(
+name|LOGFILE
+argument_list|,
+literal|"a"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** Can't write on log file ***\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|fseek
+argument_list|(
+name|logf
+argument_list|,
+literal|0L
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|logf
+argument_list|,
+literal|"Shutdown by %s at %s"
+argument_list|,
+name|shutter
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|sdt
+argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|mess
+operator|=
+name|nolog2
+init|;
+operator|*
+name|mess
+condition|;
+name|mess
+operator|++
+control|)
+name|fprintf
+argument_list|(
+name|logf
+argument_list|,
+literal|"\t%s\n"
+argument_list|,
+operator|*
+name|mess
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|logf
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|logf
 argument_list|)
 expr_stmt|;
 block|}
