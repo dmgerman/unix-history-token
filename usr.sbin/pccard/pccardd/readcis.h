@@ -324,6 +324,12 @@ name|unsigned
 name|long
 name|reg_addr
 decl_stmt|;
+name|unsigned
+name|char
+name|func_id1
+decl_stmt|,
+name|func_id2
+decl_stmt|;
 name|struct
 name|dev_mem
 name|attr_mem

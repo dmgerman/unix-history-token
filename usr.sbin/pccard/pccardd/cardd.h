@@ -152,6 +152,12 @@ name|char
 modifier|*
 name|version
 decl_stmt|;
+name|u_char
+name|func_id
+decl_stmt|;
+name|int
+name|deftype
+decl_stmt|;
 name|struct
 name|ether
 modifier|*
@@ -451,6 +457,20 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|int
+name|irq_init
+index|[
+literal|16
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* initial IRQ allocations */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|struct
 name|driver
 modifier|*
@@ -473,6 +493,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
+name|struct
+name|card
+modifier|*
+name|last_card
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
 name|bitstr_t
 modifier|*
 name|mem_avail
@@ -483,7 +512,23 @@ begin_decl_stmt
 name|EXTERN
 name|bitstr_t
 modifier|*
+name|mem_init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|bitstr_t
+modifier|*
 name|io_avail
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|bitstr_t
+modifier|*
+name|io_init
 decl_stmt|;
 end_decl_stmt
 
@@ -730,6 +775,13 @@ name|MAXINCLUDES
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXERRORS
+value|10
+end_define
+
 begin_comment
 comment|/*  * Config index types  */
 end_comment
@@ -753,6 +805,20 @@ define|#
 directive|define
 name|AUTO_INDEX
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_FUNC
+value|1
 end_define
 
 end_unit
