@@ -462,6 +462,7 @@ modifier|*
 name|trim_at
 decl_stmt|;
 comment|/* Specific time to do trimming */
+name|unsigned
 name|int
 name|permissions
 decl_stmt|;
