@@ -7,7 +7,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * LP (Laptop Package)  *   * Copyright (c) 1994 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.6 1994/11/07 04:23:58 phk Exp $  */
+comment|/*  * LP (Laptop Package)  *   * Copyright (c) 1994 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.7 1994/11/15 14:09:18 bde Exp $  */
 end_comment
 
 begin_include
@@ -417,7 +417,7 @@ block|{
 name|u_long
 name|cf
 decl_stmt|;
-asm|__asm ("pushl	%%ebp 		pushl	%%edx 		xorl	%3,%3 		lcall	_apm_addr 		jnc	1f 		incl	%3 	1:	popl	%%edx 		popl	%%ebp"
+asm|__asm ("pushl	%%ebp 		pushl	%%edx 		pushl	%%esi 		pushl	%%edi 		xorl	%3,%3 		movl	%%edi,%3 		movl	%%esi,%3 		lcall	_apm_addr 		jnc	1f 		incl	%3 	1:	 		popl	%%edi 		popl	%%esi 		popl	%%edx 		popl	%%ebp"
 block|:
 literal|"=a"
 operator|(
@@ -815,6 +815,14 @@ operator|)
 operator||
 name|APM_GETPMEVENT
 expr_stmt|;
+name|ebx
+operator|=
+literal|0
+expr_stmt|;
+name|ecx
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|apm_int
@@ -1082,6 +1090,10 @@ expr_stmt|;
 name|ebx
 operator|=
 name|PMDV_ALLDEV
+expr_stmt|;
+name|ecx
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
