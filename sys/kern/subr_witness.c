@@ -1076,6 +1076,13 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
+literal|"mutex profiling lock"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
