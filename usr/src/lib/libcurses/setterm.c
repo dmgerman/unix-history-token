@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.14  */
+comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.15  */
 end_comment
 
 begin_include
@@ -415,6 +415,10 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+name|struct
+name|winsize
+name|win
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -494,6 +498,46 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|_tty_ch
+argument_list|,
+name|TIOCGWINSZ
+argument_list|,
+operator|&
+name|win
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|LINES
+operator|==
+literal|0
+condition|)
+name|LINES
+operator|=
+name|win
+operator|.
+name|ws_row
+expr_stmt|;
+if|if
+condition|(
+name|COLS
+operator|==
+literal|0
+condition|)
+name|COLS
+operator|=
+name|win
+operator|.
+name|ws_col
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|LINES
