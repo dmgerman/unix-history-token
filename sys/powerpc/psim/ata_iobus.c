@@ -839,7 +839,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ata_iobus_locknoop
 parameter_list|(
 name|struct
@@ -850,7 +850,15 @@ parameter_list|,
 name|int
 name|type
 parameter_list|)
-block|{ }
+block|{
+return|return
+operator|(
+name|ch
+operator|->
+name|unit
+operator|)
+return|;
+block|}
 end_function
 
 begin_function
