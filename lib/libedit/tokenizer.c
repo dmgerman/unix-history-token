@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: tokenizer.c,v 1.6 2000/09/04 22:06:33 lukem Exp $  */
 end_comment
 
 begin_include
@@ -51,6 +51,20 @@ end_endif
 begin_comment
 comment|/* not lint&& not SCCSID */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * tokenize.c: Bourne shell like tokenizer  */
@@ -185,19 +199,19 @@ name|char
 modifier|*
 name|ifs
 decl_stmt|;
-comment|/* In field separator			*/
+comment|/* In field separator			 */
 name|int
 name|argc
 decl_stmt|,
 name|amax
 decl_stmt|;
-comment|/* Current and maximum number of args	*/
+comment|/* Current and maximum number of args	 */
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-comment|/* Argument list			*/
+comment|/* Argument list			 */
 name|char
 modifier|*
 name|wptr
@@ -205,42 +219,39 @@ decl_stmt|,
 modifier|*
 name|wmax
 decl_stmt|;
-comment|/* Space and limit on the word buffer	*/
+comment|/* Space and limit on the word buffer	 */
 name|char
 modifier|*
 name|wstart
 decl_stmt|;
-comment|/* Beginning of next word		*/
+comment|/* Beginning of next word		 */
 name|char
 modifier|*
 name|wspace
 decl_stmt|;
-comment|/* Space of word buffer			*/
+comment|/* Space of word buffer			 */
 name|quote_t
 name|quote
 decl_stmt|;
-comment|/* Quoting state			*/
+comment|/* Quoting state			 */
 name|int
 name|flags
 decl_stmt|;
-comment|/* flags;				*/
+comment|/* flags;				 */
 block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|tok_finish
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Tokenizer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* tok_finish():  *	Finish a word in the tokenizer.  */
@@ -251,12 +262,10 @@ name|private
 name|void
 name|tok_finish
 parameter_list|(
-name|tok
-parameter_list|)
 name|Tokenizer
 modifier|*
 name|tok
-decl_stmt|;
+parameter_list|)
 block|{
 operator|*
 name|tok
@@ -339,13 +348,11 @@ name|Tokenizer
 modifier|*
 name|tok_init
 parameter_list|(
-name|ifs
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|ifs
-decl_stmt|;
+parameter_list|)
 block|{
 name|Tokenizer
 modifier|*
@@ -410,6 +417,19 @@ operator|->
 name|amax
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tok
+operator|->
+name|argv
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|tok
 operator|->
 name|argv
@@ -432,6 +452,19 @@ argument_list|(
 name|WINCR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tok
+operator|->
+name|wspace
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|tok
 operator|->
 name|wmax
@@ -471,7 +504,9 @@ operator|=
 name|Q_none
 expr_stmt|;
 return|return
+operator|(
 name|tok
+operator|)
 return|;
 block|}
 end_function
@@ -485,12 +520,10 @@ name|public
 name|void
 name|tok_reset
 parameter_list|(
-name|tok
-parameter_list|)
 name|Tokenizer
 modifier|*
 name|tok
-decl_stmt|;
+parameter_list|)
 block|{
 name|tok
 operator|->
@@ -538,12 +571,10 @@ name|public
 name|void
 name|tok_end
 parameter_list|(
-name|tok
-parameter_list|)
 name|Tokenizer
 modifier|*
 name|tok
-decl_stmt|;
+parameter_list|)
 block|{
 name|tok_free
 argument_list|(
@@ -595,43 +626,36 @@ name|public
 name|int
 name|tok_line
 parameter_list|(
-name|tok
-parameter_list|,
-name|line
-parameter_list|,
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|Tokenizer
 modifier|*
 name|tok
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|line
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
 modifier|*
 name|ptr
 decl_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 switch|switch
 condition|(
@@ -676,7 +700,7 @@ name|quote
 operator|=
 name|Q_single
 expr_stmt|;
-comment|/* Enter single quote mode */
+comment|/* Enter single quote 							 * mode */
 break|break;
 case|case
 name|Q_single
@@ -789,13 +813,13 @@ break|break;
 case|case
 name|Q_double
 case|:
+comment|/* Exit double quote mode */
 name|tok
 operator|->
 name|quote
 operator|=
 name|Q_none
 expr_stmt|;
-comment|/* Exit double quote mode */
 break|break;
 case|case
 name|Q_one
@@ -897,17 +921,18 @@ break|break;
 case|case
 name|Q_double
 case|:
+comment|/* Quote next character */
 name|tok
 operator|->
 name|quote
 operator|=
 name|Q_doubleone
 expr_stmt|;
-comment|/* Quote next character */
 break|break;
 case|case
 name|Q_one
 case|:
+comment|/* Quote this, restore state */
 operator|*
 name|tok
 operator|->
@@ -923,7 +948,6 @@ name|quote
 operator|=
 name|Q_none
 expr_stmt|;
-comment|/* Quote this, restore state */
 break|break;
 case|case
 name|Q_single
@@ -1027,11 +1051,12 @@ operator|=
 operator|*
 name|ptr
 expr_stmt|;
-comment|/* Add the return		*/
+comment|/* Add the return */
 break|break;
 case|case
 name|Q_doubleone
 case|:
+comment|/* Back to double, eat the '\n' */
 name|tok
 operator|->
 name|flags
@@ -1044,11 +1069,11 @@ name|quote
 operator|=
 name|Q_double
 expr_stmt|;
-comment|/* Back to double, eat the '\n' */
 break|break;
 case|case
 name|Q_one
 case|:
+comment|/* No quote, more eat the '\n' */
 name|tok
 operator|->
 name|flags
@@ -1061,7 +1086,6 @@ name|quote
 operator|=
 name|Q_none
 expr_stmt|;
-comment|/* No quote, more eat the '\n' */
 break|break;
 default|default:
 return|return
@@ -1102,7 +1126,9 @@ operator|~
 name|TOK_EAT
 expr_stmt|;
 return|return
+operator|(
 literal|3
+operator|)
 return|;
 block|}
 name|tok_finish
@@ -1355,7 +1381,7 @@ argument_list|,
 name|size
 argument_list|)
 decl_stmt|;
-comment|/*SUPPRESS 22*/
+comment|/* SUPPRESS 22 */
 name|int
 name|offs
 init|=
@@ -1365,6 +1391,18 @@ name|tok
 operator|->
 name|wspace
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|offs
@@ -1455,15 +1493,18 @@ operator|-
 literal|4
 condition|)
 block|{
+name|char
+modifier|*
+modifier|*
+name|p
+decl_stmt|;
 name|tok
 operator|->
 name|amax
 operator|+=
 name|AINCR
 expr_stmt|;
-name|tok
-operator|->
-name|argv
+name|p
 operator|=
 operator|(
 name|char
@@ -1486,6 +1527,24 @@ name|char
 operator|*
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|tok
+operator|->
+name|argv
+operator|=
+name|p
 expr_stmt|;
 block|}
 block|}

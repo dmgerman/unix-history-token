@@ -1,21 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: tty.c,v 1.14 2001/01/09 17:31:04 jdolecek Exp $  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_if
 if|#
@@ -52,6 +38,20 @@ begin_comment
 comment|/* not lint&& not SCCSID */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * tty.c: tty interface stuff  */
 end_comment
@@ -79,6 +79,7 @@ typedef|typedef
 struct|struct
 name|ttymodes_t
 block|{
+specifier|const
 name|char
 modifier|*
 name|m_name
@@ -119,6 +120,7 @@ end_typedef
 
 begin_decl_stmt
 name|private
+specifier|const
 name|ttyperm_t
 name|ttyperm
 init|=
@@ -191,7 +193,7 @@ literal|0
 block|,
 literal|0
 block|}
-block|,     }
+block|, 	}
 block|,
 block|{
 block|{
@@ -362,13 +364,14 @@ literal|0
 block|,
 literal|0
 block|}
-block|,     }
+block|, 	}
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|private
+specifier|const
 name|ttychar_t
 name|ttychar
 init|=
@@ -534,6 +537,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|private
+specifier|const
 name|ttymap_t
 name|tty_map
 index|[]
@@ -720,6 +724,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|private
+specifier|const
 name|ttymodes_t
 name|ttymodes
 index|[]
@@ -733,7 +738,7 @@ literal|"ignbrk"
 block|,
 name|IGNBRK
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -747,7 +752,7 @@ literal|"brkint"
 block|,
 name|BRKINT
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -761,7 +766,7 @@ literal|"ignpar"
 block|,
 name|IGNPAR
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -775,7 +780,7 @@ literal|"parmrk"
 block|,
 name|PARMRK
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -789,7 +794,7 @@ literal|"inpck"
 block|,
 name|INPCK
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -803,7 +808,7 @@ literal|"istrip"
 block|,
 name|ISTRIP
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -817,7 +822,7 @@ literal|"inlcr"
 block|,
 name|INLCR
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -831,7 +836,7 @@ literal|"igncr"
 block|,
 name|IGNCR
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -845,7 +850,7 @@ literal|"icrnl"
 block|,
 name|ICRNL
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -859,7 +864,7 @@ literal|"iuclc"
 block|,
 name|IUCLC
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -873,7 +878,7 @@ literal|"ixon"
 block|,
 name|IXON
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -887,7 +892,7 @@ literal|"ixany"
 block|,
 name|IXANY
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -901,7 +906,7 @@ literal|"ixoff"
 block|,
 name|IXOFF
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -915,7 +920,7 @@ literal|"imaxbel"
 block|,
 name|IMAXBEL
 block|,
-name|M_INP
+name|MD_INP
 block|}
 block|,
 endif|#
@@ -929,7 +934,7 @@ literal|"opost"
 block|,
 name|OPOST
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -943,7 +948,7 @@ literal|"olcuc"
 block|,
 name|OLCUC
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -957,7 +962,7 @@ literal|"onlcr"
 block|,
 name|ONLCR
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -971,7 +976,7 @@ literal|"ocrnl"
 block|,
 name|OCRNL
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -985,7 +990,7 @@ literal|"onocr"
 block|,
 name|ONOCR
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -999,7 +1004,7 @@ literal|"onoeot"
 block|,
 name|ONOEOT
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1013,7 +1018,7 @@ literal|"onlret"
 block|,
 name|ONLRET
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1027,7 +1032,7 @@ literal|"ofill"
 block|,
 name|OFILL
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1041,7 +1046,7 @@ literal|"ofdel"
 block|,
 name|OFDEL
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1055,7 +1060,7 @@ literal|"nldly"
 block|,
 name|NLDLY
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1069,7 +1074,7 @@ literal|"crdly"
 block|,
 name|CRDLY
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1083,7 +1088,7 @@ literal|"tabdly"
 block|,
 name|TABDLY
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1097,7 +1102,7 @@ literal|"xtabs"
 block|,
 name|XTABS
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1111,7 +1116,7 @@ literal|"bsdly"
 block|,
 name|BSDLY
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1125,7 +1130,7 @@ literal|"vtdly"
 block|,
 name|VTDLY
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1139,7 +1144,7 @@ literal|"ffdly"
 block|,
 name|FFDLY
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1153,7 +1158,7 @@ literal|"pageout"
 block|,
 name|PAGEOUT
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1167,7 +1172,7 @@ literal|"wrap"
 block|,
 name|WRAP
 block|,
-name|M_OUT
+name|MD_OUT
 block|}
 block|,
 endif|#
@@ -1181,7 +1186,7 @@ literal|"cignore"
 block|,
 name|CIGNORE
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1195,7 +1200,7 @@ literal|"cbaud"
 block|,
 name|CBAUD
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1209,7 +1214,7 @@ literal|"cstopb"
 block|,
 name|CSTOPB
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1223,7 +1228,7 @@ literal|"cread"
 block|,
 name|CREAD
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1237,7 +1242,7 @@ literal|"parenb"
 block|,
 name|PARENB
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1251,7 +1256,7 @@ literal|"parodd"
 block|,
 name|PARODD
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1265,7 +1270,7 @@ literal|"hupcl"
 block|,
 name|HUPCL
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1279,7 +1284,7 @@ literal|"clocal"
 block|,
 name|CLOCAL
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1293,7 +1298,7 @@ literal|"loblk"
 block|,
 name|LOBLK
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1307,7 +1312,7 @@ literal|"cibaud"
 block|,
 name|CIBAUD
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1324,7 +1329,7 @@ literal|"ccts_oflow"
 block|,
 name|CCTS_OFLOW
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 else|#
@@ -1334,7 +1339,7 @@ literal|"crtscts"
 block|,
 name|CRTSCTS
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1351,12 +1356,26 @@ literal|"crts_iflow"
 block|,
 name|CRTS_IFLOW
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
 directive|endif
 comment|/* CRTS_IFLOW */
+ifdef|#
+directive|ifdef
+name|CDTRCTS
+block|{
+literal|"cdtrcts"
+block|,
+name|CDTRCTS
+block|,
+name|MD_CTL
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* CDTRCTS */
 ifdef|#
 directive|ifdef
 name|MDMBUF
@@ -1365,7 +1384,7 @@ literal|"mdmbuf"
 block|,
 name|MDMBUF
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1379,7 +1398,7 @@ literal|"rcv1en"
 block|,
 name|RCV1EN
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1393,7 +1412,7 @@ literal|"xmt1en"
 block|,
 name|XMT1EN
 block|,
-name|M_CTL
+name|MD_CTL
 block|}
 block|,
 endif|#
@@ -1407,7 +1426,7 @@ literal|"isig"
 block|,
 name|ISIG
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1421,7 +1440,7 @@ literal|"icanon"
 block|,
 name|ICANON
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1435,7 +1454,7 @@ literal|"xcase"
 block|,
 name|XCASE
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1449,7 +1468,7 @@ literal|"echo"
 block|,
 name|ECHO
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1463,7 +1482,7 @@ literal|"echoe"
 block|,
 name|ECHOE
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1477,7 +1496,7 @@ literal|"echok"
 block|,
 name|ECHOK
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1491,7 +1510,7 @@ literal|"echonl"
 block|,
 name|ECHONL
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1505,7 +1524,7 @@ literal|"noflsh"
 block|,
 name|NOFLSH
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1519,7 +1538,7 @@ literal|"tostop"
 block|,
 name|TOSTOP
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1533,7 +1552,7 @@ literal|"echoctl"
 block|,
 name|ECHOCTL
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1547,7 +1566,7 @@ literal|"echoprt"
 block|,
 name|ECHOPRT
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1561,7 +1580,7 @@ literal|"echoke"
 block|,
 name|ECHOKE
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1575,7 +1594,7 @@ literal|"defecho"
 block|,
 name|DEFECHO
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1589,7 +1608,7 @@ literal|"flusho"
 block|,
 name|FLUSHO
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1603,7 +1622,7 @@ literal|"pendin"
 block|,
 name|PENDIN
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1617,7 +1636,7 @@ literal|"iexten"
 block|,
 name|IEXTEN
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1631,7 +1650,7 @@ literal|"nokerninfo"
 block|,
 name|NOKERNINFO
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1645,7 +1664,7 @@ literal|"altwerase"
 block|,
 name|ALTWERASE
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1659,7 +1678,7 @@ literal|"extproc"
 block|,
 name|EXTPROC
 block|,
-name|M_LIN
+name|MD_LIN
 block|}
 block|,
 endif|#
@@ -1679,7 +1698,7 @@ argument_list|(
 name|C_INTR
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1699,7 +1718,7 @@ argument_list|(
 name|C_QUIT
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1719,7 +1738,7 @@ argument_list|(
 name|C_ERASE
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1739,7 +1758,7 @@ argument_list|(
 name|C_KILL
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1759,7 +1778,7 @@ argument_list|(
 name|C_EOF
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1779,7 +1798,7 @@ argument_list|(
 name|C_EOL
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1799,7 +1818,7 @@ argument_list|(
 name|C_EOL2
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1819,7 +1838,7 @@ argument_list|(
 name|C_SWTCH
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1839,7 +1858,7 @@ argument_list|(
 name|C_DSWTCH
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1859,7 +1878,7 @@ argument_list|(
 name|C_ERASE2
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1879,7 +1898,7 @@ argument_list|(
 name|C_START
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1899,7 +1918,7 @@ argument_list|(
 name|C_STOP
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1919,7 +1938,7 @@ argument_list|(
 name|C_WERASE
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1939,7 +1958,7 @@ argument_list|(
 name|C_SUSP
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1959,7 +1978,7 @@ argument_list|(
 name|C_DSUSP
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1979,7 +1998,7 @@ argument_list|(
 name|C_REPRINT
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -1999,7 +2018,7 @@ argument_list|(
 name|C_DISCARD
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -2019,7 +2038,7 @@ argument_list|(
 name|C_LNEXT
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -2039,7 +2058,7 @@ argument_list|(
 name|C_STATUS
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -2059,7 +2078,7 @@ argument_list|(
 name|C_PAGE
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -2079,7 +2098,7 @@ argument_list|(
 name|C_PGOFF
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -2099,7 +2118,7 @@ argument_list|(
 name|C_KILL2
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -2119,7 +2138,7 @@ argument_list|(
 name|C_BRK
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -2139,7 +2158,7 @@ argument_list|(
 name|C_MIN
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -2159,7 +2178,7 @@ argument_list|(
 name|C_TIME
 argument_list|)
 block|,
-name|M_CHAR
+name|MD_CHAR
 block|}
 block|,
 endif|#
@@ -2231,72 +2250,60 @@ parameter_list|)
 value|((td)->c_lflag& ICANON)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|tty__getchar
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|termios
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|void
 name|tty__setchar
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|termios
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|speed_t
 name|tty__getspeed
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|termios
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|private
 name|int
 name|tty_setup
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|EditLine
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -2314,18 +2321,29 @@ name|private
 name|int
 name|tty_setup
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|rst
 init|=
 literal|1
 decl_stmt|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_flags
+operator|&
+name|EDIT_DISABLED
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|tty_getty
@@ -2440,7 +2458,7 @@ operator|.
 name|t_ex
 argument_list|)
 expr_stmt|;
-comment|/*      * Reset the tty chars to reasonable defaults      * If they are disabled, then enable them.      */
+comment|/*          * Reset the tty chars to reasonable defaults          * If they are disabled, then enable them.          */
 if|if
 condition|(
 name|rst
@@ -2478,7 +2496,7 @@ name|TS_IO
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*              * Don't affect CMIN and CTIME for the editor mode              */
+comment|/* 	                 * Don't affect CMIN and CTIME for the editor mode 	                 */
 for|for
 control|(
 name|rst
@@ -2588,24 +2606,6 @@ operator|->
 name|el_tty
 operator|.
 name|t_vdisable
-operator|&&
-name|el
-operator|->
-name|el_tty
-operator|.
-name|t_c
-index|[
-name|EX_IO
-index|]
-index|[
-name|rst
-index|]
-operator|!=
-name|el
-operator|->
-name|el_tty
-operator|.
-name|t_vdisable
 condition|)
 name|el
 operator|->
@@ -2651,7 +2651,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_INP
+name|MD_INP
 index|]
 operator|.
 name|t_clrmask
@@ -2673,7 +2673,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_INP
+name|MD_INP
 index|]
 operator|.
 name|t_setmask
@@ -2696,7 +2696,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_OUT
+name|MD_OUT
 index|]
 operator|.
 name|t_clrmask
@@ -2718,7 +2718,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_OUT
+name|MD_OUT
 index|]
 operator|.
 name|t_setmask
@@ -2741,7 +2741,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_CTL
+name|MD_CTL
 index|]
 operator|.
 name|t_clrmask
@@ -2763,7 +2763,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_CTL
+name|MD_CTL
 index|]
 operator|.
 name|t_setmask
@@ -2786,7 +2786,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_LIN
+name|MD_LIN
 index|]
 operator|.
 name|t_clrmask
@@ -2808,7 +2808,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_LIN
+name|MD_LIN
 index|]
 operator|.
 name|t_setmask
@@ -2832,8 +2832,17 @@ name|ED_IO
 index|]
 argument_list|)
 expr_stmt|;
+name|tty_bind_char
+argument_list|(
+name|el
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2843,12 +2852,10 @@ name|protected
 name|int
 name|tty_init
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 name|el
 operator|->
@@ -2905,17 +2912,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tty_setup
 argument_list|(
 name|el
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end tty_init */
-end_comment
 
 begin_comment
 comment|/* tty_end():  *	Restore the tty to its original settings  */
@@ -2927,12 +2932,10 @@ name|void
 comment|/*ARGSUSED*/
 name|tty_end
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* XXX: Maybe reset to an initial state? */
 block|}
@@ -2947,13 +2950,11 @@ name|private
 name|speed_t
 name|tty__getspeed
 parameter_list|(
-name|td
-parameter_list|)
 name|struct
 name|termios
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|speed_t
 name|spd
@@ -2979,14 +2980,12 @@ name|td
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|spd
+operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end tty__getspeed */
-end_comment
 
 begin_comment
 comment|/* tty__getchar():  *	Get the tty characters  */
@@ -2997,20 +2996,16 @@ name|private
 name|void
 name|tty__getchar
 parameter_list|(
-name|td
-parameter_list|,
-name|s
-parameter_list|)
 name|struct
 name|termios
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -3460,20 +3455,16 @@ name|private
 name|void
 name|tty__setchar
 parameter_list|(
-name|td
-parameter_list|,
-name|s
-parameter_list|)
 name|struct
 name|termios
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -3923,17 +3914,13 @@ name|protected
 name|void
 name|tty_bind_char
 parameter_list|(
-name|el
-parameter_list|,
-name|force
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|force
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -3962,6 +3949,7 @@ name|t_ed
 operator|.
 name|c_cc
 decl_stmt|;
+name|unsigned
 name|char
 name|new
 index|[
@@ -3973,22 +3961,25 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+specifier|const
 name|ttymap_t
 modifier|*
 name|tp
 decl_stmt|;
 name|el_action_t
 modifier|*
-name|dmap
-decl_stmt|,
-modifier|*
-name|dalt
-decl_stmt|,
-modifier|*
 name|map
 decl_stmt|,
 modifier|*
 name|alt
+decl_stmt|;
+specifier|const
+name|el_action_t
+modifier|*
+name|dmap
+decl_stmt|,
+modifier|*
+name|dalt
 decl_stmt|;
 name|new
 index|[
@@ -4125,6 +4116,10 @@ name|el
 argument_list|,
 name|map
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|old
 argument_list|)
 expr_stmt|;
@@ -4150,6 +4145,10 @@ name|el
 argument_list|,
 name|map
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|new
 argument_list|)
 expr_stmt|;
@@ -4184,6 +4183,10 @@ name|el
 argument_list|,
 name|alt
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|old
 argument_list|)
 expr_stmt|;
@@ -4209,6 +4212,10 @@ name|el
 argument_list|,
 name|alt
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|new
 argument_list|)
 expr_stmt|;
@@ -4247,12 +4254,10 @@ name|protected
 name|int
 name|tty_rawmode
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4271,6 +4276,19 @@ operator|.
 name|t_mode
 operator|==
 name|QU_IO
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_flags
+operator|&
+name|EDIT_DISABLED
 condition|)
 return|return
 operator|(
@@ -4325,7 +4343,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/*      * We always keep up with the eight bit setting and the speed of the      * tty. But only we only believe changes that are made to cooked mode!      */
+comment|/*          * We always keep up with the eight bit setting and the speed of the          * tty. But only we only believe changes that are made to cooked mode!          */
 name|el
 operator|->
 name|el_tty
@@ -4502,7 +4520,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_CTL
+name|MD_CTL
 index|]
 operator|.
 name|t_clrmask
@@ -4524,7 +4542,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_CTL
+name|MD_CTL
 index|]
 operator|.
 name|t_setmask
@@ -4603,7 +4621,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_LIN
+name|MD_LIN
 index|]
 operator|.
 name|t_clrmask
@@ -4625,7 +4643,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_LIN
+name|MD_LIN
 index|]
 operator|.
 name|t_setmask
@@ -4704,7 +4722,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_INP
+name|MD_INP
 index|]
 operator|.
 name|t_clrmask
@@ -4726,7 +4744,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_INP
+name|MD_INP
 index|]
 operator|.
 name|t_setmask
@@ -4805,7 +4823,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_OUT
+name|MD_OUT
 index|]
 operator|.
 name|t_clrmask
@@ -4827,7 +4845,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_OUT
+name|MD_OUT
 index|]
 operator|.
 name|t_setmask
@@ -4891,7 +4909,7 @@ name|TS_IO
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Check if the user made any changes. 	     * If he did, then propagate the changes to the 	     * edit and execute data structures. 	     */
+comment|/* 		         * Check if the user made any changes. 		         * If he did, then propagate the changes to the 		         * edit and execute data structures. 		         */
 for|for
 control|(
 name|i
@@ -4939,7 +4957,7 @@ operator|!=
 name|C_NCC
 condition|)
 block|{
-comment|/* 		 * Propagate changes only to the unprotected chars 		 * that have been modified just now. 		 */
+comment|/* 				 * Propagate changes only to the unprotected 				 * chars that have been modified just now. 				 */
 for|for
 control|(
 name|i
@@ -4968,7 +4986,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_CHAR
+name|MD_CHAR
 index|]
 operator|.
 name|t_setmask
@@ -5041,7 +5059,7 @@ index|[
 name|ED_IO
 index|]
 index|[
-name|M_CHAR
+name|MD_CHAR
 index|]
 operator|.
 name|t_clrmask
@@ -5124,7 +5142,7 @@ index|[
 name|EX_IO
 index|]
 index|[
-name|M_CHAR
+name|MD_CHAR
 index|]
 operator|.
 name|t_setmask
@@ -5197,7 +5215,7 @@ index|[
 name|EX_IO
 index|]
 index|[
-name|M_CHAR
+name|MD_CHAR
 index|]
 operator|.
 name|t_clrmask
@@ -5293,8 +5311,10 @@ endif|#
 directive|endif
 comment|/* DEBUG_TTY */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|el
@@ -5314,10 +5334,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* end tty_rawmode */
-end_comment
-
-begin_comment
 comment|/* tty_cookedmode():  *	Set the tty back to normal mode  */
 end_comment
 
@@ -5326,12 +5342,10 @@ name|protected
 name|int
 name|tty_cookedmode
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* set tty in normal setup */
 if|if
@@ -5343,6 +5357,19 @@ operator|.
 name|t_mode
 operator|==
 name|EX_IO
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|el
+operator|->
+name|el_flags
+operator|&
+name|EDIT_DISABLED
 condition|)
 return|return
 operator|(
@@ -5391,8 +5418,10 @@ endif|#
 directive|endif
 comment|/* DEBUG_TTY */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|el
@@ -5412,10 +5441,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* end tty_cookedmode */
-end_comment
-
-begin_comment
 comment|/* tty_quotemode():  *	Turn on quote mode  */
 end_comment
 
@@ -5424,12 +5449,10 @@ name|protected
 name|int
 name|tty_quotemode
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5442,7 +5465,9 @@ operator|==
 name|QU_IO
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|el
 operator|->
@@ -5474,7 +5499,7 @@ index|[
 name|QU_IO
 index|]
 index|[
-name|M_INP
+name|MD_INP
 index|]
 operator|.
 name|t_clrmask
@@ -5496,7 +5521,7 @@ index|[
 name|QU_IO
 index|]
 index|[
-name|M_INP
+name|MD_INP
 index|]
 operator|.
 name|t_setmask
@@ -5519,7 +5544,7 @@ index|[
 name|QU_IO
 index|]
 index|[
-name|M_OUT
+name|MD_OUT
 index|]
 operator|.
 name|t_clrmask
@@ -5541,7 +5566,7 @@ index|[
 name|QU_IO
 index|]
 index|[
-name|M_OUT
+name|MD_OUT
 index|]
 operator|.
 name|t_setmask
@@ -5564,7 +5589,7 @@ index|[
 name|QU_IO
 index|]
 index|[
-name|M_CTL
+name|MD_CTL
 index|]
 operator|.
 name|t_clrmask
@@ -5586,7 +5611,7 @@ index|[
 name|QU_IO
 index|]
 index|[
-name|M_CTL
+name|MD_CTL
 index|]
 operator|.
 name|t_setmask
@@ -5609,7 +5634,7 @@ index|[
 name|QU_IO
 index|]
 index|[
-name|M_LIN
+name|MD_LIN
 index|]
 operator|.
 name|t_clrmask
@@ -5631,7 +5656,7 @@ index|[
 name|QU_IO
 index|]
 index|[
-name|M_LIN
+name|MD_LIN
 index|]
 operator|.
 name|t_setmask
@@ -5678,8 +5703,10 @@ endif|#
 directive|endif
 comment|/* DEBUG_TTY */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|el
@@ -5691,14 +5718,12 @@ operator|=
 name|QU_IO
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end tty_quotemode */
-end_comment
 
 begin_comment
 comment|/* tty_noquotemode():  *	Turn off quote mode  */
@@ -5709,12 +5734,10 @@ name|protected
 name|int
 name|tty_noquotemode
 parameter_list|(
-name|el
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5727,7 +5750,9 @@ operator|!=
 name|QU_IO
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -5771,8 +5796,10 @@ endif|#
 directive|endif
 comment|/* DEBUG_TTY */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|el
@@ -5784,7 +5811,9 @@ operator|=
 name|ED_IO
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5799,25 +5828,20 @@ name|int
 comment|/*ARGSUSED*/
 name|tty_stty
 parameter_list|(
-name|el
-parameter_list|,
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
+specifier|const
 name|ttymodes_t
 modifier|*
 name|m
@@ -5853,8 +5877,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|name
 operator|=
@@ -5967,8 +5993,10 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -6265,7 +6293,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 while|while
@@ -6363,8 +6393,10 @@ name|d
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 switch|switch
@@ -6509,14 +6541,12 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end tty_stty */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -6533,19 +6563,15 @@ name|private
 name|void
 name|tty_printchar
 parameter_list|(
-name|el
-parameter_list|,
-name|s
-parameter_list|)
 name|EditLine
 modifier|*
 name|el
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|ttyperm_t
 modifier|*
@@ -6591,7 +6617,7 @@ name|m
 operator|->
 name|m_type
 operator|==
-name|M_CHAR
+name|MD_CHAR
 operator|&&
 name|C_SH
 argument_list|(
