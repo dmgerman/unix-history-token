@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.16 (Berkeley) %G%"
+literal|"@(#)ls.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -656,7 +656,7 @@ name|f_recursive
 operator|=
 literal|0
 expr_stmt|;
-comment|/* if will need to stat files */
+comment|/* if need to stat files */
 name|needstat
 operator|=
 name|f_longform
@@ -943,6 +943,13 @@ decl_stmt|;
 name|char
 modifier|*
 name|names
+decl_stmt|,
+name|top
+index|[
+name|MAXPATHLEN
+operator|+
+literal|1
+index|]
 decl_stmt|;
 name|dstats
 operator|=
@@ -1243,6 +1250,15 @@ name|dircnt
 operator|>
 literal|1
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|getwd
+argument_list|(
+name|top
+argument_list|)
+expr_stmt|;
 name|qsort
 argument_list|(
 operator|(
@@ -1261,6 +1277,7 @@ argument_list|,
 name|sortfcn
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|cnt
@@ -1272,7 +1289,7 @@ operator|<
 name|dircnt
 condition|;
 operator|++
-name|cnt
+name|dstats
 control|)
 block|{
 for|for
@@ -1301,7 +1318,6 @@ empty_stmt|;
 name|ls_dir
 argument_list|(
 name|dstats
-operator|++
 argument_list|,
 name|cnt
 argument_list|,
@@ -1312,6 +1328,42 @@ operator|>
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|++
+name|cnt
+operator|<
+name|dircnt
+operator|&&
+name|chdir
+argument_list|(
+name|top
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ls: %s: %s\n"
+argument_list|,
+name|top
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 ifdef|#
