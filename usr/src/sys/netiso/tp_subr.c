@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2420,11 +2420,6 @@ name|ACK_STRAT_EACH
 decl_stmt|;
 comment|/* 0--> delay acks until full window */
 comment|/* 1--> ack each tpdu */
-name|int
-name|newrec
-init|=
-literal|0
-decl_stmt|;
 ifndef|#
 directive|ifndef
 name|lint
@@ -2617,19 +2612,6 @@ operator|.
 name|e_data
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|newrec
-operator|=
-name|E
-operator|.
-name|e_eot
-condition|)
-comment|/* ASSIGNMENT */
-name|ack_reason
-operator||=
-name|ACK_EOT
-expr_stmt|;
 name|SEQ_INC
 argument_list|(
 name|tpcb
