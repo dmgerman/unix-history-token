@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_acpica.h"
+file|"opt_acpi.h"
 end_include
 
 begin_if
@@ -45,14 +45,14 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|DEV_ACPICA
+name|DEV_ACPI
 argument_list|)
 end_if
 
 begin_error
 error|#
 directive|error
-literal|"You need the SKI option and/or the acpica device"
+literal|"You need the SKI option and/or the acpi device"
 end_error
 
 begin_endif
@@ -1118,7 +1118,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEV_ACPICA
+name|DEV_ACPI
 comment|/* 		 * Traverse the MADT to discover IOSAPIC and Local SAPIC 		 * information. 		 */
 name|ia64_probe_sapics
 argument_list|()
@@ -1131,7 +1131,7 @@ directive|else
 comment|/* 		 * It is an error to boot a SKI-only kernel on hardware. 		 */
 name|panic
 argument_list|(
-literal|"Mandatory 'device acpica' is missing"
+literal|"Mandatory 'device acpi' is missing"
 argument_list|)
 expr_stmt|;
 endif|#
