@@ -104,12 +104,6 @@ directive|include
 file|<sys/proc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -2144,13 +2138,13 @@ name|id
 operator|->
 name|bInterfaceClass
 operator|!=
-name|UICLASS_AUDIO
+name|UCLASS_AUDIO
 operator|||
 name|id
 operator|->
 name|bInterfaceSubClass
 operator|!=
-name|UISUBCLASS_AUDIOCONTROL
+name|USUBCLASS_AUDIOCONTROL
 operator|||
 operator|(
 name|usbd_get_quirks
@@ -3404,7 +3398,7 @@ name|d
 operator|->
 name|bInterfaceClass
 operator|==
-name|UICLASS_AUDIO
+name|UCLASS_AUDIO
 operator|&&
 name|d
 operator|->
@@ -7396,7 +7390,7 @@ argument_list|,
 operator|&
 name|offs
 argument_list|,
-name|UISUBCLASS_AUDIOSTREAM
+name|USUBCLASS_AUDIOSTREAM
 argument_list|)
 expr_stmt|;
 if|if
@@ -7536,7 +7530,7 @@ argument_list|,
 operator|&
 name|offs
 argument_list|,
-name|UISUBCLASS_AUDIOSTREAM
+name|USUBCLASS_AUDIOSTREAM
 argument_list|)
 expr_stmt|;
 if|if
@@ -7718,7 +7712,7 @@ argument_list|,
 operator|&
 name|offs
 argument_list|,
-name|UISUBCLASS_AUDIOCONTROL
+name|USUBCLASS_AUDIOCONTROL
 argument_list|)
 expr_stmt|;
 if|if
