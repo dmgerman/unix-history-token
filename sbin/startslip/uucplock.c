@@ -524,7 +524,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%10ld\n"
+literal|"%10d\n"
 argument_list|,
 name|pid
 argument_list|)
