@@ -438,6 +438,7 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|pecoff_dos_filehdr
 modifier|*
@@ -1088,10 +1089,13 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"offset=%x vmaddr=%x filsz=%x memsz=%x\n"
+literal|"offset=%x vmaddr=%lx filsz=%x memsz=%x\n"
 operator|,
 name|offset
 operator|,
+operator|(
+name|long
+operator|)
 name|vmaddr
 operator|,
 name|filsz
@@ -3232,6 +3236,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+specifier|const
 name|struct
 name|pecoff_dos_filehdr
 modifier|*
@@ -3428,12 +3433,14 @@ modifier|*
 name|imgp
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|pecoff_dos_filehdr
 modifier|*
 name|dp
 init|=
 operator|(
+specifier|const
 expr|struct
 name|pecoff_dos_filehdr
 operator|*
