@@ -265,15 +265,6 @@ operator|!=
 name|NODEV
 condition|)
 return|return;
-name|g_trace
-argument_list|(
-name|G_T_TOPOLOGY
-argument_list|,
-literal|"g_dev_clone(%s)"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 name|g_waitidle
 argument_list|()
 expr_stmt|;
