@@ -8708,6 +8708,23 @@ block|}
 elseif|else
 if|if
 condition|(
+name|arg
+operator|->
+name|argc
+operator|!=
+name|arg
+operator|->
+name|argn
+operator|+
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+elseif|else
+if|if
+condition|(
 name|strcasecmp
 argument_list|(
 name|port
@@ -8772,7 +8789,7 @@ name|SERVER_FAILED
 case|:
 name|log_Printf
 argument_list|(
-name|LogPHASE
+name|LogWARN
 argument_list|,
 literal|"Failed to reopen server port\n"
 argument_list|)
@@ -8785,7 +8802,7 @@ name|SERVER_UNSET
 case|:
 name|log_Printf
 argument_list|(
-name|LogPHASE
+name|LogWARN
 argument_list|,
 literal|"Cannot reopen unset server socket\n"
 argument_list|)
