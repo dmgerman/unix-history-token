@@ -964,7 +964,7 @@ name|gcg
 operator|.
 name|flag
 operator|=
-literal|0
+name|GCFG_CREATE
 expr_stmt|;
 name|gcg
 operator|.
@@ -1211,7 +1211,7 @@ name|gcg
 operator|.
 name|flag
 operator|=
-literal|1
+name|GCFG_DISMANTLE
 expr_stmt|;
 name|i
 operator|=
@@ -4052,8 +4052,7 @@ operator|.
 name|consumer
 operator|=
 operator|(
-expr|struct
-name|g_consumer
+name|void
 operator|*
 operator|)
 operator|&
