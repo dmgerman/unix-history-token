@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)getpwent.c	4.1 (Berkeley) %G% */
+comment|/* @(#)getpwent.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ndbm.h>
 end_include
 
 begin_decl_stmt
@@ -62,6 +68,21 @@ specifier|static
 name|struct
 name|passwd
 name|passwd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|DBM
+modifier|*
+name|_pw_db
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_pw_stayopen
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +139,35 @@ expr_stmt|;
 name|pwf
 operator|=
 name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|_pw_db
+operator|!=
+operator|(
+name|DBM
+operator|*
+operator|)
+literal|0
+condition|)
+block|{
+name|ndbmclose
+argument_list|(
+name|_pw_db
+argument_list|)
+expr_stmt|;
+name|_pw_db
+operator|=
+operator|(
+name|DBM
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+name|_pw_stayopen
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
