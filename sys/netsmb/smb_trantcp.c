@@ -534,6 +534,15 @@ operator|&
 name|sellock
 argument_list|)
 expr_stmt|;
+comment|/* XXX: Should be done when the thread is initialized. */
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_selq
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|nb_poll
