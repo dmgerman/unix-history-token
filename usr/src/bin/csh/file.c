@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)file.c	5.3 (Berkeley) %G%"
+literal|"@(#)file.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,18 +105,6 @@ name|COMMAND
 typedef|;
 end_typedef
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|tchars
-name|tchars
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* INT, QUIT, XON, XOFF, EOF, BRK */
-end_comment
-
 begin_comment
 comment|/*  * Put this here so the binary can be patched with adb to enable file  * completion by default.  Filec controls completion, nobeep controls  * ringing the terminal bell on incomplete expansions.  */
 end_comment
@@ -146,19 +134,12 @@ name|struct
 name|sgttyb
 name|sgtty
 decl_stmt|;
-name|int
-name|omask
+specifier|static
+name|struct
+name|tchars
+name|tchars
 decl_stmt|;
-name|omask
-operator|=
-name|sigblock
-argument_list|(
-name|sigmask
-argument_list|(
-name|SIGINT
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* INT, QUIT, XON, XOFF, EOF, BRK */
 if|if
 condition|(
 name|on
@@ -204,7 +185,7 @@ operator|&
 name|tchars
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This is a useful feature in it's own right... 		 * The shell makes sure that the tty is not in some weird state 		 * and fixes it if it is.  But it should be noted that the 		 * tenex routine will not work correctly in CBREAK or RAW mode 		 * so this code below is, therefore, mandatory. 		 */
+comment|/* 		 * This must be done after every command: if 		 * the tty gets into raw or cbreak mode the user 		 * can't even type 'reset'. 		 */
 operator|(
 name|void
 operator|)
@@ -292,14 +273,6 @@ name|tchars
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|sigsetmask
-argument_list|(
-name|omask
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -552,6 +525,7 @@ comment|/*  * Concatenate src onto tail of des.  * Des is a string whose maximum
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|catn
 argument_list|(
 name|des
@@ -649,6 +623,7 @@ comment|/*  * Like strncpy but always leave room for trailing \0  * and always n
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|copyn
 argument_list|(
 name|des
@@ -1063,6 +1038,7 @@ comment|/*  * Expand file name with possible tilde usage  *	~person/mumble  * ex
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|tilde
@@ -1450,6 +1426,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|getentry
@@ -2146,7 +2123,8 @@ begin_comment
 comment|/*  * Object: extend what user typed up to an ambiguity.  * Algorithm:  * On first match, copy full entry (assume it'll be the only match)   * On subsequent matches, shorten extended_name to the first  * character mismatch between extended_name and entry.  * If we shorten it back to the prefix length, stop searching.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|recognize
 argument_list|(
 argument|extended_name
@@ -2157,17 +2135,14 @@ argument|name_length
 argument_list|,
 argument|numitems
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|extended_name
-decl_stmt|,
-modifier|*
+operator|,
+operator|*
 name|entry
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -2261,7 +2236,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Return true if check items initial chars in template  * This differs from PWB imatch in that if check is null  * it items anything  */
+comment|/*  * Return true if check matches initial chars in template.  * This differs from PWB imatch in that if check is null  * it matches anything.  */
 end_comment
 
 begin_expr_stmt
