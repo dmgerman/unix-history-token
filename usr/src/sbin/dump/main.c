@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.23 (Berkeley) %G%"
+literal|"@(#)main.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1233,7 +1233,7 @@ name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|sighup
+name|sig
 argument_list|)
 expr_stmt|;
 if|if
@@ -1251,7 +1251,7 @@ name|signal
 argument_list|(
 name|SIGTRAP
 argument_list|,
-name|sigtrap
+name|sig
 argument_list|)
 expr_stmt|;
 if|if
@@ -1269,7 +1269,7 @@ name|signal
 argument_list|(
 name|SIGFPE
 argument_list|,
-name|sigfpe
+name|sig
 argument_list|)
 expr_stmt|;
 if|if
@@ -1287,7 +1287,7 @@ name|signal
 argument_list|(
 name|SIGBUS
 argument_list|,
-name|sigbus
+name|sig
 argument_list|)
 expr_stmt|;
 if|if
@@ -1305,7 +1305,7 @@ name|signal
 argument_list|(
 name|SIGSEGV
 argument_list|,
-name|sigsegv
+name|sig
 argument_list|)
 expr_stmt|;
 if|if
@@ -1323,7 +1323,7 @@ name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|sigterm
+name|sig
 argument_list|)
 expr_stmt|;
 if|if
@@ -2347,16 +2347,44 @@ end_function
 
 begin_function
 name|void
-name|sigAbort
-parameter_list|()
+name|sig
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
+switch|switch
+condition|(
+name|signo
+condition|)
+block|{
+case|case
+name|SIGALRM
+case|:
+case|case
+name|SIGBUS
+case|:
+case|case
+name|SIGFPE
+case|:
+case|case
+name|SIGHUP
+case|:
+case|case
+name|SIGTERM
+case|:
+case|case
+name|SIGTRAP
+case|:
 if|if
 condition|(
 name|pipeout
 condition|)
 name|quit
 argument_list|(
-literal|"Unknown signal, cannot recover\n"
+literal|"Signal on pipe: cannot recover\n"
 argument_list|)
 expr_stmt|;
 name|msg
@@ -2391,118 +2419,37 @@ argument_list|(
 name|X_REWRITE
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|sighup
-parameter_list|()
-block|{
+comment|/* NOTREACHED */
+case|case
+name|SIGSEGV
+case|:
 name|msg
 argument_list|(
-literal|"SIGHUP()  try rewriting\n"
+literal|"SIGSEGV: ABORTING!\n"
 argument_list|)
 expr_stmt|;
-name|sigAbort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
+operator|(
 name|void
-name|sigtrap
-parameter_list|()
-block|{
-name|msg
+operator|)
+name|signal
 argument_list|(
-literal|"SIGTRAP()  try rewriting\n"
+name|SIGSEGV
+argument_list|,
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
-name|sigAbort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
+operator|(
 name|void
-name|sigfpe
-parameter_list|()
-block|{
-name|msg
+operator|)
+name|kill
 argument_list|(
-literal|"SIGFPE()  try rewriting\n"
+literal|0
+argument_list|,
+name|SIGSEGV
 argument_list|)
 expr_stmt|;
-name|sigAbort
-argument_list|()
-expr_stmt|;
+comment|/* NOTREACHED */
 block|}
-end_function
-
-begin_function
-name|void
-name|sigbus
-parameter_list|()
-block|{
-name|msg
-argument_list|(
-literal|"SIGBUS()  try rewriting\n"
-argument_list|)
-expr_stmt|;
-name|sigAbort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|sigsegv
-parameter_list|()
-block|{
-name|msg
-argument_list|(
-literal|"SIGSEGV()  ABORTING!\n"
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|sigalrm
-parameter_list|()
-block|{
-name|msg
-argument_list|(
-literal|"SIGALRM()  try rewriting\n"
-argument_list|)
-expr_stmt|;
-name|sigAbort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|sigterm
-parameter_list|()
-block|{
-name|msg
-argument_list|(
-literal|"SIGTERM()  try rewriting\n"
-argument_list|)
-expr_stmt|;
-name|sigAbort
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 

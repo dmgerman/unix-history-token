@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.24 (Berkeley) %G%"
+literal|"@(#)tape.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -937,7 +937,12 @@ end_decl_stmt
 begin_function
 name|void
 name|tperror
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -981,7 +986,9 @@ literal|"Do you want to restart?"
 argument_list|)
 condition|)
 name|dumpabort
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|msg
 argument_list|(
@@ -1014,7 +1021,12 @@ end_function
 begin_function
 name|void
 name|sigpipe
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|quit
 argument_list|(
@@ -1184,7 +1196,9 @@ literal|"  DUMP: error reading command pipe in master"
 argument_list|)
 expr_stmt|;
 name|dumpabort
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|slp
@@ -1265,7 +1279,9 @@ literal|"  DUMP: error reading command pipe in master"
 argument_list|)
 expr_stmt|;
 name|dumpabort
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|slaves
@@ -1496,7 +1512,9 @@ literal|"  DUMP: error reading command pipe in master"
 argument_list|)
 expr_stmt|;
 name|dumpabort
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|slaves
@@ -1698,7 +1716,9 @@ argument_list|)
 condition|)
 block|{
 name|dumpabort
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
@@ -2138,7 +2158,9 @@ literal|"  DUMP: error writing command pipe"
 argument_list|)
 expr_stmt|;
 name|dumpabort
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|slp
@@ -2385,7 +2407,9 @@ literal|"  DUMP: error reading command pipe in master"
 argument_list|)
 expr_stmt|;
 name|dumpabort
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|slp
@@ -2881,7 +2905,9 @@ literal|"Do you want to retry the open?"
 argument_list|)
 condition|)
 name|dumpabort
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|enslave
@@ -2979,7 +3005,12 @@ end_function
 begin_function
 name|void
 name|dumpabort
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -3066,7 +3097,12 @@ end_comment
 begin_function
 name|void
 name|proceed
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 if|if
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optr.c	5.13 (Berkeley) %G%"
+literal|"@(#)optr.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,7 +437,7 @@ name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
-name|sigalrm
+name|sig
 argument_list|)
 operator|==
 name|SIG_IGN
@@ -577,7 +577,12 @@ end_comment
 begin_function
 name|void
 name|interrupt
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|msg
 argument_list|(
@@ -592,7 +597,9 @@ literal|"Do you want to abort dump?"
 argument_list|)
 condition|)
 name|dumpabort
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1562,7 +1569,9 @@ name|stderr
 argument_list|)
 expr_stmt|;
 name|dumpabort
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	5.19 (Berkeley) %G%"
+literal|"@(#)traverse.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2578,7 +2578,9 @@ argument_list|)
 condition|)
 block|{
 name|dumpabort
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
