@@ -2978,7 +2978,7 @@ name|STROUT
 parameter_list|(
 name|MAX
 parameter_list|)
-value|{ int i; \ 			TRUNC(sizeof(int32_t)); \ 			i = (int) ntohl(*((int *) bp)); \ 			bp += sizeof(int32_t); \ 			TRUNC(i); \ 			strncpy(s, bp, min(MAX, i)); \ 			s[i] = '\0'; \ 			printf(" \"%s\"", s); \ 			bp += ((i + sizeof(int32_t) - 1) / sizeof(int32_t)) * sizeof(int32_t); \ 		}
+value|{ unsigned int i; \ 			TRUNC(sizeof(int32_t)); \ 			i = ntohl(*((int *) bp)); \ 			if (i> MAX) \ 				goto trunc; \ 			bp += sizeof(int32_t); \ 			printf(" \""); \ 			if (fn_printn(bp, i, snapend)) \ 				goto trunc; \ 			printf("\""); \ 			bp += ((i + sizeof(int32_t) - 1) / sizeof(int32_t)) * sizeof(int32_t); \ 		}
 end_define
 
 begin_define
@@ -3042,7 +3042,7 @@ name|VECOUT
 parameter_list|(
 name|MAX
 parameter_list|)
-value|{ char *sp; \ 			int k; \ 			TRUNC(MAX * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< MAX; k++) { \ 				*sp++ = (char) ntohl(*((int *) bp)); \ 				bp += sizeof(int32_t); \ 			} \ 			s[MAX] = '\0'; \ 			printf(" \"%s\"", s); \ 		}
+value|{ char *sp; \ 			int k; \ 			TRUNC(MAX * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< MAX; k++) { \ 				*sp++ = (char) ntohl(*((int *) bp)); \ 				bp += sizeof(int32_t); \ 			} \ 			s[MAX] = '\0'; \ 			printf(" \""); \ 			fn_print(s, NULL); \ 			printf("\""); \ 		}
 end_define
 
 begin_comment
@@ -4004,9 +4004,19 @@ name|n
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" +{%s "
-argument_list|,
+literal|" +{"
+argument_list|)
+expr_stmt|;
+name|fn_print
+argument_list|(
 name|user
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" "
 argument_list|)
 expr_stmt|;
 name|ACLOUT
@@ -4075,9 +4085,19 @@ name|n
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" -{%s "
-argument_list|,
+literal|" -{"
+argument_list|)
+expr_stmt|;
+name|fn_print
+argument_list|(
 name|user
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" "
 argument_list|)
 expr_stmt|;
 name|ACLOUT
