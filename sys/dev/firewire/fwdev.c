@@ -3128,7 +3128,6 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|&
 name|xfer
 operator|->
 name|send
