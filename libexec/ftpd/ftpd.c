@@ -81,13 +81,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/mman.h>
 end_include
 
 begin_include
@@ -99,13 +99,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mman.h>
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_include

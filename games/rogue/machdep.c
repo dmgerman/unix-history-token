@@ -85,6 +85,12 @@ directive|include
 file|<pwd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
