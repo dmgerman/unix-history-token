@@ -33,7 +33,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.9
+literal|4.10
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.9
+literal|4.10
 operator|%
 name|G
 operator|%
@@ -389,12 +389,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_decl_stmt
 name|bool
 name|IsWiz
@@ -417,12 +411,6 @@ end_decl_stmt
 begin_comment
 comment|/* the wizard word to compare against */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_decl_stmt
 name|bool
