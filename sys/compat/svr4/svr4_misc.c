@@ -3722,13 +3722,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|swap_pager_full
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
