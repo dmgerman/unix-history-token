@@ -176,7 +176,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	c - namecache mutex  *	f - freelist mutex  *	i - interlock  *	m - mntvnodes mutex  *	p - pollinfo lock  *	s - spechash mutex  *	S - syncer mutex  *	u - Only a reference to the vnode is needed to read.  *	v - vnode lock  *  * XXX Not all fields are locked yet and some fields that are marked are not  * locked consistently.  This is a work in progress.  */
+comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	c - namecache mutex  *	f - freelist mutex  *	i - interlock  *	m - mntvnodes mutex  *	p - pollinfo lock  *	s - spechash mutex  *	S - syncer mutex  *	u - Only a reference to the vnode is needed to read.  *	v - vnode lock  *  * Vnodes may be found on many lists.  The general way to deal with operating  * on a vnode that is on a list is:  *	1) Lock the list and find the vnode.  *	2) Lock interlock so that the vnode does not go away.  *	3) Unlock the list to avoid lock order reversals.  *	4) vget with LK_INTERLOCK and check for ENOENT, or  *	5) Check for XLOCK if the vnode lock is not required.  *	6) Perform your operation, then vput().  *  * XXX Not all fields are locked yet and some fields that are marked are not  * locked consistently.  This is a work in progress.  Requires Giant!  */
 end_comment
 
 begin_struct
