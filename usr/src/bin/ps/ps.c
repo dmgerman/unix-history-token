@@ -3109,6 +3109,11 @@ operator|=
 name|pid
 expr_stmt|;
 block|}
+else|else
+name|what
+operator|=
+name|KINFO_PROC_ALL
+expr_stmt|;
 comment|/* 	 * select procs 	 */
 if|if
 condition|(
@@ -5161,7 +5166,7 @@ name|pgtok
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)/(1024/NBPG))
+value|(((a)*NBPG)/1024)
 end_define
 
 begin_macro
