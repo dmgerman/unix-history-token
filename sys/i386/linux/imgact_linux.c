@@ -745,10 +745,16 @@ name|u_long
 operator|)
 name|vmaddr
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|a_out
 operator|->
 name|a_text
 operator|+
+operator|(
+name|u_long
+operator|)
 name|a_out
 operator|->
 name|a_data
