@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  *	$NetBSD: ohci.c,v 1.141 2003/09/10 20:08:29 mycroft Exp $  */
+comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  *	$NetBSD: ohci.c,v 1.141 2003/09/10 20:08:29 mycroft Exp $  *	$NetBSD: ohci.c,v 1.142 2003/10/11 03:04:26 toshii Exp $  */
 end_comment
 
 begin_include
@@ -5929,6 +5929,9 @@ name|sc
 argument_list|,
 name|OHCI_INTERRUPT_STATUS
 argument_list|)
+operator|&
+operator|~
+name|OHCI_WDH
 expr_stmt|;
 if|if
 condition|(
