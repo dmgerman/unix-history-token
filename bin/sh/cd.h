@@ -4,7 +4,8 @@ comment|/*-  * Copyright (c) 1995  *	The Regents of the University of California
 end_comment
 
 begin_decl_stmt
-name|void
+name|char
+modifier|*
 name|getpwd
 name|__P
 argument_list|(
