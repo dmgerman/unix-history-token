@@ -4522,7 +4522,7 @@ operator|.
 name|fs_bsize
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read original cylinder group from disk, and make a copy. 	 */
+comment|/* 	 * Read original cylinder group from disk, and make a copy. 	 * XXX	If Nflag is set in some very rare cases we now miss 	 *	some changes done in updjcg by reading the unmodified 	 *	block from disk. 	 */
 name|rdfs
 argument_list|(
 name|fsbtodb
@@ -5321,6 +5321,21 @@ name|fscs
 operator|+
 name|ncscg
 expr_stmt|;
+comment|/* 		 * If Nflag is specified, we would now read random data instead 		 * of an empty cg structure from disk. So we can't simulate that 		 * part for now. 		 */
+if|if
+condition|(
+name|Nflag
+condition|)
+block|{
+name|DBG_PRINT0
+argument_list|(
+literal|"nscg update skipped\n"
+argument_list|)
+expr_stmt|;
+name|DBG_LEAVE
+expr_stmt|;
+return|return;
+block|}
 comment|/* 		 * Read the future cylinder group containing the cylinder 		 * summary from disk, and make a copy. 		 */
 name|rdfs
 argument_list|(
