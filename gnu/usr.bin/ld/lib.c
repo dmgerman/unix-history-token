@@ -2136,7 +2136,7 @@ condition|)
 comment|/* Weak symbols don't pull archive members */
 continue|continue;
 block|}
-comment|/*  			 * If the shared object referenced is undefined  			 * then note is as a common.  			 */
+comment|/* 			 * At this point, either the new symbol is a common 			 * and the shared object reference is undefined -- 			 * in which case we note the common -- or the shared 			 * object reference has a definition -- in which case 			 * the library member takes precedence. 			 */
 if|if
 condition|(
 name|iscommon
@@ -2176,7 +2176,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|" uneeded due to shared lib ref %s (%d)\n"
+literal|" needed due to shared lib ref %s (%d)\n"
 argument_list|,
 name|sp
 operator|->
@@ -2197,9 +2197,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * The shared object reference has a definition.   			 * Since it was previously defined in a shlib, it 			 * takes precedence over the new definition in the 			 * library member. 			 */
 return|return
-literal|0
+literal|1
 return|;
 block|}
 block|}
