@@ -1779,7 +1779,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	this struct describes state of controller with 2 b channels  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	this struct describes state of controller with MAX_BCHAN b channels  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_typedef
@@ -1799,6 +1799,11 @@ name|int
 name|protocol
 decl_stmt|;
 comment|/* ISDN D-channel protocol 	*/
+name|char
+modifier|*
+name|firmware
+decl_stmt|;
+comment|/* loadable fimrware file name 	*/
 name|int
 name|state
 decl_stmt|;
@@ -1813,14 +1818,17 @@ directive|define
 name|CTRL_UP
 value|1
 comment|/* controller may be used	*/
+define|#
+directive|define
+name|MAX_BCHAN
+value|30
 name|int
-name|stateb1
+name|stateb
+index|[
+name|MAX_BCHAN
+index|]
 decl_stmt|;
-comment|/* B-channel 1 			*/
-name|int
-name|stateb2
-decl_stmt|;
-comment|/* B-channel 2			*/
+comment|/* b channel state */
 define|#
 directive|define
 name|CHAN_IDLE
@@ -1832,14 +1840,13 @@ name|CHAN_RUN
 value|1
 comment|/* channel is occupied		*/
 name|int
+name|nbch
+decl_stmt|;
+comment|/* number of b channels */
+name|int
 name|freechans
 decl_stmt|;
 comment|/* number of unused channels	*/
-define|#
-directive|define
-name|MAX_CHANCTRL
-value|2
-comment|/* free channels per controller	*/
 name|int
 name|tei
 decl_stmt|;

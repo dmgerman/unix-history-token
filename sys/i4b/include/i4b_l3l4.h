@@ -95,8 +95,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAX_BCHAN
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
 name|N_CALL_DESC
-value|(MAX_CONTROLLERS*2)
+value|(MAX_CONTROLLERS*MAX_BCHAN)
 end_define
 
 begin_comment
@@ -999,9 +1006,13 @@ directive|define
 name|DL_UP
 value|1
 name|int
+name|nbch
+decl_stmt|;
+comment|/* number of b channels */
+name|int
 name|bch_state
 index|[
-literal|2
+name|MAX_BCHAN
 index|]
 decl_stmt|;
 comment|/* states of the b channels */
