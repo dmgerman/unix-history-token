@@ -915,6 +915,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ste
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"if_ste parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -925,11 +943,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_hw
+name|_hw_ste
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ste_rxsyncs
+name|rxsyncs
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
