@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: boot0cfg.c,v 1.2 1999/02/22 09:36:54 rnordier Exp $"
+literal|"$Id: boot0cfg.c,v 1.3 1999/02/26 14:57:17 rnordier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -377,6 +377,8 @@ decl_stmt|;
 name|int
 name|d_arg
 decl_stmt|,
+name|m_arg
+decl_stmt|,
 name|t_arg
 decl_stmt|;
 name|int
@@ -413,6 +415,8 @@ literal|0
 expr_stmt|;
 name|d_arg
 operator|=
+name|m_arg
+operator|=
 name|t_arg
 operator|=
 operator|-
@@ -437,7 +441,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Bvb:d:f:o:t:"
+literal|"Bvb:d:f:m:o:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -496,6 +500,23 @@ case|:
 name|fpath
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+name|m_arg
+operator|=
+name|argtoi
+argument_list|(
+name|optarg
+argument_list|,
+literal|0
+argument_list|,
+literal|0xf
+argument_list|,
+literal|'m'
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -875,6 +896,29 @@ name|d_arg
 expr_stmt|;
 if|if
 condition|(
+name|m_arg
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|buf
+index|[
+name|OFF_FLAGS
+index|]
+operator|&=
+literal|0xf0
+expr_stmt|;
+name|buf
+index|[
+name|OFF_FLAGS
+index|]
+operator||=
+name|m_arg
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|o_flag
 condition|)
 block|{
@@ -1128,12 +1172,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"drive=0x%x  options="
+literal|"drive=0x%x  mask=0x%x  options="
 argument_list|,
 name|buf
 index|[
 name|OFF_DRIVE
 index|]
+argument_list|,
+name|buf
+index|[
+name|OFF_FLAGS
+index|]
+operator|&
+literal|0xf
 argument_list|)
 expr_stmt|;
 for|for
@@ -1618,9 +1669,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: boot0cfg [-Bv] [-b boot0] [-d drive] [-f file] [-o options]"
+literal|"usage: boot0cfg [-Bv] [-b boot0] [-d drive] [-f file] [-m mask]"
 argument_list|,
-literal|"                [-t ticks] disk"
+literal|"                [-o options] [-t ticks] disk"
 argument_list|)
 expr_stmt|;
 name|exit
