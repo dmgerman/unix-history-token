@@ -224,6 +224,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_VISION
+value|0x0553
+end_define
+
+begin_comment
+comment|/* Vision */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_ATEN
 value|0x0557
 end_define
@@ -687,6 +698,21 @@ end_define
 
 begin_comment
 comment|/* J-6502 speakers */
+end_comment
+
+begin_comment
+comment|/* Vision products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_VISION_CAMERA
+value|0x0002
+end_define
+
+begin_comment
+comment|/* VC6452V002 Camera */
 end_comment
 
 begin_comment

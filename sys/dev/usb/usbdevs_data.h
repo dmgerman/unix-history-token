@@ -283,6 +283,18 @@ literal|"J-6502 speakers"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_VISION
+block|,
+name|USB_PRODUCT_VISION_CAMERA
+block|,
+literal|0
+block|,
+literal|"Vision"
+block|,
+literal|"VC6452V002 Camera"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_ATEN
 block|,
 name|USB_PRODUCT_ATEN_UC1284
@@ -686,6 +698,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Jazz"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_VISION
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Vision"
 block|,
 name|NULL
 block|, 	}
