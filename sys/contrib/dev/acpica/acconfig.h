@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -39,7 +39,18 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20010920
+value|0x20011018
+end_define
+
+begin_comment
+comment|/* Version of ACPI supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CA_SUPPORT_LEVEL
+value|2
 end_define
 
 begin_comment
