@@ -936,6 +936,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ORDER
+end_ifdef
+
 begin_comment
 comment|/* sorting orders. first is default */
 end_comment
@@ -961,6 +967,11 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -1302,12 +1313,17 @@ name|swap_names
 operator|=
 name|swapnames
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ORDER
 name|statics
 operator|->
 name|order_names
 operator|=
 name|ordernames
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* all done! */
 return|return
 operator|(
@@ -3160,54 +3176,7 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* compare routines */
-end_comment
-
-begin_decl_stmt
-name|int
-name|compare_cpu
-argument_list|()
-decl_stmt|,
-name|compare_size
-argument_list|()
-decl_stmt|,
-name|compare_res
-argument_list|()
-decl_stmt|,
-name|compare_time
-argument_list|()
-decl_stmt|,
-name|compare_prio
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|proc_compares
-index|[]
-function_decl|)
-parameter_list|()
-init|=
-block|{
-name|compare_cpu
-operator|,
-function_decl|compare_size
-operator|,
-function_decl|compare_res
-operator|,
-function_decl|compare_time
-operator|,
-function_decl|compare_prio
-operator|,
-function_decl|NULL
-end_function_decl
-
 begin_define
-unit|};
 define|#
 directive|define
 name|ORDERKEY_PCTCPU
@@ -3261,12 +3230,25 @@ end_comment
 
 begin_function
 name|int
+ifdef|#
+directive|ifdef
+name|ORDER
 name|compare_cpu
 parameter_list|(
 name|pp1
 parameter_list|,
 name|pp2
 parameter_list|)
+else|#
+directive|else
+function|proc_compare
+parameter_list|(
+name|pp1
+parameter_list|,
+name|pp2
+parameter_list|)
+endif|#
+directive|endif
 name|struct
 name|proc
 modifier|*
@@ -3338,7 +3320,57 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ORDER
+end_ifdef
+
 begin_comment
+comment|/* compare routines */
+end_comment
+
+begin_decl_stmt
+name|int
+name|compare_size
+argument_list|()
+decl_stmt|,
+name|compare_res
+argument_list|()
+decl_stmt|,
+name|compare_time
+argument_list|()
+decl_stmt|,
+name|compare_prio
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|proc_compares
+index|[]
+function_decl|)
+parameter_list|()
+init|=
+block|{
+name|compare_cpu
+operator|,
+function_decl|compare_size
+operator|,
+function_decl|compare_res
+operator|,
+function_decl|compare_time
+operator|,
+function_decl|compare_prio
+operator|,
+function_decl|NULL
+end_function_decl
+
+begin_comment
+unit|};
 comment|/* compare_size - the comparison function for sorting by total memory usage */
 end_comment
 
@@ -3669,6 +3701,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * proc_owner(pid) - returns the uid that owns process "pid", or -1 if  *		the process does not exist.  *		It is EXTREMLY IMPORTANT that this function work correctly.  *		If top runs setuid root (as in SVR4), then this function  *		is the only thing that stands in the way of a serious  *		security problem.  It validates requests for the "kill"  *		and "renice" commands.  */
