@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.6 (Berkeley) %G%"
+literal|"@(#)parse.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -763,6 +763,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Warning: "
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 name|fmt
@@ -4015,52 +4020,52 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *---------------------------------------------------------------------  * ParseAddCmd  --  *	Lst_ForEach function to add a command line to all targets  *  * Results:  *	Always 0  *  * Side Effects:  *	A new element is added to the commands list of the node.  *---------------------------------------------------------------------  */
+comment|/*-  * ParseAddCmd  --  *	Lst_ForEach function to add a command line to all targets  *  * Results:  *	Always 0  *  * Side Effects:  *	A new element is added to the commands list of the node.  */
 end_comment
 
-begin_function
+begin_expr_stmt
 specifier|static
-name|int
 name|ParseAddCmd
-parameter_list|(
-name|gn
-parameter_list|,
-name|cmd
-parameter_list|)
+argument_list|(
+argument|gn
+argument_list|,
+argument|cmd
+argument_list|)
 name|GNode
-modifier|*
+operator|*
 name|gn
-decl_stmt|;
-comment|/* the node to which the command is to be 				 * added */
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* the node to which the command is to be added */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|cmd
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* the command to add */
+end_comment
+
+begin_block
 block|{
+comment|/* if target already supplied, ignore commands */
 if|if
 condition|(
+operator|!
+operator|(
 name|gn
 operator|->
 name|type
 operator|&
 name|OP_HAS_COMMANDS
+operator|)
 condition|)
-block|{
-name|Parse_Error
-argument_list|(
-name|PARSE_WARNING
-argument_list|,
-literal|"Extra command line for \"%s\" ignored"
-argument_list|,
-name|gn
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 operator|(
 name|void
 operator|)
@@ -4076,14 +4081,13 @@ operator|)
 name|cmd
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * ParseHasCommands --  *	Callback procedure for Parse_File when destroying the list of  *	targets on the last dependency line. Marks a target as already  *	having commands if it does, to keep from having shell commands  *	on multiple dependency lines.  *  * Results:  *	Always 0.  *  * Side Effects:  *	OP_HAS_COMMANDS may be set for the target.  *  *-----------------------------------------------------------------------  */
