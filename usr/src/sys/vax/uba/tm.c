@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.38	81/05/09	*/
+comment|/*	tm.c	4.39	81/07/05	*/
 end_comment
 
 begin_include
@@ -1396,6 +1396,15 @@ operator|)
 name|spl5
 argument_list|()
 expr_stmt|;
+name|um
+operator|=
+name|tedinfo
+index|[
+name|teunit
+index|]
+operator|->
+name|ui_mi
+expr_stmt|;
 if|if
 condition|(
 name|dp
@@ -1417,15 +1426,6 @@ operator|->
 name|b_forw
 operator|=
 name|NULL
-expr_stmt|;
-name|um
-operator|=
-name|tedinfo
-index|[
-name|teunit
-index|]
-operator|->
-name|ui_mi
 expr_stmt|;
 if|if
 condition|(
