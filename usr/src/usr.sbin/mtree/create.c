@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.13 (Berkeley) %G%"
+literal|"@(#)create.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -800,6 +800,14 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|ftsclose
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

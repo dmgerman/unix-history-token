@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)verify.c	5.5 (Berkeley) %G%"
+literal|"@(#)verify.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,6 +588,14 @@ name|FTS_SKIP
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|ftsclose
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
