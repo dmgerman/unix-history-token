@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.15 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -724,12 +724,28 @@ name|hap
 operator|=
 name|h_addr_ptrs
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BSD4_3
 name|host
 operator|.
 name|h_addr_list
 operator|=
 name|h_addr_ptrs
 expr_stmt|;
+else|#
+directive|else
+name|host
+operator|.
+name|h_addr
+operator|=
+name|h_addr_ptrs
+index|[
+literal|0
+index|]
+expr_stmt|;
+endif|#
+directive|endif
 name|haveanswer
 operator|=
 literal|0
@@ -1801,12 +1817,17 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* THIS STUFF IS INTERNET SPECIFIC */
+ifdef|#
+directive|ifdef
+name|BSD4_3
 name|host
 operator|.
 name|h_addr_list
 operator|=
 name|host_addrs
 expr_stmt|;
+endif|#
+directive|endif
 name|host
 operator|.
 name|h_addr
