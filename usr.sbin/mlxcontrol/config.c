@@ -45,45 +45,17 @@ directive|include
 file|<err.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
-file|<sys/mlxio.h>
+file|<dev/mlx/mlxio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mlxreg.h>
+file|<dev/mlx/mlxreg.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"../sys/dev/mlx/mlxio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../sys/dev/mlx/mlxreg.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
