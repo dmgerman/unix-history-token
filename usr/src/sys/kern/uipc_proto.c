@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.16	82/02/15	*/
+comment|/*	uipc_proto.c	4.17	82/03/03	*/
 end_comment
 
 begin_include
@@ -231,9 +231,6 @@ end_if
 
 begin_decl_stmt
 name|int
-name|rpup_usrreq
-argument_list|()
-decl_stmt|,
 name|rpup_output
 argument_list|()
 decl_stmt|,
@@ -624,7 +621,7 @@ name|rpup_ctlinput
 block|,
 literal|0
 block|,
-name|rpup_usrreq
+name|raw_usrreq
 block|,
 literal|0
 block|,
