@@ -948,20 +948,6 @@ comment|/* XXX */
 block|}
 end_function
 
-begin_function
-name|void
-name|cpu_wait
-parameter_list|(
-name|p
-parameter_list|)
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-block|{ }
-end_function
-
 begin_comment
 comment|/*  * Reset back to firmware.  */
 end_comment

@@ -4183,17 +4183,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|cpu_wait
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* New in KSE. */
 end_comment

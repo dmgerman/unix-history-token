@@ -588,20 +588,6 @@ decl_stmt|;
 block|{ }
 end_function
 
-begin_function
-name|void
-name|cpu_wait
-parameter_list|(
-name|td
-parameter_list|)
-name|struct
-name|proc
-modifier|*
-name|td
-decl_stmt|;
-block|{ }
-end_function
-
 begin_comment
 comment|/* Temporary helper */
 end_comment

@@ -1317,18 +1317,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|cpu_wait
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
 name|int
 name|is_physical_memory
 parameter_list|(

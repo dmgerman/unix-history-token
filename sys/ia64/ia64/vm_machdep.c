@@ -935,7 +935,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * cpu_exit is called as the last action during exit.  * We drop the fp state (if we have it) and switch to a live one.  * When the proc is reaped, cpu_wait() will gc the VM state.  */
+comment|/*  * cpu_exit is called as the last action during exit.  * We drop the fp state (if we have it) and switch to a live one.  */
 end_comment
 
 begin_function
@@ -968,20 +968,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-block|{ }
-end_function
-
-begin_function
-name|void
-name|cpu_wait
-parameter_list|(
-name|p
-parameter_list|)
-name|struct
-name|proc
-modifier|*
-name|p
 decl_stmt|;
 block|{ }
 end_function
