@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.80	83/07/26	*/
+comment|/*	hp.c	4.81	83/07/26	*/
 end_comment
 
 begin_ifdef
@@ -3051,6 +3051,18 @@ operator|&
 name|MBSR_EBITS
 condition|)
 block|{
+name|er1
+operator|=
+name|hpaddr
+operator|->
+name|hper1
+expr_stmt|;
+name|er2
+operator|=
+name|hpaddr
+operator|->
+name|hper2
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HPDEBUG
@@ -3132,15 +3144,17 @@ name|printf
 argument_list|(
 literal|"er1=%b er2=%b\n"
 argument_list|,
-name|hpaddr
-operator|->
-name|hper1
+name|MASKREG
+argument_list|(
+name|er1
+argument_list|)
 argument_list|,
 name|HPER1_BITS
 argument_list|,
-name|hpaddr
-operator|->
-name|hper2
+name|MASKREG
+argument_list|(
+name|er2
+argument_list|)
 argument_list|,
 name|HPER2_BITS
 argument_list|)
@@ -3153,18 +3167,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|er1
-operator|=
-name|hpaddr
-operator|->
-name|hper1
-expr_stmt|;
-name|er2
-operator|=
-name|hpaddr
-operator|->
-name|hper2
-expr_stmt|;
 if|if
 condition|(
 name|er1
@@ -3365,19 +3367,23 @@ name|hpaddr
 operator|->
 name|hpda
 operator|&
-literal|0x1f
+literal|0xff
 operator|)
 expr_stmt|;
 comment|/* 			 * If we have a data check error or a hard 			 * ecc error the bad sector has been read/written, 			 * and the controller registers are pointing to 			 * the next sector... 			 */
 if|if
 condition|(
 name|er1
-operator|&&
+operator|&
 operator|(
 name|HPER1_DCK
 operator||
 name|HPER1_ECH
 operator|)
+operator|||
+name|sc
+operator|->
+name|sc_hdr
 condition|)
 name|bp
 operator|->
@@ -3419,15 +3425,21 @@ name|printf
 argument_list|(
 literal|"er1=%b er2=%b"
 argument_list|,
+name|MASKREG
+argument_list|(
 name|hpaddr
 operator|->
 name|hper1
+argument_list|)
 argument_list|,
 name|HPER1_BITS
 argument_list|,
+name|MASKREG
+argument_list|(
 name|hpaddr
 operator|->
 name|hper2
+argument_list|)
 argument_list|,
 name|HPER2_BITS
 argument_list|)
