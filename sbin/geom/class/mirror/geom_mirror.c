@@ -134,6 +134,15 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|intmax_t
+name|insert_priority
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -373,6 +382,17 @@ block|,
 name|G_TYPE_NONE
 block|}
 block|,
+block|{
+literal|'p'
+block|,
+literal|"priority"
+block|,
+operator|&
+name|insert_priority
+block|,
+name|G_TYPE_NUMBER
+block|}
+block|,
 name|G_OPT_SENTINEL
 block|}
 block|}
@@ -463,7 +483,7 @@ literal|"       %s clear [-v] dev1 [dev2 [...]]\n"
 literal|"       %s dump dev1 [dev2 [...]]\n"
 literal|"       %s configure [-anv] [-b balance] [-s slice] name\n"
 literal|"       %s rebuild [-v] name dev1 [dev2 [...]]\n"
-literal|"       %s insert [-iv] name dev1 [dev2 [...]]\n"
+literal|"       %s insert [-iv] [-p priority] name dev1 [dev2 [...]]\n"
 literal|"       %s remove [-v] name dev1 [dev2 [...]]\n"
 literal|"       %s activate [-v] name dev1 [dev2 [...]]\n"
 literal|"       %s deactivate [-v] name dev1 [dev2 [...]]\n"
