@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_if
@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdr_stdio.c,v 1.1 1993/10/27 05:41:14 paul Exp $"
+literal|"$Id: xdr_stdio.c,v 1.3 1996/12/30 14:07:11 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,7 +113,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|long
+name|int32_t
 modifier|*
 name|xdrstdio_inline
 parameter_list|()
@@ -266,10 +266,6 @@ comment|/* xx should we close the file ?? */
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 specifier|static
 name|bool_t
@@ -300,7 +296,7 @@ name|lp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 argument_list|,
 literal|1
@@ -321,20 +317,21 @@ operator|(
 name|FALSE
 operator|)
 return|;
-ifndef|#
-directive|ifndef
-name|mc68000
 operator|*
 name|lp
 operator|=
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
+operator|(
+name|int32_t
+operator|)
 operator|*
 name|lp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|TRUE
@@ -361,25 +358,21 @@ modifier|*
 name|lp
 decl_stmt|;
 block|{
-ifndef|#
-directive|ifndef
-name|mc68000
 name|long
 name|mycopy
 init|=
+operator|(
+name|long
+operator|)
 name|htonl
 argument_list|(
+operator|(
+name|int32_t
+operator|)
 operator|*
 name|lp
 argument_list|)
 decl_stmt|;
-name|lp
-operator|=
-operator|&
-name|mycopy
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|fwrite
@@ -387,11 +380,12 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|lp
+operator|&
+name|mycopy
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 argument_list|,
 literal|1
@@ -637,7 +631,7 @@ end_function
 
 begin_function
 specifier|static
-name|long
+name|int32_t
 modifier|*
 name|xdrstdio_inline
 parameter_list|(

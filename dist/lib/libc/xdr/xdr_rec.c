@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_if
@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdr_rec.c,v 1.1 1993/10/27 05:41:12 paul Exp $"
+literal|"$Id: xdr_rec.c,v 1.5 1996/12/30 14:07:10 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * xdr_rec.c, Implements TCP/IP based XDR streams with a "record marking"  * layer above tcp (for rpc's use).  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * These routines interface XDRSTREAMS to a tcp/ip connection.  * There is a record marking layer between the xdr stream  * and the tcp transport level.  A record is composed on one or more  * record fragments.  A record fragment is a thirty-two bit header followed  * by n bytes of data, where n is contained in the header.  The header  * is represented as a htonl(u_long).  Thegh order bit encodes  * whether or not the fragment is the last fragment of the record  * (1 => fragment is last, 0 => more fragments to follow.   * The other 31 bits encode the byte length of the fragment.  */
+comment|/*  * xdr_rec.c, Implements TCP/IP based XDR streams with a "record marking"  * layer above tcp (for rpc's use).  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * These routines interface XDRSTREAMS to a tcp/ip connection.  * There is a record marking layer between the xdr stream  * and the tcp transport level.  A record is composed on one or more  * record fragments.  A record fragment is a thirty-two bit header followed  * by n bytes of data, where n is contained in the header.  The header  * is represented as a htonl(u_long).  Thegh order bit encodes  * whether or not the fragment is the last fragment of the record  * (1 => fragment is last, 0 => more fragments to follow.  * The other 31 bits encode the byte length of the fragment.  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -74,14 +80,6 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -173,7 +171,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|long
+name|int32_t
 modifier|*
 name|xdrrec_inline
 parameter_list|()
@@ -222,7 +220,7 @@ begin_define
 define|#
 directive|define
 name|LAST_FRAG
-value|((u_long)(1<< 31))
+value|((u_int32_t)(1<< 31))
 end_define
 
 begin_typedef
@@ -238,12 +236,20 @@ name|the_buffer
 decl_stmt|;
 comment|/* 	 * out-goung bits 	 */
 name|int
-function_decl|(
-modifier|*
-name|writeit
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*writeit
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+name|caddr_t
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 name|caddr_t
 name|out_base
 decl_stmt|;
@@ -256,23 +262,31 @@ name|caddr_t
 name|out_boundry
 decl_stmt|;
 comment|/* data cannot up to this address */
-name|u_long
+name|u_int32_t
 modifier|*
 name|frag_header
 decl_stmt|;
-comment|/* beginning of curren fragment */
+comment|/* beginning of current fragment */
 name|bool_t
 name|frag_sent
 decl_stmt|;
 comment|/* true if buffer sent in middle of record */
 comment|/* 	 * in-coming bits 	 */
 name|int
-function_decl|(
-modifier|*
-name|readit
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*readit
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+name|caddr_t
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 name|u_long
 name|in_size
 decl_stmt|;
@@ -417,7 +431,7 @@ argument_list|,
 literal|"xdrrec_create: out of memory\n"
 argument_list|)
 expr_stmt|;
-comment|/*  		 *  This is bad.  Should rework xdrrec_create to  		 *  return a handle, and in this case return NULL 		 */
+comment|/* 		 *  This is bad.  Should rework xdrrec_create to 		 *  return a handle, and in this case return NULL 		 */
 return|return;
 block|}
 comment|/* 	 * adjust sizes and allocate buffer quad byte aligned 	 */
@@ -488,7 +502,7 @@ operator|->
 name|the_buffer
 init|;
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|rstrm
 operator|->
@@ -566,7 +580,7 @@ operator|->
 name|frag_header
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|rstrm
@@ -579,7 +593,7 @@ name|out_finger
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|rstrm
@@ -673,12 +687,12 @@ name|x_private
 operator|)
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 modifier|*
 name|buflp
 init|=
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|(
@@ -687,7 +701,7 @@ operator|->
 name|in_finger
 operator|)
 decl_stmt|;
-name|long
+name|int32_t
 name|mylong
 decl_stmt|;
 comment|/* first try the inline, fast case */
@@ -700,28 +714,28 @@ name|fbtbc
 operator|>=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 operator|)
 operator|&&
 operator|(
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|rstrm
 operator|->
 name|in_boundry
 operator|-
 operator|(
-name|int
+name|long
 operator|)
 name|buflp
 operator|)
 operator|>=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 operator|)
 condition|)
@@ -735,7 +749,7 @@ operator|)
 name|ntohl
 argument_list|(
 call|(
-name|u_long
+name|u_int32_t
 call|)
 argument_list|(
 operator|*
@@ -749,7 +763,7 @@ name|fbtbc
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 name|rstrm
@@ -758,7 +772,7 @@ name|in_finger
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 block|}
@@ -779,7 +793,7 @@ name|mylong
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 argument_list|)
 condition|)
@@ -797,7 +811,7 @@ operator|)
 name|ntohl
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|)
 name|mylong
 argument_list|)
@@ -845,13 +859,13 @@ name|x_private
 operator|)
 decl_stmt|;
 specifier|register
-name|long
+name|int32_t
 modifier|*
 name|dest_lp
 init|=
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|(
@@ -870,7 +884,7 @@ name|out_finger
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 operator|)
 operator|>
@@ -886,7 +900,7 @@ name|out_finger
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 name|rstrm
@@ -914,7 +928,7 @@ name|dest_lp
 operator|=
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|(
@@ -930,7 +944,7 @@ name|out_finger
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 block|}
@@ -938,12 +952,12 @@ operator|*
 name|dest_lp
 operator|=
 operator|(
-name|long
+name|int32_t
 operator|)
 name|htonl
 argument_list|(
 call|(
-name|u_long
+name|u_int32_t
 call|)
 argument_list|(
 operator|*
@@ -1141,7 +1155,7 @@ name|x_private
 operator|)
 decl_stmt|;
 specifier|register
-name|int
+name|long
 name|current
 decl_stmt|;
 while|while
@@ -1154,14 +1168,14 @@ block|{
 name|current
 operator|=
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|rstrm
 operator|->
 name|out_boundry
 operator|-
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|rstrm
 operator|->
@@ -1179,13 +1193,13 @@ name|len
 else|:
 name|current
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|addr
-argument_list|,
 name|rstrm
 operator|->
 name|out_finger
+argument_list|,
+name|addr
 argument_list|,
 name|current
 argument_list|)
@@ -1283,12 +1297,15 @@ argument_list|(
 operator|(
 name|int
 operator|)
+operator|(
+name|long
+operator|)
 name|rstrm
 operator|->
 name|tcp_handle
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 literal|0
 argument_list|,
@@ -1340,9 +1357,6 @@ break|break;
 default|default:
 name|pos
 operator|=
-operator|(
-name|u_int
-operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -1546,7 +1560,7 @@ end_function
 
 begin_function
 specifier|static
-name|long
+name|int32_t
 modifier|*
 name|xdrrec_inline
 parameter_list|(
@@ -1576,7 +1590,7 @@ name|xdrs
 operator|->
 name|x_private
 decl_stmt|;
-name|long
+name|int32_t
 modifier|*
 name|buf
 init|=
@@ -1610,7 +1624,7 @@ block|{
 name|buf
 operator|=
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 name|rstrm
@@ -1656,7 +1670,7 @@ block|{
 name|buf
 operator|=
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 name|rstrm
@@ -1856,7 +1870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look ahead fuction.  * Returns TRUE iff there is no more input in the buffer   * after consuming the rest of the current record.  */
+comment|/*  * Look ahead fuction.  * Returns TRUE iff there is no more input in the buffer  * after consuming the rest of the current record.  */
 end_comment
 
 begin_function
@@ -2028,7 +2042,7 @@ name|out_finger
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 operator|>=
 operator|(
@@ -2079,7 +2093,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2104,7 +2118,7 @@ operator|->
 name|frag_header
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|rstrm
@@ -2117,7 +2131,7 @@ name|out_finger
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 return|return
@@ -2165,7 +2179,7 @@ else|:
 literal|0
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 name|len
 init|=
 call|(
@@ -2188,7 +2202,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 decl_stmt|;
 operator|*
@@ -2265,7 +2279,7 @@ operator|->
 name|frag_header
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|rstrm
@@ -2285,7 +2299,7 @@ name|out_base
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 return|return
@@ -2314,11 +2328,11 @@ specifier|register
 name|caddr_t
 name|where
 decl_stmt|;
-name|u_int
+name|u_long
 name|i
 decl_stmt|;
 specifier|register
-name|int
+name|long
 name|len
 decl_stmt|;
 name|where
@@ -2330,7 +2344,7 @@ expr_stmt|;
 name|i
 operator|=
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|rstrm
 operator|->
@@ -2433,7 +2447,7 @@ name|len
 decl_stmt|;
 block|{
 specifier|register
-name|int
+name|long
 name|current
 decl_stmt|;
 while|while
@@ -2446,14 +2460,14 @@ block|{
 name|current
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|rstrm
 operator|->
 name|in_boundry
 operator|-
 operator|(
-name|int
+name|long
 operator|)
 name|rstrm
 operator|->
@@ -2493,13 +2507,13 @@ name|len
 else|:
 name|current
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
+name|addr
+argument_list|,
 name|rstrm
 operator|->
 name|in_finger
-argument_list|,
-name|addr
 argument_list|,
 name|current
 argument_list|)
@@ -2541,7 +2555,7 @@ modifier|*
 name|rstrm
 decl_stmt|;
 block|{
-name|u_long
+name|u_int32_t
 name|header
 decl_stmt|;
 if|if
@@ -2635,7 +2649,7 @@ name|cnt
 decl_stmt|;
 block|{
 specifier|register
-name|int
+name|long
 name|current
 decl_stmt|;
 while|while
@@ -2648,14 +2662,14 @@ block|{
 name|current
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|rstrm
 operator|->
 name|in_boundry
 operator|-
 operator|(
-name|int
+name|long
 operator|)
 name|rstrm
 operator|->
