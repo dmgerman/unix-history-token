@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.17 83/06/24"
+literal|"@(#)rlogind.c	4.18 83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -60,12 +66,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<wait.h>
 end_include
 
 begin_include
@@ -1784,7 +1784,7 @@ name|buf
 operator|+
 literal|1
 argument_list|,
-literal|"rlogind: %s.\n"
+literal|"rlogind: %s.\r\n"
 argument_list|,
 name|msg
 argument_list|)
