@@ -7836,7 +7836,7 @@ operator|||
 name|ic
 operator|->
 name|ic_opmode
-operator|!=
+operator|==
 name|IEEE80211_M_IBSS
 operator|)
 condition|)
