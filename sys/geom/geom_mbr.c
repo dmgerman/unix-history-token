@@ -100,7 +100,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
+file|<sys/diskmbr.h>
 end_include
 
 begin_include
