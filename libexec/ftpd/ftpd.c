@@ -2141,9 +2141,6 @@ name|pw
 operator|->
 name|pw_passwd
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DES
 name|xpasswd
 operator|=
 name|crypt
@@ -2153,14 +2150,6 @@ argument_list|,
 name|salt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|xpasswd
-operator|=
-name|passwd
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* The strcmp does not catch null passwords! */
 if|if
 condition|(
