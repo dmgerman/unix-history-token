@@ -209,8 +209,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|__AT_HEADER__
 end_endif
+
+begin_comment
+comment|/* !__AT_HEADER__ */
+end_comment
 
 end_unit
 

@@ -24,8 +24,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|_ATALK_ENDIAN_H_
 end_endif
+
+begin_comment
+comment|/* !_ATALK_ENDIAN_H_ */
+end_comment
 
 end_unit
 
