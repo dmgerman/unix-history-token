@@ -5346,6 +5346,7 @@ case|:
 comment|/* 		 * The generic accessor doesn't deal with failure, so 		 * we set the return value, then return an error. 		 */
 if|if
 condition|(
+operator|(
 name|dinfo
 operator|->
 name|fepresent
@@ -5354,6 +5355,7 @@ operator|(
 literal|1
 operator|<<
 name|TPL_FUNCE_LAN_NID
+operator|)
 operator|)
 operator|==
 literal|0
