@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_inode.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_inode.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -78,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"malloc.h"
 end_include
 
 begin_define
@@ -2765,14 +2771,6 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|,
-modifier|*
-name|copy
-decl_stmt|;
-specifier|register
-name|daddr_t
-modifier|*
-name|bap
 decl_stmt|;
 specifier|register
 name|struct
@@ -2784,7 +2782,15 @@ name|ip
 operator|->
 name|i_fs
 decl_stmt|;
+specifier|register
 name|daddr_t
+modifier|*
+name|bap
+decl_stmt|;
+name|daddr_t
+modifier|*
+name|copy
+decl_stmt|,
 name|nb
 decl_stmt|,
 name|last
@@ -2848,18 +2854,6 @@ name|fs_bsize
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get buffer of block pointers, zero those  	 * entries corresponding to blocks to be free'd, 	 * and update on disk copy first. 	 */
-name|copy
-operator|=
-name|geteblk
-argument_list|(
-operator|(
-name|int
-operator|)
-name|fs
-operator|->
-name|fs_bsize
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SECSIZE
@@ -2930,11 +2924,6 @@ condition|)
 block|{
 name|brelse
 argument_list|(
-name|copy
-argument_list|)
-expr_stmt|;
-name|brelse
-argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
@@ -2952,6 +2941,22 @@ name|b_un
 operator|.
 name|b_daddr
 expr_stmt|;
+name|MALLOC
+argument_list|(
+name|copy
+argument_list|,
+name|daddr_t
+operator|*
+argument_list|,
+name|fs
+operator|->
+name|fs_bsize
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(
@@ -2963,10 +2968,6 @@ operator|(
 name|caddr_t
 operator|)
 name|copy
-operator|->
-name|b_un
-operator|.
-name|b_daddr
 argument_list|,
 operator|(
 name|u_int
@@ -3016,17 +3017,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|bp
-operator|=
-name|copy
-operator|,
 name|bap
 operator|=
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_daddr
+name|copy
 expr_stmt|;
 comment|/* 	 * Recursively free totally unused blocks. 	 */
 for|for
@@ -3153,9 +3146,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|brelse
+name|FREE
 argument_list|(
-name|bp
+name|copy
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
