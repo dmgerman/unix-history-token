@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vn.c 1.1 91/04/30$  *  *	@(#)vn.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vn.c 1.1 91/04/30$  *  *	@(#)vn.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1532,19 +1532,23 @@ name|EBUSY
 operator|)
 return|;
 comment|/* 		 * Always open for read and write. 		 * This is probably bogus, but it lets vn_open() 		 * weed out directories, sockets, etc. so we don't 		 * have to worry about them. 		 */
+name|NDINIT
+argument_list|(
+operator|&
 name|nd
-operator|.
-name|ni_segflg
-operator|=
+argument_list|,
+name|LOOKUP
+argument_list|,
+name|FOLLOW
+argument_list|,
 name|UIO_USERSPACE
-expr_stmt|;
-name|nd
-operator|.
-name|ni_dirp
-operator|=
+argument_list|,
 name|vio
 operator|->
 name|vn_file
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1554,8 +1558,6 @@ name|vn_open
 argument_list|(
 operator|&
 name|nd
-argument_list|,
-name|p
 argument_list|,
 name|FREAD
 operator||
