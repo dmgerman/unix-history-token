@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/timetc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/timepps.h>
 end_include
 
@@ -1087,7 +1093,7 @@ name|mode
 operator|=
 name|TIMECOUNTER
 expr_stmt|;
-name|init_timecounter
+name|tc_init
 argument_list|(
 operator|&
 name|sc

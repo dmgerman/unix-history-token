@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/timetc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
@@ -1471,7 +1477,7 @@ expr_stmt|;
 name|init_tgc
 argument_list|()
 expr_stmt|;
-name|init_timecounter
+name|tc_init
 argument_list|(
 operator|&
 name|loran_timecounter

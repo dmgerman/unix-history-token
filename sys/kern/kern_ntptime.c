@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/timetc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/timepps.h>
 end_include
 

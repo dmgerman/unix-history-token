@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sys/timetc.h>
 end_include
 
 begin_include
@@ -203,7 +203,7 @@ name|tc_frequency
 operator|=
 name|piix_freq
 expr_stmt|;
-name|update_timecounter
+name|tc_update
 argument_list|(
 operator|&
 name|piix_timecounter
@@ -390,7 +390,7 @@ name|tc_frequency
 operator|=
 name|piix_freq
 expr_stmt|;
-name|init_timecounter
+name|tc_init
 argument_list|(
 operator|&
 name|piix_timecounter

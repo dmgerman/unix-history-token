@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/timetc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -412,7 +418,7 @@ name|tv_usec
 operator|*
 literal|1000
 expr_stmt|;
-name|set_timecounter
+name|tc_setclock
 argument_list|(
 operator|&
 name|ts
