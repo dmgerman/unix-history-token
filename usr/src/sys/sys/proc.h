@@ -153,13 +153,13 @@ name|p_xlink
 decl_stmt|;
 comment|/* linked list of procs sharing same text */
 name|short
-name|p_faults
+name|p_cpticks
 decl_stmt|;
-comment|/* faults in last second */
-name|short
-name|p_aveflt
+comment|/* ticks of cpu time */
+name|float
+name|p_pctcpu
 decl_stmt|;
-comment|/* average of p_faults into past */
+comment|/* %cpu for this process during p_time */
 name|short
 name|p_ndx
 decl_stmt|;
