@@ -647,6 +647,8 @@ name|buf
 argument_list|)
 argument_list|)
 operator|)
+operator|>
+literal|0
 condition|)
 for|for
 control|(
