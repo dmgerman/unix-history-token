@@ -1714,6 +1714,14 @@ operator|!=
 literal|0
 condition|)
 comment|/* 					 * returns to original process 					 */
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|vm86_trap
 argument_list|(
 operator|(
