@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.19 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/ftp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -94,12 +100,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ftp.h"
 end_include
 
 begin_comment
@@ -845,7 +845,7 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-name|sigset
+name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -1005,6 +1005,32 @@ name|hostname
 argument_list|,
 name|version
 argument_list|)
+expr_stmt|;
+comment|/* 			 * Anchor data source address to that 			 * of the control port so hosts with 			 * multiple address won't have data 			 * connections bound to an address different 			 * than the control port. 			 */
+if|if
+condition|(
+name|getsockname
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|ctrl_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ctrl_addr
+argument_list|)
+argument_list|)
+operator|>=
+literal|0
+condition|)
+name|data_source
+operator|.
+name|sin_addr
+operator|=
+name|ctrl_addr
+operator|.
+name|sin_addr
 expr_stmt|;
 for|for
 control|(
@@ -1952,6 +1978,8 @@ decl_stmt|;
 block|{
 name|int
 name|s
+decl_stmt|,
+name|linger
 decl_stmt|;
 if|if
 condition|(
@@ -2040,6 +2068,31 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|linger
+operator|=
+literal|60
+expr_stmt|;
+comment|/* value ignored by system */
+operator|(
+name|void
+operator|)
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_LINGER
+argument_list|,
+operator|&
+name|linger
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|linger
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|seteuid
 argument_list|(
 name|pw

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumprmt.c	1.4 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,7 +108,7 @@ name|rmtpeer
 operator|=
 name|host
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
