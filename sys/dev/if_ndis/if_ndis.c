@@ -2080,7 +2080,7 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Figure out of we're allowed to use multipacket sends 	 * with this driver, and if so, how many. 	 */
+comment|/* 	 * Figure out if we're allowed to use multipacket sends 	 * with this driver, and if so, how many. 	 */
 if|if
 condition|(
 name|sc
@@ -3677,6 +3677,36 @@ condition|)
 name|ndis_destroy_dma
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ndis_txarray
+condition|)
+name|free
+argument_list|(
+name|sc
+operator|->
+name|ndis_txarray
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|ndis_80211
+condition|)
+name|ifmedia_removeall
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ifmedia
 argument_list|)
 expr_stmt|;
 name|ndis_unload_driver
