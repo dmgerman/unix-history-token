@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xec.c	4.5 %G%"
+literal|"@(#)xec.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,6 +171,8 @@ init|=
 name|t
 operator|->
 name|treio
+operator|.
+name|treio
 decl_stmt|;
 name|gchain
 operator|=
@@ -216,6 +218,8 @@ name|setlist
 argument_list|(
 name|t
 operator|->
+name|comnod
+operator|.
 name|comset
 argument_list|,
 literal|0
@@ -726,6 +730,8 @@ name|FI
 name|ELIF
 name|t
 operator|->
+name|comnod
+operator|.
 name|comset
 operator|==
 literal|0
@@ -941,6 +947,8 @@ name|FI
 name|ELIF
 name|t
 operator|->
+name|treio
+operator|.
 name|treio
 operator|==
 literal|0
@@ -1187,6 +1195,8 @@ parameter_list|(
 name|t
 operator|->
 name|treio
+operator|.
+name|treio
 parameter_list|)
 function_decl|;
 name|IF
@@ -1198,6 +1208,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|forknod
+operator|.
 name|forktre
 argument_list|,
 literal|1
@@ -1215,6 +1227,8 @@ name|setlist
 argument_list|(
 name|t
 operator|->
+name|comnod
+operator|.
 name|comset
 argument_list|,
 name|N_EXPORT
@@ -1247,6 +1261,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|parnod
+operator|.
 name|partre
 argument_list|,
 name|execflg
@@ -1275,6 +1291,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|lstnod
+operator|.
 name|lstlef
 argument_list|,
 literal|0
@@ -1289,6 +1307,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|lstnod
+operator|.
 name|lstrit
 argument_list|,
 name|execflg
@@ -1314,6 +1334,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|lstnod
+operator|.
 name|lstlef
 argument_list|,
 literal|0
@@ -1323,6 +1345,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|lstnod
+operator|.
 name|lstrit
 argument_list|,
 name|execflg
@@ -1337,6 +1361,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|lstnod
+operator|.
 name|lstlef
 argument_list|,
 literal|0
@@ -1347,6 +1373,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|lstnod
+operator|.
 name|lstrit
 argument_list|,
 name|execflg
@@ -1362,6 +1390,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|lstnod
+operator|.
 name|lstlef
 argument_list|,
 literal|0
@@ -1372,6 +1402,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|lstnod
+operator|.
 name|lstrit
 argument_list|,
 name|execflg
@@ -1390,6 +1422,8 @@ name|lookup
 argument_list|(
 name|t
 operator|->
+name|fornod
+operator|.
 name|fornam
 argument_list|)
 decl_stmt|;
@@ -1405,6 +1439,8 @@ decl_stmt|;
 name|IF
 name|t
 operator|->
+name|fornod
+operator|.
 name|forlst
 operator|==
 literal|0
@@ -1441,6 +1477,8 @@ name|getarg
 argument_list|(
 name|t
 operator|->
+name|fornod
+operator|.
 name|forlst
 argument_list|)
 argument_list|)
@@ -1481,6 +1519,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|fornod
+operator|.
 name|fortre
 argument_list|,
 literal|0
@@ -1557,6 +1597,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|whnod
+operator|.
 name|whtre
 argument_list|,
 literal|0
@@ -1587,6 +1629,8 @@ name|execute
 break|(
 name|t
 operator|->
+name|whnod
+operator|.
 name|dotre
 operator|,
 break|0
@@ -1680,6 +1724,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|ifnod
+operator|.
 name|iftre
 argument_list|,
 literal|0
@@ -1704,6 +1750,8 @@ name|execute
 argument_list|(
 name|t
 operator|->
+name|ifnod
+operator|.
 name|thtre
 argument_list|,
 name|execflg
@@ -1717,6 +1765,8 @@ name|execute
 parameter_list|(
 name|t
 operator|->
+name|ifnod
+operator|.
 name|eltre
 parameter_list|,
 name|execflg
@@ -1749,28 +1799,34 @@ name|mactrim
 argument_list|(
 name|t
 operator|->
+name|swnod
+operator|.
 name|swarg
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|t
-operator|=
+begin_decl_stmt
+name|REG
+name|REGPTR
+name|eg
+init|=
 name|t
 operator|->
+name|swnod
+operator|.
 name|swlst
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|WHILE
-name|t
+name|eg
 name|DO
 name|ARGPTR
 name|rex
 init|=
-name|t
+name|eg
 operator|->
 name|regptr
 decl_stmt|;
@@ -1818,7 +1874,7 @@ argument_list|)
 name|THEN
 name|execute
 argument_list|(
-name|t
+name|eg
 operator|->
 name|regcom
 argument_list|,
@@ -1828,7 +1884,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|t
+name|eg
 operator|=
 literal|0
 expr_stmt|;
@@ -1852,11 +1908,11 @@ begin_decl_stmt
 name|FI
 name|OD
 name|IF
-name|t
+name|eg
 name|THEN
-name|t
+name|eg
 init|=
-name|t
+name|eg
 operator|->
 name|regnxt
 name|FI

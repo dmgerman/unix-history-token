@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	4.3 %G%"
+literal|"@(#)macro.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -406,11 +406,14 @@ index|[
 name|c
 index|]
 else|:
-operator|(
+call|(
+name|STRING
+call|)
+argument_list|(
 name|dolg
 operator|=
 literal|0
-operator|)
+argument_list|)
 operator|)
 expr_stmt|;
 name|ELIF

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)args.c	4.4 %G%"
+literal|"@(#)args.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,8 +36,7 @@ end_include
 
 begin_function_decl
 name|PROC
-name|STRING
-modifier|*
+name|DOLPTR
 name|copyargs
 parameter_list|()
 function_decl|;
@@ -523,8 +522,7 @@ end_block
 
 begin_function
 name|LOCAL
-name|STRING
-modifier|*
+name|DOLPTR
 name|copyargs
 parameter_list|(
 name|from
@@ -537,9 +535,8 @@ index|[]
 decl_stmt|;
 block|{
 name|REG
-name|STRING
-modifier|*
-name|np
+name|DOLPTR
+name|dp
 init|=
 name|alloc
 argument_list|(
@@ -559,18 +556,16 @@ decl_stmt|;
 name|REG
 name|STRING
 modifier|*
-name|fp
-init|=
-name|from
+name|np
 decl_stmt|;
 name|REG
 name|STRING
 modifier|*
-name|pp
+name|fp
 init|=
-name|np
+name|from
 decl_stmt|;
-name|np
+name|dp
 operator|->
 name|doluse
 operator|=
@@ -579,7 +574,7 @@ expr_stmt|;
 comment|/* use count */
 name|np
 operator|=
-name|np
+name|dp
 operator|->
 name|dolarg
 expr_stmt|;
@@ -608,7 +603,7 @@ name|ENDARGS
 expr_stmt|;
 return|return
 operator|(
-name|pp
+name|dp
 operator|)
 return|;
 block|}

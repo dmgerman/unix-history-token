@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mode.h	4.1	82/05/07	*/
+comment|/*	mode.h	4.2	88/04/24	*/
 end_comment
 
 begin_empty
@@ -165,7 +165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STRUCT
+name|UNION
 name|trenod
 modifier|*
 name|TREPTR
@@ -317,15 +317,13 @@ begin_comment
 comment|/* the following nonsense is required  * because casts turn an Lvalue  * into an Rvalue so two cheats  * are necessary, one for each context.  */
 end_comment
 
-begin_union
-union|union
-block|{
-name|int
-name|_cheat
-decl_stmt|;
-block|}
-union|;
-end_union
+begin_comment
+comment|/* union { int _cheat;}; */
+end_comment
+
+begin_comment
+comment|/* #define Lcheat(a)	((a)._cheat) */
+end_comment
 
 begin_define
 define|#
@@ -334,7 +332,7 @@ name|Lcheat
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)._cheat)
+value|(*(int *)&(a))
 end_define
 
 begin_define
@@ -344,7 +342,7 @@ name|Rcheat
 parameter_list|(
 name|a
 parameter_list|)
-value|((int)(a))
+value|( (int  ) (a))
 end_define
 
 begin_comment
@@ -516,24 +514,6 @@ name|sysnam
 decl_stmt|;
 name|INT
 name|sysval
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* this node is a proforma for those that follow */
-end_comment
-
-begin_struct
-struct|struct
-name|trenod
-block|{
-name|INT
-name|tretyp
-decl_stmt|;
-name|IOPTR
-name|treio
 decl_stmt|;
 block|}
 struct|;
@@ -828,6 +808,64 @@ directive|define
 name|IOTYPE
 value|(sizeof(struct ionod))
 end_define
+
+begin_comment
+comment|/* this node is a proforma for those that precede it */
+end_comment
+
+begin_union
+union|union
+name|trenod
+block|{
+name|INT
+name|tretyp
+decl_stmt|;
+struct|struct
+block|{
+name|INT
+name|dummyy
+decl_stmt|;
+name|IOPTR
+name|treio
+decl_stmt|;
+block|}
+name|treio
+struct|;
+name|struct
+name|forknod
+name|forknod
+decl_stmt|;
+name|struct
+name|comnod
+name|comnod
+decl_stmt|;
+name|struct
+name|ifnod
+name|ifnod
+decl_stmt|;
+name|struct
+name|whnod
+name|whnod
+decl_stmt|;
+name|struct
+name|fornod
+name|fornod
+decl_stmt|;
+name|struct
+name|swnod
+name|swnod
+decl_stmt|;
+name|struct
+name|lstnod
+name|lstnod
+decl_stmt|;
+name|struct
+name|parnod
+name|parnod
+decl_stmt|;
+block|}
+union|;
+end_union
 
 end_unit
 

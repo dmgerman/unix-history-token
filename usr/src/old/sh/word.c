@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)word.c	4.6 %G%"
+literal|"@(#)word.c	4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,10 @@ name|locstak
 argument_list|()
 operator|+
 name|BYTESPERWORD
+decl_stmt|;
+name|REG
+name|ARGPTR
+name|ap
 decl_stmt|;
 name|INT
 name|alpha
@@ -229,8 +233,11 @@ argument_list|,
 argument|!eofmeta(c)
 argument_list|)
 name|DONE
-name|argp
+name|ap
 operator|=
+operator|(
+name|ARGPTR
+operator|)
 name|endstak
 argument_list|(
 name|argp
@@ -240,7 +247,7 @@ name|IF
 operator|!
 name|letter
 argument_list|(
-argument|argp->argval[
+argument|ap->argval[
 literal|0
 argument|]
 argument_list|)
@@ -256,7 +263,7 @@ operator||
 name|MARK
 expr_stmt|;
 name|IF
-name|argp
+name|ap
 operator|->
 name|argval
 index|[
@@ -266,7 +273,7 @@ operator|==
 literal|0
 name|ANDF
 argument_list|(
-argument|d=argp->argval[
+argument|d=ap->argval[
 literal|0
 argument|]
 argument_list|,
@@ -301,7 +308,7 @@ name|wdval
 operator|=
 name|syslook
 argument_list|(
-name|argp
+name|ap
 operator|->
 name|argval
 argument_list|,
@@ -313,7 +320,7 @@ literal|0
 name|THEN
 name|wdarg
 operator|=
-name|argp
+name|ap
 expr_stmt|;
 name|wdval
 operator|=

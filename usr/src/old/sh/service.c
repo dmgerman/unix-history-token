@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)service.c	4.4 %G%"
+literal|"@(#)service.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1921,7 +1921,7 @@ name|c
 init|=
 name|expand
 argument_list|(
-argument|(argp=endstak(argp))->argval
+argument|((ARGPTR)(argp=endstak(argp)))->argval
 argument_list|,
 literal|0
 argument_list|)

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd.c	4.2 %G%"
+literal|"@(#)cmd.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,6 +160,8 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|->
+name|forknod
+operator|.
 name|forktyp
 operator|=
 name|flgs
@@ -168,12 +170,16 @@ name|TFORK
 expr_stmt|;
 name|t
 operator|->
+name|forknod
+operator|.
 name|forktre
 operator|=
 name|i
 expr_stmt|;
 name|t
 operator|->
+name|forknod
+operator|.
 name|forkio
 operator|=
 literal|0
@@ -232,18 +238,24 @@ argument_list|)
 decl_stmt|;
 name|t
 operator|->
+name|lstnod
+operator|.
 name|lsttyp
 operator|=
 name|type
 expr_stmt|;
 name|t
 operator|->
+name|lstnod
+operator|.
 name|lstlef
 operator|=
 name|i
 expr_stmt|;
 name|t
 operator|->
+name|lstnod
+operator|.
 name|lstrit
 operator|=
 name|r
@@ -769,6 +781,8 @@ argument_list|()
 expr_stmt|;
 name|t
 operator|->
+name|swnod
+operator|.
 name|swarg
 operator|=
 name|wdarg
@@ -787,6 +801,8 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|->
+name|swnod
+operator|.
 name|swlst
 operator|=
 name|syncase
@@ -802,6 +818,8 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|->
+name|swnod
+operator|.
 name|swtyp
 operator|=
 name|TSW
@@ -825,12 +843,16 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|->
+name|ifnod
+operator|.
 name|iftyp
 operator|=
 name|TIF
 expr_stmt|;
 name|t
 operator|->
+name|ifnod
+operator|.
 name|iftre
 operator|=
 name|cmd
@@ -842,6 +864,8 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|->
+name|ifnod
+operator|.
 name|thtre
 operator|=
 name|cmd
@@ -857,6 +881,8 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|->
+name|ifnod
+operator|.
 name|eltre
 operator|=
 operator|(
@@ -920,12 +946,16 @@ argument_list|)
 decl_stmt|;
 name|t
 operator|->
+name|fornod
+operator|.
 name|fortyp
 operator|=
 name|TFOR
 expr_stmt|;
 name|t
 operator|->
+name|fornod
+operator|.
 name|forlst
 operator|=
 literal|0
@@ -935,6 +965,8 @@ argument_list|()
 expr_stmt|;
 name|t
 operator|->
+name|fornod
+operator|.
 name|fornam
 operator|=
 name|wdarg
@@ -952,6 +984,8 @@ argument_list|()
 expr_stmt|;
 name|t
 operator|->
+name|fornod
+operator|.
 name|forlst
 operator|=
 name|item
@@ -990,6 +1024,8 @@ argument_list|)
 decl_stmt|;
 name|t
 operator|->
+name|fornod
+operator|.
 name|fortre
 operator|=
 name|cmd
@@ -1023,6 +1059,8 @@ argument_list|)
 decl_stmt|;
 name|t
 operator|->
+name|whnod
+operator|.
 name|whtyp
 operator|=
 operator|(
@@ -1037,6 +1075,8 @@ operator|)
 expr_stmt|;
 name|t
 operator|->
+name|whnod
+operator|.
 name|whtre
 operator|=
 name|cmd
@@ -1048,6 +1088,8 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|->
+name|whnod
+operator|.
 name|dotre
 operator|=
 name|cmd
@@ -1161,6 +1203,8 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|->
+name|comnod
+operator|.
 name|comio
 operator|=
 name|io
@@ -1172,6 +1216,8 @@ operator|&
 operator|(
 name|t
 operator|->
+name|comnod
+operator|.
 name|comarg
 operator|)
 expr_stmt|;
@@ -1229,12 +1275,16 @@ name|flag
 name|THEN
 name|t
 operator|->
+name|comnod
+operator|.
 name|comio
 init|=
 name|inout
 argument_list|(
 name|t
 operator|->
+name|comnod
+operator|.
 name|comio
 argument_list|)
 decl_stmt|;
@@ -1242,12 +1292,16 @@ name|FI
 name|OD
 name|t
 operator|->
+name|comnod
+operator|.
 name|comtyp
 init|=
 name|TCOM
 decl_stmt|;
 name|t
 operator|->
+name|comnod
+operator|.
 name|comset
 operator|=
 name|argset
@@ -1289,6 +1343,8 @@ argument_list|)
 decl_stmt|;
 name|t
 operator|->
+name|treio
+operator|.
 name|treio
 operator|=
 name|io
