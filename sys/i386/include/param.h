@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)param.h	5.8 (Berkeley) 6/28/91  *	$Id: param.h,v 1.35 1997/08/21 05:07:56 fsmp Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)param.h	5.8 (Berkeley) 6/28/91  *	$Id: param.h,v 1.14 1997/08/23 05:14:23 smp Exp $  */
 end_comment
 
 begin_ifndef
@@ -478,6 +478,70 @@ directive|define
 name|_SIMPLELOCK_H_
 end_define
 
+begin_comment
+comment|/*  * XXX some temp debug control of cpl locks  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_ECPL
+end_define
+
+begin_comment
+comment|/* exception.s:		SCPL_LOCK/SCPL_UNLOCK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_ICPL
+end_define
+
+begin_comment
+comment|/* ipl.s:		CPL_LOCK/CPL_UNLOCK/FAST */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_AICPL
+end_define
+
+begin_comment
+comment|/* apic_ipl.s:		SCPL_LOCK/SCPL_UNLOCK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_AVCPL
+end_define
+
+begin_comment
+comment|/* apic_vector.s:	CPL_LOCK/CPL_UNLOCK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_IFCPL
+end_define
+
+begin_comment
+comment|/* ipl_funcs.c:		SCPL_LOCK/SCPL_UNLOCK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_MCPL_NOT
+end_define
+
+begin_comment
+comment|/* microtime.s:		CPL_LOCK/movl $0,_cpl_lock */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -584,7 +648,11 @@ value|\ 	addl	$4, %esp
 end_define
 
 begin_comment
-comment|/*  * Protects spl updates as a critical region.  * Items within this 'region' include:  *  cpl  *  cil  *  ipending  *  ???  */
+comment|/*  * Variations of CPL_LOCK protect spl updates as a critical region.  * Items within this 'region' include:  *  cpl  *  cil  *  ipending  *  ???  */
+end_comment
+
+begin_comment
+comment|/*  * Botom half routines, ie. those already protected from INTs.  *  * Used in:  *  sys/i386/i386/microtime.s (XXX currently NOT used, possible race?)  *  sys/i386/isa/ipl.s:		_doreti  *  sys/i386/isa/apic_vector.s:	_Xintr0, ..., _Xintr23  */
 end_comment
 
 begin_define
@@ -609,6 +677,26 @@ comment|/* address of lock */
 value|\ 	call	_s_unlock ;
 comment|/* MP-safe */
 value|\ 	addl	$4, %esp
+end_define
+
+begin_comment
+comment|/*  * INT safe version for top half of kernel.  *  * Used in:  *  sys/i386/i386/exception.s:	_Xfpu, _Xalign, _Xsyscall, _Xint0x80_syscall  *  sys/i386/isa/apic_ipl.s:	splz()  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCPL_LOCK
+define|\
+value|pushl	$_cpl_lock ;						\ 	call	_ss_lock ;						\ 	addl	$4, %esp
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCPL_UNLOCK
+define|\
+value|pushl	$_cpl_lock ;						\ 	call	_ss_unlock ;						\ 	addl	$4, %esp
 end_define
 
 begin_else
@@ -695,6 +783,50 @@ name|SMP
 end_ifdef
 
 begin_comment
+comment|/*  * Protects cpl/cil/ipending data as a critical region.  *  * Used in:  *  sys/i386/isa/ipl_funcs.c:	DO_SETBITS, softclockpending(), GENSPL,  *				spl0(), splx(), splq()  */
+end_comment
+
+begin_comment
+comment|/* Bottom half */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPL_LOCK
+parameter_list|()
+value|s_lock(&cpl_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPL_UNLOCK
+parameter_list|()
+value|s_unlock(&cpl_lock)
+end_define
+
+begin_comment
+comment|/* INT safe version for top half of kernel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCPL_LOCK
+parameter_list|()
+value|ss_lock(&cpl_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCPL_UNLOCK
+parameter_list|()
+value|ss_unlock(&cpl_lock)
+end_define
+
+begin_comment
 comment|/*  * Protects com/tty data as a critical region.  */
 end_comment
 
@@ -722,6 +854,34 @@ end_else
 begin_comment
 comment|/* SMP */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CPL_LOCK
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPL_UNLOCK
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCPL_LOCK
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCPL_UNLOCK
+parameter_list|()
+end_define
 
 begin_define
 define|#
@@ -811,6 +971,34 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|s_unlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|simplelock
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ss_lock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|simplelock
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ss_unlock
 name|__P
 argument_list|(
 operator|(
