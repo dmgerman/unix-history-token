@@ -50,8 +50,7 @@ end_enum
 
 begin_typedef
 typedef|typedef
-name|enum
-name|obj_type
+name|u_char
 name|objtype_t
 typedef|;
 end_typedef
@@ -98,10 +97,6 @@ name|int
 name|generation
 decl_stmt|;
 comment|/* generation ID */
-name|objtype_t
-name|type
-decl_stmt|;
-comment|/* type of pager */
 name|vm_size_t
 name|size
 decl_stmt|;
@@ -118,6 +113,10 @@ name|int
 name|hash_rand
 decl_stmt|;
 comment|/* vm hash table randomizer	*/
+name|objtype_t
+name|type
+decl_stmt|;
+comment|/* type of pager */
 name|u_short
 name|flags
 decl_stmt|;
