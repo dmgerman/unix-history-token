@@ -591,7 +591,7 @@ name|options
 operator|->
 name|use_pam
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 comment|/* Standard Options */
 if|if
