@@ -12,7 +12,7 @@ end_ifdef
 begin_warning
 warning|#
 directive|warning
-literal|"<gnuregex.h> has been replaced by<gnu/regex.h>"
+literal|"Use -I/usr/include/gnu and<regex.h> instead of<gnuregex.h>"
 end_warning
 
 begin_endif
