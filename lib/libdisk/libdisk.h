@@ -282,6 +282,20 @@ name|CHUNK_NEWFS
 value|0x0100
 end_define
 
+begin_define
+define|#
+directive|define
+name|DELCHUNK_NORMAL
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DELCHUNK_RECOVER
+value|0x0001
+end_define
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -418,6 +432,29 @@ end_function_decl
 
 begin_comment
 comment|/* Set the bios geometry to something sane  */
+end_comment
+
+begin_function_decl
+name|int
+name|Delete_Chunk2
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|disk
+parameter_list|,
+name|struct
+name|chunk
+modifier|*
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Free a chunk of disk_space modified by the passed  * flags.  */
 end_comment
 
 begin_function_decl

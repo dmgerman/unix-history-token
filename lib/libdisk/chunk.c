@@ -2006,7 +2006,9 @@ argument|); 	Print_Chunk(c1->part, offset +
 literal|2
 argument|); 	Print_Chunk(c1->next, offset); }  void Debug_Chunk(struct chunk *c1) { 	Print_Chunk(c1,
 literal|2
-argument|); }  int Delete_Chunk(struct disk *d, struct chunk *c) { 	struct chunk *c1=
+argument|); }  int Delete_Chunk(struct disk *d, struct chunk *c) {     return(Delete_Chunk2(d, c,
+literal|0
+argument|)); }  int Delete_Chunk2(struct disk *d, struct chunk *c, int rflags) { 	struct chunk *c1=
 literal|0
 argument_list|,
 argument|*c2
@@ -2049,8 +2051,8 @@ literal|0
 argument|; 			goto scan; 		} 	} 	return
 literal|1
 argument|;     scan:
-comment|/* 	 * Collapse multiple unused elements together, and attempt 	 * to extend the previous chunk into the freed chunk. 	 */
-argument|for(c2 = c1->part; c2; c2 = c2->next) { 		if (c2->type != unused) { 			if (c2->offset + c2->size != offset || 			    (c2->flags& CHUNK_AUTO_SIZE) ==
+comment|/* 	 * Collapse multiple unused elements together, and attempt 	 * to extend the previous chunk into the freed chunk. 	 * 	 * We only extend non-unused elements which are marked 	 * for newfs (we can't extend working filesystems), and 	 * only if we are called with DELCHUNK_RECOVER. 	 */
+argument|for(c2 = c1->part; c2; c2 = c2->next) { 		if (c2->type != unused) { 			if (c2->offset + c2->size != offset || 			    (rflags& DELCHUNK_RECOVER) ==
 literal|0
 argument||| 			    (c2->flags& CHUNK_NEWFS) ==
 literal|0
