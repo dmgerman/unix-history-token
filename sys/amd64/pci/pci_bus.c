@@ -1890,7 +1890,7 @@ init|=
 block|{
 block|{
 literal|0x030ad041
-comment|/* PNP030A */
+comment|/* PNP0A03 */
 block|,
 literal|"PCI Bus"
 block|}
