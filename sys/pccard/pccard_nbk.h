@@ -60,6 +60,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* kludges */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|pccard_remove_device
+parameter_list|(
+name|struct
+name|pccard_devinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
