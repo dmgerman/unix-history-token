@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)kdb_machdep.c	7.6 (Berkeley) %G%	*/
+comment|/*	@(#)kdb_machdep.c	7.7 (Berkeley) %G%	*/
 end_comment
 
 begin_include
@@ -135,6 +135,26 @@ init|=
 name|kdbbuf
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|kdb_escape
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* allow kdb to be entered on console escape */
+end_comment
+
+begin_decl_stmt
+name|int
+name|kdb_panic
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* allow kdb to be entered on panic/trap */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -353,6 +373,39 @@ name|strsize
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Transfer control to the debugger when magic console sequence 	 * is typed only if the system was booted with RB_KDB and the trap 	 * enable flag (RB_NOYSNC) set. 	 */
+if|if
+condition|(
+operator|(
+name|boothowto
+operator|&
+operator|(
+name|RB_KDB
+operator||
+name|RB_NOSYNC
+operator|)
+operator|)
+operator|==
+operator|(
+name|RB_KDB
+operator||
+name|RB_NOSYNC
+operator|)
+condition|)
+name|kdb_escape
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_KDB
+condition|)
+name|kdb_panic
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * If boot flags indicate, force entry into the debugger. 	 */
 if|if
 condition|(
@@ -603,6 +656,10 @@ name|int
 name|code
 decl_stmt|,
 name|retval
+decl_stmt|,
+name|kstack
+init|=
+literal|0
 decl_stmt|;
 specifier|static
 name|int
@@ -772,10 +829,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"(from kernel stack)\n"
-argument_list|)
+name|kstack
+operator|++
 expr_stmt|;
 block|}
 name|getpcb
@@ -814,6 +869,8 @@ else|:
 name|u
 operator|.
 name|u_procp
+argument_list|,
+name|kstack
 argument_list|)
 expr_stmt|;
 call|(
