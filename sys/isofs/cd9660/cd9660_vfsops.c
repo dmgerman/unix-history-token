@@ -2356,7 +2356,9 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"cd9660: Joliet Extension\n"
+literal|"cd9660: Joliet Extension (Level %d)\n"
+argument_list|,
+name|joliet_level
 argument_list|)
 expr_stmt|;
 name|rootp
