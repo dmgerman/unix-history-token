@@ -1220,6 +1220,8 @@ name|__P
 argument_list|(
 operator|(
 name|long
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1443,7 +1445,7 @@ name|undo
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

@@ -195,6 +195,11 @@ operator|==
 name|delim
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|exp
+condition|)
 name|sprintf
 argument_list|(
 name|errmsg
