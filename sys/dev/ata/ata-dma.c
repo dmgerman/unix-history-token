@@ -3174,12 +3174,32 @@ name|ata_find_dev
 argument_list|(
 name|parent
 argument_list|,
+literal|0x06401039
+argument_list|,
+literal|0x00
+argument_list|)
+operator|||
+comment|/* SiS 640 */
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
 literal|0x06451039
 argument_list|,
 literal|0x00
 argument_list|)
 operator|||
 comment|/* SiS 645 */
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
+literal|0x06501039
+argument_list|,
+literal|0x00
+argument_list|)
+operator|||
+comment|/* SiS 650 */
 name|ata_find_dev
 argument_list|(
 name|parent
@@ -3208,9 +3228,39 @@ literal|0x07351039
 argument_list|,
 literal|0x00
 argument_list|)
+operator|||
+comment|/* SiS 735 */
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
+literal|0x07401039
+argument_list|,
+literal|0x00
+argument_list|)
+operator|||
+comment|/* SiS 740 */
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
+literal|0x07451039
+argument_list|,
+literal|0x00
+argument_list|)
+operator|||
+comment|/* SiS 745 */
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
+literal|0x07501039
+argument_list|,
+literal|0x00
+argument_list|)
 condition|)
 block|{
-comment|/* SiS 735 */
+comment|/* SiS 750 */
 name|int8_t
 name|reg
 init|=
@@ -3712,9 +3762,7 @@ return|return;
 block|}
 block|}
 block|}
-else|else
-block|{
-comment|/* SiS 5591 */
+elseif|else
 if|if
 condition|(
 name|udmamode
@@ -3805,7 +3853,6 @@ operator|=
 name|ATA_UDMA2
 expr_stmt|;
 return|return;
-block|}
 block|}
 block|}
 if|if
@@ -5103,11 +5150,11 @@ comment|/* Promise TX2 ATA100 controllers */
 case|case
 literal|0x6268105a
 case|:
-comment|/* Promise TX2v2 ATA100 controllers */
+comment|/* Promise TX2 ATA100 controllers */
 case|case
 literal|0x4d69105a
 case|:
-comment|/* Promise ATA133 controllers */
+comment|/* Promise TX2 ATA133 controllers */
 name|ATA_OUTB
 argument_list|(
 name|scp

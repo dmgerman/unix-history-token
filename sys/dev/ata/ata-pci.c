@@ -151,19 +151,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* prototypes */
-end_comment
-
-begin_function_decl
-name|void
-name|ata_via686b
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* misc defines */
 end_comment
 
@@ -177,11 +164,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|GRANDPARENT
+parameter_list|(
+name|dev
+parameter_list|)
+value|device_get_parent(device_get_parent(dev))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_MASTERDEV
 parameter_list|(
 name|dev
 parameter_list|)
-value|((pci_get_progif(dev)& 0x80)&& \ 					 (pci_get_progif(dev)& 0x05) != 0x05)
+value|((pci_get_progif(dev)& 0x80)&& \ 				 (pci_get_progif(dev)& 0x05) != 0x05)
 end_define
 
 begin_function
@@ -289,6 +286,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ata_via686b
 parameter_list|(
@@ -697,7 +695,25 @@ name|ata_find_dev
 argument_list|(
 name|dev
 argument_list|,
+literal|0x06401039
+argument_list|,
+literal|0x00
+argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
 literal|0x06451039
+argument_list|,
+literal|0x00
+argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x06501039
 argument_list|,
 literal|0x00
 argument_list|)
@@ -728,10 +744,38 @@ literal|0x07351039
 argument_list|,
 literal|0x00
 argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x07401039
+argument_list|,
+literal|0x00
+argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x07451039
+argument_list|,
+literal|0x00
+argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x07501039
+argument_list|,
+literal|0x00
+argument_list|)
 condition|)
 return|return
 literal|"SiS 5591 ATA100 controller"
 return|;
+elseif|else
 if|if
 condition|(
 name|ata_find_dev
@@ -773,6 +817,7 @@ condition|)
 return|return
 literal|"SiS 5591 ATA66 controller"
 return|;
+else|else
 return|return
 literal|"SiS 5591 ATA33 controller"
 return|;
@@ -809,7 +854,9 @@ condition|)
 return|return
 literal|"Cypress 82C693 ATA controller"
 return|;
-break|break;
+return|return
+name|NULL
+return|;
 case|case
 literal|0x01021078
 case|:
@@ -868,7 +915,7 @@ case|case
 literal|0x4d69105a
 case|:
 return|return
-literal|"Promise ATA133 controller"
+literal|"Promise TX2 ATA133 controller"
 return|;
 case|case
 literal|0x00041103
@@ -911,11 +958,10 @@ case|:
 return|return
 literal|"HighPoint HPT372 ATA133 controller"
 return|;
-default|default:
-return|return
-literal|"Unknown revision HighPoint ATA controller"
-return|;
 block|}
+return|return
+name|NULL
+return|;
 comment|/* unsupported but known chipsets, generic DMA only */
 case|case
 literal|0x10001042
@@ -1336,7 +1382,7 @@ break|break;
 case|case
 literal|0x00041103
 case|:
-comment|/* HighPoint */
+comment|/* HighPoint HPT 366/368/370/372 */
 switch|switch
 condition|(
 name|pci_get_revid
@@ -1410,7 +1456,7 @@ literal|1
 argument_list|)
 operator|&
 operator|~
-literal|0x02
+literal|0x03
 operator|)
 argument_list|,
 literal|1
@@ -1433,7 +1479,7 @@ literal|1
 argument_list|)
 operator|&
 operator|~
-literal|0x02
+literal|0x03
 operator|)
 argument_list|,
 literal|1
@@ -1955,11 +2001,11 @@ comment|/* Promise TX2 ATA100 */
 case|case
 literal|0x6268105a
 case|:
-comment|/* Promise TX2v2 ATA100 */
+comment|/* Promise TX2 ATA100 */
 case|case
 literal|0x4d69105a
 case|:
-comment|/* Promise ATA133 */
+comment|/* Promise TX2 ATA133 */
 name|ATA_OUTB
 argument_list|(
 name|scp
