@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pigs.c	5.6 (Berkeley) %G%"
+literal|"@(#)pigs.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1231,9 +1231,16 @@ name|prt
 operator|->
 name|pt_pctcpu
 operator|=
+operator|(
+operator|(
+name|double
+operator|)
 name|pp
 operator|->
 name|p_pctcpu
+operator|/
+name|fscale
+operator|)
 operator|/
 operator|(
 literal|1.0

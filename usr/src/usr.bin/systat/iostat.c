@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.4 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1809,7 +1809,7 @@ name|CPUSCALE
 value|0.5
 name|histogram
 argument_list|(
-literal|100
+literal|100.0
 operator|*
 name|s
 operator|.
