@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uux.c	5.9	(Berkeley) %G%"
+literal|"@(#)uux.c	5.10	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,28 +31,6 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
-
-begin_comment
-comment|/*  * If you have it, include<sysexits.h> to use exit  * codes that will be understood by sendmail.  * Otherwise, define EX_NOHOST, EX_CANTCREAT, and EX_NOINPUT.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
-end_include
-
-begin_comment
-comment|/*#define EX_NOINPUT	66	/**/
-end_comment
-
-begin_comment
-comment|/*#define EX_NOHOST	68	/**/
-end_comment
-
-begin_comment
-comment|/*#define EX_CANTCREAT	73	/**/
-end_comment
 
 begin_define
 define|#
@@ -89,7 +67,7 @@ name|APPCMD
 parameter_list|(
 name|d
 parameter_list|)
-value|{\ register char *p; for (p = d; *p != '\0';)\ 	{*cmdp++ = *p++;\ 		if(cmdp>(sizeof(cmd)+&cmd[0])){\ 			fprintf(stderr,"argument list too long\n");\ 			cleanup(EX_SOFTWARE);\ 		}\ 	}\ 	*cmdp++ = ' '; *cmdp = '\0';}
+value|{\ register char *p; for (p = d; *p != '\0';)\ 	{*cmdp++ = *p++;\ 		if(cmdp>(sizeof(cmd)+&cmd[0])){\ 			fprintf(stderr,"argument list too long\n");\ 			cleanup(E2BIG);\ 		}\ 	}\ 	*cmdp++ = ' '; *cmdp = '\0';}
 end_define
 
 begin_define
@@ -1105,7 +1083,7 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 argument_list|(
-name|EX_NOHOST
+name|EHOSTUNREACH
 argument_list|)
 expr_stmt|;
 block|}
@@ -1222,7 +1200,7 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 argument_list|(
-name|EX_IOERR
+name|EIO
 argument_list|)
 expr_stmt|;
 block|}
@@ -1241,7 +1219,7 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 argument_list|(
-name|EX_IOERR
+name|EIO
 argument_list|)
 expr_stmt|;
 block|}
@@ -1566,7 +1544,7 @@ argument_list|)
 condition|)
 name|cleanup
 argument_list|(
-name|EX_CANTCREAT
+name|EACCES
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1689,7 +1667,7 @@ argument_list|)
 condition|)
 name|cleanup
 argument_list|(
-name|EX_CANTCREAT
+name|EACCES
 argument_list|)
 expr_stmt|;
 if|if
@@ -1743,7 +1721,7 @@ argument_list|)
 condition|)
 name|cleanup
 argument_list|(
-name|EX_CANTCREAT
+name|EACCES
 argument_list|)
 expr_stmt|;
 name|gename
@@ -1798,7 +1776,7 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 argument_list|(
-name|EX_NOINPUT
+name|EACCES
 argument_list|)
 expr_stmt|;
 block|}
@@ -1880,7 +1858,7 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 argument_list|(
-name|EX_NOINPUT
+name|EIO
 argument_list|)
 expr_stmt|;
 block|}
@@ -2069,7 +2047,7 @@ argument_list|)
 condition|)
 name|cleanup
 argument_list|(
-name|EX_CANTCREAT
+name|EPERM
 argument_list|)
 expr_stmt|;
 name|GENRCV
@@ -2109,7 +2087,7 @@ argument_list|)
 condition|)
 name|cleanup
 argument_list|(
-name|EX_CANTCREAT
+name|EPERM
 argument_list|)
 expr_stmt|;
 if|if
@@ -2371,7 +2349,7 @@ argument_list|)
 condition|)
 name|cleanup
 argument_list|(
-name|EX_CANTCREAT
+name|EACCES
 argument_list|)
 expr_stmt|;
 if|if
@@ -2473,7 +2451,7 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 argument_list|(
-name|EX_USAGE
+name|EINVAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2505,7 +2483,7 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 argument_list|(
-name|EX_IOERR
+name|EIO
 argument_list|)
 expr_stmt|;
 block|}
@@ -2647,7 +2625,7 @@ argument_list|)
 condition|)
 name|cleanup
 argument_list|(
-name|EX_IOERR
+name|EIO
 argument_list|)
 expr_stmt|;
 name|fclose
