@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	6.1	83/07/29	*/
+comment|/*	ubareg.h	6.2	83/09/29	*/
 end_comment
 
 begin_comment
@@ -763,7 +763,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|IF_UBAPURGE
+name|UBAPURGE
 parameter_list|(
 name|uba
 parameter_list|,
@@ -917,12 +917,35 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|VAX750
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAXNUBA
+value|2
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MAXNUBA
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
