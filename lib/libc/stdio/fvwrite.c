@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fvwrite.c,v 1.3 1996/06/22 10:33:27 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -322,6 +322,13 @@ name|w
 operator|=
 name|len
 expr_stmt|;
+if|if
+condition|(
+name|w
+operator|>
+literal|0
+condition|)
+block|{
 name|COPY
 argument_list|(
 name|w
@@ -340,6 +347,7 @@ name|_p
 operator|+=
 name|w
 expr_stmt|;
+block|}
 name|w
 operator|=
 name|len
