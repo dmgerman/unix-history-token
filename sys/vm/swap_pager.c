@@ -535,7 +535,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * dmmax is in page-sized chunks with the new swap system.  It was  * dev-bsized chunks in the old.  *  * swap_*() routines are externally accessible.  swp_*() routines are  * internal.  */
+comment|/*  * dmmax is in page-sized chunks with the new swap system.  It was  * dev-bsized chunks in the old.  dmmax is always a power of 2.  *  * swap_*() routines are externally accessible.  swp_*() routines are  * internal.  */
 end_comment
 
 begin_decl_stmt
