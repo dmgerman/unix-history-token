@@ -729,7 +729,7 @@ argument_list|)
 expr_stmt|;
 name|ptr
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|orig
 argument_list|,
@@ -920,7 +920,7 @@ operator|(
 name|dialogMenuItem
 operator|*
 operator|)
-name|realloc
+name|safe_realloc
 argument_list|(
 name|list
 argument_list|,
