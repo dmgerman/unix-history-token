@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	8.3 (Berkeley) %G%"
+literal|"@(#)pass5.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,13 @@ operator|*
 operator|)
 name|buf
 decl_stmt|;
+name|statemap
+index|[
+name|WINO
+index|]
+operator|=
+name|USTATE
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
