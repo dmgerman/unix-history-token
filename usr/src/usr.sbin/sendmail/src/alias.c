@@ -99,7 +99,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.12 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.13 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -114,7 +114,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.12 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.13 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.12 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.13 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.12 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.13 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -518,6 +518,49 @@ expr_stmt|;
 name|AliasLevel
 operator|--
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QSELFREF
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"alias: QDONTSEND "
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|a
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QDONTSEND
+expr_stmt|;
+block|}
 block|}
 end_block
 

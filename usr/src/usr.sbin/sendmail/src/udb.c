@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.7 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.8 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.7 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.8 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,7 +394,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"expand(%s)\n"
+literal|"udbexpand(%s)\n"
 argument_list|,
 name|a
 operator|->
@@ -619,7 +619,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"expand: no match on %s\n"
+literal|"udbexpand: no match on %s\n"
 argument_list|,
 name|keybuf
 argument_list|)
@@ -796,6 +796,49 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QSELFREF
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|28
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"udbexpand: QDONTSEND "
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|a
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QDONTSEND
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|i
 operator|<
 literal|0
@@ -912,6 +955,49 @@ expr_stmt|;
 name|AliasLevel
 operator|--
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QSELFREF
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|28
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"udbexpand: QDONTSEND "
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|a
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QDONTSEND
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|user
