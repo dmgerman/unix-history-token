@@ -5721,21 +5721,12 @@ name|bio_resid
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* Short transfer ??? */
-if|#
-directive|if
-literal|0
-block|if (cmd6workaround(done_ccb)  								== ERESTART) 						return;
-endif|#
-directive|endif
 name|bp
 operator|->
 name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -5810,22 +5801,12 @@ name|resid
 operator|>
 literal|0
 condition|)
-block|{
-comment|/* Short transfer ??? */
-if|#
-directive|if
-literal|0
-comment|/* XXX most of the broken umass devices need this ad-hoc work around */
-block|if (cmd6workaround(done_ccb) == ERESTART) 					return;
-endif|#
-directive|endif
 name|bp
 operator|->
 name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-block|}
 block|}
 comment|/* 		 * Block out any asyncronous callbacks 		 * while we touch the pending ccb list. 		 */
 name|oldspl
