@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd.h,v 1.13 1999/03/25 22:52:45 mjacob Exp $ */
+comment|/* $Id: isp_freebsd.h,v 1.14 1999/04/04 01:34:06 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_4_3_99 */
+comment|/* release_5_11_99 */
 end_comment
 
 begin_comment
@@ -340,6 +340,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|XS_CHANNEL
+parameter_list|(
+name|xs
+parameter_list|)
+value|((int) (xs)->sc_link->adapter_bus)
+end_define
+
+begin_define
+define|#
+directive|define
 name|XS_RESID
 parameter_list|(
 name|xs
@@ -626,6 +636,13 @@ define|#
 directive|define
 name|isp_name
 value|isp_osinfo.name
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_QFULL
+value|0x28
 end_define
 
 begin_endif
@@ -1140,15 +1157,13 @@ argument_list|,
 literal|"Negotiation "
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|printf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s%s"
+literal|"%s\n"
 argument_list|,
 name|buf
-argument_list|,
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1231,7 +1246,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"?0x%x?"
+literal|"0x%x"
 argument_list|,
 name|state
 argument_list|)
@@ -1344,7 +1359,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"?0x%x?"
+literal|"0x%x"
 argument_list|,
 name|pdb_state
 argument_list|)
@@ -1355,6 +1370,13 @@ return|;
 block|}
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|ISP_NO_FASTPOST_FC
+value|1
+end_define
 
 begin_endif
 endif|#
