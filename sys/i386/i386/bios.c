@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Michael Smith  * Copyright (c) 1998 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bios.c,v 1.20 1999/08/25 06:44:32 peter Exp $  */
+comment|/*-  * Copyright (c) 1997 Michael Smith  * Copyright (c) 1998 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bios.c,v 1.21 1999/08/25 06:56:36 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -965,12 +965,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-specifier|static
-name|u_int
-name|curgen
-init|=
-literal|1
-decl_stmt|;
 name|struct
 name|soft_segment_descriptor
 name|ssd
@@ -1002,32 +996,30 @@ literal|0
 comment|/* granularity == byte units */
 block|}
 decl_stmt|;
-if|if
-condition|(
-name|seg
-operator|->
-name|generation
-operator|==
-name|curgen
-condition|)
-return|return;
-if|if
-condition|(
-operator|++
-name|curgen
-operator|==
-literal|0
-condition|)
-name|curgen
+name|union
+name|descriptor
+modifier|*
+name|p_gdt
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|p_gdt
 operator|=
-literal|1
+operator|&
+name|gdt
+index|[
+name|cpuid
+index|]
 expr_stmt|;
-name|seg
-operator|->
-name|generation
+else|#
+directive|else
+name|p_gdt
 operator|=
-name|curgen
+name|gdt
 expr_stmt|;
+endif|#
+directive|endif
 name|ssd
 operator|.
 name|ssd_base
@@ -1054,7 +1046,7 @@ operator|&
 name|ssd
 argument_list|,
 operator|&
-name|gdt
+name|p_gdt
 index|[
 name|GBIOSCODE32_SEL
 index|]
@@ -1101,7 +1093,7 @@ operator|&
 name|ssd
 argument_list|,
 operator|&
-name|gdt
+name|p_gdt
 index|[
 name|GBIOSCODE16_SEL
 index|]
@@ -1149,7 +1141,7 @@ operator|&
 name|ssd
 argument_list|,
 operator|&
-name|gdt
+name|p_gdt
 index|[
 name|GBIOSDATA_SEL
 index|]
@@ -1191,7 +1183,7 @@ operator|&
 name|ssd
 argument_list|,
 operator|&
-name|gdt
+name|p_gdt
 index|[
 name|GBIOSUTIL_SEL
 index|]
@@ -1233,7 +1225,7 @@ operator|&
 name|ssd
 argument_list|,
 operator|&
-name|gdt
+name|p_gdt
 index|[
 name|GBIOSARGS_SEL
 index|]
@@ -1830,15 +1822,6 @@ operator|)
 return|;
 block|}
 block|}
-name|args
-operator|->
-name|seg
-operator|.
-name|generation
-operator|=
-literal|0
-expr_stmt|;
-comment|/* reload selectors */
 name|set_bios_selectors
 argument_list|(
 operator|&
