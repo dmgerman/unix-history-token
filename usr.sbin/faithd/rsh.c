@@ -216,7 +216,7 @@ literal|0
 condition|)
 name|exit_failure
 argument_list|(
-literal|"connecion timeout"
+literal|"connection timeout"
 argument_list|)
 expr_stmt|;
 name|n
@@ -877,7 +877,7 @@ literal|0
 condition|)
 name|exit_failure
 argument_list|(
-literal|"connecion timeout"
+literal|"connection timeout"
 argument_list|)
 expr_stmt|;
 if|if
