@@ -4,7 +4,7 @@ comment|/*  * Various setup functions for truss.  Not the cleanest-written code,
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: setup.c,v 1.1 1997/12/06 05:23:05 sef Exp $  */
 end_comment
 
 begin_include
@@ -188,6 +188,15 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
