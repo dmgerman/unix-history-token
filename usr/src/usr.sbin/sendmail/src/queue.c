@@ -20,6 +20,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -29,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	3.1	%G%"
+literal|"@(#)queue.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +202,16 @@ argument_list|,
 literal|"T%ld\n"
 argument_list|,
 name|TimeOut
+argument_list|)
+expr_stmt|;
+comment|/* output message priority */
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"P%d\n"
+argument_list|,
+name|MsgPriority
 argument_list|)
 expr_stmt|;
 comment|/* output list of recipient addresses */
@@ -430,6 +446,12 @@ begin_comment
 comment|/* **  RUNQUEUE -- run the jobs in the queue. ** **	Gets the stuff out of the queue in some presumably logical **	order and processes them. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		runs things in the mail queue. */
 end_comment
 
+begin_decl_stmt
+name|bool
+name|ReorderQueue
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|runqueue
 argument_list|()
@@ -437,11 +459,72 @@ end_macro
 
 begin_block
 block|{
-comment|/* 	**  Order the existing work requests. 	*/
+extern|extern reordersig(
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_for
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* 		**  Order the existing work requests. 		*/
 name|orderq
 argument_list|()
 expr_stmt|;
-comment|/* 	**  Process them once at a time. 	**	The queue could be reordered while we do this to take 	**	new requests into account.  If so, the existing job 	**	will be finished but the next thing taken off WorkQ 	**	may be something else. 	*/
+if|if
+condition|(
+name|WorkQ
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* no work?  well, maybe later */
+if|if
+condition|(
+name|QueueIntvl
+operator|==
+literal|0
+condition|)
+break|break;
+name|sleep
+argument_list|(
+name|QueueIntvl
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|ReorderQueue
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
+name|QueueIntvl
+operator|!=
+literal|0
+condition|)
+block|{
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|reordersig
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+name|QueueIntvl
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		**  Process them once at a time. 		**	The queue could be reordered while we do this to take 		**	new requests into account.  If so, the existing job 		**	will be finished but the next thing taken off WorkQ 		**	may be something else. 		*/
 while|while
 condition|(
 name|WorkQ
@@ -482,96 +565,96 @@ operator|)
 name|w
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ReorderQueue
+condition|)
+break|break;
 block|}
+if|if
+condition|(
+name|QueueIntvl
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
-end_block
+end_for
 
 begin_escape
+unit|}
 end_escape
 
 begin_comment
-comment|/* **  ORDERQ -- order the work queue. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Sets WorkQ to the queue of available work, in order. */
+comment|/* **  REORDERSIG -- catch the alarm signal and tell sendmail to reorder queue. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		sets the "reorder work queue" flag. */
 end_comment
 
-begin_define
+begin_expr_stmt
+unit|reordersig
+operator|(
+operator|)
+block|{
+name|ReorderQueue
+operator|=
+name|TRUE
+block|; }
+comment|/* **  ORDERQ -- order the work queue. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Sets WorkQ to the queue of available work, in order. */
 define|#
 directive|define
 name|WLSIZE
 value|120
-end_define
-
-begin_comment
 comment|/* max size of worklist per sort */
-end_comment
-
-begin_macro
 name|orderq
 argument_list|()
-end_macro
-
-begin_block
-block|{
-name|struct
+block|{ 	struct
 name|direct
 name|d
-decl_stmt|;
+block|;
 specifier|register
 name|WORK
-modifier|*
+operator|*
 name|w
-decl_stmt|;
+block|;
 specifier|register
 name|WORK
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|wp
-decl_stmt|;
+block|;
 comment|/* parent of w */
 specifier|register
 name|FILE
-modifier|*
+operator|*
 name|f
-decl_stmt|;
+block|;
 specifier|register
 name|int
 name|i
-decl_stmt|;
-name|struct
+block|; 	struct
 name|stat
 name|st
-decl_stmt|;
+block|;
 name|WORK
 name|wlist
 index|[
 name|WLSIZE
 index|]
-decl_stmt|;
+block|;
 name|int
 name|wn
-init|=
+operator|=
 literal|0
-decl_stmt|;
-extern|extern workcmpf(
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
+block|;
+specifier|extern
+name|workcmpf
+argument_list|()
+block|;
 specifier|extern
 name|char
-modifier|*
+operator|*
 name|QueueDir
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* clear out old WorkQ */
-end_comment
-
-begin_for
 for|for
 control|(
 name|w
@@ -618,13 +701,7 @@ operator|=
 name|nw
 expr_stmt|;
 block|}
-end_for
-
-begin_comment
 comment|/* open the queue directory */
-end_comment
-
-begin_expr_stmt
 name|f
 operator|=
 name|fopen
@@ -1105,11 +1182,15 @@ name|w_next
 control|)
 name|printf
 argument_list|(
-literal|"%32s: sz=%ld\n"
+literal|"%32s: pri=%-2d sz=%ld\n"
 argument_list|,
 name|w
 operator|->
 name|w_name
+argument_list|,
+name|w
+operator|->
+name|w_pri
 argument_list|,
 name|w
 operator|->
@@ -1319,6 +1400,9 @@ name|QueueRun
 operator|=
 name|TRUE
 expr_stmt|;
+name|openxscrpt
+argument_list|()
+expr_stmt|;
 name|initsys
 argument_list|()
 expr_stmt|;
@@ -1334,6 +1418,40 @@ argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"CurTime=%ld, TimeOut=%ld\n"
+argument_list|,
+name|CurTime
+argument_list|,
+name|TimeOut
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+if|if
+condition|(
+name|QueueUp
+operator|&&
+name|CurTime
+operator|>
+name|TimeOut
+condition|)
+name|timeout
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1347,18 +1465,6 @@ argument_list|(
 name|w
 operator|->
 name|w_name
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|CurTime
-operator|>
-name|TimeOut
-condition|)
-name|timeout
-argument_list|(
-name|w
 argument_list|)
 expr_stmt|;
 name|finis
@@ -1543,11 +1649,14 @@ case|:
 comment|/* sender */
 name|setsender
 argument_list|(
+name|newstr
+argument_list|(
 operator|&
 name|buf
 index|[
 literal|1
 index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1611,6 +1720,22 @@ name|TimeOut
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'P'
+case|:
+comment|/* message priority */
+name|MsgPriority
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|syserr
 argument_list|(
@@ -1648,6 +1773,15 @@ end_expr_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"timeout(%s)\n"
@@ -1656,6 +1790,23 @@ name|w
 operator|->
 name|w_name
 argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+comment|/* return message to sender */
+operator|(
+name|void
+operator|)
+name|returntosender
+argument_list|(
+literal|"Cannot send mail for three days"
+argument_list|)
+expr_stmt|;
+comment|/* arrange to remove files from queue */
+name|QueueUp
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
 end_block

@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.47	%G%"
+literal|"@(#)main.c	3.48	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,6 +161,12 @@ literal|30
 index|]
 decl_stmt|;
 comment|/* holds HostName */
+name|bool
+name|queuemode
+init|=
+name|FALSE
+decl_stmt|;
+comment|/* process queue requests */
 name|bool
 name|aliasinit
 init|=
@@ -948,6 +954,10 @@ case|case
 literal|'q'
 case|:
 comment|/* run queue files at intervals */
+name|queuemode
+operator|=
+name|TRUE
+expr_stmt|;
 name|QueueIntvl
 operator|=
 name|atoi
@@ -958,18 +968,6 @@ index|[
 literal|1
 index|]
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|QueueIntvl
-operator|==
-literal|0
-condition|)
-name|QueueIntvl
-operator|=
-literal|60
-operator|*
-literal|60
 expr_stmt|;
 break|break;
 default|default:
@@ -1179,9 +1177,7 @@ expr_stmt|;
 comment|/* 	if (Smtp) 		smtp();  	/* 	**  If collecting stuff from the queue, go start doing that. 	*/
 if|if
 condition|(
-name|QueueIntvl
-operator|>
-literal|0
+name|queuemode
 condition|)
 block|{
 name|runqueue
@@ -1741,6 +1737,25 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"\n====finis: stat %d\n"
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 comment|/* mail back the transcript on errors */
 if|if
 condition|(
@@ -1826,19 +1841,26 @@ argument_list|(
 name|XcriptFile
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|freopen
+name|OutChannel
+operator|=
+name|fopen
 argument_list|(
 name|XcriptFile
 argument_list|,
 literal|"w"
-argument_list|,
-name|stdout
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OutChannel
 operator|==
 name|NULL
 condition|)
+block|{
+name|OutChannel
+operator|=
+name|stdout
+expr_stmt|;
 name|syserr
 argument_list|(
 literal|"Can't create %s"
@@ -1846,6 +1868,7 @@ argument_list|,
 name|XcriptFile
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1929,6 +1952,9 @@ if|if
 condition|(
 operator|!
 name|Smtp
+operator|&&
+operator|!
+name|QueueRun
 condition|)
 block|{
 name|errno
@@ -1982,6 +2008,9 @@ if|if
 condition|(
 operator|!
 name|Smtp
+operator|&&
+operator|!
+name|QueueRun
 condition|)
 name|syserr
 argument_list|(
@@ -2287,6 +2316,10 @@ name|time
 parameter_list|()
 function_decl|;
 comment|/* convert timeout interval to absolute time */
+name|TimeOut
+operator|-=
+name|CurTime
+expr_stmt|;
 operator|(
 name|void
 operator|)

@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.26	%G%"
+literal|"@(#)collect.c	3.27	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1461,19 +1461,19 @@ name|Prio
 index|[]
 init|=
 block|{
-literal|"normal"
+literal|"alert"
 block|,
-name|PRI_NORMAL
+name|PRI_ALERT
 block|,
 literal|"quick"
 block|,
 name|PRI_QUICK
 block|,
-literal|"priority"
-block|,
-name|PRI_PRIORITY
-block|,
 literal|"first-class"
+block|,
+name|PRI_FIRSTCL
+block|,
+literal|"normal"
 block|,
 name|PRI_NORMAL
 block|,
@@ -1514,6 +1514,11 @@ name|prio
 modifier|*
 name|pl
 decl_stmt|;
+specifier|extern
+name|bool
+name|sameword
+parameter_list|()
+function_decl|;
 for|for
 control|(
 name|pl
@@ -1532,7 +1537,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|sameword
 argument_list|(
 name|p
 argument_list|,
@@ -1540,8 +1545,6 @@ name|pl
 operator|->
 name|pri_name
 argument_list|)
-operator|==
-literal|0
 condition|)
 break|break;
 block|}

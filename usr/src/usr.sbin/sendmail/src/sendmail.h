@@ -21,7 +21,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.50	%G%"
+literal|"@(#)sendmail.h	3.51	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -861,42 +861,49 @@ comment|/* queue of things to be done */
 end_comment
 
 begin_comment
-comment|/* **  Message priorities. */
+comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PRI_NORMAL
+name|PRI_ALERT
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|PRI_SECONDCL
+name|PRI_QUICK
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
+name|PRI_FIRSTCL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_NORMAL
+value|-4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_SECONDCL
+value|-10
+end_define
+
+begin_define
+define|#
+directive|define
 name|PRI_THIRDCL
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRI_QUICK
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRI_PRIORITY
-value|40
+value|-20
 end_define
 
 begin_decl_stmt
