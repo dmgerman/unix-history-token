@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirname.c	5.3 (Berkeley) %G%"
+literal|"@(#)dirname.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,6 +133,12 @@ operator|++
 name|p
 operator|=
 literal|'\0'
+expr_stmt|;
+else|else
+operator|*
+name|argv
+operator|=
+literal|"."
 expr_stmt|;
 name|printf
 argument_list|(
