@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.15	%G%	*/
+comment|/*	uba.c	4.16	%G%	*/
 end_comment
 
 begin_define
@@ -1361,6 +1361,98 @@ empty_stmt|;
 block|}
 end_block
 
+begin_expr_stmt
+name|ubapurge
+argument_list|(
+name|um
+argument_list|)
+specifier|register
+expr|struct
+name|uba_minfo
+operator|*
+name|um
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|uba_hd
+modifier|*
+name|uh
+init|=
+name|um
+operator|->
+name|um_hd
+decl_stmt|;
+specifier|register
+name|int
+name|bdp
+init|=
+operator|(
+name|um
+operator|->
+name|um_ubinfo
+operator|>>
+literal|28
+operator|)
+operator|&
+literal|0x0f
+decl_stmt|;
+switch|switch
+condition|(
+name|cpu
+condition|)
+block|{
+if|#
+directive|if
+name|VAX780
+case|case
+name|VAX_780
+case|:
+name|uh
+operator|->
+name|uh_uba
+operator|->
+name|uba_dpr
+index|[
+name|bdp
+index|]
+operator||=
+name|UBA_BNE
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX750
+case|case
+name|VAX_750
+case|:
+name|uh
+operator|->
+name|uh_uba
+operator|->
+name|uba_dpr
+index|[
+name|bdp
+index|]
+operator||=
+name|UBA_PURGE
+operator||
+name|UBA_NXM
+operator||
+name|UBA_UCE
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+block|}
+block|}
+end_block
+
 begin_comment
 comment|/*  * Generate a reset on uba number uban.  Then  * call each device in the character device table,  * giving it a chance to clean up so as to be able to continue.  */
 end_comment
@@ -1565,6 +1657,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
 begin_comment
 comment|/*  * Init a uba.  This is called with a pointer  * rather than a virtual address since it is called  * by code which runs with memory mapping disabled.  * In these cases we really don't need the interrupts  * enabled, but since we run with ipl high, we don't care  * if they are, they will never happen anyways.  */
 end_comment
@@ -1617,12 +1715,6 @@ condition|)
 empty_stmt|;
 block|}
 end_block
-
-begin_if
-if|#
-directive|if
-name|VAX780
-end_if
 
 begin_comment
 comment|/*  * Check to make sure the UNIBUS adaptor is not hung,  * with an interrupt in the register to be presented,  * but not presenting it for an extended period (5 seconds).  */
