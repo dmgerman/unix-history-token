@@ -272,7 +272,7 @@ name|_kern_rndtest
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|reset
+name|retest
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -435,6 +435,21 @@ name|rs_parent
 operator|=
 name|dev
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+name|callout_init
+argument_list|(
+operator|&
+name|rsp
+operator|->
+name|rs_to
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* NB: 1 means the callout runs w/o Giant locked */
 name|callout_init
 argument_list|(
@@ -446,6 +461,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|device_printf
@@ -508,6 +525,9 @@ name|u_int
 name|len
 parameter_list|)
 block|{
+name|size_t
+name|i
+decl_stmt|;
 comment|/* 	 * If enabled, collect data and run tests when we have enough. 	 */
 if|if
 condition|(
@@ -516,9 +536,6 @@ operator|->
 name|rs_collect
 condition|)
 block|{
-name|size_t
-name|i
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -628,6 +645,42 @@ operator|+=
 name|len
 expr_stmt|;
 else|else
+block|{
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+comment|/* XXX verify buffer is word aligned */
+name|u_int32_t
+modifier|*
+name|p
+init|=
+name|buf
+decl_stmt|;
+for|for
+control|(
+name|len
+operator|/=
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+init|;
+name|len
+condition|;
+name|len
+operator|--
+control|)
+name|add_true_randomness
+argument_list|(
+operator|*
+name|p
+operator|++
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|random_harvest
 argument_list|(
 name|buf
@@ -643,6 +696,9 @@ argument_list|,
 name|RANDOM_PURE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 end_function
 
