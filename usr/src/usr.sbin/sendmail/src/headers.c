@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.63 (Berkeley) %G%"
+literal|"@(#)headers.c	8.64 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1477,7 +1477,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  EATHEADER -- run through the stored header and extract info. ** **	Parameters: **		e -- the envelope to process. **		full -- if set, do full processing (e.g., compute **			message priority). ** **	Returns: **		none. ** **	Side Effects: **		Sets a bunch of global variables from information **			in the collected header. **		Aborts the message if the hop count is exceeded. */
+comment|/* **  EATHEADER -- run through the stored header and extract info. ** **	Parameters: **		e -- the envelope to process. **		full -- if set, do full processing (e.g., compute **			message priority).  This should not be set **			when reading a queue file because some info **			needed to compute the priority is wrong. ** **	Returns: **		none. ** **	Side Effects: **		Sets a bunch of global variables from information **			in the collected header. **		Aborts the message if the hop count is exceeded. */
 end_comment
 
 begin_expr_stmt
@@ -1629,7 +1629,7 @@ argument_list|)
 expr_stmt|;
 name|msgid
 operator|=
-literal|"<none>"
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -1880,8 +1880,6 @@ block|}
 comment|/* save the message-id for logging */
 if|if
 condition|(
-name|full
-operator|&&
 name|strcasecmp
 argument_list|(
 name|h
@@ -2005,31 +2003,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|full
-condition|)
-block|{
-name|e
-operator|->
-name|e_msgpriority
-operator|=
-name|e
-operator|->
-name|e_msgsize
-operator|-
-name|e
-operator|->
-name|e_class
-operator|*
-name|WkClassFact
-operator|+
-name|e
-operator|->
-name|e_nrcpts
-operator|*
-name|WkRecipFact
-expr_stmt|;
-if|if
-condition|(
 name|e
 operator|->
 name|e_class
@@ -2057,6 +2030,31 @@ name|e_timeoutclass
 operator|=
 name|TOC_URGENT
 expr_stmt|;
+if|if
+condition|(
+name|full
+condition|)
+block|{
+name|e
+operator|->
+name|e_msgpriority
+operator|=
+name|e
+operator|->
+name|e_msgsize
+operator|-
+name|e
+operator|->
+name|e_class
+operator|*
+name|WkClassFact
+operator|+
+name|e
+operator|->
+name|e_nrcpts
+operator|*
+name|WkRecipFact
+expr_stmt|;
 block|}
 comment|/* message timeout priority */
 name|p
@@ -2072,8 +2070,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|full
-operator|&&
 name|p
 operator|!=
 name|NULL
