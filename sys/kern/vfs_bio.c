@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.112 1997/02/22 09:39:30 peter Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.113 1997/04/01 08:38:53 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2935,7 +2935,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * If this is an async free -- we cannot place 			 * pages onto the cache queue, so our policy for 			 * such buffers is to avoid the cache queue, and 			 * only modify the active queue or free queue. 			 */
+comment|/* 			 * If this is an async free -- we cannot place 			 * pages onto the cache queue.  If it is an 			 * async free, then we don't modify any queues. 			 * This is probably in error (for perf reasons), 			 * and we will eventually need to build 			 * a more complete infrastructure to support I/O 			 * rundown. 			 */
 if|if
 condition|(
 operator|(
@@ -2949,7 +2949,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * In the case of sync buffer frees, we can do pretty much 			 * anything to any of the memory queues.  Specifically, 			 * the cache queue is free to be modified. 			 */
+comment|/* 			 * In the case of sync buffer frees, we can do pretty much 			 * anything to any of the memory queues.  Specifically, 			 * the cache queue is okay to be modified. 			 */
 if|if
 condition|(
 name|m
@@ -2973,40 +2973,17 @@ expr_stmt|;
 comment|/* 					 * this keeps pressure off of the process memory 					 */
 if|if
 condition|(
-operator|(
-name|vm_swap_size
-operator|==
-literal|0
-operator|)
-operator|||
-operator|(
-name|cnt
-operator|.
-name|v_free_count
-operator|<
-name|cnt
-operator|.
-name|v_free_min
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|(
 name|m
 operator|->
 name|dirty
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|(
 name|m
 operator|->
 name|hold_count
 operator|==
 literal|0
-operator|)
 condition|)
 name|vm_page_cache
 argument_list|(
@@ -3019,7 +2996,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
