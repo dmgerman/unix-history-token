@@ -840,6 +840,13 @@ argument_list|(
 name|ata_ch
 argument_list|)
 decl_stmt|;
+comment|/*      * scp might be null if the bus is being reinitialised during      * the boot-up sequence, before the ATAPI bus is registered.      */
+if|if
+condition|(
+name|scp
+operator|!=
+name|NULL
+condition|)
 name|reinit_bus
 argument_list|(
 name|scp
