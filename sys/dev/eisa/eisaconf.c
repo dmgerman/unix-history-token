@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.c,v 1.8 1995/11/20 12:41:11 phk Exp $  */
+comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.c,v 1.9 1995/11/29 10:12:34 phk Exp $  */
 end_comment
 
 begin_include
@@ -48,18 +48,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|"i386/isa/icu.h"
+file|<i386/eisa/eisaconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/icu.h>
 end_include
 
 begin_comment
 comment|/* Hmmm.  Interrupt stuff? */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"eisaconf.h"
-end_include
 
 begin_struct
 struct|struct
@@ -176,7 +176,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 specifier|static
 name|struct
 name|eisa_driver
