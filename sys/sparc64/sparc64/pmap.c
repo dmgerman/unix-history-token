@@ -988,6 +988,8 @@ name|TD_L
 operator||
 name|TD_CP
 operator||
+name|TD_CV
+operator||
 name|TD_P
 operator||
 name|TD_W
@@ -2230,6 +2232,8 @@ argument_list|,
 name|pa
 operator|+
 name|PAGE_SIZE
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2384,6 +2388,8 @@ operator||
 name|TD_SW
 operator||
 name|TD_CP
+operator||
+name|TD_CV
 operator||
 name|TD_P
 operator||
