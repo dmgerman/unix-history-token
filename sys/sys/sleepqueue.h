@@ -46,12 +46,45 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|SLEEPQ_CONDVAR
-value|0x1
+name|SLEEPQ_TYPE
+value|0x0ff
 end_define
 
 begin_comment
-comment|/* Sleep queue is a cv. */
+comment|/* Mask of sleep queue types. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLEEPQ_MSLEEP
+value|0x00
+end_define
+
+begin_comment
+comment|/* Used by msleep/wakeup. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLEEPQ_CONDVAR
+value|0x01
+end_define
+
+begin_comment
+comment|/* Used for a cv. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLEEPQ_INTERRUPTIBLE
+value|0x100
+end_define
+
+begin_comment
+comment|/* Sleep is interruptible. */
 end_comment
 
 begin_function_decl
