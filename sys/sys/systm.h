@@ -355,6 +355,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|mtx
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|proc
 struct_decl|;
 end_struct_decl
@@ -2640,13 +2646,18 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|tsleep
+name|msleep
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
 name|chan
+operator|,
+expr|struct
+name|mtx
+operator|*
+name|mtx
 operator|,
 name|int
 name|pri
@@ -2662,6 +2673,22 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|tsleep
+parameter_list|(
+name|chan
+parameter_list|,
+name|pri
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|timo
+parameter_list|)
+value|msleep(chan, NULL, pri, wmesg, timo)
+end_define
 
 begin_decl_stmt
 name|int

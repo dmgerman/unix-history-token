@@ -420,6 +420,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PDROP
+value|0x200
+end_define
+
+begin_comment
+comment|/* OR'd with pri to stop re-entry of interlock mutex */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NZERO
 value|0
 end_define
