@@ -761,18 +761,6 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_WITNESS
-argument_list|,
-literal|"witness"
-argument_list|,
-literal|"witness structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
 name|_debug
