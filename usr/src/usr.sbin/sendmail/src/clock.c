@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.3 (Berkeley) %G%"
+literal|"@(#)clock.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -781,9 +781,26 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SLEEP_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SLEEP_T
+value|unsigned int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-name|unsigned
-name|int
+name|SLEEP_T
 name|sleep
 parameter_list|(
 name|intvl
