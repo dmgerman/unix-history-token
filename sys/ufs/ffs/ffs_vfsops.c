@@ -3399,6 +3399,10 @@ name|fs
 operator|->
 name|fs_contigsumsize
 expr_stmt|;
+name|space
+operator|=
+name|lp
+expr_stmt|;
 block|}
 name|size
 operator|=
@@ -3420,16 +3424,6 @@ name|u_int8_t
 operator|*
 operator|)
 name|space
-expr_stmt|;
-name|space
-operator|=
-operator|(
-name|u_int8_t
-operator|*
-operator|)
-name|space
-operator|+
-name|size
 expr_stmt|;
 name|bzero
 argument_list|(
