@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.199 (Berkeley) %G%"
+literal|"@(#)conf.c	8.200 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -11492,12 +11492,6 @@ endif|#
 directive|endif
 else|#
 directive|else
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NIS
-argument_list|)
 name|int
 name|nmaps
 decl_stmt|;
@@ -11520,8 +11514,6 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|tTd
@@ -11545,12 +11537,6 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NIS
-argument_list|)
 if|if
 condition|(
 name|h
@@ -11600,6 +11586,18 @@ name|nmaps
 index|]
 argument_list|,
 literal|"nis"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|maptype
+index|[
+name|nmaps
+index|]
+argument_list|,
+literal|"files"
 argument_list|)
 operator|==
 literal|0
@@ -11679,8 +11677,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-endif|#
-directive|endif
 endif|#
 directive|endif
 if|if
