@@ -10967,7 +10967,7 @@ name|sns_screq_t
 modifier|*
 name|rq
 decl_stmt|;
-name|sns_scrsp_t
+name|sns_ganrsp_t
 modifier|*
 name|rs0
 decl_stmt|,
@@ -11412,7 +11412,7 @@ expr_stmt|;
 name|rs1
 operator|=
 operator|(
-name|sns_scrsp_t
+name|sns_ganrsp_t
 operator|*
 operator|)
 name|fcp
@@ -11422,7 +11422,7 @@ expr_stmt|;
 name|rs0
 operator|=
 operator|(
-name|sns_scrsp_t
+name|sns_ganrsp_t
 operator|*
 operator|)
 operator|(
@@ -11437,17 +11437,13 @@ operator|+
 literal|0x100
 operator|)
 expr_stmt|;
-name|isp_get_sns_response
+name|isp_get_gan_response
 argument_list|(
 name|isp
 argument_list|,
 name|rs0
 argument_list|,
 name|rs1
-argument_list|,
-name|SNS_GAN_RESP_SIZE
-operator|>>
-literal|1
 argument_list|)
 expr_stmt|;
 name|portid
