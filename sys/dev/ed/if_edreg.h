@@ -1463,6 +1463,17 @@ begin_comment
 comment|/* Hewlett Packard */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ED_VENDOR_LINKSYS
+value|0x05
+end_define
+
+begin_comment
+comment|/* Linksys (Dlink) */
+end_comment
+
 begin_comment
 comment|/*  * Compile-time config flags  */
 end_comment
