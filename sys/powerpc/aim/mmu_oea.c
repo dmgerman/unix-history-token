@@ -7611,9 +7611,6 @@ argument_list|,
 name|VM_ALLOC_SYSTEM
 argument_list|)
 expr_stmt|;
-name|pmap_pvo_count
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -7625,6 +7622,9 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|pmap_pvo_count
+operator|++
+expr_stmt|;
 return|return
 operator|(
 operator|(
