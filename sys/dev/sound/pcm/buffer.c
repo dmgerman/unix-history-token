@@ -628,7 +628,7 @@ name|blksz
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
