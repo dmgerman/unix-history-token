@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.3	81/05/19	*/
+comment|/*	lpr.c	4.4	82/12/02	*/
 end_comment
 
 begin_comment
@@ -63,7 +63,7 @@ file|"lp.local.h"
 end_include
 
 begin_comment
-comment|/*  * Multiple printer scheme using info from printer data base:  *  *	DN		who to invoke to print stuff  *	SA		rectory used as spool queue  *  * daemon identifies what printer it should use (in the case of the  *  same code being shared) by inspecting its argv[1].  */
+comment|/*  * Multiple printer scheme using info from printer data base:  *  *	DN		who to invoke to print stuff  *	SA		directory used as spool queue  *  * daemon identifies what printer it should use (in the case of the  *  same code being shared) by inspecting its argv[1].  */
 end_comment
 
 begin_decl_stmt
@@ -322,16 +322,25 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
-name|class
-init|=
-name|SYSTEM_NAME
+name|classbuf
+index|[
+literal|32
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* class title on header page */
 end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|class
+init|=
+name|classbuf
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -406,6 +415,10 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|main
 parameter_list|(
@@ -448,6 +461,16 @@ name|stat
 name|sbuf
 decl_stmt|;
 comment|/* 	 * Strategy to maintain protected spooling area: 	 *	1. Spooling area is writable only by daemon and spooling group 	 *	2. lpr runs setuid root and setgrp spooling group; it uses 	 *	   root to access any file it wants (verifying things before 	 *	   with an access call) and group id to know how it should 	 *	   set up ownership of files in spooling area. 	 *	3. Files in spooling area are owned by printer and spooling 	 *	   group, with mode 660. 	 *	4. lpd runs setuid daemon and setgrp spooling group to 	 *	   access files and printer.  Users can't get to anything 	 *	   w/o help of sq and dq programs. 	 */
+name|gethostname
+argument_list|(
+name|classbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|classbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|user
 operator|=
 name|getuid
@@ -1055,7 +1078,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"lpr:"
+literal|"%s:"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1901,9 +1926,15 @@ block|{
 specifier|register
 name|f
 expr_stmt|;
-if|if
-condition|(
-operator|(
+name|int
+name|oldumask
+init|=
+name|umask
+argument_list|(
+literal|022
+argument_list|)
+decl_stmt|;
+comment|/* should block signals */
 name|f
 operator|=
 name|creat
@@ -1912,7 +1943,18 @@ name|n
 argument_list|,
 name|FILMOD
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
 operator|)
+name|umask
+argument_list|(
+name|oldumask
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|f
 operator|<
 literal|0
 condition|)
