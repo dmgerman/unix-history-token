@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.13 1998/08/04 14:10:30 des Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.14 1998/08/12 09:58:15 wosch Exp $  */
 end_comment
 
 begin_include
@@ -4515,6 +4515,22 @@ decl_stmt|,
 name|xfree
 decl_stmt|;
 comment|/* 		 * Don't report statistics for partitions which have not 		 * yet been activated via swapon(8). 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|sw
+index|[
+name|i
+index|]
+operator|.
+name|sw_flags
+operator|&
+name|SW_FREED
+operator|)
+condition|)
+continue|continue;
+comment|/* The first dmmax is never allocated to avoid trashing of 		 * disklabels 		 */
 name|xsize
 operator|=
 name|sw
@@ -4523,6 +4539,8 @@ name|i
 index|]
 operator|.
 name|sw_nblks
+operator|-
+name|dmmax
 expr_stmt|;
 name|xfree
 operator|=
