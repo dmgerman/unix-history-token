@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: net_osdep.c,v 1.9 2001/04/06 09:22:05 itojun Exp $	*/
+comment|/*	$KAME: net_osdep.c,v 1.12 2002/12/02 14:28:57 itojun Exp $	*/
 end_comment
 
 begin_comment
