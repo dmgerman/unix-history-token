@@ -3219,6 +3219,13 @@ block|}
 block|,
 comment|/* BDP0356 - Best Data 56x2 */
 block|{
+literal|0x56159008
+block|,
+name|NULL
+block|}
+block|,
+comment|/* BDP1556 - B.D. Smart One 56SPS,Voice Modem*/
+block|{
 literal|0x36339008
 block|,
 name|NULL
