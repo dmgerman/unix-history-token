@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.42	82/06/20	*/
+comment|/*	uipc_socket.c	4.43	82/07/22	*/
 end_comment
 
 begin_include
@@ -2574,15 +2574,15 @@ condition|)
 name|so
 operator|->
 name|so_options
-operator|&=
-operator|~
+operator||=
 name|SO_KEEPALIVE
 expr_stmt|;
 else|else
 name|so
 operator|->
 name|so_options
-operator||=
+operator|&=
+operator|~
 name|SO_KEEPALIVE
 expr_stmt|;
 return|return;
