@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.96 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.97 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2286,6 +2286,9 @@ break|break;
 case|case
 literal|'K'
 case|:
+operator|(
+name|void
+operator|)
 name|makemapentry
 argument_list|(
 operator|&
@@ -8286,11 +8289,12 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKEMAPENTRY -- create a map entry ** **	Parameters: **		line -- the config file line ** **	Returns: **		none. ** **	Side Effects: **		Enters the map into the dictionary. */
+comment|/* **  MAKEMAPENTRY -- create a map entry ** **	Parameters: **		line -- the config file line ** **	Returns: **		A pointer to the map that has been created. **		NULL if there was a syntax error. ** **	Side Effects: **		Enters the map into the dictionary. */
 end_comment
 
 begin_function
-name|void
+name|MAP
+modifier|*
 name|makemapentry
 parameter_list|(
 name|line
@@ -8367,7 +8371,9 @@ argument_list|(
 literal|"readcf: config K line: no map name"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 name|mapname
 operator|=
@@ -8451,7 +8457,9 @@ argument_list|,
 name|mapname
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 name|classname
 operator|=
@@ -8531,7 +8539,9 @@ argument_list|,
 name|classname
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 comment|/* enter the map */
 name|s
@@ -8696,6 +8706,12 @@ name|map_rebuild
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|&
+name|s
+operator|->
+name|s_map
+return|;
 block|}
 end_function
 
