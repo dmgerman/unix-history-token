@@ -34,13 +34,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "From: @(#)sysctl.c	8.1 (Berkeley) 6/6/93"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)sysctl.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,6 +146,30 @@ begin_include
 include|#
 directive|include
 file|<netinet/udp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_seq.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_timer.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_var.h>
 end_include
 
 begin_include
@@ -2183,6 +2212,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
+name|ctlname
+name|tcpname
+index|[]
+init|=
+name|TCPCTL_NAMES
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|list
 name|inetlist
 init|=
@@ -2242,9 +2281,9 @@ literal|0
 block|}
 block|,
 block|{
-literal|0
+name|tcpname
 block|,
-literal|0
+name|TCPCTL_MAXID
 block|}
 block|,
 comment|/* tcp */
