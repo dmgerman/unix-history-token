@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2002, Jeffrey Roberson<jeff@freebsd.org>  * All righ
 end_comment
 
 begin_comment
-comment|/*  * uma_core.c  Implementation of the Universal Memory allocator  *  * This allocator is intended to replace the multitude of similar object caches  * in the standard FreeBSD kernel.  The intent is to be flexible as well as  * effecient.  A primary design goal is to return unused memory to the rest of  * the system.  This will make the system as a whole more flexible due to the   * ability to move memory to subsystems which most need it instead of leaving  * pools of reserved memory unused.  *  * The basic ideas stem from similar slab/zone based allocators whose algorithms  * are well known.  *  */
+comment|/*  * uma_core.c  Implementation of the Universal Memory allocator  *  * This allocator is intended to replace the multitude of similar object caches  * in the standard FreeBSD kernel.  The intent is to be flexible as well as  * effecient.  A primary design goal is to return unused memory to the rest of  * the system.  This will make the system as a whole more flexible due to the  * ability to move memory to subsystems which most need it instead of leaving  * pools of reserved memory unused.  *  * The basic ideas stem from similar slab/zone based allocators whose algorithms  * are well known.  *  */
 end_comment
 
 begin_comment
@@ -184,7 +184,7 @@ file|<machine/vmparam.h>
 end_include
 
 begin_comment
-comment|/*  * This is the zone from which all zones are spawned.  The idea is that even   * the zone heads are allocated from the allocator, so we use the bss section  * to bootstrap us.  */
+comment|/*  * This is the zone from which all zones are spawned.  The idea is that even  * the zone heads are allocated from the allocator, so we use the bss section  * to bootstrap us.  */
 end_comment
 
 begin_decl_stmt
@@ -1368,7 +1368,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Routine called by timeout which is used to fire off some time interval  * based calculations.  (stats, hash size, etc.)  *  * Arguments:  *	arg   Unused  *   * Returns:  *	Nothing  */
+comment|/*  * Routine called by timeout which is used to fire off some time interval  * based calculations.  (stats, hash size, etc.)  *  * Arguments:  *	arg   Unused  *  * Returns:  *	Nothing  */
 end_comment
 
 begin_function
@@ -1515,7 +1515,7 @@ name|uz_allocs
 operator|+=
 name|alloc
 expr_stmt|;
-comment|/* 	 * Expand the zone hash table. 	 *  	 * This is done if the number of slabs is larger than the hash size. 	 * What I'm trying to do here is completely reduce collisions.  This 	 * may be a little aggressive.  Should I allow for two collisions max? 	 */
+comment|/* 	 * Expand the zone hash table. 	 * 	 * This is done if the number of slabs is larger than the hash size. 	 * What I'm trying to do here is completely reduce collisions.  This 	 * may be a little aggressive.  Should I allow for two collisions max? 	 */
 if|if
 condition|(
 name|zone
@@ -1550,7 +1550,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-comment|/* 		 * This is so involved because allocating and freeing  		 * while the zone lock is held will lead to deadlock. 		 * I have to do everything in stages and check for 		 * races. 		 */
+comment|/* 		 * This is so involved because allocating and freeing 		 * while the zone lock is held will lead to deadlock. 		 * I have to do everything in stages and check for 		 * races. 		 */
 name|newhash
 operator|=
 name|zone
@@ -1791,7 +1791,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Expands the hash table for HASH zones.  This is done from zone_timeout  * to reduce collisions.  This must not be done in the regular allocation  * path, otherwise, we can recurse on the vm while allocating pages.  *  * Arguments:  *	oldhash  The hash you want to expand   *	newhash  The hash structure for the new table  *  * Returns:  * 	Nothing  *  * Discussion:  */
+comment|/*  * Expands the hash table for HASH zones.  This is done from zone_timeout  * to reduce collisions.  This must not be done in the regular allocation  * path, otherwise, we can recurse on the vm while allocating pages.  *  * Arguments:  *	oldhash  The hash you want to expand  *	newhash  The hash structure for the new table  *  * Returns:  *	Nothing  *  * Discussion:  */
 end_comment
 
 begin_function
@@ -2102,7 +2102,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*  		 * This is extremely inefficient.  The slab pointer was passed 		 * to uma_zfree_arg, but we lost it because the buckets don't 		 * hold them.  This will go away when free() gets a size passed 		 * to it. 		 */
+comment|/* 		 * This is extremely inefficient.  The slab pointer was passed 		 * to uma_zfree_arg, but we lost it because the buckets don't 		 * hold them.  This will go away when free() gets a size passed 		 * to it. 		 */
 if|if
 condition|(
 name|mzone
@@ -3265,7 +3265,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocates a number of pages from the system  *  * Arguments:  *	zone  Unused  *	bytes  The number of bytes requested  *	wait  Shall we wait?  *  * Returns:  *	A pointer to the alloced memory or possibly   *	NULL if M_NOWAIT is set.  */
+comment|/*  * Allocates a number of pages from the system  *  * Arguments:  *	zone  Unused  *	bytes  The number of bytes requested  *	wait  Shall we wait?  *  * Returns:  *	A pointer to the alloced memory or possibly  *	NULL if M_NOWAIT is set.  */
 end_comment
 
 begin_function
@@ -3322,7 +3322,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocates a number of pages from within an object  *  * Arguments:  *	zone   Unused  *	bytes  The number of bytes requested  *	wait   Shall we wait?  *  * Returns:  *	A pointer to the alloced memory or possibly   *	NULL if M_NOWAIT is set.  */
+comment|/*  * Allocates a number of pages from within an object  *  * Arguments:  *	zone   Unused  *	bytes  The number of bytes requested  *	wait   Shall we wait?  *  * Returns:  *	A pointer to the alloced memory or possibly  *	NULL if M_NOWAIT is set.  */
 end_comment
 
 begin_function
@@ -3371,7 +3371,7 @@ name|retkva
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * This looks a little weird since we're getting one page at a time. 	 */
+comment|/* 	 * This looks a little weird since we're getting one page at a time. 	 */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
@@ -3567,7 +3567,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Frees a number of pages to the system  *   * Arguments:  *	mem   A pointer to the memory to be freed  *	size  The size of the memory being freed  *	flags The original p->us_flags field  *  * Returns:  *	Nothing  */
+comment|/*  * Frees a number of pages to the system  *  * Arguments:  *	mem   A pointer to the memory to be freed  *	size  The size of the memory being freed  *	flags The original p->us_flags field  *  * Returns:  *	Nothing  */
 end_comment
 
 begin_function
@@ -3855,7 +3855,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Finish creating a large (> UMA_SLAB_SIZE) uma zone.  Just give in and do   * OFFPAGE for now.  When I can allow for more dynamic slab sizes this will be  * more complicated.  *  * Arguments  *	zone  The zone we should initialize  *  * Returns  *	Nothing  */
+comment|/*  * Finish creating a large (> UMA_SLAB_SIZE) uma zone.  Just give in and do  * OFFPAGE for now.  When I can allow for more dynamic slab sizes this will be  * more complicated.  *  * Arguments  *	zone  The zone we should initialize  *  * Returns  *	Nothing  */
 end_comment
 
 begin_function
@@ -3959,7 +3959,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Zone header ctor.  This initializes all fields, locks, etc.  And inserts  * the zone onto the global zone list.  *  * Arguments/Returns follow uma_ctor specifications  *	udata  Actually uma_zcreat_args  */
+comment|/*  * Zone header ctor.  This initializes all fields, locks, etc.  And inserts  * the zone onto the global zone list.  *  * Arguments/Returns follow uma_ctor specifications  *	udata  Actually uma_zcreat_args  */
 end_comment
 
 begin_function
@@ -4206,7 +4206,7 @@ name|privlc
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * If we're putting the slab header in the actual page we need to 	 * figure out where in each page it goes.  This calculates a right  	 * justified offset into the memory on an ALIGN_PTR boundary. 	 */
+comment|/* 	 * If we're putting the slab header in the actual page we need to 	 * figure out where in each page it goes.  This calculates a right 	 * justified offset into the memory on an ALIGN_PTR boundary. 	 */
 if|if
 condition|(
 operator|!
@@ -4430,7 +4430,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Zone header dtor.  This frees all data, destroys locks, frees the hash table  * and removes the zone from the global list.  *  * Arguments/Returns follow uma_dtor specifications  *	udata  unused  */
+comment|/*  * Zone header dtor.  This frees all data, destroys locks, frees the hash table  * and removes the zone from the global list.  *  * Arguments/Returns follow uma_dtor specifications  *	udata  unused  */
 end_comment
 
 begin_function
@@ -4568,7 +4568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Traverses every zone in the system and calls a callback  *  * Arguments:  *	zfunc  A pointer to a function which accepts a zone  *		as an argument.  *   * Returns:  *	Nothing  */
+comment|/*  * Traverses every zone in the system and calls a callback  *  * Arguments:  *	zfunc  A pointer to a function which accepts a zone  *		as an argument.  *  * Returns:  *	Nothing  */
 end_comment
 
 begin_function
@@ -5761,7 +5761,7 @@ block|{
 name|uma_slab_t
 name|slab
 decl_stmt|;
-comment|/*  	 * This is to prevent us from recursively trying to allocate 	 * buckets.  The problem is that if an allocation forces us to 	 * grab a new bucket we will call page_alloc, which will go off 	 * and cause the vm to allocate vm_map_entries.  If we need new 	 * buckets there too we will recurse in kmem_alloc and bad  	 * things happen.  So instead we return a NULL bucket, and make 	 * the code that allocates buckets smart enough to deal with it 	 */
+comment|/* 	 * This is to prevent us from recursively trying to allocate 	 * buckets.  The problem is that if an allocation forces us to 	 * grab a new bucket we will call page_alloc, which will go off 	 * and cause the vm to allocate vm_map_entries.  If we need new 	 * buckets there too we will recurse in kmem_alloc and bad 	 * things happen.  So instead we return a NULL bucket, and make 	 * the code that allocates buckets smart enough to deal with it 	 */
 if|if
 condition|(
 name|zone
@@ -5936,7 +5936,7 @@ operator|->
 name|uz_recurse
 operator|--
 expr_stmt|;
-comment|/*  		 * If we got a slab here it's safe to mark it partially used 		 * and return.  We assume that the caller is going to remove 		 * at least one item. 		 */
+comment|/* 		 * If we got a slab here it's safe to mark it partially used 		 * and return.  We assume that the caller is going to remove 		 * at least one item. 		 */
 if|if
 condition|(
 name|slab
@@ -5960,7 +5960,7 @@ name|slab
 operator|)
 return|;
 block|}
-comment|/*  		 * We might not have been able to get a slab but another cpu 		 * could have while we were unlocked.  Check again before we 		 * fail. 		 */
+comment|/* 		 * We might not have been able to get a slab but another cpu 		 * could have while we were unlocked.  Check again before we 		 * fail. 		 */
 if|if
 condition|(
 name|flags
@@ -7912,7 +7912,7 @@ argument_list|,
 name|kmem_object
 argument_list|)
 expr_stmt|;
-comment|/*  	 * XXX: We get a lock order reversal if we don't have Giant: 	 * vm_map_remove (locks system map) -> vm_map_delete -> 	 *    vm_map_entry_unwire -> vm_fault_unwire -> mtx_lock(&Giant) 	 */
+comment|/* 	 * XXX: We get a lock order reversal if we don't have Giant: 	 * vm_map_remove (locks system map) -> vm_map_delete -> 	 *    vm_map_entry_unwire -> vm_fault_unwire -> mtx_lock(&Giant) 	 */
 if|if
 condition|(
 operator|!
@@ -8247,7 +8247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sysctl handler for vm.zone   *  * stolen from vm_zone.c  */
+comment|/*  * Sysctl handler for vm.zone  *  * stolen from vm_zone.c  */
 end_comment
 
 begin_function
