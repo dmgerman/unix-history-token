@@ -2414,22 +2414,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|SOCK_LOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Prevent accumulated error from previous connection 		 * from biting us. 		 */
 name|so
 operator|->
 name|so_error
 operator|=
 literal|0
-expr_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
