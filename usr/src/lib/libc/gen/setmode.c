@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setmode.c	5.10 (Berkeley) %G%"
+literal|"@(#)setmode.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -598,6 +604,11 @@ decl_stmt|,
 modifier|*
 name|endset
 decl_stmt|;
+name|sigset_t
+name|sigset
+decl_stmt|,
+name|sigoset
+decl_stmt|;
 name|mode_t
 name|mask
 decl_stmt|;
@@ -617,7 +628,27 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * Get a copy of the mask for the permissions that are mask relative. 	 * Flip the bits, we want what's not set. 	 */
+comment|/* 	 * Get a copy of the mask for the permissions that are mask relative. 	 * Flip the bits, we want what's not set.  Since it's possible that 	 * the caller is opening files inside a signal handler, protect them 	 * as best we can. 	 */
+name|sigfillset
+argument_list|(
+operator|&
+name|sigset
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigprocmask
+argument_list|(
+name|SIG_BLOCK
+argument_list|,
+operator|&
+name|sigset
+argument_list|,
+operator|&
+name|sigoset
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -635,6 +666,19 @@ name|mask
 operator|=
 operator|~
 name|mask
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|sigoset
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|setlen
 operator|=
