@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timedc.c	2.6 (Berkeley) %G%"
+literal|"@(#)timedc.c	2.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -451,9 +451,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|gets
+name|fgets
 argument_list|(
 name|cmdline
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmdline
+argument_list|)
+argument_list|,
+name|stdin
 argument_list|)
 operator|==
 literal|0
