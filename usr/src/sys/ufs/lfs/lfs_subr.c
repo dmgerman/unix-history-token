@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_subr.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_subr.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -297,77 +297,6 @@ name|ino
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-block|}
-end_function
-
-begin_function
-name|daddr_t
-name|lfs_itod
-parameter_list|(
-name|fs
-parameter_list|,
-name|ino
-parameter_list|)
-name|struct
-name|lfs
-modifier|*
-name|fs
-decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
-block|{
-name|BUF
-modifier|*
-name|bp
-decl_stmt|;
-name|IFILE
-modifier|*
-name|ifp
-decl_stmt|;
-name|daddr_t
-name|iaddr
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_itod %d\n"
-argument_list|,
-name|ino
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Translate an inode number to a disk address. */
-name|LFS_IENTRY
-argument_list|(
-name|ifp
-argument_list|,
-name|fs
-argument_list|,
-name|ino
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-name|iaddr
-operator|=
-name|ifp
-operator|->
-name|if_daddr
-expr_stmt|;
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|iaddr
-operator|)
-return|;
 block|}
 end_function
 

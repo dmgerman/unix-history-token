@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.71 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.72 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -948,11 +948,6 @@ modifier|*
 name|ump
 decl_stmt|;
 name|struct
-name|inode
-modifier|*
-name|ip
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|vp
@@ -965,9 +960,6 @@ decl_stmt|;
 name|struct
 name|partinfo
 name|dpart
-decl_stmt|;
-name|daddr_t
-name|seg_addr
 decl_stmt|;
 name|dev_t
 name|dev
@@ -1270,10 +1262,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* XXX NOTUSED:	fs->lfs_seglist = NULL; */
-end_comment
-
-begin_comment
 comment|/* Set the file system readonly/modify bits. */
 end_comment
 
@@ -1431,8 +1419,17 @@ name|NULLVP
 expr_stmt|;
 end_for
 
+begin_expr_stmt
+name|devvp
+operator|->
+name|v_specflags
+operator||=
+name|SI_MOUNTEDON
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/* Read the ifile disk inode and store it in a vnode. */
+comment|/* 	 * We use the ifile vnode for almost every operation.  Instead of 	 * retrieving it from the hash table each time we retrieve it here, 	 * artificially increment the reference count and keep a pointer 	 * to it in the incore copy of the superblock. 	 */
 end_comment
 
 begin_if
@@ -1440,35 +1437,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|bread
-argument_list|(
-name|devvp
-argument_list|,
-name|fs
-operator|->
-name|lfs_idaddr
-argument_list|,
-name|fs
-operator|->
-name|lfs_bsize
-argument_list|,
-name|NOCRED
-argument_list|,
-operator|&
-name|bp
-argument_list|)
-condition|)
-goto|goto
-name|out
-goto|;
-end_if
-
-begin_if
-if|if
-condition|(
-name|error
-operator|=
-name|lfs_vcreate
+name|lfs_vget
 argument_list|(
 name|mp
 argument_list|,
@@ -1484,30 +1453,6 @@ goto|;
 end_if
 
 begin_expr_stmt
-name|ip
-operator|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VREF
-argument_list|(
-name|ip
-operator|->
-name|i_devvp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* The ifile inode is stored in the superblock. */
-end_comment
-
-begin_expr_stmt
 name|fs
 operator|->
 name|lfs_ivnode
@@ -1516,72 +1461,18 @@ name|vp
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* Copy the on-disk inode into place. */
-end_comment
-
-begin_expr_stmt
-name|ip
-operator|->
-name|i_din
-operator|=
-operator|*
-name|lfs_ifind
-argument_list|(
-name|fs
-argument_list|,
-name|LFS_IFILE_INUM
-argument_list|,
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_dino
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Initialize the associated vnode */
-end_comment
-
-begin_expr_stmt
-name|vp
-operator|->
-name|v_type
-operator|=
-name|IFTOVT
-argument_list|(
-name|ip
-operator|->
-name|i_mode
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|devvp
-operator|->
-name|v_specflags
-operator||=
-name|SI_MOUNTEDON
-expr_stmt|;
-end_expr_stmt
-
 begin_expr_stmt
 name|VREF
 argument_list|(
-name|ip
-operator|->
-name|i_devvp
+name|vp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|vput
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1930,25 +1821,6 @@ operator|(
 name|error
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|NOTLFS
-comment|/* LFS */
-name|fs
-operator|=
-name|ump
-operator|->
-name|um_fs
-expr_stmt|;
-name|ronly
-operator|=
-operator|!
-name|fs
-operator|->
-name|fs_ronly
-expr_stmt|;
-else|#
-directive|else
 name|fs
 operator|=
 name|ump
@@ -1962,8 +1834,13 @@ name|fs
 operator|->
 name|lfs_ronly
 expr_stmt|;
-endif|#
-directive|endif
+name|vrele
+argument_list|(
+name|fs
+operator|->
+name|lfs_ivnode
+argument_list|)
+expr_stmt|;
 operator|*
 name|Get
 name|file
