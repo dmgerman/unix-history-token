@@ -141,9 +141,13 @@ directive|include
 file|"pathnames.h"
 end_include
 
+begin_comment
+comment|/*  * 'local_host' is always the hostname of the machine which is running  * lpr (lpd, whatever), while 'from_host' either points at 'local_host'  * or points at a different buffer when receiving a job from a remote  * machine (and that buffer has the hostname of that remote machine).  */
+end_comment
+
 begin_decl_stmt
 name|char
-name|host
+name|local_host
 index|[
 name|MAXHOSTNAMELEN
 index|]
@@ -151,15 +155,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* host machine name */
+comment|/* host running lpd/lpr */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
-name|from
+name|from_host
 init|=
-name|host
+name|local_host
 decl_stmt|;
 end_decl_stmt
 
@@ -168,11 +173,10 @@ comment|/* client's machine name */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
+modifier|*
 name|from_ip
-index|[
-name|NI_MAXHOST
-index|]
 init|=
 literal|""
 decl_stmt|;

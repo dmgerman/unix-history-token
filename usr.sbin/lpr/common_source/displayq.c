@@ -538,7 +538,7 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 name|printf
@@ -650,7 +650,7 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 name|printf
@@ -837,7 +837,7 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 name|seteuid
@@ -1207,15 +1207,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|from
+name|from_host
 operator|!=
-name|host
+name|local_host
 condition|)
 name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1329,7 +1329,7 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 name|puts
@@ -2002,7 +2002,7 @@ name|strcmp
 argument_list|(
 name|cp
 argument_list|,
-name|from
+name|from_host
 argument_list|)
 condition|)
 return|return

@@ -492,13 +492,13 @@ comment|/* program name (lpr, lpq, etc) */
 end_comment
 
 begin_comment
-comment|/* host machine name */
+comment|/*      * 'local_host' is the name of the machine that lpd (lpr, whatever)      * is actually running on.      *      * 'from_host' will point to the 'host' variable when receiving a job      * from a user on the same host, or "somewhere else" when receiving a      * job from a remote host.  If 'from_host != local_host', then 'from_ip'      * is the character representation of the IP address of from_host (note      * that string could be an IPv6 address).      *      * Also note that when 'from_host' is not pointing at 'local_host', the      * string it is pointing at may be as long as NI_MAXHOST (which is very      * likely to be much longer than MAXHOSTNAMELEN).      */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|char
-name|host
+name|local_host
 index|[
 name|MAXHOSTNAMELEN
 index|]
@@ -507,9 +507,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
-name|from
+name|from_host
 decl_stmt|;
 end_decl_stmt
 
@@ -519,11 +520,10 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
+modifier|*
 name|from_ip
-index|[
-name|NI_MAXHOST
-index|]
 decl_stmt|;
 end_decl_stmt
 

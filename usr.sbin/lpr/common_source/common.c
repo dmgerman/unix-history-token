@@ -2307,11 +2307,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* this error message is being sent to the 'from_host' */
 if|if
 condition|(
-name|from
+name|from_host
 operator|!=
-name|host
+name|local_host
 condition|)
 operator|(
 name|void
@@ -2320,7 +2321,7 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|host
+name|local_host
 argument_list|)
 expr_stmt|;
 operator|(
