@@ -312,7 +312,7 @@ value|0x0004
 define|#
 directive|define
 name|B_ASN1_TELETEXSTRING
-value|0x0008
+value|0x0004
 define|#
 directive|define
 name|B_ASN1_VIDEOTEXSTRING

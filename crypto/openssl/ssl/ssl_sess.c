@@ -125,7 +125,7 @@ modifier|*
 name|sess
 decl_stmt|;
 comment|/* Need to lock this all up rather than just use CRYPTO_add so that 	 * somebody doesn't free ssl->session between when we check it's 	 * non-null and when we up the reference count. */
-name|CRYPTO_r_lock
+name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_SSL_SESSION
 argument_list|)
@@ -145,7 +145,7 @@ operator|->
 name|references
 operator|++
 expr_stmt|;
-name|CRYPTO_r_unlock
+name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_SSL_SESSION
 argument_list|)

@@ -316,8 +316,6 @@ name|NULL
 expr_stmt|;
 block|}
 elseif|else
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -337,6 +335,8 @@ return|return
 literal|0
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ctx

@@ -1120,7 +1120,7 @@ name|strncmp
 argument_list|(
 name|p
 argument_list|,
-literal|"DER:,"
+literal|"DER:"
 argument_list|,
 literal|4
 argument_list|)

@@ -619,6 +619,11 @@ modifier|*
 name|mod
 decl_stmt|;
 comment|/* just a reference */
+name|unsigned
+name|long
+name|thread_id
+decl_stmt|;
+comment|/* added in OpenSSL 0.9.6j and 0.9.7b; 				  * used only by crypto/rsa/rsa_eay.c, rsa_lib.c */
 block|}
 name|BN_BLINDING
 typedef|;

@@ -143,6 +143,12 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_MACOSX
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYS_SUNOS
+argument_list|)
 comment|/* should return&data, but doesn't on some systems, 	   so we don't even look at the return value */
 name|gmtime_r
 argument_list|(
@@ -172,9 +178,12 @@ expr_stmt|;
 if|if
 condition|(
 name|ts
-operator|!=
+operator|==
 name|NULL
 condition|)
+return|return
+name|NULL
+return|;
 name|memcpy
 argument_list|(
 name|result

@@ -682,6 +682,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|ignore_err
+init|=
+literal|0
+decl_stmt|;
 name|STACK
 modifier|*
 name|reqnames
@@ -967,6 +972,22 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|args
+argument_list|,
+literal|"-ignore_err"
+argument_list|)
+condition|)
+name|ignore_err
+operator|=
+literal|1
+expr_stmt|;
 elseif|else
 if|if
 condition|(
@@ -2485,7 +2506,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-sign_certs file   additional certificates to include in signed request\n"
+literal|"-sign_other file   additional certificates to include in signed request\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -2625,7 +2646,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-verify_certs file additional certificates to search for signer\n"
+literal|"-verify_other file additional certificates to search for signer\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -2646,7 +2667,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-no_sig_verify     don't check signature on response\n"
+literal|"-no_signature_verify don't check signature on response\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -3857,6 +3878,13 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ignore_err
+condition|)
+goto|goto
+name|redo_accept
+goto|;
 name|ret
 operator|=
 literal|0

@@ -2447,6 +2447,11 @@ argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
+operator|*
+name|buf
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|i

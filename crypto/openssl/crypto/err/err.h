@@ -1176,6 +1176,15 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|void
+name|ERR_release_err_state_table
+parameter_list|(
+name|LHASH
+modifier|*
+modifier|*
+name|hash
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 name|int

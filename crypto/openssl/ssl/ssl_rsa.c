@@ -872,6 +872,10 @@ literal|0
 operator|)
 return|;
 block|}
+name|ERR_clear_error
+argument_list|()
+expr_stmt|;
+comment|/* make sure no error from X509_check_private_key() 	                    * is left if we have chosen to ignore it */
 if|if
 condition|(
 name|c

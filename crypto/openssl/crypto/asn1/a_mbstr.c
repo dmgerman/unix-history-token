@@ -1244,7 +1244,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|long
+name|int
 modifier|*
 name|outlen
 decl_stmt|;

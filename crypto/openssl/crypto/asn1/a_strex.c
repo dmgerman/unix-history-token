@@ -1224,6 +1224,7 @@ end_comment
 begin_decl_stmt
 specifier|const
 specifier|static
+name|signed
 name|char
 name|tag2nbyte
 index|[]

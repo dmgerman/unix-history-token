@@ -7701,6 +7701,12 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|->
+name|state
+operator|=
+name|SSL3_ST_CW_CERT_VRFY_B
+expr_stmt|;
+name|s
+operator|->
 name|init_num
 operator|=
 operator|(

@@ -25,6 +25,23 @@ directive|include
 file|<openssl/evp.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<openssl/engine.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -56,6 +73,9 @@ expr_stmt|;
 name|OpenSSL_add_all_digests
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|#
 directive|if
 name|defined
@@ -70,6 +90,8 @@ argument_list|)
 name|ENGINE_setup_bsd_cryptodev
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
