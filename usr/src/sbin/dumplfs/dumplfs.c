@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	5.10 (Berkeley) %G%"
+literal|"@(#)dumplfs.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1106,7 +1106,7 @@ operator|!
 name|do_ientries
 condition|)
 goto|goto
-name|e1
+name|e0
 goto|;
 else|else
 name|print_iheader
@@ -1886,7 +1886,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t%X"
+literal|"\t0x%X"
 argument_list|,
 name|dip
 operator|->
@@ -1933,7 +1933,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\t%X"
+literal|"\t0x%X"
 argument_list|,
 name|dip
 operator|->
@@ -2038,16 +2038,33 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"dumplfs: %s %d address %lx\n"
+literal|"dumplfs: %s %d address 0x%lx\n"
 argument_list|,
 literal|"corrupt summary block; segment"
 argument_list|,
 name|segnum
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"Segment Summary Info at 0x%lx\n"
 argument_list|,
 name|addr
 argument_list|)
@@ -2057,15 +2074,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Segment Summary Info\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"\t%s%X\t%s%d\t%s%d\t%s%X\t%s%X\n"
+literal|"    %s0x%X\t%s%d\t%s%d\n    %s0x%X\t%s0x%X"
 argument_list|,
 literal|"next     "
 argument_list|,
@@ -2169,7 +2178,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tInode addresses:"
+literal|"    Inode addresses:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2193,7 +2202,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"\t%X {"
+literal|"\t0x%X {"
 argument_list|,
 operator|*
 name|dp
@@ -2366,7 +2375,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"File Info for file: %d version %d nblocks %d\n"
+literal|"    FINFO for inode: %d version %d nblocks %d\n"
 argument_list|,
 name|fp
 operator|->
@@ -2543,7 +2552,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\nSegment Number %d (Disk Address %X)\n"
+literal|"\nSEGMENT %d (Disk Address 0x%X)\n"
 argument_list|,
 name|addr
 operator|>>
@@ -2668,7 +2677,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Segment at %X corrupt\n"
+literal|"Segment at 0x%X corrupt\n"
 argument_list|,
 name|addr
 argument_list|)
@@ -2690,7 +2699,17 @@ name|sump
 argument_list|,
 name|segnum
 argument_list|,
-name|addr
+name|sum_offset
+operator|>>
+operator|(
+name|lfsp
+operator|->
+name|lfs_bshift
+operator|-
+name|lfsp
+operator|->
+name|lfs_fsbtodb
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2780,7 +2799,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%X\t%s%X\t%s%d\t%s%d\n"
+literal|"%s0x%X\t%s0x%X\t%s%d\t%s%d\n"
 argument_list|,
 literal|"magic    "
 argument_list|,
@@ -2812,7 +2831,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s%d\t%s%d\t%s%d\n"
+literal|"%s%d\t\t%s%d\t%s%d\t%s%d\n"
 argument_list|,
 literal|"dsize    "
 argument_list|,
@@ -2844,7 +2863,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s%d\t%s%d\t%s%d\n"
+literal|"%s%d\t\t%s%d\t%s%d\t%s%d\n"
 argument_list|,
 literal|"minfree  "
 argument_list|,
@@ -2876,7 +2895,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s%d\t%s%d\t%s%d\n"
+literal|"%s%d\t\t%s%d\t%s%d\t%s%d\n"
 argument_list|,
 literal|"nseg     "
 argument_list|,
@@ -2908,7 +2927,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%X\t%s%d\t%s%X\t%s%d\n"
+literal|"%s0x%X\t%s%d\t%s0x%X\t%s%d\n"
 argument_list|,
 literal|"segmask  "
 argument_list|,
@@ -2940,7 +2959,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%X\t%s%d\t%s%X\t%s%d\n"
+literal|"%s0x%X\t\t%s%d\t%s0x%X\t%s%d\n"
 argument_list|,
 literal|"ffmask   "
 argument_list|,
@@ -2972,7 +2991,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s%X\t%qd\n"
+literal|"%s%d\t\t%s0x%X\t%s0x%qx\n"
 argument_list|,
 literal|"fsbtodb  "
 argument_list|,
@@ -2998,7 +3017,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Superblock disk addresses:"
+literal|"Superblock disk addresses:\t"
 argument_list|)
 expr_stmt|;
 for|for
@@ -3014,12 +3033,13 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %X"
+literal|" 0x%X"
 argument_list|,
 name|lfsp
 operator|->
@@ -3029,6 +3049,25 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+operator|(
+name|LFS_MAXNUMSB
+operator|>>
+literal|1
+operator|)
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n\t\t\t\t"
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -3050,7 +3089,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s%X\t%s%d\n"
+literal|"%s%d\t%s0x%X\t%s%d\n"
 argument_list|,
 literal|"free     "
 argument_list|,
@@ -3076,7 +3115,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%X\t%s%d\t%s%X\t%s%X\t%s%X\t%s%X\n"
+literal|"%s0x%X\t%s%d\t%s0x%X\t%s0x%X\n%s0x%X\t%s0x%X\t"
 argument_list|,
 literal|"bfree    "
 argument_list|,
@@ -3140,7 +3179,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"In-Memory Information\n"
+literal|"\nIn-Memory Information\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3148,7 +3187,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s%X\t%s%d\t%s%d\t%s%d\n"
+literal|"%s%d\t%s0x%X\t%s%d\t%s%d\t%s%d\n"
 argument_list|,
 literal|"seglock  "
 argument_list|,
@@ -3186,7 +3225,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s%X\t%s%d\n"
+literal|"%s%d\t%s0x%X\t%s%d\n"
 argument_list|,
 literal|"fmod     "
 argument_list|,
@@ -3310,7 +3349,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Cleaner Info\nclean\t%d\tdirty\t%d\n"
+literal|"segments clean\t%d\tsegments dirty\t%d\n\n"
 argument_list|,
 name|cip
 operator|->
