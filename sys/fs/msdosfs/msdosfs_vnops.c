@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.76 1998/09/13 15:39:01 dt Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.77 1998/10/31 15:31:24 peter Exp $ */
 end_comment
 
 begin_comment
@@ -695,6 +695,12 @@ else|:
 name|ATTR_ARCHIVE
 operator||
 name|ATTR_READONLY
+expr_stmt|;
+name|ndirent
+operator|.
+name|de_LowerCase
+operator|=
+literal|0
 expr_stmt|;
 name|ndirent
 operator|.
@@ -6455,6 +6461,12 @@ name|ATTR_DIRECTORY
 expr_stmt|;
 name|ndirent
 operator|.
+name|de_LowerCase
+operator|=
+literal|0
+expr_stmt|;
+name|ndirent
+operator|.
 name|de_StartCluster
 operator|=
 name|newcluster
@@ -7751,11 +7763,27 @@ name|dirbuf
 operator|.
 name|d_name
 argument_list|,
+name|dentp
+operator|->
+name|deLowerCase
+operator||
+operator|(
+operator|(
 name|pmp
 operator|->
 name|pm_flags
 operator|&
 name|MSDOSFSMNT_SHORTNAME
+operator|)
+condition|?
+operator|(
+name|LCASE_BASE
+operator||
+name|LCASE_EXT
+operator|)
+else|:
+literal|0
+operator|)
 argument_list|,
 name|pmp
 operator|->

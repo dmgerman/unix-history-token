@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.40 1998/10/29 09:29:17 peter Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.41 1998/11/10 09:16:29 peter Exp $ */
 end_comment
 
 begin_comment
@@ -994,6 +994,12 @@ operator|->
 name|de_Attributes
 operator|=
 name|ATTR_DIRECTORY
+expr_stmt|;
+name|ldep
+operator|->
+name|de_LowerCase
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
