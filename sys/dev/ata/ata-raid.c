@@ -2733,7 +2733,7 @@ name|raid
 operator|.
 name|flags
 operator|!=
-name|PR_F_CONFED
+name|PR_F_READY
 operator|)
 operator|||
 operator|(
@@ -2761,6 +2761,15 @@ operator|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Promise check3 failed\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|promise_out
 goto|;
@@ -2812,9 +2821,20 @@ index|]
 operator|->
 name|magic_0
 condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Promise check4 failed\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|promise_out
 goto|;
+block|}
 block|}
 else|else
 block|{
