@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 2.11 1993/10/23 04:21:03 davidg Exp davidg $  */
+comment|/*  * $Id: if_ed.c,v 1.21 1993/10/23 04:52:41 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -610,6 +610,10 @@ operator|(
 name|nports
 operator|)
 return|;
+return|return
+literal|0
+return|;
+comment|/* Added by GW: don't fall off the end */
 block|}
 end_function
 
