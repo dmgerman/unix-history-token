@@ -234,7 +234,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|tl0_trap_flushed
+name|tl0_trap
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -829,7 +829,7 @@ operator|==
 operator|(
 name|u_long
 operator|)
-name|tl0_trap_flushed
+name|tl0_trap
 operator|||
 name|value
 operator|==
@@ -1040,7 +1040,7 @@ literal|0
 condition|)
 name|db_printf
 argument_list|(
-literal|"tpc = %p, tnpc = %p "
+literal|"tpc=0x%lx, tnpc=0x%lx "
 argument_list|,
 name|tf
 operator|->
@@ -1519,57 +1519,6 @@ argument_list|,
 literal|7
 argument_list|)
 end_macro
-
-begin_function
-name|int
-name|db_md_set_watchpoint
-parameter_list|(
-name|db_expr_t
-name|addr
-parameter_list|,
-name|db_expr_t
-name|size
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|db_md_clr_watchpoint
-parameter_list|(
-name|db_expr_t
-name|addr
-parameter_list|,
-name|db_expr_t
-name|size
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|db_md_list_watchpoints
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return;
-block|}
-end_function
 
 end_unit
 
