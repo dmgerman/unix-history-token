@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernel.h	8.3 (Berkeley) 1/21/94  * $Id: kernel.h,v 1.54 1999/04/17 08:36:06 peter Exp $  */
+comment|/*-  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernel.h	8.3 (Berkeley) 1/21/94  * $Id: kernel.h,v 1.55 1999/05/06 13:42:25 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -485,34 +485,6 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * System initialization call types; currently two are supported... one  * to do a simple function call and one to cause a process to be started  * by the kernel on the callers behalf.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-name|sysinit_elem_type
-block|{
-name|SI_TYPE_DEFAULT
-init|=
-literal|0x00000000
-block|,
-comment|/* No special processing*/
-name|SI_TYPE_KTHREAD
-init|=
-literal|0x00000001
-block|,
-comment|/* start kernel thread*/
-name|SI_TYPE_KPROCESS
-init|=
-literal|0x00000002
-comment|/* start kernel process*/
-block|}
-name|si_elem_t
-typedef|;
-end_typedef
-
-begin_comment
 comment|/*  * A system initialization call instance  *  * At the moment there is one instance of sysinit.  We probably do not  * want two which is why this code is if'd out, but we definitely want  * to discern SYSINIT's which take non-constant data pointers and  * SYSINIT's which take constant data pointers,  *  * The C_* macros take functions expecting const void * arguments   * while the non-C_* macros take functions expecting just void * arguments.  *  * With -Wcast-qual on, the compiler issues warnings:  *	- if we pass non-const data or functions taking non-const data  *	  to a C_* macro.  *  *	- if we pass const data to the normal macros  *  * However, no warning is issued if we pass a function taking const data  * through a normal non-const macro.  This is ok because the function is  * saying it won't modify the data so we don't care whether the data is  * modifiable or not.  */
 end_comment
 
@@ -573,10 +545,6 @@ modifier|*
 name|udata
 decl_stmt|;
 comment|/* multiplexer/argument */
-name|si_elem_t
-name|type
-decl_stmt|;
-comment|/* sysinit_elem_type*/
 block|}
 struct|;
 end_struct
@@ -601,7 +569,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident,						\ 		SI_TYPE_DEFAULT					\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
+value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident						\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
 end_define
 
 begin_define
@@ -620,7 +588,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|C_SYSINIT(uniquifier, subsystem, order, (sysinit_cfunc_t)(sysinit_nfunc_t)func, (void *)ident)
+value|C_SYSINIT(uniquifier, subsystem, order,			\ 	(sysinit_cfunc_t)(sysinit_nfunc_t)func, (void *)ident)
 end_define
 
 begin_comment
@@ -643,7 +611,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|static struct sysinit uniquifier ## _sys_uninit = {	\ 		subsystem,					\ 		order,						\ 		func, 						\ 		ident,						\ 		SI_TYPE_DEFAULT					\ 	};							\ 	DATA_SET(sysuninit_set,uniquifier ## _sys_uninit)
+value|static struct sysinit uniquifier ## _sys_uninit = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident						\ 	};							\ 	DATA_SET(sysuninit_set,uniquifier ## _sys_uninit)
 end_define
 
 begin_define
@@ -662,101 +630,8 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|C_SYSUNINIT(uniquifier, subsystem, order, (sysinit_cfunc_t)(sysinit_nfunc_t)func, (void *)ident)
+value|C_SYSUNINIT(uniquifier, subsystem, order,		\ 	(sysinit_cfunc_t)(sysinit_nfunc_t)func, (void *)ident)
 end_define
-
-begin_comment
-comment|/*  * Call 'fork()' before calling '(*func)(ident)';  * for making a kernel 'thread' (or builtin process.)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SYSINIT_KT
-parameter_list|(
-name|uniquifier
-parameter_list|,
-name|subsystem
-parameter_list|,
-name|order
-parameter_list|,
-name|func
-parameter_list|,
-name|ident
-parameter_list|)
-define|\
-value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func, 						\ 		ident,						\ 		SI_TYPE_KTHREAD					\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSINIT_KP
-parameter_list|(
-name|uniquifier
-parameter_list|,
-name|subsystem
-parameter_list|,
-name|order
-parameter_list|,
-name|func
-parameter_list|,
-name|ident
-parameter_list|)
-define|\
-value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident,						\ 		SI_TYPE_KPROCESS				\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
-end_define
-
-begin_comment
-comment|/*  * A kernel process descriptor; used to start "internal" daemons  *  * Note: global_procpp may be NULL for no global save area  */
-end_comment
-
-begin_struct
-struct|struct
-name|kproc_desc
-block|{
-name|char
-modifier|*
-name|arg0
-decl_stmt|;
-comment|/* arg 0 (for 'ps' listing)*/
-name|void
-argument_list|(
-argument|*func
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* "main" for kernel process*/
-name|struct
-name|proc
-modifier|*
-modifier|*
-name|global_procpp
-decl_stmt|;
-comment|/* ptr to proc ptr save area*/
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-name|void
-name|kproc_start
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|void
-operator|*
-name|udata
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
