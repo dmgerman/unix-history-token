@@ -7041,14 +7041,7 @@ decl_stmt|;
 name|int
 name|port
 decl_stmt|;
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"Parallel port"
-argument_list|)
-expr_stmt|;
-comment|/* XXX shall be connected to pnpbios - from Peter Wemm */
+comment|/* If we are a PNP device, abort.  Otherwise we attach to *everthing* */
 if|if
 condition|(
 name|isa_get_logicalid
@@ -7064,6 +7057,14 @@ operator|=
 name|device_get_parent
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+comment|/* XXX shall be set after detection */
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Parallel port"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate the ppc_data structure. 	 */
