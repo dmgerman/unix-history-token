@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftpd.c	5.12 (Berkeley) %G%"
+literal|"@(#)tftpd.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,19 +65,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
 end_include
 
 begin_include
@@ -89,7 +77,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -119,6 +119,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -137,13 +143,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdlib.h>
 end_include
 
 begin_define
@@ -369,7 +375,9 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|from
@@ -461,7 +469,9 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|from
@@ -586,7 +596,9 @@ argument_list|(
 name|peer
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|sin
@@ -620,7 +632,9 @@ argument_list|(
 name|peer
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|from
@@ -1368,12 +1382,10 @@ name|timeoutbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|timer
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|timeout
 operator|+=
@@ -1398,7 +1410,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Send the requested file.  */
@@ -1742,12 +1754,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|justquit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|exit
 argument_list|(
@@ -1755,7 +1765,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Receive a file.  */

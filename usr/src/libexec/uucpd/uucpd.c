@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucpd.c	5.9 (Berkeley) %G%"
+literal|"@(#)uucpd.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,12 +65,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/wait.h>
 end_include
 
@@ -83,13 +77,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -107,7 +107,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -119,7 +125,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -1091,6 +1121,10 @@ name|pid
 operator|=
 name|wait
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|)
@@ -1109,6 +1143,10 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
@@ -1255,6 +1293,10 @@ name|hp
 init|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|sin
 operator|->
