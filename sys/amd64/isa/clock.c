@@ -1042,7 +1042,7 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read the counter first, so that the rest of the setup overhead is 	 * counted.  Guess the initial overhead is 20 usec (on most systems it 	 * takes about 1.5 usec for each of the i/o's in getit().  The loop 	 * takes about 6 usec on a 486/33 and 13 usec on a 386/20.  The 	 * multiplications and divisions to scale the count take a while). 	 * 	 * However, if ddb is active then use a fake counter since reading 	 * the i8254 counter involves acquiring a lock.  ddb must not go 	 * locking for many reasons, but it calls here for at least atkbd 	 * input. 	 */
+comment|/* 	 * Read the counter first, so that the rest of the setup overhead is 	 * counted.  Guess the initial overhead is 20 usec (on most systems it 	 * takes about 1.5 usec for each of the i/o's in getit().  The loop 	 * takes about 6 usec on a 486/33 and 13 usec on a 386/20.  The 	 * multiplications and divisions to scale the count take a while). 	 * 	 * However, if ddb is active then use a fake counter since reading 	 * the i8254 counter involves acquiring a lock.  ddb must not do 	 * locking for many reasons, but it calls here for at least atkbd 	 * input. 	 */
 ifdef|#
 directive|ifdef
 name|KDB
