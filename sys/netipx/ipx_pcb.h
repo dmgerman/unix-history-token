@@ -139,6 +139,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPXP_CHECKSUM
+value|0x10
+end_define
+
+begin_comment
+comment|/* use checksum on this socket */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPX_WILDCARD
 value|1
 end_define

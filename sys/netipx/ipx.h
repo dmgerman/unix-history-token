@@ -336,6 +336,13 @@ name|SO_IPXTUN_ROUTE
 value|9
 end_define
 
+begin_define
+define|#
+directive|define
+name|SO_IPX_CHECKSUM
+value|10
+end_define
+
 begin_comment
 comment|/*  * IPX addressing  */
 end_comment

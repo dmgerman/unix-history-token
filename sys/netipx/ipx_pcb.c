@@ -158,6 +158,16 @@ name|ipxp_socket
 operator|=
 name|so
 expr_stmt|;
+if|if
+condition|(
+name|ipxcksum
+condition|)
+name|ipxp
+operator|->
+name|ipxp_flags
+operator||=
+name|IPXP_CHECKSUM
+expr_stmt|;
 name|insque
 argument_list|(
 name|ipxp
