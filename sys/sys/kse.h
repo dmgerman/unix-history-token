@@ -21,8 +21,14 @@ directive|include
 file|<machine/kse.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/ucontext.h>
+end_include
+
 begin_comment
-comment|/*   * This file defines the structures needed for communication between  * the userland and the kernel when running a KSE-based threading system.  * The only programs that should see this file are the UTS and the kernel.  */
+comment|/*  * This file defines the structures needed for communication between  * the userland and the kernel when running a KSE-based threading system.  * The only programs that should see this file are the UTS and the kernel.  */
 end_comment
 
 begin_struct_decl
@@ -45,105 +51,146 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*   * Each userland thread has one of these buried in it's   * Thread control structure somewhere.  */
+comment|/*  * Thread mailbox.  *  * This describes a user thread to the kernel scheduler.  */
 end_comment
 
 begin_struct
 struct|struct
 name|thread_mailbox
 block|{
+name|ucontext_t
+name|tm_context
+decl_stmt|;
+comment|/* User and machine context */
+name|unsigned
+name|int
+name|tm_flags
+decl_stmt|;
+comment|/* Thread flags */
 name|struct
 name|thread_mailbox
 modifier|*
-name|next_completed
+name|tm_next
 decl_stmt|;
-name|unsigned
-name|int
-name|flags
-decl_stmt|;
+comment|/* Next thread in list */
 name|void
 modifier|*
-name|UTS_handle
+name|tm_udata
 decl_stmt|;
-comment|/* The UTS can use this for anything */
-name|union
-name|kse_td_ctx
-name|ctx
+comment|/* For use by the UTS */
+name|int
+name|tm_spare
+index|[
+literal|8
+index|]
 decl_stmt|;
-comment|/* thread's saved context goes here. */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*   * You need to supply one of these as the argument to the   * kse_new() system call.  */
+comment|/*  * KSE mailbox.  *  * Cummunication path between the UTS and the kernel scheduler specific to  * a single KSE.  */
 end_comment
 
 begin_struct
 struct|struct
 name|kse_mailbox
 block|{
-name|kse_fn_t
-modifier|*
-name|kmbx_upcall
-decl_stmt|;
-name|char
-modifier|*
-name|kmbx_stackbase
-decl_stmt|;
-name|unsigned
-name|long
-name|int
-name|kmbx_stacksize
-decl_stmt|;
 name|struct
 name|thread_mailbox
 modifier|*
-name|kmbx_current_thread
+name|km_curthread
 decl_stmt|;
+comment|/* Currently running thread */
 name|struct
 name|thread_mailbox
 modifier|*
-name|kmbx_completed_threads
+name|km_completed
 decl_stmt|;
+comment|/* Threads back from kernel */
+name|sigset_t
+name|km_sigscaught
+decl_stmt|;
+comment|/* Caught signals */
 name|unsigned
 name|int
-name|kmbx_flags
+name|km_flags
 decl_stmt|;
+comment|/* KSE flags */
 name|void
 modifier|*
-name|kmbx_UTS_handle
+name|km_func
 decl_stmt|;
-comment|/* UTS can use this for anything */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|KEMBXF_CRITICAL
-value|0x00000001
-end_define
-
-begin_struct
-struct|struct
-name|kse_global_mailbox
-block|{
-name|unsigned
+comment|/* UTS function */
+name|stack_t
+name|km_stack
+decl_stmt|;
+comment|/* UTS context */
+name|void
+modifier|*
+name|km_udata
+decl_stmt|;
+comment|/* For use by the UTS */
 name|int
-name|flags
+name|tm_spare
+index|[
+literal|8
+index|]
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|GMBXF_CRITICAL
-value|0x00000001
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_function_decl
+name|int
+name|kse_exit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kse_wakeup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kse_new
+parameter_list|(
+name|struct
+name|kse_mailbox
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kse_yield
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

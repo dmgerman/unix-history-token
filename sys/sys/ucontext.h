@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/ucontext.h>
 end_include
 
@@ -42,9 +48,17 @@ name|stack_t
 name|uc_stack
 decl_stmt|;
 name|int
+name|uc_flags
+decl_stmt|;
+define|#
+directive|define
+name|UCF_SWAPPED
+value|0x00000001
+comment|/* Used by swapcontext(3). */
+name|int
 name|__spare__
 index|[
-literal|8
+literal|4
 index|]
 decl_stmt|;
 block|}
@@ -98,6 +112,21 @@ parameter_list|,
 name|int
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|signalcontext
+parameter_list|(
+name|ucontext_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|__sighandler_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
