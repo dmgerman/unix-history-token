@@ -274,7 +274,7 @@ argument_list|(
 operator|*
 name|argv
 argument_list|)
-operator|>
+operator|>=
 name|FILENAME_MAX
 operator|||
 name|print_matches
