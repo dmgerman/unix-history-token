@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	5.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	5.22 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,11 +15,32 @@ directive|define
 name|_STDIO_H_
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STRICT_ANSI__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -75,6 +96,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * This is fairly grotesque, but pure ANSI code must not inspect the  * innards of an fpos_t anyway.  The library internally uses off_t,  * which we assume is exactly as big as eight chars.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STRICT_ANSI__
+argument_list|)
+end_if
+
 begin_typedef
 typedef|typedef
 name|off_t
@@ -82,9 +123,31 @@ name|fpos_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Must match off_t<sys/types.h> */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|__sfpos
+block|{
+name|char
+name|_pos
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+name|fpos_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
