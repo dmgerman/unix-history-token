@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1518,32 +1518,8 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|s
-expr_stmt|;
-name|s
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-operator|(
-name|TS_TIMEOUT
-operator||
-name|TS_TTSTOP
-operator||
-name|TS_BUSY
-operator|)
-operator|)
-operator|==
-literal|0
-operator|&&
 name|tp
 operator|->
 name|t_oproc
@@ -1557,11 +1533,6 @@ name|t_oproc
 call|)
 argument_list|(
 name|tp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -6776,6 +6747,25 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|tp
+operator|->
+name|t_outq
+operator|.
+name|c_cc
+operator|>
+name|hiwat
+condition|)
+block|{
+name|cc
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|ovhiwat
+goto|;
+block|}
 comment|/* 		 * Grab a hunk of data from the user. 		 */
 name|cc
 operator|=
@@ -6849,19 +6839,6 @@ condition|(
 name|error
 condition|)
 break|break;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_outq
-operator|.
-name|c_cc
-operator|>
-name|hiwat
-condition|)
-goto|goto
-name|ovhiwat
-goto|;
 if|if
 condition|(
 name|tp
@@ -7296,11 +7273,6 @@ operator|)
 return|;
 name|ovhiwat
 label|:
-name|s
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|cc
@@ -7337,7 +7309,17 @@ operator|-=
 name|cc
 expr_stmt|;
 block|}
-comment|/* 	 * This can only occur if FLUSHO 	 * is also set in t_flags. 	 */
+name|ttstart
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+comment|/* 	 * This can only occur if FLUSHO is set in t_flags, 	 * or if ttstart/oproc is synchronous (or very fast). 	 */
 if|if
 condition|(
 name|tp
@@ -7358,11 +7340,6 @@ goto|goto
 name|loop
 goto|;
 block|}
-name|ttstart
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tp
