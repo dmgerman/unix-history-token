@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	3.1	%H%	*/
+comment|/*	kern_clock.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -627,6 +627,47 @@ name|p_clktim
 operator|==
 literal|0
 condition|)
+if|if
+condition|(
+name|pp
+operator|->
+name|p_flag
+operator|&
+name|STIMO
+condition|)
+block|{
+name|s
+operator|=
+name|spl6
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|p_stat
+operator|==
+name|SSLEEP
+condition|)
+name|setrun
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
+name|pp
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|STIMO
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|psignal
 argument_list|(
 name|pp
