@@ -4012,6 +4012,10 @@ argument_list|()
 expr_stmt|;
 name|cmddone
 label|:
+name|cmdenviron
+operator|=
+name|NULL
+expr_stmt|;
 name|out1
 operator|=
 operator|&

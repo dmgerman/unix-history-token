@@ -3207,9 +3207,11 @@ else|else
 block|{
 name|val
 operator|=
-name|lookupvar
+name|bltinlookup
 argument_list|(
 name|var
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
