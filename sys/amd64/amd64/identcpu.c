@@ -4104,8 +4104,10 @@ literal|"\021PAT"
 comment|/* Page attributes table */
 literal|"\022PGE36"
 comment|/* 36 bit address space support */
-literal|"\023<b18>"
-literal|"\024<b19>"
+literal|"\023RSVD"
+comment|/* Reserved, unknown */
+literal|"\024MP"
+comment|/* Multiprocessor Capable */
 literal|"\025<b20>"
 literal|"\026<b21>"
 literal|"\027AMIE"
