@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.39 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.40 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.39 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.40 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2436,6 +2436,12 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|!=
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
@@ -3782,6 +3788,10 @@ name|UseErrorsTo
 operator|=
 name|FALSE
 expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_OK
+expr_stmt|;
 if|if
 condition|(
 name|forkflag
@@ -3870,7 +3880,9 @@ name|EX_OK
 argument_list|)
 expr_stmt|;
 else|else
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|e
 operator|->
