@@ -11,15 +11,23 @@ directive|include
 file|<sys/mx.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)daemon.c	3.4	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|daemon
+operator|.
+name|c
+literal|3.5
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* **  DAEMON.C -- routines to use when running as a daemon. */

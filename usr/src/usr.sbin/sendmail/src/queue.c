@@ -35,15 +35,27 @@ directive|ifndef
 name|QUEUE
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)queue.c	3.7	%G%	(no queueing)"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|queue
+operator|.
+name|c
+literal|3.8
+operator|%
+name|G
+operator|%
+operator|(
+name|no
+name|queueing
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
@@ -51,15 +63,23 @@ directive|else
 else|QUEUE
 end_else
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)queue.c	3.7	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|queue
+operator|.
+name|c
+literal|3.8
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* **  QUEUEUP -- queue a message up for future transmission. ** **	The queued message should already be in the correct place. **	This routine just outputs the control file as appropriate. ** **	Parameters: **		df -- location of the data file.  The name will **			be transformed into a control file name. ** **	Returns: **		none. ** **	Side Effects: **		The current request (only unsatisfied addresses) **			are saved in a control file. */
@@ -93,24 +113,21 @@ modifier|*
 name|f
 decl_stmt|;
 specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
 name|HDR
 modifier|*
 name|h
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
 decl_stmt|;
 specifier|register
 name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|mktemp
+parameter_list|()
+function_decl|;
 comment|/* 	**  Create control file. 	*/
 name|strcpy
 argument_list|(
@@ -799,9 +816,6 @@ block|;
 specifier|register
 name|int
 name|i
-block|; 	struct
-name|stat
-name|st
 block|;
 name|WORK
 name|wlist

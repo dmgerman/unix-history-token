@@ -5,15 +5,23 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)mailstats.c	3.3	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|mailstats
+operator|.
+name|c
+literal|3.4
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* **  MAILSTATS -- print mail statistics. ** **	Flags: **		-Ffile		Name of statistics file. ** **	Exit Status: **		zero. */
@@ -107,6 +115,9 @@ sizeof|sizeof
 name|stat
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|stderr

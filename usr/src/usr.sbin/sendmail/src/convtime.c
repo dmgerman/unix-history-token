@@ -2,27 +2,35 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"useful.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)convtime.c	3.1	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|convtime
+operator|.
+name|c
+literal|3.2
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* **  CONVTIME -- convert time ** **	Parameters: **		p -- pointer to ascii time. ** **	Returns: **		time in seconds. ** **	Side Effects: **		none. */
+comment|/* **  CONVTIME -- convert time ** **	Takes a time as an ascii string with a trailing character **	giving units: **	  s -- seconds **	  m -- minutes **	  h -- hours **	  d -- days (default) **	  w -- weeks ** **	Parameters: **		p -- pointer to ascii time. ** **	Returns: **		time in seconds. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -39,7 +47,21 @@ block|{
 specifier|register
 name|time_t
 name|t
+decl_stmt|,
+name|r
 decl_stmt|;
+name|r
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+block|{
 name|t
 operator|=
 literal|0
@@ -70,6 +92,7 @@ switch|switch
 condition|(
 operator|*
 name|p
+operator|++
 condition|)
 block|{
 case|case
@@ -81,12 +104,16 @@ operator|*=
 literal|7
 expr_stmt|;
 case|case
+literal|'\0'
+case|:
+name|p
+operator|--
+expr_stmt|;
+comment|/* fall through... */
+case|case
 literal|'d'
 case|:
 comment|/* days */
-case|case
-literal|'\0'
-case|:
 default|default:
 name|t
 operator|*=
@@ -114,9 +141,14 @@ case|:
 comment|/* seconds */
 break|break;
 block|}
+name|r
+operator|+=
+name|t
+expr_stmt|;
+block|}
 return|return
 operator|(
-name|t
+name|r
 operator|)
 return|;
 block|}

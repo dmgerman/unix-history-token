@@ -35,15 +35,23 @@ directive|include
 file|"userdbm.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)vacation.c	3.4	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|vacation
+operator|.
+name|c
+literal|3.5
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* **  VACATION -- return a message to the sender when on vacation. ** **	This program could be invoked as a message receiver **	when someone is on vacation.  It returns a message **	specified by the user to whoever sent the mail, taking **	care not to return a message too often to prevent **	"I am on vacation" loops. ** **	Positional Parameters: **		the user to send to. ** **	Flag Parameters: **		-I	initialize the database. ** **	Side Effects: **		A message is sent back to the sender. ** **	Author: **		Eric Allman **		UCB/INGRES */

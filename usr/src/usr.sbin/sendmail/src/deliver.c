@@ -41,15 +41,23 @@ directive|endif
 endif|LOG
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)deliver.c	3.59	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|deliver
+operator|.
+name|c
+literal|3.60
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* **  DELIVER -- Deliver a message to a list of addresses. ** **	This routine delivers to everyone on the same host as the **	user on the head of the list.  It is clever about mailers **	that don't handle multiple users.  It is NOT guaranteed **	that it will deliver to all these addresses however -- so **	deliver should be called once for each address on the **	list. ** **	Parameters: **		firstto -- head of the address list to deliver to. **		editfcn -- if non-NULL, we want to call this function **			to output the letter (instead of just out- **			putting it raw). ** **	Returns: **		zero -- successfully delivered. **		else -- some failure, see ExitStat for more info. ** **	Side Effects: **		The standard input is passed off to someone. */

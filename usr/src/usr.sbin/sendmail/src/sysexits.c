@@ -5,15 +5,29 @@ directive|include
 file|<sysexits.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)sysexits.c	3.2	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"useful.h"
+end_include
+
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|sysexits
+operator|.
+name|c
+literal|3.3
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* **  SYSEXITS.C -- error messages corresponding to sysexits.h */

@@ -11,15 +11,27 @@ directive|ifndef
 name|SMTP
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)srvrsmtp.c	3.12	%G%	(no SMTP)"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|srvrsmtp
+operator|.
+name|c
+literal|3.13
+operator|%
+name|G
+operator|%
+operator|(
+name|no
+name|SMTP
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
@@ -27,15 +39,23 @@ directive|else
 else|SMTP
 end_else
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)srvrsmtp.c	3.12	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|srvrsmtp
+operator|.
+name|c
+literal|3.13
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* **  SMTP -- run the SMTP protocol. ** **	Parameters: **		none. ** **	Returns: **		never. ** **	Side Effects: **		Reads commands from the input channel and processes **			them. */

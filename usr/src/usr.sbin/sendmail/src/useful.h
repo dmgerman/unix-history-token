@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.6	%G% */
+comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.7		%G% */
 end_comment
 
 begin_ifndef
@@ -79,6 +79,97 @@ name|word
 parameter_list|)
 value|((word)& (bit))
 end_define
+
+begin_comment
+comment|/* assertions */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NASSERT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ASSERT
+parameter_list|(
+name|expr
+parameter_list|,
+name|msg
+parameter_list|,
+name|parm
+parameter_list|)
+define|\
+value|if (!(expr))\ 	{\ 		fprintf(stderr, "assertion botch: %s:%d: ", __FILE__, __LINE__);\ 		fprintf(stderr, msg, parm);\ 	}
+end_define
+
+begin_else
+else|#
+directive|else
+else|NASSERT
+end_else
+
+begin_define
+define|#
+directive|define
+name|ASSERT
+parameter_list|(
+name|expr
+parameter_list|,
+name|msg
+parameter_list|,
+name|parm
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|NASSERT
+end_endif
+
+begin_comment
+comment|/* sccs id's */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SCCSID
+parameter_list|(
+name|arg
+parameter_list|)
+value|static char SccsId[] = "arg";
+end_define
+
+begin_else
+else|#
+directive|else
+else|lint
+end_else
+
+begin_define
+define|#
+directive|define
+name|SCCSID
+parameter_list|(
+name|arg
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_comment
 comment|/* define the types of some common functions */

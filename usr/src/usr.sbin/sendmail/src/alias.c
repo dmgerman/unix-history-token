@@ -29,15 +29,27 @@ directive|ifdef
 name|DBM
 end_ifdef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)alias.c	3.27	%G%	(with DBM)"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|alias
+operator|.
+name|c
+literal|3.28
+operator|%
+name|G
+operator|%
+operator|(
+name|with
+name|DBM
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
@@ -45,15 +57,27 @@ directive|else
 else|DBM
 end_else
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)alias.c	3.27	%G%	(without DBM)"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|alias
+operator|.
+name|c
+literal|3.28
+operator|%
+name|G
+operator|%
+operator|(
+name|without
+name|DBM
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

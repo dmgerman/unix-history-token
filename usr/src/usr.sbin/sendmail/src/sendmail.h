@@ -15,15 +15,27 @@ directive|define
 name|EXTERN
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.55	%G%"
+literal|"@(#)sendmail.h	3.56		%G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_else
 else|#
@@ -42,24 +54,6 @@ begin_endif
 endif|#
 directive|endif
 endif|_DEFINE
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|major
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|major
 end_endif
 
 begin_include

@@ -5,15 +5,23 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)stab.c	3.10	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|stab
+operator|.
+name|c
+literal|3.11
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* **  STAB -- manage the symbol table ** **	Parameters: **		name -- the name to be looked up or inserted. **		type -- the type of symbol. **		op -- what to do: **			ST_ENTER -- enter the name if not **				already present. **			ST_FIND -- find it only. ** **	Returns: **		pointer to a STAB entry for this name. **		NULL if not found and not entered. ** **	Side Effects: **		can update the symbol table. */

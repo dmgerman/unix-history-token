@@ -3,16 +3,6 @@ begin_comment
 comment|/* ** rmail: front end for mail to stack up those stupid>From ... remote from ... ** lines and make a correct return address.  This works with the -f option ** to /usr/lib/sendmail so it won't work on systems without sendmail. ** However, it ought to be easy to modify a standard /bin/mail to do the ** same thing. */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)rmail.c	3.5	%G%"
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include
@@ -36,6 +26,27 @@ include|#
 directive|include
 file|"conf.h"
 end_include
+
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|rmail
+operator|.
+name|c
+literal|3.6
+operator|(
+name|Berkeley
+operator|)
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|extern
@@ -419,6 +430,9 @@ argument_list|,
 name|ufrom
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cmd

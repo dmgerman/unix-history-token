@@ -5,15 +5,23 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)stats.c	3.3	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|stats
+operator|.
+name|c
+literal|3.4
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* **  POSTSTATS -- post statistics in the statistics file ** **	Parameters: **		sfile -- the name of the statistics file. ** **	Returns: **		none. ** **	Side Effects: **		merges the Stat structure with the sfile file. */

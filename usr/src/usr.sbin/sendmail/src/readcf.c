@@ -5,15 +5,23 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)readcf.c	3.17	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|readcf
+operator|.
+name|c
+literal|3.18
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn p f r a	Define mailer.  n - internal name, **				p - pathname, f - flags, r - rewriting **				rule for sender, a - argument vector. ** **	Parameters: **		cfname -- control file name. **		safe -- set if this is a system configuration file. **			Non-system configuration files can not do **			certain things (e.g., leave the SUID bit on **			when executing mailers). ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */

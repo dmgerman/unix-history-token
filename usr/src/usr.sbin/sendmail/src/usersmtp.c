@@ -29,15 +29,27 @@ directive|ifndef
 name|SMTP
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)usersmtp.c	3.6	%G%	(no SMTP)"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|usersmtp
+operator|.
+name|c
+literal|3.7
+operator|%
+name|G
+operator|%
+operator|(
+name|no
+name|SMTP
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
@@ -45,15 +57,23 @@ directive|else
 else|SMTP
 end_else
 
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)usersmtp.c	3.6	%G%"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|SCCSID
+argument_list|(
+argument|@
+operator|(
+operator|#
+operator|)
+name|usersmtp
+operator|.
+name|c
+literal|3.7
+operator|%
+name|G
+operator|%
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* **  SMTPINIT -- initialize SMTP. ** **	Opens the connection and sends the initial protocol. ** **	Parameters: **		m -- mailer to create connection to. **		pvp -- pointer to parameter vector to pass to **			the mailer. **		ctladdr -- controlling address for this mailer. ** **	Returns: **		appropriate exit status -- EX_OK on success. ** **	Side Effects: **		creates connection and sends initial protocol. */
