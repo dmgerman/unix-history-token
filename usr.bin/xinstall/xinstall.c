@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.5 1996/02/08 06:17:50 pst Exp $"
+literal|"$Id: xinstall.c,v 1.6 1996/04/06 01:50:40 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -701,6 +701,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ALLOW_NUMERIC_IDS
+if|if
+condition|(
+name|owner
+condition|)
 name|uid
 operator|=
 name|resolve_uid
@@ -708,6 +712,10 @@ argument_list|(
 name|owner
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|group
+condition|)
 name|gid
 operator|=
 name|resolve_gid
