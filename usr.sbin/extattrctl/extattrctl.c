@@ -102,7 +102,7 @@ argument_list|,
 literal|"usage:\n"
 literal|"  extattrctl start [path]\n"
 literal|"  extattrctl stop [path]\n"
-literal|"  extattrctl initattr [-o] [-p path] [attrsize] [attrfile]\n"
+literal|"  extattrctl initattr [-f] [-p path] [attrsize] [attrfile]\n"
 literal|"  extattrctl enable [path] [attrname] [attrfile]\n"
 literal|"  extattrctl disable [path] [attrname]\n"
 argument_list|)
@@ -233,7 +233,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"op:r:w:"
+literal|"fp:r:w:"
 argument_list|)
 operator|)
 operator|!=
@@ -246,7 +246,7 @@ name|ch
 condition|)
 block|{
 case|case
-literal|'o'
+literal|'f'
 case|:
 name|overwrite
 operator|=
