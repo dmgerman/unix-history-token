@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.68
+literal|3.69
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.68
+literal|3.69
 operator|%
 name|G
 operator|%
@@ -1068,6 +1068,16 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|LOG
+comment|/* 	**  Release any resources used by the daemon code. 	*/
+ifdef|#
+directive|ifdef
+name|DAEMON
+name|clrdaemon
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+endif|DAEMON
 comment|/* 	**  Start making passes through the queue. 	**	First, read and sort the entire queue. 	**	Then, process the work in that order. 	**		But if you take too long, start over. 	*/
 comment|/* order the existing work requests */
 operator|(

@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.43
+literal|3.44
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.43
+literal|3.44
 operator|%
 name|G
 operator|%
@@ -101,7 +101,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	makeconnection(host, port, outfile, infile) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. ** **	The semantics of both of these should be clean. */
+comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	clrdaemon() **		Close any open files associated with getting **		the connection; this is used when running the queue, **		etc., to avoid having extra file descriptors during **		the queue run and to avoid confusing the network **		code (if it cares). **	makeconnection(host, port, outfile, infile) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. ** **	The semantics of both of these should be clean. */
 end_comment
 
 begin_decl_stmt
@@ -141,6 +141,23 @@ name|SendmailAddress
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* internet address of sendmail */
+end_comment
+
+begin_decl_stmt
+name|int
+name|DaemonSocket
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* fd describing socket */
+end_comment
+
 begin_macro
 name|getrequests
 argument_list|()
@@ -148,9 +165,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|s
-decl_stmt|;
 name|int
 name|t
 decl_stmt|;
@@ -243,7 +257,7 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* get a socket for the SMTP connection */
-name|s
+name|DaemonSocket
 operator|=
 name|socket
 argument_list|(
@@ -258,7 +272,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|s
+name|DaemonSocket
 operator|<
 literal|0
 condition|)
@@ -298,7 +312,7 @@ if|if
 condition|(
 name|bind
 argument_list|(
-name|s
+name|DaemonSocket
 argument_list|,
 operator|&
 name|SendmailAddress
@@ -317,9 +331,12 @@ argument_list|(
 literal|"getrequests: cannot bind"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
-name|s
+name|DaemonSocket
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -328,7 +345,7 @@ goto|;
 block|}
 name|listen
 argument_list|(
-name|s
+name|DaemonSocket
 argument_list|,
 literal|10
 argument_list|)
@@ -349,7 +366,7 @@ name|printf
 argument_list|(
 literal|"getrequests: %d\n"
 argument_list|,
-name|s
+name|DaemonSocket
 argument_list|)
 expr_stmt|;
 endif|#
