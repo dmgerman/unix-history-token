@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	4.7 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3451,6 +3451,17 @@ argument_list|(
 name|fout
 argument_list|,
 literal|"Reply-To: %s%s\n"
+argument_list|,
+name|BUGS_NAME
+argument_list|,
+name|BUGS_HOME
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fout
+argument_list|,
+literal|"From: %s%s (Bugs Bunny)\n"
 argument_list|,
 name|BUGS_NAME
 argument_list|,
