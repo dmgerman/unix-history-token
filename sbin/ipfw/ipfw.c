@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipfw.c,v 1.67 1999/05/29 08:12:38 kris Exp $"
+literal|"$Id: ipfw.c,v 1.68 1999/06/02 05:59:48 ru Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3264,16 +3264,30 @@ name|struct
 name|hostent
 modifier|*
 name|he
-init|=
-name|gethostbyname
-argument_list|(
-name|host
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
 operator|!
+name|inet_aton
+argument_list|(
+name|host
+argument_list|,
+name|ipaddr
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
 name|he
+operator|=
+name|gethostbyname
+argument_list|(
+name|host
+argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3297,6 +3311,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
