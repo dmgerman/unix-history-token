@@ -1106,6 +1106,16 @@ literal|"Linksys WMP11 PCI Prism2.5"
 block|}
 block|,
 block|{
+literal|0x10b7
+block|,
+literal|0x7770
+block|,
+name|WI_BUS_PCI_PLX
+block|,
+literal|"3Com Airconnect IEEE 802.11b"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
