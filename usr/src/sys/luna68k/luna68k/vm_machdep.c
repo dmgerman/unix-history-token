@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  * OMRON: $Id: vm_machdep.c,v 1.2 92/06/14 06:24:23 moti Exp $  *  * from: hp300/hp300/vm_machdep.c	7.12 (Berkeley) 6/5/92  *  *	@(#)vm_machdep.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  * from: hp300/hp300/vm_machdep.c	7.14 (Berkeley) 12/27/92  *  *	@(#)vm_machdep.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -116,6 +116,39 @@ name|char
 name|kstack
 index|[]
 decl_stmt|;
+name|p2
+operator|->
+name|p_md
+operator|.
+name|md_regs
+operator|=
+name|p1
+operator|->
+name|p_md
+operator|.
+name|md_regs
+expr_stmt|;
+name|p2
+operator|->
+name|p_md
+operator|.
+name|md_flags
+operator|=
+operator|(
+name|p1
+operator|->
+name|p_md
+operator|.
+name|md_flags
+operator|&
+operator|~
+operator|(
+name|MDP_AST
+operator||
+name|MDP_HPUXTRACE
+operator|)
+operator|)
+expr_stmt|;
 comment|/* 	 * Copy pcb and stack from proc p1 to p2.  	 * We do this as cheaply as possible, copying only the active 	 * part of the stack.  The stack and pcb need to agree; 	 * this is tricky, as the final pcb is constructed by savectx, 	 * but its frame isn't yet on the stack when the stack is copied. 	 * swtch compensates for this when the child eventually runs. 	 * This should be done differently, with a single call 	 * that copies and updates the pcb+stack, 	 * replacing the bcopy and savectx. 	 */
 name|p2
 operator|->
