@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -103,8 +103,6 @@ name|vn_open
 argument_list|(
 name|ndp
 argument_list|,
-name|p
-argument_list|,
 name|fmode
 argument_list|,
 name|cmode
@@ -116,14 +114,6 @@ operator|*
 name|ndp
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -143,13 +133,27 @@ name|vp
 decl_stmt|;
 specifier|register
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|ndp
+operator|->
+name|ni_cnd
+operator|.
+name|cn_proc
+decl_stmt|;
+specifier|register
+name|struct
 name|ucred
 modifier|*
 name|cred
 init|=
-name|p
+name|ndp
 operator|->
-name|p_ucred
+name|ni_cnd
+operator|.
+name|cn_cred
 decl_stmt|;
 name|struct
 name|vattr
@@ -175,10 +179,18 @@ condition|)
 block|{
 name|ndp
 operator|->
-name|ni_nameiop
+name|ni_cnd
+operator|.
+name|cn_nameiop
 operator|=
 name|CREATE
-operator||
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_cnd
+operator|.
+name|cn_flags
+operator|=
 name|LOCKPARENT
 operator||
 name|LOCKLEAF
@@ -195,7 +207,9 @@ literal|0
 condition|)
 name|ndp
 operator|->
-name|ni_nameiop
+name|ni_cnd
+operator|.
+name|cn_flags
 operator||=
 name|FOLLOW
 expr_stmt|;
@@ -206,8 +220,6 @@ operator|=
 name|namei
 argument_list|(
 name|ndp
-argument_list|,
-name|p
 argument_list|)
 condition|)
 return|return
@@ -371,10 +383,18 @@ else|else
 block|{
 name|ndp
 operator|->
-name|ni_nameiop
+name|ni_cnd
+operator|.
+name|cn_nameiop
 operator|=
 name|LOOKUP
-operator||
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_cnd
+operator|.
+name|cn_flags
+operator|=
 name|FOLLOW
 operator||
 name|LOCKLEAF
@@ -386,8 +406,6 @@ operator|=
 name|namei
 argument_list|(
 name|ndp
-argument_list|,
-name|p
 argument_list|)
 condition|)
 return|return
