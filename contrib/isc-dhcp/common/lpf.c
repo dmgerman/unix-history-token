@@ -4,7 +4,7 @@ comment|/* lpf.c     Linux packet filter code, contributed by Brian Murrel at In
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1998, 1999  * The Internet Software Consortium.    All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon<mellon@fugue.com> in cooperation with Vixie  * Enterprises.  To learn more about the Internet Software Consortium,  * see ``http://www.vix.com/isc''.  To learn more about Vixie  * Enterprises, see ``http://www.vix.com''.  */
+comment|/*  * Copyright (c) 1996-2000 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: lpf.c,v 1.1.2.10 1999/10/25 15:39:02 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: lpf.c,v 1.29 2001/04/24 00:36:00 mellon Exp $ Copyright (c) 1996-2000 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,36 +105,6 @@ include|#
 directive|include
 file|"includes/netinet/if_ether.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|void
-name|lpf_gen_filter_setup
-name|PROTO
-argument_list|(
-operator|(
-expr|struct
-name|interface_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|lpf_tr_filter_setup
-name|PROTO
-argument_list|(
-operator|(
-expr|struct
-name|interface_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Reinitializes the specified interface after an address change.   This    is not required for packet-filter APIs. */
@@ -236,6 +206,9 @@ name|SOCK_PACKET
 argument_list|,
 name|htons
 argument_list|(
+operator|(
+name|short
+operator|)
 name|ETH_P_ALL
 argument_list|)
 argument_list|)
@@ -271,22 +244,32 @@ operator|==
 name|EINVAL
 condition|)
 block|{
-name|warn
+name|log_error
 argument_list|(
-literal|"socket: %m"
+literal|"socket: %m - make sure"
 argument_list|)
 expr_stmt|;
-name|error
+name|log_error
 argument_list|(
-literal|"Make sure to set %s %s!"
+literal|"CONFIG_PACKET (Packet socket) %s"
 argument_list|,
-literal|"CONFIG_PACKET=y and CONFIG_FILTER=y"
+literal|"and CONFIG_FILTER"
+argument_list|)
+expr_stmt|;
+name|log_error
+argument_list|(
+literal|"(Socket Filtering) are enabled %s"
 argument_list|,
-literal|"in your kernel configuration"
+literal|"in your kernel"
+argument_list|)
+expr_stmt|;
+name|log_fatal
+argument_list|(
+literal|"configuration!"
 argument_list|)
 expr_stmt|;
 block|}
-name|error
+name|log_fatal
 argument_list|(
 literal|"Open a socket for LPF: %m"
 argument_list|)
@@ -372,22 +355,32 @@ operator|==
 name|EINVAL
 condition|)
 block|{
-name|warn
+name|log_error
 argument_list|(
-literal|"bind: %m"
+literal|"socket: %m - make sure"
 argument_list|)
 expr_stmt|;
-name|error
+name|log_error
 argument_list|(
-literal|"Set %s %s!"
+literal|"CONFIG_PACKET (Packet socket) %s"
 argument_list|,
-literal|"CONFIG_PACKET=y and CONFIG_FILTER=y"
+literal|"and CONFIG_FILTER"
+argument_list|)
+expr_stmt|;
+name|log_error
+argument_list|(
+literal|"(Socket Filtering) are enabled %s"
 argument_list|,
-literal|"in your kernel configuration"
+literal|"in your kernel"
+argument_list|)
+expr_stmt|;
+name|log_fatal
+argument_list|(
+literal|"configuration!"
 argument_list|)
 expr_stmt|;
 block|}
-name|error
+name|log_fatal
 argument_list|(
 literal|"Bind socket to interface: %m"
 argument_list|)
@@ -437,8 +430,6 @@ operator|=
 name|if_register_lpf
 argument_list|(
 name|info
-argument_list|,
-name|interface
 argument_list|)
 expr_stmt|;
 else|#
@@ -458,7 +449,7 @@ condition|(
 operator|!
 name|quiet_interface_discovery
 condition|)
-name|note
+name|log_info
 argument_list|(
 literal|"Sending on   LPF/%s/%s%s%s"
 argument_list|,
@@ -472,19 +463,132 @@ name|info
 operator|->
 name|hw_address
 operator|.
-name|htype
+name|hbuf
+index|[
+literal|0
+index|]
 argument_list|,
 name|info
 operator|->
 name|hw_address
 operator|.
 name|hlen
+operator|-
+literal|1
+argument_list|,
+operator|&
+name|info
+operator|->
+name|hw_address
+operator|.
+name|hbuf
+index|[
+literal|1
+index|]
+argument_list|)
+argument_list|,
+operator|(
+name|info
+operator|->
+name|shared_network
+condition|?
+literal|"/"
+else|:
+literal|""
+operator|)
+argument_list|,
+operator|(
+name|info
+operator|->
+name|shared_network
+condition|?
+name|info
+operator|->
+name|shared_network
+operator|->
+name|name
+else|:
+literal|""
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|if_deregister_send
+parameter_list|(
+name|info
+parameter_list|)
+name|struct
+name|interface_info
+modifier|*
+name|info
+decl_stmt|;
+block|{
+comment|/* don't need to close twice if we are using lpf for sending and 	   receiving */
+ifndef|#
+directive|ifndef
+name|USE_LPF_RECEIVE
+comment|/* for LPF this is simple, packet filters are removed when sockets 	   are closed */
+name|close
+argument_list|(
+name|info
+operator|->
+name|wfdesc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|info
+operator|->
+name|wfdesc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet_interface_discovery
+condition|)
+name|log_info
+argument_list|(
+literal|"Disabling output on LPF/%s/%s%s%s"
+argument_list|,
+name|info
+operator|->
+name|name
+argument_list|,
+name|print_hw_addr
+argument_list|(
+name|info
+operator|->
+name|hw_address
+operator|.
+name|hbuf
+index|[
+literal|0
+index|]
 argument_list|,
 name|info
 operator|->
 name|hw_address
 operator|.
-name|haddr
+name|hlen
+operator|-
+literal|1
+argument_list|,
+operator|&
+name|info
+operator|->
+name|hw_address
+operator|.
+name|hbuf
+index|[
+literal|1
+index|]
 argument_list|)
 argument_list|,
 operator|(
@@ -550,6 +654,15 @@ name|dhcp_bpf_filter_len
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_TR_SUPPORT
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -569,7 +682,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
-name|lpf_gen_filter_setup
+name|lpf_tr_filter_setup
 parameter_list|(
 name|struct
 name|interface_info
@@ -578,10 +691,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
-name|lpf_tr_filter_setup
+name|lpf_gen_filter_setup
 parameter_list|(
 name|struct
 name|interface_info
@@ -612,13 +730,22 @@ argument_list|(
 name|info
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_TR_SUPPORT
+argument_list|)
 if|if
 condition|(
 name|info
 operator|->
 name|hw_address
 operator|.
-name|htype
+name|hbuf
+index|[
+literal|0
+index|]
 operator|==
 name|HTYPE_IEEE802
 condition|)
@@ -628,6 +755,8 @@ name|info
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|lpf_gen_filter_setup
 argument_list|(
 name|info
@@ -638,7 +767,7 @@ condition|(
 operator|!
 name|quiet_interface_discovery
 condition|)
-name|note
+name|log_info
 argument_list|(
 literal|"Listening on LPF/%s/%s%s%s"
 argument_list|,
@@ -652,19 +781,126 @@ name|info
 operator|->
 name|hw_address
 operator|.
-name|htype
+name|hbuf
+index|[
+literal|0
+index|]
 argument_list|,
 name|info
 operator|->
 name|hw_address
 operator|.
 name|hlen
+operator|-
+literal|1
+argument_list|,
+operator|&
+name|info
+operator|->
+name|hw_address
+operator|.
+name|hbuf
+index|[
+literal|1
+index|]
+argument_list|)
+argument_list|,
+operator|(
+name|info
+operator|->
+name|shared_network
+condition|?
+literal|"/"
+else|:
+literal|""
+operator|)
+argument_list|,
+operator|(
+name|info
+operator|->
+name|shared_network
+condition|?
+name|info
+operator|->
+name|shared_network
+operator|->
+name|name
+else|:
+literal|""
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|if_deregister_receive
+parameter_list|(
+name|info
+parameter_list|)
+name|struct
+name|interface_info
+modifier|*
+name|info
+decl_stmt|;
+block|{
+comment|/* for LPF this is simple, packet filters are removed when sockets 	   are closed */
+name|close
+argument_list|(
+name|info
+operator|->
+name|rfdesc
+argument_list|)
+expr_stmt|;
+name|info
+operator|->
+name|rfdesc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet_interface_discovery
+condition|)
+name|log_info
+argument_list|(
+literal|"Disabling input on LPF/%s/%s%s%s"
+argument_list|,
+name|info
+operator|->
+name|name
+argument_list|,
+name|print_hw_addr
+argument_list|(
+name|info
+operator|->
+name|hw_address
+operator|.
+name|hbuf
+index|[
+literal|0
+index|]
 argument_list|,
 name|info
 operator|->
 name|hw_address
 operator|.
-name|haddr
+name|hlen
+operator|-
+literal|1
+argument_list|,
+operator|&
+name|info
+operator|->
+name|hw_address
+operator|.
+name|hbuf
+index|[
+literal|1
+index|]
 argument_list|)
 argument_list|,
 operator|(
@@ -735,6 +971,9 @@ name|k
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|short
+operator|)
 name|local_port
 argument_list|)
 expr_stmt|;
@@ -782,16 +1021,33 @@ name|errno
 operator|==
 name|EAFNOSUPPORT
 condition|)
-name|error
+block|{
+name|log_error
 argument_list|(
-literal|"socket: %m - make sure %s %s!"
-argument_list|,
-literal|"CONFIG_PACKET and CONFIG_FILTER are defined"
-argument_list|,
-literal|"in your kernel configuration"
+literal|"socket: %m - make sure"
 argument_list|)
 expr_stmt|;
-name|error
+name|log_error
+argument_list|(
+literal|"CONFIG_PACKET (Packet socket) %s"
+argument_list|,
+literal|"and CONFIG_FILTER"
+argument_list|)
+expr_stmt|;
+name|log_error
+argument_list|(
+literal|"(Socket Filtering) are enabled %s"
+argument_list|,
+literal|"in your kernel"
+argument_list|)
+expr_stmt|;
+name|log_fatal
+argument_list|(
+literal|"configuration!"
+argument_list|)
+expr_stmt|;
+block|}
+name|log_fatal
 argument_list|(
 literal|"Can't install packet filter program: %m"
 argument_list|)
@@ -799,6 +1055,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_TR_SUPPORT
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -875,16 +1140,33 @@ name|errno
 operator|==
 name|EAFNOSUPPORT
 condition|)
-name|error
+block|{
+name|log_error
 argument_list|(
-literal|"socket: %m - make sure %s %s!"
-argument_list|,
-literal|"CONFIG_PACKET and CONFIG_FILTER are defined"
-argument_list|,
-literal|"in your kernel configuration"
+literal|"socket: %m - make sure"
 argument_list|)
 expr_stmt|;
-name|error
+name|log_error
+argument_list|(
+literal|"CONFIG_PACKET (Packet socket) %s"
+argument_list|,
+literal|"and CONFIG_FILTER"
+argument_list|)
+expr_stmt|;
+name|log_error
+argument_list|(
+literal|"(Socket Filtering) are enabled %s"
+argument_list|,
+literal|"in your kernel"
+argument_list|)
+expr_stmt|;
+name|log_fatal
+argument_list|(
+literal|"configuration!"
+argument_list|)
+expr_stmt|;
+block|}
+name|log_fatal
 argument_list|(
 literal|"Can't install packet filter program: %m"
 argument_list|)
@@ -892,6 +1174,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_TR_SUPPORT */
+end_comment
 
 begin_endif
 endif|#
@@ -959,17 +1250,43 @@ modifier|*
 name|hto
 decl_stmt|;
 block|{
-name|int
-name|bufp
+name|unsigned
+name|hbufp
+init|=
+literal|0
+decl_stmt|,
+name|ibufp
 init|=
 literal|0
 decl_stmt|;
+name|double
+name|hh
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|double
+name|ih
+index|[
+literal|1536
+operator|/
+sizeof|sizeof
+argument_list|(
+name|double
+argument_list|)
+index|]
+decl_stmt|;
 name|unsigned
 name|char
+modifier|*
 name|buf
-index|[
-literal|1500
-index|]
+init|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|ih
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -977,6 +1294,9 @@ name|sa
 decl_stmt|;
 name|int
 name|result
+decl_stmt|;
+name|int
+name|fudge
 decl_stmt|;
 if|if
 condition|(
@@ -1013,13 +1333,47 @@ name|assemble_hw_header
 argument_list|(
 name|interface
 argument_list|,
-name|buf
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|hh
 argument_list|,
 operator|&
-name|bufp
+name|hbufp
 argument_list|,
 name|hto
 argument_list|)
+expr_stmt|;
+name|fudge
+operator|=
+name|hbufp
+operator|%
+literal|4
+expr_stmt|;
+comment|/* IP header must be word-aligned. */
+name|memcpy
+argument_list|(
+name|buf
+operator|+
+name|fudge
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|hh
+argument_list|,
+name|hbufp
+argument_list|)
+expr_stmt|;
+name|ibufp
+operator|=
+name|hbufp
+operator|+
+name|fudge
 expr_stmt|;
 name|assemble_udp_ip_header
 argument_list|(
@@ -1028,7 +1382,7 @@ argument_list|,
 name|buf
 argument_list|,
 operator|&
-name|bufp
+name|ibufp
 argument_list|,
 name|from
 operator|.
@@ -1058,7 +1412,7 @@ name|memcpy
 argument_list|(
 name|buf
 operator|+
-name|bufp
+name|ibufp
 argument_list|,
 name|raw
 argument_list|,
@@ -1113,10 +1467,14 @@ operator|->
 name|wfdesc
 argument_list|,
 name|buf
+operator|+
+name|fudge
 argument_list|,
-name|bufp
+name|ibufp
 operator|+
 name|len
+operator|-
+name|fudge
 argument_list|,
 literal|0
 argument_list|,
@@ -1133,7 +1491,7 @@ name|result
 operator|<
 literal|0
 condition|)
-name|warn
+name|log_error
 argument_list|(
 literal|"send_packet: %m"
 argument_list|)
@@ -1214,10 +1572,10 @@ name|unsigned
 name|char
 name|ibuf
 index|[
-literal|1500
+literal|1536
 index|]
 decl_stmt|;
-name|int
+name|unsigned
 name|bufix
 init|=
 literal|0
@@ -1303,6 +1661,9 @@ operator|*
 operator|)
 literal|0
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|length
 argument_list|)
 expr_stmt|;
@@ -1347,7 +1708,14 @@ end_function
 begin_function
 name|int
 name|can_unicast_without_arp
-parameter_list|()
+parameter_list|(
+name|ip
+parameter_list|)
+name|struct
+name|interface_info
+modifier|*
+name|ip
+decl_stmt|;
 block|{
 return|return
 literal|1
@@ -1374,23 +1742,52 @@ block|}
 end_function
 
 begin_function
+name|int
+name|supports_multiple_interfaces
+parameter_list|(
+name|ip
+parameter_list|)
+name|struct
+name|interface_info
+modifier|*
+name|ip
+decl_stmt|;
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|maybe_setup_fallback
 parameter_list|()
 block|{
+name|isc_result_t
+name|status
+decl_stmt|;
 name|struct
 name|interface_info
 modifier|*
 name|fbi
+init|=
+operator|(
+expr|struct
+name|interface_info
+operator|*
+operator|)
+literal|0
 decl_stmt|;
-name|fbi
-operator|=
-name|setup_fallback
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
+name|setup_fallback
+argument_list|(
+operator|&
 name|fbi
+argument_list|,
+name|MDL
+argument_list|)
 condition|)
 block|{
 name|if_register_fallback
@@ -1398,17 +1795,53 @@ argument_list|(
 name|fbi
 argument_list|)
 expr_stmt|;
-name|add_protocol
+name|status
+operator|=
+name|omapi_register_io_object
 argument_list|(
-literal|"fallback"
+operator|(
+name|omapi_object_t
+operator|*
+operator|)
+name|fbi
 argument_list|,
-name|fallback_interface
-operator|->
-name|wfdesc
+name|if_readsocket
+argument_list|,
+literal|0
 argument_list|,
 name|fallback_discard
 argument_list|,
-name|fallback_interface
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|log_fatal
+argument_list|(
+literal|"Can't register I/O handle for %s: %s"
+argument_list|,
+name|fbi
+operator|->
+name|name
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|interface_dereference
+argument_list|(
+operator|&
+name|fbi
+argument_list|,
+name|MDL
 argument_list|)
 expr_stmt|;
 block|}

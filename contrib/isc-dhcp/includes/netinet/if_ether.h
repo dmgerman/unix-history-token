@@ -38,7 +38,7 @@ end_define
 
 begin_struct
 struct|struct
-name|ether_header
+name|isc_ether_header
 block|{
 name|u_int8_t
 name|ether_dhost
@@ -91,67 +91,6 @@ end_define
 begin_comment
 comment|/* address resolution protocol */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHERTYPE_REVARP
-value|0x8035
-end_define
-
-begin_comment
-comment|/* reverse addr resolution protocol */
-end_comment
-
-begin_comment
-comment|/*  * The ETHERTYPE_NTRAILER packet types starting at ETHERTYPE_TRAIL have  * (type-ETHERTYPE_TRAIL)*512 bytes of data followed  * by an ETHER type (as given above) and then the (variable-length) header.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHERTYPE_TRAIL
-value|0x1000
-end_define
-
-begin_comment
-comment|/* Trailer packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHERTYPE_NTRAILER
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_IS_MULTICAST
-parameter_list|(
-name|addr
-parameter_list|)
-value|(*(addr)& 0x01)
-end_define
-
-begin_comment
-comment|/* is address mcast/bcast? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHERMTU
-value|1500
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHERMIN
-value|(60-14)
-end_define
 
 begin_define
 define|#
