@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	6.12	85/05/27	*/
+comment|/*	uipc_usrreq.c	6.13	85/06/02	*/
 end_comment
 
 begin_include
@@ -2055,6 +2055,15 @@ name|unp_nextref
 operator|=
 literal|0
 expr_stmt|;
+name|unp
+operator|->
+name|unp_socket
+operator|->
+name|so_state
+operator|&=
+operator|~
+name|SS_ISCONNECTED
+expr_stmt|;
 break|break;
 case|case
 name|SOCK_STREAM
@@ -2772,7 +2781,7 @@ name|so_proto
 operator|->
 name|pr_flags
 operator|&
-name|PR_ADDR
+name|PR_RIGHTS
 operator|)
 operator|==
 literal|0
