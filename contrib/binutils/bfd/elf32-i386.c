@@ -1362,12 +1362,38 @@ begin_comment
 comment|/* The name of the dynamic interpreter.  This is put in the .interp    section.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|ELF_DYNAMIC_INTERPRETER
 value|"/usr/libexec/ld-elf.so.1"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ELF_DYNAMIC_INTERPRETER
+value|"/usr/lib/libc.so.1"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The size in bytes of an entry in the procedure linkage table.  */
@@ -3867,7 +3893,7 @@ name|relocs
 operator|=
 name|true
 expr_stmt|;
-comment|/* If this relocation section applies to a read only 		     section which is in memory at run time, then 		     we probably need a DT_TEXTREL entry.  The entries 		     in the .rel.plt section really apply to the 		     .got section, which we created ourselves and so 		     know is not readonly.  */
+comment|/* If this relocation section applies to a read only 		     section, then we probably need a DT_TEXTREL 		     entry.  The entries in the .rel.plt section 		     really apply to the .got section, which we 		     created ourselves and so know is not readonly.  */
 name|outname
 operator|=
 name|bfd_get_section_name
