@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forward.c	5.1 (Berkeley) %G%"
+literal|"@(#)forward.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -529,6 +529,14 @@ argument_list|)
 condition|)
 name|ierr
 argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
