@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.27 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -473,20 +473,17 @@ name|boothowto
 operator|&
 name|RB_ASKNAME
 operator|)
-operator|||
-name|setroot
-argument_list|()
 operator|==
 literal|0
 condition|)
+name|setroot
+argument_list|()
+expr_stmt|;
 name|setconf
 argument_list|()
 expr_stmt|;
 else|#
 directive|else
-operator|(
-name|void
-operator|)
 name|setroot
 argument_list|()
 expr_stmt|;
@@ -4488,11 +4485,7 @@ name|u_long
 operator|)
 name|B_DEVMAGIC
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|majdev
 operator|=
 operator|(
@@ -4520,11 +4513,7 @@ literal|0
 index|]
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|adaptor
 operator|=
 operator|(
@@ -4669,11 +4658,7 @@ name|mi_driver
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|mindev
 operator|=
 name|mbap
@@ -4682,11 +4667,7 @@ name|mi_unit
 expr_stmt|;
 else|#
 directive|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 endif|#
 directive|endif
 block|}
@@ -4772,11 +4753,7 @@ name|ui_driver
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|mindev
 operator|=
 name|ubap
@@ -4814,11 +4791,7 @@ name|rootdev
 operator|==
 name|orootdev
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 name|printf
 argument_list|(
 literal|"Changing root device to %c%c%d%c\n"
@@ -4933,11 +4906,7 @@ name|sw_dev
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+return|return;
 comment|/* 	 * If argdev and dumpdev were the same as the old primary swap 	 * device, move them to the new primary swap device. 	 */
 if|if
 condition|(
@@ -4971,11 +4940,6 @@ name|sw_dev
 expr_stmt|;
 endif|#
 directive|endif
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_block
 
