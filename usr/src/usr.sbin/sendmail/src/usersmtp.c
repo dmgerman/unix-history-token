@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.12 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.13 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.12 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.13 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -425,11 +425,23 @@ name|REPLYTYPE
 argument_list|(
 name|r
 argument_list|)
+operator|==
+literal|4
+condition|)
+goto|goto
+name|tempfail1
+goto|;
+if|if
+condition|(
+name|REPLYTYPE
+argument_list|(
+name|r
+argument_list|)
 operator|!=
 literal|2
 condition|)
 goto|goto
-name|tempfail1
+name|unavailable
 goto|;
 comment|/* 	**  Send the HELO command. 	**	My mother taught me to always introduce myself. 	*/
 if|if
