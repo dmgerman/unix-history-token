@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ioasic.c,v 1.1 1998/08/20 08:27:10 dfr Exp $ */
+comment|/* $Id: ioasic.c,v 1.2 1999/05/08 21:58:48 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -623,11 +623,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|vm_offset_t
-name|regs
-decl_stmt|,
-name|va
-decl_stmt|;
 name|u_long
 name|i
 decl_stmt|;
@@ -940,7 +935,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|" at %s%d, offset 0x%lx"
+literal|" at %s%d, offset 0x%x"
 argument_list|,
 name|device_get_name
 argument_list|(
@@ -1154,7 +1149,7 @@ name|ioasic_intrnull
 condition|)
 name|panic
 argument_list|(
-literal|"ioasic_intr_establish: cookie %d twice"
+literal|"ioasic_intr_establish: cookie %ld twice"
 argument_list|,
 name|dev
 argument_list|)
@@ -1287,7 +1282,7 @@ name|ioasic_intrnull
 condition|)
 name|panic
 argument_list|(
-literal|"ioasic_intr_disestablish: cookie %d missing intr"
+literal|"ioasic_intr_disestablish: cookie %ld missing intr"
 argument_list|,
 name|dev
 argument_list|)
@@ -1401,25 +1396,15 @@ name|val
 decl_stmt|;
 specifier|register
 name|int
-name|i
-decl_stmt|,
 name|ifound
 decl_stmt|;
 name|int
 name|gifound
 decl_stmt|;
-name|u_int32_t
-name|sir
-decl_stmt|,
-name|junk
-decl_stmt|;
 specifier|volatile
 name|u_int32_t
 modifier|*
 name|sirp
-decl_stmt|,
-modifier|*
-name|junkp
 decl_stmt|;
 name|sirp
 operator|=
