@@ -102,6 +102,19 @@ name|rs
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+specifier|inline
+name|u_int8_t
+name|arc4_getbyte
+parameter_list|(
+name|struct
+name|arc4_stream
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 specifier|inline
@@ -296,6 +309,8 @@ decl_stmt|;
 block|{
 name|int
 name|fd
+decl_stmt|,
+name|n
 decl_stmt|;
 struct|struct
 block|{
@@ -402,6 +417,25 @@ sizeof|sizeof
 argument_list|(
 name|rdat
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Throw away the first N bytes of output, as suggested in the 	 * paper "Weaknesses in the Key Scheduling Algorithm of RC4" 	 * by Fluher, Mantin, and Shamir.  N=1024 is based on 	 * suggestions in the paper "(Not So) Random Shuffles of RC4" 	 * by Ilya Mironov. 	 */
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+literal|1024
+condition|;
+name|n
+operator|++
+control|)
+name|arc4_getbyte
+argument_list|(
+name|as
 argument_list|)
 expr_stmt|;
 block|}
