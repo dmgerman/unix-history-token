@@ -292,6 +292,14 @@ name|LSYS
 block|}
 block|,
 block|{
+name|USB_VENDOR_LINKSYS
+block|,
+name|USB_PRODUCT_LINKSYS_USB10TX2
+block|,
+name|LSYS
+block|}
+block|,
+block|{
 name|USB_VENDOR_COREGA
 block|,
 name|USB_PRODUCT_COREGA_FETHER_USB_TX
