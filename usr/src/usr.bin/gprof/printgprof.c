@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printgprof.c	1.6 (Berkeley) %G%"
+literal|"@(#)printgprof.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2797,16 +2797,6 @@ decl_stmt|;
 name|int
 name|input
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|BLURBLIB
-define|#
-directive|define
-name|BLURBLIB
-value|"./"
-endif|#
-directive|endif
-endif|not BLURBLIB
 name|sprintf
 argument_list|(
 name|pathname

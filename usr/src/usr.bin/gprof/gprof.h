@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.9 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.10 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -94,6 +94,17 @@ define|#
 directive|define
 name|GMONSUM
 value|"gmon.sum"
+end_define
+
+begin_comment
+comment|/*      *	the directory where the descriptions of the fields      *	of the profiles are kept.      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLURBLIB
+value|"/usr/lib/"
 end_define
 
 begin_comment
