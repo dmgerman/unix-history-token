@@ -3002,8 +3002,6 @@ control|(
 name|i
 operator|=
 name|NLDT
-operator|+
-literal|1
 init|;
 name|i
 operator|<
