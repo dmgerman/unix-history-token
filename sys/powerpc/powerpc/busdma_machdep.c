@@ -2019,7 +2019,9 @@ parameter_list|,
 name|bus_dmamap_t
 name|map
 parameter_list|)
-block|{}
+block|{
+return|return;
+block|}
 end_function
 
 begin_function
@@ -2036,23 +2038,7 @@ name|bus_dmasync_op_t
 name|op
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|(
-name|op
-operator|==
-name|BUS_DMASYNC_PREREAD
-operator|)
-operator|||
-operator|(
-name|op
-operator|==
-name|BUS_DMASYNC_PREWRITE
-operator|)
-condition|)
-name|powerpc_mb
-argument_list|()
-expr_stmt|;
+return|return;
 block|}
 end_function
 
