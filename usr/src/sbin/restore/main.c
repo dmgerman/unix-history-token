@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.3	(Berkeley)	83/02/27"
+literal|"@(#)main.c	3.4	(Berkeley)	83/02/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,6 +178,12 @@ modifier|*
 name|dirmodefile
 init|=
 literal|"./dirmodes"
+decl_stmt|;
+name|char
+name|name
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 name|int
 argument_list|(
@@ -580,6 +586,15 @@ name|argc
 operator|--
 condition|)
 block|{
+name|canon
+argument_list|(
+operator|*
+name|argv
+operator|++
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -587,8 +602,7 @@ name|ino
 operator|=
 name|psearch
 argument_list|(
-operator|*
-name|argv
+name|name
 argument_list|)
 operator|)
 operator|==
@@ -610,18 +624,14 @@ name|stderr
 argument_list|,
 literal|"%s: not on tape\n"
 argument_list|,
-operator|*
-name|argv
-operator|++
+name|name
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
 name|treescan
 argument_list|(
-operator|*
-name|argv
-operator|++
+name|name
 argument_list|,
 name|ino
 argument_list|,
@@ -703,6 +713,15 @@ name|argc
 operator|--
 condition|)
 block|{
+name|canon
+argument_list|(
+operator|*
+name|argv
+operator|++
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -710,8 +729,7 @@ name|ino
 operator|=
 name|psearch
 argument_list|(
-operator|*
-name|argv
+name|name
 argument_list|)
 operator|)
 operator|==
@@ -733,9 +751,7 @@ name|stderr
 argument_list|,
 literal|"%s: not on tape\n"
 argument_list|,
-operator|*
-name|argv
-operator|++
+name|name
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -746,10 +762,9 @@ name|mflag
 condition|)
 name|pathcheck
 argument_list|(
-operator|*
-name|argv
+name|name
 argument_list|,
-name|NEW
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -758,9 +773,7 @@ name|hflag
 condition|)
 name|treescan
 argument_list|(
-operator|*
-name|argv
-operator|++
+name|name
 argument_list|,
 name|ino
 argument_list|,
@@ -770,19 +783,17 @@ expr_stmt|;
 else|else
 name|addfile
 argument_list|(
-operator|*
-name|argv
-operator|++
+name|name
 argument_list|,
 name|ino
 argument_list|,
-name|LEAF
+name|inodetype
+argument_list|(
+name|ino
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|createnodes
-argument_list|()
-expr_stmt|;
 name|createfiles
 argument_list|()
 expr_stmt|;
@@ -1009,6 +1020,12 @@ name|initsymtable
 argument_list|(
 name|symtbl
 argument_list|)
+expr_stmt|;
+name|skipmaps
+argument_list|()
+expr_stmt|;
+name|skipdirs
+argument_list|()
 expr_stmt|;
 name|createleaves
 argument_list|(
