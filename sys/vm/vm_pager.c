@@ -265,7 +265,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize known pagers 	 */
+comment|/* 	 * Initialize known pagers 	 * If pgops is a null pointer skip over it. 	 */
 for|for
 control|(
 name|pgops
@@ -283,6 +283,11 @@ condition|;
 name|pgops
 operator|++
 control|)
+if|if
+condition|(
+operator|*
+name|pgops
+condition|)
 operator|(
 operator|*
 operator|(
