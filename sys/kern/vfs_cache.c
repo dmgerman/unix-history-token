@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Poul-Henning Kamp of the FreeBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.3 (Berkeley) 8/22/94  * $Id$  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Poul-Henning Kamp of the FreeBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.5 (Berkeley) 3/22/95  * $Id: vfs_cache.c,v 1.23 1997/02/22 09:39:31 peter Exp $  */
 end_comment
 
 begin_include
@@ -88,7 +88,7 @@ parameter_list|,
 name|cnp
 parameter_list|)
 define|\
-value|(&nchashtbl[((dvp)->v_id + (cnp)->cn_hash)& nchash])
+value|(&nchashtbl[((dvp)->v_id + (cnp)->cn_hash) % nchash])
 end_define
 
 begin_expr_stmt
@@ -116,42 +116,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* size of hash table - 1 */
+comment|/* size of hash table */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|doingcache
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 => enable the cache */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|vfscache
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|doingcache
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -189,6 +155,40 @@ end_decl_stmt
 begin_comment
 comment|/* cache effectiveness statistics */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|doingcache
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 => enable the cache */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|vfscache
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|doingcache
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -279,7 +279,7 @@ value|{						\ 	if (ncp->nc_lru.tqe_next != 0) {			\ 		TAILQ_REMOVE(&nclruhead, 
 end_define
 
 begin_comment
-comment|/*  * Lookup an entry in the cache   *  * We don't do this if the segment name is long, simply so the cache   * can avoid holding long names (which would either waste space, or  * add greatly to the complexity).  *  * Lookup is called with dvp pointing to the directory to search,  * cnp pointing to the name of the entry being sought. If the lookup  * succeeds, the vnode is returned in *vpp, and a status of -1 is  * returned. If the lookup determines that the name does not exist  * (negative cacheing), a status of ENOENT is returned. If the lookup  * fails, a status of zero is returned.  */
+comment|/*  * Lookup an entry in the cache  *  * We don't do this if the segment name is long, simply so the cache  * can avoid holding long names (which would either waste space, or  * add greatly to the complexity).  *  * Lookup is called with dvp pointing to the directory to search,  * cnp pointing to the name of the entry being sought. If the lookup  * succeeds, the vnode is returned in *vpp, and a status of -1 is  * returned. If the lookup determines that the name does not exist  * (negative cacheing), a status of ENOENT is returned. If the lookup  * fails, a status of zero is returned.  */
 end_comment
 
 begin_function
@@ -692,9 +692,6 @@ operator|!
 name|doingcache
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 name|cnp
@@ -711,8 +708,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * We allocate a new entry if we are less than the maximum 	 * allowed and the one at the front of the LRU list is in use. 	 * Otherwise we use the one at the front of the LRU list. 	 */
 if|if
 condition|(
@@ -981,7 +976,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Invalidate all entries to particular vnode.  *   * We actually just increment the v_id, that will do it. The stale entries  * will be purged by lookup as they get found. If the v_id wraps around, we  * need to ditch the entire cache, to avoid confusion. No valid vnode will  * ever have (v_id == 0).  */
+comment|/*  * Invalidate all entries to particular vnode.  *  * We actually just increment the v_id, that will do it. The stale entries  * will be purged by lookup as they get found. If the v_id wraps around, we  * need to ditch the entire cache, to avoid confusion. No valid vnode will  * ever have (v_id == 0).  */
 end_comment
 
 begin_function
