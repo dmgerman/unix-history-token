@@ -90,6 +90,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -241,7 +247,7 @@ name|n
 expr_stmt|;
 name|ret
 operator|=
-name|vfprintf
+name|__vfprintf
 argument_list|(
 operator|&
 name|f

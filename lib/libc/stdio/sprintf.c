@@ -210,7 +210,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|vfprintf
+name|__vfprintf
 argument_list|(
 operator|&
 name|f

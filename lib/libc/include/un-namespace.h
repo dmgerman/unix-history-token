@@ -234,6 +234,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|pthread_self
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|pthread_setspecific
 end_undef
 
@@ -445,12 +451,6 @@ begin_undef
 undef|#
 directive|undef
 name|pthread_rwlockattr_destroy
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|pthread_self
 end_undef
 
 begin_undef

@@ -57,26 +57,19 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/*  * A subroutine version of the macro fileno.  */
+comment|/*  * fileno has traditionally been a macro in<stdio.h>.  That is  * no longer true because it needs to be thread-safe.  *  * #undef fileno  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|fileno
-end_undef
 
 begin_function
 name|int
 name|fileno
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
+comment|/* ??? - Should probably use atomic_read. */
 return|return
 operator|(
 name|__sfileno

@@ -268,6 +268,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|pthread_self
+value|_pthread_self
+end_define
+
+begin_define
+define|#
+directive|define
 name|pthread_setspecific
 value|_pthread_setspecific
 end_define
@@ -515,13 +522,6 @@ define|#
 directive|define
 name|pthread_rwlockattr_destroy
 value|_pthread_rwlockattr_destroy
-end_define
-
-begin_define
-define|#
-directive|define
-name|pthread_self
-value|_pthread_self
 end_define
 
 begin_define

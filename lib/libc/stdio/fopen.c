@@ -227,7 +227,6 @@ name|_close
 operator|=
 name|__sclose
 expr_stmt|;
-comment|/* fp->_lock = NULL; */
 comment|/* 	 * When opening in append mode, even though we use O_APPEND, 	 * we need to seek to the end so that ftell() gets the right 	 * answer.  If the user then alters the seek pointer, or 	 * the file extends, this will fail, but there is not much 	 * we can do about this.  (We could set __SAPP and check in 	 * fseek and ftell.) 	 */
 if|if
 condition|(

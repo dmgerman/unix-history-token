@@ -142,7 +142,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -151,7 +150,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|f
 decl_stmt|;

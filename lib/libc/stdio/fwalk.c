@@ -117,7 +117,7 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * It should be safe to walk the list without locking it; 	 * new nodes are only added to the end and none are ever 	 * removed. 	 */
+comment|/* 	 * It should be safe to walk the list without locking it; 	 * new nodes are only added to the end and none are ever 	 * removed. 	 * 	 * Avoid locking this list while walking it or else you will 	 * introduce a potential deadlock in [at least] refill.c. 	 */
 for|for
 control|(
 name|g
@@ -159,11 +159,25 @@ operator|++
 control|)
 if|if
 condition|(
+operator|(
 name|fp
 operator|->
 name|_flags
 operator|!=
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|fp
+operator|->
+name|_flags
+operator|&
+name|__SIGN
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 name|ret
 operator||=

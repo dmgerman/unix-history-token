@@ -296,7 +296,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|atomic_set_ptr(&(ptr), (uintptr_t)(val))
+value|atomic_set_rel_ptr(&(ptr), (uintptr_t)(val))
 end_define
 
 begin_else
@@ -668,7 +668,8 @@ name|_size
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fp->_lock = NULL; */
+comment|/*	fp->_lock = NULL; */
+comment|/* once set always set (reused) */
 return|return
 operator|(
 name|fp
@@ -820,7 +821,7 @@ name|void
 name|__sinit
 parameter_list|()
 block|{
-comment|/* make sure we clean up on exit */
+comment|/* Make sure we clean up on exit. */
 name|__cleanup
 operator|=
 name|_cleanup

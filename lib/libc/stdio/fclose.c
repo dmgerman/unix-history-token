@@ -96,12 +96,10 @@ begin_function
 name|int
 name|fclose
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|r
@@ -217,11 +215,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|fp
 operator|->
 name|_file
@@ -240,12 +233,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Mess up if reaccessed. */
-if|#
-directive|if
-literal|0
-block|if (fp->_lock != NULL) { 		_pthread_mutex_destroy((pthread_mutex_t *)&fp->_lock); 		fp->_lock = NULL; 	}
-endif|#
-directive|endif
 name|fp
 operator|->
 name|_flags
@@ -253,6 +240,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Release this FILE for reuse. */
+name|FUNLOCKFILE
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|r

@@ -74,23 +74,20 @@ directive|include
 file|"libc_private.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|getc
-end_undef
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
 
 begin_function
 name|int
 name|getc
 parameter_list|(
-name|fp
-parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|retval

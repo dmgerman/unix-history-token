@@ -87,6 +87,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_function
 name|int
 if|#
@@ -237,7 +243,7 @@ expr_stmt|;
 comment|/* Leave room for the NULL */
 name|ret
 operator|=
-name|vfprintf
+name|__vfprintf
 argument_list|(
 operator|&
 name|f
@@ -247,6 +253,7 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+comment|/* Use unlocked __vfprintf */
 operator|*
 name|f
 operator|.
