@@ -5568,6 +5568,20 @@ name|b_lblkno
 operator|>
 literal|0
 operator|&&
+name|tbp
+operator|->
+name|b_lblkno
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|bp
+operator|->
+name|b_lblkno
+operator|>
+literal|0
+operator|&&
 name|bp
 operator|->
 name|b_lblkno
@@ -5622,7 +5636,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 			 * New sorting algorithm, only handle sequential case, 			 * otherwise guess. 			 */
+comment|/* 			 * New sorting algorithm, only handle sequential case, 			 * otherwise append to end (but before metadata) 			 */
 if|if
 condition|(
 operator|(
@@ -5651,6 +5665,7 @@ name|BX_VNDIRTY
 operator|)
 condition|)
 block|{
+comment|/* 				 * Found the best place to insert the buffer 				 */
 name|TAILQ_INSERT_AFTER
 argument_list|(
 name|listheadp
@@ -5668,9 +5683,42 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|TAILQ_INSERT_HEAD
+comment|/* 				 * Missed, append to end, but before meta-data. 				 * We know that the head buffer in the list is 				 * not meta-data due to prior conditionals. 				 * 				 * Indirect effects:  NFS second stage write 				 * tends to wind up here, giving maximum  				 * distance between the unstable write and the 				 * commit rpc. 				 */
+name|tbp
+operator|=
+name|TAILQ_LAST
 argument_list|(
 name|listheadp
+argument_list|,
+name|buflists
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|tbp
+operator|&&
+name|tbp
+operator|->
+name|b_lblkno
+operator|<
+literal|0
+condition|)
+name|tbp
+operator|=
+name|TAILQ_PREV
+argument_list|(
+name|tbp
+argument_list|,
+name|buflists
+argument_list|,
+name|b_vnbufs
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_AFTER
+argument_list|(
+name|listheadp
+argument_list|,
+name|tbp
 argument_list|,
 name|bp
 argument_list|,

@@ -5025,9 +5025,7 @@ operator|&&
 name|nmp
 operator|->
 name|nm_bufqlen
-operator|<
-literal|2
-operator|*
+operator|<=
 name|nfs_numasync
 condition|)
 block|{
