@@ -784,7 +784,7 @@ name|rtadvd_set_dump_file
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1272,10 +1272,6 @@ name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|set_die
 argument_list|)
 expr_stmt|;
@@ -1283,10 +1279,6 @@ name|signal
 argument_list|(
 name|SIGUSR1
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|rtadvd_set_dump_file
 argument_list|)
 expr_stmt|;
@@ -1481,7 +1473,12 @@ begin_function
 specifier|static
 name|void
 name|rtadvd_set_dump_file
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|do_dump
 operator|=
