@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eval.c,v 1.15.2.3 1999/05/08 10:42:55 kris Exp $"
+literal|"$Id: eval.c,v 1.15.2.4 1999/07/19 11:02:39 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,16 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_comment
+comment|/* For WIFSIGNALED(status) */
+end_comment
 
 begin_comment
 comment|/*  * Evaluate a command.  */
@@ -1782,6 +1792,12 @@ operator|=
 name|waitforjob
 argument_list|(
 name|jp
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|INTON
@@ -2254,6 +2270,12 @@ operator|=
 name|waitforjob
 argument_list|(
 name|jp
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|TRACE
@@ -2650,6 +2672,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|lastarg
+decl_stmt|;
+name|int
+name|realstatus
 decl_stmt|;
 if|#
 directive|if
@@ -4180,10 +4205,36 @@ operator|=
 name|waitforjob
 argument_list|(
 name|jp
+argument_list|,
+operator|&
+name|realstatus
 argument_list|)
 expr_stmt|;
 name|INTON
 expr_stmt|;
+if|if
+condition|(
+name|iflag
+operator|&&
+name|loopnest
+operator|>
+literal|0
+operator|&&
+name|WIFSIGNALED
+argument_list|(
+name|realstatus
+argument_list|)
+condition|)
+block|{
+name|evalskip
+operator|=
+name|SKIPBREAK
+expr_stmt|;
+name|skipcount
+operator|=
+name|loopnest
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
