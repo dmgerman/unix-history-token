@@ -102,29 +102,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_COMMERCIAL
+name|DIST_DES
 value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_DES
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_EXPERIMENTAL
-value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_ALL
-value|0xFFFF
+value|0x1FFF
 end_define
 
 begin_comment

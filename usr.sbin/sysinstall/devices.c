@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.50 1996/11/15 19:53:08 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.51 1996/11/27 01:01:52 joerg Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -294,7 +294,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"ed"
 block|,
-literal|"WD/SMC 80xx; Novell NE1000/2000; 3Com 3C503 cards"
+literal|"WD/SMC 80xx; Novell NE1000/2000; 3Com 3C503 card"
 block|}
 block|,
 block|{
@@ -950,7 +950,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type disk named: %s\n"
+literal|"Found a disk device named %s\n"
 argument_list|,
 name|names
 index|[
@@ -1114,7 +1114,10 @@ argument_list|(
 literal|"ifconfig: socket"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|skipif
+goto|;
+comment|/* Jump over network iface probing */
 block|}
 if|if
 condition|(
@@ -1140,7 +1143,10 @@ argument_list|(
 literal|"ifconfig (SIOCGIFCONF)"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|skipif
+goto|;
+comment|/* Jump over network iface probing */
 block|}
 name|ifflags
 operator|=
@@ -1229,15 +1235,16 @@ literal|3
 argument_list|)
 condition|)
 continue|continue;
-name|descr
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* Try and find its description */
 for|for
 control|(
 name|i
 operator|=
 literal|0
+operator|,
+name|descr
+operator|=
+name|NULL
 init|;
 name|device_names
 index|[
@@ -1336,7 +1343,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type network named: %s\n"
+literal|"Found a network device named %s\n"
 argument_list|,
 name|ifptr
 operator|->
@@ -1409,6 +1416,8 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
+name|skipif
+label|:
 comment|/* Finally, try to find all the types of devices one might need      * during the second stage of the installation.      */
 for|for
 control|(
@@ -1538,7 +1547,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type CDROM named: %s\n"
+literal|"Found a CDROM device named %s\n"
 argument_list|,
 name|device_names
 index|[
@@ -1621,7 +1630,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type TAPE named: %s\n"
+literal|"Found a TAPE device named %s\n"
 argument_list|,
 name|device_names
 index|[
@@ -1704,7 +1713,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type floppy named: %s\n"
+literal|"Found a floppy device named %s\n"
 argument_list|,
 name|device_names
 index|[
@@ -1863,7 +1872,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"Found a device of type network named: %s\n"
+literal|"Found a serial network device named %s on %s\n"
 argument_list|,
 name|device_names
 index|[
@@ -1871,6 +1880,8 @@ name|i
 index|]
 operator|.
 name|name
+argument_list|,
+name|try
 argument_list|)
 expr_stmt|;
 block|}
