@@ -919,9 +919,6 @@ name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|count
 argument_list|,
@@ -1122,9 +1119,6 @@ name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|n_nchash
 argument_list|,
@@ -1149,9 +1143,6 @@ name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|used
 argument_list|,
@@ -1176,9 +1167,6 @@ name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|maxlength
 argument_list|,
@@ -1203,9 +1191,6 @@ name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|pct
 argument_list|,

@@ -466,9 +466,6 @@ name|argp
 operator|->
 name|ex_addr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|saddr
 argument_list|,
 name|argp
@@ -513,9 +510,6 @@ name|sockaddr
 operator|*
 operator|)
 operator|(
-operator|(
-name|caddr_t
-operator|)
 name|saddr
 operator|+
 name|argp
@@ -531,9 +525,6 @@ name|argp
 operator|->
 name|ex_mask
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|smask
 argument_list|,
 name|argp
@@ -675,14 +666,8 @@ operator|->
 name|rnh_addaddr
 call|)
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|saddr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|smask
 argument_list|,
 name|rnh
@@ -878,9 +863,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|rn
 argument_list|,
 name|M_NETADDR
@@ -959,17 +941,11 @@ name|rnh
 argument_list|,
 name|vfs_free_netcred
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|rnh
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|rnh
 argument_list|,
 name|M_RTABLE
@@ -1332,9 +1308,6 @@ return|;
 comment|/* 	 * Get real filehandle for root of exported FS. 	 */
 name|bzero
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|nfs_pub
 operator|.
@@ -1657,9 +1630,6 @@ operator|->
 name|rnh_matchaddr
 call|)
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|saddr
 argument_list|,
 name|rnh

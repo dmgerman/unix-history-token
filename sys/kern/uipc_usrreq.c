@@ -2532,9 +2532,6 @@ name|so
 operator|->
 name|so_pcb
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|unp
 expr_stmt|;
 return|return
@@ -6471,9 +6468,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|extra_ref
 argument_list|,
 name|M_TEMP

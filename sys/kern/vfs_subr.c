@@ -1410,9 +1410,6 @@ expr_stmt|;
 comment|/* 		 * Since all busy locks are shared except the exclusive 		 * lock granted when unmounting, the only place that a 		 * wakeup needs to be done is at the release of the 		 * exclusive lock at the end of dounmount. 		 */
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|mp
 argument_list|,
 name|interlkp
@@ -4419,9 +4416,6 @@ name|VBWAIT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|vp
 operator|->
@@ -4531,9 +4525,6 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|vp
 operator|->
@@ -7640,9 +7631,6 @@ name|VXWANT
 expr_stmt|;
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|vp
 argument_list|,
 operator|&
@@ -9239,9 +9227,6 @@ name|VXWANT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|vp
 argument_list|)
 expr_stmt|;
@@ -9318,9 +9303,6 @@ name|VXWANT
 expr_stmt|;
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|vp
 argument_list|,
 operator|&
@@ -9571,9 +9553,6 @@ name|VXWANT
 expr_stmt|;
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|vp
 argument_list|,
 operator|&
