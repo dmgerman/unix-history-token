@@ -13522,7 +13522,13 @@ name|sc
 operator|==
 name|NULL
 condition|)
-continue|continue;
+block|{
+name|can_go
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 name|pp
 operator|=
 name|sc
