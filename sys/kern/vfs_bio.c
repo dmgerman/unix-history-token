@@ -14521,19 +14521,6 @@ name|v_type
 operator|==
 name|VCHR
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|buf_prewrite
-argument_list|(
-name|bp
-operator|->
-name|b_vp
-argument_list|,
-name|bp
-argument_list|)
-condition|)
 name|i
 operator|=
 name|VOP_SPECSTRATEGY
@@ -14543,9 +14530,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|i
 operator|=
 name|VOP_STRATEGY
@@ -14555,7 +14540,6 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
 name|KASSERT
 argument_list|(
 name|i

@@ -999,6 +999,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|softdep_disk_prewrite
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* XXX incorrectly moved to mount.h - should be indirect function */
 end_comment

@@ -1251,24 +1251,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|int
-name|softdep_disk_prewrite
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|softdep_disk_io_initiation
 parameter_list|(
@@ -5663,12 +5645,6 @@ operator|=
 name|softdep_fsync
 expr_stmt|;
 comment|/* initialise bioops hack */
-name|bioops
-operator|.
-name|io_prewrite
-operator|=
-name|softdep_disk_prewrite
-expr_stmt|;
 name|bioops
 operator|.
 name|io_start
@@ -15824,7 +15800,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|softdep_disk_prewrite
 parameter_list|(
