@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)subr.c	1.5 (Berkeley) %G%"
+literal|"@(#)subr.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1195,6 +1195,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|char
+name|mod2incomment
+index|[]
+init|=
+name|MOD2INCOMMENT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|mod2outcomment
+index|[]
+init|=
+name|MOD2OUTCOMMENT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|lang_desc
 name|lang_table
@@ -1333,6 +1353,13 @@ block|,
 name|troffincomment
 block|,
 name|troffoutcomment
+block|,
+comment|/*INMOD2	19*/
+literal|"mod2"
+block|,
+name|mod2incomment
+block|,
+name|mod2outcomment
 block|,
 literal|0
 block|,
