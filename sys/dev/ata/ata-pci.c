@@ -968,6 +968,12 @@ return|return
 literal|"AMD 766 ATA100 controller"
 return|;
 case|case
+literal|0x74411022
+case|:
+return|return
+literal|"AMD 768 ATA100 controller"
+return|;
+case|case
 literal|0x02111166
 case|:
 return|return
@@ -1957,6 +1963,10 @@ case|case
 literal|0x74111022
 case|:
 comment|/* AMD 766 default setup */
+case|case
+literal|0x74411022
+case|:
+comment|/* AMD 768 default setup */
 comment|/* set prefetch, postwrite */
 name|pci_write_config
 argument_list|(
