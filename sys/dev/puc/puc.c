@@ -475,7 +475,7 @@ name|sc
 operator|->
 name|fastintr
 operator|=
-literal|1
+name|INTR_FAST
 expr_stmt|;
 else|else
 name|irq_setup
@@ -2164,8 +2164,7 @@ name|flags
 operator|&
 name|INTR_FAST
 operator|)
-operator|&&
-operator|!
+operator|!=
 name|sc
 operator|->
 name|fastintr
