@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.4 (Berkeley) %G%  *  * from: $Header: machdep.c,v 1.33 92/08/05 04:20:03 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.5 (Berkeley) %G%  *  * from: $Header: machdep.c,v 1.40 93/04/20 11:16:12 torek Exp $  */
 end_comment
 
 begin_include
@@ -2278,27 +2278,10 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-include|#
-directive|include
-file|"fd.h"
-if|#
-directive|if
-name|NFD
-operator|>
-literal|0
-name|fdshutdown
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|sync
 argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-name|NULL
+operator|&
+name|proc0
 argument_list|,
 operator|(
 name|void
@@ -2723,7 +2706,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sparc/sparc/ctlreg.h>
+file|<machine/ctlreg.h>
 end_include
 
 begin_define
@@ -3039,8 +3022,6 @@ name|kpmap
 operator|->
 name|pm_rsegmap
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -3504,7 +3485,10 @@ name|virt
 condition|)
 name|v
 operator|=
+name|trunc_page
+argument_list|(
 name|virt
+argument_list|)
 expr_stmt|;
 else|else
 block|{
@@ -3536,6 +3520,17 @@ name|void
 operator|*
 operator|)
 name|v
+expr_stmt|;
+name|phys
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|trunc_page
+argument_list|(
+name|phys
+argument_list|)
 expr_stmt|;
 do|do
 block|{
