@@ -577,6 +577,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_DUPOK
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
@@ -1777,8 +1779,15 @@ expr_stmt|;
 if|if
 condition|(
 name|temp
+operator|!=
+name|NULL
 condition|)
 block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|temp
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1800,6 +1809,11 @@ name|temp
 operator|->
 name|generation
 operator|++
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|temp
+argument_list|)
 expr_stmt|;
 name|object
 operator|->
