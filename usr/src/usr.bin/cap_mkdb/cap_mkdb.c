@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cap_mkdb.c	1.10 (Berkeley) %G%"
+literal|"@(#)cap_mkdb.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,19 +56,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -370,7 +364,7 @@ argument_list|,
 name|outname
 argument_list|)
 expr_stmt|;
-comment|/*  	 * We want to avoid the confusion of where the capability record  	 * is being read from.  Since the user probably intends to read the  	 * ascii file, we should make sure that user knows that the  	 * corresponding .db file will override.          */
+comment|/* 	 * We want to avoid the confusion of where the capability record 	 * is being read from.  Since the user probably intends to read the 	 * ascii file, we should make sure that user knows that the 	 * corresponding .db file will override. 	 */
 for|for
 control|(
 name|f
@@ -425,7 +419,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"open: %s"
+literal|"%s: %s"
+argument_list|,
+name|buf
 argument_list|,
 name|strerror
 argument_list|(
@@ -526,6 +522,9 @@ name|key
 decl_stmt|,
 name|data
 decl_stmt|;
+name|recno_t
+name|reccnt
+decl_stmt|;
 name|size_t
 name|lastlen
 decl_stmt|,
@@ -535,8 +534,6 @@ name|int
 name|st
 decl_stmt|,
 name|stdb
-decl_stmt|,
-name|i
 decl_stmt|;
 name|char
 modifier|*
@@ -569,7 +566,7 @@ name|O_CREAT
 operator||
 name|O_TRUNC
 operator||
-name|O_WRONLY
+name|O_RDWR
 argument_list|,
 name|DEFFILEMODE
 argument_list|,
@@ -619,12 +616,12 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
-name|i
+for|for
+control|(
+name|reccnt
 operator|=
-literal|1
-expr_stmt|;
-while|while
-condition|(
+literal|0
+init|;
 operator|(
 name|st
 operator|=
@@ -638,7 +635,8 @@ argument_list|)
 operator|)
 operator|>
 literal|0
-condition|)
+condition|;
+control|)
 block|{
 name|getnamefield
 argument_list|(
@@ -700,7 +698,7 @@ operator|=
 name|bplen
 expr_stmt|;
 block|}
-comment|/* 		 * Store record under name field. 		 */
+comment|/* Store record under name field. */
 if|if
 condition|(
 name|st
@@ -837,31 +835,17 @@ name|err
 argument_list|(
 literal|0
 argument_list|,
-literal|"put: record '%s' already exists -- only first reference is stored"
+literal|"ignored duplicate: %s"
 argument_list|,
 name|nf
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|printf
-argument_list|(
-literal|"Hashed %d capability records.\r"
-argument_list|,
-name|i
 operator|++
-argument_list|)
+name|reccnt
 expr_stmt|;
-name|printnl
-operator|=
-literal|1
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Store references for other names. 		 */
+comment|/* Store references for other names. */
 operator|(
 name|void
 operator|)
@@ -909,10 +893,14 @@ name|cp
 operator|!=
 literal|'\0'
 condition|;
+operator|*
+name|np
+operator|++
+operator|=
+operator|*
 name|cp
 operator|++
 control|)
-block|{
 if|if
 condition|(
 operator|*
@@ -987,7 +975,7 @@ name|err
 argument_list|(
 literal|0
 argument_list|,
-literal|"put: record '%s' already exists -- only first reference is stored."
+literal|"ignored duplicate: %s"
 argument_list|,
 name|namebuf
 argument_list|)
@@ -997,14 +985,6 @@ operator|=
 name|namebuf
 expr_stmt|;
 continue|continue;
-block|}
-operator|*
-name|np
-operator|++
-operator|=
-operator|*
-name|cp
-expr_stmt|;
 block|}
 block|}
 if|if
@@ -1080,9 +1060,14 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"\n"
+literal|"cap_mkdb: %d capability records\n"
+argument_list|,
+name|reccnt
 argument_list|)
 expr_stmt|;
 block|}
