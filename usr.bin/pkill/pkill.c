@@ -555,6 +555,8 @@ decl_stmt|,
 name|rv
 decl_stmt|,
 name|criteria
+decl_stmt|,
+name|drop_privs
 decl_stmt|;
 name|void
 function_decl|(
@@ -772,6 +774,10 @@ name|criteria
 operator|=
 literal|0
 expr_stmt|;
+name|drop_privs
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -783,7 +789,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"G:P:U:d:fg:lns:t:u:vx"
+literal|"G:M:N:P:U:d:fg:lns:t:u:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -809,6 +815,30 @@ name|optarg
 argument_list|)
 expr_stmt|;
 name|criteria
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+name|coref
+operator|=
+name|optarg
+expr_stmt|;
+name|drop_privs
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|execf
+operator|=
+name|optarg
+expr_stmt|;
+name|drop_privs
 operator|=
 literal|1
 expr_stmt|;
@@ -1021,6 +1051,25 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Discard privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
+if|if
+condition|(
+name|drop_privs
+condition|)
+block|{
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 name|mypid
 operator|=
 name|getpid
@@ -2044,8 +2093,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s [-G gid] [-P ppid] [-U uid] [-g pgrp] [-s sid]\n"
-literal|"             [-t tty] [-u euid] pattern ...\n"
+literal|"usage: %s %s [-G gid] [-M core] [-N system]\n"
+literal|"             [-P ppid] [-U uid] [-g pgrp] [-s sid] [-t tty]\n"
+literal|"             [-u euid] pattern ...\n"
 argument_list|,
 name|getprogname
 argument_list|()
