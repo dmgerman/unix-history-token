@@ -348,6 +348,12 @@ endif|#
 directive|endif
 name|ap
 operator|->
+name|flag
+operator|=
+literal|0
+expr_stmt|;
+name|ap
+operator|->
 name|next
 operator|=
 operator|*
