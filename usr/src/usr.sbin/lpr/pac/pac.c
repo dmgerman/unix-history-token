@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pac.c	5.9 (Berkeley) %G%"
+literal|"@(#)pac.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,7 +326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|stativ
+specifier|static
 name|int
 name|chkprinter
 name|__P
