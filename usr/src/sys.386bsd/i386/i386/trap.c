@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)trap.c	7.4 (Berkeley) 5/13/91  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)trap.c	7.4 (Berkeley) 5/13/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00137  * --------------------         -----   ----------------------  *  * 08 Apr 93	Bruce Evans		Several VM system fixes  * 		Paul Kranenburg		Add counter for vmstat  */
 end_comment
 
 begin_decl_stmt
@@ -521,6 +521,11 @@ comment|/* Allow process switch */
 name|astoff
 argument_list|()
 expr_stmt|;
+name|cnt
+operator|.
+name|v_soft
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -664,15 +669,13 @@ case|case
 name|T_PAGEFLT
 case|:
 comment|/* allow page faults in kernel mode */
-if|if
-condition|(
-name|code
-operator|&
-name|PGEX_P
-condition|)
-goto|goto
-name|we_re_toast
-goto|;
+if|#
+directive|if
+literal|0
+comment|/* XXX - check only applies to 386's and 486's with WP off */
+block|if (code& PGEX_P) goto we_re_toast;
+endif|#
+directive|endif
 comment|/* fall into */
 case|case
 name|T_PAGEFLT
@@ -724,6 +727,23 @@ operator|)
 name|eva
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Avoid even looking at pde_v(va) for high va's.   va's 		 * above VM_MAX_KERNEL_ADDRESS don't correspond to normal 		 * PDE's (half of them correspond to APDEpde and half to 		 * an unmapped kernel PDE).  va's betweeen 0xFEC00000 and 		 * VM_MAX_KERNEL_ADDRESS correspond to unmapped kernel PDE's 		 * (XXX - why are only 3 initialized when 6 are required to 		 * reach VM_MAX_KERNEL_ADDRESS?).  Faulting in an unmapped 		 * kernel page table would give inconsistent PTD's. 		 * 		 * XXX - faulting in unmapped page tables wastes a page if 		 * va turns out to be invalid. 		 * 		 * XXX - should "kernel address space" cover the kernel page 		 * tables?  Might have same problem with PDEpde as with 		 * APDEpde (or there may be no problem with APDEpde). 		 */
+if|if
+condition|(
+name|va
+operator|>
+literal|0xFEBFF000
+condition|)
+block|{
+name|rv
+operator|=
+name|KERN_FAILURE
+expr_stmt|;
+comment|/* becomes SIGBUS */
+goto|goto
+name|nogo
+goto|;
+block|}
 comment|/* 		 * It is only a kernel address space fault iff: 		 * 	1. (type& T_USER) == 0  and 		 * 	2. pcb_onfault not set or 		 *	3. pcb_onfault set but supervisor space fault 		 * The last can occur during an exec() copyin where the 		 * argument space is lazy-allocated. 		 */
 if|if
 condition|(
@@ -733,7 +753,7 @@ name|T_PAGEFLT
 operator|&&
 name|va
 operator|>=
-literal|0xfe000000
+name|KERNBASE
 condition|)
 name|map
 operator|=
