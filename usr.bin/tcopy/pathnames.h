@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_DEFTAPE
-value|"/dev/rmt0"
+value|"/dev/rst0"
 end_define
 
 end_unit

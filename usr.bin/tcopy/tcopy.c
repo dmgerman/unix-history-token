@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)tcopy.c	8.2 (Berkeley) 4/17/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	8.2 (Berkeley) 4/17/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mtio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -198,6 +218,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -352,11 +373,9 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tcopy: illegal block size\n"
+literal|"illegal block size"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -494,21 +513,18 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|3
+argument_list|,
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|3
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 default|default:
 name|usage
@@ -532,18 +548,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|inf
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|buff
 operator|=
 name|getspace
@@ -664,25 +677,15 @@ goto|goto
 name|r1
 goto|;
 block|}
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"read error, file %d, record %ld: "
+literal|"read error, file %d, record %ld"
 argument_list|,
 name|filen
 argument_list|,
 name|record
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -844,17 +847,6 @@ operator|!=
 name|nread
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"write error, file %d, record %ld: "
-argument_list|,
-name|filen
-argument_list|,
-name|record
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|nw
@@ -862,33 +854,43 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+block|{
+name|warn
 argument_list|(
-literal|""
+literal|"write error, file %d, record %ld"
+argument_list|,
+name|filen
+argument_list|,
+name|record
 argument_list|)
 expr_stmt|;
+block|}
 else|else
-name|fprintf
+block|{
+name|warnx
 argument_list|(
-name|stderr
+literal|"write error, file %d, record %ld"
 argument_list|,
-literal|"write (%d) != read (%d)\n"
+name|filen
+argument_list|,
+name|record
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"write (%d) != read (%d)"
 argument_list|,
 name|nw
 argument_list|,
 name|nread
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"copy aborted\n"
-argument_list|)
-expr_stmt|;
-name|exit
+block|}
+name|errx
 argument_list|(
 literal|5
+argument_list|,
+literal|"copy aborted"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1170,9 +1172,9 @@ goto|goto
 name|r1
 goto|;
 block|}
-name|perror
+name|warn
 argument_list|(
-literal|"tcopy: read error"
+literal|"read error"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1236,9 +1238,9 @@ goto|goto
 name|r2
 goto|;
 block|}
-name|perror
+name|warn
 argument_list|(
-literal|"tcopy: read error"
+literal|"read error"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1430,20 +1432,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tcopy: no memory\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|11
+argument_list|,
+literal|"no memory"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|bp
@@ -1503,22 +1498,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"tcopy: tape op"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|6
+argument_list|,
+literal|"tape op"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -1527,7 +1518,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tcopy [-cvx] [-s maxblk] src [dest]\n"
+literal|"usage: tcopy [-cvx] [-s maxblk] [src [dest]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
