@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: scsiio.h,v 1.8 1997/02/22 09:45:49 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -380,6 +380,28 @@ end_define
 begin_comment
 comment|/* Wait for SCSI to thaw */
 end_comment
+
+begin_struct
+struct|struct
+name|scsi_getdevinfo
+block|{
+name|struct
+name|scsi_addr
+name|addr
+decl_stmt|;
+name|dev_t
+name|dev
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SCIOCGETDEVINFO
+value|_IOWR('Q', 13, struct scsi_getdevinfo)
+end_define
 
 begin_endif
 endif|#
