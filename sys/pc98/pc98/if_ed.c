@@ -17,11 +17,26 @@ directive|include
 file|"ed.h"
 end_include
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"pnp.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -201,7 +216,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_edreg.h>
+file|<dev/ed/if_edreg.h>
 end_include
 
 begin_if
@@ -215,7 +230,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<i386/isa/pnp.h>
+file|<isa/pnpvar.h>
 end_include
 
 begin_endif
