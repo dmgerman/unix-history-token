@@ -138,14 +138,14 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *	Define the version level of the kernel - so we can compile in the  *	appropriate bits of code. By default this will compile for a 2.1  *	level kernel.  */
+comment|/*  *	Define the version level of the kernel - so we can compile in the  *	appropriate bits of code. By default this will compile for a 4.x  *	level kernel.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VFREEBSD
-value|410
+value|400
 end_define
 
 begin_define
