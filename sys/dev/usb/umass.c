@@ -5218,7 +5218,7 @@ operator|==
 name|UMASS_BBB_CBW_SIZE
 argument_list|,
 operator|(
-literal|"%s: CBW struct does not have the right size (%d vs. %d)\n"
+literal|"%s: CBW struct does not have the right size (%ld vs. %d)\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -5227,6 +5227,9 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 name|umass_bbb_cbw_t
@@ -5246,7 +5249,7 @@ operator|==
 name|UMASS_BBB_CSW_SIZE
 argument_list|,
 operator|(
-literal|"%s: CSW struct does not have the right size (%d vs. %d)\n"
+literal|"%s: CSW struct does not have the right size (%ld vs. %d)\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -5255,6 +5258,9 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 name|umass_bbb_csw_t
@@ -7100,7 +7106,7 @@ operator|>=
 name|SEND_DIAGNOSTIC_CMDLEN
 argument_list|,
 operator|(
-literal|"%s: CBL struct is too small (%d< %d)\n"
+literal|"%s: CBL struct is too small (%ld< %d)\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -7109,6 +7115,9 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 name|sc
@@ -11447,11 +11456,14 @@ name|scsi_start_stop_unit
 argument_list|)
 argument_list|,
 operator|(
-literal|"rcmdlen = %d< %d, buffer too small"
+literal|"rcmdlen = %d< %ld, buffer too small"
 operator|,
 operator|*
 name|rcmdlen
 operator|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -12259,11 +12271,14 @@ name|scsi_start_stop_unit
 argument_list|)
 argument_list|,
 operator|(
-literal|"rcmdlen = %d< %d, buffer too small"
+literal|"rcmdlen = %d< %ld, buffer too small"
 operator|,
 operator|*
 name|rcmdlen
 operator|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
