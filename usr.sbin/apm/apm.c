@@ -105,6 +105,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|APM_UNKNOWN
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
 name|xh
 parameter_list|(
 name|a
@@ -685,8 +692,8 @@ expr_stmt|;
 if|if
 condition|(
 name|batt_life
-operator|>=
-literal|255
+operator|==
+name|APM_UNKNOWN
 condition|)
 name|printf
 argument_list|(
@@ -751,8 +758,8 @@ expr_stmt|;
 if|if
 condition|(
 name|batt_stat
-operator|>=
-literal|255
+operator|==
+name|APM_UNKNOWN
 condition|)
 name|printf
 argument_list|(
@@ -857,8 +864,8 @@ condition|(
 name|aip
 operator|->
 name|ai_acline
-operator|>=
-literal|255
+operator|==
+name|APM_UNKNOWN
 condition|)
 name|printf
 argument_list|(
@@ -936,8 +943,9 @@ condition|(
 name|aip
 operator|->
 name|ai_batteries
-operator|>=
-literal|255
+operator|==
+operator|~
+literal|0U
 condition|)
 name|printf
 argument_list|(
@@ -1025,16 +1033,8 @@ condition|(
 name|aps
 operator|.
 name|ap_batt_flag
-operator|<=
-literal|255
-operator|&&
-operator|(
-name|aps
-operator|.
-name|ap_batt_flag
 operator|&
 name|APM_BATT_NOT_PRESENT
-operator|)
 condition|)
 block|{
 name|printf
@@ -1426,11 +1426,6 @@ operator|>=
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"APM Capabilities:\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|aip
@@ -1439,9 +1434,10 @@ name|ai_capabilities
 operator|==
 literal|0xff00
 condition|)
+return|return;
 name|printf
 argument_list|(
-literal|"\tunknown\n"
+literal|"APM Capabilities:\n"
 argument_list|)
 expr_stmt|;
 if|if
