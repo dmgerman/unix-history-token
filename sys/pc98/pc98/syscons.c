@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1992-1995 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.48 1997/07/16 13:55:58 kato Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.49 1997/07/21 13:11:14 kato Exp $  */
 end_comment
 
 begin_include
@@ -824,6 +824,13 @@ name|int
 name|fonts_loaded
 init|=
 literal|0
+ifdef|#
+directive|ifdef
+name|STD8X16FONT
+operator||
+name|FONT_16
+endif|#
+directive|endif
 decl_stmt|;
 end_decl_stmt
 
@@ -850,6 +857,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|unsigned
 name|char
 name|font_16
 index|[
@@ -9638,6 +9647,38 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+ifdef|#
+directive|ifdef
+name|PC98
+case|case
+name|PIO_FONT8x8
+case|:
+comment|/* set 8x8 dot font */
+case|case
+name|GIO_FONT8x8
+case|:
+comment|/* get 8x8 dot font */
+case|case
+name|PIO_FONT8x14
+case|:
+comment|/* set 8x14 dot font */
+case|case
+name|GIO_FONT8x14
+case|:
+comment|/* get 8x14 dot font */
+case|case
+name|PIO_FONT8x16
+case|:
+comment|/* set 8x16 dot font */
+case|case
+name|GIO_FONT8x16
+case|:
+comment|/* get 8x16 dot font */
+return|return
+name|ENXIO
+return|;
+else|#
+directive|else
 case|case
 name|PIO_FONT8x8
 case|:
@@ -9941,6 +9982,9 @@ else|else
 return|return
 name|ENXIO
 return|;
+endif|#
+directive|endif
+comment|/* PC98 */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -24143,6 +24187,7 @@ comment|/* graphics off */
 block|}
 else|#
 directive|else
+comment|/* IBM-PC */
 switch|switch
 condition|(
 name|scp
@@ -24689,6 +24734,7 @@ break|break;
 block|}
 endif|#
 directive|endif
+comment|/* PC98 */
 comment|/* set border color for this (virtual) console */
 name|set_border
 argument_list|(
@@ -29008,11 +29054,33 @@ name|duration
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* Save font and palette if VGA */
 if|if
 condition|(
 name|crtc_vga
 condition|)
+block|{
+if|if
+condition|(
+name|fonts_loaded
+operator|&
+name|FONT_16
+condition|)
+block|{
+name|copy_font
+argument_list|(
+name|LOAD
+argument_list|,
+name|FONT_16
+argument_list|,
+name|font_16
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|copy_font
 argument_list|(
@@ -29027,6 +29095,7 @@ name|fonts_loaded
 operator|=
 name|FONT_16
 expr_stmt|;
+block|}
 name|save_palette
 argument_list|()
 expr_stmt|;
@@ -29048,6 +29117,8 @@ argument_list|(
 name|cur_console
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
