@@ -6728,7 +6728,7 @@ operator|)
 expr_stmt|;
 name|dev
 operator|->
-name|id_intr
+name|id_ointr
 operator|=
 name|pcmintr
 expr_stmt|;
@@ -7291,7 +7291,7 @@ operator|)
 expr_stmt|;
 name|dev
 operator|->
-name|id_intr
+name|id_ointr
 operator|=
 name|pcmintr
 expr_stmt|;
@@ -7641,7 +7641,7 @@ operator|)
 expr_stmt|;
 name|dev
 operator|->
-name|id_intr
+name|id_ointr
 operator|=
 name|pcmintr
 expr_stmt|;
@@ -7936,7 +7936,7 @@ operator|)
 expr_stmt|;
 name|dev
 operator|->
-name|id_intr
+name|id_ointr
 operator|=
 name|pcmintr
 expr_stmt|;
