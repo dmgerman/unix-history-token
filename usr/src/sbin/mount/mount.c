@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.47 (Berkeley) %G%"
+literal|"@(#)mount.c	5.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -902,10 +902,16 @@ literal|'@'
 argument_list|)
 operator|)
 condition|)
+block|{
 name|mnttype
 operator|=
 name|MOUNT_NFS
 expr_stmt|;
+name|mntname
+operator|=
+literal|"nfs"
+expr_stmt|;
+block|}
 name|ret
 operator|=
 name|mountfs
