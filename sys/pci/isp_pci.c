@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * PCI specific probe and attach routines for Qlogic ISP SCSI adapters.  * FreeBSD Version.  *  * Copyright (c) 1997, 1998, 1999, 2000 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * PCI specific probe and attach routines for Qlogic ISP SCSI adapters.  * FreeBSD Version.  *  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -218,7 +218,7 @@ operator|,
 name|XS_T
 operator|*
 operator|,
-name|u_int32_t
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1196,6 +1196,9 @@ name|ispmdvec
 modifier|*
 name|mdvp
 decl_stmt|;
+name|quad_t
+name|wwn
+decl_stmt|;
 name|bus_size_t
 name|lim
 decl_stmt|;
@@ -2021,40 +2024,30 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|snprintf
-argument_list|(
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
 name|isp
 operator|->
-name|isp_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-argument_list|,
-literal|"isp%d"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|unit
+name|isp_role
 operator|=
-name|unit
+name|ISP_ROLE_BOTH
 expr_stmt|;
+else|#
+directive|else
 name|isp
 operator|->
 name|isp_role
 operator|=
 name|ISP_DEFAULT_ROLES
+expr_stmt|;
+endif|#
+directive|endif
+name|isp
+operator|->
+name|isp_dev
+operator|=
+name|dev
 expr_stmt|;
 comment|/* 	 * Try and find firmware for this device. 	 */
 if|if
@@ -2567,106 +2560,97 @@ operator||=
 name|ISP_CFG_NPORT
 expr_stmt|;
 block|}
-comment|/* 	 * Look for overriding WWN. This is a Node WWN so it binds to 	 * all FC instances. A Port WWN will be constructed from it 	 * as appropriate. 	 */
+comment|/* 	 * Because the resource_*_value functions can neither return 	 * 64 bit integer values, nor can they be directly coerced 	 * to interpret the right hand side of the assignment as 	 * you want them to interpret it, we have to force WWN 	 * hint replacement to specify WWN strings with a leading 	 * 'w' (e..g w50000000aaaa0001). Sigh. 	 */
 if|if
 condition|(
-operator|!
 name|getenv_quad
 argument_list|(
-literal|"isp_wwn"
+literal|"isp_portwwn"
 argument_list|,
-operator|(
-name|quad_t
-operator|*
-operator|)
 operator|&
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|default_wwn
+name|wwn
 argument_list|)
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
-name|u_int64_t
-name|seed
-init|=
-operator|(
-name|u_int64_t
-operator|)
-operator|(
-name|intptr_t
-operator|)
-name|isp
-decl_stmt|;
-name|seed
-operator|<<=
-literal|16
-expr_stmt|;
-name|seed
-operator|&=
-operator|(
-operator|(
-literal|1LL
-operator|<<
-literal|48
-operator|)
-operator|-
-literal|1LL
-operator|)
-expr_stmt|;
-comment|/* 		 * This isn't very random, but it's the best we can do for 		 * the real edge case of cards that don't have WWNs. If 		 * you recompile a new vers.c, you'll get a different WWN. 		 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|version
-index|[
-name|i
-index|]
-operator|!=
-literal|0
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|seed
-operator|+=
-name|version
-index|[
-name|i
-index|]
-expr_stmt|;
-block|}
-comment|/* 		 * Make sure the top nibble has something vaguely sensible 		 * (NAA == Locally Administered) 		 */
 name|isp
 operator|->
 name|isp_osinfo
 operator|.
-name|default_wwn
-operator||=
-operator|(
-literal|3LL
-operator|<<
-literal|60
-operator|)
-operator||
-name|seed
+name|default_port_wwn
+operator|=
+name|wwn
 expr_stmt|;
-block|}
-else|else
-block|{
 name|isp
 operator|->
 name|isp_confopts
 operator||=
 name|ISP_CFG_OWNWWN
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|default_port_wwn
+operator|==
+literal|0
+condition|)
+block|{
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|default_port_wwn
+operator|=
+literal|0x400000007F000009ull
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|getenv_quad
+argument_list|(
+literal|"isp_nodewwn"
+argument_list|,
+operator|&
+name|wwn
+argument_list|)
+condition|)
+block|{
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|default_node_wwn
+operator|=
+name|wwn
+expr_stmt|;
+name|isp
+operator|->
+name|isp_confopts
+operator||=
+name|ISP_CFG_OWNWWN
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|default_node_wwn
+operator|==
+literal|0
+condition|)
+block|{
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|default_node_wwn
+operator|=
+literal|0x400000007F000009ull
 expr_stmt|;
 block|}
 name|isp_debug
@@ -4848,9 +4832,10 @@ name|ct_entry_t
 modifier|*
 name|cto
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|handle
-decl_stmt|,
+decl_stmt|;
+name|u_int32_t
 name|totxfr
 decl_stmt|,
 name|sflags
@@ -4969,7 +4954,11 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO lun %d->iid%d flgs 0x%x sts 0x%x ssts 0x%x res %d"
+literal|"CTIO[%x] lun%d->iid%d flgs 0x%x sts 0x%x ssts 0x%x res %d"
+argument_list|,
+name|cto
+operator|->
+name|ct_fwhandle
 argument_list|,
 name|csio
 operator|->
@@ -5028,16 +5017,16 @@ name|nctios
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Save handle, and potentially any SCSI status, which we'll reinsert 	 * on the last CTIO we're going to send. 	 */
+comment|/* 	 * Save syshandle, and potentially any SCSI status, which we'll 	 * reinsert on the last CTIO we're going to send. 	 */
 name|handle
 operator|=
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 expr_stmt|;
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 literal|0
 expr_stmt|;
@@ -5341,7 +5330,7 @@ block|{
 comment|/* 			 * We're the last in a sequence of CTIOs, so mark 			 * this CTIO and save the handle to the CCB such that 			 * when this CTIO completes we can free dma resources 			 * and do whatever else we need to do to finish the 			 * rest of the command. 			 */
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 name|handle
 expr_stmt|;
@@ -5393,8 +5382,12 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO lun%d for ID %d ct_flags 0x%x scsi "
-literal|"status %x resid %d"
+literal|"CTIO[%x] lun%d for ID %d ct_flags 0x%x "
+literal|"scsi status %x resid %d"
+argument_list|,
+name|cto
+operator|->
+name|ct_fwhandle
 argument_list|,
 name|csio
 operator|->
@@ -5430,7 +5423,11 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO lun%d for ID%d ct_flags 0x%x"
+literal|"CTIO[%x] lun%d for ID%d ct_flags 0x%x"
+argument_list|,
+name|cto
+operator|->
+name|ct_fwhandle
 argument_list|,
 name|csio
 operator|->
@@ -5484,10 +5481,10 @@ name|octo
 init|=
 name|cto
 decl_stmt|;
-comment|/* 			 * Make sure handle fields are clean 			 */
+comment|/* 			 * Make sure syshandle fields are clean 			 */
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 literal|0
 expr_stmt|;
@@ -5507,7 +5504,11 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO lun%d for ID%d ct_flags 0x%x"
+literal|"CTIO[%x] lun%d for ID%d ct_flags 0x%x"
+argument_list|,
+name|cto
+operator|->
+name|ct_fwhandle
 argument_list|,
 name|csio
 operator|->
@@ -5597,7 +5598,7 @@ name|mp
 operator|->
 name|isp
 argument_list|,
-name|ISP_LOGWARN
+name|ISP_LOGTDEBUG0
 argument_list|,
 literal|"Queue Overflow in tdma_mk"
 argument_list|)
@@ -5626,6 +5627,14 @@ operator|.
 name|rqs_entry_count
 operator|=
 literal|1
+expr_stmt|;
+name|cto
+operator|->
+name|ct_fwhandle
+operator|=
+name|octo
+operator|->
+name|ct_fwhandle
 expr_stmt|;
 name|cto
 operator|->
@@ -5808,10 +5817,10 @@ decl_stmt|,
 name|send_status
 decl_stmt|,
 name|send_sense
+decl_stmt|,
+name|handle
 decl_stmt|;
 name|u_int32_t
-name|handle
-decl_stmt|,
 name|totxfr
 decl_stmt|,
 name|datalen
@@ -5918,7 +5927,7 @@ name|rqs_seqno
 operator|=
 literal|1
 expr_stmt|;
-comment|/* ct_reserved contains the handle set by caller */
+comment|/* ct_syshandle contains the handle set by caller */
 comment|/* 		 * We preserve ct_lun, ct_iid, ct_rxid. We set the data 		 * flags to NO DATA and clear relative offset flags. 		 * We preserve the ct_resid and the response area. 		 */
 name|cto
 operator|->
@@ -5991,7 +6000,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO2 RX_ID 0x%x lun %d->iid%d flgs 0x%x sts 0x%x ssts "
+literal|"CTIO2[%x] lun %d->iid%d flgs 0x%x sts 0x%x ssts "
 literal|"0x%x res %d"
 argument_list|,
 name|cto
@@ -6099,11 +6108,11 @@ name|handle
 operator|=
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 expr_stmt|;
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 literal|0
 expr_stmt|;
@@ -6457,7 +6466,7 @@ block|{
 comment|/* 			 * We're the last in a sequence of CTIO2s, so mark this 			 * CTIO2 and save the handle to the CCB such that when 			 * this CTIO2 completes we can free dma resources and 			 * do whatever else we need to do to finish the rest 			 * of the command. 			 */
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 name|handle
 expr_stmt|;
@@ -6617,7 +6626,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO2 RX_ID 0x%x lun %d->iid%d flgs 0x%x sts 0x%x"
+literal|"CTIO2[%x] lun %d->iid%d flgs 0x%x sts 0x%x"
 literal|" ssts 0x%x res %d"
 argument_list|,
 name|cto
@@ -6679,7 +6688,7 @@ decl_stmt|;
 comment|/* 			 * Make sure handle fields are clean 			 */
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 literal|0
 expr_stmt|;
@@ -6715,7 +6724,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO2 RX_ID 0x%x lun %d->iid%d flgs 0x%x"
+literal|"CTIO2[%x] lun %d->iid%d flgs 0x%x"
 argument_list|,
 name|cto
 operator|->
@@ -6834,7 +6843,15 @@ name|rqs_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* ct_header.rqs_seqno&& ct_reserved done later */
+comment|/* ct_header.rqs_seqno&& ct_syshandle done later */
+name|cto
+operator|->
+name|ct_fwhandle
+operator|=
+name|octo
+operator|->
+name|ct_fwhandle
+expr_stmt|;
 name|cto
 operator|->
 name|ct_lun
@@ -7395,7 +7412,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (IS_FC(mp->isp)) { 			ispreqt2_t *rq2 = (ispreqt2_t *)rq; 			printf("%s: seg0[%d] cnt 0x%x paddr 0x%08x\n", 			    mp->isp->isp_name, rq->req_seg_count, 			    rq2->req_dataseg[rq2->req_seg_count].ds_count, 			    rq2->req_dataseg[rq2->req_seg_count].ds_base); 		} else { 			printf("%s: seg0[%d] cnt 0x%x paddr 0x%08x\n", 			    mp->isp->isp_name, rq->req_seg_count, 			    rq->req_dataseg[rq->req_seg_count].ds_count, 			    rq->req_dataseg[rq->req_seg_count].ds_base); 		}
+block|if (IS_FC(mp->isp)) { 			ispreqt2_t *rq2 = (ispreqt2_t *)rq; 			device_printf(mp->isp->isp_dev, 			    "seg0[%d] cnt 0x%x paddr 0x%08x\n", 			    rq->req_seg_count, 			    rq2->req_dataseg[rq2->req_seg_count].ds_count, 			    rq2->req_dataseg[rq2->req_seg_count].ds_base); 		} else { 			device_printf(mp->isp->isp_dev, 			    "seg0[%d] cnt 0x%x paddr 0x%08x\n", 			    rq->req_seg_count, 			    rq->req_dataseg[rq->req_seg_count].ds_count, 			    rq->req_dataseg[rq->req_seg_count].ds_base); 		}
 endif|#
 directive|endif
 name|rq
@@ -7468,12 +7485,17 @@ operator|->
 name|optr
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|printf("%s: Request Queue Overflow++\n", 			    mp->isp->isp_name);
-endif|#
-directive|endif
+name|isp_prt
+argument_list|(
+name|mp
+operator|->
+name|isp
+argument_list|,
+name|ISP_LOGDEBUG0
+argument_list|,
+literal|"Request Queue Overflow++"
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|error
@@ -7568,7 +7590,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("%s: seg%d[%d] cnt 0x%x paddr 0x%08x\n", 			    mp->isp->isp_name, rq->req_header.rqs_entry_count-1, 			    seglim, crq->req_dataseg[seglim].ds_count, 			    crq->req_dataseg[seglim].ds_base);
+block|device_printf(mp->isp->isp_dev, 			    "seg%d[%d] cnt 0x%x paddr 0x%08x\n", 			    rq->req_header.rqs_entry_count-1, 			    seglim, crq->req_dataseg[seglim].ds_count, 			    crq->req_dataseg[seglim].ds_base);
 endif|#
 directive|endif
 name|rq
@@ -8000,13 +8022,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: error %d in dma mapping code\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"error %d in dma mapping code"
 argument_list|,
 name|error
 argument_list|)
@@ -8319,7 +8341,7 @@ name|XS_T
 modifier|*
 name|xs
 parameter_list|,
-name|u_int32_t
+name|u_int16_t
 name|handle
 parameter_list|)
 block|{
@@ -8472,11 +8494,27 @@ name|printf
 argument_list|(
 literal|"%s: %s\n"
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|isp
 operator|->
-name|isp_name
+name|isp_dev
+argument_list|)
 argument_list|,
 name|msg
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%s:\n"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|isp
+operator|->
+name|isp_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
