@@ -191,7 +191,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"  pid   proc     uarea   uid  ppid  pgrp  flag   stat  wmesg    wchan  cmd\n"
+literal|"  pid   proc     uid  ppid  pgrp  flag   stat  wmesg    wchan  cmd\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -288,7 +288,7 @@ break|break;
 block|}
 name|db_printf
 argument_list|(
-literal|"%5d %8p %8p %4d %5d %5d %07x %s"
+literal|"%5d %8p %4d %5d %5d %07x %s"
 argument_list|,
 name|p
 operator|->
@@ -300,14 +300,6 @@ name|void
 operator|*
 operator|)
 name|p
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|p
-operator|->
-name|p_uarea
 argument_list|,
 name|p
 operator|->
