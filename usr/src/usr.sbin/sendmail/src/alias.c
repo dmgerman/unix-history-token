@@ -99,7 +99,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.16 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.17 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -114,7 +114,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.16 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.17 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.16 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.17 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.16 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.17 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,6 +393,8 @@ condition|(
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QVERIFIED
 argument_list|,
 name|a
 operator|->
@@ -463,13 +465,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|message
-argument_list|(
-literal|"aliased to %s"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bitset
@@ -481,7 +476,22 @@ operator|->
 name|e_flags
 argument_list|)
 condition|)
+block|{
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QVERIFIED
+expr_stmt|;
 return|return;
+block|}
+name|message
+argument_list|(
+literal|"aliased to %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG

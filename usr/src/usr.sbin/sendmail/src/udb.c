@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.11 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.12 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.11 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.12 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -410,6 +410,8 @@ condition|(
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QVERIFIED
 argument_list|,
 name|a
 operator|->
@@ -677,9 +679,17 @@ operator|->
 name|e_flags
 argument_list|)
 condition|)
+block|{
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QVERIFIED
+expr_stmt|;
 return|return
 name|EX_OK
 return|;
+block|}
 name|breakout
 operator|=
 name|TRUE
