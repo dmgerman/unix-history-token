@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mbuf.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mbuf.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -468,7 +468,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|{ struct mbuf *p; \ 	  int ms = splimp(); \ 	  if (mclfree == 0) \ 		(void)m_clalloc(1, MPG_CLUSTERS, M_DONTWAIT); \ 	  MCLALLOC(p, 1); \ 	  if (p) { \ 		(m)->m_off = (int)p - (int)(m); \ 		(m)->m_len = CLBYTES; \ 	  } \ 	  splx(ms); \ 	}
+value|{ struct mbuf *p; \ 	  int ms = splimp(); \ 	  MCLALLOC(p, 1); \ 	  if (p) { \ 		(m)->m_off = (int)p - (int)(m); \ 		(m)->m_len = CLBYTES; \ 	  } \ 	  splx(ms); \ 	}
 end_define
 
 begin_define
