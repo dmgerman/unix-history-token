@@ -1662,20 +1662,10 @@ name|src
 argument_list|)
 expr_stmt|;
 comment|/* append the rest */
-name|Buf_AddBytes
+name|Buf_Append
 argument_list|(
 name|buf
 argument_list|,
-name|strlen
-argument_list|(
-name|pat
-argument_list|)
-argument_list|,
-operator|(
-specifier|const
-name|Byte
-operator|*
-operator|)
 name|pat
 argument_list|)
 expr_stmt|;

@@ -501,6 +501,39 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * Append characters in str to Buffer object  */
+end_comment
+
+begin_function
+name|void
+name|Buf_Append
+parameter_list|(
+name|Buffer
+modifier|*
+name|bp
+parameter_list|,
+specifier|const
+name|char
+name|str
+index|[]
+parameter_list|)
+block|{
+name|Buf_AddBytes
+argument_list|(
+name|bp
+argument_list|,
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * Clear the contents of the buffer.  */
 end_comment
 
