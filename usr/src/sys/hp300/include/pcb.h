@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pcb.h 1.14 91/03/25$  *  *	@(#)pcb.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pcb.h 1.14 91/03/25$  *  *	@(#)pcb.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -49,94 +49,25 @@ name|fpframe
 name|pcb_fpregs
 decl_stmt|;
 comment|/* 68881/2 context save area */
-name|int
-name|pcb_exec
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* exec structure for core dumps */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCB_HPUXMMAP
-value|0x0010
-end_define
-
-begin_comment
-comment|/* VA space is multiple mapped */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCB_HPUXTRACE
-value|0x0020
-end_define
-
-begin_comment
-comment|/* being traced by an HPUX process */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCB_HPUXBIN
-value|0x0040
-end_define
-
-begin_comment
-comment|/* loaded from an HPUX format binary */
-end_comment
-
-begin_comment
-comment|/* note: does NOT imply SHPUX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCB_CCBDATA
-value|0x0100
-end_define
-
-begin_comment
-comment|/* copyback caching of data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCB_CCBSTACK
-value|0x0200
-end_define
-
-begin_comment
-comment|/* copyback caching of stack */
-end_comment
-
-begin_comment
-comment|/*  * The pcb is augmented with machine-dependent additional data for  * core dumps. For the hp300, there is nothing to add.  */
+comment|/*  * The pcb is augmented with machine-dependent additional data for  * core dumps. For the hp300, this includes an HP-UX exec header  * which is dumped for HP-UX processes.  */
 end_comment
 
 begin_struct
 struct|struct
 name|md_coredump
 block|{
-name|long
-name|md_pad
+name|int
+name|md_exec
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|;
+comment|/* exec structure for HP-UX core dumps */
 block|}
 struct|;
 end_struct
