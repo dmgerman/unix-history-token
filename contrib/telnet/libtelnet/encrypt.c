@@ -54,6 +54,12 @@ directive|ifdef
 name|ENCRYPTION
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -295,7 +301,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|long
+name|u_long
 name|i_support_encrypt
 init|=
 literal|0
@@ -316,7 +322,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|long
+name|u_long
 name|i_support_decrypt
 init|=
 literal|0
@@ -337,7 +343,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|long
+name|u_long
 name|i_wont_support_encrypt
 init|=
 literal|0
@@ -346,7 +352,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|long
+name|u_long
 name|i_wont_support_decrypt
 init|=
 literal|0
@@ -369,7 +375,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|long
+name|u_long
 name|remote_supports_encrypt
 init|=
 literal|0
@@ -378,7 +384,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|long
+name|u_long
 name|remote_supports_decrypt
 init|=
 literal|0
