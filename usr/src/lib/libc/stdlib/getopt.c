@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getopt.c	4.8 (Berkeley) %G%"
+literal|"@(#)getopt.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,9 +138,16 @@ decl_stmt|;
 comment|/* option letter list index */
 name|char
 modifier|*
+name|p
+decl_stmt|,
+modifier|*
 name|index
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|rindex
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -242,6 +249,31 @@ if|if
 condition|(
 name|opterr
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|p
+operator|=
+name|rindex
+argument_list|(
+operator|*
+name|nargv
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+condition|)
+name|p
+operator|=
+operator|*
+name|nargv
+expr_stmt|;
+else|else
+operator|++
+name|p
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -251,12 +283,12 @@ name|stderr
 argument_list|,
 literal|"%s: illegal option -- %c\n"
 argument_list|,
-operator|*
-name|nargv
+name|p
 argument_list|,
 name|optopt
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|BADCH
@@ -316,6 +348,30 @@ name|EMSG
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|p
+operator|=
+name|rindex
+argument_list|(
+operator|*
+name|nargv
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+condition|)
+name|p
+operator|=
+operator|*
+name|nargv
+expr_stmt|;
+else|else
+operator|++
+name|p
+expr_stmt|;
+if|if
+condition|(
 name|opterr
 condition|)
 operator|(
@@ -327,8 +383,7 @@ name|stderr
 argument_list|,
 literal|"%s: option requires an argument -- %c\n"
 argument_list|,
-operator|*
-name|nargv
+name|p
 argument_list|,
 name|optopt
 argument_list|)
