@@ -2397,10 +2397,6 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
 name|mib
 index|[
 literal|0
@@ -2645,10 +2641,6 @@ block|{
 name|char
 modifier|*
 name|host
-decl_stmt|;
-specifier|extern
-name|int
-name|h_errno
 decl_stmt|;
 name|struct
 name|hostent
