@@ -623,6 +623,14 @@ literal|0
 argument_list|)
 return|;
 block|}
+name|key_sa_recordxfer
+argument_list|(
+name|sav
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* record data transfer */
 comment|/* 	 * We're done with IPsec processing, transmit the packet using the 	 * appropriate network protocol (IP or IPv6). SPD lookup will be 	 * performed again there. 	 */
 switch|switch
 condition|(
