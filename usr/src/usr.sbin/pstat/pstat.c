@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	8.2 (Berkeley) %G%"
+literal|"@(#)pstat.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -315,8 +315,24 @@ value|FNL_MAXFILE
 comment|/* names up to here are mandatory */
 define|#
 directive|define
-name|SCONS
+name|VM_NISWAP
 value|NLMANDATORY + 1
+block|{
+literal|"_niswap"
+block|}
+block|,
+define|#
+directive|define
+name|VM_NISWDEV
+value|NLMANDATORY + 2
+block|{
+literal|"_niswdev"
+block|}
+block|,
+define|#
+directive|define
+name|SCONS
+value|NLMANDATORY + 3
 block|{
 literal|"_cons"
 block|}
@@ -324,7 +340,7 @@ block|,
 define|#
 directive|define
 name|SPTY
-value|NLMANDATORY + 2
+value|NLMANDATORY + 4
 block|{
 literal|"_pt_tty"
 block|}
@@ -332,7 +348,7 @@ block|,
 define|#
 directive|define
 name|SNPTY
-value|NLMANDATORY + 3
+value|NLMANDATORY + 5
 block|{
 literal|"_npty"
 block|}
@@ -5105,6 +5121,10 @@ decl_stmt|,
 name|dmmax
 decl_stmt|,
 name|nswapmap
+decl_stmt|,
+name|niswap
+decl_stmt|,
+name|niswdev
 decl_stmt|;
 name|int
 name|s
@@ -5114,6 +5134,8 @@ decl_stmt|,
 name|div
 decl_stmt|,
 name|i
+decl_stmt|,
+name|l
 decl_stmt|,
 name|avail
 decl_stmt|,
@@ -5280,6 +5302,45 @@ argument_list|,
 literal|"swapmap"
 argument_list|)
 expr_stmt|;
+comment|/* Supports sequential swap */
+if|if
+condition|(
+name|nl
+index|[
+name|VM_NISWAP
+index|]
+operator|.
+name|n_value
+operator|!=
+literal|0
+condition|)
+block|{
+name|KGET
+argument_list|(
+name|VM_NISWAP
+argument_list|,
+name|niswap
+argument_list|)
+expr_stmt|;
+name|KGET
+argument_list|(
+name|VM_NISWDEV
+argument_list|,
+name|niswdev
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|niswap
+operator|=
+name|nswap
+expr_stmt|;
+name|niswdev
+operator|=
+name|nswdev
+expr_stmt|;
+block|}
 comment|/* First entry in map is `struct map'; rest are mapent's. */
 name|swapmap
 operator|=
@@ -5371,17 +5432,11 @@ name|mp
 operator|->
 name|m_size
 expr_stmt|;
-comment|/* 		 * Swap space is split up among the configured disks. 		 * The first dmmax blocks of swap space some from the 		 * first disk, the next dmmax blocks from the next,  		 * and so on.  The list of free space joins adjacent 		 * free blocks, ignoring device boundries.  If we want 		 * to keep track of this information per device, we'll 		 * just have to extract it ourselves. 		 */
-comment|/* calculate first device on which this falls */
+comment|/* 		 * Swap space is split up among the configured disks. 		 * 		 * For interleaved swap devices, the first dmmax blocks 		 * of swap space some from the first disk, the next dmmax 		 * blocks from the next, and so on up to niswap blocks. 		 * 		 * Sequential swap devices follow the interleaved devices 		 * (i.e. blocks starting at niswap) in the order in which 		 * they appear in the swdev table.  The size of each device 		 * will be a multiple of dmmax. 		 * 		 * The list of free space joins adjacent free blocks, 		 * ignoring device boundries.  If we want to keep track 		 * of this information per device, we'll just have to 		 * extract it ourselves.  We know that dmmax-sized chunks 		 * cannot span device boundaries (interleaved or sequential) 		 * so we loop over such chunks assigning them to devices. 		 */
 name|i
 operator|=
-operator|(
-name|s
-operator|/
-name|dmmax
-operator|)
-operator|%
-name|nswdev
+operator|-
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -5413,6 +5468,31 @@ name|bound
 operator|=
 name|e
 expr_stmt|;
+if|if
+condition|(
+name|bound
+operator|<=
+name|niswap
+condition|)
+block|{
+comment|/* Interleaved swap chunk. */
+if|if
+condition|(
+name|i
+operator|==
+operator|-
+literal|1
+condition|)
+name|i
+operator|=
+operator|(
+name|s
+operator|/
+name|dmmax
+operator|)
+operator|%
+name|niswdev
+expr_stmt|;
 name|perdev
 index|[
 name|i
@@ -5427,12 +5507,77 @@ condition|(
 operator|++
 name|i
 operator|>=
-name|nswdev
+name|niswdev
 condition|)
 name|i
 operator|=
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Sequential swap chunk. */
+if|if
+condition|(
+name|i
+operator|<
+name|niswdev
+condition|)
+block|{
+name|i
+operator|=
+name|niswdev
+expr_stmt|;
+name|l
+operator|=
+name|niswap
+operator|+
+name|sw
+index|[
+name|i
+index|]
+operator|.
+name|sw_nblks
+expr_stmt|;
+block|}
+while|while
+condition|(
+name|s
+operator|>=
+name|l
+condition|)
+block|{
+comment|/* XXX don't die on bogus blocks */
+if|if
+condition|(
+name|i
+operator|==
+name|nswdev
+operator|-
+literal|1
+condition|)
+break|break;
+name|l
+operator|+=
+name|sw
+index|[
+operator|++
+name|i
+index|]
+operator|.
+name|sw_nblks
+expr_stmt|;
+block|}
+name|perdev
+index|[
+name|i
+index|]
+operator|+=
+name|bound
+operator|-
+name|s
+expr_stmt|;
+block|}
 name|s
 operator|=
 name|bound
@@ -5460,9 +5605,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-10s %*s %10s %10s %10s\n"
+literal|"%-10s %4s %*s %10s %10s %10s\n"
 argument_list|,
 literal|"Device"
+argument_list|,
+literal|"Type"
 argument_list|,
 name|hlen
 argument_list|,
@@ -5516,7 +5663,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"/dev/%-5s %*d "
+literal|"/dev/%-5s %4s %*d "
 argument_list|,
 name|devname
 argument_list|(
@@ -5529,6 +5676,21 @@ name|sw_dev
 argument_list|,
 name|S_IFBLK
 argument_list|)
+argument_list|,
+operator|(
+name|sw
+index|[
+name|i
+index|]
+operator|.
+name|sw_flags
+operator|&
+name|SW_SEQUENTIAL
+operator|)
+condition|?
+literal|"Seq"
+else|:
+literal|"Int"
 argument_list|,
 name|hlen
 argument_list|,
@@ -5546,12 +5708,16 @@ comment|/* 		 * Don't report statistics for partitions which have not 		 * yet b
 if|if
 condition|(
 operator|!
+operator|(
 name|sw
 index|[
 name|i
 index|]
 operator|.
-name|sw_freed
+name|sw_flags
+operator|&
+name|SW_FREED
+operator|)
 condition|)
 block|{
 if|if
@@ -5608,7 +5774,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%10d %10d %7.0f%%\n"
+literal|"%10d %10d %9.0f%%\n"
 argument_list|,
 name|used
 operator|/
@@ -5674,7 +5840,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-10s %*d %10d %10d %7.0f%%\n"
+literal|"%-10s      %*d %10d %10d %9.0f%%\n"
 argument_list|,
 literal|"Total"
 argument_list|,
