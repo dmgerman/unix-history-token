@@ -41,11 +41,11 @@ directive|if
 literal|0
 end_if
 
-begin_else
+begin_endif
 unit|static char sccsid[] = "@(#)expand.c	8.1 (Berkeley) 6/9/93";
-else|#
-directive|else
-end_else
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -57,11 +57,6 @@ init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -81,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -293,21 +288,18 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|errx
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|argc
 operator|--
 operator|,
@@ -593,22 +585,13 @@ name|i
 operator|>
 literal|256
 condition|)
-block|{
-name|bad
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Bad tab stop spec\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad tab stop spec"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|nstops
@@ -624,9 +607,13 @@ operator|-
 literal|1
 index|]
 condition|)
-goto|goto
-name|bad
-goto|;
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"bad tab stop spec"
+argument_list|)
+expr_stmt|;
 name|tabstops
 index|[
 name|nstops
@@ -655,9 +642,13 @@ name|cp
 operator|!=
 literal|' '
 condition|)
-goto|goto
-name|bad
-goto|;
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"bad tab stop spec"
+argument_list|)
+expr_stmt|;
 name|cp
 operator|++
 expr_stmt|;
