@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1984 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ptrace.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1984 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ptrace.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -123,6 +123,49 @@ end_define
 
 begin_comment
 comment|/* single step the child */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_ATTACH
+value|10
+end_define
+
+begin_comment
+comment|/* trace some running process */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_DETACH
+value|11
+end_define
+
+begin_comment
+comment|/* stop tracing a process */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_FIRSTMACH
+value|32
+end_define
+
+begin_comment
+comment|/* for machine-specific requests */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/ptrace.h>
+end_include
+
+begin_comment
+comment|/* machine-specific requests, if any */
 end_comment
 
 begin_ifndef
