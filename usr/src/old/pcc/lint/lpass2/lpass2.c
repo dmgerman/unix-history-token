@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpass2.c	1.8	(Berkeley)	%G%"
+literal|"@(#)lpass2.c	1.9	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -776,7 +776,7 @@ literal|0
 condition|)
 name|n
 operator|=
-operator|-
+operator|~
 name|n
 expr_stmt|;
 if|if
@@ -1748,7 +1748,7 @@ argument|if( !q->decflag ){
 comment|/* new one */
 argument|q->decflag = r.l.decflag; 		q->symty.t = r.l.type; 		if( r.l.nargs<
 literal|0
-argument|){ 			q->nargs = -r.l.nargs; 			q->use = VARARGS; 			} 		else { 			q->nargs = r.l.nargs; 			q->use =
+argument|){ 			q->nargs = ~r.l.nargs; 			q->use = VARARGS; 			} 		else { 			q->nargs = r.l.nargs; 			q->use =
 literal|0
 argument|; 			} 		q->fline = r.l.fline; 		q->fno = cfno; 		if( q->nargs ){ 			int i; 			STYPE *qq; 			for( i=
 literal|0
@@ -1940,7 +1940,7 @@ argument|:
 literal|0
 argument|, j& ~X_NONAME ); 		k = r.l.nargs; 		if( k<
 literal|0
-argument|) k = -k; 		for( i =
+argument|) k = ~k; 		for( i =
 literal|0
 argument|; i< k; i++ ){ 			printf(
 literal|"atyp[%d].aty\t0%o ("
