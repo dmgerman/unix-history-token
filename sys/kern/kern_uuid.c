@@ -349,7 +349,7 @@ operator|)
 name|node
 operator|)
 operator||=
-literal|0x80
+literal|0x01
 expr_stmt|;
 block|}
 end_function
