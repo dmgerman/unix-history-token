@@ -1,9 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"ctm.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|BADREAD
+value|1
+end_define
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*/
@@ -682,14 +693,21 @@ name|fd
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|Force
+condition|)
+block|{
 name|Fatal
 argument_list|(
-literal|"Trailing junk in CTM-file."
+literal|"Trailing junk in CTM-file.  Can Force with -F."
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|16
 return|;
+block|}
 block|}
 return|return
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$  *  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  * This is the client program of 'CTM'.  It will apply a CTM-patch to a   * collection of files.  *  * Options we'd like to see:  *  * -a 			Attempt best effort.  * -b<dir>		Base-dir	  * -B<file>		Backup to tar-file.  * -c			Check it out, "ma non troppo"  * -d<int>		Debug TBD.  * -m<mail-addr>	Email me instead.  * -p			Less paranoid.  * -P			Paranoid.  * -q 			Be quiet.  * -r<name>		Reconstruct file.  * -R<file>		Read list of files to reconstruct.  * -T<tmpdir>.		Temporary files.  * -v 			Tell about each file.  *  * Exit-codes, bitmap, logical or of:  * 1	Couldn't do something we wanted to, not fatal.  * 2	Couldn't do something we wanted to, fatal.  * 4	Input file corrupt.  * 8	Cannot apply input file.  * 16   Corruption while applying input file.  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  * This is the client program of 'CTM'.  It will apply a CTM-patch to a   * collection of files.  *  * Options we'd like to see:  *  * -a 			Attempt best effort.  * -b<dir>		Base-dir	  * -B<file>		Backup to tar-file.  * -c			Check it out, "ma non troppo"  * -d<int>		Debug TBD.  * -F      		Force  * -m<mail-addr>	Email me instead.  * -p			Less paranoid.  * -P			Paranoid.  * -q 			Be quiet.  * -r<name>		Reconstruct file.  * -R<file>		Read list of files to reconstruct.  * -T<tmpdir>.		Temporary files.  * -v 			Tell about each file.  *  */
 end_comment
 
 begin_define
@@ -49,10 +49,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|,
 name|c
 decl_stmt|;
 specifier|extern
@@ -99,7 +95,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ab:B:cd:m:pPqr:R:T:Vv"
+literal|"ab:B:cd:Fm:pPqr:R:T:Vv"
 argument_list|)
 operator|)
 operator|!=
@@ -150,6 +146,14 @@ case|:
 name|TmpDir
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+name|Force
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -213,7 +217,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -245,6 +249,9 @@ while|while
 condition|(
 name|argc
 operator|--
+operator|&&
+operator|!
+name|stat
 condition|)
 name|stat
 operator||=
@@ -446,7 +453,7 @@ name|fn
 init|=
 name|tempnam
 argument_list|(
-name|NULL
+name|TmpDir
 argument_list|,
 literal|"CMTclient"
 argument_list|)
@@ -482,7 +489,7 @@ name|f
 argument_list|)
 expr_stmt|;
 return|return
-literal|2
+literal|4
 return|;
 block|}
 name|unlink
@@ -656,6 +663,11 @@ block|{
 name|pclose
 argument_list|(
 name|f
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

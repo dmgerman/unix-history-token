@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -317,6 +321,17 @@ name|TmpDir
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*   * Paranoid -- Just in case they should be after us...  *  0 not at all.  *  1 normal.  *  2 somewhat.  *  3 you bet!.  *  * Verbose -- What to tell mom...  *  0 Nothing which wouldn't surprise.  *  1 Normal.   *  2 Show progress '.'.  *  3 Show progress names, and actions.  *  4 even more...  *  and so on  *  * ExitCode -- our Epitaph  *  0 Perfect, all input digested, no problems  *  1 Bad input, no point in retrying.  *  2 Pilot error, commandline problem&c  *  4 Out of resources.  *  8 Destination-tree not correct.  * 16 Destination-tree not correct, can force.  * 32 Internal problems.  *   */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|Paranoid
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|EXTERN
 name|int
@@ -324,14 +339,17 @@ name|Verbose
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*   * Paranoid -- Just in case they should be after us...  *  0 not at all.  *  1 normal.  *  2 somewhat.  *  3 you bet!.  *  * Verbose -- What to tell mom...  *  0 Nothing which wouldn't surprise.  *  1 Normal.   *  2 Show progress '.'.  *  3 Show progress names, and actions.  *  4 even more...  *  and so on  */
-end_comment
+begin_decl_stmt
+name|EXTERN
+name|int
+name|Exit
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
 name|int
-name|Paranoid
+name|Force
 decl_stmt|;
 end_decl_stmt
 
@@ -387,7 +405,7 @@ begin_define
 define|#
 directive|define
 name|WRONG
-value|{Assert(); return 1;}
+value|{Assert(); return 32;}
 end_define
 
 begin_function_decl
@@ -455,7 +473,7 @@ name|p
 parameter_list|,
 name|q
 parameter_list|)
-value|if(!((p)=Ffield(fd,&ctx,(q)))) return 1
+value|if(!((p)=Ffield(fd,&ctx,(q)))) return BADREAD
 end_define
 
 begin_define
@@ -467,7 +485,7 @@ name|p
 parameter_list|,
 name|q
 parameter_list|)
-value|if(!((p)=Ffield(fd,&ctx,(q)))) return 1; else p=String(p)
+value|if(!((p)=Ffield(fd,&ctx,(q)))) return BADREAD; else p=String(p)
 end_define
 
 begin_define
@@ -479,7 +497,7 @@ name|p
 parameter_list|,
 name|q
 parameter_list|)
-value|if(0>((p)= Fbytecnt(fd,&ctx,(q)))) return 1
+value|if(0>((p)= Fbytecnt(fd,&ctx,(q)))) return BADREAD
 end_define
 
 begin_define
@@ -491,7 +509,7 @@ name|p
 parameter_list|,
 name|q
 parameter_list|)
-value|if(!((p) = Fdata(fd,(q),&ctx))) return 1
+value|if(!((p) = Fdata(fd,(q),&ctx))) return BADREAD
 end_define
 
 begin_function_decl
@@ -523,6 +541,28 @@ parameter_list|(
 name|FILE
 modifier|*
 name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ctm_edit
+parameter_list|(
+name|u_char
+modifier|*
+name|script
+parameter_list|,
+name|int
+name|length
+parameter_list|,
+name|char
+modifier|*
+name|filein
+parameter_list|,
+name|char
+modifier|*
+name|fileout
 parameter_list|)
 function_decl|;
 end_function_decl
