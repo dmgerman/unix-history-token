@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.25 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -364,7 +364,7 @@ operator|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: invalid file mode\n"
+literal|"%s: invalid file mode"
 argument_list|,
 name|optarg
 argument_list|)
@@ -437,7 +437,7 @@ operator|)
 condition|)
 name|err
 argument_list|(
-literal|"unknown group %s\n"
+literal|"unknown group %s"
 argument_list|,
 name|group
 argument_list|)
@@ -458,7 +458,7 @@ operator|)
 condition|)
 name|err
 argument_list|(
-literal|"unknown user %s\n"
+literal|"unknown user %s"
 argument_list|,
 name|owner
 argument_list|)
@@ -552,7 +552,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s\n"
+literal|"%s: %s"
 argument_list|,
 operator|*
 name|argv
@@ -575,7 +575,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s\n"
+literal|"%s: %s"
 argument_list|,
 name|to_name
 argument_list|,
@@ -605,7 +605,7 @@ name|st_ino
 condition|)
 name|err
 argument_list|(
-literal|"%s and %s are the same file\n"
+literal|"%s and %s are the same file"
 argument_list|,
 operator|*
 name|argv
@@ -714,7 +714,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s\n"
+literal|"%s: %s"
 argument_list|,
 name|from_name
 argument_list|,
@@ -736,7 +736,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s\n"
+literal|"%s: %s"
 argument_list|,
 name|from_name
 argument_list|,
