@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian F. Darwin and others;  * maintained 1995-present by Christos Zoulas and others.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Ian F. Darwin and others.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian F. Darwin and others;  * maintained 1995-present by Christos Zoulas and others.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -98,7 +98,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: apprentice.c,v 1.78 2004/07/24 20:38:56 christos Exp $"
+literal|"@(#)$Id: apprentice.c,v 1.82 2004/11/24 18:56:04 christos Exp $"
 argument_list|)
 end_macro
 
@@ -221,6 +221,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|IS_STRING
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) == FILE_STRING || (t) == FILE_PSTRING || \     (t) == FILE_BESTRING16 || (t) == FILE_LESTRING16)
+end_define
 
 begin_function_decl
 name|private
@@ -422,6 +432,8 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -479,6 +491,10 @@ name|private
 name|int
 name|check_format
 parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
 name|struct
 name|magic
 modifier|*
@@ -886,6 +902,8 @@ name|MAGIC_CHECK
 condition|)
 name|file_magwarn
 argument_list|(
+name|ms
+argument_list|,
 literal|"using regular magic file `%s'"
 argument_list|,
 name|fn
@@ -1527,9 +1545,6 @@ literal|1
 index|]
 decl_stmt|;
 name|int
-name|lineno
-decl_stmt|;
-name|int
 name|errs
 init|=
 literal|0
@@ -1538,6 +1553,10 @@ name|f
 operator|=
 name|fopen
 argument_list|(
+name|ms
+operator|->
+name|file
+operator|=
 name|fn
 argument_list|,
 literal|"r"
@@ -1643,7 +1662,9 @@ expr_stmt|;
 comment|/* parse it */
 for|for
 control|(
-name|lineno
+name|ms
+operator|->
+name|line
 operator|=
 literal|1
 init|;
@@ -1658,10 +1679,15 @@ argument_list|)
 operator|!=
 name|NULL
 condition|;
-name|lineno
+name|ms
+operator|->
+name|line
 operator|++
 control|)
 block|{
+name|size_t
+name|len
+decl_stmt|;
 if|if
 condition|(
 name|line
@@ -1673,26 +1699,24 @@ literal|'#'
 condition|)
 comment|/* comment, do not parse */
 continue|continue;
-if|if
-condition|(
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|line
 argument_list|)
-operator|<=
-operator|(
-name|unsigned
-operator|)
-literal|1
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|2
 condition|)
 comment|/* null line, garbage, etc */
 continue|continue;
 name|line
 index|[
-name|strlen
-argument_list|(
-name|line
-argument_list|)
+name|len
 operator|-
 literal|1
 index|]
@@ -1869,6 +1893,12 @@ case|:
 case|case
 name|FILE_PSTRING
 case|:
+case|case
+name|FILE_BESTRING16
+case|:
+case|case
+name|FILE_LESTRING16
+case|:
 break|break;
 case|case
 name|FILE_REGEX
@@ -1885,6 +1915,8 @@ name|MAGIC_CHECK
 condition|)
 name|file_magwarn
 argument_list|(
+name|ms
+argument_list|,
 literal|"cannot happen: m->type=%d\n"
 argument_list|,
 name|m
@@ -2182,7 +2214,9 @@ name|MAGIC_CHECK
 condition|)
 name|file_magwarn
 argument_list|(
-literal|"offset %s invalid"
+name|ms
+argument_list|,
+literal|"offset `%s' invalid"
 argument_list|,
 name|l
 argument_list|)
@@ -2306,7 +2340,9 @@ name|MAGIC_CHECK
 condition|)
 name|file_magwarn
 argument_list|(
-literal|"indirect offset type %c invalid"
+name|ms
+argument_list|,
+literal|"indirect offset type `%c' invalid"
 argument_list|,
 operator|*
 name|l
@@ -2499,6 +2535,8 @@ name|MAGIC_CHECK
 condition|)
 name|file_magwarn
 argument_list|(
+name|ms
+argument_list|,
 literal|"missing ')' in indirect offset"
 argument_list|)
 expr_stmt|;
@@ -2598,6 +2636,14 @@ define|#
 directive|define
 name|NREGEX
 value|5
+define|#
+directive|define
+name|NBESTRING16
+value|10
+define|#
+directive|define
+name|NLESTRING16
+value|10
 if|if
 condition|(
 operator|*
@@ -3056,10 +3102,59 @@ name|FILE_REGEX
 expr_stmt|;
 name|l
 operator|+=
-sizeof|sizeof
+name|NREGEX
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
 argument_list|(
-literal|"regex"
+name|l
+argument_list|,
+literal|"bestring16"
+argument_list|,
+name|NBESTRING16
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|m
+operator|->
+name|type
+operator|=
+name|FILE_BESTRING16
+expr_stmt|;
+name|l
+operator|+=
+name|NBESTRING16
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|l
+argument_list|,
+literal|"lestring16"
+argument_list|,
+name|NLESTRING16
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|m
+operator|->
+name|type
+operator|=
+name|FILE_LESTRING16
+expr_stmt|;
+name|l
+operator|+=
+name|NLESTRING16
 expr_stmt|;
 block|}
 else|else
@@ -3074,7 +3169,9 @@ name|MAGIC_CHECK
 condition|)
 name|file_magwarn
 argument_list|(
-literal|"type %s invalid"
+name|ms
+argument_list|,
+literal|"type `%s' invalid"
 argument_list|,
 name|l
 argument_list|)
@@ -3096,17 +3193,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|FILE_STRING
-operator|!=
+operator|!
+name|IS_STRING
+argument_list|(
 name|m
 operator|->
 name|type
-operator|&&
-name|FILE_PSTRING
-operator|!=
-name|m
-operator|->
-name|type
+argument_list|)
 condition|)
 name|m
 operator|->
@@ -3153,19 +3246,13 @@ name|op
 operator|!=
 name|FILE_OPDIVIDE
 operator|||
-operator|(
-name|FILE_STRING
-operator|!=
+operator|!
+name|IS_STRING
+argument_list|(
 name|m
 operator|->
 name|type
-operator|&&
-name|FILE_PSTRING
-operator|!=
-name|m
-operator|->
-name|type
-operator|)
+argument_list|)
 condition|)
 block|{
 operator|++
@@ -3282,7 +3369,9 @@ name|MAGIC_CHECK
 condition|)
 name|file_magwarn
 argument_list|(
-literal|"string extension %c invalid"
+name|ms
+argument_list|,
+literal|"string extension `%c' invalid"
 argument_list|,
 operator|*
 name|l
@@ -3350,17 +3439,13 @@ literal|'!'
 case|:
 if|if
 condition|(
+operator|!
+name|IS_STRING
+argument_list|(
 name|m
 operator|->
 name|type
-operator|!=
-name|FILE_STRING
-operator|&&
-name|m
-operator|->
-name|type
-operator|!=
-name|FILE_PSTRING
+argument_list|)
 condition|)
 block|{
 name|m
@@ -3556,6 +3641,8 @@ condition|(
 operator|!
 name|check_format
 argument_list|(
+name|ms
+argument_list|,
 name|m
 argument_list|)
 condition|)
@@ -3604,6 +3691,11 @@ name|private
 name|int
 name|check_format
 parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+name|ms
+parameter_list|,
 name|struct
 name|magic
 modifier|*
@@ -3693,6 +3785,8 @@ condition|)
 block|{
 name|file_magwarn
 argument_list|(
+name|ms
+argument_list|,
 literal|"Internal error inconsistency between m->type"
 literal|" and format strings"
 argument_list|)
@@ -3715,7 +3809,10 @@ condition|)
 block|{
 name|file_magwarn
 argument_list|(
-literal|"No format string for `%s' with description `%s'"
+name|ms
+argument_list|,
+literal|"No format string for `%s' with description "
+literal|"`%s'"
 argument_list|,
 name|m
 operator|->
@@ -3789,6 +3886,8 @@ block|{
 comment|/* Missing format string; bad */
 name|file_magwarn
 argument_list|(
+name|ms
+argument_list|,
 literal|"Invalid format `%s' for type `%s'"
 argument_list|,
 name|m
@@ -3827,6 +3926,8 @@ condition|)
 block|{
 name|file_magwarn
 argument_list|(
+name|ms
+argument_list|,
 literal|"Printf format `%c' is not valid for type `%s'"
 literal|" in description `%s'"
 argument_list|,
@@ -3891,6 +3992,12 @@ name|type
 condition|)
 block|{
 case|case
+name|FILE_BESTRING16
+case|:
+case|case
+name|FILE_LESTRING16
+case|:
+case|case
 name|FILE_STRING
 case|:
 case|case
@@ -3946,6 +4053,8 @@ name|MAGIC_CHECK
 condition|)
 name|file_magwarn
 argument_list|(
+name|ms
+argument_list|,
 literal|"cannot get string from `%s'"
 argument_list|,
 name|m
@@ -4884,6 +4993,8 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 decl_stmt|;
 name|void
@@ -5407,6 +5518,8 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 decl_stmt|;
 if|if
@@ -5636,11 +5749,16 @@ name|buf
 parameter_list|,
 name|size_t
 name|bufsiz
+parameter_list|,
+name|int
+name|strip
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
+if|if
+condition|(
+name|strip
+condition|)
+block|{
 specifier|const
 name|char
 modifier|*
@@ -5666,8 +5784,7 @@ operator|=
 operator|++
 name|p
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 operator|(
 name|void
 operator|)
@@ -5956,11 +6073,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|IS_STRING
+argument_list|(
 name|m
 operator|->
 name|type
-operator|!=
-name|FILE_STRING
+argument_list|)
 condition|)
 name|m
 operator|->

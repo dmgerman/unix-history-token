@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian F. Darwin and others;  * maintained 1995-present by Christos Zoulas and others.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Ian F. Darwin and others.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian F. Darwin and others;  * maintained 1995-present by Christos Zoulas and others.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.61 2004/05/12 14:53:01 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.64 2004/11/20 23:50:12 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -385,6 +385,14 @@ name|FILE_REGEX
 value|17
 define|#
 directive|define
+name|FILE_BESTRING16
+value|18
+define|#
+directive|define
+name|FILE_LESTRING16
+value|19
+define|#
+directive|define
 name|FILE_FORMAT_NAME
 define|\
 comment|/* 0 */
@@ -422,7 +430,11 @@ value|"beldate",		\
 comment|/* 16 */
 value|"leldate",		\
 comment|/* 17 */
-value|"regex",
+value|"regex",		\
+comment|/* 18 */
+value|"bestring16",		\
+comment|/* 19 */
+value|"lestring16",
 define|#
 directive|define
 name|FILE_FMT_NUM
@@ -470,6 +482,10 @@ value|FILE_FMT_STR,		\
 comment|/* 16 */
 value|FILE_FMT_STR,		\
 comment|/* 17 */
+value|FILE_FMT_STR,		\
+comment|/* 18 */
+value|FILE_FMT_STR,		\
+comment|/* 19 */
 value|FILE_FMT_STR,
 comment|/* Word 3 */
 name|uint8_t
@@ -747,6 +763,14 @@ name|flags
 decl_stmt|;
 name|int
 name|haderr
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+decl_stmt|;
+name|size_t
+name|line
 decl_stmt|;
 block|}
 struct|;
@@ -1073,6 +1097,10 @@ name|protected
 name|void
 name|file_magwarn
 parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
