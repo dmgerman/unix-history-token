@@ -252,6 +252,10 @@ operator|->
 name|fs_bsize
 argument_list|)
 expr_stmt|;
+name|disk
+operator|->
+name|d_inomin
+operator|=
 name|min
 operator|=
 name|inode
@@ -265,6 +269,10 @@ name|fs
 argument_list|)
 operator|)
 expr_stmt|;
+name|disk
+operator|->
+name|d_inomax
+operator|=
 name|max
 operator|=
 name|min
