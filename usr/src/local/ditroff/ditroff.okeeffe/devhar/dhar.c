@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dhar.c	1.1	CWI 1.1	%G%"
+literal|"@(#)dhar.c	1.2	CWI 1.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,7 +130,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|font
+name|Font
 modifier|*
 name|fontbase
 index|[
@@ -2102,7 +2102,7 @@ index|]
 operator|=
 operator|(
 expr|struct
-name|font
+name|Font
 operator|*
 operator|)
 name|p
@@ -2140,7 +2140,7 @@ operator|+=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|font
+name|Font
 argument_list|)
 expr_stmt|;
 comment|/* that's what's on the beginning */
@@ -2262,7 +2262,7 @@ index|]
 operator|=
 operator|(
 expr|struct
-name|font
+name|Font
 operator|*
 operator|)
 name|malloc
@@ -2284,7 +2284,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|font
+name|Font
 argument_list|)
 operator|+
 literal|255
@@ -2312,7 +2312,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|font
+name|Font
 argument_list|)
 expr_stmt|;
 name|fontbase
@@ -2876,7 +2876,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|font
+name|Font
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2996,7 +2996,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|font
+name|Font
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3024,7 +3024,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|font
+name|Font
 argument_list|)
 expr_stmt|;
 name|codetab
