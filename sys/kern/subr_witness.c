@@ -968,6 +968,20 @@ name|lock_class_sx
 block|}
 block|,
 block|{
+literal|"filedesc structure"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"pipe mutex"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
 literal|"sigio lock"
 block|,
 operator|&
