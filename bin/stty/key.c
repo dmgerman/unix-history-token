@@ -375,7 +375,7 @@ literal|"ispeed"
 block|,
 name|f_ispeed
 block|,
-literal|0
+name|F_NEEDARG
 block|,
 literal|"new"
 block|,
