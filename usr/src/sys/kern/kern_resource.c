@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_resource.c	6.5	85/03/08	*/
+comment|/*	kern_resource.c	6.6	85/05/22	*/
 end_comment
 
 begin_include
@@ -622,7 +622,7 @@ name|u
 operator|.
 name|u_error
 operator|=
-name|EACCES
+name|EPERM
 expr_stmt|;
 return|return;
 block|}
