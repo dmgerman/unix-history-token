@@ -274,8 +274,13 @@ directive|define
 name|STAILQ_LAST
 parameter_list|(
 name|head
+parameter_list|,
+name|type
+parameter_list|,
+name|field
 parameter_list|)
-value|(*(head)->stqh_last)
+define|\
+value|(STAILQ_EMPTY(head) ?						\ 		NULL :							\ 	        ((struct type *)					\ 		((char *)((head)->stqh_last) - __offsetof(struct type, field))))
 end_define
 
 begin_define

@@ -453,6 +453,10 @@ operator|&
 name|queue
 operator|->
 name|tq_queue
+argument_list|,
+name|task
+argument_list|,
+name|ta_link
 argument_list|)
 expr_stmt|;
 if|if
