@@ -1725,7 +1725,7 @@ argument_list|(
 name|cam_errbuf
 argument_list|,
 literal|"%s: asked for a peripheral match, but"
-literal|" got a bus or device match??!!"
+literal|" got a bus or device match"
 argument_list|,
 name|func_name
 argument_list|)
@@ -2093,7 +2093,7 @@ name|sprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-literal|"%s: device %s%d does not exist"
+literal|"%s: device %s%d does not exist!"
 argument_list|,
 name|func_name
 argument_list|,
@@ -2467,7 +2467,7 @@ name|sprintf
 argument_list|(
 name|cam_errbuf
 argument_list|,
-literal|"%s: passthrough device does not exist??!!"
+literal|"%s: passthrough device does not exist!"
 argument_list|,
 name|func_name
 argument_list|)
