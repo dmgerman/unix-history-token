@@ -876,6 +876,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Snag our default values for the buttons / button states. */
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|fujitsu
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -884,7 +889,6 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -892,7 +896,11 @@ argument_list|,
 literal|"Couldn't initialize button states!\n"
 argument_list|)
 expr_stmt|;
-block|}
+name|ACPI_SERIAL_END
+argument_list|(
+name|fujitsu
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
