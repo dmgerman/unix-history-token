@@ -1198,7 +1198,7 @@ end_function
 
 begin_function
 specifier|static
-name|ssize_t
+name|int
 name|pcfclock_read
 parameter_list|(
 name|dev_t
