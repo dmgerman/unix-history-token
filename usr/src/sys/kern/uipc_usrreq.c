@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.28 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1703,6 +1703,13 @@ block|{
 name|VOP_ABORTOP
 argument_list|(
 name|ndp
+operator|->
+name|ni_dvp
+argument_list|,
+operator|&
+name|ndp
+operator|->
+name|ni_cnd
 argument_list|)
 expr_stmt|;
 if|if
@@ -1779,11 +1786,21 @@ operator|=
 name|VOP_CREATE
 argument_list|(
 name|ndp
+operator|->
+name|ni_dvp
+argument_list|,
+operator|&
+name|ndp
+operator|->
+name|ni_vp
+argument_list|,
+operator|&
+name|ndp
+operator|->
+name|ni_cnd
 argument_list|,
 operator|&
 name|vattr
-argument_list|,
-name|p
 argument_list|)
 condition|)
 return|return

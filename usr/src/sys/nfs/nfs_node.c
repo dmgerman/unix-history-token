@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1144,29 +1144,31 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nfs_abortop
-argument_list|(
-argument|ndp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dvp
+parameter_list|,
+name|cnp
+parameter_list|)
 name|struct
-name|nameidata
+name|vnode
 modifier|*
-name|ndp
+name|dvp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|struct
+name|componentname
+modifier|*
+name|cnp
+decl_stmt|;
 block|{
 if|if
 condition|(
 operator|(
-name|ndp
+name|cnp
 operator|->
-name|ni_nameiop
+name|cn_flags
 operator|&
 operator|(
 name|HASBUF
@@ -1179,9 +1181,9 @@ name|HASBUF
 condition|)
 name|FREE
 argument_list|(
-name|ndp
+name|cnp
 operator|->
-name|ni_pnbuf
+name|cn_pnbuf
 argument_list|,
 name|M_NAMEI
 argument_list|)
@@ -1192,7 +1194,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -261,10 +261,20 @@ operator|=
 name|VOP_CREATE
 argument_list|(
 name|ndp
+operator|->
+name|ni_dvp
+argument_list|,
+operator|&
+name|ndp
+operator|->
+name|ni_vp
+argument_list|,
+operator|&
+name|ndp
+operator|->
+name|ni_cnd
 argument_list|,
 name|vap
-argument_list|,
-name|p
 argument_list|)
 condition|)
 return|return
@@ -289,6 +299,13 @@ block|{
 name|VOP_ABORTOP
 argument_list|(
 name|ndp
+operator|->
+name|ni_dvp
+argument_list|,
+operator|&
+name|ndp
+operator|->
+name|ni_cnd
 argument_list|)
 expr_stmt|;
 if|if
