@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkdir.c,v 1.11 1998/05/15 06:23:45 charnier Exp $"
+literal|"$Id: mkdir.c,v 1.12 1998/10/20 06:37:01 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -383,7 +383,7 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
-name|mode
+name|omode
 argument_list|)
 operator|==
 operator|-
@@ -629,30 +629,32 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/*                          * The mkdir() and umask() calls both honor only the low                 	 * nine bits, so if you try to set a mode including the                     	 * sticky, setuid, setgid bits you lose them. So chmod().                          */
+comment|/*                          * The mkdir() and umask() calls both honor only the 			 * low nine bits, so if you try to set a mode  			 * including the sticky, setuid, setgid bits you lose  			 * them. So chmod() the last path component to try 			 * to do what the caller has asked for.                          */
 if|if
 condition|(
+name|last
+operator|&&
+operator|(
 name|chmod
 argument_list|(
-operator|*
 name|path
 argument_list|,
-name|mode
+name|omode
 argument_list|)
 operator|==
 operator|-
 literal|1
+operator|)
 condition|)
 block|{
 name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-operator|*
 name|path
 argument_list|)
 expr_stmt|;
-name|exitval
+name|retval
 operator|=
 literal|1
 expr_stmt|;
