@@ -8,7 +8,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 1.15 %G%"
+literal|"@(#)main.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"../h/buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ndir.h"
 end_include
 
 begin_include

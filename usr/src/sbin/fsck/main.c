@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.28 (Berkeley) %G%"
+literal|"@(#)main.c	1.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -597,7 +597,7 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|blkmap
+name|blockmap
 decl_stmt|;
 end_decl_stmt
 
@@ -776,7 +776,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* num chars in blkmap */
+comment|/* num chars in blockmap */
 end_comment
 
 begin_decl_stmt
@@ -921,7 +921,7 @@ name|setbmap
 parameter_list|(
 name|x
 parameter_list|)
-value|setbit(blkmap, x)
+value|setbit(blockmap, x)
 end_define
 
 begin_define
@@ -931,7 +931,7 @@ name|getbmap
 parameter_list|(
 name|x
 parameter_list|)
-value|isset(blkmap, x)
+value|isset(blockmap, x)
 end_define
 
 begin_define
@@ -941,7 +941,7 @@ name|clrbmap
 parameter_list|(
 name|x
 parameter_list|)
-value|clrbit(blkmap, x)
+value|clrbit(blockmap, x)
 end_define
 
 begin_define
@@ -3084,7 +3084,7 @@ argument_list|)
 expr_stmt|;
 name|copy
 argument_list|(
-name|blkmap
+name|blockmap
 argument_list|,
 name|freemap
 argument_list|,
@@ -4006,7 +4006,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|blkmap
+name|blockmap
 argument_list|)
 expr_stmt|;
 name|free
@@ -7680,7 +7680,7 @@ name|short
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|blkmap
+name|blockmap
 operator|=
 operator|(
 name|char

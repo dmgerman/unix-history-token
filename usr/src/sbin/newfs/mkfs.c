@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	1.19 (Berkeley) %G%"
+literal|"@(#)mkfs.c	1.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2059,9 +2059,9 @@ name|sblock
 operator|.
 name|fs_rps
 operator|=
-name|HZ
+literal|60
 expr_stmt|;
-comment|/* assume disk speed == HZ */
+comment|/* assume disk speed == 60 HZ */
 name|sblock
 operator|.
 name|fs_cgrotor
