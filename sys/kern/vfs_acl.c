@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/namei.h>
 end_include
 
@@ -2652,7 +2658,7 @@ comment|/*  * syscalls -- convert the path/fd to a vnode, and call vacl_whatever
 end_comment
 
 begin_comment
-comment|/*  * Given a file path, get an ACL for it  */
+comment|/*  * Given a file path, get an ACL for it  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -2677,6 +2683,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* what flags are required here -- possible not LOCKLEAF? */
 name|NDINIT
 argument_list|(
@@ -2710,12 +2722,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
 name|error
 operator|=
 name|vacl_get_acl
@@ -2749,6 +2759,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2758,7 +2775,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, set an ACL for it  */
+comment|/*  * Given a file path, set an ACL for it  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -2783,6 +2800,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -2815,12 +2838,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
 name|error
 operator|=
 name|vacl_set_acl
@@ -2854,6 +2875,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2863,7 +2891,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file descriptor, get an ACL for it  */
+comment|/*  * Given a file descriptor, get an ACL for it  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -2889,6 +2917,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|getvnode
@@ -2911,13 +2945,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
+block|{
 name|error
-operator|)
-return|;
-return|return
+operator|=
 name|vacl_get_acl
 argument_list|(
 name|p
@@ -2945,12 +2978,24 @@ argument_list|,
 name|aclp
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file descriptor, set an ACL for it  */
+comment|/*  * Given a file descriptor, set an ACL for it  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -2976,6 +3021,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|getvnode
@@ -2998,13 +3049,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
+block|{
 name|error
-operator|)
-return|;
-return|return
+operator|=
 name|vacl_set_acl
 argument_list|(
 name|p
@@ -3032,12 +3082,24 @@ argument_list|,
 name|aclp
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, delete an ACL from it.  */
+comment|/*  * Given a file path, delete an ACL from it.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -3062,6 +3124,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -3094,12 +3162,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
 name|error
 operator|=
 name|vacl_delete
@@ -3126,6 +3192,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3135,7 +3208,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, delete an ACL from it.  */
+comment|/*  * Given a file path, delete an ACL from it.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -3161,6 +3234,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|getvnode
@@ -3183,12 +3262,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
 name|error
 operator|=
 name|vacl_delete
@@ -3212,6 +3289,13 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3221,7 +3305,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file path, check an ACL for it  */
+comment|/*  * Given a file path, check an ACL for it  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -3246,6 +3330,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|NDINIT
 argument_list|(
 operator|&
@@ -3278,12 +3368,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
 name|error
 operator|=
 name|vacl_aclcheck
@@ -3317,6 +3405,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3326,7 +3421,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file descriptor, check an ACL for it  */
+comment|/*  * Given a file descriptor, check an ACL for it  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -3352,6 +3447,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|getvnode
@@ -3374,13 +3475,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
+block|{
 name|error
-operator|)
-return|;
-return|return
+operator|=
 name|vacl_aclcheck
 argument_list|(
 name|p
@@ -3408,6 +3508,18 @@ argument_list|,
 name|aclp
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
