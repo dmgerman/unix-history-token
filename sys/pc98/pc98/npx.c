@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.15 1997/03/24 12:29:39 bde Exp $  */
+comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.16 1997/04/22 12:20:50 kato Exp $  */
 end_comment
 
 begin_include
@@ -27,6 +27,12 @@ begin_include
 include|#
 directive|include
 file|"opt_math_emulate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_smp.h"
 end_include
 
 begin_include
@@ -135,6 +141,36 @@ include|#
 directive|include
 file|<machine/specialreg.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/apic.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mpapic.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APIC_IO */
+end_comment
 
 begin_include
 include|#
@@ -761,6 +797,35 @@ name|SWI_CLOCK_MASK
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|npxproc
+value|(SMPnpxproc[cpunumber()])
+end_define
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|SMPnpxproc
+index|[
+name|NCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|struct
 name|proc
@@ -768,6 +833,11 @@ modifier|*
 name|npxproc
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -831,9 +901,36 @@ name|probeintr
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+end_if
+
+begin_asm
+asm|asm (" 	.text 	.p2align 2,0x90 " __XSTRING(CNAME(probeintr)) ": 	ss 	incl	" __XSTRING(CNAME(npx_intrs_while_probing)) " 	pushl	%eax 	movl	" __XSTRING(CNAME(apic_base)) ",%eax	# EOI to local APIC 	movl	$0,0xb0(,%eax,1)	# movl $0, APIC_EOI(%eax) 	movb	$0,%al #ifdef PC98 	outb	%al,$0xf8		# clear BUSY# latch #else 	outb	%al,$0xf0		# clear BUSY# latch #endif 	popl	%eax 	iret ");
+end_asm
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_asm
 asm|asm (" 	.text 	.p2align 2,0x90 " __XSTRING(CNAME(probeintr)) ": 	ss 	incl	" __XSTRING(CNAME(npx_intrs_while_probing)) " 	pushl	%eax 	movb	$0x20,%al	# EOI (asm in strings loses cpp features) #ifdef PC98 	outb	%al,$0x08	# IO_ICU2 	outb	%al,$0x0	# IO_ICU1 #else 	outb	%al,$0xa0	# IO_ICU2 	outb	%al,$0x20	# IO_ICU1 #endif 	movb	$0,%al #ifdef PC98 	outb	%al,$0xf8	# clear BUSY# latch #else 	outb	%al,$0xf0	# clear BUSY# latch #endif 	popl	%eax 	iret ");
 end_asm
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APIC_IO */
+end_comment
 
 begin_decl_stmt
 name|inthand_t
@@ -868,12 +965,26 @@ decl_stmt|;
 name|u_long
 name|save_eflags
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|u_int
+name|save_apic_mask
+decl_stmt|;
+else|#
+directive|else
 name|u_char
 name|save_icu1_mask
 decl_stmt|;
 name|u_char
 name|save_icu2_mask
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* APIC_IO */
 name|struct
 name|gate_descriptor
 name|save_idt_npxintr
@@ -904,6 +1015,19 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|save_apic_mask
+operator|=
+name|INTRGET
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|PC98
@@ -947,6 +1071,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* APIC_IO */
 name|save_idt_npxintr
 operator|=
 name|idt
@@ -961,6 +1088,22 @@ index|[
 literal|16
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|INTRSET
+argument_list|(
+operator|~
+name|dvp
+operator|->
+name|id_irq
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|PC98
@@ -1032,6 +1175,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* APIC_IO */
 name|setidt
 argument_list|(
 literal|16
@@ -1088,6 +1234,19 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|INTRSET
+argument_list|(
+name|save_apic_mask
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|PC98
@@ -1131,6 +1290,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* APIC_IO */
 name|idt
 index|[
 name|npx_intrno
@@ -1527,9 +1689,19 @@ argument_list|(
 name|__INITIAL_NPXCW__
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|I586_CPU
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+comment|/* FPU not working under SMP yet */
 if|if
 condition|(
 name|cpu_class
@@ -2043,6 +2215,20 @@ modifier|*
 name|addr
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|u_int
+name|apic_mask
+decl_stmt|;
+name|u_int
+name|old_apic_mask
+decl_stmt|;
+else|#
+directive|else
 name|u_char
 name|icu1_mask
 decl_stmt|;
@@ -2055,6 +2241,9 @@ decl_stmt|;
 name|u_char
 name|old_icu2_mask
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* APIC_IO */
 name|struct
 name|gate_descriptor
 name|save_idt_npxintr
@@ -2062,6 +2251,19 @@ decl_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|old_apic_mask
+operator|=
+name|INTRGET
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|PC98
@@ -2105,6 +2307,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* APIC_IO */
 name|save_idt_npxintr
 operator|=
 name|idt
@@ -2112,6 +2317,27 @@ index|[
 name|npx_intrno
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+comment|/** FIXME: try clrIoApicMaskBit( npx0_imask ); */
+name|INTRSET
+argument_list|(
+name|old_apic_mask
+operator|&
+operator|~
+operator|(
+name|npx0_imask
+operator|&
+literal|0xffff
+operator|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|PC98
@@ -2183,6 +2409,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* APIC_IO */
 name|idt
 index|[
 name|npx_intrno
@@ -2214,6 +2443,44 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|apic_mask
+operator|=
+name|INTRGET
+argument_list|()
+expr_stmt|;
+comment|/* masks may have changed */
+name|INTRSET
+argument_list|(
+operator|(
+name|apic_mask
+operator|&
+operator|~
+operator|(
+name|npx0_imask
+operator|&
+literal|0xffff
+operator|)
+operator|)
+operator||
+operator|(
+name|old_apic_mask
+operator|&
+operator|(
+name|npx0_imask
+operator|&
+literal|0xffff
+operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|PC98
@@ -2355,6 +2622,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* APIC_IO */
 name|idt
 index|[
 name|npx_intrno

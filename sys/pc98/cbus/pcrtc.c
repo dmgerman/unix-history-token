@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.18 1997/03/05 16:19:48 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.19 1997/04/07 10:53:14 kato Exp $  */
 end_comment
 
 begin_comment
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"opt_clock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_smp.h"
 end_include
 
 begin_include
@@ -238,6 +244,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -246,6 +253,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 end_if
 
@@ -722,6 +736,7 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -730,6 +745,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 end_if
 
@@ -2587,6 +2609,7 @@ literal|0
 expr_stmt|;
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -2595,6 +2618,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 if|if
 condition|(
@@ -2711,6 +2741,7 @@ goto|;
 block|}
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -2719,6 +2750,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 comment|/* 	 * Read the cpu cycle counter.  The timing considerations are 	 * similar to those for the i8254 clock. 	 */
 if|if
@@ -3087,6 +3125,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -3095,6 +3134,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 name|i586_ctr_freq
 operator|=
@@ -3114,6 +3160,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -3122,6 +3169,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 ifndef|#
 directive|ifndef
@@ -4579,6 +4633,98 @@ directive|endif
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+end_if
+
+begin_comment
+comment|/* from icu.s: */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|hwisrs
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|vec8254
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|vecRTC
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|ivectors
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|Xintr8254
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|XintrRTC
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mask8254
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|maskRTC
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APIC_IO */
+end_comment
+
 begin_comment
 comment|/*  * Start both clocks running.  */
 end_comment
@@ -4588,6 +4734,18 @@ name|void
 name|cpu_initclocks
 parameter_list|()
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|int
+name|x
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* APIC_IO */
 ifndef|#
 directive|ifndef
 name|PC98
@@ -4626,6 +4784,188 @@ block|}
 endif|#
 directive|endif
 comment|/* Finish initializing 8253 timer 0. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+comment|/* 8254 is traditionally on ISA IRQ0 */
+if|if
+condition|(
+operator|(
+name|x
+operator|=
+name|get_isa_apic_irq
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* 		 * bummer, this mb doesn't have the 8254 on ISA irq0, 		 *  perhaps it's on the EISA bus... 		 */
+if|if
+condition|(
+operator|(
+name|x
+operator|=
+name|get_eisa_apic_irq
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* double bummer, attempt to redirect thru the 8259 */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"APIC missing 8254 connection\n"
+argument_list|)
+expr_stmt|;
+comment|/* allow 8254 timer to INTerrupt 8259 */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|IO_ICU1
+argument_list|)
+ifdef|#
+directive|ifdef
+name|PC98
+define|#
+directive|define
+name|IO_ICU1
+value|0x00
+else|#
+directive|else
+define|#
+directive|define
+name|IO_ICU1
+value|0x20
+endif|#
+directive|endif
+endif|#
+directive|endif
+name|x
+operator|=
+name|inb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* current mask in 8259 */
+name|x
+operator|&=
+operator|~
+literal|1
+expr_stmt|;
+comment|/* clear 8254 timer mask */
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+comment|/* write new mask */
+comment|/* program IO APIC for type 3 INT on INT0 */
+if|if
+condition|(
+name|ext_int_setup
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"8254 redirect impossible!"
+argument_list|)
+expr_stmt|;
+name|x
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 8259 is on 0 */
+block|}
+block|}
+name|hwisrs
+index|[
+name|x
+index|]
+operator|=
+operator|(
+name|u_int
+operator|)
+name|vec8254
+expr_stmt|;
+name|Xintr8254
+operator|=
+operator|(
+name|u_int
+operator|)
+name|ivectors
+index|[
+name|x
+index|]
+expr_stmt|;
+comment|/* XXX might need Xfastintr# */
+name|mask8254
+operator|=
+operator|(
+literal|1
+operator|<<
+name|x
+operator|)
+expr_stmt|;
+name|register_intr
+argument_list|(
+comment|/* irq */
+name|x
+argument_list|,
+comment|/* XXX id */
+literal|0
+argument_list|,
+comment|/* flags */
+literal|0
+argument_list|,
+comment|/* XXX */
+operator|(
+name|inthand2_t
+operator|*
+operator|)
+name|clkintr
+argument_list|,
+operator|&
+name|clk_imask
+argument_list|,
+comment|/* unit */
+literal|0
+argument_list|)
+expr_stmt|;
+name|INTREN
+argument_list|(
+name|mask8254
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|register_intr
 argument_list|(
 comment|/* irq */
@@ -4656,8 +4996,12 @@ argument_list|(
 name|IRQ0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* APIC_IO */
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -4666,6 +5010,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 comment|/* 	 * Finish setting up anti-jitter measures. 	 */
 if|if
@@ -4727,6 +5078,109 @@ argument_list|,
 name|RTCDG_BITS
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+comment|/* RTC is traditionally on ISA IRQ8 */
+if|if
+condition|(
+operator|(
+name|x
+operator|=
+name|get_isa_apic_irq
+argument_list|(
+literal|8
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|x
+operator|=
+name|get_eisa_apic_irq
+argument_list|(
+literal|8
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"APIC missing RTC connection"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|hwisrs
+index|[
+name|x
+index|]
+operator|=
+operator|(
+name|u_int
+operator|)
+name|vecRTC
+expr_stmt|;
+name|XintrRTC
+operator|=
+operator|(
+name|u_int
+operator|)
+name|ivectors
+index|[
+name|x
+index|]
+expr_stmt|;
+comment|/* XXX might need Xfastintr# */
+name|maskRTC
+operator|=
+operator|(
+literal|1
+operator|<<
+name|x
+operator|)
+expr_stmt|;
+name|register_intr
+argument_list|(
+comment|/* irq */
+name|x
+argument_list|,
+comment|/* XXX id */
+literal|1
+argument_list|,
+comment|/* flags */
+literal|0
+argument_list|,
+comment|/* XXX */
+operator|(
+name|inthand2_t
+operator|*
+operator|)
+name|rtcintr
+argument_list|,
+operator|&
+name|stat_imask
+argument_list|,
+comment|/* unit */
+literal|0
+argument_list|)
+expr_stmt|;
+name|INTREN
+argument_list|(
+name|maskRTC
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|register_intr
 argument_list|(
 comment|/* irq */
@@ -4757,6 +5211,9 @@ argument_list|(
 name|IRQ8
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* APIC_IO */
 name|writertc
 argument_list|(
 name|RTC_STATUSB
@@ -4766,6 +5223,61 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+name|printf
+argument_list|(
+literal|"Enabled INTs: "
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|x
+operator|=
+literal|0
+init|;
+name|x
+operator|<
+literal|24
+condition|;
+operator|++
+name|x
+control|)
+if|if
+condition|(
+operator|(
+name|imen
+operator|&
+operator|(
+literal|1
+operator|<<
+name|x
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%d, "
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"imen: 0x%08x\n"
+argument_list|,
+name|imen
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* APIC_IO */
 block|}
 end_function
 
@@ -4877,6 +5389,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -4885,6 +5398,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 name|set_i586_ctr_freq
 argument_list|(
@@ -4936,6 +5456,7 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -4944,6 +5465,13 @@ operator|||
 name|defined
 argument_list|(
 name|I686_CPU
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
 argument_list|)
 end_if
 
@@ -5141,7 +5669,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(I586_CPU) || defined(I686_CPU) */
+comment|/* (defined(I586_CPU) || defined(I686_CPU))&& !defined(SMP) */
 end_comment
 
 end_unit
