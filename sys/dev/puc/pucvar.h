@@ -84,6 +84,9 @@ decl_stmt|;
 name|u_int
 name|serialfreq
 decl_stmt|;
+name|u_int
+name|flags
+decl_stmt|;
 block|}
 name|ports
 index|[
