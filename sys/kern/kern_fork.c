@@ -1284,6 +1284,12 @@ name|newproc
 expr_stmt|;
 name|p2
 operator|->
+name|p_intr_nesting_level
+operator|=
+literal|0
+expr_stmt|;
+name|p2
+operator|->
 name|p_stat
 operator|=
 name|SIDL

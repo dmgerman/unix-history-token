@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -518,10 +524,9 @@ name|M_WAITOK
 condition|)
 name|KASSERT
 argument_list|(
-name|PCPU_GET
-argument_list|(
-name|intr_nesting_level
-argument_list|)
+name|curproc
+operator|->
+name|p_intr_nesting_level
 operator|==
 literal|0
 argument_list|,

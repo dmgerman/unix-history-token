@@ -2750,6 +2750,12 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
+name|p_intr_nesting_level
+operator|=
+literal|1
+expr_stmt|;
+name|p
+operator|->
 name|p_rtprio
 operator|.
 name|type

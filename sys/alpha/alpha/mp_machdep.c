@@ -3821,10 +3821,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
-name|intr_nesting_level
-argument_list|)
+name|curproc
+operator|->
+name|p_intr_nesting_level
 operator|==
 literal|1
 condition|)

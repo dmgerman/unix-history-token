@@ -4279,10 +4279,9 @@ name|__FreeBSD__
 argument_list|)
 name|KASSERT
 argument_list|(
-name|PCPU_GET
-argument_list|(
-name|intr_nesting_level
-argument_list|)
+name|curproc
+operator|->
+name|p_intr_nesting_level
 operator|==
 literal|0
 argument_list|,

@@ -2481,25 +2481,13 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* install an inter-CPU IPI for interrupt forwarding */
-name|setidt
-argument_list|(
-name|XFORWARD_IRQ_OFFSET
-argument_list|,
-name|Xforward_irq
-argument_list|,
-name|SDT_SYS386IGT
-argument_list|,
-name|SEL_KPL
-argument_list|,
-name|GSEL
-argument_list|(
-name|GCODE_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
-argument_list|)
-expr_stmt|;
+block|setidt(XFORWARD_IRQ_OFFSET, Xforward_irq, 	       SDT_SYS386IGT, SEL_KPL, GSEL(GCODE_SEL, SEL_KPL));
+endif|#
+directive|endif
 comment|/* install an inter-CPU IPI for CPU stop/restart */
 name|setidt
 argument_list|(

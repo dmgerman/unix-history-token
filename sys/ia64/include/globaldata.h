@@ -96,10 +96,6 @@ name|u_int32_t
 name|gd_current_asngen
 decl_stmt|;
 comment|/* ASN rollover check */
-name|u_int32_t
-name|gd_intr_nesting_level
-decl_stmt|;
-comment|/* interrupt recursion */
 name|u_int
 name|gd_astpending
 decl_stmt|;

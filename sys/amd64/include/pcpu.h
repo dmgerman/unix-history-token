@@ -93,15 +93,6 @@ decl_stmt|;
 name|int
 name|gd_switchticks
 decl_stmt|;
-name|u_char
-name|gd_intr_nesting_level
-decl_stmt|;
-name|u_char
-name|gd_pad0
-index|[
-literal|3
-index|]
-decl_stmt|;
 name|struct
 name|segment_descriptor
 name|gd_common_tssd

@@ -511,10 +511,9 @@ name|size
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|PCPU_GET
-argument_list|(
-name|intr_nesting_level
-argument_list|)
+name|curproc
+operator|->
+name|p_intr_nesting_level
 operator|==
 literal|0
 condition|?

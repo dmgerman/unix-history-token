@@ -123,7 +123,7 @@ name|CLKF_INTR
 parameter_list|(
 name|framep
 parameter_list|)
-value|(PCPU_GET(intr_nesting_level)>= 2)
+value|(curproc->p_intr_nesting_level>= 2)
 end_define
 
 begin_define

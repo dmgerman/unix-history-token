@@ -386,6 +386,10 @@ name|int
 name|p_flag
 decl_stmt|;
 comment|/* (c/j) P_* flags. */
+name|int
+name|p_intr_nesting_level
+decl_stmt|;
+comment|/* (n) Interrupt recursion. */
 name|char
 name|p_stat
 decl_stmt|;
