@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.34 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3520,7 +3520,8 @@ expr_stmt|;
 comment|/* 	**  See if this option is preset for us. 	*/
 if|if
 condition|(
-name|safe
+operator|!
+name|sticky
 operator|&&
 name|bitnset
 argument_list|(
