@@ -75,35 +75,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|MAXSHELLCMDLEN
-value|64
-end_define
-
-begin_decl_stmt
-specifier|static
-name|int
-name|exec_shell_imgact
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|image_params
-operator|*
-name|imgp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Shell interpreter image activator. A interpreter name beginning  *	at imgp->stringbase is the minimal successful exit requirement.  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|exec_shell_imgact
 parameter_list|(

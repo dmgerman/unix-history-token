@@ -248,6 +248,19 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* function to dump core, or NULL */
+name|int
+argument_list|(
+argument|*sv_imgact_try
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|image_params
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
