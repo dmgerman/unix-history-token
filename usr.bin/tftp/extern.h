@@ -23,7 +23,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|sendfile
+name|xmitfile
 name|__P
 argument_list|(
 operator|(

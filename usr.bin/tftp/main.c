@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.5 1997/08/14 06:47:39 charnier Exp $"
+literal|"$Id: main.c,v 1.6 1998/06/09 04:31:02 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2040,7 +2040,7 @@ name|sin_port
 operator|=
 name|port
 expr_stmt|;
-name|sendfile
+name|xmitfile
 argument_list|(
 name|fd
 argument_list|,
@@ -2154,7 +2154,7 @@ name|sin_port
 operator|=
 name|port
 expr_stmt|;
-name|sendfile
+name|xmitfile
 argument_list|(
 name|fd
 argument_list|,
