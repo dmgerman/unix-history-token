@@ -2142,6 +2142,9 @@ argument_list|,
 name|cpuid
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|APIC_IO
 name|printf
 argument_list|(
 literal|"lapic.id = %08x\n"
@@ -2151,6 +2154,8 @@ operator|.
 name|id
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|#
