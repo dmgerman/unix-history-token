@@ -2280,12 +2280,8 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 comment|/* Check isapnp ids */
 return|return
-operator|(
 name|ISA_PNP_PROBE
 argument_list|(
 name|device_get_parent
@@ -2297,7 +2293,6 @@ name|dev
 argument_list|,
 name|pca_ids
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
