@@ -472,6 +472,7 @@ operator|*
 name|cp
 argument_list|)
 condition|)
+operator|*
 name|cp
 operator|++
 expr_stmt|;

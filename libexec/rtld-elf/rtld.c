@@ -108,6 +108,12 @@ directive|include
 file|"rtld.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libmap.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -905,6 +911,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|bool
+name|libmap_disable
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Disable libmap */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
 name|trust
 decl_stmt|;
 end_decl_stmt
@@ -1597,6 +1614,15 @@ argument_list|(
 literal|"LD_DEBUG"
 argument_list|)
 expr_stmt|;
+name|libmap_disable
+operator|=
+name|getenv
+argument_list|(
+literal|"LD_LIBMAP_DISABLE"
+argument_list|)
+operator|!=
+name|NULL
+expr_stmt|;
 name|ld_library_path
 operator|=
 name|getenv
@@ -1988,6 +2014,19 @@ operator|.
 name|st_shndx
 operator|=
 name|SHN_ABS
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|libmap_disable
+condition|)
+name|libmap_disable
+operator|=
+operator|(
+name|bool
+operator|)
+name|lm_init
+argument_list|()
 expr_stmt|;
 name|dbg
 argument_list|(
@@ -3852,7 +3891,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
+name|xname
 parameter_list|,
 specifier|const
 name|Obj_Entry
@@ -3864,11 +3903,15 @@ name|char
 modifier|*
 name|pathname
 decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
 if|if
 condition|(
 name|strchr
 argument_list|(
-name|name
+name|xname
 argument_list|,
 literal|'/'
 argument_list|)
@@ -3879,7 +3922,7 @@ block|{
 comment|/* Hard coded pathname */
 if|if
 condition|(
-name|name
+name|xname
 index|[
 literal|0
 index|]
@@ -3894,7 +3937,7 @@ name|_rtld_error
 argument_list|(
 literal|"Absolute pathname required for shared object \"%s\""
 argument_list|,
-name|name
+name|xname
 argument_list|)
 expr_stmt|;
 return|return
@@ -3904,10 +3947,43 @@ block|}
 return|return
 name|xstrdup
 argument_list|(
-name|name
+name|xname
 argument_list|)
 return|;
 block|}
+if|if
+condition|(
+name|libmap_disable
+operator|||
+operator|(
+name|refobj
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|name
+operator|=
+name|lm_find
+argument_list|(
+name|refobj
+operator|->
+name|path
+argument_list|,
+name|xname
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|name
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|xname
+expr_stmt|;
 name|dbg
 argument_list|(
 literal|" Searching for \"%s\""
@@ -6517,6 +6593,14 @@ name|list_fini
 argument_list|)
 expr_stmt|;
 comment|/* No need to remove the items from the list, since we are exiting. */
+if|if
+condition|(
+operator|!
+name|libmap_disable
+condition|)
+name|lm_fini
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
