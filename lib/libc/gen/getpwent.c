@@ -5119,6 +5119,14 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|geteuid
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|snprintf
 argument_list|(
 name|buffer
@@ -5174,6 +5182,7 @@ operator|(
 name|NS_SUCCESS
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
