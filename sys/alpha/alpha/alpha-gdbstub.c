@@ -253,10 +253,8 @@ name|c
 parameter_list|)
 comment|/* write a single character      */
 block|{
-name|siocnputc
+name|siogdbputc
 argument_list|(
-name|REMOTE_DEV
-argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
@@ -276,10 +274,8 @@ parameter_list|)
 comment|/* read and return a single char */
 block|{
 return|return
-name|siocngetc
-argument_list|(
-name|REMOTE_DEV
-argument_list|)
+name|siogdbgetc
+argument_list|()
 return|;
 block|}
 end_function
