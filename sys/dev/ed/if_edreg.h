@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_edreg.h,v 1.14 1994/04/10 20:06:28 davidg Exp $  */
+comment|/*  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_edreg.h,v 1.15 1994/08/02 07:39:30 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1324,62 +1324,17 @@ value|0x80
 end_define
 
 begin_comment
-comment|/*  * receive ring discriptor  *  * The National Semiconductor DS8390 Network interface controller uses  * the following receive ring headers.  The way this works is that the  * memory on the interface card is chopped up into 256 bytes blocks.  * A contiguous portion of those blocks are marked for receive packets  * by setting start and end block #'s in the NIC.  For each packet that  * is put into the receive ring, one of these headers (4 bytes each) is  * tacked onto the front.  */
+comment|/*  * receive ring discriptor  *  * The National Semiconductor DS8390 Network interface controller uses  * the following receive ring headers.  The way this works is that the  * memory on the interface card is chopped up into 256 bytes blocks.  * A contiguous portion of those blocks are marked for receive packets  * by setting start and end block #'s in the NIC.  For each packet that  * is put into the receive ring, one of these headers (4 bytes each) is  * tacked onto the front. The first byte is a copy of the receiver status  * register at the time the packet was received.  */
 end_comment
 
 begin_struct
 struct|struct
 name|ed_ring
 block|{
-struct|struct
-name|edr_status
-block|{
-comment|/* received packet status	*/
 name|u_char
-name|rs_prx
-range|:
-literal|1
-decl_stmt|,
-comment|/* packet received intack	*/
-name|rs_crc
-range|:
-literal|1
-decl_stmt|,
-comment|/* crc error		*/
-name|rs_fae
-range|:
-literal|1
-decl_stmt|,
-comment|/* frame alignment error	*/
-name|rs_fo
-range|:
-literal|1
-decl_stmt|,
-comment|/* fifo overrun		*/
-name|rs_mpa
-range|:
-literal|1
-decl_stmt|,
-comment|/* packet received intack	*/
-name|rs_phy
-range|:
-literal|1
-decl_stmt|,
-comment|/* packet received intack	*/
-name|rs_dis
-range|:
-literal|1
-decl_stmt|,
-comment|/* packet received intack	*/
-name|rs_dfr
-range|:
-literal|1
+name|rsr
 decl_stmt|;
-comment|/* packet received intack	*/
-block|}
-name|ed_rcv_status
-struct|;
-comment|/* received packet status	*/
+comment|/* receiver status */
 name|u_char
 name|next_packet
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.38 1994/05/25 08:59:02 rgrimes Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.39 1994/08/02 07:39:28 davidg Exp $  */
 end_comment
 
 begin_include
@@ -273,7 +273,7 @@ comment|/* width of access to card 0=8 or 1=16 */
 name|int
 name|is790
 decl_stmt|;
-comment|/* set by the probe code if the card is 790 based */
+comment|/* set by the probe code if the card is 790 				 * based */
 name|caddr_t
 name|bpf
 decl_stmt|;
@@ -309,7 +309,7 @@ comment|/* number of transmit buffers */
 name|u_char
 name|txb_inuse
 decl_stmt|;
-comment|/* number of TX buffers currently in-use*/
+comment|/* number of TX buffers currently in-use */
 name|u_char
 name|txb_new
 decl_stmt|;
@@ -433,6 +433,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MULTICAST
+end_ifdef
+
+begin_function_decl
+name|void
+name|ds_getmcaf
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
@@ -446,7 +464,9 @@ name|char
 modifier|*
 parameter_list|,
 name|int
-comment|/*u_short*/
+comment|/* u_short */
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -507,6 +527,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ed_setrcr
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|ed_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|int
 name|ether_output
@@ -544,7 +579,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Interrupt conversion table for WD/SMC ASIC  * (IRQ* are defined in icu.h)  */
+comment|/*  * Interrupt conversion table for WD/SMC ASIC  * (IRQ* are defined in icu.h)  */
 end_comment
 
 begin_decl_stmt
@@ -716,7 +751,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generic probe routine for testing for the existance of a DS8390.  *	Must be called after the NIC has just been reset. This routine  *	works by looking at certain register values that are gauranteed  *	to be initialized a certain way after power-up or reset. Seems  *	not to currently work on the 83C690.  *  * Specifically:  *  *	Register			reset bits	set bits  *	Command Register (CR)		TXP, STA	RD2, STP  *	Interrupt Status (ISR)				RST  *	Interrupt Mask (IMR)		All bits  *	Data Control (DCR)				LAS  *	Transmit Config. (TCR)		LB1, LB0  *  * We only look at the CR and ISR registers, however, because looking at  *	the others would require changing register pages (which would be  *	intrusive if this isn't an 8390).  *  * Return 1 if 8390 was found, 0 if not.   */
+comment|/*  * Generic probe routine for testing for the existance of a DS8390.  *	Must be called after the NIC has just been reset. This routine  *	works by looking at certain register values that are gauranteed  *	to be initialized a certain way after power-up or reset. Seems  *	not to currently work on the 83C690.  *  * Specifically:  *  *	Register			reset bits	set bits  *	Command Register (CR)		TXP, STA	RD2, STP  *	Interrupt Status (ISR)				RST  *	Interrupt Mask (IMR)		All bits  *	Data Control (DCR)				LAS  *	Transmit Config. (TCR)		LB1, LB0  *  * We only look at the CR and ISR registers, however, because looking at  *	the others would require changing register pages (which would be  *	intrusive if this isn't an 8390).  *  * Return 1 if 8390 was found, 0 if not.  */
 end_comment
 
 begin_function
@@ -882,7 +917,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Attempt to do a checksum over the station address PROM. 	 *	If it fails, it's probably not a SMC/WD board. There 	 *	is a problem with this, though: some clone WD boards 	 *	don't pass the checksum test. Danpex boards for one. 	 */
+comment|/* 	 * Attempt to do a checksum over the station address PROM. If it 	 * fails, it's probably not a SMC/WD board. There is a problem with 	 * this, though: some clone WD boards don't pass the checksum test. 	 * Danpex boards for one. 	 */
 for|for
 control|(
 name|sum
@@ -920,7 +955,7 @@ operator|!=
 name|ED_WD_ROM_CHECKSUM_TOTAL
 condition|)
 block|{
-comment|/* 		 * Checksum is invalid. This often happens with cheap 		 *	WD8003E clones.  In this case, the checksum byte 		 *	(the eighth byte) seems to always be zero. 		 */
+comment|/* 		 * Checksum is invalid. This often happens with cheap WD8003E 		 * clones.  In this case, the checksum byte (the eighth byte) 		 * seems to always be zero. 		 */
 if|if
 condition|(
 name|inb
@@ -1323,7 +1358,7 @@ literal|""
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Make some adjustments to initial values depending on what is 	 *	found in the ICR. 	 */
+comment|/* 	 * Make some adjustments to initial values depending on what is found 	 * in the ICR. 	 */
 if|if
 condition|(
 name|isa16bit
@@ -1452,7 +1487,7 @@ name|isa_dev
 operator|->
 name|id_msize
 expr_stmt|;
-comment|/* 	 * (note that if the user specifies both of the following flags 	 *	that '8bit' mode intentionally has precedence) 	 */
+comment|/* 	 * (note that if the user specifies both of the following flags that 	 * '8bit' mode intentionally has precedence) 	 */
 if|if
 condition|(
 name|isa_dev
@@ -1477,7 +1512,7 @@ name|isa16bit
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Check 83C584 interrupt configuration register if this board has one 	 *	XXX - we could also check the IO address register. But why 	 *		bother...if we get past this, it *has* to be correct. 	 */
+comment|/* 	 * Check 83C584 interrupt configuration register if this board has one 	 * XXX - we could also check the IO address register. But why 	 * bother...if we get past this, it *has* to be correct. 	 */
 if|if
 condition|(
 operator|(
@@ -1533,7 +1568,7 @@ operator|>>
 literal|5
 operator|)
 expr_stmt|;
-comment|/* 		 * Translate it using translation table, and check for correctness. 		 */
+comment|/* 		 * Translate it using translation table, and check for 		 * correctness. 		 */
 if|if
 condition|(
 name|ed_intr_mask
@@ -1764,11 +1799,11 @@ name|isa16bit
 operator|=
 name|isa16bit
 expr_stmt|;
+comment|/* XXX - I'm not sure if PIO mode is even possible on WD/SMC boards */
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* XXX - I'm not sure if PIO mode is even possible on WD/SMC boards */
-comment|/* 	 * The following allows the WD/SMC boards to be used in Programmed I/O 	 *	mode - without mapping the NIC memory shared. ...Not the prefered 	 *	way, but it might be the only way. 	 */
+comment|/* 	 * The following allows the WD/SMC boards to be used in Programmed I/O 	 * mode - without mapping the NIC memory shared. ...Not the prefered 	 * way, but it might be the only way. 	 */
 if|if
 condition|(
 name|isa_dev
@@ -1976,6 +2011,163 @@ operator|->
 name|mem_shared
 condition|)
 block|{
+comment|/* 		 * Set upper address bits and 8/16 bit access to shared memory 		 */
+if|if
+condition|(
+name|isa16bit
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|is790
+condition|)
+block|{
+name|sc
+operator|->
+name|wd_laar_proto
+operator|=
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_LAAR
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_LAAR
+argument_list|,
+name|ED_WD_LAAR_M16EN
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_LAAR
+argument_list|,
+operator|(
+name|sc
+operator|->
+name|wd_laar_proto
+operator|=
+name|ED_WD_LAAR_L16EN
+operator||
+name|ED_WD_LAAR_M16EN
+operator||
+operator|(
+operator|(
+name|kvtop
+argument_list|(
+name|sc
+operator|->
+name|mem_start
+argument_list|)
+operator|>>
+literal|19
+operator|)
+operator|&
+name|ED_WD_LAAR_ADDRHI
+operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|type
+operator|&
+name|ED_WD_SOFTCONFIG
+operator|)
+operator|||
+ifdef|#
+directive|ifdef
+name|TOSH_ETHER
+operator|(
+name|sc
+operator|->
+name|type
+operator|==
+name|ED_TYPE_TOSHIBA1
+operator|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|type
+operator|==
+name|ED_TYPE_TOSHIBA4
+operator|)
+operator|||
+endif|#
+directive|endif
+operator|(
+name|sc
+operator|->
+name|type
+operator|==
+name|ED_TYPE_WD8013EBT
+operator|)
+operator|&&
+operator|(
+operator|!
+name|sc
+operator|->
+name|is790
+operator|)
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_LAAR
+argument_list|,
+operator|(
+name|sc
+operator|->
+name|wd_laar_proto
+operator|=
+operator|(
+operator|(
+name|kvtop
+argument_list|(
+name|sc
+operator|->
+name|mem_start
+argument_list|)
+operator|>>
+literal|19
+operator|)
+operator|&
+name|ED_WD_LAAR_ADDRHI
+operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 		 * Set address and enable interface shared memory. 		 */
 if|if
 condition|(
@@ -2197,171 +2389,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Set upper address bits and 8/16 bit access to shared memory 		 */
-if|if
-condition|(
-name|isa16bit
-condition|)
-block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
-name|sc
-operator|->
-name|wd_laar_proto
-operator|=
-name|inb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_WD_LAAR
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_WD_LAAR
-argument_list|,
-name|ED_WD_LAAR_M16EN
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-literal|0x84
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_WD_LAAR
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|wd_laar_proto
-operator|=
-name|ED_WD_LAAR_L16EN
-operator||
-name|ED_WD_LAAR_M16EN
-operator||
-operator|(
-operator|(
-name|kvtop
-argument_list|(
-name|sc
-operator|->
-name|mem_start
-argument_list|)
-operator|>>
-literal|19
-operator|)
-operator|&
-name|ED_WD_LAAR_ADDRHI
-operator|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|type
-operator|&
-name|ED_WD_SOFTCONFIG
-operator|)
-operator|||
-ifdef|#
-directive|ifdef
-name|TOSH_ETHER
-operator|(
-name|sc
-operator|->
-name|type
-operator|==
-name|ED_TYPE_TOSHIBA1
-operator|)
-operator|||
-operator|(
-name|sc
-operator|->
-name|type
-operator|==
-name|ED_TYPE_TOSHIBA4
-operator|)
-operator|||
-endif|#
-directive|endif
-operator|(
-name|sc
-operator|->
-name|type
-operator|==
-name|ED_TYPE_WD8013EBT
-operator|)
-operator|&&
-operator|(
-operator|!
-name|sc
-operator|->
-name|is790
-operator|)
-condition|)
-block|{
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_WD_LAAR
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|wd_laar_proto
-operator|=
-operator|(
-operator|(
-name|kvtop
-argument_list|(
-name|sc
-operator|->
-name|mem_start
-argument_list|)
-operator|>>
-literal|19
-operator|)
-operator|&
-name|ED_WD_LAAR_ADDRHI
-operator|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* 		 * Now zero memory and verify that it is clear 		 */
 name|bzero
 argument_list|(
@@ -2419,6 +2446,25 @@ condition|(
 name|isa16bit
 condition|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|is790
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_MSR
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+block|}
 name|outb
 argument_list|(
 name|sc
@@ -2435,14 +2481,6 @@ operator|&=
 operator|~
 name|ED_WD_LAAR_M16EN
 operator|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-literal|0x84
 argument_list|)
 expr_stmt|;
 block|}
@@ -2452,12 +2490,31 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * Disable 16bit access to shared memory - we leave it disabled so 		 *	that 1) machines reboot properly when the board is set 		 *	16 bit mode and there are conflicting 8bit devices/ROMS 		 *	in the same 128k address space as this boards shared 		 *	memory. and 2) so that other 8 bit devices with shared 		 *	memory can be used in this 128k region, too. 		 */
+comment|/* 		 * Disable 16bit access to shared memory - we leave it 		 * disabled so that 1) machines reboot properly when the board 		 * is set 16 bit mode and there are conflicting 8bit 		 * devices/ROMS in the same 128k address space as this boards 		 * shared memory. and 2) so that other 8 bit devices with 		 * shared memory can be used in this 128k region, too. 		 */
 if|if
 condition|(
 name|isa16bit
 condition|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|is790
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_MSR
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+block|}
 name|outb
 argument_list|(
 name|sc
@@ -2474,14 +2531,6 @@ operator|&=
 operator|~
 name|ED_WD_LAAR_M16EN
 operator|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-literal|0x84
 argument_list|)
 expr_stmt|;
 block|}
@@ -2554,7 +2603,7 @@ name|id_iobase
 operator|+
 name|ED_3COM_NIC_OFFSET
 expr_stmt|;
-comment|/* 	 * Verify that the kernel configured I/O address matches the board 	 *	configured address 	 */
+comment|/* 	 * Verify that the kernel configured I/O address matches the board 	 * configured address 	 */
 switch|switch
 condition|(
 name|inb
@@ -2710,7 +2759,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Verify that the kernel shared memory address matches the 	 *	board configured address. 	 */
+comment|/* 	 * Verify that the kernel shared memory address matches the board 	 * configured address. 	 */
 switch|switch
 condition|(
 name|inb
@@ -2810,7 +2859,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Reset NIC and ASIC. Enable on-board transceiver throughout reset 	 *	sequence because it'll lock up if the cable isn't connected 	 *	if we don't. 	 */
+comment|/* 	 * Reset NIC and ASIC. Enable on-board transceiver throughout reset 	 * sequence because it'll lock up if the cable isn't connected if we 	 * don't. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -2830,7 +2879,7 @@ argument_list|(
 literal|50
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The 3Com ASIC defaults to rather strange settings for the CR after 	 *	a reset - it's important to set it again after the following 	 *	outb (this is done when we map the PROM below). 	 */
+comment|/* 	 * The 3Com ASIC defaults to rather strange settings for the CR after 	 * a reset - it's important to set it again after the following outb 	 * (this is done when we map the PROM below). 	 */
 name|outb
 argument_list|(
 name|sc
@@ -2866,13 +2915,13 @@ name|mem_shared
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Hmmm...a 16bit 3Com board has 16k of memory, but only an 8k 	 *	window to it. 	 */
+comment|/* 	 * Hmmm...a 16bit 3Com board has 16k of memory, but only an 8k window 	 * to it. 	 */
 name|memsize
 operator|=
 literal|8192
 expr_stmt|;
 comment|/* 	 * Get station address from on-board ROM 	 */
-comment|/* 	 * First, map ethernet address PROM over the top of where the NIC 	 *	registers normally appear. 	 */
+comment|/* 	 * First, map ethernet address PROM over the top of where the NIC 	 * registers normally appear. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -2917,7 +2966,7 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unmap PROM - select NIC registers. The proper setting of the 	 *	tranceiver is set in ed_init so that the attach code 	 *	is given a chance to set the default based on a compile-time 	 *	config option 	 */
+comment|/* 	 * Unmap PROM - select NIC registers. The proper setting of the 	 * tranceiver is set in ed_init so that the attach code is given a 	 * chance to set the default based on a compile-time config option 	 */
 name|outb
 argument_list|(
 name|sc
@@ -2944,7 +2993,7 @@ operator||
 name|ED_CR_STP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Attempt to clear WTS bit. If it doesn't clear, then this is a 	 *	16bit board. 	 */
+comment|/* 	 * Attempt to clear WTS bit. If it doesn't clear, then this is a 16bit 	 * board. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -3036,7 +3085,7 @@ name|mem_start
 operator|+
 name|memsize
 expr_stmt|;
-comment|/* 	 * We have an entire 8k window to put the transmit buffers on the 	 *	16bit boards. But since the 16bit 3c503's shared memory 	 *	is only fast enough to overlap the loading of one full-size 	 *	packet, trying to load more than 2 buffers can actually 	 *	leave the transmitter idle during the load. So 2 seems 	 *	the best value. (Although a mix of variable-sized packets 	 *	might change this assumption. Nonetheless, we optimize for 	 *	linear transfers of same-size packets.) 	 */
+comment|/* 	 * We have an entire 8k window to put the transmit buffers on the 	 * 16bit boards. But since the 16bit 3c503's shared memory is only 	 * fast enough to overlap the loading of one full-size packet, trying 	 * to load more than 2 buffers can actually leave the transmitter idle 	 * during the load. So 2 seems the best value. (Although a mix of 	 * variable-sized packets might change this assumption. Nonetheless, 	 * we optimize for linear transfers of same-size packets.) 	 */
 if|if
 condition|(
 name|isa16bit
@@ -3147,7 +3196,7 @@ name|isa16bit
 operator|=
 name|isa16bit
 expr_stmt|;
-comment|/* 	 * Initialize GA page start/stop registers. Probably only needed 	 *	if doing DMA, but what the hell. 	 */
+comment|/* 	 * Initialize GA page start/stop registers. Probably only needed if 	 * doing DMA, but what the hell. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -3267,7 +3316,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Initialize GA configuration register. Set bank and enable shared mem. 	 */
+comment|/* 	 * Initialize GA configuration register. Set bank and enable shared 	 * mem. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -3281,7 +3330,7 @@ operator||
 name|ED_3COM_GACFR_MBS0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize "Vector Pointer" registers. These gawd-awful things 	 *	are compared to 20 bits of the address on ISA, and if they 	 *	match, the shared memory is disabled. We set them to 	 *	0xffff0...allegedly the reset vector. 	 */
+comment|/* 	 * Initialize "Vector Pointer" registers. These gawd-awful things are 	 * compared to 20 bits of the address on ISA, and if they match, the 	 * shared memory is disabled. We set them to 0xffff0...allegedly the 	 * reset vector. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -3469,6 +3518,28 @@ name|ED_NOVELL_NIC_OFFSET
 expr_stmt|;
 comment|/* XXX - do Novell-specific probe here */
 comment|/* Reset the board */
+ifdef|#
+directive|ifdef
+name|GWETHER
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_NOVELL_RESET
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* GWETHER */
 name|tmp
 operator|=
 name|inb
@@ -3480,7 +3551,7 @@ operator|+
 name|ED_NOVELL_RESET
 argument_list|)
 expr_stmt|;
-comment|/* 	 * I don't know if this is necessary; probably cruft leftover from 	 *	Clarkson packet driver code. Doesn't do a thing on the boards 	 *	I've tested. -DG [note that a outb(0x84, 0) seems to work 	 *	here, and is non-invasive...but some boards don't seem to reset 	 *	and I don't have complete documentation on what the 'right' 	 *	thing to do is...so we do the invasive thing for now. Yuck.] 	 */
+comment|/* 	 * I don't know if this is necessary; probably cruft leftover from 	 * Clarkson packet driver code. Doesn't do a thing on the boards I've 	 * tested. -DG [note that a outb(0x84, 0) seems to work here, and is 	 * non-invasive...but some boards don't seem to reset and I don't have 	 * complete documentation on what the 'right' thing to do is...so we 	 * do the invasive thing for now. Yuck.] 	 */
 name|outb
 argument_list|(
 name|sc
@@ -3497,7 +3568,7 @@ argument_list|(
 literal|5000
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is needed because some NE clones apparently don't reset the 	 *	NIC properly (or the NIC chip doesn't reset fully on power-up) 	 * XXX - this makes the probe invasive! ...Done against my better 	 *	judgement. -DLG 	 */
+comment|/* 	 * This is needed because some NE clones apparently don't reset the 	 * NIC properly (or the NIC chip doesn't reset fully on power-up) XXX 	 * - this makes the probe invasive! ...Done against my better 	 * judgement. -DLG 	 */
 name|outb
 argument_list|(
 name|sc
@@ -3548,8 +3619,8 @@ name|id_maddr
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Test the ability to read and write to the NIC memory. This has 	 * the side affect of determining if this is an NE1000 or an NE2000. 	 */
-comment|/* 	 * This prevents packets from being stored in the NIC memory when 	 *	the readmem routine turns on the start bit in the CR. 	 */
+comment|/* 	 * Test the ability to read and write to the NIC memory. This has the 	 * side affect of determining if this is an NE1000 or an NE2000. 	 */
+comment|/* 	 * This prevents packets from being stored in the NIC memory when the 	 * readmem routine turns on the start bit in the CR. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -3607,7 +3678,7 @@ name|isa16bit
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Write a test pattern in byte mode. If this fails, then there 	 *	probably isn't any memory at 8k - which likely means 	 *	that the board is an NE2000. 	 */
+comment|/* 	 * Write a test pattern in byte mode. If this fails, then there 	 * probably isn't any memory at 8k - which likely means that the board 	 * is an NE2000. 	 */
 name|ed_pio_writemem
 argument_list|(
 name|sc
@@ -3699,7 +3770,7 @@ name|isa16bit
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * Write a test pattern in word mode. If this also fails, then 		 *	we don't know what this board is. 		 */
+comment|/* 		 * Write a test pattern in word mode. If this also fails, then 		 * we don't know what this board is. 		 */
 name|ed_pio_writemem
 argument_list|(
 name|sc
@@ -3837,7 +3908,427 @@ name|memsize
 operator|/
 name|ED_PAGE_SIZE
 expr_stmt|;
-comment|/* 	 * Use one xmit buffer if< 16k, two buffers otherwise (if not told 	 *	otherwise). 	 */
+ifdef|#
+directive|ifdef
+name|GWETHER
+block|{
+name|int
+name|x
+decl_stmt|,
+name|i
+decl_stmt|,
+name|mstart
+init|=
+literal|0
+decl_stmt|,
+name|msize
+init|=
+literal|0
+decl_stmt|;
+name|char
+name|pbuf0
+index|[
+name|ED_PAGE_SIZE
+index|]
+decl_stmt|,
+name|pbuf
+index|[
+name|ED_PAGE_SIZE
+index|]
+decl_stmt|,
+name|tbuf
+index|[
+name|ED_PAGE_SIZE
+index|]
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ED_PAGE_SIZE
+condition|;
+name|i
+operator|++
+control|)
+name|pbuf0
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Clear all the memory. */
+for|for
+control|(
+name|x
+operator|=
+literal|1
+init|;
+name|x
+operator|<
+literal|256
+condition|;
+name|x
+operator|++
+control|)
+name|ed_pio_writemem
+argument_list|(
+name|sc
+argument_list|,
+name|pbuf0
+argument_list|,
+name|x
+operator|*
+literal|256
+argument_list|,
+name|ED_PAGE_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* Search for the start of RAM. */
+for|for
+control|(
+name|x
+operator|=
+literal|1
+init|;
+name|x
+operator|<
+literal|256
+condition|;
+name|x
+operator|++
+control|)
+block|{
+name|ed_pio_readmem
+argument_list|(
+name|sc
+argument_list|,
+name|x
+operator|*
+literal|256
+argument_list|,
+name|tbuf
+argument_list|,
+name|ED_PAGE_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|memcmp
+argument_list|(
+name|pbuf0
+argument_list|,
+name|tbuf
+argument_list|,
+name|ED_PAGE_SIZE
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ED_PAGE_SIZE
+condition|;
+name|i
+operator|++
+control|)
+name|pbuf
+index|[
+name|i
+index|]
+operator|=
+literal|255
+operator|-
+name|x
+expr_stmt|;
+name|ed_pio_writemem
+argument_list|(
+name|sc
+argument_list|,
+name|pbuf
+argument_list|,
+name|x
+operator|*
+literal|256
+argument_list|,
+name|ED_PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|ed_pio_readmem
+argument_list|(
+name|sc
+argument_list|,
+name|x
+operator|*
+literal|256
+argument_list|,
+name|tbuf
+argument_list|,
+name|ED_PAGE_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|memcmp
+argument_list|(
+name|pbuf
+argument_list|,
+name|tbuf
+argument_list|,
+name|ED_PAGE_SIZE
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|mstart
+operator|=
+name|x
+operator|*
+name|ED_PAGE_SIZE
+expr_stmt|;
+name|msize
+operator|=
+name|ED_PAGE_SIZE
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|mstart
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ed%d: Cannot find start of RAM.\n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/* Search for the start of RAM. */
+for|for
+control|(
+name|x
+operator|=
+operator|(
+name|mstart
+operator|/
+name|ED_PAGE_SIZE
+operator|)
+operator|+
+literal|1
+init|;
+name|x
+operator|<
+literal|256
+condition|;
+name|x
+operator|++
+control|)
+block|{
+name|ed_pio_readmem
+argument_list|(
+name|sc
+argument_list|,
+name|x
+operator|*
+literal|256
+argument_list|,
+name|tbuf
+argument_list|,
+name|ED_PAGE_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|memcmp
+argument_list|(
+name|pbuf0
+argument_list|,
+name|tbuf
+argument_list|,
+name|ED_PAGE_SIZE
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ED_PAGE_SIZE
+condition|;
+name|i
+operator|++
+control|)
+name|pbuf
+index|[
+name|i
+index|]
+operator|=
+literal|255
+operator|-
+name|x
+expr_stmt|;
+name|ed_pio_writemem
+argument_list|(
+name|sc
+argument_list|,
+name|pbuf
+argument_list|,
+name|x
+operator|*
+literal|256
+argument_list|,
+name|ED_PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|ed_pio_readmem
+argument_list|(
+name|sc
+argument_list|,
+name|x
+operator|*
+literal|256
+argument_list|,
+name|tbuf
+argument_list|,
+name|ED_PAGE_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|memcmp
+argument_list|(
+name|pbuf
+argument_list|,
+name|tbuf
+argument_list|,
+name|ED_PAGE_SIZE
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|msize
+operator|+=
+name|ED_PAGE_SIZE
+expr_stmt|;
+else|else
+block|{
+break|break;
+block|}
+block|}
+else|else
+block|{
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|msize
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ed%d: Cannot find any RAM, start : %d, x = %d.\n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
+argument_list|,
+name|mstart
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|printf
+argument_list|(
+literal|"ed%d: RAM start at %d, size : %d.\n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
+argument_list|,
+name|mstart
+argument_list|,
+name|msize
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|mem_size
+operator|=
+name|msize
+expr_stmt|;
+name|sc
+operator|->
+name|mem_start
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|mstart
+expr_stmt|;
+name|sc
+operator|->
+name|mem_end
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|msize
+operator|+
+name|mstart
+operator|)
+expr_stmt|;
+name|sc
+operator|->
+name|tx_page_start
+operator|=
+name|mstart
+operator|/
+name|ED_PAGE_SIZE
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* GWETHER */
+comment|/* 	 * Use one xmit buffer if< 16k, two buffers otherwise (if not told 	 * otherwise). 	 */
 if|if
 condition|(
 operator|(
@@ -3955,6 +4446,31 @@ literal|1
 operator|)
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GWETHER
+if|if
+condition|(
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
+index|[
+literal|2
+index|]
+operator|==
+literal|0x86
+condition|)
+name|sc
+operator|->
+name|type_str
+operator|=
+literal|"Gateway AT"
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* GWETHER */
 comment|/* clear any pending interrupts that might have occurred above */
 name|outb
 argument_list|(
@@ -4091,7 +4607,7 @@ name|if_watchdog
 operator|=
 name|ed_watchdog
 expr_stmt|;
-comment|/* 	 * Set default state for ALTPHYS flag (used to disable the tranceiver 	 *	for AUI operation), based on compile-time config option. 	 */
+comment|/* 	 * Set default state for ALTPHYS flag (used to disable the tranceiver 	 * for AUI operation), based on compile-time config option. 	 */
 if|if
 condition|(
 name|isa_dev
@@ -4127,6 +4643,17 @@ operator||
 name|IFF_NOTRAILERS
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MULTICAST
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_MULTICAST
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Attach the interface 	 */
 name|if_attach
 argument_list|(
@@ -4172,7 +4699,7 @@ name|ifa
 operator|->
 name|ifa_next
 expr_stmt|;
-comment|/* 	 * If we find an AF_LINK type entry we fill in the hardware address. 	 *	This is useful for netstat(1) to keep track of which interface 	 *	is which. 	 */
+comment|/* 	 * If we find an AF_LINK type entry we fill in the hardware address. 	 * This is useful for netstat(1) to keep track of which interface is 	 * which. 	 */
 if|if
 condition|(
 operator|(
@@ -4472,7 +4999,7 @@ name|ED_CR_STP
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Wait for interface to enter stopped state, but limit # of checks 	 *	to 'n' (about 5ms). It shouldn't even take 5us on modern 	 *	DS8390's, but just in case it's an old one. 	 */
+comment|/* 	 * Wait for interface to enter stopped state, but limit # of checks to 	 * 'n' (about 5ms). It shouldn't even take 5us on modern DS8390's, but 	 * just in case it's an old one. 	 */
 while|while
 condition|(
 operator|(
@@ -4551,7 +5078,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize device.   */
+comment|/*  * Initialize device.  */
 end_comment
 
 begin_function
@@ -4610,7 +5137,7 @@ operator|)
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Initialize the NIC in the exact order outlined in the NS manual. 	 *	This init procedure is "mandatory"...don't change what or when 	 *	things happen. 	 */
+comment|/* 	 * Initialize the NIC in the exact order outlined in the NS manual. 	 * This init procedure is "mandatory"...don't change what or when 	 * things happen. 	 */
 name|s
 operator|=
 name|splimp
@@ -4705,7 +5232,7 @@ operator|->
 name|isa16bit
 condition|)
 block|{
-comment|/* 		 * Set FIFO threshold to 8, No auto-init Remote DMA, 		 *	byte order=80x86, word-wide DMA xfers, 		 */
+comment|/* 		 * Set FIFO threshold to 8, No auto-init Remote DMA, byte 		 * order=80x86, word-wide DMA xfers, 		 */
 name|outb
 argument_list|(
 name|sc
@@ -4762,7 +5289,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable reception of broadcast packets 	 */
+comment|/* 	 * For the moment, don't store incoming packets in memory. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -4771,7 +5298,7 @@ name|nic_addr
 operator|+
 name|ED_P0_RCR
 argument_list|,
-name|ED_RCR_AB
+name|ED_RCR_MON
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Place NIC in internal loopback mode 	 */
@@ -4858,7 +5385,7 @@ operator|->
 name|rec_page_start
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Clear all interrupts. A '1' in each bit position clears the 	 *	corresponding flag. 	 */
+comment|/* 	 * Clear all interrupts. A '1' in each bit position clears the 	 * corresponding flag. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -4870,7 +5397,7 @@ argument_list|,
 literal|0xff
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable the following interrupts: receive/transmit complete, 	 *	receive/transmit error, and Receiver OverWrite. 	 * 	 * Counter overflow and Remote DMA complete are *not* enabled. 	 */
+comment|/* 	 * Enable the following interrupts: receive/transmit complete, 	 * receive/transmit error, and Receiver OverWrite. 	 *  	 * Counter overflow and Remote DMA complete are *not* enabled. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -4964,40 +5491,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
-comment|/* 	 * Initialize multicast address hashing registers to accept 	 *	 all multicasts (only used when in promiscuous mode) 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|8
-condition|;
-operator|++
-name|i
-control|)
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P1_MAR0
-operator|+
-name|i
-argument_list|,
-literal|0xff
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Set Current Page pointer to next_packet (initialized above) 	 */
 name|outb
 argument_list|(
@@ -5012,42 +5505,14 @@ operator|->
 name|next_packet
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set Command Register for page 0, Remote DMA complete, 	 * 	and interface Start. 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
-name|outb
+comment|/* 	 * Program Receiver Configuration Register and multicast filter. CR is 	 * set to page 0 on return. 	 */
+name|ed_setrcr
 argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P1_CR
+name|ifp
 argument_list|,
-name|ED_CR_STA
+name|sc
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P1_CR
-argument_list|,
-name|ED_CR_RD2
-operator||
-name|ED_CR_STA
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Take interface out of loopback 	 */
 name|outb
 argument_list|(
@@ -5060,7 +5525,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this is a 3Com board, the tranceiver must be software enabled 	 *	(there is no settable hardware default). 	 */
+comment|/* 	 * If this is a 3Com board, the tranceiver must be software enabled 	 * (there is no settable hardware default). 	 */
 if|if
 condition|(
 name|sc
@@ -5387,7 +5852,7 @@ name|len
 decl_stmt|;
 name|outloop
 label|:
-comment|/* 	 * First, see if there are buffered packets and an idle 	 *	transmitter - should never happen at this point. 	 */
+comment|/* 	 * First, see if there are buffered packets and an idle transmitter - 	 * should never happen at this point. 	 */
 if|if
 condition|(
 name|sc
@@ -5426,7 +5891,7 @@ operator|->
 name|txb_cnt
 condition|)
 block|{
-comment|/* 		 * No room. Indicate this to the outside world 		 *	and exit. 		 */
+comment|/* 		 * No room. Indicate this to the outside world and exit. 		 */
 name|ifp
 operator|->
 name|if_flags
@@ -5456,7 +5921,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	 * We are using the !OACTIVE flag to indicate to the outside 	 * world that we can accept an additional packet rather than 	 * that the transmitter is _actually_ active. Indeed, the 	 * transmitter may be active, but if we haven't filled all 	 * the buffers with data then we still want to accept more. 	 */
+comment|/* 		 * We are using the !OACTIVE flag to indicate to the outside 		 * world that we can accept an additional packet rather than 		 * that the transmitter is _actually_ active. Indeed, the 		 * transmitter may be active, but if we haven't filled all the 		 * buffers with data then we still want to accept more. 		 */
 name|ifp
 operator|->
 name|if_flags
@@ -5510,7 +5975,7 @@ operator|->
 name|vendor
 condition|)
 block|{
-comment|/* 			 * For 16bit 3Com boards (which have 16k of memory), 			 *	we have the xmit buffers in a different page 			 *	of memory ('page 0') - so change pages. 			 */
+comment|/* 				 * For 16bit 3Com boards (which have 16k of 				 * memory), we have the xmit buffers in a 				 * different page of memory ('page 0') - so 				 * change pages. 				 */
 case|case
 name|ED_VENDOR_3COM
 case|:
@@ -5526,7 +5991,7 @@ name|ED_3COM_GACFR_RSEL
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 			 * Enable 16bit access to shared memory on WD/SMC boards 			 *	Don't update wd_laar_proto because we want to restore the 			 *	previous state (because an arp reply in the input code 			 *	may cause a call-back to ed_start) 			 * XXX - the call-back to 'start' is a bug, IMHO. 			 */
+comment|/* 				 * Enable 16bit access to shared memory on 				 * WD/SMC boards Don't update wd_laar_proto 				 * because we want to restore the previous 				 * state (because an arp reply in the input 				 * code may cause a call-back to ed_start) XXX 				 * - the call-back to 'start' is a bug, IMHO. 				 */
 case|case
 name|ED_VENDOR_WD_SMC
 case|:
@@ -5548,14 +6013,6 @@ name|ED_WD_LAAR_M16EN
 operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-literal|0x84
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -5574,23 +6031,7 @@ argument_list|,
 name|ED_WD_MSR_MENB
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-literal|0x84
-argument_list|)
-expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-literal|0x84
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 block|}
@@ -5677,27 +6118,6 @@ case|case
 name|ED_VENDOR_WD_SMC
 case|:
 block|{
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_WD_LAAR
-argument_list|,
-name|sc
-operator|->
-name|wd_laar_proto
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-literal|0x84
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -5716,15 +6136,20 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|inb
+block|}
+name|outb
 argument_list|(
-literal|0x84
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_LAAR
+argument_list|,
+name|sc
+operator|->
+name|wd_laar_proto
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 block|}
@@ -5800,7 +6225,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there is BPF support in the configuration, tap off here. 	 *   The following has support for converting trailer packets 	 *   back to normal. 	 * XXX - support for trailer packets in BPF should be moved into 	 *	the bpf code proper to avoid code duplication in all of 	 *	the drivers. 	 */
+comment|/* 	 * If there is BPF support in the configuration, tap off here. The 	 * following has support for converting trailer packets back to 	 * normal. XXX - support for trailer packets in BPF should be moved 	 * into the bpf code proper to avoid code duplication in all of the 	 * drivers. 	 */
 if|#
 directive|if
 name|NBPFILTER
@@ -5846,7 +6271,7 @@ name|ep
 operator|=
 name|ether_packet
 expr_stmt|;
-comment|/* 		 * We handle trailers below: 		 * Copy ether header first, then residual data, 		 * then data. Put all this in a temporary buffer 		 * 'ether_packet' and send off to bpf. Since the 		 * system has generated this packet, we assume 		 * that all of the offsets in the packet are 		 * correct; if they're not, the system will almost 		 * certainly crash in m_copydata. 		 * We make no assumptions about how the data is 		 * arranged in the mbuf chain (i.e. how much 		 * data is in each mbuf, if mbuf clusters are 		 * used, etc.), which is why we use m_copydata 		 * to get the ether header rather than assume 		 * that this is located in the first mbuf. 		 */
+comment|/* 		 * We handle trailers below: Copy ether header first, then 		 * residual data, then data. Put all this in a temporary 		 * buffer 'ether_packet' and send off to bpf. Since the system 		 * has generated this packet, we assume that all of the 		 * offsets in the packet are correct; if they're not, the 		 * system will almost certainly crash in m_copydata. We make 		 * no assumptions about how the data is arranged in the mbuf 		 * chain (i.e. how much data is in each mbuf, if mbuf clusters 		 * are used, etc.), which is why we use m_copydata to get the 		 * ether header rather than assume that this is located in the 		 * first mbuf. 		 */
 comment|/* copy ether header */
 name|m_copydata
 argument_list|(
@@ -6133,7 +6558,7 @@ name|ED_CR_STA
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * 'sc->next_packet' is the logical beginning of the ring-buffer - i.e. 	 *	it points to where new data has been buffered. The 'CURR' 	 *	(current) register points to the logical end of the ring-buffer 	 *	- i.e. it points to where additional new data will be added. 	 *	We loop here until the logical beginning equals the logical 	 *	end (or in other words, until the ring-buffer is empty). 	 */
+comment|/* 	 * 'sc->next_packet' is the logical beginning of the ring-buffer - 	 * i.e. it points to where new data has been buffered. The 'CURR' 	 * (current) register points to the logical end of the ring-buffer - 	 * i.e. it points to where additional new data will be added. We loop 	 * here until the logical beginning equals the logical end (or in 	 * other words, until the ring-buffer is empty). 	 */
 while|while
 condition|(
 name|sc
@@ -6169,7 +6594,7 @@ operator|)
 operator|*
 name|ED_PAGE_SIZE
 expr_stmt|;
-comment|/* 		 * The byte count includes the FCS - Frame Check Sequence (a 		 *	32 bit CRC). 		 */
+comment|/* 		 * The byte count includes a 4 byte header that was added by 		 * the NIC. 		 */
 if|if
 condition|(
 name|sc
@@ -6227,18 +6652,32 @@ name|ETHER_MAX_LEN
 operator|)
 condition|)
 block|{
-comment|/* 			 * Go get packet. len - 4 removes CRC from length. 			 */
+comment|/* 			 * Go get packet. 			 */
 name|ed_get_packet
 argument_list|(
 name|sc
 argument_list|,
 name|packet_ptr
 operator|+
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ed_ring
+argument_list|)
 argument_list|,
 name|len
 operator|-
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ed_ring
+argument_list|)
+argument_list|,
+name|packet_hdr
+operator|.
+name|rsr
+operator|&
+name|ED_RSR_PHY
 argument_list|)
 expr_stmt|;
 operator|++
@@ -6253,7 +6692,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Really BAD...probably indicates that the ring pointers 			 *	are corrupted. Also seen on early rev chips under 			 *	high load - the byte order of the length gets switched. 			 */
+comment|/* 			 * Really BAD...probably indicates that the ring 			 * pointers are corrupted. Also seen on early rev 			 * chips under high load - the byte order of the 			 * length gets switched. 			 */
 name|log
 argument_list|(
 name|LOG_ERR
@@ -6290,7 +6729,7 @@ name|packet_hdr
 operator|.
 name|next_packet
 expr_stmt|;
-comment|/* 		 * Update NIC boundry pointer - being careful to keep it 		 *	one buffer behind. (as recommended by NS databook) 		 */
+comment|/* 		 * Update NIC boundry pointer - being careful to keep it one 		 * buffer behind. (as recommended by NS databook) 		 */
 name|boundry
 operator|=
 name|sc
@@ -6362,7 +6801,7 @@ argument_list|,
 name|boundry
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Set NIC to page 1 registers before looping to top (prepare to 		 *	get 'CURR' current pointer) 		 */
+comment|/* 		 * Set NIC to page 1 registers before looping to top (prepare 		 * to get 'CURR' current pointer) 		 */
 if|if
 condition|(
 name|sc
@@ -6485,7 +6924,7 @@ name|ED_P0_ISR
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * reset all the bits that we are 'acknowledging' 		 *	by writing a '1' to each bit position that was set 		 * (writing a '1' *clears* the bit) 		 */
+comment|/* 		 * reset all the bits that we are 'acknowledging' by writing a 		 * '1' to each bit position that was set (writing a '1' 		 * *clears* the bit) 		 */
 name|outb
 argument_list|(
 name|sc
@@ -6497,7 +6936,7 @@ argument_list|,
 name|isr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Handle transmitter interrupts. Handle these first 		 *	because the receiver will reset the board under 		 *	some conditions. 		 */
+comment|/* 		 * Handle transmitter interrupts. Handle these first because 		 * the receiver will reset the board under some conditions. 		 */
 if|if
 condition|(
 name|isr
@@ -6523,7 +6962,7 @@ argument_list|)
 operator|&
 literal|0x0f
 decl_stmt|;
-comment|/* 			 * Check for transmit error. If a TX completed with an 			 * error, we end up throwing the packet away. Really 			 * the only error that is possible is excessive 			 * collisions, and in this case it is best to allow the 			 * automatic mechanisms of TCP to backoff the flow. Of 			 * course, with UDP we're screwed, but this is expected 			 * when a network is heavily loaded. 			 */
+comment|/* 			 * Check for transmit error. If a TX completed with an 			 * error, we end up throwing the packet away. Really 			 * the only error that is possible is excessive 			 * collisions, and in this case it is best to allow 			 * the automatic mechanisms of TCP to backoff the 			 * flow. Of course, with UDP we're screwed, but this 			 * is expected when a network is heavily loaded. 			 */
 operator|(
 name|void
 operator|)
@@ -6566,7 +7005,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 					 *    When collisions total 16, the 					 * P0_NCR will indicate 0, and the 					 * TSR_ABT is set. 					 */
+comment|/* 					 * When collisions total 16, the 					 * P0_NCR will indicate 0, and the 					 * TSR_ABT is set. 					 */
 name|collisions
 operator|=
 literal|16
@@ -6585,7 +7024,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Update total number of successfully 				 * 	transmitted packets. 				 */
+comment|/* 				 * Update total number of successfully 				 * transmitted packets. 				 */
 operator|++
 name|sc
 operator|->
@@ -6625,7 +7064,7 @@ name|if_timer
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Add in total number of collisions on last 			 *	transmission. 			 */
+comment|/* 			 * Add in total number of collisions on last 			 * transmission. 			 */
 name|sc
 operator|->
 name|arpcom
@@ -6636,7 +7075,7 @@ name|if_collisions
 operator|+=
 name|collisions
 expr_stmt|;
-comment|/* 			 * Decrement buffer in-use count if not zero (can only 			 *	be zero if a transmitter interrupt occured while 			 *	not actually transmitting). 			 * If data is ready to transmit, start it transmitting, 			 *	otherwise defer until after handling receiver 			 */
+comment|/* 			 * Decrement buffer in-use count if not zero (can only 			 * be zero if a transmitter interrupt occured while 			 * not actually transmitting). If data is ready to 			 * transmit, start it transmitting, otherwise defer 			 * until after handling receiver 			 */
 if|if
 condition|(
 name|sc
@@ -6673,7 +7112,7 @@ name|ED_ISR_OVW
 operator|)
 condition|)
 block|{
-comment|/* 		     * Overwrite warning. In order to make sure that a lockup 		     *	of the local DMA hasn't occurred, we reset and 		     *	re-init the NIC. The NSC manual suggests only a 		     *	partial reset/re-init is necessary - but some 		     *	chips seem to want more. The DMA lockup has been 		     *	seen only with early rev chips - Methinks this 		     *	bug was fixed in later revs. -DG 		     */
+comment|/* 			 * Overwrite warning. In order to make sure that a 			 * lockup of the local DMA hasn't occurred, we reset 			 * and re-init the NIC. The NSC manual suggests only a 			 * partial reset/re-init is necessary - but some chips 			 * seem to want more. The DMA lockup has been seen 			 * only with early rev chips - Methinks this bug was 			 * fixed in later revs. -DG 			 */
 if|if
 condition|(
 name|isr
@@ -6713,7 +7152,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			     * Receiver Error. One or more of: CRC error, frame 			     *	alignment error FIFO overrun, or missed packet. 			     */
+comment|/* 				 * Receiver Error. One or more of: CRC error, 				 * frame alignment error FIFO overrun, or 				 * missed packet. 				 */
 if|if
 condition|(
 name|isr
@@ -6752,8 +7191,8 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 				 * Go get the packet(s) 				 * XXX - Doing this on an error is dubious 				 *    because there shouldn't be any data to 				 *    get (we've configured the interface to 				 *    not accept packets with errors). 				 */
-comment|/* 				 * Enable 16bit access to shared memory first 				 *	on WD/SMC boards. 				 */
+comment|/* 				 * Go get the packet(s) XXX - Doing this on an 				 * error is dubious because there shouldn't be 				 * any data to get (we've configured the 				 * interface to not accept packets with 				 * errors). 				 */
+comment|/* 				 * Enable 16bit access to shared memory first 				 * on WD/SMC boards. 				 */
 if|if
 condition|(
 name|sc
@@ -6786,14 +7225,6 @@ name|ED_WD_LAAR_M16EN
 operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-literal|0x84
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -6810,14 +7241,6 @@ operator|+
 name|ED_WD_MSR
 argument_list|,
 name|ED_WD_MSR_MENB
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-literal|0x84
 argument_list|)
 expr_stmt|;
 block|}
@@ -6843,32 +7266,6 @@ name|ED_VENDOR_WD_SMC
 operator|)
 condition|)
 block|{
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_WD_LAAR
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|wd_laar_proto
-operator|&=
-operator|~
-name|ED_WD_LAAR_M16EN
-operator|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|inb
-argument_list|(
-literal|0x84
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -6887,19 +7284,29 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|inb
+block|}
+name|outb
 argument_list|(
-literal|0x84
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_LAAR
+argument_list|,
+operator|(
+name|sc
+operator|->
+name|wd_laar_proto
+operator|&=
+operator|~
+name|ED_WD_LAAR_M16EN
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 block|}
-block|}
-comment|/* 		 * If it looks like the transmitter can take more data, 		 * 	attempt to start output on the interface. 		 *	This is done after handling the receiver to 		 *	give the receiver priority. 		 */
+comment|/* 		 * If it looks like the transmitter can take more data, 		 * attempt to start output on the interface. This is done 		 * after handling the receiver to give the receiver priority. 		 */
 if|if
 condition|(
 operator|(
@@ -6926,7 +7333,7 @@ operator|.
 name|ac_if
 argument_list|)
 expr_stmt|;
-comment|/* 		 * return NIC CR to standard state: page 0, remote DMA complete, 		 * 	start (toggling the TXP bit off, even if was just set 		 *	in the transmit routine, is *okay* - it is 'edge' 		 *	triggered from low to high) 		 */
+comment|/* 		 * return NIC CR to standard state: page 0, remote DMA 		 * complete, start (toggling the TXP bit off, even if was just 		 * set in the transmit routine, is *okay* - it is 'edge' 		 * triggered from low to high) 		 */
 if|if
 condition|(
 name|sc
@@ -6962,7 +7369,7 @@ name|ED_CR_STA
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If the Network Talley Counters overflow, read them to 		 *	reset them. It appears that old 8390's won't 		 *	clear the ISR flag otherwise - resulting in an 		 *	infinite loop. 		 */
+comment|/* 		 * If the Network Talley Counters overflow, read them to reset 		 * them. It appears that old 8390's won't clear the ISR flag 		 * otherwise - resulting in an infinite loop. 		 */
 if|if
 condition|(
 name|isr
@@ -7125,7 +7532,7 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 comment|/* before arpwhohas */
-comment|/* 			 * See if another station has *our* IP address. 			 * i.e.: There is an address conflict! If a 			 * conflict exists, a message is sent to the 			 * console. 			 */
+comment|/* 			 * See if another station has *our* IP address. i.e.: 			 * There is an address conflict! If a conflict exists, 			 * a message is sent to the console. 			 */
 operator|(
 operator|(
 expr|struct
@@ -7168,7 +7575,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|NS
-comment|/* 		 * XXX - This code is probably wrong 		 */
+comment|/* 			 * XXX - This code is probably wrong 			 */
 case|case
 name|AF_NS
 case|:
@@ -7217,7 +7624,6 @@ operator|)
 expr_stmt|;
 else|else
 block|{
-comment|/*  				 *  				 */
 name|bcopy
 argument_list|(
 operator|(
@@ -7249,7 +7655,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Set new address 			 */
+comment|/* 				 * Set new address 				 */
 name|ed_init
 argument_list|(
 name|ifp
@@ -7360,7 +7766,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * If interface is marked up and it is stopped, then start it 		 */
+comment|/* 			 * If interface is marked up and it is stopped, then 			 * start it 			 */
 if|if
 condition|(
 operator|(
@@ -7396,50 +7802,17 @@ directive|if
 name|NBPFILTER
 operator|>
 literal|0
-if|if
-condition|(
+comment|/* 		 * Promiscuous flag may have changed, so reprogram the RCR. 		 */
+name|ed_setrcr
+argument_list|(
 name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_PROMISC
-condition|)
-block|{
-comment|/* 			 * Set promiscuous mode on interface. 			 *	XXX - for multicasts to work, we would need to 			 *		write 1's in all bits of multicast 			 *		hashing array. For now we assume that 			 *		this was done in ed_init(). 			 */
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P0_RCR
 argument_list|,
-name|ED_RCR_PRO
-operator||
-name|ED_RCR_AM
-operator||
-name|ED_RCR_AB
+name|sc
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 			 * XXX - for multicasts to work, we would need to 			 *	rewrite the multicast hashing array with the 			 *	proper hash (would have been destroyed above). 			 */
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P0_RCR
-argument_list|,
-name|ED_RCR_AB
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
-comment|/* 		 * An unfortunate hack to provide the (required) software control 		 *	of the tranceiver for 3Com boards. The ALTPHYS flag disables 		 *	the tranceiver if set. 		 */
+comment|/* 		 * An unfortunate hack to provide the (required) software 		 * control of the tranceiver for 3Com boards. The ALTPHYS flag 		 * disables the tranceiver if set. 		 */
 if|if
 condition|(
 name|sc
@@ -7486,6 +7859,77 @@ expr_stmt|;
 block|}
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|MULTICAST
+case|case
+name|SIOCADDMULTI
+case|:
+case|case
+name|SIOCDELMULTI
+case|:
+comment|/* 		 * Update out multicast list. 		 */
+name|error
+operator|=
+operator|(
+name|command
+operator|==
+name|SIOCADDMULTI
+operator|)
+condition|?
+name|ether_addmulti
+argument_list|(
+operator|(
+expr|struct
+name|ifreq
+operator|*
+operator|)
+name|data
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|arpcom
+argument_list|)
+else|:
+name|ether_delmulti
+argument_list|(
+operator|(
+expr|struct
+name|ifreq
+operator|*
+operator|)
+name|data
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|arpcom
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|ENETRESET
+condition|)
+block|{
+comment|/* 			 * Multicast list has changed; set the hardware filter 			 * accordingly. 			 */
+name|ed_setrcr
+argument_list|(
+name|ifp
+argument_list|,
+name|sc
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
+break|break;
+endif|#
+directive|endif
 default|default:
 name|error
 operator|=
@@ -7543,6 +7987,8 @@ parameter_list|,
 name|buf
 parameter_list|,
 name|len
+parameter_list|,
+name|multicast
 parameter_list|)
 name|struct
 name|ed_softc
@@ -7555,6 +8001,9 @@ name|buf
 decl_stmt|;
 name|u_short
 name|len
+decl_stmt|;
+name|int
+name|multicast
 decl_stmt|;
 block|{
 name|struct
@@ -7648,7 +8097,7 @@ define|#
 directive|define
 name|EOFF
 value|(EROUND - sizeof(struct ether_header))
-comment|/* 	 * The following assumes there is room for 	 * the ether header in the header mbuf 	 */
+comment|/* 	 * The following assumes there is room for the ether header in the 	 * header mbuf 	 */
 name|head
 operator|->
 name|m_data
@@ -7749,7 +8198,7 @@ operator|->
 name|ether_type
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Deal with trailer protocol: 	 * If trailer protocol, calculate the datasize as 'off', 	 * which is also the offset to the trailer header. 	 * Set resid to the amount of packet data following the 	 * trailer header. 	 * Finally, copy residual data into mbuf chain. 	 */
+comment|/* 	 * Deal with trailer protocol: If trailer protocol, calculate the 	 * datasize as 'off', which is also the offset to the trailer header. 	 * Set resid to the amount of packet data following the trailer 	 * header. Finally, copy residual data into mbuf chain. 	 */
 if|if
 condition|(
 name|etype
@@ -7791,7 +8240,7 @@ goto|goto
 name|bad
 goto|;
 comment|/* insanity */
-comment|/* 		 * If we have shared memory, we can get info directly from the 		 *	stored packet, otherwise we must get a local copy 		 *	of the trailer header using PIO. 		 */
+comment|/* 		 * If we have shared memory, we can get info directly from the 		 * stored packet, otherwise we must get a local copy of the 		 * trailer header using PIO. 		 */
 if|if
 condition|(
 name|sc
@@ -7966,7 +8415,7 @@ literal|4
 expr_stmt|;
 comment|/* subtract trailer header */
 block|}
-comment|/* 	 * Pull packet off interface. Or if this was a trailer packet, 	 * the data portion is appended. 	 */
+comment|/* 	 * Pull packet off interface. Or if this was a trailer packet, the 	 * data portion is appended. 	 */
 name|m
 operator|=
 name|ed_ring_to_mbuf
@@ -7994,7 +8443,7 @@ directive|if
 name|NBPFILTER
 operator|>
 literal|0
-comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf.  	 */
+comment|/* 	 * Check if there's a BPF listener on this interface. If so, hand off 	 * the raw packet to bpf. 	 */
 if|if
 condition|(
 name|sc
@@ -8011,7 +8460,7 @@ argument_list|,
 name|head
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Note that the interface cannot be in promiscuous mode if 		 * there are no BPF listeners.  And if we are in promiscuous 		 * mode, we have to check if this packet is really ours. 		 * 		 * XXX This test does not support multicasts. 		 */
+comment|/* 		 * Note that the interface cannot be in promiscuous mode if 		 * there are no BPF listeners.  And if we are in promiscuous 		 * mode, we have to check if this packet is really ours. 		 */
 if|if
 condition|(
 operator|(
@@ -8048,22 +8497,8 @@ argument_list|)
 operator|!=
 literal|0
 operator|&&
-name|bcmp
-argument_list|(
-name|eh
-operator|->
-name|ether_dhost
-argument_list|,
-name|etherbroadcastaddr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|eh
-operator|->
-name|ether_dhost
-argument_list|)
-argument_list|)
-operator|!=
+name|multicast
+operator|==
 literal|0
 condition|)
 block|{
@@ -8470,7 +8905,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for remote DMA complete. This is necessary because on the 	 *	transmit side, data is handled internally by the NIC in bursts 	 *	and we can't start another remote DMA until this one completes. 	 *	Not waiting causes really bad things to happen - like the NIC 	 *	irrecoverably jamming the ISA bus. 	 */
+comment|/* 	 * Wait for remote DMA complete. This is necessary because on the 	 * transmit side, data is handled internally by the NIC in bursts and 	 * we can't start another remote DMA until this one completes. Not 	 * waiting causes really bad things to happen - like the NIC 	 * irrecoverably jamming the ISA bus. 	 */
 while|while
 condition|(
 operator|(
@@ -8669,7 +9104,7 @@ name|mb_offset
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Transfer the mbuf chain to the NIC memory. 	 * The following code isn't too pretty. The problem is that we can only 	 *	transfer words to the board, and if an mbuf has an odd number 	 *	of bytes in it, this is a problem. It's not a simple matter of 	 *	just removing a byte from the next mbuf (adjusting data++ and 	 *	len--) because this will hose-over the mbuf chain which might 	 *	be needed later for BPF. Instead, we maintain an offset 	 *	(mb_offset) which let's us skip over the first byte in the 	 *	following mbuf. 	 */
+comment|/* 	 * Transfer the mbuf chain to the NIC memory. The following code isn't 	 * too pretty. The problem is that we can only transfer words to the 	 * board, and if an mbuf has an odd number of bytes in it, this is a 	 * problem. It's not a simple matter of just removing a byte from the 	 * next mbuf (adjusting data++ and len--) because this will hose-over 	 * the mbuf chain which might be needed later for BPF. Instead, we 	 * maintain an offset (mb_offset) which let's us skip over the first 	 * byte in the following mbuf. 	 */
 while|while
 condition|(
 name|m
@@ -8731,7 +9166,7 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* 				 * if odd number of bytes, get the odd byte from 				 * the next mbuf with data 				 */
+comment|/* 				 * if odd number of bytes, get the odd byte 				 * from the next mbuf with data 				 */
 if|if
 condition|(
 operator|(
@@ -8797,7 +9232,7 @@ operator|->
 name|m_next
 condition|)
 block|{
-comment|/* remove first byte in next mbuf */
+comment|/* 						 * remove first byte in next 						 * mbuf 						 */
 name|residual
 index|[
 literal|1
@@ -8872,7 +9307,7 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
-comment|/* 	 * Wait for remote DMA complete. This is necessary because on the 	 *	transmit side, data is handled internally by the NIC in bursts 	 *	and we can't start another remote DMA until this one completes. 	 *	Not waiting causes really bad things to happen - like the NIC 	 *	irrecoverably jamming the ISA bus. 	 */
+comment|/* 	 * Wait for remote DMA complete. This is necessary because on the 	 * transmit side, data is handled internally by the NIC in bursts and 	 * we can't start another remote DMA until this one completes. Not 	 * waiting causes really bad things to happen - like the NIC 	 * irrecoverably jamming the ISA bus. 	 */
 while|while
 condition|(
 operator|(
@@ -9146,8 +9581,8 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* no more data in this mbuf, alloc another */
-comment|/* 			 * If there is enough data for an mbuf cluster, attempt 			 * 	to allocate one of those, otherwise, a regular 			 *	mbuf will do. 			 * Note that a regular mbuf is always required, even if 			 *	we get a cluster - getting a cluster does not 			 *	allocate any mbufs, and one is needed to assign 			 *	the cluster to. The mbuf that has a cluster 			 *	extension can not be used to contain data - only 			 *	the cluster can contain data. 			 */
+comment|/* no more data in this mbuf, alloc 					 * another */
+comment|/* 			 * If there is enough data for an mbuf cluster, 			 * attempt to allocate one of those, otherwise, a 			 * regular mbuf will do. Note that a regular mbuf is 			 * always required, even if we get a cluster - getting 			 * a cluster does not allocate any mbufs, and one is 			 * needed to assign the cluster to. The mbuf that has 			 * a cluster extension can not be used to contain data 			 * - only the cluster can contain data. 			 */
 name|dst
 operator|=
 name|m
@@ -9250,6 +9685,749 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function
+name|void
+name|ed_setrcr
+parameter_list|(
+name|ifp
+parameter_list|,
+name|sc
+parameter_list|)
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|struct
+name|ed_softc
+modifier|*
+name|sc
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+comment|/* set page 1 registers */
+if|if
+condition|(
+name|sc
+operator|->
+name|is790
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_CR
+argument_list|,
+name|ED_CR_PAGE_1
+operator||
+name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_CR
+argument_list|,
+name|ED_CR_PAGE_1
+operator||
+name|ED_CR_RD2
+operator||
+name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_PROMISC
+condition|)
+block|{
+comment|/* 		 * Reconfigure the multicast filter. 		 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|8
+condition|;
+name|i
+operator|++
+control|)
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P1_MAR0
+operator|+
+name|i
+argument_list|,
+literal|0xff
+argument_list|)
+expr_stmt|;
+comment|/* 		 * And turn on promiscuous mode. Also enable reception of 		 * runts and packets with CRC& alignment errors. 		 */
+comment|/* Set page 0 registers */
+if|if
+condition|(
+name|sc
+operator|->
+name|is790
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_CR
+argument_list|,
+name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_CR
+argument_list|,
+name|ED_CR_RD2
+operator||
+name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+block|}
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_RCR
+argument_list|,
+name|ED_RCR_PRO
+operator||
+name|ED_RCR_AM
+operator||
+name|ED_RCR_AB
+operator||
+name|ED_RCR_AR
+operator||
+name|ED_RCR_SEP
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+ifndef|#
+directive|ifndef
+name|MULTICAST
+comment|/* 		 * Initialize multicast address hashing registers to not 		 * accept multicasts. 		 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|8
+condition|;
+operator|++
+name|i
+control|)
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P1_MAR0
+operator|+
+name|i
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+comment|/* Set page 0 registers */
+if|if
+condition|(
+name|sc
+operator|->
+name|is790
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_CR
+argument_list|,
+name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_CR
+argument_list|,
+name|ED_CR_RD2
+operator||
+name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+block|}
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_RCR
+argument_list|,
+name|ED_RCR_AB
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* set up multicast addresses and filter modes */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_MULTICAST
+condition|)
+block|{
+name|u_long
+name|mcaf
+index|[
+literal|2
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_ALLMULTI
+condition|)
+block|{
+name|mcaf
+index|[
+literal|0
+index|]
+operator|=
+literal|0xffffffff
+expr_stmt|;
+name|mcaf
+index|[
+literal|1
+index|]
+operator|=
+literal|0xffffffff
+expr_stmt|;
+block|}
+else|else
+name|ds_getmcaf
+argument_list|(
+name|sc
+argument_list|,
+name|mcaf
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Set multicast filter on chip. 			 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|8
+condition|;
+name|i
+operator|++
+control|)
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P1_MAR0
+operator|+
+name|i
+argument_list|,
+operator|(
+operator|(
+name|u_char
+operator|*
+operator|)
+name|mcaf
+operator|)
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* Set page 0 registers */
+if|if
+condition|(
+name|sc
+operator|->
+name|is790
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_CR
+argument_list|,
+name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_CR
+argument_list|,
+name|ED_CR_RD2
+operator||
+name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+block|}
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_RCR
+argument_list|,
+name|ED_RCR_AM
+operator||
+name|ED_RCR_AB
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * Initialize multicast address hashing registers to 			 * not accept multicasts. 			 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|8
+condition|;
+operator|++
+name|i
+control|)
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P1_MAR0
+operator|+
+name|i
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+comment|/* Set page 0 registers */
+if|if
+condition|(
+name|sc
+operator|->
+name|is790
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_CR
+argument_list|,
+name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_CR
+argument_list|,
+name|ED_CR_RD2
+operator||
+name|ED_CR_STP
+argument_list|)
+expr_stmt|;
+block|}
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_RCR
+argument_list|,
+name|ED_RCR_AB
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* MULTICAST */
+block|}
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MULTICAST
+end_ifdef
+
+begin_comment
+comment|/*  * Compute crc for ethernet address  */
+end_comment
+
+begin_function
+name|u_long
+name|ds_crc
+parameter_list|(
+name|ep
+parameter_list|)
+name|u_char
+modifier|*
+name|ep
+decl_stmt|;
+block|{
+define|#
+directive|define
+name|POLYNOMIAL
+value|0x04c11db6
+specifier|register
+name|u_long
+name|crc
+init|=
+literal|0xffffffffL
+decl_stmt|;
+specifier|register
+name|int
+name|carry
+decl_stmt|,
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+specifier|register
+name|u_char
+name|b
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|6
+init|;
+operator|--
+name|i
+operator|>=
+literal|0
+condition|;
+control|)
+block|{
+name|b
+operator|=
+operator|*
+name|ep
+operator|++
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|8
+init|;
+operator|--
+name|j
+operator|>=
+literal|0
+condition|;
+control|)
+block|{
+name|carry
+operator|=
+operator|(
+operator|(
+name|crc
+operator|&
+literal|0x80000000L
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+operator|^
+operator|(
+name|b
+operator|&
+literal|0x01
+operator|)
+expr_stmt|;
+name|crc
+operator|<<=
+literal|1
+expr_stmt|;
+name|b
+operator|>>=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|carry
+condition|)
+name|crc
+operator|=
+operator|(
+operator|(
+name|crc
+operator|^
+name|POLYNOMIAL
+operator|)
+operator||
+name|carry
+operator|)
+expr_stmt|;
+block|}
+block|}
+return|return
+name|crc
+return|;
+undef|#
+directive|undef
+name|POLYNOMIAL
+block|}
+end_function
+
+begin_comment
+comment|/*  * Compute the multicast address filter from the  * list of multicast addresses we need to listen to.  */
+end_comment
+
+begin_function
+name|void
+name|ds_getmcaf
+parameter_list|(
+name|sc
+parameter_list|,
+name|mcaf
+parameter_list|)
+name|struct
+name|ed_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|u_long
+modifier|*
+name|mcaf
+decl_stmt|;
+block|{
+specifier|register
+name|u_int
+name|index
+decl_stmt|;
+specifier|register
+name|u_char
+modifier|*
+name|af
+init|=
+operator|(
+name|u_char
+operator|*
+operator|)
+name|mcaf
+decl_stmt|;
+specifier|register
+name|struct
+name|ether_multi
+modifier|*
+name|enm
+decl_stmt|;
+specifier|register
+name|struct
+name|ether_multistep
+name|step
+decl_stmt|;
+name|mcaf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|mcaf
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|ETHER_FIRST_MULTI
+argument_list|(
+name|step
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|arpcom
+argument_list|,
+name|enm
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|enm
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|enm
+operator|->
+name|enm_addrlo
+argument_list|,
+name|enm
+operator|->
+name|enm_addrhi
+argument_list|,
+literal|6
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|mcaf
+index|[
+literal|0
+index|]
+operator|=
+literal|0xffffffff
+expr_stmt|;
+name|mcaf
+index|[
+literal|1
+index|]
+operator|=
+literal|0xffffffff
+expr_stmt|;
+return|return;
+block|}
+name|index
+operator|=
+name|ds_crc
+argument_list|(
+name|enm
+operator|->
+name|enm_addrlo
+argument_list|,
+literal|6
+argument_list|)
+operator|>>
+literal|26
+expr_stmt|;
+name|af
+index|[
+name|index
+operator|>>
+literal|3
+index|]
+operator||=
+literal|1
+operator|<<
+operator|(
+name|index
+operator|&
+literal|7
+operator|)
+expr_stmt|;
+name|ETHER_NEXT_MULTI
+argument_list|(
+name|step
+argument_list|,
+name|enm
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
