@@ -316,6 +316,19 @@ begin_comment
 comment|/* maximum in-progress async I/O's	*/
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|vnode
+modifier|*
+name|swapdev_vp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX: This is not quite a real vnode */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -969,6 +982,35 @@ operator|=
 name|n
 operator|-
 literal|1
+expr_stmt|;
+name|n
+operator|=
+name|getnewvnode
+argument_list|(
+name|VT_NON
+argument_list|,
+name|NULL
+argument_list|,
+name|spec_vnodeop_p
+argument_list|,
+operator|&
+name|swapdev_vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+condition|)
+name|panic
+argument_list|(
+literal|"Cannot get vnode for swapdev"
+argument_list|)
+expr_stmt|;
+name|swapdev_vp
+operator|->
+name|v_type
+operator|=
+name|VBLK
 expr_stmt|;
 block|}
 end_function
