@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.179 (Berkeley) %G%"
+literal|"@(#)conf.c	8.180 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -12692,11 +12692,14 @@ directive|undef
 name|syslog
 end_undef
 
-begin_function
-name|void
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|__STDC__
+end_ifdef
+
+begin_function
+name|void
 name|hard_syslog
 parameter_list|(
 name|int
