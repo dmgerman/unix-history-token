@@ -139,9 +139,6 @@ name|int
 name|error
 decl_stmt|;
 name|int
-name|wantparent
-decl_stmt|;
-name|int
 name|slotcount
 decl_stmt|;
 name|int
@@ -287,16 +284,6 @@ operator|*
 name|vpp
 operator|=
 name|NULL
-expr_stmt|;
-name|wantparent
-operator|=
-name|flags
-operator|&
-operator|(
-name|LOCKPARENT
-operator||
-name|WANTPARENT
-operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1269,7 +1256,7 @@ name|pmp
 operator|->
 name|pm_rootdirblk
 expr_stmt|;
-comment|/* 	 * If deleting, and at end of pathname, return 	 * parameters which can be used to remove file. 	 * If the wantparent flag isn't set, we return only 	 * the directory (in ndp->ni_dvp), otherwise we go 	 * on and lock the inode, being careful with ".". 	 */
+comment|/* 	 * If deleting, and at end of pathname, return 	 * parameters which can be used to remove file. 	 */
 if|if
 condition|(
 name|nameiop
@@ -1393,8 +1380,6 @@ condition|(
 name|nameiop
 operator|==
 name|RENAME
-operator|&&
-name|wantparent
 operator|&&
 operator|(
 name|flags
