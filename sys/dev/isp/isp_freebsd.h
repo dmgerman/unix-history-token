@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $Id: isp_freebsd.h,v 1.9 1998/04/17 17:09:29 mjacob Exp $ */
+comment|/* $Id: isp_freebsd.h,v 1.1 1998/04/22 17:54:52 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -101,11 +101,27 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<osreldate.h>
-end_include
+begin_comment
+comment|/*  * Quick hack fix to get around osreldate.h not being present.  * #include<osreldate.h>  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD_version
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__FreeBSD_version
+value|300002
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
