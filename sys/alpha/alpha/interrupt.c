@@ -382,6 +382,9 @@ condition|(
 name|a0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
 case|case
 name|ALPHA_INTR_XPROC
 case|:
@@ -402,6 +405,8 @@ argument_list|)
 expr_stmt|;
 comment|/* note: lock not taken */
 break|break;
+endif|#
+directive|endif
 case|case
 name|ALPHA_INTR_CLOCK
 case|:
@@ -417,7 +422,7 @@ if|if
 condition|(
 name|PCPU_GET
 argument_list|(
-name|cpuno
+name|cpuid
 argument_list|)
 operator|!=
 name|hwrpb
@@ -2240,6 +2245,7 @@ condition|)
 block|{
 name|KASSERT
 argument_list|(
+operator|(
 name|ithd
 operator|->
 name|it_ih
@@ -2247,6 +2253,7 @@ operator|->
 name|ih_flags
 operator|&
 name|INTR_FAST
+operator|)
 operator|!=
 literal|0
 argument_list|,
