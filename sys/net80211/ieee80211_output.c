@@ -577,7 +577,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX statistic */
+name|ic
+operator|->
+name|ic_stats
+operator|.
+name|is_tx_nombuf
+operator|++
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
@@ -665,6 +671,13 @@ name|ether_dhost
 argument_list|)
 operator|)
 argument_list|)
+expr_stmt|;
+name|ic
+operator|->
+name|ic_stats
+operator|.
+name|is_tx_nonode
+operator|++
 expr_stmt|;
 goto|goto
 name|bad
@@ -797,9 +810,18 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
+name|ic
+operator|->
+name|ic_stats
+operator|.
+name|is_tx_nombuf
+operator|++
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|wh
 operator|=
 name|mtod
@@ -1355,8 +1377,10 @@ directive|define
 name|senderr
 parameter_list|(
 name|_x
+parameter_list|,
+name|_v
 parameter_list|)
-value|do { ret = _x; goto bad; } while (0)
+value|do { ic->ic_stats._v++; ret = _x; goto bad; } while (0)
 name|struct
 name|ifnet
 modifier|*
@@ -1462,6 +1486,8 @@ condition|)
 name|senderr
 argument_list|(
 name|ENOMEM
+argument_list|,
+name|is_tx_nombuf
 argument_list|)
 expr_stmt|;
 name|m
@@ -1627,6 +1653,8 @@ condition|)
 name|senderr
 argument_list|(
 name|ENOMEM
+argument_list|,
+name|is_tx_nombuf
 argument_list|)
 expr_stmt|;
 name|m
@@ -2033,6 +2061,8 @@ condition|)
 name|senderr
 argument_list|(
 name|ENOMEM
+argument_list|,
+name|is_tx_nombuf
 argument_list|)
 expr_stmt|;
 name|MH_ALIGN
@@ -2172,6 +2202,8 @@ condition|)
 name|senderr
 argument_list|(
 name|ENOMEM
+argument_list|,
+name|is_tx_nombuf
 argument_list|)
 expr_stmt|;
 name|MH_ALIGN
@@ -2264,6 +2296,8 @@ condition|)
 name|senderr
 argument_list|(
 name|ENOMEM
+argument_list|,
+name|is_tx_nombuf
 argument_list|)
 expr_stmt|;
 name|m
@@ -2527,6 +2561,8 @@ condition|)
 name|senderr
 argument_list|(
 name|ENOMEM
+argument_list|,
+name|is_tx_nombuf
 argument_list|)
 expr_stmt|;
 name|m
@@ -2733,6 +2769,8 @@ condition|)
 name|senderr
 argument_list|(
 name|ENOMEM
+argument_list|,
+name|is_tx_nombuf
 argument_list|)
 expr_stmt|;
 name|MH_ALIGN
@@ -2785,6 +2823,8 @@ expr_stmt|;
 name|senderr
 argument_list|(
 name|EINVAL
+argument_list|,
+name|is_tx_unknownmgt
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */

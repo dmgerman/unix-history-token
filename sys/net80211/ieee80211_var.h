@@ -34,6 +34,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_ioctl.h>
+end_include
+
+begin_comment
+comment|/* for ieee80211_stats */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_node.h>
 end_include
 
@@ -841,6 +851,11 @@ name|u_int32_t
 name|ic_iv
 decl_stmt|;
 comment|/* initial vector for wep */
+name|struct
+name|ieee80211_stats
+name|ic_stats
+decl_stmt|;
+comment|/* statistics */
 block|}
 struct|;
 end_struct

@@ -19,6 +19,178 @@ begin_comment
 comment|/*  * IEEE 802.11 ioctls.  */
 end_comment
 
+begin_struct
+struct|struct
+name|ieee80211_stats
+block|{
+name|u_int32_t
+name|is_rx_badversion
+decl_stmt|;
+comment|/* rx frame with bad version */
+name|u_int32_t
+name|is_rx_tooshort
+decl_stmt|;
+comment|/* rx frame too short */
+name|u_int32_t
+name|is_rx_wrongbss
+decl_stmt|;
+comment|/* rx from wrong bssid */
+name|u_int32_t
+name|is_rx_dup
+decl_stmt|;
+comment|/* rx discard 'cuz dup */
+name|u_int32_t
+name|is_rx_wrongdir
+decl_stmt|;
+comment|/* rx w/ wrong direction */
+name|u_int32_t
+name|is_rx_mcastecho
+decl_stmt|;
+comment|/* rx discard 'cuz mcast echo */
+name|u_int32_t
+name|is_rx_notassoc
+decl_stmt|;
+comment|/* rx discard 'cuz sta !assoc */
+name|u_int32_t
+name|is_rx_nowep
+decl_stmt|;
+comment|/* rx w/ wep but wep !config */
+name|u_int32_t
+name|is_rx_wepfail
+decl_stmt|;
+comment|/* rx wep processing failed */
+name|u_int32_t
+name|is_rx_decap
+decl_stmt|;
+comment|/* rx decapsulation failed */
+name|u_int32_t
+name|is_rx_mgtdiscard
+decl_stmt|;
+comment|/* rx discard mgt frames */
+name|u_int32_t
+name|is_rx_ctl
+decl_stmt|;
+comment|/* rx discard ctrl frames */
+name|u_int32_t
+name|is_rx_rstoobig
+decl_stmt|;
+comment|/* rx rate set truncated */
+name|u_int32_t
+name|is_rx_elem_missing
+decl_stmt|;
+comment|/* rx required element missing*/
+name|u_int32_t
+name|is_rx_elem_toobig
+decl_stmt|;
+comment|/* rx element too big */
+name|u_int32_t
+name|is_rx_elem_toosmall
+decl_stmt|;
+comment|/* rx element too small */
+name|u_int32_t
+name|is_rx_elem_unknown
+decl_stmt|;
+comment|/* rx element unknown */
+name|u_int32_t
+name|is_rx_badchan
+decl_stmt|;
+comment|/* rx frame w/ invalid chan */
+name|u_int32_t
+name|is_rx_chanmismatch
+decl_stmt|;
+comment|/* rx frame chan mismatch */
+name|u_int32_t
+name|is_rx_nodealloc
+decl_stmt|;
+comment|/* rx frame dropped */
+name|u_int32_t
+name|is_rx_ssidmismatch
+decl_stmt|;
+comment|/* rx frame ssid mismatch  */
+name|u_int32_t
+name|is_rx_auth_unsupported
+decl_stmt|;
+comment|/* rx w/ unsupported auth alg */
+name|u_int32_t
+name|is_rx_auth_fail
+decl_stmt|;
+comment|/* rx sta auth failure */
+name|u_int32_t
+name|is_rx_assoc_bss
+decl_stmt|;
+comment|/* rx assoc from wrong bssid */
+name|u_int32_t
+name|is_rx_assoc_notauth
+decl_stmt|;
+comment|/* rx assoc w/o auth */
+name|u_int32_t
+name|is_rx_assoc_capmismatch
+decl_stmt|;
+comment|/* rx assoc w/ cap mismatch */
+name|u_int32_t
+name|is_rx_assoc_norate
+decl_stmt|;
+comment|/* rx assoc w/ no rate match */
+name|u_int32_t
+name|is_rx_deauth
+decl_stmt|;
+comment|/* rx deauthentication */
+name|u_int32_t
+name|is_rx_disassoc
+decl_stmt|;
+comment|/* rx disassociation */
+name|u_int32_t
+name|is_rx_badsubtype
+decl_stmt|;
+comment|/* rx frame w/ unknown subtype*/
+name|u_int32_t
+name|is_rx_nombuf
+decl_stmt|;
+comment|/* rx failed for lack of mbuf */
+name|u_int32_t
+name|is_rx_decryptcrc
+decl_stmt|;
+comment|/* rx decrypt failed on crc */
+name|u_int32_t
+name|is_rx_ahdemo_mgt
+decl_stmt|;
+comment|/* rx discard ahdemo mgt frame*/
+name|u_int32_t
+name|is_rx_bad_auth
+decl_stmt|;
+comment|/* rx bad auth request */
+name|u_int32_t
+name|is_tx_nombuf
+decl_stmt|;
+comment|/* tx failed for lack of mbuf */
+name|u_int32_t
+name|is_tx_nonode
+decl_stmt|;
+comment|/* tx failed for no node */
+name|u_int32_t
+name|is_tx_unknownmgt
+decl_stmt|;
+comment|/* tx of unknown mgt frame */
+name|u_int32_t
+name|is_scan_active
+decl_stmt|;
+comment|/* active scans started */
+name|u_int32_t
+name|is_scan_passive
+decl_stmt|;
+comment|/* passive scans started */
+name|u_int32_t
+name|is_node_timeout
+decl_stmt|;
+comment|/* nodes timed out inactivity */
+name|u_int32_t
+name|is_crypto_nomem
+decl_stmt|;
+comment|/* no memory for crypto ctx */
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -254,6 +426,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SIOCG80211STATS
+value|_IOWR('i', 236, struct ifreq)
+end_define
 
 begin_endif
 endif|#
