@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Source: /home/ncvs/src/usr.bin/netstat/iso.c,v $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment
