@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cat.c	5.8 (Berkeley) %G%"
+literal|"@(#)cat.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,7 +152,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-benstuv"
+literal|"benstuv"
 argument_list|)
 operator|)
 operator|!=
@@ -163,15 +163,6 @@ condition|(
 name|ch
 condition|)
 block|{
-case|case
-literal|'-'
-case|:
-operator|--
-name|optind
-expr_stmt|;
-goto|goto
-name|done
-goto|;
 case|case
 literal|'b'
 case|:
@@ -263,8 +254,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|done
-label|:
 name|argv
 operator|+=
 name|optind
