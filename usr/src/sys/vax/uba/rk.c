@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.48	82/10/17	*/
+comment|/*	rk.c	4.49	82/10/17	*/
 end_comment
 
 begin_include
@@ -2413,11 +2413,6 @@ name|sc
 operator|->
 name|sc_softas
 decl_stmt|;
-name|int
-name|needie
-init|=
-literal|1
-decl_stmt|;
 name|sc
 operator|->
 name|sc_wticks
@@ -3228,8 +3223,6 @@ if|if
 condition|(
 operator|(
 operator|(
-name|needie
-operator|=
 name|rkaddr
 operator|->
 name|rkcs1

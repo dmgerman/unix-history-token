@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.51	82/10/17	*/
+comment|/*	uba.c	4.52	82/10/17	*/
 end_comment
 
 begin_include
@@ -495,8 +495,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|temp
-decl_stmt|,
-name|i
 decl_stmt|;
 name|int
 name|npf
@@ -2527,9 +2525,21 @@ argument|addr
 argument_list|,
 argument|size
 argument_list|,
-argument|alloc
+argument|doalloc
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|uban
+decl_stmt|,
+name|addr
+decl_stmt|,
+name|size
+decl_stmt|,
+name|doalloc
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2560,7 +2570,7 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-name|alloc
+name|doalloc
 condition|)
 block|{
 name|s

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	idc.c	4.7	82/10/17	*/
+comment|/*	idc.c	4.8	82/10/17	*/
 end_comment
 
 begin_include
@@ -59,7 +59,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{*trp++ = (int)a; *trp++ = (int)b; if(trp>&idctrb[998])trp=idctrb;}
+value|{*trp++ = *(int*)a; *trp++ = (int)b; if(trp>&idctrb[998])trp=idctrb;}
 end_define
 
 begin_comment
@@ -608,6 +608,10 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|idcprobe
 argument_list|(
@@ -713,6 +717,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|idcslave
@@ -883,6 +891,15 @@ operator|->
 name|idcmpr
 expr_stmt|;
 comment|/* read header word 2 */
+ifdef|#
+directive|ifdef
+name|lint
+name|i
+operator|=
+name|i
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|idcaddr
@@ -1304,7 +1321,7 @@ argument_list|()
 expr_stmt|;
 name|trace
 argument_list|(
-literal|'strt'
+literal|"strt"
 argument_list|,
 name|bp
 argument_list|)
@@ -1337,7 +1354,7 @@ condition|)
 block|{
 name|trace
 argument_list|(
-literal|'!act'
+literal|"!act"
 argument_list|,
 name|dp
 argument_list|)
@@ -1504,7 +1521,7 @@ name|ui_slave
 expr_stmt|;
 name|trace
 argument_list|(
-literal|'ust'
+literal|"ust"
 argument_list|,
 name|dp
 argument_list|)
@@ -1539,7 +1556,7 @@ name|unit
 expr_stmt|;
 name|trace
 argument_list|(
-literal|'umac'
+literal|"umac"
 argument_list|,
 name|idc_softc
 operator|.
@@ -1567,7 +1584,7 @@ condition|)
 block|{
 name|trace
 argument_list|(
-literal|'!bp'
+literal|"!bp"
 argument_list|,
 literal|0
 argument_list|)
@@ -1587,7 +1604,7 @@ condition|)
 block|{
 name|trace
 argument_list|(
-literal|'dpac'
+literal|"dpac"
 argument_list|,
 name|dp
 operator|->
@@ -1614,7 +1631,7 @@ argument_list|)
 expr_stmt|;
 name|trace
 argument_list|(
-literal|'seek'
+literal|"seek"
 argument_list|,
 name|bn
 argument_list|)
@@ -1960,7 +1977,7 @@ condition|)
 block|{
 name|trace
 argument_list|(
-literal|'!=2'
+literal|"!=2"
 argument_list|,
 name|dp
 operator|->
@@ -1995,7 +2012,7 @@ else|else
 block|{
 name|trace
 argument_list|(
-literal|'!NUL'
+literal|"!NUL"
 argument_list|,
 name|um
 operator|->
@@ -2114,7 +2131,7 @@ condition|)
 block|{
 name|trace
 argument_list|(
-literal|'nodp'
+literal|"nodp"
 argument_list|,
 name|um
 argument_list|)
@@ -2140,7 +2157,7 @@ condition|)
 block|{
 name|trace
 argument_list|(
-literal|'nobp'
+literal|"nobp"
 argument_list|,
 name|dp
 argument_list|)
@@ -2186,7 +2203,7 @@ argument_list|)
 expr_stmt|;
 name|trace
 argument_list|(
-literal|'star'
+literal|"star"
 argument_list|,
 name|bp
 argument_list|)
@@ -2596,7 +2613,7 @@ name|um_cmd
 expr_stmt|;
 name|trace
 argument_list|(
-literal|'go'
+literal|"go"
 argument_list|,
 name|um
 argument_list|)
@@ -2713,7 +2730,7 @@ literal|0
 expr_stmt|;
 name|trace
 argument_list|(
-literal|'intr'
+literal|"intr"
 argument_list|,
 name|um
 operator|->
@@ -3456,13 +3473,14 @@ name|av_forw
 expr_stmt|;
 name|trace
 argument_list|(
-literal|'done'
+literal|"done"
 argument_list|,
 name|dp
 argument_list|)
 expr_stmt|;
 name|trace
 argument_list|(
+operator|&
 name|um
 operator|->
 name|um_tab
@@ -3655,7 +3673,7 @@ literal|0
 expr_stmt|;
 name|trace
 argument_list|(
-literal|'as'
+literal|"as"
 argument_list|,
 name|as
 argument_list|)
@@ -3793,7 +3811,7 @@ condition|)
 block|{
 name|trace
 argument_list|(
-literal|'stum'
+literal|"stum"
 argument_list|,
 name|um
 operator|->
@@ -3816,7 +3834,7 @@ name|idcwait
 argument_list|(
 name|addr
 argument_list|,
-name|cnt
+name|n
 argument_list|)
 specifier|register
 expr|struct
@@ -3829,7 +3847,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|register
 name|int
-name|cnt
+name|n
 decl_stmt|;
 end_decl_stmt
 
@@ -3842,7 +3860,7 @@ decl_stmt|;
 while|while
 condition|(
 operator|--
-name|cnt
+name|n
 operator|&&
 operator|(
 name|addr
@@ -3868,7 +3886,7 @@ control|)
 empty_stmt|;
 return|return
 operator|(
-name|cnt
+name|n
 operator|)
 return|;
 block|}
@@ -4671,6 +4689,10 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|idcdump

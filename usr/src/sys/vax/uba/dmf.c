@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	4.10	82/10/17	*/
+comment|/*	dmf.c	4.11	82/10/17	*/
 end_comment
 
 begin_include
@@ -2386,20 +2386,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-specifier|register
-name|int
-name|dmf
-init|=
-name|unit
-operator|>>
-literal|3
-decl_stmt|;
-specifier|register
-name|struct
-name|device
-modifier|*
-name|dmfaddr
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3299,10 +3285,6 @@ name|addr
 decl_stmt|;
 specifier|register
 name|int
-name|car
-decl_stmt|,
-name|dmf
-decl_stmt|,
 name|unit
 decl_stmt|,
 name|nch
@@ -3318,12 +3300,6 @@ name|tp
 operator|->
 name|t_dev
 argument_list|)
-expr_stmt|;
-name|dmf
-operator|=
-name|unit
-operator|>>
-literal|3
 expr_stmt|;
 name|unit
 operator|&=

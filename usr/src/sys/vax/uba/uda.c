@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.11	82/10/17	*/
+comment|/*	uda.c	4.12	82/10/17	*/
 end_comment
 
 begin_include
@@ -111,41 +111,6 @@ directive|include
 file|"../vaxuba/ubavar.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../vaxuba/udareg.h"
-end_include
-
-begin_decl_stmt
-name|int
-name|udadebug
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|printd
-value|if(udadebug&1)printf
-end_define
-
-begin_decl_stmt
-name|int
-name|udaerror
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set to cause hex dump of error log packets */
-end_comment
-
-begin_comment
-comment|/*  * Parameters for the communications area  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -181,6 +146,37 @@ directive|define
 name|NCMD
 value|(1<<NCMDL2)
 end_define
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/udareg.h"
+end_include
+
+begin_decl_stmt
+name|int
+name|udadebug
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|printd
+value|if(udadebug&1)printf
+end_define
+
+begin_decl_stmt
+name|int
+name|udaerror
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set to cause hex dump of error log packets */
+end_comment
 
 begin_include
 include|#

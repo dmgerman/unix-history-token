@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn.c	4.9	82/10/17	*/
+comment|/*	dn.c	4.10	82/10/17	*/
 end_comment
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"../h/ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/uio.h"
 end_include
 
 begin_include
@@ -348,7 +354,28 @@ operator|*
 operator|)
 name|reg
 decl_stmt|;
-comment|/* 	 * If there's at least one dialer out there it better be 	 *  at chassis 0. 	 */
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+literal|0
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * If there's at least one dialer out there it better be 	 * at chassis 0. 	 */
 name|dnaddr
 operator|->
 name|dn_reg
@@ -387,6 +414,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|dnattach
@@ -674,7 +705,7 @@ modifier|*
 name|dp
 decl_stmt|;
 name|char
-name|buf
+name|obuf
 index|[
 name|OBUFSIZ
 index|]
@@ -733,7 +764,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|buf
+name|obuf
 expr_stmt|;
 name|error
 operator|=
