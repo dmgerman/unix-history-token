@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcivar.h,v 1.10 1996/03/19 15:02:58 bde Exp $ ** **  Declarations for pci device drivers. ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcivar.h,v 1.11 1996/09/06 23:09:01 phk Exp $ ** **  Declarations for pci device drivers. ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_ifndef
@@ -122,12 +122,6 @@ begin_comment
 comment|/*----------------------------------------------------------------- ** **	The pci driver structure. ** **	name:	The short device name. ** **	probe:	Checks if the driver can support a device **		with this type. The tag may be used to get **		more info with pci_read_conf(). See below. **		It returns a string with the devices name, **		or a NULL pointer, if the driver cannot **		support this device. ** **	attach:	Allocate a control structure and prepare **		it. This function may use the pci mapping **		functions. See below. **		(configuration id) or type. ** **	count:	A pointer to a unit counter. **		It's used by the pci configurator to **		allocate unit numbers. ** **----------------------------------------------------------------- */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|kern_devconf
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|pci_device
@@ -241,38 +235,6 @@ name|pi_dummy
 decl_stmt|;
 name|u_char
 name|pi_unit
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|PCI_EXT_CONF_LEN
-value|(16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_EXTERNAL_LEN
-value|(sizeof(struct pci_externalize_buffer))
-end_define
-
-begin_struct
-struct|struct
-name|pci_externalize_buffer
-block|{
-name|struct
-name|pci_info
-name|peb_pci_info
-decl_stmt|;
-name|u_long
-name|peb_config
-index|[
-name|PCI_EXT_CONF_LEN
-index|]
 decl_stmt|;
 block|}
 struct|;
