@@ -913,7 +913,7 @@ expr|*
 name|dl
 argument_list|)
 expr_stmt|;
-comment|/*      * Compile the driver's methods.      */
+comment|/*      * Compile the driver's methods. Also increase the reference count      * so that the class doesn't get freed when the last instance      * goes. This means we can safely use static methods and avoids a      * double-free in devclass_delete_driver.      */
 name|kobj_class_compile
 argument_list|(
 operator|(
@@ -4475,11 +4475,6 @@ name|driver
 operator|->
 name|size
 argument_list|)
-expr_stmt|;
-name|driver
-operator|->
-name|refs
-operator|++
 expr_stmt|;
 block|}
 else|else
@@ -8929,15 +8924,6 @@ block|{
 name|device_t
 name|child
 decl_stmt|;
-comment|/*      * Make sure the class has a valid ops table.      */
-name|kobj_class_compile
-argument_list|(
-operator|(
-name|kobj_class_t
-operator|)
-name|driver
-argument_list|)
-expr_stmt|;
 name|DEVICE_IDENTIFY
 argument_list|(
 name|driver

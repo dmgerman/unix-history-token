@@ -140,10 +140,6 @@ modifier|*
 name|priv
 decl_stmt|;
 comment|/* driver private data */
-name|int
-name|refs
-decl_stmt|;
-comment|/* # devclasses containing driver */
 block|}
 struct|;
 end_struct

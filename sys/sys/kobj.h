@@ -111,8 +111,8 @@ value|\ 	kobj_method_t	*methods;
 comment|/* method table */
 value|\ 	size_t		size;
 comment|/* object size */
-value|\ 	u_int		instances;
-comment|/* instance count */
+value|\ 	u_int		refs;
+comment|/* reference count */
 value|\ 	kobj_ops_t	ops
 end_define
 

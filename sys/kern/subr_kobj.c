@@ -573,7 +573,7 @@ name|ops
 expr_stmt|;
 name|cls
 operator|->
-name|instances
+name|refs
 operator|++
 expr_stmt|;
 block|}
@@ -604,7 +604,7 @@ decl_stmt|;
 comment|/* 	 * Consider freeing the compiled method table for the class 	 * after its last instance is deleted. As an optimisation, we 	 * should defer this for a short while to avoid thrashing. 	 */
 name|cls
 operator|->
-name|instances
+name|refs
 operator|--
 expr_stmt|;
 if|if
@@ -612,7 +612,7 @@ condition|(
 operator|!
 name|cls
 operator|->
-name|instances
+name|refs
 condition|)
 name|kobj_class_free
 argument_list|(
