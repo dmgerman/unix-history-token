@@ -2349,7 +2349,7 @@ literal|"ad"
 block|,
 literal|"da"
 block|,
-literal|"wfd"
+literal|"afd"
 block|,
 literal|"fla"
 block|,
@@ -2358,6 +2358,8 @@ block|,
 literal|"mlxd"
 block|,
 literal|"amrd"
+block|,
+literal|"fd"
 block|,
 literal|0
 block|}
