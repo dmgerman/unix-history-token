@@ -537,13 +537,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* This is actually used with radix [2..36] */
+end_comment
+
 begin_decl_stmt
 name|char
 specifier|const
 name|hex2ascii_data
 index|[]
 init|=
-literal|"0123456789abcdef"
+literal|"0123456789abcdefghijklmnopqrstuvwxyz"
 decl_stmt|;
 end_decl_stmt
 
