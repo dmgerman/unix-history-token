@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	4.11 %G%"
+literal|"@(#)trpt.c	4.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -706,13 +706,6 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"tcp_debx=%d\n"
-argument_list|,
-name|tcp_debx
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -998,12 +991,12 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|tcp_debx
+operator|%
+name|TCP_NDEBUG
 init|;
 name|i
 operator|<
-name|tcp_debx
-operator|%
 name|TCP_NDEBUG
 condition|;
 name|i
@@ -1072,12 +1065,12 @@ for|for
 control|(
 name|i
 operator|=
-name|tcp_debx
-operator|%
-name|TCP_NDEBUG
+literal|0
 init|;
 name|i
 operator|<
+name|tcp_debx
+operator|%
 name|TCP_NDEBUG
 condition|;
 name|i
