@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)type.c 1.8.1.1 %G%"
+literal|"@(#)type.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,16 +313,7 @@ directive|ifndef
 name|PI0
 name|enter
 argument_list|(
-name|defnl
-argument_list|(
-name|tid
-argument_list|,
-name|TYPE
-argument_list|,
-name|np
-argument_list|,
-literal|0
-argument_list|)
+name|tnp
 argument_list|)
 operator|->
 name|nl_flags
@@ -339,16 +330,7 @@ name|void
 operator|)
 name|enter
 argument_list|(
-name|defnl
-argument_list|(
-name|tid
-argument_list|,
-name|TYPE
-argument_list|,
-name|np
-argument_list|,
-literal|0
-argument_list|)
+name|tnp
 argument_list|)
 expr_stmt|;
 name|send
