@@ -1303,11 +1303,6 @@ name|int
 name|aio_fphysio
 parameter_list|(
 name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
 name|aiocblist
 modifier|*
 name|aiocbe
@@ -2343,8 +2338,6 @@ name|error
 operator|=
 name|aio_fphysio
 argument_list|(
-name|p
-argument_list|,
 name|aiocbe
 argument_list|)
 operator|)
@@ -5620,11 +5613,6 @@ specifier|static
 name|int
 name|aio_fphysio
 parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
 name|struct
 name|aiocblist
 modifier|*
