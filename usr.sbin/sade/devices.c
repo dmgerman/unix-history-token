@@ -87,6 +87,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libdisk.h>
+end_include
+
 begin_comment
 comment|/* how much to bias minor number for a given /dev/<ct#><un#>s<s#> slice */
 end_comment
