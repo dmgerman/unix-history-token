@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: throughput.c,v 1.1 1997/11/18 14:52:07 brian Exp $  */
 end_comment
 
 begin_include
@@ -30,6 +30,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"timer.h"
 end_include
 
@@ -54,25 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"command.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"log.h"
 end_include
 
 begin_function
@@ -427,12 +427,23 @@ specifier|static
 name|void
 name|throughput_sampler
 parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|)
+block|{
 name|struct
 name|pppThroughput
 modifier|*
 name|t
-parameter_list|)
-block|{
+init|=
+operator|(
+expr|struct
+name|pppThroughput
+operator|*
+operator|)
+name|v
+decl_stmt|;
 name|u_long
 name|old
 decl_stmt|;

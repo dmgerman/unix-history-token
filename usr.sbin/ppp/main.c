@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.103 1997/11/18 07:33:23 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.104 1997/11/18 18:17:25 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -63,11 +63,22 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<net/if_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -145,6 +156,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"command.h"
 end_include
 
 begin_include
@@ -228,12 +245,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"command.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vars.h"
 end_include
 
@@ -307,6 +318,12 @@ begin_include
 include|#
 directive|include
 file|"tun.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"route.h"
 end_include
 
 begin_ifndef
@@ -426,6 +443,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ex_desc
@@ -1056,7 +1074,10 @@ begin_function
 specifier|static
 name|void
 name|TerminalCont
-parameter_list|()
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
 block|{
 name|pending_signal
 argument_list|(
@@ -1197,6 +1218,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ex_desc
@@ -1213,6 +1235,7 @@ literal|12
 index|]
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|desc
@@ -1293,13 +1316,22 @@ begin_function
 specifier|static
 name|void
 name|Usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: ppp [-auto | -background | -direct | -dedicated | -ddial ] [ -alias ] [system]\n"
+literal|"Usage: ppp [-auto | -background | -direct | -dedicated | -ddial ]"
+ifndef|#
+directive|ifndef
+name|NOALIAS
+literal|" [ -alias ]"
+endif|#
+directive|endif
+literal|" [system]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1473,6 +1505,9 @@ operator|&=
 operator|~
 name|MODE_INTER
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NOALIAS
 block|}
 elseif|else
 if|if
@@ -1513,6 +1548,8 @@ name|optc
 operator|--
 expr_stmt|;
 comment|/* this option isn't exclusive */
+endif|#
+directive|endif
 block|}
 else|else
 name|Usage
@@ -1586,7 +1623,9 @@ begin_function
 specifier|static
 name|void
 name|Greetings
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2658,7 +2697,9 @@ begin_function
 specifier|static
 name|void
 name|ShowHelp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -2723,7 +2764,9 @@ begin_function
 specifier|static
 name|void
 name|ReadTty
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|n
@@ -2985,7 +3028,9 @@ argument_list|)
 condition|)
 block|{
 name|ShowMemMap
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -3029,6 +3074,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|FrameHeaders
@@ -3052,6 +3098,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+specifier|const
 name|u_char
 modifier|*
 name|HdlcDetect
@@ -3064,6 +3111,7 @@ name|int
 name|n
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|ptr
@@ -3134,6 +3182,7 @@ block|}
 return|return
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3155,7 +3204,11 @@ begin_function
 specifier|static
 name|void
 name|RedialTimeout
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|)
 block|{
 name|StopTimer
 argument_list|(
@@ -3260,7 +3313,9 @@ begin_function
 specifier|static
 name|void
 name|DoLoop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fd_set
 name|rfds
@@ -3299,6 +3354,7 @@ argument_list|(
 name|hisaddr
 argument_list|)
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|cp
@@ -3750,7 +3806,9 @@ argument_list|)
 expr_stmt|;
 comment|/* little pause to allow peer starts */
 name|ModemTimeout
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 name|PacketMode
 argument_list|()
@@ -4714,6 +4772,9 @@ name|mbuf
 modifier|*
 name|bp
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NOALIAS
 if|if
 condition|(
 name|mode
@@ -4746,6 +4807,8 @@ name|ip_len
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|bp
 operator|=
 name|mballoc
@@ -4825,6 +4888,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|NOALIAS
 if|if
 condition|(
 name|mode
@@ -4857,6 +4923,8 @@ name|ip_len
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|IpEnqueue
 argument_list|(
 name|pri
@@ -4892,6 +4960,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|NOALIAS
 if|if
 condition|(
 name|mode
@@ -4924,6 +4995,8 @@ name|ip_len
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|IpEnqueue
 argument_list|(
 name|pri

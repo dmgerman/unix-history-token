@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: log.h,v 1.15 1997/11/04 01:17:01 brian Exp $  */
+comment|/*  * $Id: log.h,v 1.16 1997/11/09 06:22:42 brian Exp $  */
 end_comment
 
 begin_define
@@ -328,6 +328,7 @@ name|LogPrintf
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -343,9 +344,11 @@ name|LogDumpBp
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -360,9 +363,11 @@ name|LogDumpBuff
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,

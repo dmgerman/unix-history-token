@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.46 1997/11/16 22:15:04 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.47 1997/11/18 14:52:05 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -45,11 +45,22 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<net/if_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -97,6 +108,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"command.h"
 end_include
 
 begin_include
@@ -181,12 +198,6 @@ begin_include
 include|#
 directive|include
 file|"loadalias.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"command.h"
 end_include
 
 begin_include
@@ -375,6 +386,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|cftypes
@@ -561,7 +573,11 @@ begin_function
 specifier|static
 name|void
 name|LcpReportTime
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -621,7 +637,13 @@ end_function
 begin_function
 name|int
 name|ReportLcpStatus
-parameter_list|()
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
+name|arg
+parameter_list|)
 block|{
 name|struct
 name|lcpstate
@@ -771,7 +793,9 @@ begin_function
 specifier|static
 name|u_long
 name|GenerateMagic
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|randinit
 argument_list|()
@@ -980,6 +1004,7 @@ modifier|*
 modifier|*
 name|cpp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1674,7 +1699,9 @@ begin_function
 specifier|static
 name|void
 name|StopAllTimers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|StopTimer
 argument_list|(
@@ -1978,6 +2005,7 @@ name|int
 name|mode_type
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|request

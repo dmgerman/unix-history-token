@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.26 1997/11/13 14:43:20 brian Exp $  *  *  TODO:  */
+comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.27 1997/11/14 15:38:07 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -91,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|"loadalias.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"command.h"
 end_include
 
 begin_include
@@ -150,6 +150,7 @@ name|FILE
 modifier|*
 name|OpenSecret
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
@@ -801,18 +802,10 @@ name|int
 name|AllowUsers
 parameter_list|(
 name|struct
-name|cmdtab
+name|cmdargs
 specifier|const
 modifier|*
-name|list
-parameter_list|,
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
+name|arg
 parameter_list|)
 block|{
 name|int
@@ -846,6 +839,8 @@ literal|0
 init|;
 name|f
 operator|<
+name|arg
+operator|->
 name|argc
 condition|;
 name|f
@@ -858,6 +853,8 @@ name|strcmp
 argument_list|(
 literal|"*"
 argument_list|,
+name|arg
+operator|->
 name|argv
 index|[
 name|f
@@ -869,6 +866,8 @@ name|strcmp
 argument_list|(
 name|user
 argument_list|,
+name|arg
+operator|->
 name|argv
 index|[
 name|f
@@ -895,6 +894,7 @@ block|{
 name|int
 name|mode
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -968,18 +968,10 @@ name|int
 name|AllowModes
 parameter_list|(
 name|struct
-name|cmdtab
+name|cmdargs
 specifier|const
 modifier|*
-name|list
-parameter_list|,
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
+name|arg
 parameter_list|)
 block|{
 name|int
@@ -1003,6 +995,8 @@ literal|0
 init|;
 name|f
 operator|<
+name|arg
+operator|->
 name|argc
 condition|;
 name|f
@@ -1037,6 +1031,8 @@ index|]
 operator|.
 name|name
 argument_list|,
+name|arg
+operator|->
 name|argv
 index|[
 name|f
@@ -1072,6 +1068,8 @@ name|LogWARN
 argument_list|,
 literal|"%s: Invalid mode\n"
 argument_list|,
+name|arg
+operator|->
 name|argv
 index|[
 name|f
@@ -1568,6 +1566,13 @@ name|RunCommand
 argument_list|(
 name|argc
 argument_list|,
+operator|(
+name|char
+specifier|const
+operator|*
+specifier|const
+operator|*
+operator|)
 name|argv
 argument_list|,
 name|name
@@ -1732,26 +1737,21 @@ name|int
 name|LoadCommand
 parameter_list|(
 name|struct
-name|cmdtab
+name|cmdargs
 specifier|const
 modifier|*
-name|list
-parameter_list|,
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
+name|arg
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 if|if
 condition|(
+name|arg
+operator|->
 name|argc
 operator|>
 literal|0
@@ -1759,6 +1759,8 @@ condition|)
 name|name
 operator|=
 operator|*
+name|arg
+operator|->
 name|argv
 expr_stmt|;
 else|else
@@ -1818,6 +1820,8 @@ block|}
 else|else
 name|SetLabel
 argument_list|(
+name|arg
+operator|->
 name|argc
 condition|?
 name|name
@@ -1836,18 +1840,10 @@ name|int
 name|SaveCommand
 parameter_list|(
 name|struct
-name|cmdtab
+name|cmdargs
 specifier|const
 modifier|*
-name|list
-parameter_list|,
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
+name|arg
 parameter_list|)
 block|{
 name|LogPrintf

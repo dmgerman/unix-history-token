@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: $  */
+comment|/*  * $Id: alias_cmd.c,v 1.6 1997/10/26 01:02:00 brian Exp $  */
 end_comment
 
 begin_include
@@ -60,18 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"log.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"defs.h"
 end_include
 
@@ -79,6 +67,18 @@ begin_include
 include|#
 directive|include
 file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
 end_include
 
 begin_include
@@ -104,6 +104,7 @@ specifier|static
 name|int
 name|StrToAddr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -119,12 +120,14 @@ specifier|static
 name|int
 name|StrToPort
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
 name|u_short
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -136,6 +139,7 @@ specifier|static
 name|int
 name|StrToAddrAndPort
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -146,6 +150,7 @@ parameter_list|,
 name|u_short
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -157,21 +162,10 @@ name|int
 name|AliasRedirectPort
 parameter_list|(
 name|struct
-name|cmdtab
+name|cmdargs
+specifier|const
 modifier|*
-name|list
-parameter_list|,
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|,
-name|void
-modifier|*
-name|param
+name|arg
 parameter_list|)
 block|{
 if|if
@@ -199,6 +193,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|arg
+operator|->
 name|argc
 operator|==
 literal|3
@@ -207,6 +203,7 @@ block|{
 name|char
 name|proto_constant
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|proto
@@ -235,6 +232,8 @@ name|link
 decl_stmt|;
 name|proto
 operator|=
+name|arg
+operator|->
 name|argv
 index|[
 literal|0
@@ -295,11 +294,15 @@ name|VarTerm
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|name
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|syntax
 argument_list|)
@@ -313,6 +316,8 @@ name|error
 operator|=
 name|StrToAddrAndPort
 argument_list|(
+name|arg
+operator|->
 name|argv
 index|[
 literal|1
@@ -350,11 +355,15 @@ name|VarTerm
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|name
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|syntax
 argument_list|)
@@ -368,6 +377,8 @@ name|error
 operator|=
 name|StrToPort
 argument_list|(
+name|arg
+operator|->
 name|argv
 index|[
 literal|2
@@ -402,11 +413,15 @@ name|VarTerm
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|name
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|syntax
 argument_list|)
@@ -471,11 +486,15 @@ name|VarTerm
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|name
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|syntax
 argument_list|)
@@ -491,21 +510,10 @@ name|int
 name|AliasRedirectAddr
 parameter_list|(
 name|struct
-name|cmdtab
+name|cmdargs
+specifier|const
 modifier|*
-name|list
-parameter_list|,
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|,
-name|void
-modifier|*
-name|param
+name|arg
 parameter_list|)
 block|{
 if|if
@@ -533,6 +541,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|arg
+operator|->
 name|argc
 operator|==
 literal|2
@@ -558,6 +568,8 @@ name|error
 operator|=
 name|StrToAddr
 argument_list|(
+name|arg
+operator|->
 name|argv
 index|[
 literal|0
@@ -591,6 +603,8 @@ name|error
 operator|=
 name|StrToAddr
 argument_list|(
+name|arg
+operator|->
 name|argv
 index|[
 literal|1
@@ -623,11 +637,15 @@ name|VarTerm
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|name
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|syntax
 argument_list|)
@@ -668,11 +686,15 @@ name|VarTerm
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|name
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|syntax
 argument_list|)
@@ -690,11 +712,15 @@ name|VarTerm
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|name
 argument_list|,
-name|list
+name|arg
+operator|->
+name|cmd
 operator|->
 name|syntax
 argument_list|)
@@ -710,6 +736,7 @@ specifier|static
 name|int
 name|StrToAddr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -790,6 +817,7 @@ specifier|static
 name|int
 name|StrToPort
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -798,6 +826,7 @@ name|u_short
 modifier|*
 name|port
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|proto
@@ -891,9 +920,11 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|StrToAddrAndPort
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -907,6 +938,7 @@ name|u_short
 modifier|*
 name|port
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|proto
@@ -914,9 +946,12 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|ptr
+name|colon
 decl_stmt|;
-name|ptr
+name|int
+name|res
+decl_stmt|;
+name|colon
 operator|=
 name|strchr
 argument_list|(
@@ -928,7 +963,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ptr
+name|colon
 condition|)
 block|{
 name|LogPrintf
@@ -946,21 +981,29 @@ literal|1
 return|;
 block|}
 operator|*
-name|ptr
+name|colon
 operator|=
 literal|'\0'
 expr_stmt|;
-operator|++
-name|ptr
-expr_stmt|;
-if|if
-condition|(
+comment|/* Cheat the const-ness ! */
+name|res
+operator|=
 name|StrToAddr
 argument_list|(
 name|str
 argument_list|,
 name|addr
 argument_list|)
+expr_stmt|;
+operator|*
+name|colon
+operator|=
+literal|':'
+expr_stmt|;
+comment|/* Cheat the const-ness ! */
+if|if
+condition|(
+name|res
 operator|!=
 literal|0
 condition|)
@@ -971,7 +1014,9 @@ return|;
 return|return
 name|StrToPort
 argument_list|(
-name|ptr
+name|colon
+operator|+
+literal|1
 argument_list|,
 name|port
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.30 1997/11/16 22:15:03 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
+comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.31 1997/11/18 14:52:04 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
 end_comment
 
 begin_include
@@ -75,11 +75,22 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<net/if_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -87,11 +98,22 @@ directive|include
 file|<net/if_tun.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOALIAS
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<alias.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -127,6 +149,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"command.h"
 end_include
 
 begin_include
@@ -180,12 +208,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"command.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vars.h"
 end_include
 
@@ -193,12 +215,6 @@ begin_include
 include|#
 directive|include
 file|"filter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"log.h"
 end_include
 
 begin_include
@@ -255,7 +271,11 @@ begin_function
 specifier|static
 name|void
 name|IdleTimeout
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|)
 block|{
 name|LogPrintf
 argument_list|(
@@ -372,7 +392,9 @@ begin_function
 specifier|static
 name|void
 name|RestartIdleTimer
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -406,6 +428,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_short
 name|interactive_ports
 index|[
@@ -492,6 +515,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|TcpFlags
@@ -509,12 +533,13 @@ block|,
 literal|"ACK"
 block|,
 literal|"URG"
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|Direction
@@ -2086,9 +2111,6 @@ decl_stmt|;
 name|struct
 name|tun_data
 name|tun
-decl_stmt|,
-modifier|*
-name|frag
 decl_stmt|;
 name|tun_fill_header
 argument_list|(
@@ -2150,6 +2172,9 @@ operator|->
 name|cnt
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|NOALIAS
 if|if
 condition|(
 name|mode
@@ -2157,6 +2182,11 @@ operator|&
 name|MODE_ALIAS
 condition|)
 block|{
+name|struct
+name|tun_data
+modifier|*
+name|frag
+decl_stmt|;
 name|int
 name|iresult
 decl_stmt|;
@@ -2597,6 +2627,9 @@ block|}
 block|}
 block|}
 else|else
+endif|#
+directive|endif
+comment|/* #ifndef NOALIAS */
 block|{
 comment|/* no aliasing */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: defs.c,v 1.3 1997/11/17 00:42:38 brian Exp $  */
+comment|/*  * $Id: defs.c,v 1.4 1997/11/18 00:19:30 brian Exp $  */
 end_comment
 
 begin_include
@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -49,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"command.h"
 end_include
 
 begin_include
@@ -67,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"loadalias.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"command.h"
 end_include
 
 begin_include
@@ -208,6 +214,9 @@ name|void
 name|randinit
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 specifier|static
 name|int
 name|initdone
@@ -226,6 +235,21 @@ name|srandomdev
 argument_list|()
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|srandom
+argument_list|(
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|^
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

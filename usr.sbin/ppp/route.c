@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.25 1997/11/11 22:58:13 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.26 1997/11/15 02:15:56 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -127,12 +133,6 @@ begin_include
 include|#
 directive|include
 file|"loadalias.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"command.h"
 end_include
 
 begin_include
@@ -225,7 +225,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|cmdstr
 decl_stmt|;
@@ -705,7 +707,9 @@ name|buf
 index|[
 literal|29
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|cp
 decl_stmt|;
@@ -1294,6 +1298,7 @@ parameter_list|(
 name|u_long
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|format
@@ -1370,6 +1375,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|Index2Nam
@@ -1769,7 +1775,13 @@ end_function
 begin_function
 name|int
 name|ShowRoute
-parameter_list|()
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
+name|arg
+parameter_list|)
 block|{
 name|struct
 name|rt_msghdr
@@ -2711,6 +2723,7 @@ block|{
 name|int
 name|idx
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|got

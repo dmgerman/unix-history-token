@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: $  */
+comment|/*  * $Id: alias_cmd.h,v 1.3 1997/10/26 01:02:01 brian Exp $  */
 end_comment
 
 begin_function_decl
@@ -9,16 +9,8 @@ name|int
 name|AliasRedirectPort
 parameter_list|(
 name|struct
-name|cmdtab
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|void
+name|cmdargs
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;
@@ -30,16 +22,8 @@ name|int
 name|AliasRedirectAddr
 parameter_list|(
 name|struct
-name|cmdtab
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|void
+name|cmdargs
+specifier|const
 modifier|*
 parameter_list|)
 function_decl|;

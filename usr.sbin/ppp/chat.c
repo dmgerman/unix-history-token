@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.37 1997/11/09 06:22:39 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.38 1997/11/09 14:18:36 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -132,12 +138,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"command.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vars.h"
 end_include
 
@@ -151,12 +151,6 @@ begin_include
 include|#
 directive|include
 file|"sig.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"chat.h"
 end_include
 
 begin_include
@@ -506,6 +500,7 @@ name|char
 modifier|*
 name|ExpandString
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -942,7 +937,9 @@ begin_function
 specifier|static
 name|void
 name|clear_log
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|memset
 argument_list|(
@@ -964,7 +961,9 @@ begin_function
 specifier|static
 name|void
 name|flush_log
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1017,6 +1016,7 @@ specifier|static
 name|void
 name|connect_log
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1091,6 +1091,7 @@ specifier|static
 name|int
 name|WaitforString
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|estr
@@ -1150,9 +1151,6 @@ directive|endif
 name|clear_log
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|ExpandString
 argument_list|(
 name|estr
@@ -1839,7 +1837,7 @@ name|char
 modifier|*
 name|vector
 index|[
-literal|20
+name|MAXARGS
 index|]
 decl_stmt|;
 name|int
@@ -1928,9 +1926,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
 name|MakeArgs
 argument_list|(
 name|tmp
@@ -2118,6 +2113,11 @@ name|execvp
 argument_list|(
 name|command
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|vector
 argument_list|)
 expr_stmt|;
@@ -2221,6 +2221,7 @@ specifier|static
 name|void
 name|SendString
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2312,9 +2313,6 @@ operator|==
 literal|'!'
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|ExpandString
 argument_list|(
 name|str
@@ -2349,9 +2347,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|ExpandString
 argument_list|(
 name|str
@@ -2569,16 +2564,25 @@ block|{
 comment|/* We have sub-send-expect. */
 operator|*
 name|minus
-operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* XXX: Cheat with the const string */
 name|state
 operator|=
 name|WaitforString
 argument_list|(
 name|str
 argument_list|)
+expr_stmt|;
+operator|*
+name|minus
+operator|=
+literal|'-'
+expr_stmt|;
+comment|/* XXX: Cheat with the const string */
+name|minus
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -2644,17 +2648,24 @@ condition|)
 block|{
 operator|*
 name|minus
-operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* XXX: Cheat with the const string */
 name|SendString
 argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
+operator|*
+name|minus
+operator|=
+literal|'-'
+expr_stmt|;
+comment|/* XXX: Cheat with the const string */
 name|str
 operator|=
+operator|++
 name|minus
 expr_stmt|;
 block|}
@@ -2754,11 +2765,12 @@ name|char
 modifier|*
 name|vector
 index|[
-literal|40
+name|MAXARGS
 index|]
 decl_stmt|;
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 decl_stmt|;
@@ -2866,7 +2878,7 @@ name|vector
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|n
+name|argc
 operator|=
 name|MakeArgs
 argument_list|(
@@ -2879,10 +2891,6 @@ argument_list|(
 name|vector
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|argc
-operator|=
-name|n
 expr_stmt|;
 name|argv
 operator|=

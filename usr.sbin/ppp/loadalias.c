@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: loadalias.c,v 1.9 1997/11/09 06:22:41 brian Exp $  */
+comment|/*  * $Id: loadalias.c,v 1.10 1997/11/09 14:18:40 brian Exp $  */
 end_comment
 
 begin_include
@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"systems.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mbuf.h"
 end_include
 
@@ -73,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systems.h"
 end_include
 
 begin_include
@@ -133,6 +133,7 @@ block|{
 name|int
 name|offset
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -219,10 +220,12 @@ modifier|*
 name|h
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|path
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|env

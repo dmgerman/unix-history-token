@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: phase.c,v 1.1 1997/10/26 01:03:31 brian Exp $  */
+comment|/*  * $Id: phase.c,v 1.2 1997/10/29 01:19:50 brian Exp $  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"command.h"
 end_include
 
 begin_include
@@ -102,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"command.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vars.h"
 end_include
 
@@ -131,6 +131,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|PhaseNames

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.20 1997/10/26 01:02:37 brian Exp $  *  *  TODO:  *		o Refer loglevel for log output  *		o Better option log display  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.21 1997/11/11 23:23:11 brian Exp $  *  *  TODO:  *		o Refer loglevel for log output  *		o Better option log display  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"command.h"
 end_include
 
 begin_include
@@ -103,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|"loadalias.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"command.h"
 end_include
 
 begin_include
@@ -258,12 +258,23 @@ specifier|static
 name|void
 name|StoppedTimeout
 parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|)
+block|{
 name|struct
 name|fsm
 modifier|*
 name|fp
-parameter_list|)
-block|{
+init|=
+operator|(
+expr|struct
+name|fsm
+operator|*
+operator|)
+name|v
+decl_stmt|;
 name|LogPrintf
 argument_list|(
 name|fp
@@ -1335,12 +1346,23 @@ specifier|static
 name|void
 name|FsmTimeout
 parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|)
+block|{
 name|struct
 name|fsm
 modifier|*
 name|fp
-parameter_list|)
-block|{
+init|=
+operator|(
+expr|struct
+name|fsm
+operator|*
+operator|)
+name|v
+decl_stmt|;
 if|if
 condition|(
 name|fp

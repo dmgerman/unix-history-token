@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: server.c,v 1.9 1997/11/09 22:07:29 brian Exp $  */
+comment|/*  * $Id: server.c,v 1.10 1997/11/11 22:58:13 brian Exp $  */
 end_comment
 
 begin_include
@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -96,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"command.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"defs.h"
 end_include
 
@@ -115,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|"server.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"log.h"
 end_include
 
 begin_include

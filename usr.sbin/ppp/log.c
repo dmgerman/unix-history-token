@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: log.c,v 1.20 1997/11/09 14:18:41 brian Exp $  */
+comment|/*  * $Id: log.c,v 1.21 1997/11/11 12:26:34 brian Exp $  */
 end_comment
 
 begin_include
@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -60,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"command.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"defs.h"
 end_include
 
@@ -77,6 +77,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|LogNames
@@ -538,6 +539,7 @@ parameter_list|(
 name|int
 name|lev
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -755,10 +757,12 @@ parameter_list|(
 name|int
 name|lev
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|hdr
 parameter_list|,
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -928,10 +932,12 @@ parameter_list|(
 name|int
 name|lev
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|hdr
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|ptr

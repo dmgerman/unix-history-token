@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: id.c,v 1.1 1997/11/09 06:22:40 brian Exp $  */
+comment|/*  * $Id: id.c,v 1.2 1997/11/13 17:31:52 brian Exp $  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"command.h"
 end_include
 
 begin_include
@@ -163,7 +169,9 @@ begin_function
 specifier|static
 name|void
 name|ID0setuser
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -207,7 +215,9 @@ begin_function
 specifier|static
 name|void
 name|ID0set0
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -502,7 +512,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|ttyname
+name|basettyname
 parameter_list|)
 block|{
 name|int
@@ -515,7 +525,7 @@ name|ret
 operator|=
 name|uu_lock
 argument_list|(
-name|ttyname
+name|basettyname
 argument_list|)
 expr_stmt|;
 name|LogPrintf
@@ -526,7 +536,7 @@ literal|"%d = uu_lock(\"%s\")\n"
 argument_list|,
 name|ret
 argument_list|,
-name|ttyname
+name|basettyname
 argument_list|)
 expr_stmt|;
 name|ID0setuser
@@ -545,7 +555,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|ttyname
+name|basettyname
 parameter_list|)
 block|{
 name|int
@@ -558,7 +568,7 @@ name|ret
 operator|=
 name|uu_unlock
 argument_list|(
-name|ttyname
+name|basettyname
 argument_list|)
 expr_stmt|;
 name|LogPrintf
@@ -569,7 +579,7 @@ literal|"%d = uu_unlock(\"%s\")\n"
 argument_list|,
 name|ret
 argument_list|,
-name|ttyname
+name|basettyname
 argument_list|)
 expr_stmt|;
 name|ID0setuser
