@@ -227,49 +227,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_OLD_PCI_LINK
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ACPI_STA_PRESENT
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STA_ENABLE
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STA_SHOWINUI
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_STA_FUNCTIONAL
-value|0x00000008
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_OLD_PCI_LINK */
-end_comment
-
 begin_comment
 comment|/*  * PCI link object management  */
 end_comment
@@ -625,12 +582,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_OLD_PCI_LINK
-end_ifdef
-
 begin_function
 specifier|static
 name|ACPI_STATUS
@@ -867,15 +818,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_OLD_PCI_LINK */
-end_comment
 
 begin_function
 specifier|static
@@ -1930,14 +1872,9 @@ decl_stmt|;
 name|ACPI_STATUS
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_OLD_PCI_LINK
 name|UINT32
 name|sta
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|acpi_prt_entry
 modifier|*
@@ -2037,10 +1974,6 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * PCI link status (_STA) is unreliable.  Many systems return 	 * erroneous values so we ignore it. 	 */
-ifdef|#
-directive|ifdef
-name|ACPI_OLD_PCI_LINK
 name|error
 operator|=
 name|acpi_pci_link_get_object_status
@@ -2084,6 +2017,7 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * PCI link status (_STA) is unreliable.  Many systems return 	 * erroneous values so we ignore it. 	 */
 if|if
 condition|(
 operator|(
@@ -2099,6 +2033,23 @@ operator|==
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|ACPI_OLD_PCI_LINK
+name|device_printf
+argument_list|(
+name|pcidev
+argument_list|,
+literal|"acpi PRT ignoring status for %s\n"
+argument_list|,
+name|acpi_name
+argument_list|(
+name|handle
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -2118,10 +2069,10 @@ argument_list|(
 name|AE_ERROR
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
-comment|/* ACPI_OLD_PCI_LINK */
+comment|/* !ACPI_OLD_PCI_LINK */
+block|}
 name|TAILQ_FOREACH
 argument_list|(
 argument|entry
@@ -2363,9 +2314,15 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|FALSE
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|ACPI_OLD_PCI_LINK
+comment|/* 	 * Look up the given interrupt in the list of possible settings for 	 * this link.  We don't special-case the initial link setting.  Some 	 * systems return current settings that are outside the list of valid 	 * settings so only allow choices explicitly specified in _PRS. 	 */
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -2395,7 +2352,7 @@ name|irq
 condition|)
 return|return
 operator|(
-literal|1
+name|TRUE
 operator|)
 return|;
 block|}
@@ -2408,14 +2365,32 @@ name|initial_irq
 operator|==
 name|irq
 condition|)
+ifndef|#
+directive|ifndef
+name|ACPI_OLD_PCI_LINK
+name|printf
+argument_list|(
+literal|"acpi link check: %d initial irq, %d irq to route\n"
+argument_list|,
+name|link
+operator|->
+name|initial_irq
+argument_list|,
+name|irq
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 return|return
 operator|(
-literal|1
+name|TRUE
 operator|)
 return|;
+endif|#
+directive|endif
 return|return
 operator|(
-literal|0
+name|FALSE
 operator|)
 return|;
 block|}
@@ -2444,14 +2419,9 @@ decl_stmt|;
 name|ACPI_BUFFER
 name|crsbuf
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_OLD_PCI_LINK
 name|UINT32
 name|sta
 decl_stmt|;
-endif|#
-directive|endif
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -2860,9 +2830,6 @@ operator|=
 name|AE_OK
 expr_stmt|;
 comment|/* 	 * PCI link status (_STA) is unreliable.  Many systems return 	 * erroneous values so we ignore it. 	 */
-ifdef|#
-directive|ifdef
-name|ACPI_OLD_PCI_LINK
 name|error
 operator|=
 name|acpi_pci_link_get_object_status
@@ -2915,12 +2882,29 @@ condition|(
 operator|(
 name|sta
 operator|&
-name|ACPI_STA_ENABLE
+name|ACPI_STA_ENABLED
 operator|)
 operator|==
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|ACPI_OLD_PCI_LINK
+name|printf
+argument_list|(
+literal|"acpi link set: ignoring status for %s\n"
+argument_list|,
+name|acpi_name
+argument_list|(
+name|link
+operator|->
+name|handle
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -2942,14 +2926,11 @@ argument_list|(
 name|AE_ERROR
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
-comment|/* ACPI_OLD_PCI_LINK */
+comment|/* !ACPI_OLD_PCI_LINK */
+block|}
 comment|/* 	 * Many systems always return invalid values for current settings 	 * (_CRS).  Since we can't trust the value returned, we have to 	 * assume we were successful. 	 */
-ifdef|#
-directive|ifdef
-name|ACPI_OLD_PCI_LINK
 name|error
 operator|=
 name|acpi_pci_link_get_current_irq
@@ -3013,6 +2994,39 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifndef|#
+directive|ifndef
+name|ACPI_OLD_PCI_LINK
+name|printf
+argument_list|(
+literal|"acpi link set: curr irq %d != %d for %s (ignoring)\n"
+argument_list|,
+name|link
+operator|->
+name|current_irq
+argument_list|,
+name|irq
+argument_list|,
+name|acpi_name
+argument_list|(
+name|link
+operator|->
+name|handle
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|link
+operator|->
+name|current_irq
+operator|=
+name|irq
+expr_stmt|;
+name|error
+operator|=
+name|AE_OK
+expr_stmt|;
+else|#
+directive|else
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -3045,10 +3059,10 @@ name|error
 operator|=
 name|AE_ERROR
 expr_stmt|;
-block|}
 endif|#
 directive|endif
-comment|/* ACPI_OLD_PCI_LINK */
+comment|/* !ACPI_OLD_PCI_LINK */
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|error
