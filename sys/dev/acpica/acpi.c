@@ -8317,6 +8317,13 @@ argument_list|(
 name|acpi
 argument_list|)
 expr_stmt|;
+comment|/*      * Be sure to hold Giant across DEVICE_SUSPEND/RESUME since non-MPSAFE      * drivers need this.      */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|slp_state
 operator|=
 name|ACPI_SS_NONE
@@ -8649,6 +8656,12 @@ argument_list|,
 name|hz
 operator|*
 name|ACPI_MINIMUM_AWAKETIME
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
