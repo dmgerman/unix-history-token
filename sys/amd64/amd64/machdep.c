@@ -4588,23 +4588,14 @@ literal|"have you forgotten the isa device?"
 error|;
 endif|#
 directive|endif
+if|#
+directive|if
+literal|0
+comment|/* Not till we test the features bit */
 comment|/* Turn on PTE NX (no execute) bit */
-name|msr
-operator|=
-name|rdmsr
-argument_list|(
-name|MSR_EFER
-argument_list|)
-operator||
-name|EFER_NXE
-expr_stmt|;
-name|wrmsr
-argument_list|(
-name|MSR_EFER
-argument_list|,
-name|msr
-argument_list|)
-expr_stmt|;
+block|msr = rdmsr(MSR_EFER) | EFER_NXE; 	wrmsr(MSR_EFER, msr);
+endif|#
+directive|endif
 name|proc0
 operator|.
 name|p_uarea
