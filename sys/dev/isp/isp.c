@@ -242,7 +242,7 @@ name|char
 modifier|*
 name|notresp
 init|=
-literal|"Not RESPONSE in RESPONSE Queue (type 0x%x) @ idx %d (next %d)"
+literal|"Not RESPONSE in RESPONSE Queue (type 0x%x) @ idx %d (next %d) nlooked %d"
 decl_stmt|;
 end_decl_stmt
 
@@ -1655,6 +1655,17 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* 	 * Clear instrumentation 	 */
+name|isp
+operator|->
+name|isp_intcnt
+operator|=
+name|isp
+operator|->
+name|isp_intbogus
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Do MD specific pre initialization 	 */
 name|ISP_RESET0
 argument_list|(
@@ -2567,8 +2578,10 @@ name|MBLOGNONE
 argument_list|)
 expr_stmt|;
 comment|/* give it a chance to start */
-name|USEC_DELAY
+name|USEC_SLEEP
 argument_list|(
+name|isp
+argument_list|,
 literal|500
 argument_list|)
 expr_stmt|;
@@ -4652,27 +4665,54 @@ operator||=
 name|ICBOPT_EXTENDED
 expr_stmt|;
 comment|/* 		 * Prefer or force Point-To-Point instead Loop? 		 */
-if|if
+switch|switch
 condition|(
 name|isp
 operator|->
 name|isp_confopts
 operator|&
-name|ISP_CFG_NPORT
+name|ISP_CFG_PORT_PREF
 condition|)
+block|{
+case|case
+name|ISP_CFG_NPORT
+case|:
 name|icbp
 operator|->
 name|icb_xfwoptions
 operator|=
 name|ICBXOPT_PTP_2_LOOP
 expr_stmt|;
-else|else
+break|break;
+case|case
+name|ISP_CFG_NPORT_ONLY
+case|:
+name|icbp
+operator|->
+name|icb_xfwoptions
+operator|=
+name|ICBXOPT_PTP_ONLY
+expr_stmt|;
+break|break;
+case|case
+name|ISP_CFG_LPORT_ONLY
+case|:
+name|icbp
+operator|->
+name|icb_xfwoptions
+operator|=
+name|ICBXOPT_LOOP_ONLY
+expr_stmt|;
+break|break;
+default|default:
 name|icbp
 operator|->
 name|icb_xfwoptions
 operator|=
 name|ICBXOPT_LOOP_2_PTP
 expr_stmt|;
+break|break;
+block|}
 block|}
 name|icbp
 operator|->
@@ -5772,8 +5812,10 @@ operator|)
 literal|4000000000U
 condition|)
 block|{
-name|USEC_DELAY
+name|USEC_SLEEP
 argument_list|(
+name|isp
+argument_list|,
 literal|4000000
 argument_list|)
 expr_stmt|;
@@ -5789,8 +5831,10 @@ name|wrk
 operator|=
 name|enano
 expr_stmt|;
-name|USEC_DELAY
+name|USEC_SLEEP
 argument_list|(
+name|isp
+argument_list|,
 name|wrk
 operator|/
 literal|1000
@@ -11835,6 +11879,11 @@ name|sema
 operator|&=
 name|BIU_SEMA_LOCK
 expr_stmt|;
+name|isp
+operator|->
+name|isp_intcnt
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|isr
@@ -11846,6 +11895,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|isp
+operator|->
+name|isp_intbogus
+operator|++
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -12505,8 +12559,31 @@ argument_list|,
 name|oop
 argument_list|,
 name|optr
+argument_list|,
+name|nlooked
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isp
+operator|->
+name|isp_dblev
+operator|&
+name|ISP_LOGDEBUG0
+condition|)
+block|{
+name|isp_print_bytes
+argument_list|(
+name|isp
+argument_list|,
+literal|"Queue Entry"
+argument_list|,
+name|QENTRY_LEN
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+block|}
 name|MEMZERO
 argument_list|(
 name|sp
@@ -13651,6 +13728,20 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+name|isp_target_async
+argument_list|(
+name|isp
+argument_list|,
+name|bus
+argument_list|,
+name|mbox
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* no point continuing after this */
 return|return
 operator|(
@@ -14536,6 +14627,20 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+name|isp_target_async
+argument_list|(
+name|isp
+argument_list|,
+name|bus
+argument_list|,
+name|ASYNC_SYSTEM_ERROR
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* no point continuing after this */
 return|return
 operator|(
@@ -14795,17 +14900,17 @@ name|ISP_LOGDEBUG1
 argument_list|,
 literal|"Selection Timeout for %d.%d.%d"
 argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
+argument_list|,
 name|XS_TGT
 argument_list|(
 name|xs
 argument_list|)
 argument_list|,
 name|XS_LUN
-argument_list|(
-name|xs
-argument_list|)
-argument_list|,
-name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
@@ -19228,12 +19333,6 @@ argument_list|,
 name|HCCR
 argument_list|,
 name|HCCR_CMD_SET_HOST_INT
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Give the f/w a chance to pick this up. 	 */
-name|USEC_DELAY
-argument_list|(
-literal|250
 argument_list|)
 expr_stmt|;
 comment|/* 	 * While we haven't finished the command, spin our wheels here. 	 */
