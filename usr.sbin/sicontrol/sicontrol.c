@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *	SLXOS configuration and debug interface  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id$  */
+comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *	SLXOS configuration and debug interface  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: sicontrol.c,v 1.1 1995/08/13 15:24:23 peter Exp $  */
 end_comment
 
 begin_include
@@ -801,7 +801,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: siconfig - %s"
+literal|"Usage: sicontrol - %s"
 argument_list|,
 name|usage
 index|[
@@ -813,11 +813,23 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       siconfig devname %s"
+literal|"       sicontrol - %s"
 argument_list|,
 name|usage
 index|[
 literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       sicontrol devname %s"
+argument_list|,
+name|usage
+index|[
+literal|3
 index|]
 argument_list|)
 expr_stmt|;
@@ -828,7 +840,7 @@ operator|=
 operator|&
 name|usage
 index|[
-literal|3
+literal|4
 index|]
 init|;
 operator|*
@@ -841,7 +853,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"                        %s"
+literal|"                         %s"
 argument_list|,
 operator|*
 name|cp
@@ -863,7 +875,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: siconfig devname %s"
+literal|"Usage: sicontrol devname %s"
 argument_list|,
 name|usage
 index|[
@@ -876,7 +888,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"siconfig: usage ???\n"
+literal|"sicontrol: usage ???\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2786,7 +2798,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"siconfig: unknown token '%s'\n"
+literal|"sicontrol: unknown token '%s'\n"
 argument_list|,
 name|token
 argument_list|)
