@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)graph.c	4.4 (Berkeley) %G%"
+literal|"@(#)graph.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,7 @@ name|xqf
 decl_stmt|;
 comment|/*flag:explicit quantum*/
 name|double
+specifier|const
 function_decl|(
 modifier|*
 name|xf
