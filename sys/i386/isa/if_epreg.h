@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2. The name  * of the author may not be used to endorse or promote products derived from  * this software withough specific prior written permission  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO  * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *   * $Id: if_epreg.h,v 1.4 1994/11/13 10:12:37 gibbs Exp $ Modified by:  *   October 2, 1994    Modified by: Andres Vega Garcia    INRIA - Sophia Antipolis, France   e-mail: avega@sophia.inria.fr   finger: avega@pax.inria.fr   */
+comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2. The name  * of the author may not be used to endorse or promote products derived from  * this software withough specific prior written permission  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO  * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *   * if_epreg.h,v 1.4 1994/11/13 10:12:37 gibbs Exp Modified by:  *   October 2, 1994    Modified by: Andres Vega Garcia    INRIA - Sophia Antipolis, France   e-mail: avega@sophia.inria.fr   finger: avega@pax.inria.fr   */
+end_comment
+
+begin_comment
+comment|/*  *  March 28 1995  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -1109,6 +1113,17 @@ name|C_UPD_STATS
 value|(u_short) (ACK_INTR|0x80)
 end_define
 
+begin_define
+define|#
+directive|define
+name|C_MASK
+value|(u_short) 0xFF
+end_define
+
+begin_comment
+comment|/* mask of C_* */
+end_comment
+
 begin_comment
 comment|/*  * Status register. All windows.  *  *     15-13:  Window number(0-7).  *     12:     Command_in_progress.  *     11:     reserved.  *     10:     reserved.  *     9:      reserved.  *     8:      reserved.  *     7:      Update Statistics.  *     6:      Interrupt Requested.  *     5:      RX Early.  *     4:      RX Complete.  *     3:      TX Available.  *     2:      TX Complete.  *     1:      Adapter Failure.  *     0:      Interrupt Latch.  */
 end_comment
@@ -1172,6 +1187,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|S_MASK
+value|(u_short) 0xFF
+end_define
+
+begin_comment
+comment|/* mask of S_* */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|S_5_INTS
 value|(S_CARD_FAILURE|S_TX_COMPLETE|\ 				 S_TX_AVAIL|S_RX_COMPLETE|S_RX_EARLY)
 end_define
@@ -1182,6 +1208,56 @@ directive|define
 name|S_COMMAND_IN_PROGRESS
 value|(u_short) (0x1000)
 end_define
+
+begin_comment
+comment|/* Address Config. Register.  * Window 0/Port 06  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACF_CONNECTOR_BITS
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACF_CONNECTOR_UTP
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACF_CONNECTOR_AUI
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACF_CONNECTOR_BNC
+value|3
+end_define
+
+begin_comment
+comment|/* Resource configuration register.  * Window 0/Port 08  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_IRQ
+parameter_list|(
+name|i
+parameter_list|)
+value|(((i)<<12) | 0xF00)
+end_define
+
+begin_comment
+comment|/* set IRQ i */
+end_comment
 
 begin_comment
 comment|/*  * FIFO Registers.    * RX Status. Window 1/Port 08  *  *     15:     Incomplete or FIFO empty.  *     14:     1: Error in RX Packet   0: Incomplete or no error.  *     13-11:  Type of error.  *	      1000 = Overrun.  *	      1011 = Run Packet Error.  *	      1100 = Alignment Error.  *	      1101 = CRC Error.  *	      1001 = Oversize Packet Error (>1514 bytes)  *	      0010 = Dribble Bits.  *	      (all other error codes, no errors.)  *  *     10-0:   RX Bytes (0-1514)  */
