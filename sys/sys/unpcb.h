@@ -71,12 +71,6 @@ modifier|*
 name|unp_vnode
 decl_stmt|;
 comment|/* if associated with file */
-name|struct
-name|vnode
-modifier|*
-name|unp_rvnode
-decl_stmt|;
-comment|/* root vp for creating process */
 name|ino_t
 name|unp_ino
 decl_stmt|;
