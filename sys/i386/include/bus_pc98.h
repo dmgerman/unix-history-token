@@ -7382,27 +7382,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Bus read/write barrier methods.  *  *	void bus_space_barrier(bus_space_tag_t tag, bus_space_handle_t bsh,  *			       bus_size_t offset, bus_size_t len, int flags);  *  * Note: the i386 does not currently require barriers, but we must  * provide the flags to MI code.  */
+comment|/*  * Bus read/write barrier methods.  *  *	void bus_space_barrier(bus_space_tag_t tag, bus_space_handle_t bsh,  *			       bus_size_t offset, bus_size_t len, int flags);  *  *  * Note that BUS_SPACE_BARRIER_WRITE doesn't do anything other than  * prevent reordering by the compiler; all Intel x86 processors currently  * retire operations outside the CPU in program order.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|bus_space_barrier
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|,
-name|l
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|((void)((void)(t), (void)(h), (void)(o), (void)(l), (void)(f)))
-end_define
 
 begin_define
 define|#
@@ -7425,6 +7406,40 @@ end_define
 begin_comment
 comment|/* force write barrier */
 end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|bus_space_barrier
+parameter_list|(
+name|bus_space_tag_t
+name|tag
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|,
+name|bus_size_t
+name|len
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|BUS_SPACE_BARRIER_READ
+condition|)
+asm|__asm __volatile ("lock; addl $0,0(%esp)" : : : "memory");
+else|else
+asm|__asm __volatile ("" : : : "memory");
+block|}
+end_function
 
 begin_comment
 comment|/*  * Flags used in various bus DMA methods.  */
