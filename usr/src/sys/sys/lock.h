@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.11 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -158,14 +158,14 @@ comment|/* wait for all lock activity to end */
 end_comment
 
 begin_comment
-comment|/*  * External lock flags.  *  * These flags may be set in lock_init to set their mode permanently,  * or passed in as arguments to the lock manager.  */
+comment|/*  * External lock flags.  *  * The first three flags may be set in lock_init to set their mode permanently,  * or passed in as arguments to the lock manager. The LK_REENABLE flag may be  * set only at the release of a lock obtained by drain.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LK_EXTFLG_MASK
-value|0x000000f0
+value|0x00000070
 end_define
 
 begin_comment
@@ -203,6 +203,17 @@ end_define
 
 begin_comment
 comment|/* allow recursive exclusive lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_REENABLE
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* lock is be reenabled after drain */
 end_comment
 
 begin_comment
