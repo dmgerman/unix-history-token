@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -622,9 +622,6 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|ip_ifmatrix
 operator|=
 operator|(
@@ -639,13 +636,16 @@ name|M_RTABLE
 argument_list|,
 name|M_WAITOK
 argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
+expr_stmt|;
+name|bzero
 argument_list|(
-literal|"no memory for ip_ifmatrix"
+operator|(
+name|char
+operator|*
+operator|)
+name|ip_ifmatrix
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 endif|#
