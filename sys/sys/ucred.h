@@ -81,6 +81,49 @@ begin_comment
 comment|/* filesystem credential */
 end_comment
 
+begin_comment
+comment|/*  * This is the external representation of struct ucred, based upon the  * size of a 4.2-RELEASE struct ucred.  There will probably never be  * any need to change the size of this or layout of its used fields.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xucred
+block|{
+name|u_int
+name|cr_version
+decl_stmt|;
+comment|/* structure layout version */
+name|uid_t
+name|cr_uid
+decl_stmt|;
+comment|/* effective user id */
+name|short
+name|cr_ngroups
+decl_stmt|;
+comment|/* number of groups */
+name|gid_t
+name|cr_groups
+index|[
+name|NGROUPS
+index|]
+decl_stmt|;
+comment|/* groups */
+name|void
+modifier|*
+name|_cr_unused1
+decl_stmt|;
+comment|/* compatibility with old ucred */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|XUCRED_VERSION
+value|0
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -202,6 +245,26 @@ expr|struct
 name|ucred
 operator|*
 name|cr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|cru2x
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ucred
+operator|*
+name|cr
+operator|,
+expr|struct
+name|xucred
+operator|*
+name|xcr
 operator|)
 argument_list|)
 decl_stmt|;
