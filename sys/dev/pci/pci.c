@@ -5168,7 +5168,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|" at %d.%d (no driver attached)\n"
+literal|" at device %d.%d (no driver attached)\n"
 argument_list|,
 name|pci_get_slot
 argument_list|(
