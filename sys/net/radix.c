@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)radix.c	8.2 (Berkeley) 1/4/94  * $Id$  */
+comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)radix.c	8.2 (Berkeley) 1/4/94  * $Id: radix.c,v 1.3 1994/08/02 07:46:29 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -791,11 +791,15 @@ block|}
 block|}
 do|while
 condition|(
+operator|(
 name|t
 operator|=
 name|t
 operator|->
 name|rn_dupedkey
+operator|)
+operator|!=
+literal|0
 condition|)
 do|;
 name|t
@@ -817,13 +821,15 @@ name|t
 operator|->
 name|rn_p
 expr_stmt|;
-if|if
-condition|(
 name|m
 operator|=
 name|t
 operator|->
 name|rn_mklist
+expr_stmt|;
+if|if
+condition|(
+name|m
 condition|)
 block|{
 comment|/* 			 * After doing measurements here, it may 			 * turn out to be faster to open code 			 * rn_search_m here instead of always 			 * copying and masking. 			 */
@@ -939,11 +945,15 @@ return|;
 block|}
 do|while
 condition|(
+operator|(
 name|m
 operator|=
 name|m
 operator|->
 name|rm_mklist
+operator|)
+operator|!=
+literal|0
 condition|)
 do|;
 block|}
@@ -2110,11 +2120,15 @@ break|break;
 block|}
 do|while
 condition|(
+operator|(
 name|tt
 operator|=
 name|tt
 operator|->
 name|rn_dupedkey
+operator|)
+operator|!=
+literal|0
 condition|)
 do|;
 comment|/* 		 * If the mask is not duplicated, we wouldn't 		 * find it among possible duplicate key entries 		 * anyway, so the above test doesn't hurt. 		 * 		 * We sort the masks for a duplicated key the same way as 		 * in a masklist -- most specific to least specific. 		 * This may require the unfortunate nuisance of relocating 		 * the head of the list. 		 */
@@ -2441,10 +2455,14 @@ name|x
 operator|->
 name|rn_mklist
 init|;
+operator|(
 name|m
 operator|=
 operator|*
 name|mp
+operator|)
+operator|!=
+literal|0
 condition|;
 name|mp
 operator|=
@@ -2543,10 +2561,14 @@ name|x
 operator|->
 name|rn_mklist
 init|;
+operator|(
 name|m
 operator|=
 operator|*
 name|mp
+operator|)
+operator|!=
+literal|0
 condition|;
 name|mp
 operator|=
@@ -2835,13 +2857,15 @@ literal|0
 operator|)
 return|;
 comment|/* 	 * Delete our route from mask lists. 	 */
-if|if
-condition|(
 name|dupedkey
 operator|=
 name|tt
 operator|->
 name|rn_dupedkey
+expr_stmt|;
+if|if
+condition|(
+name|dupedkey
 condition|)
 block|{
 if|if
@@ -3002,10 +3026,14 @@ name|x
 operator|->
 name|rn_mklist
 init|;
+operator|(
 name|m
 operator|=
 operator|*
 name|mp
+operator|)
+operator|!=
+literal|0
 condition|;
 name|mp
 operator|=
@@ -3377,10 +3405,14 @@ name|x
 operator|->
 name|rn_mklist
 init|;
+operator|(
 name|m
 operator|=
 operator|*
 name|mp
+operator|)
+operator|!=
+literal|0
 condition|;
 control|)
 name|mp
@@ -3456,7 +3488,7 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"%s %x at %x\n"
+literal|"%s %p at %p\n"
 argument_list|,
 literal|"rn_delete: Orphaned Mask"
 argument_list|,
@@ -3730,9 +3762,13 @@ expr_stmt|;
 comment|/* Process leaves */
 while|while
 condition|(
+operator|(
 name|rn
 operator|=
 name|base
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|base
