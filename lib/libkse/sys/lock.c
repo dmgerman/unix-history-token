@@ -821,7 +821,7 @@ operator|->
 name|lu_watchreq
 operator|->
 name|lr_locked
-operator|==
+operator|!=
 literal|0
 condition|)
 empty_stmt|;
