@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: verify.c,v 1.5 1997/10/01 06:30:02 charnier Exp $"
+literal|"$Id: verify.c,v 1.6 1998/06/05 14:43:42 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -515,11 +515,7 @@ name|ep
 operator|->
 name|flags
 operator|&
-operator|(
 name|F_IGN
-operator||
-name|F_NOCHANGE
-operator|)
 condition|)
 operator|(
 name|void
