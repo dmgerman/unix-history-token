@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.62 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.63 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1089,12 +1089,25 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|NVM
 name|vnode_pager_umount
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
 comment|/* release cached vnodes */
+else|#
+directive|else
+name|xumount
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* remove unused sticky files from text table */
+endif|#
+directive|endif
 name|cache_purgevfs
 argument_list|(
 name|mp
@@ -4355,6 +4368,9 @@ goto|goto
 name|out
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|NVM
 operator|(
 name|void
 operator|)
@@ -4363,6 +4379,24 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VTEXT
+condition|)
+name|xrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* try once to free text */
+endif|#
+directive|endif
 name|out
 label|:
 if|if
