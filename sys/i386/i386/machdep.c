@@ -5321,6 +5321,9 @@ modifier|*
 name|rate
 parameter_list|)
 block|{
+name|register_t
+name|reg
+decl_stmt|;
 name|uint64_t
 name|tsc1
 decl_stmt|,
@@ -5397,6 +5400,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Calibrate by measuring a short delay. */
+name|reg
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 name|tsc1
 operator|=
 name|rdtsc
@@ -5411,6 +5419,11 @@ name|tsc2
 operator|=
 name|rdtsc
 argument_list|()
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|reg
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5434,20 +5447,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|tsc_freq
-operator|=
-operator|(
+comment|/* 	 * Calculate the difference in readings, convert to Mhz, and 	 * subtract 0.5% of the total.  Empirical testing has shown that 	 * overhead in DELAY() works out to approximately this value. 	 */
 name|tsc2
-operator|-
+operator|-=
 name|tsc1
-operator|)
-operator|*
-literal|1000
 expr_stmt|;
 operator|*
 name|rate
 operator|=
-name|tsc_freq
+name|tsc2
+operator|*
+literal|1000
+operator|-
+name|tsc2
+operator|*
+literal|5
 expr_stmt|;
 return|return
 operator|(
