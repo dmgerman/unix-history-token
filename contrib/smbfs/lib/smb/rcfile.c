@@ -6,6 +6,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -1669,7 +1683,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"line too long for key '%s' in section '%s', max = %d\n"
+literal|"line too long for key '%s' in section '%s', max = %zd\n"
 argument_list|,
 name|key
 argument_list|,
