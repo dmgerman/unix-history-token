@@ -177,6 +177,12 @@ literal|"passwd.byname"
 block|}
 block|,
 block|{
+literal|"master.passwd"
+block|,
+literal|"master.passwd.byname"
+block|}
+block|,
+block|{
 literal|"group"
 block|,
 literal|"group.byname"
