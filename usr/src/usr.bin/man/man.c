@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.9 (Berkeley) %G%"
+literal|"@(#)man.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1668,7 +1668,7 @@ name|found
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * 7: If nothing found, we're done. 	 */
+comment|/* 6: If nothing found, we're done. */
 if|if
 condition|(
 operator|!
@@ -1684,7 +1684,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 8: If it's simple, display it fast. */
+comment|/* 7: If it's simple, display it fast. */
 if|if
 condition|(
 name|f_cat
@@ -1831,7 +1831,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * 9: We display things in a single command; build a list of things 	 *    to display. 	 */
+comment|/* 	 * 8: We display things in a single command; build a list of things 	 *    to display. 	 */
 for|for
 control|(
 name|ap
