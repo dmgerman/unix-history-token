@@ -1083,7 +1083,7 @@ operator|&
 name|term_kh
 block|,
 comment|/* home */
-literal|"kH"
+literal|"@7"
 block|,
 operator|&
 name|term_kH
