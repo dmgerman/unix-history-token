@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edquota.c	5.13 (Berkeley) %G%"
+literal|"@(#)edquota.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1777,6 +1777,8 @@ decl_stmt|;
 name|ftruncate
 argument_list|(
 name|outfd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|lseek
@@ -2675,6 +2677,8 @@ decl_stmt|;
 name|ftruncate
 argument_list|(
 name|outfd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|lseek
