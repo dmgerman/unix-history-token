@@ -4,7 +4,7 @@ comment|/*  * The main module for truss.  Suprisingly simple, but, then, the oth
 end_comment
 
 begin_comment
-comment|/*  * $Id: main.c,v 1.3 1997/12/06 14:41:41 peter Exp $  */
+comment|/*  * $Id: main.c,v 1.4 1997/12/06 17:13:54 sef Exp $  */
 end_comment
 
 begin_include
@@ -856,7 +856,6 @@ name|Procfd
 argument_list|,
 name|PIOCCONT
 argument_list|,
-operator|&
 name|val
 argument_list|)
 operator|==

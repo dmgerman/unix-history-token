@@ -4,7 +4,7 @@ comment|/*  * Various setup functions for truss.  Not the cleanest-written code,
 end_comment
 
 begin_comment
-comment|/*  * $Id: setup.c,v 1.3 1997/12/06 14:42:58 peter Exp $  */
+comment|/*  * $Id: setup.c,v 1.4 1997/12/07 04:08:48 sef Exp $  */
 end_comment
 
 begin_include
@@ -202,7 +202,6 @@ name|fd
 argument_list|,
 name|PIOCBIS
 argument_list|,
-operator|&
 name|mask
 argument_list|)
 operator|==
@@ -229,7 +228,6 @@ name|fd
 argument_list|,
 name|PIOCSFL
 argument_list|,
-operator|&
 name|flags
 argument_list|)
 operator|==
@@ -262,8 +260,8 @@ name|fd
 argument_list|,
 name|PIOCBIC
 argument_list|,
-operator|&
-name|mask
+operator|~
+literal|0
 argument_list|)
 expr_stmt|;
 name|err
@@ -366,11 +364,6 @@ operator|==
 name|S_EXIT
 condition|)
 block|{
-name|int
-name|zero
-init|=
-literal|0
-decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -384,8 +377,7 @@ name|fd
 argument_list|,
 name|PIOCCONT
 argument_list|,
-operator|&
-name|zero
+literal|0
 argument_list|)
 expr_stmt|;
 name|wait
@@ -510,7 +502,6 @@ name|fd
 argument_list|,
 name|PIOCBIS
 argument_list|,
-operator|&
 name|flags
 argument_list|)
 operator|==
@@ -525,10 +516,6 @@ literal|"cannot set procfs event bit mask"
 argument_list|)
 expr_stmt|;
 comment|/*    * This clears the PF_LINGER set above in setup_and_wait();    * if truss happens to die before this, then the process    * needs to be woken up via procctl.    */
-name|flags
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -537,8 +524,7 @@ name|fd
 argument_list|,
 name|PIOCSFL
 argument_list|,
-operator|&
-name|flags
+literal|0
 argument_list|)
 operator|==
 operator|-
@@ -571,22 +557,14 @@ specifier|extern
 name|int
 name|Procfd
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|i
-operator|=
-operator|~
-literal|0
-expr_stmt|;
 name|ioctl
 argument_list|(
 name|Procfd
 argument_list|,
 name|PIOCBIC
 argument_list|,
-operator|&
-name|i
+operator|~
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -599,7 +577,6 @@ name|Procfd
 argument_list|,
 name|PIOCBIS
 argument_list|,
-operator|&
 name|evflags
 argument_list|)
 expr_stmt|;

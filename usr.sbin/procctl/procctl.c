@@ -4,7 +4,7 @@ comment|/*  * procctl -- clear the event mask, and continue, any specified proce
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: procctl.c,v 1.1 1997/12/06 04:19:09 sef Exp $  */
 end_comment
 
 begin_include
@@ -172,11 +172,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|mask
-operator|=
-operator|~
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -185,8 +180,8 @@ name|fd
 argument_list|,
 name|PIOCBIC
 argument_list|,
-operator|&
-name|mask
+operator|~
+literal|0
 argument_list|)
 operator|==
 operator|-
@@ -216,10 +211,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|mask
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -228,8 +219,7 @@ name|fd
 argument_list|,
 name|PIOCCONT
 argument_list|,
-operator|&
-name|mask
+literal|0
 argument_list|)
 operator|==
 operator|-
