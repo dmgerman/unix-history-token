@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.6 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
+comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.7 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
 end_comment
 
 begin_ifndef
@@ -102,7 +102,7 @@ decl_stmt|;
 name|short
 name|p_unused
 decl_stmt|;
-comment|/* local credit fraction reported (>0) no longer used*/
+comment|/* was .. local credit fraction reported (>0) */
 name|short
 name|p_winsize
 decl_stmt|;
@@ -154,6 +154,10 @@ comment|/* use these params as they are */
 name|u_char
 name|p_netservice
 decl_stmt|;
+name|u_char
+name|p_version
+decl_stmt|;
+comment|/* only here for checking */
 block|}
 struct|;
 end_struct
