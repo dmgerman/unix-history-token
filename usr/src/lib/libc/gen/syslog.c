@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.27 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -715,6 +715,10 @@ argument_list|,
 literal|"\r\n"
 argument_list|)
 expr_stmt|;
+name|cnt
+operator|+=
+literal|2
+expr_stmt|;
 name|p
 operator|=
 name|index
@@ -736,8 +740,6 @@ argument_list|,
 name|p
 argument_list|,
 name|cnt
-operator|+
-literal|1
 operator|-
 operator|(
 name|p
