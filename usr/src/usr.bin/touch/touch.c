@@ -1,4 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1988 Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touch.c	4.6 (Berkeley) %G%"
+literal|"@(#)touch.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,14 +49,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *	attempt to set the modify date of a file to the current date.  *	if the file exists, read and write its first character.  *	if the file doesn't exist, create it, unless -c option prevents it.  *	if the file is read-only, -f forces chmod'ing and touch'ing.  */
+comment|/* not lint */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_comment
+comment|/*  * Attempt to set the modify date of a file to the current date.  If the  * file exists, read and write its first character.  If the file doesn't  * exist, create it, unless -c option prevents it.  If the file is read-only,  * -f forces chmod'ing and touch'ing.  */
+end_comment
 
 begin_include
 include|#
@@ -48,7 +74,14 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_decl_stmt
+specifier|static
 name|int
 name|dontcreate
 decl_stmt|;
@@ -59,6 +92,7 @@ comment|/* set if -c option */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|force
 decl_stmt|;
@@ -603,11 +637,11 @@ end_macro
 
 begin_block
 block|{
-name|fputs
+name|fprintf
 argument_list|(
-literal|"usage: touch [-cf] file ...\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"usage: touch [-cf] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
