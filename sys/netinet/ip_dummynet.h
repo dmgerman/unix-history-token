@@ -679,9 +679,6 @@ modifier|*
 name|m
 parameter_list|,
 name|int
-name|pipe_nr
-parameter_list|,
-name|int
 name|dir
 parameter_list|,
 name|struct

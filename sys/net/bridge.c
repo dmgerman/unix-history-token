@@ -4570,10 +4570,6 @@ name|ip_dn_io_ptr
 argument_list|(
 name|m
 argument_list|,
-name|args
-operator|.
-name|cookie
-argument_list|,
 name|DN_TO_BDG_FWD
 argument_list|,
 operator|&

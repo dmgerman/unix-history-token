@@ -2293,10 +2293,6 @@ name|ip_dn_io_ptr
 argument_list|(
 name|m
 argument_list|,
-name|args
-operator|.
-name|cookie
-argument_list|,
 name|dst
 condition|?
 name|DN_TO_ETH_OUT

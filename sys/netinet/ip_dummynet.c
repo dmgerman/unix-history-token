@@ -5174,9 +5174,6 @@ modifier|*
 name|m
 parameter_list|,
 name|int
-name|pipe_nr
-parameter_list|,
-name|int
 name|dir
 parameter_list|,
 name|struct
@@ -5304,10 +5301,6 @@ name|IP_FW_F_PIPE
 expr_stmt|;
 endif|#
 directive|endif
-name|pipe_nr
-operator|&=
-literal|0xffff
-expr_stmt|;
 name|DUMMYNET_LOCK
 argument_list|()
 expr_stmt|;
@@ -5316,7 +5309,9 @@ name|fs
 operator|=
 name|locate_flowset
 argument_list|(
-name|pipe_nr
+name|fwa
+operator|->
+name|cookie
 argument_list|,
 name|fwa
 operator|->

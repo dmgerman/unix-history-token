@@ -581,10 +581,6 @@ argument_list|(
 operator|*
 name|m0
 argument_list|,
-name|args
-operator|.
-name|cookie
-argument_list|,
 name|DN_TO_IP_IN
 argument_list|,
 operator|&
@@ -1038,10 +1034,6 @@ name|ip_dn_io_ptr
 argument_list|(
 operator|*
 name|m0
-argument_list|,
-name|args
-operator|.
-name|cookie
 argument_list|,
 name|DN_TO_IP_OUT
 argument_list|,
