@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.44 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.45 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.44 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.45 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1677,10 +1677,18 @@ expr_stmt|;
 if|if
 condition|(
 name|hp
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
+name|syserr
+argument_list|(
+literal|"!My host name (%s) does not seem to exist!"
+argument_list|,
+name|hostbuf
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1706,10 +1714,10 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
-comment|/* if still no dot, try DNS directly (i.e., avoid NIS) */
+comment|/* if still no dot, try DNS directly (i.e., avoid NIS problems) */
 if|if
 condition|(
 name|strchr
@@ -1727,9 +1735,14 @@ name|bool
 name|getcanonname
 parameter_list|()
 function_decl|;
-operator|(
-name|void
-operator|)
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
+comment|/* try twice in case name server not yet started up */
+if|if
+condition|(
+operator|!
 name|getcanonname
 argument_list|(
 name|hostbuf
@@ -1738,7 +1751,47 @@ name|size
 argument_list|,
 name|TRUE
 argument_list|)
+operator|&&
+name|UseNameServer
+operator|&&
+operator|(
+name|h_errno
+operator|!=
+name|TRY_AGAIN
+operator|||
+operator|(
+name|sleep
+argument_list|(
+literal|30
+argument_list|)
+operator|,
+operator|!
+name|getcanonname
+argument_list|(
+name|hostbuf
+argument_list|,
+name|size
+argument_list|,
+name|TRUE
+argument_list|)
+operator|)
+operator|)
+condition|)
+block|{
+name|errno
+operator|=
+name|h_errno
+operator|+
+name|E_DNSBASE
 expr_stmt|;
+name|syserr
+argument_list|(
+literal|"!My host name (%s) not known to DNS"
+argument_list|,
+name|hostbuf
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -1825,13 +1878,6 @@ operator|(
 name|hp
 operator|->
 name|h_aliases
-operator|)
-return|;
-block|}
-else|else
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 block|}
