@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: telnetd.c,v 1.4 1998/02/16 12:09:27 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4797,7 +4797,7 @@ condition|)
 block|{
 name|char
 modifier|*
-name|getstr
+name|Getstr
 parameter_list|()
 function_decl|;
 name|char
@@ -4808,7 +4808,7 @@ name|defstrs
 decl_stmt|;
 name|HE
 operator|=
-name|getstr
+name|Getstr
 argument_list|(
 literal|"he"
 argument_list|,
@@ -4818,7 +4818,7 @@ argument_list|)
 expr_stmt|;
 name|HN
 operator|=
-name|getstr
+name|Getstr
 argument_list|(
 literal|"hn"
 argument_list|,
@@ -4828,7 +4828,7 @@ argument_list|)
 expr_stmt|;
 name|IM
 operator|=
-name|getstr
+name|Getstr
 argument_list|(
 literal|"im"
 argument_list|,

@@ -131,7 +131,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|getstr
+name|Getstr
 parameter_list|(
 name|id
 parameter_list|,
