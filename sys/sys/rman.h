@@ -253,7 +253,7 @@ comment|/*  * We use a linked list rather than a bitmap because we need to be ab
 end_comment
 
 begin_expr_stmt
-name|CIRCLEQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 name|resource_head
 argument_list|,
@@ -266,7 +266,7 @@ begin_struct
 struct|struct
 name|resource
 block|{
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|resource
 argument_list|)

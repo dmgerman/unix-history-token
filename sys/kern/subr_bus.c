@@ -12217,21 +12217,12 @@ name|error
 operator|)
 return|;
 block|}
-define|#
-directive|define
-name|CIRCLEQ_TERMCOND
-parameter_list|(
-name|var
-parameter_list|,
-name|head
-parameter_list|)
-value|(var == (void *)&(head))
 comment|/* 	 * Find the indexed resource and return it. 	 */
 for|for
 control|(
 name|res
 operator|=
-name|CIRCLEQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|rm
@@ -12239,19 +12230,11 @@ operator|->
 name|rm_list
 argument_list|)
 init|;
-operator|!
-name|CIRCLEQ_TERMCOND
-argument_list|(
 name|res
-argument_list|,
-name|rm
-operator|->
-name|rm_list
-argument_list|)
 condition|;
 name|res
 operator|=
-name|CIRCLEQ_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|res
 argument_list|,
