@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -336,10 +336,9 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-name|off_t
+name|long
 name|pos
 decl_stmt|;
-comment|/* XXX becomes long */
 block|}
 modifier|*
 name|uap
@@ -538,29 +537,6 @@ name|uap
 operator|->
 name|fd
 expr_stmt|;
-name|spos
-operator|=
-name|uap
-operator|->
-name|pos
-operator|>>
-literal|32
-expr_stmt|;
-comment|/* XXX */
-if|if
-condition|(
-name|spos
-operator|>
-literal|0
-condition|)
-comment|/* XXX */
-name|uap
-operator|->
-name|pos
-operator|=
-name|spos
-expr_stmt|;
-comment|/* XXX */
 name|nargs
 operator|.
 name|pos
