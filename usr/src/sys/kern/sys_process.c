@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -1302,6 +1302,9 @@ case|case
 name|PT_CONTINUE
 case|:
 comment|/* continue the child */
+ifndef|#
+directive|ifndef
+name|mips
 name|regs
 operator|=
 operator|(
@@ -1318,6 +1321,8 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -1366,6 +1371,25 @@ expr_stmt|;
 comment|/* see issignal */
 ifdef|#
 directive|ifdef
+name|mips
+if|if
+condition|(
+name|i
+operator|==
+name|PT_STEP
+operator|&&
+name|cpu_singlestep
+argument_list|(
+name|p
+argument_list|)
+condition|)
+goto|goto
+name|error
+goto|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
 name|PSL_T
 comment|/* need something more machine independent here... */
 if|if
@@ -1381,6 +1405,8 @@ index|]
 operator||=
 name|PSL_T
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|wakeup
