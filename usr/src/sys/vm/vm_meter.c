@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vm_meter.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vm_meter.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -596,7 +596,7 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
-comment|/* 	 * No one wants in, so nothing to do. 	 */
+comment|/* 	 * If something came ready after we checked it, 	 * wantin will be set.  Otherwise, 	 * no one wants in, so nothing to do. 	 */
 if|if
 condition|(
 name|outpri
@@ -614,25 +614,9 @@ expr_stmt|;
 if|if
 condition|(
 name|wantin
-condition|)
-block|{
-name|wantin
-operator|=
+operator|==
 literal|0
-expr_stmt|;
-name|sleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|lbolt
-argument_list|,
-name|PSWP
-argument_list|)
-expr_stmt|;
-block|}
-else|else
+condition|)
 block|{
 name|runout
 operator|++
