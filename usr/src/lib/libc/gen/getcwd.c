@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)getcwd.c	4.1	(Berkeley)	%G%	*/
+comment|/*	@(#)getcwd.c	4.2	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
@@ -59,9 +59,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|off
-init|=
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -96,11 +93,17 @@ modifier|*
 name|np
 decl_stmt|;
 block|{
-name|int
+name|dev_t
 name|rdev
-decl_stmt|,
+decl_stmt|;
+name|ino_t
 name|rino
 decl_stmt|;
+name|off
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 operator|*
 name|np
 operator|++
