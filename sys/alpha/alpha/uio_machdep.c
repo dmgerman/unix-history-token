@@ -280,7 +280,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|PHYS_TO_DMAP
+name|ALPHA_PHYS_TO_K0SEG
 argument_list|(
 name|ma
 index|[

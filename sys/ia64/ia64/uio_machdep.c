@@ -280,7 +280,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|PHYS_TO_DMAP
+name|IA64_PHYS_TO_RR7
 argument_list|(
 name|ma
 index|[
