@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	4.4 (Berkeley) %G%"
+literal|"@(#)syslog.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,12 +142,12 @@ specifier|static
 name|int
 name|LogMask
 init|=
-name|LOG_DEBUG
+literal|0xffffffff
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* lowest priority to be logged */
+comment|/* mask of priorities to be logged */
 end_comment
 
 begin_decl_stmt
@@ -254,12 +254,24 @@ comment|/* see if we should just throw out this message */
 if|if
 condition|(
 name|pri
-operator|<
-name|LOG_ALERT
+operator|<=
+literal|0
 operator|||
 name|pri
-operator|>
+operator|>=
+literal|32
+operator|||
+operator|(
+operator|(
+literal|1
+operator|<<
+name|pri
+operator|)
+operator|&
 name|LogMask
+operator|)
+operator|==
+literal|0
 condition|)
 return|return;
 if|if
@@ -681,12 +693,8 @@ expr_stmt|;
 if|if
 condition|(
 name|logmask
-operator|>
+operator|!=
 literal|0
-operator|&&
-name|logmask
-operator|<=
-name|LOG_DEBUG
 condition|)
 name|LogMask
 operator|=
@@ -776,42 +784,38 @@ end_comment
 begin_macro
 name|setlogmask
 argument_list|(
-argument|pri
+argument|pmask
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
-name|pri
+name|pmask
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
 name|int
-name|opri
+name|omask
 decl_stmt|;
-name|opri
+name|omask
 operator|=
 name|LogMask
 expr_stmt|;
 if|if
 condition|(
-name|pri
-operator|>
+name|pmask
+operator|!=
 literal|0
-operator|&&
-name|pri
-operator|<=
-name|LOG_DEBUG
 condition|)
 name|LogMask
 operator|=
-name|pri
+name|pmask
 expr_stmt|;
 return|return
 operator|(
-name|opri
+name|omask
 operator|)
 return|;
 block|}
