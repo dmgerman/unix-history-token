@@ -54,7 +54,7 @@ name|short
 name|mt_op
 decl_stmt|;
 comment|/* operations defined below */
-name|daddr_t
+name|int32_t
 name|mt_count
 decl_stmt|;
 comment|/* how many of them */
@@ -521,11 +521,11 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|daddr_t
+name|int32_t
 name|mt_blksiz
 decl_stmt|;
 comment|/* presently operating blocksize */
-name|daddr_t
+name|int32_t
 name|mt_density
 decl_stmt|;
 comment|/* presently operating density */
@@ -533,35 +533,35 @@ name|u_int32_t
 name|mt_comp
 decl_stmt|;
 comment|/* presently operating compression */
-name|daddr_t
+name|int32_t
 name|mt_blksiz0
 decl_stmt|;
 comment|/* blocksize for mode 0 */
-name|daddr_t
+name|int32_t
 name|mt_blksiz1
 decl_stmt|;
 comment|/* blocksize for mode 1 */
-name|daddr_t
+name|int32_t
 name|mt_blksiz2
 decl_stmt|;
 comment|/* blocksize for mode 2 */
-name|daddr_t
+name|int32_t
 name|mt_blksiz3
 decl_stmt|;
 comment|/* blocksize for mode 3 */
-name|daddr_t
+name|int32_t
 name|mt_density0
 decl_stmt|;
 comment|/* density for mode 0 */
-name|daddr_t
+name|int32_t
 name|mt_density1
 decl_stmt|;
 comment|/* density for mode 1 */
-name|daddr_t
+name|int32_t
 name|mt_density2
 decl_stmt|;
 comment|/* density for mode 2 */
-name|daddr_t
+name|int32_t
 name|mt_density3
 decl_stmt|;
 comment|/* density for mode 3 */
@@ -585,11 +585,11 @@ comment|/* compression type for mode 3 */
 comment|/* end not yet implemented */
 endif|#
 directive|endif
-name|daddr_t
+name|int32_t
 name|mt_fileno
 decl_stmt|;
 comment|/* relative file number of current position */
-name|daddr_t
+name|int32_t
 name|mt_blkno
 decl_stmt|;
 comment|/* relative block number of current position */
