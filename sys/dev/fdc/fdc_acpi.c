@@ -943,6 +943,8 @@ name|ctx
 decl_stmt|;
 name|device_t
 name|child
+decl_stmt|,
+name|old_child
 decl_stmt|;
 name|ACPI_BUFFER
 name|buf
@@ -1028,6 +1030,11 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|old_child
+operator|=
+operator|*
+name|dev
+expr_stmt|;
 operator|*
 name|dev
 operator|=
@@ -1068,7 +1075,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Evaluate _FDI to get drive type to pass to the child. */
+comment|/* 	 * Evaluate _FDI to get drive type to pass to the child.  We use the 	 * old child here since it has a valid ACPI_HANDLE since it is a 	 * child of acpi.  A better way to implement this would be to make fdc 	 * support the ACPI handle ivar for its children. 	 */
 name|status
 operator|=
 name|ACPI_EVALUATE_OBJECT
@@ -1077,8 +1084,7 @@ name|ctx
 operator|->
 name|acpi_dev
 argument_list|,
-operator|*
-name|dev
+name|old_child
 argument_list|,
 literal|"_FDI"
 argument_list|,
