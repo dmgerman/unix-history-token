@@ -42,6 +42,60 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIC_ID_ENE_CB710
+value|0x14111524ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_ENE_CB720
+value|0x14211524ul
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_ENE_CB1211
+value|0x12111524ul
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_ENE_CB1225
+value|0x12251524ul
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_ENE_CB1410
+value|0x14101524ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_ID_ENE_CB1420
+value|0x14201524ul
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIC_ID_INTEL_82092AA_0
 value|0x12218086ul
 end_define
@@ -151,6 +205,10 @@ directive|define
 name|PCIC_ID_OZ6933
 value|0x69331217ul
 end_define
+
+begin_comment
+comment|/* O2Micro 711E1 */
+end_comment
 
 begin_define
 define|#

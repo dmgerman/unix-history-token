@@ -474,6 +474,55 @@ block|,
 name|CB_TI12XX
 block|}
 block|,
+comment|/* ENE */
+block|{
+name|PCIC_ID_ENE_CB710
+block|,
+literal|"ENE CB720 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_ENE_CB720
+block|,
+literal|"ENE CB720 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_ENE_CB1211
+block|,
+literal|"ENE CB1211 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_ENE_CB1225
+block|,
+literal|"ENE CB1225 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_ENE_CB1410
+block|,
+literal|"ENE CB1410 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_ENE_CB1420
+block|,
+literal|"ENE CB1420 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
 comment|/* Ricoh chips */
 block|{
 name|PCIC_ID_RICOH_RL5C465
@@ -630,6 +679,7 @@ block|,
 name|CB_O2MICRO
 block|}
 block|,
+comment|/* 711E1 */
 comment|/* sentinel */
 block|{
 literal|0
