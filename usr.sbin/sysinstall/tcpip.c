@@ -2081,7 +2081,6 @@ argument_list|)
 operator|||
 operator|(
 operator|(
-operator|!
 name|variable_cmp
 argument_list|(
 name|VAR_TRY_DHCP
