@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 139 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 142 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1383,6 +1383,9 @@ name|WalkState
 operator|->
 name|AmlOffset
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|ACPI_PTR_DIFF
 argument_list|(
 name|ParserState
@@ -2072,7 +2075,7 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Op is not a constant or string, append each argument */
+comment|/* Op is not a constant or string, append each argument to the Op */
 while|while
 condition|(
 name|GET_CURRENT_ARG_TYPE
@@ -2092,6 +2095,9 @@ name|WalkState
 operator|->
 name|AmlOffset
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|ACPI_PTR_DIFF
 argument_list|(
 name|ParserState
@@ -2165,6 +2171,7 @@ name|ArgTypes
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Special processing for certain opcodes */
 switch|switch
 condition|(
 name|Op
@@ -2177,8 +2184,7 @@ block|{
 case|case
 name|AML_METHOD_OP
 case|:
-comment|/* For a method, save the length and address of the body */
-comment|/*                      * Skip parsing of control method or opregion body,                      * because we don't have enough info in the first pass                      * to parse them correctly.                      */
+comment|/*                      * Skip parsing of control method                      * because we don't have enough info in the first pass                      * to parse it correctly.                      *                      * Save the length and address of the body                      */
 name|Op
 operator|->
 name|Named
@@ -2208,7 +2214,7 @@ operator|->
 name|Aml
 argument_list|)
 expr_stmt|;
-comment|/*                      * Skip body of method.  For OpRegions, we must continue                      * parsing because the opregion is not a standalone                      * package (We don't know where the end is).                      */
+comment|/* Skip body of method */
 name|ParserState
 operator|->
 name|Aml
@@ -2266,7 +2272,7 @@ name|AcpiDsExecBeginOp
 operator|)
 condition|)
 block|{
-comment|/*                          * Skip parsing of                          * because we don't have enough info in the first pass                          * to parse them correctly.                          */
+comment|/*                          * Skip parsing of Buffers and Packages                          * because we don't have enough info in the first pass                          * to parse them correctly.                          */
 name|Op
 operator|->
 name|Named
@@ -2292,7 +2298,7 @@ operator|-
 name|AmlOpStart
 argument_list|)
 expr_stmt|;
-comment|/*                          * Skip body                          */
+comment|/* Skip body */
 name|ParserState
 operator|->
 name|Aml
@@ -3220,6 +3226,9 @@ name|ACPI_WALK_STATE
 modifier|*
 name|PreviousWalkState
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ACPICA_PEDANTIC
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
@@ -3235,6 +3244,8 @@ name|EffectiveReturnDesc
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"PsParseAml"
@@ -3425,6 +3436,9 @@ argument_list|(
 name|Thread
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ACPICA_PEDANTIC
 comment|/* Save the last effective return value */
 if|if
 condition|(
@@ -3452,6 +3466,8 @@ name|EffectiveReturnDesc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Reset the current scope to the beginning of scope stack */
 name|AcpiDsScopeStackClear
 argument_list|(
@@ -3595,7 +3611,10 @@ operator|->
 name|CallerReturnDesc
 condition|)
 block|{
-comment|/*              * Some AML code expects return value w/o ReturnOp.              * Return the saved effective return value instead.              */
+ifndef|#
+directive|ifndef
+name|ACPICA_PEDANTIC
+comment|/*              * Some AML code expects a return value without a ReturnOp.              * Return the saved effective return value instead.              */
 if|if
 condition|(
 name|PreviousWalkState
@@ -3623,6 +3642,8 @@ name|ReturnDesc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 operator|*
 operator|(
 name|PreviousWalkState
@@ -3660,11 +3681,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Normal exit */
+ifndef|#
+directive|ifndef
+name|ACPICA_PEDANTIC
 name|AcpiUtRemoveReference
 argument_list|(
 name|EffectiveReturnDesc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|AcpiExReleaseAllMutexes
 argument_list|(
 name|Thread
