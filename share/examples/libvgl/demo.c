@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vgl.h"
+file|<vgl.h>
 end_include
 
 begin_function
@@ -35,8 +35,6 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|x
-decl_stmt|,
 name|y
 decl_stmt|,
 name|xsize
