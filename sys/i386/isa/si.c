@@ -1074,7 +1074,7 @@ specifier|static
 name|struct
 name|tty
 modifier|*
-name|si_tty
+name|si__tty
 decl_stmt|;
 end_decl_stmt
 
@@ -5038,7 +5038,7 @@ operator|*
 name|nport
 argument_list|)
 expr_stmt|;
-name|si_tty
+name|si__tty
 operator|=
 name|tp
 expr_stmt|;
