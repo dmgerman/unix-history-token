@@ -6145,6 +6145,11 @@ operator|&
 name|P_TRACED
 condition|)
 do|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
+expr_stmt|;
 comment|/* 			 * If the traced bit got turned off, go back up 			 * to the top to rescan signals.  This ensures 			 * that p_sig* and ps_sigact are consistent. 			 */
 if|if
 condition|(
