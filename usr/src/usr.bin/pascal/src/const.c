@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)const.c	5.2 (Berkeley) %G%"
+literal|"@(#)const.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,12 +63,16 @@ begin_macro
 name|constbeg
 argument_list|(
 argument|lineofyconst
+argument_list|,
+argument|linenum
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
 name|lineofyconst
+decl_stmt|,
+name|linenum
 decl_stmt|;
 end_decl_stmt
 
