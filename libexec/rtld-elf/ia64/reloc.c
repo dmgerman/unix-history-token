@@ -990,6 +990,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+case|case
+name|R_IA64_NONE
+case|:
+break|break;
 default|default:
 name|_rtld_error
 argument_list|(
