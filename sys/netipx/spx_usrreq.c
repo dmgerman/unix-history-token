@@ -5288,7 +5288,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * If this is a new packet and we are not currently  			 * timing anything, time this one. 			 */
+comment|/* 			 * If this is a new packet and we are not currently 			 * timing anything, time this one. 			 */
 if|if
 condition|(
 name|SSEQ_LT

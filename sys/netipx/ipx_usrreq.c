@@ -1397,7 +1397,7 @@ operator|.
 name|x_host
 expr_stmt|;
 block|}
-comment|/*  			 * Otherwise, we go through the same gateway 			 * and dst is already set up. 			 */
+comment|/* 			 * Otherwise, we go through the same gateway 			 * and dst is already set up. 			 */
 block|}
 else|else
 block|{
