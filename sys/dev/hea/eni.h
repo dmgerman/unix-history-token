@@ -1765,10 +1765,15 @@ name|Cmn_unit
 name|eu_cmn
 decl_stmt|;
 comment|/* Common unit stuff */
+ifdef|#
+directive|ifdef
+name|COMPAT_OLDPCI
 name|pcici_t
 name|eu_pcitag
 decl_stmt|;
 comment|/* PCI tag */
+endif|#
+directive|endif
 name|Eni_mem
 name|eu_base
 decl_stmt|;

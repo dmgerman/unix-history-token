@@ -3,6 +3,23 @@ begin_comment
 comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $FreeBSD$  *  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPILING_LINT
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+literal|"The fore pci driver is broken and is not compiled with LINT"
+end_warning
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
 comment|/*  * FORE Systems 200-Series Adapter Support  * ---------------------------------------  *  * Loadable kernel module and device identification support  *  */
 end_comment
@@ -274,6 +291,23 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDPCI
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The fore device requires the old pci compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Local variables  */
@@ -1662,6 +1696,11 @@ end_endif
 begin_comment
 comment|/* ATM_LINKED */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

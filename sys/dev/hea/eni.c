@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * Efficient ENI adapter support  * -----------------------------  *  * Module supports PCI interface to ENI adapter  *  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPILING_LINT
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+literal|"The eni driver is broken and is not compiled with LINT"
+end_warning
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -146,6 +163,23 @@ literal|"@(#) $FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDPCI
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The eni device requires the old pci compatibility shims"
+end_error
 
 begin_endif
 endif|#
@@ -1832,6 +1866,11 @@ end_endif
 begin_comment
 comment|/* BSD< 199506 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

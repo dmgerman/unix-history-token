@@ -3,6 +3,23 @@ begin_comment
 comment|/*-  * Copyright (c) 1994-1997 Matt Thomas (matt@3am-software.com)  * Copyright (c) LAN Media Corporation 1998, 1999.  * Copyright (c) 2000 Stephen Kiernan (sk-ports@vegamuse.org)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  *      From NetBSD: if_de.c,v 1.56.2.1 1997/10/27 02:13:25 thorpej Exp  *	$Id: if_lmc.c,v 1.9 1999/02/19 15:08:42 explorer Exp $  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPILING_LINT
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+literal|"The lmc driver is broken and is not compiled with LINT"
+end_warning
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|char
 name|lmc_version
@@ -6605,6 +6622,11 @@ include|#
 directive|include
 file|"dev/lmc/if_lmc_fbsd3.c"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -39,6 +39,23 @@ parameter_list|)
 value|(sc)->lmc_pci_busno = (config_id->bus), \ 			      (sc)->lmc_pci_devno = (config_id->slot)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDPCI
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The lmc device requires the old pci compatibility shims"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if

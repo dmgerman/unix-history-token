@@ -419,10 +419,15 @@ modifier|*
 name|fu_psr
 decl_stmt|;
 comment|/* PCI specific register */
+ifdef|#
+directive|ifdef
+name|COMPAT_OLDPCI
 name|pcici_t
 name|fu_pcitag
 decl_stmt|;
 comment|/* PCI tag */
+endif|#
+directive|endif
 name|Fore_mem
 modifier|*
 name|fu_ram
