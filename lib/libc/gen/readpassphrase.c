@@ -192,7 +192,7 @@ name|input
 operator|=
 name|output
 operator|=
-name|open
+name|_open
 argument_list|(
 name|_PATH_TTY
 argument_list|,
@@ -256,7 +256,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -387,7 +387,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|write
+name|_write
 argument_list|(
 name|output
 argument_list|,
@@ -413,7 +413,7 @@ name|p
 operator|=
 name|buf
 init|;
-name|read
+name|_read
 argument_list|(
 name|input
 argument_list|,
@@ -520,7 +520,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|write
+name|_write
 argument_list|(
 name|output
 argument_list|,
@@ -566,7 +566,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -585,7 +585,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|close
+name|_close
 argument_list|(
 name|input
 argument_list|)
