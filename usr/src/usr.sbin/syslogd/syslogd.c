@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.16 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -805,7 +805,7 @@ name|len
 decl_stmt|;
 name|struct
 name|sockaddr_un
-name|sun
+name|sunx
 decl_stmt|,
 name|fromunix
 decl_stmt|;
@@ -1149,7 +1149,7 @@ argument_list|(
 name|LogName
 argument_list|)
 expr_stmt|;
-name|sun
+name|sunx
 operator|.
 name|sun_family
 operator|=
@@ -1160,14 +1160,14 @@ name|void
 operator|)
 name|strncpy
 argument_list|(
-name|sun
+name|sunx
 operator|.
 name|sun_path
 argument_list|,
 name|LogName
 argument_list|,
 sizeof|sizeof
-name|sun
+name|sunx
 operator|.
 name|sun_path
 argument_list|)
@@ -1199,18 +1199,18 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sun
+name|sunx
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sun
+name|sunx
 operator|.
 name|sun_family
 argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|sun
+name|sunx
 operator|.
 name|sun_path
 argument_list|)
@@ -3575,7 +3575,7 @@ name|p
 operator|=
 literal|"/dev/12345678"
 expr_stmt|;
-name|strcpyn
+name|strncpy
 argument_list|(
 operator|&
 name|p
