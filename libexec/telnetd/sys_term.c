@@ -4882,6 +4882,9 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|char
+name|erase
+decl_stmt|;
 if|#
 directive|if
 operator|!
@@ -4924,7 +4927,7 @@ name|def_tspeed
 decl_stmt|,
 name|def_rspeed
 decl_stmt|;
-comment|/* 	 * Opening the slave side may cause initilization of the 	 * kernel tty structure.  We need remember the state of 	 * 	if linemode was turned on 	 *	terminal window size 	 *	terminal speed 	 * so that we can re-set them if we need to. 	 */
+comment|/* 	 * Opening the slave side may cause initilization of the 	 * kernel tty structure.  We need remember the state of 	 * 	if linemode was turned on 	 *	terminal window size 	 *	terminal speed 	 *	erase character 	 * so that we can re-set them if we need to. 	 */
 ifdef|#
 directive|ifdef
 name|LINEMODE
@@ -4935,6 +4938,15 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|erase
+operator|=
+name|termbuf
+operator|.
+name|c_cc
+index|[
+name|VERASE
+index|]
+expr_stmt|;
 comment|/* 	 * Make sure that we don't have a controlling tty, and 	 * that we are the session (process group) leader. 	 */
 ifdef|#
 directive|ifdef
@@ -5337,6 +5349,19 @@ name|def_tspeed
 else|:
 literal|9600
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|erase
+condition|)
+name|termbuf
+operator|.
+name|c_cc
+index|[
+name|VERASE
+index|]
+operator|=
+name|erase
 expr_stmt|;
 ifdef|#
 directive|ifdef
