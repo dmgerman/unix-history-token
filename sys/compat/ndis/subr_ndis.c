@@ -7383,6 +7383,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|pool
 operator|==
 name|NULL
@@ -8172,6 +8173,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|pool
 operator|==
 name|NULL
