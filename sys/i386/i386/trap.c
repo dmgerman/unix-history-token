@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.33 1994/09/08 11:48:52 bde Exp $  */
+comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.34 1994/09/11 11:26:18 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1545,6 +1545,10 @@ name|type
 decl_stmt|,
 name|eva
 decl_stmt|;
+name|struct
+name|soft_segment_descriptor
+name|softseg
+decl_stmt|;
 name|code
 operator|=
 name|frame
@@ -1561,6 +1565,23 @@ name|eva
 operator|=
 name|rcr2
 argument_list|()
+expr_stmt|;
+name|sdtossd
+argument_list|(
+name|gdt
+operator|+
+name|IDXSEL
+argument_list|(
+name|frame
+operator|->
+name|tf_cs
+operator|&
+literal|0xffff
+argument_list|)
+argument_list|,
+operator|&
+name|softseg
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1639,11 +1660,55 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"instruction pointer	= 0x%x\n"
+literal|"instruction pointer	= 0x%x:0x%x\n"
+argument_list|,
+name|frame
+operator|->
+name|tf_cs
+operator|&
+literal|0xffff
 argument_list|,
 name|frame
 operator|->
 name|tf_eip
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"code segment		= base 0x%x, limit 0x%x, type 0x%x\n"
+argument_list|,
+name|softseg
+operator|.
+name|ssd_base
+argument_list|,
+name|softseg
+operator|.
+name|ssd_limit
+argument_list|,
+name|softseg
+operator|.
+name|ssd_type
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"			= DPL %d, pres %d, def32 %d, gran %d\n"
+argument_list|,
+name|softseg
+operator|.
+name|ssd_dpl
+argument_list|,
+name|softseg
+operator|.
+name|ssd_p
+argument_list|,
+name|softseg
+operator|.
+name|ssd_def32
+argument_list|,
+name|softseg
+operator|.
+name|ssd_gran
 argument_list|)
 expr_stmt|;
 name|printf
