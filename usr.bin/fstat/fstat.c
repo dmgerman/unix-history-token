@@ -1403,6 +1403,24 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * text vnode, if one 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_textvp
+condition|)
+name|vtrans
+argument_list|(
+name|p
+operator|->
+name|p_textvp
+argument_list|,
+name|TEXT
+argument_list|,
+name|FREAD
+argument_list|)
+expr_stmt|;
 comment|/* 	 * open files 	 */
 define|#
 directive|define
