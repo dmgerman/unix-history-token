@@ -2810,6 +2810,27 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|LINUX_MS_ASYNC
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_MS_INVALIDATE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_MS_SYNC
+value|0x0004
+end_define
+
 begin_function
 name|int
 name|linux_msync
@@ -2852,9 +2873,13 @@ name|bsd_args
 operator|.
 name|flags
 operator|=
-literal|0
+name|args
+operator|->
+name|fl
+operator|&
+operator|~
+name|LINUX_MS_SYNC
 expr_stmt|;
-comment|/* XXX ignore */
 return|return
 name|msync
 argument_list|(
