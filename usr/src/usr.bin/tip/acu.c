@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acu.c	4.2	81/10/02	*/
+comment|/*	acu.c	4.3	81/11/16	*/
 end_comment
 
 begin_include
@@ -677,6 +677,8 @@ expr_stmt|;
 name|longjmp
 argument_list|(
 name|jmpbuf
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
