@@ -734,6 +734,10 @@ case|case
 literal|0x25788086
 case|:
 comment|/* i875P */
+case|case
+literal|0x25608086
+case|:
+comment|/* i845G */
 name|pci_write_config
 argument_list|(
 name|dev
