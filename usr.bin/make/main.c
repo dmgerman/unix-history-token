@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.21 1997/08/25 21:35:44 fsmp Exp $"
+literal|"$Id: main.c,v 1.22 1997/08/27 06:31:27 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,6 +134,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
