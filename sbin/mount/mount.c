@@ -1632,12 +1632,6 @@ operator|)
 name|argv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|!=
-name|ENOENT
-condition|)
 name|warn
 argument_list|(
 literal|"exec %s for %s"
@@ -1657,21 +1651,6 @@ operator|!=
 name|NULL
 condition|)
 do|;
-if|if
-condition|(
-name|errno
-operator|==
-name|ENOENT
-condition|)
-name|warn
-argument_list|(
-literal|"exec %s for %s"
-argument_list|,
-name|execname
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 literal|1
