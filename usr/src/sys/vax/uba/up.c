@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.37	81/04/09	*/
+comment|/*	up.c	4.38	81/04/18	*/
 end_comment
 
 begin_include
@@ -856,7 +856,7 @@ name|upaddr
 operator|->
 name|uphr
 operator|==
-literal|10
+literal|9
 condition|)
 name|ui
 operator|->
