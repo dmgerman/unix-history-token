@@ -7080,7 +7080,6 @@ argument_list|,
 name|ku
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Clear TDF_UPCALLING after set upcall context, 		 * profiling code looks TDF_UPCALLING to avoid account 		 * a wrong user %EIP 		 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
