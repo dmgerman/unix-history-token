@@ -218,6 +218,13 @@ name|BDEV_MAJOR
 value|15
 end_define
 
+begin_define
+define|#
+directive|define
+name|VN_BSIZE_BEST
+value|8192
+end_define
+
 begin_comment
 comment|/*  * cdevsw  *	D_DISK		we want to look like a disk  *	( D_NOCLUSTERRW	 removed - clustering should be ok )  *	D_CANFREE	We support B_FREEBUF  */
 end_comment
@@ -794,7 +801,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Update si_bsize fields for device.  This data will be overriden by 	 * the slice/parition code for vn accesses through partitions, and 	 * used directly if you open the 'whole disk' device. 	 */
+comment|/* 	 * Update si_bsize fields for device.  This data will be overriden by 	 * the slice/parition code for vn accesses through partitions, and 	 * used directly if you open the 'whole disk' device. 	 * 	 * si_bsize_best must be reinitialized in case VN has been  	 * reconfigured, plus make it at least VN_BSIZE_BEST for efficiency. 	 */
 name|dev
 operator|->
 name|si_bsize_phys
@@ -803,17 +810,43 @@ name|vn
 operator|->
 name|sc_secsize
 expr_stmt|;
+name|dev
+operator|->
+name|si_bsize_best
+operator|=
+name|vn
+operator|->
+name|sc_secsize
+expr_stmt|;
 if|if
 condition|(
+name|dev
+operator|->
+name|si_bsize_best
+operator|<
+name|VN_BSIZE_BEST
+condition|)
+name|dev
+operator|->
+name|si_bsize_best
+operator|=
+name|VN_BSIZE_BEST
+expr_stmt|;
+if|if
+condition|(
+operator|(
 name|flags
 operator|&
 name|FWRITE
+operator|)
 operator|&&
+operator|(
 name|vn
 operator|->
 name|sc_flags
 operator|&
 name|VNF_READONLY
+operator|)
 condition|)
 return|return
 operator|(
@@ -1038,9 +1071,6 @@ name|isvplocked
 init|=
 literal|0
 decl_stmt|;
-name|long
-name|sz
-decl_stmt|;
 name|struct
 name|uio
 name|auio
@@ -1182,6 +1212,10 @@ name|int
 name|pbn
 decl_stmt|;
 comment|/* in sc_secsize chunks */
+name|long
+name|sz
+decl_stmt|;
+comment|/* in sc_secsize chunks */
 name|pbn
 operator|=
 name|bp
@@ -1209,6 +1243,7 @@ operator|->
 name|sc_secsize
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If out of bounds return an error.  If at the EOF point, 		 * simply read or write less. 		 */
 if|if
 condition|(
 name|pbn
@@ -1216,9 +1251,7 @@ operator|<
 literal|0
 operator|||
 name|pbn
-operator|+
-name|sz
-operator|>
+operator|>=
 name|vn
 operator|->
 name|sc_size
@@ -1254,6 +1287,45 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+comment|/* 		 * If the request crosses EOF, truncate the request. 		 */
+if|if
+condition|(
+name|pbn
+operator|+
+name|sz
+operator|>
+name|vn
+operator|->
+name|sc_size
+condition|)
+block|{
+name|bp
+operator|->
+name|b_bcount
+operator|-=
+operator|(
+name|pbn
+operator|+
+name|sz
+operator|-
+name|vn
+operator|->
+name|sc_size
+operator|)
+operator|*
+name|vn
+operator|->
+name|sc_secsize
+expr_stmt|;
+name|bp
+operator|->
+name|b_resid
+operator|=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
 block|}
 name|bp
 operator|->
@@ -1292,7 +1364,7 @@ operator|->
 name|sc_vp
 condition|)
 block|{
-comment|/* 		 * VNODE I/O 		 */
+comment|/* 		 * VNODE I/O 		 * 		 * If an error occurs, we set B_ERROR but we do not set  		 * B_INVAL because (for a write anyway), the buffer is  		 * still valid. 		 */
 name|aiov
 operator|.
 name|iov_base
