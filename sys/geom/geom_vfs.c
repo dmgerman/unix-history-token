@@ -171,7 +171,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ffs_geom_done():"
+literal|"g_vfs_done():"
 argument_list|)
 expr_stmt|;
 name|g_print_bio
