@@ -349,19 +349,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* XXX Should really be issetguid(), but we don't have that */
 if|if
 condition|(
-name|getuid
-argument_list|()
-operator|!=
-name|geteuid
-argument_list|()
-operator|||
-name|getgid
-argument_list|()
-operator|!=
-name|getegid
+name|issetugid
 argument_list|()
 condition|)
 name|strcpy
