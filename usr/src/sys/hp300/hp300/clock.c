@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.17 89/11/30$  *  *	@(#)clock.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.17 89/11/30$  *  *	@(#)clock.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -842,7 +842,16 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 name|struct
 name|mapmem
 modifier|*
@@ -850,6 +859,8 @@ name|mp
 decl_stmt|;
 name|int
 name|id
+decl_stmt|,
+name|error
 decl_stmt|,
 name|clockmapin
 argument_list|()
@@ -862,10 +873,12 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|mp
+name|error
 operator|=
 name|mmalloc
 argument_list|(
+name|p
+argument_list|,
 name|id
 argument_list|,
 name|addrp
@@ -880,6 +893,9 @@ name|MM_NOCORE
 argument_list|,
 operator|&
 name|clockops
+argument_list|,
+operator|&
+name|mp
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -893,9 +909,7 @@ name|printf
 argument_list|(
 literal|"clockmmap(%d): addr %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -907,44 +921,36 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|mp
+name|error
 operator|==
-name|MMNIL
+literal|0
 condition|)
-return|return
-operator|(
-name|u
-operator|.
-name|u_error
-operator|)
-return|;
 if|if
 condition|(
-operator|!
+name|error
+operator|=
 name|mmmapin
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|,
 name|clockmapin
 argument_list|)
 condition|)
-block|{
+operator|(
+name|void
+operator|)
 name|mmfree
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|u
-operator|.
-name|u_error
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -973,6 +979,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|mapmem
@@ -999,9 +1015,7 @@ name|printf
 argument_list|(
 literal|"clockunmmap(%d): addr %x\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|,
@@ -1103,11 +1117,18 @@ continue|continue;
 block|}
 name|mmmapout
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mmfree
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
