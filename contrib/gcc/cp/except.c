@@ -395,6 +395,13 @@ parameter_list|()
 block|{
 ifdef|#
 directive|ifdef
+name|EXCEPTION_SECTION_FUNCTION
+name|EXCEPTION_SECTION_FUNCTION
+expr_stmt|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
 name|ASM_OUTPUT_SECTION_NAME
 name|named_section
 argument_list|(
@@ -428,6 +435,8 @@ directive|else
 name|readonly_data_section
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#

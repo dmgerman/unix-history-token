@@ -9536,17 +9536,6 @@ directive|endif
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INIT_SECTION_ASM_OP
-end_ifndef
-
 begin_comment
 comment|/* Run all the global constructors on entry to the program.  */
 end_comment
@@ -9619,30 +9608,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* no INIT_SECTION_ASM_OP */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|INIT_SECTION_ASM_OP
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INVOKE__main
-argument_list|)
-end_if
 
 begin_comment
 comment|/* Subroutine called automatically by `main'.    Compiling a global function named `main'    produces an automatic call to this function at the beginning.     For many systems, this routine calls __do_global_ctors.    For systems which support a .init section we use the .init section    to run __do_global_ctors, so we need not do anything here.  */
@@ -9719,11 +9684,19 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 operator|!
 name|defined
 argument_list|(
 name|INIT_SECTION_ASM_OP
 argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|OBJECT_FORMAT_ELF
+argument_list|)
+operator|)
 operator|&&
 operator|!
 name|defined
