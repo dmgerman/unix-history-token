@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.56.1.1 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1193,6 +1193,8 @@ operator|(
 name|EF_INQUEUE
 operator||
 name|EF_CLRQUEUE
+operator||
+name|EF_FATALERRS
 operator|)
 expr_stmt|;
 name|setsender
@@ -1816,6 +1818,15 @@ operator|!
 name|bitset
 argument_list|(
 name|QBADADDR
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+operator|||
+name|bitset
+argument_list|(
+name|QDONTSEND
 argument_list|,
 name|q
 operator|->
@@ -6068,7 +6079,7 @@ if|if
 condition|(
 name|e
 operator|->
-name|e_message
+name|e_statmsg
 operator|!=
 name|NULL
 condition|)
@@ -6086,7 +6097,7 @@ name|statmsg
 argument_list|,
 name|e
 operator|->
-name|e_message
+name|e_statmsg
 argument_list|)
 expr_stmt|;
 name|statmsg
