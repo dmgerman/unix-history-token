@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)insertln.c	5.7 (Berkeley) %G%"
+literal|"@(#)insertln.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +123,18 @@ operator|--
 name|y
 control|)
 block|{
+name|win
+operator|->
+name|lines
+index|[
+name|y
+index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|__ISPASTEOL
+expr_stmt|;
 if|if
 condition|(
 name|win
