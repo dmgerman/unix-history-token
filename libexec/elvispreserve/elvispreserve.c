@@ -29,6 +29,48 @@ directive|include
 file|"vi.h"
 end_include
 
+begin_comment
+comment|/* We include ctype.c here (instead of including just ctype.h and linking  * with ctype.o) because on some systems ctype.o will have been compiled in  * "large model" and the elvprsv program is to be compiled in "small model"   * You can't mix models.  By including ctype.c here, we can avoid linking  * with ctype.o.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"ctype.c"
+end_include
+
+begin_decl_stmt
+name|void
+name|preserve
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+decl|main
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -282,7 +324,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: trucated header blocks\n"
+literal|"%s: truncated header blocks\n"
 argument_list|,
 name|tname
 argument_list|)
@@ -314,6 +356,31 @@ literal|1
 index|]
 operator|==
 literal|'\177'
+condition|)
+block|{
+name|close
+argument_list|(
+name|infd
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+name|tname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* If there are no text blocks in the file, then we must've never 	 * really started editing.  Discard the file. 	 */
+if|if
+condition|(
+name|hdr
+operator|.
+name|n
+index|[
+literal|1
+index|]
+operator|==
+literal|0
 condition|)
 block|{
 name|close
@@ -400,6 +467,15 @@ name|BLKSIZE
 argument_list|)
 operator|!=
 name|BLKSIZE
+operator|||
+name|buf
+operator|.
+name|c
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 block|{
 comment|/* messed up header */
@@ -480,10 +556,20 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* should be at the end of the file already, but MAKE SURE */
+name|fseek
+argument_list|(
+name|index
+argument_list|,
+literal|0L
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* create the recovery file in the PRESVDIR directory */
 if|#
 directive|if
@@ -639,6 +725,15 @@ name|BLKSIZE
 argument_list|)
 operator|!=
 name|BLKSIZE
+operator|||
+name|buf
+operator|.
+name|c
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 block|{
 comment|/* messed up header */
@@ -766,6 +861,7 @@ block|}
 end_function
 
 begin_function
+name|void
 name|main
 parameter_list|(
 name|argc
@@ -796,6 +892,11 @@ name|MSDOS
 operator|||
 name|TOS
 comment|/* expand any wildcards in the command line */
+name|_ct_init
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
 name|argv
 operator|=
 name|wildexpand
@@ -808,7 +909,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* do we have a "when" argument? */
+comment|/* do we have a "-c", "-R", or "-when elvis died" argument? */
 name|i
 operator|=
 literal|1
