@@ -552,7 +552,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__maskrune
+name|__istype
 argument_list|(
 operator|(
 name|c
