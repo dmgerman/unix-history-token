@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)psignal.c	5.6 (Berkeley) %G%"
+literal|"@(#)psignal.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,7 @@ name|s
 decl_stmt|;
 block|{
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|c
