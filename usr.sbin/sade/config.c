@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.46 1996/07/16 17:11:39 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.47 1996/08/03 10:10:40 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1614,6 +1614,7 @@ return|;
 block|}
 else|else
 return|return
+operator|(
 name|variable_get_value
 argument_list|(
 name|VAR_BLANKTIME
@@ -1624,6 +1625,9 @@ condition|?
 name|DITEM_SUCCESS
 else|:
 name|DITEM_FAILURE
+operator|)
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -1695,6 +1699,8 @@ expr_stmt|;
 block|}
 return|return
 name|status
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -2056,6 +2062,7 @@ name|self
 parameter_list|)
 block|{
 return|return
+operator|(
 name|variable_get_value
 argument_list|(
 name|VAR_ROUTEDFLAGS
@@ -2067,6 +2074,9 @@ condition|?
 name|DITEM_SUCCESS
 else|:
 name|DITEM_FAILURE
+operator|)
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -2167,6 +2177,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 name|msgNotify
@@ -2211,6 +2223,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 name|mediaDevice
@@ -2386,6 +2400,10 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
+operator||
+name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
 return|;
 block|}
 end_function
@@ -2418,9 +2436,6 @@ name|tries
 init|=
 literal|0
 decl_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2437,9 +2452,6 @@ name|dist
 operator|=
 literal|"/cdrom/ports"
 argument_list|)
-expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -2458,6 +2470,9 @@ operator|>
 literal|2
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"You appear to be having some problems with your CD drive\n"
@@ -2485,6 +2500,9 @@ argument_list|(
 name|mediaDevice
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"The ports collection is now on the second CDROM due to\n"
@@ -2506,6 +2524,9 @@ name|mediaDevice
 argument_list|)
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Mount failed - either the CDROM isn't in the drive or\n"
@@ -2515,6 +2536,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|cp
 operator|=
 name|msgGetInput
@@ -2589,6 +2613,9 @@ operator|-
 literal|1
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to create a symlink from /usr/ports to %s!\n"
@@ -2607,6 +2634,9 @@ goto|;
 block|}
 else|else
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"NOTE: This directory is also now symlinked to /usr/ports\n"
@@ -2620,6 +2650,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Making a link tree from %s to %s."
@@ -2644,6 +2677,9 @@ operator|!=
 name|DITEM_SUCCESS
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"The lndir function returned an error status and may not have.\n"
@@ -2654,6 +2690,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"The /usr/ports directory is now ready to use.  When the system comes\n"
@@ -2685,6 +2724,9 @@ argument_list|(
 name|mediaDevice
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Done with the second CD.  Please remove it and reinsert the first\n"
@@ -2703,6 +2745,9 @@ name|mediaDevice
 argument_list|)
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Mount failed - either the CDROM isn't in the drive or\n"
@@ -2802,6 +2847,21 @@ name|DITEM_SUCCESS
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|RunningAsRoot
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"This package can only be installed in multi-user mode."
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+if|if
+condition|(
 name|variable_get
 argument_list|(
 name|VAR_NOVELL
@@ -2840,6 +2900,8 @@ expr_stmt|;
 block|}
 return|return
 name|ret
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -2947,6 +3009,9 @@ init|=
 name|savescr
 argument_list|()
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Operating as an NFS server means that you must first configure\n"
