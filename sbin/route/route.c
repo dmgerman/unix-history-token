@@ -3815,6 +3815,15 @@ operator|=
 literal|"routing table overflow"
 expr_stmt|;
 break|break;
+case|case
+name|EDQUOT
+case|:
+comment|/* handle recursion avoidance in rt_setgate() */
+name|err
+operator|=
+literal|"gateway uses the same route"
+expr_stmt|;
+break|break;
 default|default:
 name|err
 operator|=
