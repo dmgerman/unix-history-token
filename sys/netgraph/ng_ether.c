@@ -1100,6 +1100,12 @@ name|node
 argument_list|)
 expr_stmt|;
 comment|/* break all links to other nodes */
+name|node
+operator|->
+name|flags
+operator||=
+name|NG_INVALID
+expr_stmt|;
 name|IFP2NG
 argument_list|(
 name|ifp
