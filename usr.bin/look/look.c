@@ -378,9 +378,6 @@ modifier|*
 name|back
 decl_stmt|,
 modifier|*
-name|file
-decl_stmt|,
-modifier|*
 name|front
 decl_stmt|,
 modifier|*
@@ -388,6 +385,12 @@ name|string
 decl_stmt|,
 modifier|*
 name|p
+decl_stmt|;
+name|unsigned
+specifier|const
+name|char
+modifier|*
+name|file
 decl_stmt|;
 operator|(
 name|void
@@ -736,11 +739,13 @@ name|writep
 operator|=
 name|string
 init|;
+operator|(
 name|ch
 operator|=
 operator|*
 name|readp
 operator|++
+operator|)
 condition|;
 control|)
 block|{
