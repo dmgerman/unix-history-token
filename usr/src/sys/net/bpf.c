@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)bpf.c	7.4 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.23 91/01/30 18:22:13 mccanne Exp $";  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)bpf.c	7.5 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.23 91/01/30 18:22:13 mccanne Exp $";  */
 end_comment
 
 begin_include
@@ -2278,14 +2278,9 @@ name|fcode
 argument_list|,
 name|size
 argument_list|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-if|if
-condition|(
+operator|==
+literal|0
+operator|&&
 name|bpf_validate
 argument_list|(
 name|fcode
