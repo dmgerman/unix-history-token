@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.113
+literal|3.114
 operator|%
 name|G
 operator|%
@@ -2068,10 +2068,8 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ExitStat
-argument_list|)
+name|finis
+argument_list|()
 expr_stmt|;
 block|}
 end_if

@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.43
+literal|3.44
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.43
+literal|3.44
 operator|%
 name|G
 operator|%
@@ -451,6 +451,7 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|tfp
@@ -462,6 +463,7 @@ operator|->
 name|q_paddr
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* output headers for this message */
 name|define
@@ -590,7 +592,20 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|H_FROM
+operator||
+name|H_RCPT
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+condition|)
 name|commaize
 argument_list|(
 name|h
@@ -606,6 +621,22 @@ operator|->
 name|e_oldstyle
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"%s: %s\n"
+argument_list|,
+name|h
+operator|->
+name|h_field
+argument_list|,
+name|h
+operator|->
+name|h_value
 argument_list|)
 expr_stmt|;
 block|}
@@ -704,12 +735,18 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|LOG
-comment|/* disconnect this temp file from the job */
+comment|/* disconnect this temp file from the job; don't requeue later */
 name|e
 operator|->
 name|e_df
 operator|=
 name|NULL
+expr_stmt|;
+name|e
+operator|->
+name|e_dontqueue
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
 end_block
