@@ -539,6 +539,9 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+name|int
+name|gone
+decl_stmt|;
 name|u_int32_t
 name|saved_maps
 index|[

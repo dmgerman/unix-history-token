@@ -4554,6 +4554,12 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+name|sc
+operator|->
+name|gone
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Close down routes etc. 	 */
 name|ether_ifdetach
 argument_list|(
@@ -4565,16 +4571,7 @@ operator|.
 name|ac_if
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Stop DMA and drop transmit queue. 	 */
-if|if
-condition|(
-name|bus_child_present
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
-comment|/* disable interrupts */
+comment|/* 	 * Stop DMA and drop transmit queue, but disable interrupts first. 	 */
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -4589,7 +4586,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
+name|FXP_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Unhook interrupt before dropping lock. This is to prevent 	 * races with fxp_intr(). 	 */
 name|bus_teardown_intr
 argument_list|(
@@ -4611,11 +4612,6 @@ operator|->
 name|ih
 operator|=
 name|NULL
-expr_stmt|;
-name|FXP_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -10695,6 +10691,17 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|gone
+condition|)
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
 name|FXP_LOCK
 argument_list|(
 name|sc
