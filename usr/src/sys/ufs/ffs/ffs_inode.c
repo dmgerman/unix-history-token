@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.56 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.57 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1544,20 +1544,30 @@ name|ICHG
 operator||
 name|IUPD
 expr_stmt|;
+name|allerror
+operator|=
 name|vinvalbuf
 argument_list|(
 name|ovp
 argument_list|,
-operator|(
 name|ap
 operator|->
 name|a_length
 operator|>
 literal|0
-operator|)
+argument_list|,
+name|ap
+operator|->
+name|a_cred
+argument_list|,
+name|ap
+operator|->
+name|a_p
 argument_list|)
 expr_stmt|;
-name|allerror
+if|if
+condition|(
+name|error
 operator|=
 name|VOP_UPDATE
 argument_list|(
@@ -1571,6 +1581,10 @@ name|time
 argument_list|,
 name|MNT_WAIT
 argument_list|)
+condition|)
+name|allerror
+operator|=
+name|error
 expr_stmt|;
 comment|/* 	 * Indirect blocks first. 	 */
 name|ip
