@@ -23,5 +23,12 @@ name|_PATH_MOTDFILE
 value|"/etc/motd"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_LOGACCESS
+value|"/etc/login.access"
+end_define
+
 end_unit
 
