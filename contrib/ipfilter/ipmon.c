@@ -6128,7 +6128,7 @@ name|ipf
 operator|->
 name|fl_flags
 operator|&
-name|FR_LOGP
+name|FR_LOG
 condition|)
 operator|*
 name|t
@@ -6164,7 +6164,7 @@ name|ipf
 operator|->
 name|fl_flags
 operator|&
-name|FR_LOGB
+name|FR_LOG
 condition|)
 operator|*
 name|t
