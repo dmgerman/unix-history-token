@@ -3386,7 +3386,7 @@ block|{
 comment|/* 		 * PassThrough Device. 		 */
 return|return
 operator|(
-name|SES_SES_PASSTHRU
+name|SES_SES_PASSTHROUGH
 operator|)
 return|;
 block|}
