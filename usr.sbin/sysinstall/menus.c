@@ -5002,9 +5002,9 @@ name|DIST_DES_DES
 block|, }
 block|,
 block|{
-literal|"krb"
+literal|"krb4"
 block|,
-literal|"Kerberos encryption services"
+literal|"KerberosIV authentication services"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5021,13 +5021,13 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_DES_KERBEROS
+name|DIST_DES_KERBEROS4
 block|}
 block|,
 block|{
 literal|"skerbero"
 block|,
-literal|"Sources for Kerberos IV"
+literal|"Sources for Kerberos"
 block|,
 name|dmenuFlagCheck
 block|,

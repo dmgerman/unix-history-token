@@ -215,7 +215,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_DES_KERBEROS
+name|DIST_DES_KERBEROS4
 value|0x0008
 end_define
 

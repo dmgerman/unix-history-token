@@ -438,14 +438,14 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"krb"
+literal|"krb4"
 block|,
 literal|"/"
 block|,
 operator|&
 name|DESDists
 block|,
-name|DIST_DES_KERBEROS
+name|DIST_DES_KERBEROS4
 block|,
 name|NULL
 block|}
@@ -1485,7 +1485,7 @@ if|if
 condition|(
 name|DESDists
 operator|&
-name|DIST_DES_KERBEROS
+name|DIST_DES_KERBEROS4
 condition|)
 name|DESDists
 operator||=
