@@ -1053,54 +1053,6 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-literal|0
-comment|/* 	 * Calculate callout wheel size 	 */
-block|for (callwheelsize = 1, callwheelbits = 0; 	     callwheelsize< ncallout; 	     callwheelsize<<= 1, ++callwheelbits) 		; 	callwheelmask = callwheelsize - 1;
-comment|/* 	 * Allocate space for system data structures. 	 * The first available kernel virtual address is in "v". 	 * As pages of kernel virtual memory are allocated, "v" is incremented. 	 * As pages of memory are allocated and cleared, 	 * "firstaddr" is incremented. 	 * An index into the kernel page table corresponding to the 	 * virtual memory address maintained in "v" is kept in "mapaddr". 	 */
-comment|/* 	 * Make two passes.  The first pass calculates how much memory is 	 * needed and allocates it.  The second pass assigns virtual 	 * addresses to the various data structures. 	 */
-block|firstaddr = 0; again: 	v = (caddr_t)firstaddr;
-define|#
-directive|define
-name|valloc
-parameter_list|(
-name|name
-parameter_list|,
-name|type
-parameter_list|,
-name|num
-parameter_list|)
-define|\
-value|(name) = (type *)v; v = (caddr_t)((name)+(num))
-define|#
-directive|define
-name|valloclim
-parameter_list|(
-name|name
-parameter_list|,
-name|type
-parameter_list|,
-name|num
-parameter_list|,
-name|lim
-parameter_list|)
-define|\
-value|(name) = (type *)v; v = (caddr_t)((lim) = ((name)+(num)))
-block|valloc(callout, struct callout, ncallout); 	valloc(callwheel, struct callout_tailq, callwheelsize);
-comment|/* 	 * Discount the physical memory larger than the size of kernel_map 	 * to avoid eating up all of KVA space. 	 */
-block|if (kernel_map->first_free == NULL) { 		printf("Warning: no free entries in kernel_map.\n"); 		physmem_est = physmem; 	} else 		physmem_est = min(physmem, btoc(kernel_map->max_offset - 		    kernel_map->min_offset));
-comment|/* 	 * The nominal buffer size (and minimum KVA allocation) is BKVASIZE. 	 * For the first 64MB of ram nominally allocate sufficient buffers to 	 * cover 1/4 of our ram.  Beyond the first 64MB allocate additional 	 * buffers to cover 1/20 of our ram over 64MB. When auto-sizing 	 * the buffer cache we limit the eventual kva reservation to 	 * maxbcache bytes. 	 */
-block|if (nbuf == 0) { 		int factor = 4 * BKVASIZE / PAGE_SIZE;  		nbuf = 50; 		if (physmem_est> 1024) 			nbuf += min((physmem_est - 1024) / factor, 			    16384 / factor); 		if (physmem_est> 16384) 			nbuf += (physmem_est - 16384) * 2 / (factor * 5); 		if (maxbcache&& nbuf> maxbcache / BKVASIZE) 			nbuf = maxbcache / BKVASIZE; 	} 	nswbuf = max(min(nbuf/4, 64), 16);  	valloc(swbuf, struct buf, nswbuf); 	valloc(buf, struct buf, nbuf); 	v = bufhashinit(v);
-comment|/* 	 * End of first pass, size has been calculated so allocate memory 	 */
-block|if (firstaddr == 0) { 		size = (vm_size_t)(v - firstaddr); 		firstaddr = (vm_offset_t)kmem_alloc(kernel_map, round_page(size)); 		if (firstaddr == 0) 			panic("startup: no room for tables"); 		goto again; 	}
-comment|/* 	 * End of second pass, addresses have been assigned 	 */
-block|if ((vm_size_t)(v - firstaddr) != size) 		panic("startup: table size inconsistency");  	clean_map = kmem_suballoc(kernel_map,&clean_sva,&clean_eva, 			(nbuf*BKVASIZE) + (nswbuf*MAXPHYS) + pager_map_size); 	buffer_map = kmem_suballoc(clean_map,&buffer_sva,&buffer_eva, 				(nbuf*BKVASIZE)); 	buffer_map->system_map = 1; 	pager_map = kmem_suballoc(clean_map,&pager_sva,&pager_eva, 				(nswbuf*MAXPHYS) + pager_map_size); 	pager_map->system_map = 1; 	exec_map = kmem_suballoc(kernel_map,&minaddr,&maxaddr, 				(16*(ARG_MAX+(PAGE_SIZE*3))));
-comment|/* 	 * Finally, allocate mbuf pool. 	 * XXX: Mbuf system machine-specific initializations should 	 *      go here, if anywhere. 	 */
-comment|/* 	 * Initialize callouts 	 */
-block|SLIST_INIT(&callfree); 	for (i = 0; i< ncallout; i++) { 		callout_init(&callout[i], 0); 		callout[i].c_flags = CALLOUT_LOCAL_ALLOC; 		SLIST_INSERT_HEAD(&callfree,&callout[i], c_links.sle); 	}  	for (i = 0; i< callwheelsize; i++) { 		TAILQ_INIT(&callwheel[i]); 	}  	mtx_init(&callout_lock, "callout", MTX_SPIN | MTX_RECURSE);
-endif|#
-directive|endif
-if|#
-directive|if
 name|defined
 argument_list|(
 name|USERCONFIG
