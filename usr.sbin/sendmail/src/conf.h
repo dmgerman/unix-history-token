@@ -3127,6 +3127,65 @@ directive|undef
 name|SPT_TYPE
 end_undef
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD__
+operator|==
+literal|2
+end_if
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_comment
+comment|/* and this works */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|199512
+end_if
+
+begin_comment
+comment|/* 2.2-current right now */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPT_TYPE
+value|SPT_BUILTIN
+end_define
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SPT_TYPE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -3144,6 +3203,11 @@ end_define
 begin_comment
 comment|/* pad process title with nulls */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
