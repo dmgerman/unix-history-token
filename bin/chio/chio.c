@@ -1632,7 +1632,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: no arguements expected"
+literal|"%s: no arguments expected"
 argument_list|,
 name|cname
 argument_list|)
@@ -2250,7 +2250,7 @@ break|break;
 default|default:
 name|warnx
 argument_list|(
-literal|"bad option"
+literal|"%s: bad option"
 argument_list|,
 name|cname
 argument_list|)
@@ -3204,7 +3204,7 @@ break|break;
 default|default:
 name|warnx
 argument_list|(
-literal|"bad option"
+literal|"%s: bad option"
 argument_list|,
 name|cname
 argument_list|)
@@ -3231,7 +3231,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"missing element specification"
+literal|"%s: missing element specification"
 argument_list|,
 name|cname
 argument_list|)
@@ -3283,7 +3283,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"missing argument"
+literal|"%s: missing argument"
 argument_list|,
 name|cname
 argument_list|)
@@ -3331,7 +3331,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"volume label too long"
+literal|"%s: volume label too long"
 argument_list|,
 name|cname
 argument_list|)
@@ -3397,7 +3397,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"unexpected argument"
+literal|"%s: unexpected argument"
 argument_list|,
 name|cname
 argument_list|)
