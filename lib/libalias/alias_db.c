@@ -1100,9 +1100,7 @@ block|{
 comment|/* Used for debugging */
 if|if
 condition|(
-name|packetAliasMode
-operator|&
-name|PKT_ALIAS_LOG
+name|monitorFile
 condition|)
 block|{
 name|fprintf
@@ -5940,11 +5938,17 @@ if|if
 condition|(
 name|monitorFile
 condition|)
+block|{
 name|fclose
 argument_list|(
 name|monitorFile
 argument_list|)
 expr_stmt|;
+name|monitorFile
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|packetAliasMode
 operator|&=
 operator|~
