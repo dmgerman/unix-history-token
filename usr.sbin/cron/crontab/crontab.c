@@ -1383,6 +1383,11 @@ decl_stmt|;
 name|mode_t
 name|um
 decl_stmt|;
+name|int
+name|syntax_error
+init|=
+literal|0
+decl_stmt|;
 name|log_it
 argument_list|(
 name|RealUser
@@ -2175,6 +2180,9 @@ operator|==
 name|statbuf
 operator|.
 name|st_mtime
+operator|&&
+operator|!
+name|syntax_error
 condition|)
 block|{
 name|warnx
@@ -2200,11 +2208,13 @@ block|{
 case|case
 literal|0
 case|:
+comment|/* Success */
 break|break;
 case|case
 operator|-
 literal|1
 case|:
+comment|/* Syntax error */
 for|for
 control|(
 init|;
@@ -2268,6 +2278,10 @@ block|{
 case|case
 literal|'y'
 case|:
+name|syntax_error
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|again
 goto|;
@@ -2292,6 +2306,7 @@ case|case
 operator|-
 literal|2
 case|:
+comment|/* Install error */
 name|abandon
 label|:
 name|warnx
