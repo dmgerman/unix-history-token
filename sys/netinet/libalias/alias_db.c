@@ -1647,6 +1647,11 @@ return|;
 block|}
 else|else
 block|{
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
