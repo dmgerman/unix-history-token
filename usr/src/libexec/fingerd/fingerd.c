@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fingerd.c	5.7 (Berkeley) %G%"
+literal|"@(#)fingerd.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,12 +301,23 @@ operator|==
 literal|'w'
 operator|)
 condition|)
-operator|*
-name|comp
-operator|--
+block|{
+name|av
+index|[
+literal|1
+index|]
 operator|=
 literal|"-l"
 expr_stmt|;
+name|comp
+operator|=
+operator|&
+name|av
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
