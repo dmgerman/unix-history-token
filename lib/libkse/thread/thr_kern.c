@@ -2766,15 +2766,6 @@ operator|=
 name|_get_curkse
 argument_list|()
 expr_stmt|;
-name|_tcb_set
-argument_list|(
-name|curkse
-operator|->
-name|k_kcb
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|curthread
 operator|->
 name|need_switchout
@@ -2942,6 +2933,15 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
+name|_tcb_set
+argument_list|(
+name|curkse
+operator|->
+name|k_kcb
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* Choose another thread to run. */
 name|td
 operator|=
@@ -3000,7 +3000,7 @@ name|curframe
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 			 * Continue the thread at its current frame: 			 */
+comment|/* 			 * Continue the thread at its current frame. 			 * Note: TCB is set in _thread_switch 			 */
 name|ret
 operator|=
 name|_thread_switch
@@ -3288,6 +3288,21 @@ name|void
 operator|)
 name|_kse_critical_enter
 argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Bound thread always has tcb set, this prevent some 		 * code from blindly setting bound thread tcb to NULL, 		 * buggy code ? 		 */
+name|_tcb_set
+argument_list|(
+name|curkse
+operator|->
+name|k_kcb
+argument_list|,
+name|curthread
+operator|->
+name|tcb
+argument_list|)
 expr_stmt|;
 block|}
 name|curthread
@@ -3919,6 +3934,16 @@ operator||=
 name|KF_INITIALIZED
 expr_stmt|;
 block|}
+comment|/* 	 * No current thread anymore, calling _get_curthread in UTS 	 * should dump core 	 */
+name|_tcb_set
+argument_list|(
+name|curkse
+operator|->
+name|k_kcb
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* This may have returned from a kse_release(). */
 if|if
 condition|(
@@ -3948,17 +3973,6 @@ name|k_switch
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* Set fake kcb */
-name|_tcb_set
-argument_list|(
-name|curkse
-operator|->
-name|k_kcb
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|KSE_SCHED_LOCK
 argument_list|(
 name|curkse
@@ -3968,7 +3982,6 @@ operator|->
 name|k_kseg
 argument_list|)
 expr_stmt|;
-block|}
 name|curkse
 operator|->
 name|k_switch
