@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: interactive.c,v 1.5 1998/07/28 06:20:08 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1478,32 +1478,18 @@ block|}
 else|else
 block|{
 comment|/* 		 * For relative pathnames, prepend the current directory to 		 * it then canonicalize and return it. 		 */
-operator|(
-name|void
-operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|output
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|output
+argument_list|)
+argument_list|,
+literal|"%s/%s"
 argument_list|,
 name|curdir
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|output
-argument_list|,
-literal|"/"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|output
 argument_list|,
 name|rawname
 argument_list|)
