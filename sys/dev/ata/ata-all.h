@@ -461,6 +461,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_C_FLUSHCACHE
+value|0xe7
+end_define
+
+begin_comment
+comment|/* flush cache to disk */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_C_ATA_IDENTIFY
 value|0xec
 end_define
@@ -505,12 +516,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_C_F_ENAB_SRVIRQ
-value|0x5e
+name|ATA_C_F_DIS_WCACHE
+value|0x82
 end_define
 
 begin_comment
-comment|/* enable service interrupt */
+comment|/* disable write cache */
 end_comment
 
 begin_define
@@ -527,12 +538,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_C_F_DIS_RCACHE
+value|0x55
+end_define
+
+begin_comment
+comment|/* disable readahead cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_F_ENAB_RELIRQ
+value|0x5d
+end_define
+
+begin_comment
+comment|/* enable release interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_C_F_DIS_RELIRQ
 value|0xdd
 end_define
 
 begin_comment
 comment|/* disable release interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_F_ENAB_SRVIRQ
+value|0x5e
+end_define
+
+begin_comment
+comment|/* enable service interrupt */
 end_comment
 
 begin_define
@@ -670,23 +714,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_ALTSTAT
-value|0x02
+name|ATA_ALTOFFSET
+value|0x206
 end_define
 
 begin_comment
-comment|/* alternate status register */
+comment|/* alternate registers offset */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATA_ALTCTRL
-value|0X02
+name|ATA_ALTIOSIZE
+value|0x01
 end_define
 
 begin_comment
-comment|/* alternate device control */
+comment|/* alternate registers size */
 end_comment
 
 begin_define
@@ -720,28 +764,6 @@ end_define
 
 begin_comment
 comment|/* 4 head bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_ALTPORT
-value|0x204
-end_define
-
-begin_comment
-comment|/* alternate registers offset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_ALTIOSIZE
-value|0x01
-end_define
-
-begin_comment
-comment|/* alternate registers size */
 end_comment
 
 begin_comment
