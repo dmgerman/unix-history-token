@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.1 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +188,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The European tables ... based on hearsay  * Believed correct for:  *	WE:	Great Britain, Ireland, Portugal  *	ME:	Belgium, Luxembourg, Netherlands, Denmark, Norway,  *		Austria, Poland, Czechoslovakia, Sweden, Switzerland,  *		DDR, DBR, France, Spain, Hungary, Italy, Jugoslavia  * Eastern European dst is unknown, we'll make it ME until someone speaks up.  *	EE:	Bulgaria, Finland, Greece, Rumania, Turkey, Western Russia  */
+comment|/*  * The European tables ... based on hearsay  * Believed correct for:  *	WE:	Great Britain, Portugal?  *	ME:	Belgium, Luxembourg, Netherlands, Denmark, Norway,  *		Austria, Poland, Czechoslovakia, Sweden, Switzerland,  *		DDR, DBR, France, Spain, Hungary, Italy, Jugoslavia  *		Finland (EE timezone, but ME dst rules)  * Eastern European dst is unknown, we'll make it ME until someone speaks up.  *	EE:	Bulgaria, Greece, Rumania, Turkey, Western Russia  *  * Ireland is unpredictable.  (Years when Easter Sunday just happens ...)  * Years before 1983 are suspect.  */
 end_comment
 
 begin_decl_stmt
@@ -201,32 +201,18 @@ init|=
 block|{
 literal|1983
 block|,
-literal|86
+literal|89
 block|,
-literal|303
+literal|296
 block|,
 comment|/* 1983: end March - end Oct */
-literal|1984
+literal|0
 block|,
-literal|86
+literal|89
 block|,
 literal|303
 block|,
-comment|/* 1984: end March - end Oct */
-literal|1985
-block|,
-literal|86
-block|,
-literal|303
-block|,
-comment|/* 1985: end March - end Oct */
-literal|0
-block|,
-literal|400
-block|,
-literal|0
-block|,
-comment|/* others: no daylight saving at all ??? */
+comment|/* others: end March - end Oct */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -241,32 +227,41 @@ init|=
 block|{
 literal|1983
 block|,
-literal|86
+literal|89
 block|,
-literal|272
+literal|296
 block|,
-comment|/* 1983: end March - end Sep */
-literal|1984
-block|,
-literal|86
-block|,
-literal|272
-block|,
-comment|/* 1984: end March - end Sep */
-literal|1985
-block|,
-literal|86
-block|,
-literal|272
-block|,
-comment|/* 1985: end March - end Sep */
+comment|/* 1983: end March - end Oct */
 literal|0
 block|,
-literal|400
+literal|89
 block|,
+literal|272
+block|,
+comment|/* others: end March - end Sep */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Canada, same as the US, except no early 70's fluctuations.  * Can this really be right ??  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|dstab
+name|candaytab
+index|[]
+init|=
+block|{
 literal|0
 block|,
-comment|/* others: no daylight saving at all ??? */
+literal|119
+block|,
+literal|303
+block|,
+comment|/* all years: end Apr - end Oct */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -345,6 +340,14 @@ block|,
 name|NTH
 block|,
 comment|/* XXX */
+name|DST_CAN
+block|,
+literal|1
+block|,
+name|candaytab
+block|,
+name|NTH
+block|,
 operator|-
 literal|1
 block|, }
@@ -764,7 +767,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The argument is a 0-origin day number.  * The value is the day number of the first  * Sunday on or after the day.  */
+comment|/*  * The argument is a 0-origin day number.  * The value is the day number of the first  * Sunday on or before the day.  */
 end_comment
 
 begin_expr_stmt
