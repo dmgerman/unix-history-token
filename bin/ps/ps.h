@@ -35,6 +35,8 @@ block|,
 name|ULONG
 block|,
 name|KPTR
+block|,
+name|PLONG
 block|}
 enum|;
 end_enum
