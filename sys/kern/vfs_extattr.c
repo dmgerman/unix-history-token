@@ -22435,13 +22435,11 @@ name|nbytes
 expr_stmt|;
 block|}
 else|else
-block|{
 name|sizep
 operator|=
 operator|&
 name|size
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|MAC
@@ -22517,7 +22515,6 @@ name|cnt
 expr_stmt|;
 block|}
 else|else
-block|{
 name|td
 operator|->
 name|td_retval
@@ -22527,7 +22524,6 @@ index|]
 operator|=
 name|size
 expr_stmt|;
-block|}
 name|done
 label|:
 name|VOP_UNLOCK
@@ -23694,13 +23690,11 @@ name|nbytes
 expr_stmt|;
 block|}
 else|else
-block|{
 name|sizep
 operator|=
 operator|&
 name|size
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|MAC
@@ -23769,7 +23763,6 @@ name|cnt
 expr_stmt|;
 block|}
 else|else
-block|{
 name|td
 operator|->
 name|td_retval
@@ -23779,7 +23772,6 @@ index|]
 operator|=
 name|size
 expr_stmt|;
-block|}
 name|done
 label|:
 name|VOP_UNLOCK
