@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmail.c	4.13 (Berkeley) %G%"
+literal|"@(#)rmail.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -377,9 +377,8 @@ name|stdin
 argument_list|)
 control|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|lbuf
@@ -388,6 +387,13 @@ sizeof|sizeof
 name|lbuf
 argument_list|,
 name|stdin
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|exit
+argument_list|(
+name|EX_DATAERR
 argument_list|)
 expr_stmt|;
 if|if
