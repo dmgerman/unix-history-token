@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Header: nfsfh.h,v 1.6 96/12/16 03:40:31 leres Exp $  *  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
+comment|/*  * $Header: /tcpdump/master/tcpdump/nfsfh.h,v 1.8 1999/12/15 06:49:05 fenner Exp $  *  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  *	$FreeBSD$  *	$NetBSD: nfsfh.h,v 1.1.1.2 1997/10/03 17:25:13 christos Exp $	*/
 end_comment
 
 begin_comment

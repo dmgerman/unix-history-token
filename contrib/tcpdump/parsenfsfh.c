@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * parsenfsfh.c - portable parser for NFS file handles  *			uses all sorts of heuristics  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
+comment|/*  * parsenfsfh.c - portable parser for NFS file handles  *			uses all sorts of heuristics  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: parsenfsfh.c,v 1.14 97/06/15 13:20:27 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/parsenfsfh.c,v 1.16 1999/11/21 09:36:47 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#

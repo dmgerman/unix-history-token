@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-fddi.c,v 1.36 97/05/26 17:13:35 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-fddi.c,v 1.40 1999/12/14 16:49:02 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,8 +28,19 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_FDDI
+name|HAVE_CONFIG_H
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -188,6 +199,11 @@ operator|||
 name|defined
 argument_list|(
 name|__bsdi
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
 argument_list|)
 end_if
 
@@ -1265,13 +1281,12 @@ operator|*
 operator|)
 name|p
 decl_stmt|;
-specifier|extern
-name|u_short
-name|extracted_ethertype
-decl_stmt|;
 name|struct
 name|ether_header
 name|ehdr
+decl_stmt|;
+name|u_short
+name|extracted_ethertype
 decl_stmt|;
 name|ts_print
 argument_list|(
@@ -1565,70 +1580,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"interface.h"
-end_include
-
-begin_function
-name|void
-name|fddi_if_print
-parameter_list|(
-name|u_char
-modifier|*
-name|pcap
-parameter_list|,
-specifier|const
-name|struct
-name|pcap_pkthdr
-modifier|*
-name|h
-parameter_list|,
-specifier|register
-specifier|const
-name|u_char
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|error
-argument_list|(
-literal|"not configured for fddi"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-domain.c,v 1.39 97/06/13 12:56:28 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-domain.c,v 1.42 1999/11/21 09:36:50 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -120,12 +137,6 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/tcpip.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -178,6 +189,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -507,6 +524,160 @@ end_define
 
 begin_comment
 comment|/* Location Information */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|T_NXT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|T_NXT
+value|30
+end_define
+
+begin_comment
+comment|/* Next Valid Name in Zone */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|T_EID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|T_EID
+value|31
+end_define
+
+begin_comment
+comment|/* Endpoint identifier */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|T_NIMLOC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|T_NIMLOC
+value|32
+end_define
+
+begin_comment
+comment|/* Nimrod locator */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|T_SRV
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|T_SRV
+value|33
+end_define
+
+begin_comment
+comment|/* Server selection */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|T_ATMA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|T_ATMA
+value|34
+end_define
+
+begin_comment
+comment|/* ATM Address */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|T_NAPTR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|T_NAPTR
+value|35
+end_define
+
+begin_comment
+comment|/* Naming Authority PoinTeR */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|T_A6
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|T_A6
+value|38
+end_define
+
+begin_comment
+comment|/* IP6 address (ipngwg-dns-lookups) */
 end_comment
 
 begin_endif
@@ -1188,6 +1359,48 @@ block|,
 literal|"LOC "
 block|}
 block|,
+block|{
+name|T_NXT
+block|,
+literal|"NXT "
+block|}
+block|,
+block|{
+name|T_EID
+block|,
+literal|"EID "
+block|}
+block|,
+block|{
+name|T_NIMLOC
+block|,
+literal|"NIMLOC "
+block|}
+block|,
+block|{
+name|T_SRV
+block|,
+literal|"SRV "
+block|}
+block|,
+block|{
+name|T_ATMA
+block|,
+literal|"ATMA "
+block|}
+block|,
+block|{
+name|T_NAPTR
+block|,
+literal|"NAPTR "
+block|}
+block|,
+block|{
+name|T_A6
+block|,
+literal|"A6 "
+block|}
+block|,
 ifndef|#
 directive|ifndef
 name|T_UINFO
@@ -1651,6 +1864,15 @@ case|:
 case|case
 name|T_PTR
 case|:
+ifdef|#
+directive|ifdef
+name|T_DNAME
+case|case
+name|T_DNAME
+case|:
+comment|/*XXX not checked as there's no server support yet*/
+endif|#
+directive|endif
 name|putchar
 argument_list|(
 literal|' '
@@ -1717,6 +1939,104 @@ name|bp
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|T_AAAA
+case|:
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+name|ip6addr_string
+argument_list|(
+name|cp
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|T_A6
+case|:
+comment|/*XXX not checked as there's no server support yet*/
+block|{
+name|struct
+name|in6_addr
+name|a
+decl_stmt|;
+name|int
+name|pbyte
+decl_stmt|;
+name|pbyte
+operator|=
+operator|(
+operator|*
+name|cp
+operator|+
+literal|7
+operator|)
+operator|/
+literal|8
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|a
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
+name|a
+argument_list|,
+name|cp
+operator|+
+literal|1
+argument_list|,
+name|pbyte
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %u %s "
+argument_list|,
+operator|*
+name|cp
+argument_list|,
+name|ip6addr_string
+argument_list|(
+operator|&
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ns_nprint
+argument_list|(
+name|cp
+operator|+
+literal|1
+operator|+
+name|pbyte
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
+comment|/*INET6*/
 case|case
 name|T_UNSPECA
 case|:
