@@ -1481,7 +1481,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"proc size mismatch (%d total, %d chunks)\n"
+literal|"proc size mismatch (%zu total, %zu chunks)\n"
 argument_list|,
 name|size
 argument_list|,
