@@ -1605,15 +1605,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NFS_NOSERVER */
-end_comment
-
 begin_function
 name|int
 name|nqnfs_vop_lease_check
@@ -1687,6 +1678,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_NOSERVER */
+end_comment
 
 begin_comment
 comment|/*  * Add a host to an nqhost structure for a lease.  */
