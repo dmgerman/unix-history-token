@@ -352,7 +352,7 @@ begin_decl_stmt
 name|int
 name|sync_on_panic
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
