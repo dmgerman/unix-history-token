@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.12 (Berkeley) 83/06/01"
+literal|"@(#)rwhod.c	4.13 (Berkeley) 83/06/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -1049,7 +1049,7 @@ name|we
 operator|->
 name|we_utmp
 operator|.
-name|ut_time
+name|out_time
 operator|=
 name|ntohl
 argument_list|(
@@ -1057,7 +1057,7 @@ name|we
 operator|->
 name|we_utmp
 operator|.
-name|ut_time
+name|out_time
 argument_list|)
 expr_stmt|;
 name|we
