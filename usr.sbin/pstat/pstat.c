@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pstat.c,v 1.34 1998/01/06 05:33:28 dyson Exp $"
+literal|"$Id: pstat.c,v 1.35 1998/03/07 15:36:27 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2232,8 +2232,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%8x %s %5s %4d %4d"
+literal|"%p %s %5s %4d %4d"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|avnode
 argument_list|,
 name|type
@@ -2743,7 +2747,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %6d %5s"
+literal|" %6ld %5s"
 argument_list|,
 name|VT
 operator|.
@@ -2912,12 +2916,20 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %8x %8x"
+literal|" %p %p"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|up
 operator|->
 name|un_uppervp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|up
 operator|->
 name|un_lowervp
@@ -4936,12 +4948,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-6s %8x"
+literal|"%-6s %p"
 argument_list|,
 name|state
 argument_list|,
 operator|(
-name|u_long
+name|void
+operator|*
 operator|)
 name|tp
 operator|->
@@ -5282,8 +5295,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%x "
+literal|"%p "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|)
 expr_stmt|;
@@ -5432,8 +5449,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"  %8.1x"
+literal|"  %8p"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|fp
 operator|->
 name|f_data

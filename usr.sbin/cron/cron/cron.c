@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cron.c,v 1.5 1997/03/31 05:09:54 imp Exp $"
+literal|"$Id: cron.c,v 1.6 1997/09/15 06:39:04 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -923,7 +923,7 @@ argument|DSCH
 argument_list|,
 argument|(
 literal|"[%d] TargetTime=%ld, sec-to-wait=%d\n"
-argument|, 			getpid(), TargetTime, seconds_to_wait)
+argument|, 			getpid(), (long)TargetTime, seconds_to_wait)
 argument_list|)
 comment|/* if we intend to sleep, this means that it's finally 		 * time to empty the job queue (execute it). 		 * 		 * if we run any jobs, we'll probably screw up our timing, 		 * so go recompute. 		 * 		 * note that we depend here on the left-to-right nature 		 * of&&, and the short-circuiting. 		 */
 block|}

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.36 1998/06/27 21:45:59 steve Exp $"
+literal|"$Id: syslogd.c,v 1.37 1998/07/02 19:35:40 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3725,11 +3725,16 @@ name|f
 operator|->
 name|f_prevcount
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|now
 operator|-
 name|f
 operator|->
 name|f_time
+argument_list|)
 argument_list|,
 name|repeatinterval
 index|[
