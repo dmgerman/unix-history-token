@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tr.c	4.4 (Berkeley) %G%"
+literal|"@(#)tr.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1020,6 +1020,7 @@ operator|*
 name|s
 operator|->
 name|str
+operator|++
 argument_list|)
 operator|&&
 name|isdigit
@@ -1032,10 +1033,6 @@ operator|++
 operator|<
 literal|3
 condition|;
-operator|++
-name|s
-operator|->
-name|str
 control|)
 name|val
 operator|=
