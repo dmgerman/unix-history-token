@@ -649,6 +649,30 @@ comment|/* for passive mode */
 end_comment
 
 begin_decl_stmt
+name|int
+name|readonly
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Server is in readonly mode.	*/
+end_comment
+
+begin_decl_stmt
+name|int
+name|noepsv
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* EPSV command is disabled.	*/
+end_comment
+
+begin_decl_stmt
 name|sig_atomic_t
 name|transflag
 decl_stmt|;
@@ -1537,7 +1561,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AdlDSURt:T:u:va:p:46"
+literal|"AdlDESURrt:T:u:va:p:46"
 argument_list|)
 operator|)
 operator|!=
@@ -1565,12 +1589,28 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'E'
+case|:
+name|noepsv
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'l'
 case|:
 name|logging
 operator|++
 expr_stmt|;
 comment|/*> 1 == extra logging */
+break|break;
+case|case
+literal|'r'
+case|:
+name|readonly
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'R'
