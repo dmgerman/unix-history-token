@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local.c	1.5 (Berkeley) %G%"
+literal|"@(#)local.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -834,6 +834,9 @@ operator|=
 name|m
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|notdef
 elseif|else
 if|if
 condition|(
@@ -854,8 +857,6 @@ condition|)
 goto|goto
 name|inherit
 goto|;
-else|else
-break|break;
 comment|/* clobber conversion */
 name|p
 operator|->
@@ -875,6 +876,8 @@ name|left
 operator|)
 return|;
 comment|/* conversion gets clobbered */
+endif|#
+directive|endif
 break|break;
 case|case
 name|QUEST
