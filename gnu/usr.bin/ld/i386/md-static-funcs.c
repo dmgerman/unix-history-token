@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Called by ld.so when onanating.  * This *must* be a static function, so it is not called through a jmpslot.  */
+comment|/*  *	$Id: md-static-funcs.c,v 1.2 1993/12/08 10:14:44 pk Exp $  *  * Called by ld.so when onanating.  * This *must* be a static function, so it is not called through a jmpslot.  */
 end_comment
 
 begin_function
