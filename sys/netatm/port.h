@@ -667,7 +667,7 @@ name|head
 parameter_list|,
 name|next
 parameter_list|)
-value|{			\ 	MFREE((head), (next));				\ }
+value|{			\ 	(next) = m_free((head));			\ 	(head) = NULL;					\ }
 end_define
 
 begin_define
@@ -681,7 +681,7 @@ name|prev
 parameter_list|,
 name|next
 parameter_list|)
-value|{			\ 	MFREE((old), (next));				\ 	(prev)->m_next = (next);			\ }
+value|{			\ 	(next) = m_free((old));				\ 	(old) = NULL;					\ 	(prev)->m_next = (next);			\ }
 end_define
 
 begin_define
@@ -1084,7 +1084,7 @@ name|head
 parameter_list|,
 name|next
 parameter_list|)
-value|{			\ 	MFREE((head), (next));				\ }
+value|{			\ 	(next) = m_free((head));			\ 	(head) = NULL;					\ }
 end_define
 
 begin_define
@@ -1098,7 +1098,7 @@ name|prev
 parameter_list|,
 name|next
 parameter_list|)
-value|{			\ 	MFREE((old), (next));				\ 	(prev)->m_next = (next);			\ }
+value|{			\ 	(next) = m_free((old));				\ 	(old) = NULL;					\ 	(prev)->m_next = (next);			\ }
 end_define
 
 begin_define
