@@ -864,7 +864,7 @@ name|mlxd_disk
 operator|.
 name|d_name
 operator|=
-literal|"mxld"
+literal|"mlxd"
 expr_stmt|;
 name|sc
 operator|->
