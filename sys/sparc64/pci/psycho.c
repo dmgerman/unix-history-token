@@ -4312,6 +4312,20 @@ name|DQT_BAD_INTPIN
 block|}
 block|,
 comment|/* Sun GEM (PCIO2 func. 1) */
+block|{
+literal|0x1102108e
+block|,
+name|DQT_BAD_INTPIN
+block|}
+block|,
+comment|/* Sun FireWire ctl. (PCIO2 func. 2) */
+block|{
+literal|0x1103108e
+block|,
+name|DQT_BAD_INTPIN
+block|}
+block|,
+comment|/* Sun USB ctl. (PCIO2 func. 3) */
 block|}
 decl_stmt|;
 end_decl_stmt
