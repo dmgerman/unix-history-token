@@ -1354,6 +1354,12 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
+name|op
+operator|==
+name|KERN_PROC_ALL
+condition|?
+literal|3
+else|:
 literal|4
 argument_list|,
 name|NULL
@@ -1426,6 +1432,12 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
+name|op
+operator|==
+name|KERN_PROC_ALL
+condition|?
+literal|3
+else|:
 literal|4
 argument_list|,
 name|kd
