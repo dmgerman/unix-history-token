@@ -340,7 +340,7 @@ begin_define
 define|#
 directive|define
 name|UN_SIZE
-value|sizeof(struct sockaddr_in)
+value|sizeof(struct sockaddr_un)
 end_define
 
 begin_define
