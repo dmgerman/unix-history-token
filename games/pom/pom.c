@@ -168,24 +168,47 @@ value|((((y) % 4) == 0&& ((y) % 100) != 0) || ((y) % 400) == 0)
 end_define
 
 begin_decl_stmt
+specifier|static
+name|void
+name|adj360
+name|__P
+argument_list|(
+operator|(
 name|double
-name|dtor
-argument_list|()
-decl_stmt|,
-name|potm
-argument_list|()
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|adj360
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_decl_stmt
+specifier|static
+name|double
+name|dtor
+name|__P
+argument_list|(
+operator|(
+name|double
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|double
+name|potm
+name|__P
+argument_list|(
+operator|(
+name|double
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|()
 block|{
@@ -426,6 +449,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -434,6 +460,7 @@ comment|/*  * potm --  *	return phase of the moon  */
 end_comment
 
 begin_function
+specifier|static
 name|double
 name|potm
 parameter_list|(
@@ -747,6 +774,7 @@ comment|/*  * dtor --  *	convert degrees to radians  */
 end_comment
 
 begin_function
+specifier|static
 name|double
 name|dtor
 parameter_list|(
@@ -773,6 +801,7 @@ comment|/*  * adj360 --  *	adjust value so 0<= deg<= 360  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|adj360
 parameter_list|(
