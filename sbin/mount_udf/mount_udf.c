@@ -818,15 +818,13 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kiconv_add_xlat16_cspair
+name|kiconv_add_xlat16_cspairs
 argument_list|(
-operator|*
-name|cs_local
-argument_list|,
 operator|*
 name|cs_disk
 argument_list|,
-literal|0
+operator|*
+name|cs_local
 argument_list|)
 expr_stmt|;
 if|if
@@ -839,12 +837,6 @@ operator|-
 literal|1
 operator|)
 return|;
-if|#
-directive|if
-literal|0
-block|error = kiconv_add_xlat16_cspair(*cs_disk, *cs_local, 0); 	if (error) 		return (-1);
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
