@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.6 (Berkeley) %G%"
+literal|"@(#)collect.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2742,6 +2742,10 @@ name|FILE
 modifier|*
 name|ibuf
 decl_stmt|;
+name|char
+modifier|*
+name|tabst
+decl_stmt|;
 name|mp
 operator|=
 name|mailp
@@ -2766,6 +2770,23 @@ expr_stmt|;
 name|bol
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tabst
+operator|=
+name|value
+argument_list|(
+literal|"tabstr"
+argument_list|)
+operator|)
+operator|==
+name|NOSTR
+condition|)
+name|tabst
+operator|=
+literal|"\t"
 expr_stmt|;
 while|while
 condition|(
@@ -2802,9 +2823,9 @@ name|bol
 operator|=
 literal|0
 expr_stmt|;
-name|putc
+name|fputs
 argument_list|(
-literal|'\t'
+name|tabst
 argument_list|,
 name|fp
 argument_list|)
