@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)dterm.c	1.6	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -L	put a form feed (^L) at the end of each page  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c and -L to allow  *		for extra-wide printouts on the printer.  *  *	-fxxx	get special character definition file "xxx".  Default is  *		/usr/lib/font/devter/specfile.  */
+comment|/* @(#)dterm.c	1.7	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -L	put a form feed (^L) at the end of each page  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c and -L to allow  *		for extra-wide printouts on the printer.  *  *	-fxxx	get special character definition file "xxx".  Default is  *		/usr/lib/font/devter/specfile.  */
 end_comment
 
 begin_include
@@ -171,7 +171,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)dterm.c	1.6	(Berkeley)	%G%"
+literal|"@(#)dterm.c	1.7	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2001,8 +2001,7 @@ operator|!=
 name|EOF
 condition|;
 name|i
-operator|+=
-literal|2
+operator|++
 control|)
 block|{
 name|charptr
@@ -2104,7 +2103,7 @@ name|tabptr
 operator|=
 name|spectab
 index|[
-name|j
+literal|0
 index|]
 expr_stmt|;
 comment|/* set up pointers to table */
