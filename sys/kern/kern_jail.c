@@ -404,9 +404,15 @@ expr_stmt|;
 comment|/* Implicitly fail if already in jail.  */
 name|error
 operator|=
-name|suser
+name|suser_xxx
 argument_list|(
 name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

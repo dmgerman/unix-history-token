@@ -1011,9 +1011,15 @@ operator|.
 name|kg_nice
 comment|/* XXXKSE */
 operator|&&
-name|suser
+name|suser_xxx
 argument_list|(
 name|curp
+operator|->
+name|p_ucred
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1299,9 +1305,15 @@ break|break;
 comment|/* disallow setting rtprio in most cases if not superuser */
 if|if
 condition|(
-name|suser
+name|suser_xxx
 argument_list|(
 name|curp
+operator|->
+name|p_ucred
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 literal|0
