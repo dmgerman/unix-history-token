@@ -65,6 +65,10 @@ name|PCIC_CL6729
 value|5
 end_define
 
+begin_comment
+comment|/* Cirrus logic 6729 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -72,12 +76,20 @@ name|PCIC_VG468
 value|6
 end_define
 
+begin_comment
+comment|/* Vadem 468 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PCIC_VG469
 value|7
 end_define
+
+begin_comment
+comment|/* Vadem 469 */
+end_comment
 
 begin_define
 define|#
@@ -107,6 +119,10 @@ directive|define
 name|PCIC_PC98
 value|10
 end_define
+
+begin_comment
+comment|/* NEC PC98 PCMCIA Controller */
+end_comment
 
 begin_define
 define|#
@@ -138,18 +154,18 @@ begin_define
 define|#
 directive|define
 name|PCIC_DATA_0
-value|0x3E1
+value|(PCIC_INDEX_0 + 1)
 end_define
 
 begin_comment
-comment|/* data register, chips 0 and 1 */
+comment|/* data reg, chips 0 and 1 */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PCIC_INDEX_1
-value|0x3E2
+value|(PCIC_INDEX_0 + 2)
 end_define
 
 begin_comment
@@ -160,11 +176,11 @@ begin_define
 define|#
 directive|define
 name|PCIC_DATA_1
-value|0x3E3
+value|(PCIC_INDEX_1 + 1)
 end_define
 
 begin_comment
-comment|/* data register, chips 2 and 3 */
+comment|/* data reg, chips 2 and 3 */
 end_comment
 
 begin_comment
