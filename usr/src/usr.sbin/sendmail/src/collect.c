@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.24 (Berkeley) %G%"
+literal|"@(#)collect.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -977,6 +977,18 @@ name|MS_BODY
 condition|)
 block|{
 comment|/* just put the character out */
+if|if
+condition|(
+name|MaxMessageSize
+operator|<=
+literal|0
+operator|||
+name|e
+operator|->
+name|e_msgsize
+operator|<=
+name|MaxMessageSize
+condition|)
 name|fputc
 argument_list|(
 name|c
@@ -1350,6 +1362,19 @@ block|{
 break|break;
 block|}
 comment|/* if not a blank separator, write it out */
+if|if
+condition|(
+name|MaxMessageSize
+operator|<=
+literal|0
+operator|||
+name|e
+operator|->
+name|e_msgsize
+operator|<=
+name|MaxMessageSize
+condition|)
+block|{
 while|while
 condition|(
 operator|*
@@ -1366,6 +1391,7 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 block|}
 name|bp
