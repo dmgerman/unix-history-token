@@ -504,11 +504,9 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|char
 name|ch
 decl_stmt|,
