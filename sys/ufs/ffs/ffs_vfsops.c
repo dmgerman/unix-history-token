@@ -3583,6 +3583,13 @@ name|MNT_WAIT
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|FFS_EXTATTR
+comment|/* 	 * XXX Auto-starting of EAs would go here. 	 * 	 * Auto-starting would: 	 *	- check for /.attribute in the fs, and extattr_start if so 	 *	- for each file in .attribute, enable that file with 	 * 	  an attribute of the same name. 	 * Not clear how to report errors -- probably eat them. 	 * This would all happen while the file system was busy/not 	 * available, so would effectively be "atomic". 	 */
+comment|/* ufs_extattr_autostart(mp, ump); */
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3886,6 +3893,14 @@ argument_list|(
 literal|"ffs_unmount: ufs_extattr_stop returned %d\n"
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+name|ufs_extattr_uepm_destroy
+argument_list|(
+operator|&
+name|ump
+operator|->
+name|um_extattr
 argument_list|)
 expr_stmt|;
 endif|#
