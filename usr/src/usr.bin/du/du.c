@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.20 (Berkeley) %G%"
+literal|"@(#)du.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,9 +113,6 @@ name|getbsize
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-operator|,
 name|int
 operator|*
 operator|,
@@ -368,8 +365,6 @@ name|void
 operator|)
 name|getbsize
 argument_list|(
-literal|"du"
-argument_list|,
 operator|&
 name|notused
 argument_list|,

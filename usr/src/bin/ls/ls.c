@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.73 (Berkeley) %G%"
+literal|"@(#)ls.c	5.74 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,9 +132,6 @@ name|getbsize
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-operator|,
 name|int
 operator|*
 operator|,
@@ -878,8 +875,6 @@ name|void
 operator|)
 name|getbsize
 argument_list|(
-literal|"ls"
-argument_list|,
 operator|&
 name|notused
 argument_list|,
