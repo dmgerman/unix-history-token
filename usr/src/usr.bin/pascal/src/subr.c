@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c 1.3 %G%"
+literal|"@(#)subr.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -404,49 +404,17 @@ end_decl_stmt
 
 begin_block
 block|{
-name|write
+name|fprintf
 argument_list|(
-literal|2
+name|stderr
+argument_list|,
+literal|"%s: %s\n"
 argument_list|,
 name|file
 argument_list|,
-name|strlen
-argument_list|(
-name|file
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-literal|2
-argument_list|,
-literal|": "
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-literal|2
-argument_list|,
-name|error
-argument_list|,
-name|strlen
-argument_list|(
 name|error
 argument_list|)
-argument_list|)
 expr_stmt|;
-name|write
-argument_list|(
-literal|2
-argument_list|,
-literal|"\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 	errno = 0; 	sys_errlist[0] = error; 	perror(file); */
 block|}
 end_block
 
