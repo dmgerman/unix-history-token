@@ -437,27 +437,10 @@ name|u_int8_t
 name|p_frag
 decl_stmt|;
 comment|/* filesystem fragments per block */
-union|union
-block|{
 name|u_int16_t
-name|cpg
-decl_stmt|;
-comment|/* UFS: FS cylinders per group */
-name|u_int16_t
-name|sgs
-decl_stmt|;
-comment|/* LFS: FS segment shift */
-block|}
-name|__partition_u1
-union|;
-define|#
-directive|define
 name|p_cpg
-value|__partition_u1.cpg
-define|#
-directive|define
-name|p_sgs
-value|__partition_u1.sgs
+decl_stmt|;
+comment|/* filesystem cylinders per group */
 block|}
 name|d_partitions
 index|[
