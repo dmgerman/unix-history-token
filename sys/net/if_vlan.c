@@ -1172,6 +1172,7 @@ expr|*
 name|evl
 argument_list|,
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
