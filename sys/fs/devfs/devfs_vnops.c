@@ -3501,6 +3501,25 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|vap
+operator|->
+name|va_atime
+operator|.
+name|tv_sec
+operator|!=
+name|VNOVAL
+operator|||
+name|vap
+operator|->
+name|va_mtime
+operator|.
+name|tv_sec
+operator|!=
+name|VNOVAL
+condition|)
+block|{
 comment|/* see comment in ufs_vnops::ufs_setattr() */
 if|if
 condition|(
@@ -3559,6 +3578,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|vap
