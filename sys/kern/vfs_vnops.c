@@ -4030,9 +4030,24 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mp_fixme
+comment|/* 			 * Since we're just going to return, unlock interlock 			 * if the caller didn't call us with it held. 			 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+operator|(
+name|LK_INTERLOCK
+operator||
+name|LK_RETRY
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|VI_UNLOCK
 argument_list|(
-literal|"interlock not released."
+name|vp
 argument_list|)
 expr_stmt|;
 name|error
@@ -4042,13 +4057,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-literal|0
-comment|/* this can now occur in normal operation */
-block|if (vp->v_vxproc != NULL) 				log(LOG_INFO, "VXLOCK interlock avoided in vn_lock\n");
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG_LOCKS
@@ -4066,6 +4074,7 @@ name|line
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 			 * lockmgr drops interlock before it will return for 			 * any reason.  So force the code above to relock it. 			 */
 name|error
 operator|=
 name|VOP_LOCK
@@ -4081,29 +4090,22 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 name|flags
 operator|&=
 operator|~
 name|LK_INTERLOCK
 expr_stmt|;
 block|}
+block|}
 do|while
 condition|(
 name|flags
 operator|&
 name|LK_RETRY
+operator|&&
+name|error
+operator|!=
+literal|0
 condition|)
 do|;
 return|return
