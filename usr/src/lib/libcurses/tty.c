@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	8.1 (Berkeley) %G%"
+literal|"@(#)tty.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,14 +66,12 @@ begin_decl_stmt
 name|int
 name|__tcaction
 init|=
-name|TCSASOFT
-operator||
-name|TCSADRAIN
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ignore hardware settings */
+comment|/* Ignore hardware settings. */
 end_comment
 
 begin_else
@@ -85,7 +83,7 @@ begin_decl_stmt
 name|int
 name|__tcaction
 init|=
-name|TCSADRAIN
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -93,10 +91,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* was, pfast = rand() % HARDTABS; */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -307,13 +301,38 @@ operator||
 name|IEXTEN
 operator|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * In general, curses should leave hardware-related settings alone. 	 * This includes parity and word size.  Older versions set the tty 	 * to 8 bits, no parity in raw(), but this is considered to be an 	 * artifact of the old tty interface.  If it's desired to change 	 * parity and word size, the TCSASOFT bit would have to be removed 	 * from the calls that switch to/from "raw" mode. 	 */
-block|rawt.c_iflag&= ~ISTRIP; 	rawt.c_cflag&= ~(CSIZE|PARENB); 	rawt.c_cflag |= CS8;
-endif|#
-directive|endif
+comment|/* 	 * In general, curses should leave hardware-related settings alone. 	 * This includes parity and word size.  Older versions set the tty 	 * to 8 bits, no parity in raw(), but this is considered to be an 	 * artifact of the old tty interface.  If it's desired to change 	 * parity and word size, the TCSASOFT bit has to be removed from the 	 * calls that switch to/from "raw" mode. 	 */
+if|if
+condition|(
+operator|!
+name|__tcaction
+condition|)
+block|{
+name|rawt
+operator|.
+name|c_iflag
+operator|&=
+operator|~
+name|ISTRIP
+expr_stmt|;
+name|rawt
+operator|.
+name|c_cflag
+operator|&=
+operator|~
+operator|(
+name|CSIZE
+operator||
+name|PARENB
+operator|)
+expr_stmt|;
+name|rawt
+operator|.
+name|c_cflag
+operator||=
+name|CS8
+expr_stmt|;
+block|}
 name|curt
 operator|=
 operator|&
@@ -326,9 +345,14 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
-operator|&
-name|__baset
+name|curt
 argument_list|)
 condition|?
 name|ERR
@@ -364,9 +388,14 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
-operator|&
-name|rawt
+name|curt
 argument_list|)
 operator|)
 return|;
@@ -398,9 +427,14 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
-operator|&
-name|__baset
+name|curt
 argument_list|)
 operator|)
 return|;
@@ -433,6 +467,12 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
@@ -467,6 +507,12 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
@@ -509,6 +555,12 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
@@ -554,6 +606,12 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
@@ -614,6 +672,12 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
@@ -680,6 +744,12 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
 name|curt
 argument_list|)
@@ -849,6 +919,12 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
 operator|&
 name|__orig_termios
@@ -901,6 +977,12 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|,
 name|__tcaction
+condition|?
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+else|:
+name|TCSADRAIN
 argument_list|,
 operator|&
 name|savedtty
