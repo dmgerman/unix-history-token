@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_simos.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -132,28 +126,6 @@ parameter_list|)
 value|((db_addr_t)(regs)->tf_regs[FRAME_PC])
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIMOS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BKPT_INST
-value|0x000000aa
-end_define
-
-begin_comment
-comment|/* gentrap instruction */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -164,11 +136,6 @@ end_define
 begin_comment
 comment|/* breakpoint instruction */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -210,29 +177,6 @@ begin_comment
 comment|/* no hardware support */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIMOS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IS_BREAKPOINT_TRAP
-parameter_list|(
-name|type
-parameter_list|,
-name|code
-parameter_list|)
-value|((type) == ALPHA_KENTRY_IF&& \ 					 (code) == ALPHA_IF_CODE_GENTRAP)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -244,11 +188,6 @@ name|code
 parameter_list|)
 value|((type) == ALPHA_KENTRY_IF&& \ 					 (code) == ALPHA_IF_CODE_BPT)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

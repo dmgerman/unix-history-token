@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_simos.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1560,15 +1554,6 @@ operator|||
 name|a0
 operator|==
 name|ALPHA_IF_CODE_BPT
-ifdef|#
-directive|ifdef
-name|SIMOS
-operator|||
-name|a0
-operator|==
-name|ALPHA_IF_CODE_GENTRAP
-endif|#
-directive|endif
 condition|)
 block|{
 if|if

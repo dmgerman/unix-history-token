@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_simos.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -316,27 +310,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIMOS
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|simos_intr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 specifier|static
 name|void
@@ -347,11 +320,6 @@ name|long
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Direct-mapped window: 2G at 2G  */
@@ -3489,39 +3457,6 @@ begin_comment
 comment|/*  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIMOS
-end_ifdef
-
-begin_function
-specifier|static
-name|void
-name|dwlpx_intr
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|simos_intr
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !SIMOS */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -4137,15 +4072,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SIMOS */
-end_comment
 
 begin_decl_stmt
 specifier|static
