@@ -331,6 +331,17 @@ begin_comment
 comment|/* itjc - driver	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|L1DRVR_IFPI2
+value|7
+end_define
+
+begin_comment
+comment|/* ifpi2 - driver	*/
+end_comment
+
 begin_comment
 comment|/* MAXL1DRVR MUST be updated when more passive drivers are added !!! */
 end_comment
@@ -339,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|MAXL1DRVR
-value|(L1DRVR_ITJC + 1)
+value|(L1DRVR_IFPI2 + 1)
 end_define
 
 begin_comment
@@ -709,6 +720,17 @@ begin_comment
 comment|/* Compaq Microcom 610 		*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_AVMA1PCI_V2
+value|32
+end_define
+
+begin_comment
+comment|/* AVM FRITZ!CARD PCI Ver. 2	*/
+end_comment
+
 begin_comment
 comment|/*  * in case you add support for more cards, please update:  *  *	isdnd:		controller.c, name_of_controller()  *  * and adjust CARD_TYPEP_MAX below.  */
 end_comment
@@ -717,7 +739,7 @@ begin_define
 define|#
 directive|define
 name|CARD_TYPEP_MAX
-value|31
+value|32
 end_define
 
 begin_comment
