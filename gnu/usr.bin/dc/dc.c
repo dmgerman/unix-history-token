@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -95,11 +89,20 @@ begin_comment
 comment|/* Chain of free regstack structures for fast realloc */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DC_MAX_REG
+value|127
+end_define
+
 begin_decl_stmt
 name|decimal
 name|regs
 index|[
-literal|128
+name|DC_MAX_REG
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -112,7 +115,9 @@ begin_decl_stmt
 name|regstack
 name|regstacks
 index|[
-literal|128
+name|DC_MAX_REG
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -894,8 +899,8 @@ operator|=
 literal|0
 init|;
 name|regno
-operator|<
-literal|128
+operator|<=
+name|DC_MAX_REG
 condition|;
 name|regno
 operator|++
@@ -1048,7 +1053,7 @@ literal|'l'
 case|:
 comment|/* l<x> load register<x> onto stack */
 block|{
-name|char
+name|int
 name|c1
 init|=
 name|fetch
@@ -1065,6 +1070,20 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c1
+operator|>
+name|DC_MAX_REG
+condition|)
+name|error
+argument_list|(
+literal|"invalid register %c"
+argument_list|,
+name|c1
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|!
@@ -1096,7 +1115,7 @@ literal|'L'
 case|:
 comment|/* L<x> load register<x> to stack, pop<x>'s own stack */
 block|{
-name|char
+name|int
 name|c1
 init|=
 name|fetch
@@ -1113,6 +1132,20 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c1
+operator|>
+name|DC_MAX_REG
+condition|)
+name|error
+argument_list|(
+literal|"invalid register %c"
+argument_list|,
+name|c1
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|!
@@ -1323,6 +1356,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|c1
+operator|>
+name|DC_MAX_REG
+condition|)
+name|error
+argument_list|(
+literal|"invalid register %c"
+argument_list|,
+name|c1
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
 name|regs
 index|[
 name|c1
@@ -1347,6 +1395,7 @@ name|stacktop
 operator|--
 index|]
 expr_stmt|;
+block|}
 block|}
 break|break;
 case|case
@@ -1381,6 +1430,21 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c1
+operator|>
+name|DC_MAX_REG
+condition|)
+name|error
+argument_list|(
+literal|"invalid register %c"
+argument_list|,
+name|c1
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|pushreg
 argument_list|(
 name|c1
@@ -1397,6 +1461,7 @@ name|stacktop
 operator|--
 index|]
 expr_stmt|;
+block|}
 block|}
 break|break;
 case|case
@@ -1750,6 +1815,20 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
+name|regno
+operator|>
+name|DC_MAX_REG
+condition|)
+name|error
+argument_list|(
+literal|"invalid register %c"
+argument_list|,
+name|regno
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|!
 name|regs
 index|[
@@ -1960,36 +2039,6 @@ condition|(
 name|file_count
 condition|)
 block|{
-name|struct
-name|stat
-name|stat_buf
-decl_stmt|;
-name|file_count
-operator|--
-expr_stmt|;
-if|if
-condition|(
-name|stat
-argument_list|(
-operator|*
-name|next_file
-argument_list|,
-operator|&
-name|stat_buf
-argument_list|)
-operator|==
-literal|0
-condition|)
-operator|&&
-operator|!
-name|S_ISDIR
-argument_list|(
-name|stat_buf
-operator|.
-name|st_mode
-argument_list|)
-block|)
-block|{
 name|open_file
 operator|=
 name|fopen
@@ -2000,6 +2049,9 @@ operator|++
 argument_list|,
 literal|"r"
 argument_list|)
+expr_stmt|;
+name|file_count
+operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -2018,16 +2070,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|next_file
-operator|++
-expr_stmt|;
-block|}
-else|else
 break|break;
 block|}
-end_function
-
-begin_if
 if|if
 condition|(
 name|c
@@ -2037,37 +2081,28 @@ condition|)
 return|return
 name|c
 return|;
-end_if
-
-begin_return
 return|return
 name|getc
 argument_list|(
 name|stdin
 argument_list|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/* Unread character c on command input stream, whatever it is */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|unfetch
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|c
+parameter_list|)
 name|char
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2102,7 +2137,7 @@ name|stdin
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Begin execution of macro m.  */
