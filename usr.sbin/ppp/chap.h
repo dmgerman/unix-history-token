@@ -155,6 +155,36 @@ define|\
 value|((struct chap *)((char *)a - (int)&((struct chap *)0)->auth))
 end_define
 
+begin_struct
+struct|struct
+name|MSCHAPv2_resp
+block|{
+comment|/* rfc2759 */
+name|char
+name|PeerChallenge
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|char
+name|Reserved
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|char
+name|NTResponse
+index|[
+literal|24
+index|]
+decl_stmt|;
+name|char
+name|Flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 specifier|extern
 name|void
