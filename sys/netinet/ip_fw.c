@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.103.2.3 1999/04/26 14:59:02 luigi Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.103.2.4 1999/05/24 10:09:21 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -1788,6 +1788,9 @@ literal|"Count"
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|IPDIVERT
 case|case
 name|IP_FW_F_DIVERT
 case|:
@@ -1814,6 +1817,8 @@ name|fw_divert_port
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|IP_FW_F_SKIPTO
 case|:
@@ -3621,13 +3626,13 @@ operator|->
 name|fw_divert_port
 operator|)
 return|;
-endif|#
-directive|endif
 case|case
 name|IP_FW_F_TEE
 case|:
 comment|/* 			 * XXX someday tee packet here, but beware that you 			 * can't use m_copym() or m_copypacket() because 			 * the divert input routine modifies the mbuf 			 * (and these routines only increment reference 			 * counts in the case of mbuf clusters), so need 			 * to write custom routine. 			 */
 continue|continue;
+endif|#
+directive|endif
 case|case
 name|IP_FW_F_SKIPTO
 case|:
@@ -5414,17 +5419,38 @@ operator|)
 return|;
 block|}
 break|break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPDIVERT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|DUMMYNET
+argument_list|)
+ifdef|#
+directive|ifdef
+name|IPDIVERT
 case|case
 name|IP_FW_F_DIVERT
 case|:
 comment|/* Diverting to port zero is invalid */
 case|case
+name|IP_FW_F_TEE
+case|:
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DUMMYNET
+case|case
 name|IP_FW_F_PIPE
 case|:
 comment|/* piping through 0 is invalid */
-case|case
-name|IP_FW_F_TEE
-case|:
+endif|#
+directive|endif
 if|if
 condition|(
 name|frwl
@@ -5450,6 +5476,9 @@ operator|)
 return|;
 block|}
 break|break;
+endif|#
+directive|endif
+comment|/* IPDIVERT || DUMMYNET */
 case|case
 name|IP_FW_F_DENY
 case|:
