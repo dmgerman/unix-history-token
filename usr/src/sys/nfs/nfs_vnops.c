@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.88 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.89 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2571,6 +2571,14 @@ operator|->
 name|a_vpp
 decl_stmt|;
 specifier|register
+name|int
+name|flags
+init|=
+name|cnp
+operator|->
+name|cn_flags
+decl_stmt|;
+specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -2682,17 +2690,13 @@ operator|)
 return|;
 name|lockparent
 operator|=
-name|cnp
-operator|->
-name|cn_flags
+name|flags
 operator|&
 name|LOCKPARENT
 expr_stmt|;
 name|wantparent
 operator|=
-name|cnp
-operator|->
-name|cn_flags
+name|flags
 operator|&
 operator|(
 name|LOCKPARENT
@@ -2893,9 +2897,7 @@ operator|!=
 name|LOOKUP
 operator|&&
 operator|(
-name|cnp
-operator|->
-name|cn_flags
+name|flags
 operator|&
 name|ISLASTCN
 operator|)
@@ -2962,9 +2964,7 @@ operator|!=
 name|LOOKUP
 operator|&&
 operator|(
-name|cnp
-operator|->
-name|cn_flags
+name|flags
 operator|&
 name|ISLASTCN
 operator|)
@@ -3076,9 +3076,7 @@ name|DELETE
 operator|||
 operator|!
 operator|(
-name|cnp
-operator|->
-name|cn_flags
+name|flags
 operator|&
 name|ISLASTCN
 operator|)
@@ -3198,9 +3196,7 @@ name|RENAME
 operator|)
 operator|&&
 operator|(
-name|cnp
-operator|->
-name|cn_flags
+name|flags
 operator|&
 name|ISLASTCN
 operator|)
@@ -3222,9 +3218,7 @@ operator|!=
 name|LOOKUP
 operator|&&
 operator|(
-name|cnp
-operator|->
-name|cn_flags
+name|flags
 operator|&
 name|ISLASTCN
 operator|)
@@ -3347,9 +3341,7 @@ operator|&&
 name|wantparent
 operator|&&
 operator|(
-name|cnp
-operator|->
-name|cn_flags
+name|flags
 operator|&
 name|ISLASTCN
 operator|)
@@ -3610,9 +3602,7 @@ operator|!=
 name|LOOKUP
 operator|&&
 operator|(
-name|cnp
-operator|->
-name|cn_flags
+name|flags
 operator|&
 name|ISLASTCN
 operator|)
@@ -3642,9 +3632,7 @@ name|DELETE
 operator|||
 operator|!
 operator|(
-name|cnp
-operator|->
-name|cn_flags
+name|flags
 operator|&
 name|ISLASTCN
 operator|)
