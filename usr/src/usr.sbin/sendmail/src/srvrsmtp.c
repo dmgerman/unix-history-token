@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.6 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.7 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.6 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -364,17 +364,23 @@ literal|"debug"
 block|,
 name|CMDDBGDEBUG
 block|,
+endif|#
+directive|endif
+endif|DEBUG
+ifdef|#
+directive|ifdef
+name|WIZ
 literal|"kill"
 block|,
 name|CMDDBGKILL
 block|,
+endif|#
+directive|endif
+endif|WIZ
 literal|"wiz"
 block|,
 name|CMDDBGWIZ
 block|,
-endif|#
-directive|endif
-endif|DEBUG
 name|NULL
 block|,
 name|CMDERROR
@@ -1450,6 +1456,12 @@ literal|"Debug set"
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+endif|DEBUG
+ifdef|#
+directive|ifdef
+name|WIZ
 case|case
 name|CMDDBGKILL
 case|:
@@ -1562,9 +1574,24 @@ literal|"You are no wizard!"
 argument_list|)
 expr_stmt|;
 break|break;
+else|#
+directive|else
+else|WIZ
+case|case
+name|CMDDBGWIZ
+case|:
+comment|/* try to become a wizard */
+name|message
+argument_list|(
+literal|"500"
+argument_list|,
+literal|"You wascal wabbit!  Wandering wizards won't win!"
+argument_list|)
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
-endif|DEBUG
+endif|WIZ
 case|case
 name|CMDERROR
 case|:
@@ -1955,7 +1982,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|WIZ
 end_ifdef
 
 begin_function
@@ -1986,7 +2013,7 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|DEBUG
+endif|WIZ
 end_endif
 
 begin_escape
