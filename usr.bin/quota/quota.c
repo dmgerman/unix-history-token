@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: quota.c,v 1.7 1997/08/04 06:45:11 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2373,14 +2373,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|strcmp
+argument_list|(
 name|fst
 index|[
 name|i
 index|]
 operator|.
-name|f_type
+name|f_fstypename
+argument_list|,
+literal|"nfs"
+argument_list|)
 operator|==
-name|MOUNT_NFS
+literal|0
 condition|)
 block|{
 if|if
@@ -2409,14 +2414,19 @@ block|}
 elseif|else
 if|if
 condition|(
+name|strcmp
+argument_list|(
 name|fst
 index|[
 name|i
 index|]
 operator|.
-name|f_type
+name|f_fstypename
+argument_list|,
+literal|"ffs"
+argument_list|)
 operator|==
-name|MOUNT_UFS
+literal|0
 condition|)
 block|{
 comment|/* 			 * XXX 			 * UFS filesystems must be in /etc/fstab, and must 			 * indicate that they have quotas on (?!) This is quite 			 * unlike SunOS where quotas can be enabled/disabled 			 * on a filesystem independent of /etc/fstab, and it 			 * will still print quotas for them. 			 */
