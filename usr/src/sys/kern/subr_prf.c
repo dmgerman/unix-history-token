@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.23	82/10/31	*/
+comment|/*	subr_prf.c	4.24	82/10/31	*/
 end_comment
 
 begin_include
@@ -681,8 +681,8 @@ end_decl_stmt
 
 begin_block
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|sun
 specifier|register
 name|int
@@ -704,8 +704,8 @@ name|bootopt
 operator||=
 name|RB_NOSYNC
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|sun
 else|else
 block|{
@@ -929,8 +929,8 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|vax
 include|#
 directive|include
@@ -951,8 +951,8 @@ operator|&&
 name|c
 operator|!=
 literal|0177
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|vax
 operator|&&
 name|mfpr

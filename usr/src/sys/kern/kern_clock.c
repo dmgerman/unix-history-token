@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.43	82/10/30	*/
+comment|/*	kern_clock.c	4.44	82/10/31	*/
 end_comment
 
 begin_include
@@ -125,11 +125,11 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|vax
-end_if
+end_ifdef
 
 begin_macro
 name|hardclock
@@ -156,8 +156,8 @@ begin_block
 block|{
 endif|#
 directive|endif
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|sun
 name|hardclock
 argument_list|(
@@ -775,8 +775,8 @@ expr_stmt|;
 block|}
 comment|/*  * Software priority level clock interrupt.  * Run periodic events from timeout queue.  */
 comment|/*ARGSUSED*/
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|vax
 name|softclock
 argument_list|(
@@ -793,8 +793,8 @@ decl_stmt|;
 block|{
 endif|#
 directive|endif
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|sun
 name|softclock
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_process.c	5.6	82/10/31	*/
+comment|/*	sys_process.c	5.7	82/10/31	*/
 end_comment
 
 begin_include
@@ -363,11 +363,11 @@ expr_stmt|;
 block|}
 end_block
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|vax
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -381,11 +381,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|sun
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -406,8 +406,8 @@ index|[
 name|NIPCREG
 index|]
 init|=
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|vax
 block|{
 name|R0
@@ -450,11 +450,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|sun
-end_if
+end_ifdef
 
 begin_block
 block|{
