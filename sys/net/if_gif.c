@@ -1157,6 +1157,10 @@ expr_stmt|;
 endif|#
 directive|endif
 break|break;
+default|default:
+return|return
+name|EOPNOTSUPP
+return|;
 block|}
 return|return
 literal|0

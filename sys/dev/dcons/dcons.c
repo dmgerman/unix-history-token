@@ -3156,6 +3156,12 @@ case|case
 name|MOD_SHUTDOWN
 case|:
 break|break;
+default|default:
+name|err
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(

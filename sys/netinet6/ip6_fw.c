@@ -6611,6 +6611,9 @@ return|return
 literal|0
 return|;
 default|default:
+return|return
+name|EOPNOTSUPP
+return|;
 break|break;
 block|}
 return|return

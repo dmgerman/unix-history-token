@@ -1014,6 +1014,10 @@ name|tunmtx
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+return|return
+name|EOPNOTSUPP
+return|;
 block|}
 return|return
 literal|0

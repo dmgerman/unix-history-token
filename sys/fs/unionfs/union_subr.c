@@ -5634,6 +5634,9 @@ name|NULL
 expr_stmt|;
 break|break;
 default|default:
+return|return
+name|EOPNOTSUPP
+return|;
 break|break;
 block|}
 return|return

@@ -14431,6 +14431,9 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
+return|return
+name|EOPNOTSUPP
+return|;
 break|break;
 block|}
 return|return

@@ -5312,6 +5312,12 @@ return|return
 name|EBUSY
 return|;
 block|}
+else|else
+block|{
+return|return
+name|EOPNOTSUPP
+return|;
+block|}
 return|return
 literal|0
 return|;

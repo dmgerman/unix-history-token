@@ -470,6 +470,10 @@ expr_stmt|;
 return|return
 name|error
 return|;
+default|default :
+return|return
+name|EOPNOTSUPP
+return|;
 block|}
 if|if
 condition|(

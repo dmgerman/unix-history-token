@@ -10866,7 +10866,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-literal|0
+name|EOPNOTSUPP
 expr_stmt|;
 comment|/* XXX ? */
 break|break;

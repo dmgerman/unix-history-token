@@ -1572,7 +1572,7 @@ parameter_list|,
 name|sw
 parameter_list|)
 define|\
-value|DATA_SET(scterm_set, sw);				\ 	static int						\ 	scterm_##name##_event(module_t mod, int type, void *data) \ 	{							\ 		switch (type) {					\ 		case MOD_LOAD:					\ 			return sc_term_add(&sw);		\ 		case MOD_UNLOAD:				\ 			if (sw.te_refcount> 0)			\ 				return EBUSY;			\ 			return sc_term_remove(&sw);		\ 		default:					\ 			break;					\ 		}						\ 		return 0;					\ 	}							\ 	static moduledata_t scterm_##name##_mod = {		\ 		"scterm-" #name,				\ 		scterm_##name##_event,				\ 		NULL,						\ 	};							\ 	DECLARE_MODULE(scterm_##name, scterm_##name##_mod,	\ 		       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+value|DATA_SET(scterm_set, sw);				\ 	static int						\ 	scterm_##name##_event(module_t mod, int type, void *data) \ 	{							\ 		switch (type) {					\ 		case MOD_LOAD:					\ 			return sc_term_add(&sw);		\ 		case MOD_UNLOAD:				\ 			if (sw.te_refcount> 0)			\ 				return EBUSY;			\ 			return sc_term_remove(&sw);		\ 		default:					\ 			return EOPNOTSUPP;			\ 			break;					\ 		}						\ 		return 0;					\ 	}							\ 	static moduledata_t scterm_##name##_mod = {		\ 		"scterm-" #name,				\ 		scterm_##name##_event,				\ 		NULL,						\ 	};							\ 	DECLARE_MODULE(scterm_##name, scterm_##name##_mod,	\ 		       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
 end_define
 
 begin_comment
@@ -1825,7 +1825,7 @@ parameter_list|,
 name|set
 parameter_list|)
 define|\
-value|SET_DECLARE(set, sc_renderer_t);			\ 	static int						\ 	scrndr_##name##_event(module_t mod, int type, void *data) \ 	{							\ 		sc_renderer_t **list;				\ 		int error = 0;					\ 		switch (type) {					\ 		case MOD_LOAD:					\ 			SET_FOREACH(list, set) {		\ 				error = sc_render_add(*list);	\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		case MOD_UNLOAD:				\ 			SET_FOREACH(list, set) {		\ 				error = sc_render_remove(*list);\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		default:					\ 			break;					\ 		}						\ 		return error;					\ 	}							\ 	static moduledata_t scrndr_##name##_mod = {		\ 		"scrndr-" #name,				\ 		scrndr_##name##_event,				\ 		NULL,						\ 	};							\ 	DECLARE_MODULE(scrndr_##name, scrndr_##name##_mod, 	\ 		       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+value|SET_DECLARE(set, sc_renderer_t);			\ 	static int						\ 	scrndr_##name##_event(module_t mod, int type, void *data) \ 	{							\ 		sc_renderer_t **list;				\ 		int error = 0;					\ 		switch (type) {					\ 		case MOD_LOAD:					\ 			SET_FOREACH(list, set) {		\ 				error = sc_render_add(*list);	\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		case MOD_UNLOAD:				\ 			SET_FOREACH(list, set) {		\ 				error = sc_render_remove(*list);\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		default:					\ 			return EOPNOTSUPP;			\ 			break;					\ 		}						\ 		return error;					\ 	}							\ 	static moduledata_t scrndr_##name##_mod = {		\ 		"scrndr-" #name,				\ 		scrndr_##name##_event,				\ 		NULL,						\ 	};							\ 	DECLARE_MODULE(scrndr_##name, scrndr_##name##_mod, 	\ 		       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
 end_define
 
 begin_typedef

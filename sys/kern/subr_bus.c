@@ -11710,6 +11710,12 @@ operator|(
 literal|0
 operator|)
 return|;
+default|default:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 block|}
 return|return
 operator|(
@@ -12019,6 +12025,12 @@ name|dmd
 operator|->
 name|dmd_chainarg
 argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|error
+operator|=
+name|EOPNOTSUPP
 expr_stmt|;
 break|break;
 block|}

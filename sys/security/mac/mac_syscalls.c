@@ -1116,6 +1116,10 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
 break|break;
 block|}
 return|return

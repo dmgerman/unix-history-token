@@ -1217,6 +1217,12 @@ name|stf_mtx
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 block|}
 return|return
 operator|(

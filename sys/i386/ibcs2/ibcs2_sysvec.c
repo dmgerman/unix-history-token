@@ -369,7 +369,11 @@ name|allproc_lock
 argument_list|)
 expr_stmt|;
 default|default:
-comment|/* do not care */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 break|break;
 block|}
 return|return

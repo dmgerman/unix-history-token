@@ -180,6 +180,9 @@ return|return
 name|EBUSY
 return|;
 default|default:
+return|return
+name|EOPNOTSUPP
+return|;
 break|break;
 block|}
 return|return

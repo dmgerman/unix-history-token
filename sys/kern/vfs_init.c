@@ -2276,7 +2276,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* including MOD_SHUTDOWN */
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
 break|break;
 block|}
 return|return

@@ -79,7 +79,7 @@ parameter_list|,
 name|driver
 parameter_list|)
 define|\
-value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		switch (type) { \ 		case MOD_LOAD: \ 			periphdriver_register(data); \ 			break; \ 		case MOD_UNLOAD: \ 			printf(#name " module unload - not possible for this module type\n"); \ 			return EINVAL; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)&driver \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_DRIVERS, SI_ORDER_ANY); \ 	MODULE_DEPEND(name, cam, 1, 1, 1)
+value|static int name ## _modevent(module_t mod, int type, void *data) \ 	{ \ 		switch (type) { \ 		case MOD_LOAD: \ 			periphdriver_register(data); \ 			break; \ 		case MOD_UNLOAD: \ 			printf(#name " module unload - not possible for this module type\n"); \ 			return EINVAL; \ 		default: \ 			return EOPNOTSUPP; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)&driver \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_DRIVERS, SI_ORDER_ANY); \ 	MODULE_DEPEND(name, cam, 1, 1, 1)
 end_define
 
 begin_typedef

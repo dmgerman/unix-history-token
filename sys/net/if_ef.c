@@ -2693,7 +2693,9 @@ name|ef_unload
 argument_list|()
 return|;
 default|default:
-break|break;
+return|return
+name|EOPNOTSUPP
+return|;
 block|}
 return|return
 literal|0

@@ -543,6 +543,12 @@ case|case
 name|MOD_SHUTDOWN
 case|:
 break|break;
+default|default:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 block|}
 return|return
 operator|(

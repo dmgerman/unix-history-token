@@ -932,7 +932,7 @@ return|;
 default|default:
 return|return
 operator|(
-literal|0
+name|EOPNOTSUPP
 operator|)
 return|;
 block|}

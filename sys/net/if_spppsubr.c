@@ -3510,9 +3510,10 @@ case|:
 return|return
 name|EACCES
 return|;
-break|break;
 default|default:
-break|break;
+return|return
+name|EOPNOTSUPP
+return|;
 block|}
 return|return
 literal|0

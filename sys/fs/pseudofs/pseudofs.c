@@ -1752,13 +1752,9 @@ argument_list|()
 expr_stmt|;
 break|break;
 default|default:
-name|printf
-argument_list|(
-literal|"pseudofs: unexpected event type %d\n"
-argument_list|,
-name|evt
-argument_list|)
-expr_stmt|;
+return|return
+name|EOPNOTSUPP
+return|;
 break|break;
 block|}
 return|return

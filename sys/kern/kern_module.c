@@ -941,6 +941,10 @@ condition|(
 name|error
 operator|==
 name|EOPNOTSUPP
+operator|||
+name|error
+operator|==
+name|EINVAL
 condition|)
 name|error
 operator|=

@@ -1540,6 +1540,10 @@ expr_stmt|;
 return|return
 name|EINVAL
 return|;
+default|default:
+return|return
+name|EOPNOTSUPP
+return|;
 block|}
 return|return
 literal|0

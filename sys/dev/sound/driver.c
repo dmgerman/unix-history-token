@@ -39,6 +39,11 @@ name|MOD_UNLOAD
 case|:
 break|break;
 default|default:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 break|break;
 block|}
 return|return
