@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: param.h,v 1.4 1998/06/14 13:45:13 dfr Exp $ */
+comment|/* $Id: param.h,v 1.5 1998/07/12 16:32:10 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|KERNBASE
-value|0xfffffc0000230000LL
+value|0xfffffc0000300000LL
 end_define
 
 begin_comment
