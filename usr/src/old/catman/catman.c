@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)catman.c	4.4 (Berkeley) %G%"
+literal|"@(#)catman.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,19 +39,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stat.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_include

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	3.12	(Berkeley)	83/05/15"
+literal|"@(#)symtab.c	3.13	(Berkeley)	83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_comment

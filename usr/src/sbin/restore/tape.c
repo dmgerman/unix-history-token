@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.19	(Berkeley)	83/06/19"
+literal|"@(#)tape.c	3.20	(Berkeley)	83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stat.h>
+file|<sys/stat.h>
 end_include
 
 begin_decl_stmt

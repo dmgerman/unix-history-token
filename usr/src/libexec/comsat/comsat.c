@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)comsat.c	4.7 83/06/12"
+literal|"@(#)comsat.c	4.8 83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,18 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -54,18 +66,6 @@ begin_include
 include|#
 directive|include
 file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<wait.h>
 end_include
 
 begin_include

@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dcheck.c	2.3 (Berkeley) %G%"
+literal|"@(#)dcheck.c	2.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * dcheck - check directory consistency  */
@@ -26,12 +37,6 @@ directive|define
 name|MAXNINDIR
 value|(MAXBSIZE / sizeof (daddr_t))
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SIMFS
-end_ifndef
 
 begin_include
 include|#
@@ -54,42 +59,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"../h/param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/fs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ndir.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
