@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	4.9 83/03/11"
+literal|"@(#)inet.c	4.10 83/03/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -1181,7 +1181,7 @@ for|for
 control|(
 name|first
 operator|=
-literal|0
+literal|1
 operator|,
 name|i
 operator|=
@@ -1270,7 +1270,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d messages respondes generated\n"
+literal|"\t%d messages responses generated\n"
 argument_list|,
 name|icmpstat
 operator|.
@@ -1281,7 +1281,7 @@ for|for
 control|(
 name|first
 operator|=
-literal|0
+literal|1
 operator|,
 name|i
 operator|=
