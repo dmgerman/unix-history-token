@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.34 1998/02/09 06:09:25 eivind Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.35 1998/03/30 09:50:46 phk Exp $ */
 end_comment
 
 begin_comment
@@ -736,6 +736,13 @@ operator|=
 name|shmseg
 operator|->
 name|shm_internal
+expr_stmt|;
+name|shm_handle
+operator|->
+name|shm_object
+operator|->
+name|shadow_count
+operator|--
 expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
@@ -2696,6 +2703,22 @@ name|VM_PROT_DEFAULT
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|shm_handle
+operator|->
+name|shm_object
+operator|->
+name|shadow_count
+operator|++
+expr_stmt|;
+name|shm_handle
+operator|->
+name|shm_object
+operator|->
+name|flags
+operator|&=
+operator|~
+name|OBJ_ONEMAPPING
 expr_stmt|;
 name|shmseg
 operator|->
