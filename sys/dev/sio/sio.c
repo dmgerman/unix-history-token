@@ -2627,6 +2627,13 @@ block|}
 block|,
 comment|/* PNP0511 */
 block|{
+literal|0x01017256
+block|,
+name|NULL
+block|}
+block|,
+comment|/* USR0101 */
+block|{
 literal|0x30207256
 block|,
 name|NULL
