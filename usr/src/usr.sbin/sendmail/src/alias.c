@@ -3,56 +3,6 @@ begin_comment
 comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DBM
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)alias.c	5.10 (Berkeley) %G%	(with DBM)"
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-else|DBM
-end_else
-
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)alias.c	5.10 (Berkeley) %G%	(without DBM)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|DBM
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|not lint
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -105,6 +55,56 @@ begin_endif
 endif|#
 directive|endif
 endif|FLOCK
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBM
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)alias.c	5.11 (Berkeley) %G%	(with DBM)"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+else|DBM
+end_else
+
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)alias.c	5.11 (Berkeley) %G%	(without DBM)"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|DBM
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
 end_endif
 
 begin_comment

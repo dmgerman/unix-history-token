@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	5.9 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2619,7 +2619,7 @@ block|}
 endif|#
 directive|endif
 endif|SMTP
-comment|/* 	**  Actually fork the mailer process. 	**	DOFORK is clever about retrying. 	*/
+comment|/* 	**  Actually fork the mailer process. 	**	DOFORK is clever about retrying. 	** 	**	Dispose of SIGCHLD signal catchers that may be laying 	**	around so that endmail will get it. 	*/
 if|if
 condition|(
 name|CurEnv
@@ -2647,6 +2647,22 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGCHLD
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|SIGCHLD
 name|DOFORK
 argument_list|(
 name|XFORK
