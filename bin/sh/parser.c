@@ -4682,6 +4682,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|c
+operator|>=
+literal|0
+operator|&&
 name|SQSYNTAX
 index|[
 name|c
@@ -6728,6 +6732,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|c
+operator|>=
+literal|0
+operator|&&
 name|BASESYNTAX
 index|[
 operator|(
