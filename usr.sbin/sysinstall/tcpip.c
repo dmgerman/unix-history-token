@@ -2950,10 +2950,6 @@ index|[
 literal|255
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|pccard
-decl_stmt|;
 name|int
 name|ipv4_enable
 init|=

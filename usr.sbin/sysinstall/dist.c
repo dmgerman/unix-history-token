@@ -2523,8 +2523,6 @@ decl_stmt|,
 name|stop
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|j
 decl_stmt|,
 name|status
