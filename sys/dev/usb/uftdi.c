@@ -15,10 +15,6 @@ begin_comment
 comment|/*  * FTDI FT8U100AX serial adapter driver  */
 end_comment
 
-begin_comment
-comment|/*  * XXX This driver will not support multiple serial ports.  * XXX The ucom layer needs to be extended first.  */
-end_comment
-
 begin_include
 include|#
 directive|include
