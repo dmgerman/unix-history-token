@@ -839,7 +839,7 @@ literal|0
 argument_list|,
 name|sysctl_kern_geom_confxml
 argument_list|,
-literal|"A"
+literal|""
 argument_list|,
 literal|"Dump the GEOM config in XML"
 argument_list|)
@@ -865,7 +865,7 @@ literal|0
 argument_list|,
 name|sysctl_kern_geom_confdot
 argument_list|,
-literal|"A"
+literal|""
 argument_list|,
 literal|"Dump the GEOM config in dot"
 argument_list|)
@@ -891,7 +891,7 @@ literal|0
 argument_list|,
 name|sysctl_kern_geom_conftxt
 argument_list|,
-literal|"A"
+literal|""
 argument_list|,
 literal|"Dump the GEOM config in txt"
 argument_list|)
