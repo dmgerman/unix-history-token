@@ -4674,11 +4674,6 @@ modifier|*
 modifier|*
 name|sepp
 decl_stmt|;
-name|struct
-name|conninfo
-modifier|*
-name|conn
-decl_stmt|;
 name|long
 name|omask
 decl_stmt|;
@@ -9197,7 +9192,7 @@ name|sscanf
 argument_list|(
 name|versp
 argument_list|,
-literal|"%d-%d"
+literal|"%u-%u"
 argument_list|,
 operator|&
 name|sep
@@ -13109,7 +13104,7 @@ modifier|*
 name|sep
 parameter_list|,
 name|int
-name|maxperip
+name|maxpip
 parameter_list|)
 block|{
 name|struct
@@ -13133,7 +13128,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|maxperip
+name|maxpip
 operator|<=
 literal|0
 condition|)
@@ -13172,7 +13167,7 @@ for|for
 control|(
 name|j
 operator|=
-name|maxperip
+name|maxpip
 init|;
 name|j
 operator|<
@@ -13203,7 +13198,7 @@ name|conn
 operator|->
 name|co_proc
 argument_list|,
-name|maxperip
+name|maxpip
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -13242,13 +13237,13 @@ name|conn
 operator|->
 name|co_numchild
 operator|>
-name|maxperip
+name|maxpip
 condition|)
 name|conn
 operator|->
 name|co_numchild
 operator|=
-name|maxperip
+name|maxpip
 expr_stmt|;
 block|}
 block|}
