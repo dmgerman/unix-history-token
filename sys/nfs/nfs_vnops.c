@@ -15597,7 +15597,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Work out if all buffers are using the same cred 			 * so we can deal with them all with one commit. 			 * 			 * NOTE: we are not clearing B_DONE here, so we have 			 * to do it later on in this routine if we intend to  			 * initiate I/O on the bp. 			 */
+comment|/* 			 * Work out if all buffers are using the same cred 			 * so we can deal with them all with one commit. 			 * 			 * NOTE: we are not clearing B_DONE here, so we have 			 * to do it later on in this routine if we intend to  			 * initiate I/O on the bp. 			 * 			 * Note: to avoid loopback deadlocks, we do not 			 * assign b_runningbufspace. 			 */
 if|if
 condition|(
 name|wcred
@@ -16682,6 +16682,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note: to avoid loopback deadlocks, we do not 	 * assign b_runningbufspace. 	 */
 name|vfs_busy_pages
 argument_list|(
 name|bp
