@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_resource.c	4.20	83/02/10	*/
+comment|/*	kern_resource.c	4.21	83/05/23	*/
 end_comment
 
 begin_include
@@ -172,9 +172,7 @@ name|u_r
 operator|.
 name|r_val1
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_nice
 expr_stmt|;
