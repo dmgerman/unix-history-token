@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.15	82/02/15	*/
+comment|/*	param.h	4.16	82/03/30	*/
 end_comment
 
 begin_comment
@@ -445,6 +445,13 @@ parameter_list|(
 name|i
 parameter_list|)
 value|(((i) + (CLSIZE-1))&~ (CLSIZE-1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_BSIZE
+value|512
 end_define
 
 begin_if
