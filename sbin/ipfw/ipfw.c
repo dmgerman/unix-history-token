@@ -2595,7 +2595,7 @@ name|chain
 operator|->
 name|fw_ipflg
 operator|&
-name|IP_FW_IF_TCPOPT
+name|IP_FW_IF_TCPFLG
 condition|)
 block|{
 name|int
