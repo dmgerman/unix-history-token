@@ -335,6 +335,28 @@ operator|=
 operator|++
 name|ring_clock
 expr_stmt|;
+comment|/*      * Try to encourage "ring_empty_consecutive()" to be large.      */
+if|if
+condition|(
+name|ring_empty
+argument_list|(
+name|ring
+argument_list|)
+condition|)
+block|{
+name|ring
+operator|->
+name|consume
+operator|=
+name|ring
+operator|->
+name|supply
+operator|=
+name|ring
+operator|->
+name|bottom
+expr_stmt|;
+block|}
 block|}
 end_function
 
