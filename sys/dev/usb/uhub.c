@@ -2178,7 +2178,21 @@ name|struct
 name|softc
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|struct
+name|softc
+modifier|*
+name|scp
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dev
+condition|)
+comment|/* no device driver attached at port */
+return|return;
+name|sc
+operator|=
 operator|(
 expr|struct
 name|softc
@@ -2187,12 +2201,9 @@ operator|)
 name|dev
 operator|->
 name|softc
-decl_stmt|;
-name|struct
-name|softc
-modifier|*
+expr_stmt|;
 name|scp
-init|=
+operator|=
 operator|(
 expr|struct
 name|softc
@@ -2203,7 +2214,7 @@ operator|->
 name|parent
 operator|->
 name|softc
-decl_stmt|;
+expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|3
