@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.30 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1641,7 +1641,7 @@ name|telrcv_state
 operator|=
 name|TS_IAC
 expr_stmt|;
-continue|continue;
+break|break;
 block|}
 operator|*
 name|Ifrontp
@@ -3172,6 +3172,7 @@ if|if
 condition|(
 name|ring_full_count
 argument_list|(
+operator|&
 name|ttyoring
 argument_list|)
 condition|)
