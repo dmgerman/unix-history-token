@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_if
@@ -24,15 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)malloc.c	5.6 (Berkeley) %G%"
+literal|"@(#)malloc.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_comment
 comment|/*  * malloc.c (Caltech) 2/21/82  * Chris Kingsley, kingsley@cit-20.  *  * This is a very fast storage allocator.  It allocates blocks of a small   * number of different sizes, and keeps free lists of each size.  Blocks that  * don't exactly fit are passed up to the next larger size.  In this   * implementation, the available sizes are 2^n-4 (or 2^n-10) bytes long.  * This is designed for use in a virtual memory environment.  */
