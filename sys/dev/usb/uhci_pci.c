@@ -1196,7 +1196,7 @@ name|self
 argument_list|,
 name|PCI_USBREV
 argument_list|,
-literal|4
+literal|1
 argument_list|)
 operator|&
 name|PCI_USBREV_MASK
@@ -1304,7 +1304,7 @@ name|self
 argument_list|,
 name|PCI_LEGSUP
 argument_list|,
-literal|4
+literal|2
 argument_list|)
 operator|!=
 name|PCI_LEGSUP_USBPIRQDEN
@@ -1313,7 +1313,7 @@ name|device_printf
 argument_list|(
 name|self
 argument_list|,
-literal|"LegSup = 0x%08x\n"
+literal|"LegSup = 0x%04x\n"
 argument_list|,
 name|pci_read_config
 argument_list|(
@@ -1321,7 +1321,7 @@ name|self
 argument_list|,
 name|PCI_LEGSUP
 argument_list|,
-literal|4
+literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1335,7 +1335,7 @@ name|PCI_LEGSUP
 argument_list|,
 name|PCI_LEGSUP_USBPIRQDEN
 argument_list|,
-literal|4
+literal|2
 argument_list|)
 expr_stmt|;
 name|err
