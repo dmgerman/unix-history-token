@@ -118,8 +118,6 @@ init|=
 literal|0
 decl_stmt|,
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 comment|/* Get arguments */
 if|if
