@@ -335,6 +335,34 @@ argument_list|(
 name|SOUND_MIXER_TREBLE
 argument_list|)
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* PC98's synth is assigned to AUX#2 */
+name|MIX_ENT
+argument_list|(
+name|SOUND_MIXER_SYNTH
+argument_list|,
+literal|4
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|5
+argument_list|,
+literal|5
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|5
+argument_list|)
+block|,
+else|#
+directive|else
+comment|/* AT386's synth is assigned to AUX#1 */
 name|MIX_ENT
 argument_list|(
 name|SOUND_MIXER_SYNTH
@@ -356,6 +384,8 @@ argument_list|,
 literal|5
 argument_list|)
 block|,
+endif|#
+directive|endif
 name|MIX_ENT
 argument_list|(
 name|SOUND_MIXER_PCM
@@ -440,6 +470,34 @@ argument_list|,
 literal|1
 argument_list|)
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* PC98's cd-audio is assigned to AUX#1 */
+name|MIX_ENT
+argument_list|(
+name|SOUND_MIXER_CD
+argument_list|,
+literal|2
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|5
+argument_list|,
+literal|3
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|5
+argument_list|)
+block|,
+else|#
+directive|else
+comment|/* AT386's cd-audio is assigned to AUX#2 */
 name|MIX_ENT
 argument_list|(
 name|SOUND_MIXER_CD
@@ -461,6 +519,8 @@ argument_list|,
 literal|5
 argument_list|)
 block|,
+endif|#
+directive|endif
 name|MIX_ENT
 argument_list|(
 name|SOUND_MIXER_IMIX

@@ -3076,6 +3076,18 @@ goto|goto
 name|no
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+name|irq
+operator|>
+literal|12
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|irq
@@ -3083,6 +3095,8 @@ operator|>
 literal|11
 condition|)
 block|{
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"MSS: Bad IRQ %d\n"
@@ -3204,9 +3218,6 @@ return|return
 name|result
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|mss_detect
@@ -4002,9 +4013,6 @@ return|return
 name|ENXIO
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -4210,6 +4218,23 @@ operator|->
 name|conf_base
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* PC98 need this. I don't know reason why. */
+name|bus_delete_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+name|mss
+operator|->
+name|conf_rid
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mss
 operator|->
 name|conf_base
@@ -4240,9 +4265,6 @@ return|return
 name|NULL
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|mss_doattach
@@ -4311,6 +4333,56 @@ name|DV_F_TRUE_MSS
 condition|)
 block|{
 comment|/* has IRQ/DMA registers, set IRQ and DMA addr */
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* CS423[12] in PC98 can use IRQ3,5,10,12 */
+specifier|static
+name|char
+name|interrupt_bits
+index|[
+literal|13
+index|]
+init|=
+block|{
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+literal|0x08
+block|,
+operator|-
+literal|1
+block|,
+literal|0x10
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+literal|0x18
+block|,
+operator|-
+literal|1
+block|,
+literal|0x20
+block|}
+decl_stmt|;
+else|#
+directive|else
 specifier|static
 name|char
 name|interrupt_bits
@@ -4351,6 +4423,8 @@ block|,
 literal|0x20
 block|}
 decl_stmt|;
+endif|#
+directive|endif
 specifier|static
 name|char
 name|pdma_bits
@@ -4417,6 +4491,10 @@ condition|)
 goto|goto
 name|no
 goto|;
+ifndef|#
+directive|ifndef
+name|PC98
+comment|/* CS423[12] in PC98 don't support this. */
 name|io_wr
 argument_list|(
 name|mss
@@ -4451,6 +4529,8 @@ argument_list|,
 literal|"IRQ Conflict?\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Write IRQ+DMA setup */
 if|if
 condition|(
@@ -4818,9 +4898,6 @@ return|return
 name|ENXIO
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|mss_attach
@@ -4977,9 +5054,6 @@ name|mss
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|device_method_t
 name|mss_methods
@@ -5008,9 +5082,6 @@ literal|0
 block|}
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|driver_t
 name|mss_driver
@@ -5026,9 +5097,6 @@ name|snddev_info
 argument_list|)
 block|, }
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|mss
@@ -5044,13 +5112,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * main irq handler for the CS423x. The OPTi931 code is  * a separate one.  * The correct way to operate for a device with multiple internal  * interrupt sources is to loop on the status register and ack  * interrupts until all interrupts are served and none are reported. At  * this point the IRQ line to the ISA IRQ controller should go low  * and be raised at the next interrupt.  *  * Since the ISA IRQ controller is sent EOI _before_ passing control  * to the isr, it might happen that we serve an interrupt early, in  * which case the status register at the next interrupt should just  * say that there are no more interrupts...  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|mss_intr
@@ -5281,13 +5343,7 @@ expr_stmt|;
 comment|/* Clear interrupt status */
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * AD_WAIT_INIT waits if we are initializing the board and  * we cannot modify its settings  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|ad_wait_init
@@ -5358,9 +5414,6 @@ return|return
 name|n
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|ad_read
@@ -5441,9 +5494,6 @@ return|return
 name|x
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ad_write
@@ -5524,9 +5574,6 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ad_write_cnt
@@ -5569,9 +5616,6 @@ argument_list|)
 expr_stmt|;
 comment|/* upper base must be last */
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|wait_for_calibration
@@ -5713,9 +5757,6 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ad_unmute
@@ -5761,9 +5802,6 @@ name|I6_MUTE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ad_enter_MCE
@@ -5816,9 +5854,6 @@ name|MSS_MCE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|ad_leave_MCE
@@ -5915,13 +5950,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * only one source can be set...  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|mss_set_recsrc
@@ -6030,13 +6059,7 @@ return|return
 name|mask
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* there are differences in the mixer depending on the actual sound card. */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|mss_mixer_set
@@ -6339,9 +6362,6 @@ literal|0
 return|;
 comment|/* success */
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|mss_speed
@@ -6544,13 +6564,7 @@ return|return
 name|speed
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * mss_format checks that the format is supported (or defaults to AFMT_U8)  * and returns the bit setting for the 1848 register corresponding to  * the desired format.  *  * fixed lr970724  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|mss_format
@@ -6703,9 +6717,6 @@ return|return
 name|format
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|mss_trigger
@@ -6918,9 +6929,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|struct
 name|isa_pnp_id
@@ -6996,9 +7004,6 @@ literal|0
 block|}
 block|, }
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 specifier|static
 name|int
 name|pnpmss_probe
@@ -7054,9 +7059,6 @@ name|pnpmss_ids
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|pnpmss_attach
@@ -7301,9 +7303,6 @@ name|mss
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|device_method_t
 name|pnpmss_methods
@@ -7332,9 +7331,6 @@ literal|0
 block|}
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|driver_t
 name|pnpmss_driver
@@ -7350,9 +7346,6 @@ name|snddev_info
 argument_list|)
 block|, }
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|pnpmss
@@ -7368,13 +7361,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * the opti931 seems to miss interrupts when working in full  * duplex, so we try some heuristics to catch them.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|opti931_intr
@@ -7659,17 +7646,11 @@ literal|"xxx too many loops\n"
 argument|);
 argument_list|)
 block|}
-end_function
-
-begin_if
 if|#
 directive|if
 name|NGUSC
 operator|>
 literal|0
-end_if
-
-begin_function
 specifier|static
 name|int
 name|guspcm_probe
@@ -7716,9 +7697,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|guspcm_attach
@@ -8001,9 +7979,6 @@ name|mss
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|device_method_t
 name|guspcm_methods
@@ -8031,9 +8006,6 @@ literal|0
 block|}
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|driver_t
 name|guspcm_driver
@@ -8049,9 +8021,6 @@ name|snddev_info
 argument_list|)
 block|, }
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|guspcm
@@ -8067,18 +8036,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* NGUSC> 0 */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|mssmix_init
@@ -8190,9 +8150,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|mssmix_set
@@ -8242,9 +8199,6 @@ literal|8
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|mssmix_setrecsrc
@@ -8280,9 +8234,6 @@ return|return
 name|src
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|ymmix_init
@@ -8348,9 +8299,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|ymmix_set
@@ -8605,9 +8553,6 @@ literal|8
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|ymmix_setrecsrc
@@ -8643,13 +8588,7 @@ return|return
 name|src
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* channel interface */
-end_comment
-
-begin_function
 specifier|static
 name|void
 modifier|*
@@ -8748,9 +8687,6 @@ return|return
 name|ch
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|msschan_setdir
@@ -8804,9 +8740,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|msschan_setformat
@@ -8837,9 +8770,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|msschan_setspeed
@@ -8868,9 +8798,6 @@ name|speed
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|msschan_setblocksize
@@ -8887,9 +8814,6 @@ return|return
 name|blocksize
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|msschan_trigger
@@ -8938,9 +8862,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|msschan_getptr
@@ -8966,9 +8887,6 @@ name|buffer
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|pcmchan_caps
 modifier|*

@@ -1762,8 +1762,7 @@ operator|(
 name|u_int8_t
 operator|*
 operator|)
-operator|(
-name|rman_get_bushandle
+name|rman_get_virtual
 argument_list|(
 name|sc
 operator|->
@@ -1771,7 +1770,6 @@ name|buf
 argument_list|)
 operator|+
 name|chnbuf
-operator|)
 expr_stmt|;
 if|if
 condition|(
