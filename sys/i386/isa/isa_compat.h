@@ -333,14 +333,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|isa_driver
-name|wdcdriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
 name|msedriver
 decl_stmt|;
 end_decl_stmt
@@ -961,20 +953,6 @@ block|,
 endif|#
 directive|endif
 comment|/* BIO */
-if|#
-directive|if
-name|NWDC
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_BIO
-block|,
-operator|&
-name|wdcdriver
-block|}
-block|,
-endif|#
-directive|endif
 if|#
 directive|if
 name|NMCD
