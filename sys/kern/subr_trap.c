@@ -402,11 +402,6 @@ modifier|*
 name|p
 decl_stmt|;
 name|struct
-name|kse
-modifier|*
-name|ke
-decl_stmt|;
-name|struct
 name|ksegrp
 modifier|*
 name|kg
@@ -528,12 +523,6 @@ argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
-expr_stmt|;
-name|ke
-operator|=
-name|td
-operator|->
-name|td_kse
 expr_stmt|;
 name|sticks
 operator|=
