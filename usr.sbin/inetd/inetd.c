@@ -44,7 +44,7 @@ name|char
 name|inetd_c_rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.6 1995/06/11 19:32:39 rgrimes Exp $"
+literal|"$Id: inetd.c,v 1.7 1995/10/12 16:43:26 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5215,6 +5215,11 @@ name|char
 modifier|*
 name|start
 decl_stmt|;
+name|char
+name|quote
+init|=
+literal|'\0'
+decl_stmt|;
 name|again
 label|:
 while|while
@@ -5301,10 +5306,46 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'"'
+operator|||
+operator|*
+name|cp
+operator|==
+literal|'\''
+condition|)
+name|quote
+operator|=
+operator|*
+name|cp
+operator|++
+expr_stmt|;
 name|start
 operator|=
 name|cp
 expr_stmt|;
+if|if
+condition|(
+name|quote
+condition|)
+while|while
+condition|(
+operator|*
+name|cp
+operator|&&
+operator|*
+name|cp
+operator|!=
+name|quote
+condition|)
+name|cp
+operator|++
+expr_stmt|;
+else|else
 while|while
 condition|(
 operator|*
