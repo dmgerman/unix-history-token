@@ -28,9 +28,41 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/*  * Operating system dependent routines.  *  * Most of the stuff in here is based on Unix, but an attempt  * has been made to make things work on other operating systems.  * This will sometimes result in a loss of functionality, unless  * someone rewrites code specifically for the new operating system.  *  * The makefile provides defines to decide whether various  * Unix features are present.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
 
 begin_include
 include|#
@@ -47,19 +79,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -77,7 +115,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<less.h>
+file|"less.h"
 end_include
 
 begin_include
@@ -415,6 +453,10 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+specifier|static
+name|int
+name|neofs
+decl_stmt|;
 if|if
 condition|(
 name|setjmp
@@ -444,6 +486,30 @@ argument_list|,
 name|buf
 argument_list|,
 name|len
+argument_list|)
+expr_stmt|;
+comment|/* There's really no terribly impressive reason why we should just 	 * sighup after a single EOF read, nor is there any particular 	 * reason why we SIGHUP ourselves rather than calling exit().  However, 	 * none of it hurts, either. */
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+name|neofs
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|neofs
+operator|>
+literal|2
+condition|)
+name|kill
+argument_list|(
+name|getpid
+argument_list|()
+argument_list|,
+name|SIGHUP
 argument_list|)
 expr_stmt|;
 name|reading
@@ -764,10 +830,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|struct
 name|stat
 name|statbuf
