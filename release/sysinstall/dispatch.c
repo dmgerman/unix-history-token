@@ -191,6 +191,12 @@ name|distSetCustom
 block|}
 block|,
 block|{
+literal|"distUnsetCustom"
+block|,
+name|distUnsetCustom
+block|}
+block|,
+block|{
 literal|"distSetDeveloper"
 block|,
 name|distSetDeveloper

@@ -183,6 +183,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NEWFS_PROMPT
+value|"Please enter newfs(8) parameters:"
+end_define
+
+begin_define
+define|#
+directive|define
 name|RELNAME_PROMPT
 value|"Please specify the release you wish to load or\n\"none\" for a generic release install:"
 end_define
@@ -470,6 +477,20 @@ block|,
 name|PKG_PROMPT
 block|,
 name|VAR_PKG_TMPDIR
+block|,
+name|varCheck
+block|}
+block|,
+block|{
+literal|"Newfs Args"
+block|,
+literal|"Default parameters for newfs(8)"
+block|,
+name|OPT_IS_VAR
+block|,
+name|NEWFS_PROMPT
+block|,
+name|VAR_NEWFS_ARGS
 block|,
 name|varCheck
 block|}

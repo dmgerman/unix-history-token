@@ -1385,7 +1385,19 @@ name|ret
 operator|->
 name|newfs_cmd
 argument_list|,
-literal|"newfs -b 8192 -f 1024"
+literal|"newfs "
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|ret
+operator|->
+name|newfs_cmd
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_NEWFS_ARGS
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ret

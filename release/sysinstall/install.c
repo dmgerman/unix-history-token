@@ -99,6 +99,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -4569,6 +4575,15 @@ argument_list|(
 name|SYSTEM_STATE
 argument_list|,
 literal|"init"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|VAR_NEWFS_ARGS
+argument_list|,
+literal|"-b 8192 -f 1024"
 argument_list|,
 literal|0
 argument_list|)
