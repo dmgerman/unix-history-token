@@ -84,10 +84,10 @@ name|l
 decl_stmt|;
 name|int
 name|sl
+decl_stmt|,
+name|pl
 decl_stmt|;
 name|u_int
-name|pl
-decl_stmt|,
 name|i
 decl_stmt|;
 name|u_char
@@ -322,6 +322,9 @@ for|for
 control|(
 name|pl
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|pw
@@ -347,6 +350,10 @@ operator|*
 operator|)
 name|final
 argument_list|,
+call|(
+name|u_int
+call|)
+argument_list|(
 name|pl
 operator|>
 name|MD5_SIZE
@@ -354,6 +361,7 @@ condition|?
 name|MD5_SIZE
 else|:
 name|pl
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Don't leave anything around in vm they could use. */
