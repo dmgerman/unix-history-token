@@ -399,10 +399,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|gidlen
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|gidlen
