@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	5.11 (Berkeley) %G%"
+literal|"@(#)interactive.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,6 +110,10 @@ name|char
 name|ftype
 decl_stmt|;
 comment|/* file type, e.g. LEAF or NODE */
+name|char
+name|finotype
+decl_stmt|;
+comment|/* file type specified in directory entry */
 block|}
 struct|;
 end_struct
@@ -2929,8 +2933,6 @@ argument_list|(
 name|buf
 argument_list|,
 name|dp
-operator|->
-name|d_ino
 argument_list|,
 name|ap
 argument_list|)
@@ -3177,8 +3179,6 @@ operator|->
 name|d_name
 argument_list|,
 name|dp
-operator|->
-name|d_ino
 argument_list|,
 operator|&
 name|alist
@@ -3279,7 +3279,7 @@ name|mkentry
 argument_list|(
 argument|name
 argument_list|,
-argument|ino
+argument|dp
 argument_list|,
 argument|ap
 argument_list|)
@@ -3293,8 +3293,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ino_t
-name|ino
+name|struct
+name|direct
+modifier|*
+name|dp
 decl_stmt|;
 end_decl_stmt
 
@@ -3412,7 +3414,28 @@ name|fp
 operator|->
 name|fnum
 operator|=
-name|ino
+name|dp
+operator|->
+name|d_ino
+expr_stmt|;
+if|if
+condition|(
+name|oldinofmt
+condition|)
+name|fp
+operator|->
+name|finotype
+operator|=
+name|DT_UNKNOWN
+expr_stmt|;
+else|else
+name|fp
+operator|->
+name|finotype
+operator|=
+name|dp
+operator|->
+name|d_type
 expr_stmt|;
 name|fp
 operator|->
@@ -4074,6 +4097,55 @@ operator|=
 operator|*
 name|cp
 expr_stmt|;
+switch|switch
+condition|(
+name|fp
+operator|->
+name|finotype
+condition|)
+block|{
+case|case
+name|DT_LNK
+case|:
+operator|*
+name|dp
+operator|++
+operator|=
+literal|'@'
+expr_stmt|;
+break|break;
+case|case
+name|DT_FIFO
+case|:
+case|case
+name|DT_SOCK
+case|:
+operator|*
+name|dp
+operator|++
+operator|=
+literal|'='
+expr_stmt|;
+break|break;
+case|case
+name|DT_CHR
+case|:
+case|case
+name|DT_BLK
+case|:
+operator|*
+name|dp
+operator|++
+operator|=
+literal|'#'
+expr_stmt|;
+break|break;
+case|case
+name|DT_UNKNOWN
+case|:
+case|case
+name|DT_DIR
+case|:
 if|if
 condition|(
 name|fp
@@ -4088,6 +4160,25 @@ operator|++
 operator|=
 literal|'/'
 expr_stmt|;
+break|break;
+case|case
+name|DT_REG
+case|:
+comment|/* nothing */
+break|break;
+default|default:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: undefined file type %d\n"
+argument_list|,
+name|fp
+operator|->
+name|finotype
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|dp
 operator|++
