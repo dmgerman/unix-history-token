@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)iso_snpac.h	7.5 (Berkeley) %G% */
+comment|/*	@(#)iso_snpac.h	7.6 (Berkeley) %G% */
 end_comment
 
 begin_define
@@ -54,74 +54,33 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  *	Structure of the SNPA cache  */
-end_comment
-
-begin_struct
-struct|struct
-name|snpa_cache
-block|{
-name|struct
-name|snpa_req
-name|sc_sr
-decl_stmt|;
-define|#
-directive|define
-name|sc_nsap
-value|sc_sr.sr_isoa
-comment|/* this could be a NET if entry is 											for an IS */
-define|#
-directive|define
-name|sc_len
-value|sc_sr.sr_len
-define|#
-directive|define
-name|sc_snpa
-value|sc_sr.sr_snpa
-define|#
-directive|define
-name|sc_ht
-value|sc_sr.sr_ht
-define|#
-directive|define
-name|sc_flags
-value|sc_sr.sr_flags
-name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
-decl_stmt|;
+begin_define
 define|#
 directive|define
 name|SNPA_VALID
 value|0x01
+end_define
+
+begin_define
 define|#
 directive|define
 name|SNPA_ES
 value|0x02
+end_define
+
+begin_define
 define|#
 directive|define
 name|SNPA_IS
 value|0x04
+end_define
+
+begin_define
 define|#
 directive|define
 name|SNPA_PERM
 value|0x10
-comment|/* redirects only */
-name|struct
-name|iso_addr
-name|sc_da
-decl_stmt|;
-comment|/* DA from RD */
-name|struct
-name|rtentry
-modifier|*
-name|sc_rt
-decl_stmt|;
-block|}
-struct|;
-end_struct
+end_define
 
 begin_struct
 struct|struct
@@ -186,12 +145,6 @@ name|lc_rt
 decl_stmt|;
 comment|/* backpointer to route */
 name|struct
-name|rtentry
-modifier|*
-name|lc_rtgate
-decl_stmt|;
-comment|/* route to (RTF_GATEWAY ? ll : iface) */
-name|struct
 name|esis_req
 name|lc_er
 decl_stmt|;
@@ -210,39 +163,6 @@ end_struct
 
 begin_comment
 comment|/* ISO arp IOCTL data structures */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCSISOMAP
-value|_IOW('a',30, struct snpa_req)
-end_define
-
-begin_comment
-comment|/* set arp entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCGISOMAP
-value|_IOWR('a',38, struct snpa_req)
-end_define
-
-begin_comment
-comment|/* get arp entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCDISOMAP
-value|_IOW('a',31, struct snpa_req)
-end_define
-
-begin_comment
-comment|/* delete arp entry */
 end_comment
 
 begin_define
@@ -272,17 +192,6 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_function_decl
-name|struct
-name|snpa_cache
-modifier|*
-name|snpac_look
-parameter_list|(
-comment|/* struct iso_addr *isoa */
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|struct

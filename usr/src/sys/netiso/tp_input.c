@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *	@(#)tp_input.c	7.10 (Berkeley) %G% *  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
+comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *	@(#)tp_input.c	7.11 (Berkeley) %G% *  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
 end_comment
 
 begin_ifndef
@@ -581,8 +581,17 @@ parameter_list|,
 name|Loc
 parameter_list|)
 define|\
-value|if(Phrase) { error = (Erval); errlen = (int)(Loc); IncStat(Stat); \ 	goto Whattodo; }
+value|if (Phrase) {error = (Erval); errlen = (int)(Loc); IncStat(Stat); tpibrk();\ 	goto Whattodo; }
 end_define
+
+begin_macro
+name|tpibrk
+argument_list|()
+end_macro
+
+begin_block
+block|{}
+end_block
 
 begin_comment
 comment|/*   * WHENEVER YOU USE THE FOLLOWING MACRO,  * BE SURE THE TPDUTYPE IS A LEGIT VALUE FIRST!   */
@@ -5530,6 +5539,20 @@ name|mbtype
 operator|=
 name|MT_CONTROL
 expr_stmt|;
+name|MGET
+argument_list|(
+name|n
+argument_list|,
+name|M_DONTWAIT
+argument_list|,
+name|MT_DATA
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+condition|)
+block|{
 name|datalen
 operator|+=
 sizeof|sizeof
@@ -5537,19 +5560,10 @@ argument_list|(
 name|c_hdr
 argument_list|)
 expr_stmt|;
-name|m
+name|n
 operator|->
 name|m_len
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|c_hdr
-argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|m_data
-operator|-=
+operator|=
 sizeof|sizeof
 argument_list|(
 name|c_hdr
@@ -5561,27 +5575,44 @@ name|cmsg_len
 operator|=
 name|datalen
 expr_stmt|;
-name|bcopy
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|c_hdr
-argument_list|,
+operator|*
 name|mtod
 argument_list|(
-name|m
+name|n
 argument_list|,
-name|caddr_t
+expr|struct
+name|cmsghdr
+operator|*
 argument_list|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
+operator|=
 name|c_hdr
-argument_list|)
+expr_stmt|;
+name|n
+operator|->
+name|m_next
+operator|=
+name|m
+expr_stmt|;
+name|m
+operator|=
+name|n
+expr_stmt|;
+block|}
+else|else
+block|{
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
+name|m
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|invoke
+goto|;
+block|}
 comment|/* FALLTHROUGH */
 case|case
 name|XPD_TPDU_type
@@ -5629,6 +5660,8 @@ name|mbtype
 argument_list|)
 expr_stmt|;
 block|}
+name|invoke
+label|:
 name|e
 operator|.
 name|ATTR
@@ -6125,7 +6158,7 @@ end_label
 begin_macro
 name|IFDEBUG
 argument_list|(
-argument|D_ERROR_EMIT
+argument|D_TPINPUT
 argument_list|)
 end_macro
 

@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.8 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
+comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.9 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
 end_comment
 
 begin_ifndef
@@ -182,6 +182,16 @@ begin_comment
 comment|/* loopback interface */
 end_comment
 
+begin_decl_stmt
+name|int
+name|ether_output
+argument_list|()
+decl_stmt|,
+name|llc_rtrequest
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * FUNCTION:		iso_init  *  * PURPOSE:			initialize the iso address family  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	1) zeros the maptab table.  *					2) initializes the routing table.  *  * NOTES:			  */
 end_comment
@@ -201,16 +211,6 @@ end_macro
 
 begin_block
 block|{
-specifier|extern
-name|struct
-name|spna_cache
-name|iso_snpac
-index|[]
-decl_stmt|;
-specifier|extern
-name|u_int
-name|iso_snpac_size
-decl_stmt|;
 specifier|static
 name|iso_init_done
 expr_stmt|;
@@ -223,22 +223,6 @@ condition|)
 block|{
 name|iso_init_done
 operator|++
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|iso_snpac
-argument_list|,
-name|iso_snpac_size
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snpa_cache
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|rn_inithead
 argument_list|(
@@ -2381,6 +2365,15 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|nsellength
+init|=
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|siso_tlen
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2394,6 +2387,14 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|siso_tlen
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -2467,6 +2468,14 @@ expr_stmt|;
 block|}
 name|ia
 operator|->
+name|ia_addr
+operator|.
+name|siso_tlen
+operator|=
+name|nsellength
+expr_stmt|;
+name|ia
+operator|->
 name|ia_flags
 operator|&=
 operator|~
@@ -2528,6 +2537,8 @@ name|splimp
 argument_list|()
 decl_stmt|,
 name|error
+decl_stmt|,
+name|nsellength
 decl_stmt|;
 name|oldaddr
 operator|=
@@ -2628,7 +2639,62 @@ operator|->
 name|ia_addr
 expr_stmt|;
 block|}
+comment|/* XXX -- The following is here temporarily out of laziness 	   in not changing every ethernet driver's if_ioctl routine */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_output
+operator|==
+name|ether_output
+condition|)
+block|{
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_rtrequest
+operator|=
+name|llc_rtrequest
+expr_stmt|;
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_flags
+operator||=
+name|RTF_CLONING
+expr_stmt|;
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_llinfolen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|llinfo_llc
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Add route for the network. 	 */
+name|nsellength
+operator|=
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|siso_tlen
+expr_stmt|;
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|siso_tlen
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -2753,6 +2819,14 @@ name|RTF_UP
 argument_list|)
 expr_stmt|;
 block|}
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|siso_tlen
+operator|=
+name|nsellength
+expr_stmt|;
 name|ia
 operator|->
 name|ia_flags
