@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1994 Søren Schmidt  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:@(#)syscons.c	1.3 940129  *	$Id: syscons.c,v 1.34 1994/02/04 10:36:15 chmr Exp $  *  */
+comment|/*-  * Copyright (c) 1992-1994 Søren Schmidt  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:@(#)syscons.c	1.3 940129  *	$Id: syscons.c,v 1.35 1994/02/07 02:14:27 davidg Exp $  *  */
 end_comment
 
 begin_if
@@ -1839,6 +1839,23 @@ end_if
 begin_define
 define|#
 directive|define
+name|VIRTUAL_TTY
+parameter_list|(
+name|x
+parameter_list|)
+value|(pccons[x] = ttymalloc(pccons[x]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONSOLE_TTY
+value|(pccons[NCONS] = ttymalloc(pccons[NCONS]))
+end_define
+
+begin_define
+define|#
+directive|define
 name|frametype
 value|struct trapframe
 end_define
@@ -1871,6 +1888,19 @@ name|CGA_BUF
 value|(KERNBASE+0xB8000)
 end_define
 
+begin_decl_stmt
+name|struct
+name|tty
+modifier|*
+name|pccons
+index|[
+name|NCONS
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1890,6 +1920,23 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|VIRTUAL_TTY
+parameter_list|(
+name|x
+parameter_list|)
+value|&pccons[x]
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONSOLE_TTY
+value|&pccons[NCONS]
+end_define
 
 begin_define
 define|#
@@ -1926,6 +1973,18 @@ name|CGA_BUF
 value|(0xFE0B8000)
 end_define
 
+begin_decl_stmt
+name|struct
+name|tty
+name|pccons
+index|[
+name|NCONS
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1945,23 +2004,6 @@ name|__FreeBSD__
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|VIRTUAL_TTY
-parameter_list|(
-name|x
-parameter_list|)
-value|&pccons[x]
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONSOLE_TTY
-value|&pccons[NCONS]
-end_define
-
 begin_decl_stmt
 name|u_short
 modifier|*
@@ -1972,18 +2014,6 @@ name|u_short
 operator|*
 operator|)
 name|MONO_BUF
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|tty
-name|pccons
-index|[
-name|NCONS
-operator|+
-literal|1
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -6054,7 +6084,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -6086,7 +6115,6 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -6132,7 +6160,6 @@ if|if
 condition|(
 name|RB_LEN
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -6154,7 +6181,6 @@ name|c
 operator|=
 name|getc
 argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_out
@@ -6263,25 +6289,10 @@ name|cn_pri
 operator|=
 name|CN_INTERNAL
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__386BSD__
-argument_list|)
-name|cp
-operator|->
-name|cn_tp
-operator|=
-name|CONSOLE_TTY
-expr_stmt|;
-endif|#
-directive|endif
+warning|#
+directive|warning
+warning|Crude hack, do it better
+comment|/*#if defined(__FreeBSD__) || defined(__386BSD__) 	cp->cn_tp = CONSOLE_TTY; #endif*/
 block|}
 name|void
 name|pccninit
