@@ -1530,10 +1530,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * Came from user mode; CPU was in user state. 		 * If this process is being profiled, record the tick. 		 * if there is no related user location yet, don't 		 * bother trying to count it. 		 */
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 if|if
 condition|(
 name|td
