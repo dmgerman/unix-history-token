@@ -1626,7 +1626,7 @@ name|acpi_SetInteger
 argument_list|(
 name|h
 argument_list|,
-literal|"DSSX"
+name|METHOD_VIDEO
 argument_list|,
 operator|*
 name|video_output
