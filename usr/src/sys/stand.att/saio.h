@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	4.9	%G%	*/
+comment|/*	saio.h	4.10	%G%	*/
 end_comment
 
 begin_comment
@@ -161,6 +161,17 @@ begin_comment
 comment|/* limit the number of bad bits accepted in ecc's */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|F_SSI
+value|0x40
+end_define
+
+begin_comment
+comment|/* set skip sector inhibit, 				 * enable access to all sectors */
+end_comment
+
 begin_comment
 comment|/* io types */
 end_comment
@@ -303,6 +314,10 @@ name|short
 modifier|*
 name|off
 decl_stmt|;
+name|short
+name|sflg
+decl_stmt|;
+comment|/* skip sector flag */
 block|}
 struct|;
 end_struct
@@ -637,6 +652,28 @@ begin_comment
 comment|/* get device data */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SAIOSSI
+value|(('d'<<8)|9)
+end_define
+
+begin_comment
+comment|/* set skip sector inhibit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIONOSSI
+value|(('d'<<8)|10)
+end_define
+
+begin_comment
+comment|/* normal skip sector handling */
+end_comment
+
 begin_comment
 comment|/* codes for sector header word 1 */
 end_comment
@@ -661,6 +698,17 @@ end_define
 
 begin_comment
 comment|/* sector ok */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HDR1_SSF
+value|0x2000
+end_define
+
+begin_comment
+comment|/* skip sector flag */
 end_comment
 
 end_unit
