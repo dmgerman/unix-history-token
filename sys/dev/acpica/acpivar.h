@@ -101,6 +101,9 @@ name|int
 name|acpi_suspend_sx
 decl_stmt|;
 name|int
+name|acpi_sleep_delay
+decl_stmt|;
+name|int
 name|acpi_s4bios
 decl_stmt|;
 name|int
