@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.9	81/02/21	*/
+comment|/*	ubareg.h	4.10	81/02/22	*/
 end_comment
 
 begin_comment
@@ -892,6 +892,14 @@ name|int
 name|uh_zvcnt
 decl_stmt|;
 comment|/* number of 0 vectors */
+name|short
+name|uh_users
+decl_stmt|;
+comment|/* transient bdp use count */
+name|short
+name|uh_xclu
+decl_stmt|;
+comment|/* an rk07 is using this uba! */
 define|#
 directive|define
 name|UAMSIZ
