@@ -972,13 +972,6 @@ name|HE_VCC_FLOW_CTRL
 value|0x00100000
 end_define
 
-begin_define
-define|#
-directive|define
-name|HE_VCC_ASYNC
-value|0x00200000
-end_define
-
 begin_comment
 comment|/*  * CBR rate groups  */
 end_comment

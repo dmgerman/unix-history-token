@@ -352,9 +352,11 @@ if|if
 condition|(
 name|vcc
 operator|->
-name|vflags
+name|param
+operator|.
+name|flags
 operator|&
-name|HE_VCC_ASYNC
+name|ATMIO_FLAG_ASYNC
 condition|)
 block|{
 if|if
@@ -1036,9 +1038,9 @@ name|vcc
 operator|->
 name|param
 operator|.
-name|flags
-operator|&
-name|ATM_PH_AAL5
+name|aal
+operator|==
+name|ATMIO_AAL_5
 operator|)
 operator|&&
 operator|(
