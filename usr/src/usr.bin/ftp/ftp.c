@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.32 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2950,7 +2950,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|type
+name|curtype
 condition|)
 block|{
 case|case
