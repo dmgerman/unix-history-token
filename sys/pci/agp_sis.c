@@ -172,6 +172,14 @@ operator|(
 literal|"SiS 5591 host to AGP bridge"
 operator|)
 return|;
+case|case
+literal|0x06481039
+case|:
+return|return
+operator|(
+literal|"SiS 648 host to AGP bridge"
+operator|)
+return|;
 block|}
 empty_stmt|;
 if|if
