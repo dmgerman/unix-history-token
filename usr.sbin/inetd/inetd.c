@@ -44,7 +44,7 @@ name|char
 name|inetd_c_rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.10 1996/01/01 08:42:23 peter Exp $"
+literal|"$Id: inetd.c,v 1.11 1996/02/07 17:15:01 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4046,7 +4046,7 @@ name|sep
 operator|->
 name|se_fd
 argument_list|,
-literal|10
+literal|64
 argument_list|)
 expr_stmt|;
 name|FD_SET
