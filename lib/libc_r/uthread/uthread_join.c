@@ -124,14 +124,9 @@ name|NULL
 condition|)
 block|{
 comment|/* Return an error: */
-name|errno
-operator|=
-name|ESRCH
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|ESRCH
 expr_stmt|;
 comment|/* Check if this thread has been detached: */
 block|}
@@ -152,14 +147,9 @@ literal|0
 condition|)
 block|{
 comment|/* Return an error: */
-name|errno
-operator|=
-name|ESRCH
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|ESRCH
 expr_stmt|;
 block|}
 comment|/* Check if the thread is not dead: */
@@ -237,14 +227,9 @@ block|}
 else|else
 block|{
 comment|/* Return an error: */
-name|errno
-operator|=
-name|ESRCH
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|ESRCH
 expr_stmt|;
 block|}
 block|}
