@@ -31,13 +31,13 @@ begin_struct
 struct|struct
 name|sf_buf
 block|{
-name|SLIST_ENTRY
+name|LIST_ENTRY
 argument_list|(
 argument|sf_buf
 argument_list|)
-name|free_list
+name|list_entry
 expr_stmt|;
-comment|/* list of free buffer slots */
+comment|/* list of buffers */
 name|struct
 name|vm_page
 modifier|*
@@ -48,6 +48,10 @@ name|vm_offset_t
 name|kva
 decl_stmt|;
 comment|/* va of mapping */
+name|int
+name|ref_count
+decl_stmt|;
+comment|/* usage of this mapping */
 block|}
 struct|;
 end_struct
