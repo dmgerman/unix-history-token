@@ -1066,6 +1066,7 @@ expr_stmt|;
 name|connectlog
 argument_list|()
 expr_stmt|;
+comment|/* 	 * If the send() failed, there are two likely scenarios:  	 *  1) syslogd was restarted 	 *  2) /var/run/log is out of socket buffer space 	 * We attempt to reconnect to /var/run/log to take care of 	 * case #1 and keep send()ing data to cover case #2 	 * to give syslogd a chance to empty its socket buffer. 	 */
 if|if
 condition|(
 name|send
@@ -1078,17 +1079,31 @@ name|cnt
 argument_list|,
 literal|0
 argument_list|)
-operator|>=
+operator|<
 literal|0
 condition|)
-return|return;
-comment|/* 	 * If the send() failed, the odds are syslogd was restarted. 	 * Make one (only) attempt to reconnect to /dev/log. 	 */
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOBUFS
+condition|)
+block|{
 name|disconnectlog
 argument_list|()
 expr_stmt|;
 name|connectlog
 argument_list|()
 expr_stmt|;
+block|}
+do|do
+block|{
+name|usleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|send
@@ -1104,7 +1119,16 @@ argument_list|)
 operator|>=
 literal|0
 condition|)
-return|return;
+break|break;
+block|}
+do|while
+condition|(
+name|errno
+operator|==
+name|ENOBUFS
+condition|)
+do|;
+block|}
 comment|/* 	 * Output the message to the console; try not to block 	 * as a blocking console should not stop other processes. 	 * Make sure the error reported is the one from the syslogd failure. 	 */
 if|if
 condition|(
