@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sem.c	8.2 (Berkeley) %G%"
+literal|"@(#)sem.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2960,9 +2960,15 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|creat
+name|open
 argument_list|(
 name|tmp
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
 argument_list|,
 literal|0666
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -825,7 +825,7 @@ name|getexit
 parameter_list|(
 name|a
 parameter_list|)
-value|bcopy((char *)reslab, ((char *)(a)), sizeof reslab)
+value|memmove((a), reslab, sizeof reslab)
 end_define
 
 begin_define
@@ -835,7 +835,7 @@ name|resexit
 parameter_list|(
 name|a
 parameter_list|)
-value|bcopy((char *)(a), (char *)reslab, sizeof reslab)
+value|memmove(reslab, (a), sizeof reslab)
 end_define
 
 begin_decl_stmt

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	8.3 (Berkeley) %G%"
+literal|"@(#)csh.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1253,11 +1253,6 @@ name|oact
 operator|.
 name|sa_handler
 expr_stmt|;
-if|if
-condition|(
-name|loginsh
-condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -1291,7 +1286,6 @@ name|phup
 argument_list|)
 expr_stmt|;
 comment|/* ...and on XFSZ */
-block|}
 comment|/*      * Process the arguments.      *      * Note that processing of -v/-x is actually delayed till after script      * processing.      *      * We set the first character of our name to be '-' if we are a shell      * running interruptible commands.  Many programs which examine ps'es      * use this to filter such shells out.      */
 name|argc
 operator|--
@@ -3123,23 +3117,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Setup the new values of the state stuff saved above */
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
+operator|&
+name|saveB
+argument_list|,
 operator|&
 name|B
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-operator|(
-name|saveB
-operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3305,23 +3289,13 @@ name|fbuf
 argument_list|)
 expr_stmt|;
 comment|/* Reset input arena */
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-operator|(
-name|saveB
-operator|)
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|B
+argument_list|,
+operator|&
+name|saveB
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3575,12 +3549,18 @@ condition|(
 operator|(
 name|fp
 operator|=
-name|creat
+name|open
 argument_list|(
 name|short2str
 argument_list|(
 name|hfile
 argument_list|)
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
 argument_list|,
 literal|0600
 argument_list|)
@@ -3908,7 +3888,7 @@ condition|)
 do|;
 block|}
 block|}
-name|_exit
+name|xexit
 argument_list|(
 name|sig
 argument_list|)
