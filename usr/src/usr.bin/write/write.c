@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)write.c	4.3 (Berkeley) %G%"
+literal|"@(#)write.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<whoami.h>
 end_include
 
 begin_define
@@ -835,8 +841,10 @@ name|fprintf
 argument_list|(
 name|tf
 argument_list|,
-literal|"%s on %s at %d:%02d ...\r\n
+literal|"%s!%s on %s at %d:%02d ...\r\n
 literal|"
+argument_list|,
+name|sysname
 argument_list|,
 name|me
 argument_list|,
