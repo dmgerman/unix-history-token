@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.2 81/11/25 */
+comment|/* tcp_timer.c 4.3 81/11/26 */
 end_comment
 
 begin_include
@@ -42,31 +42,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet.h"
+file|"../net/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_pcb.h"
+file|"../net/in_pcb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_systm.h"
+file|"../net/in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"../net/if.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/imp.h"
 end_include
 
 begin_include
@@ -96,7 +90,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../net/tcp_seq.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/tcp_timer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../net/tcp_var.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/tcpip.h"
 end_include
 
 begin_include
@@ -115,7 +127,13 @@ argument_list|()
 end_macro
 
 begin_block
-block|{  }
+block|{
+name|COUNT
+argument_list|(
+name|TCP_FASTTIMO
+argument_list|)
+expr_stmt|;
+block|}
 end_block
 
 begin_comment
@@ -158,7 +176,7 @@ name|i
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|TCP_TIMEO
+name|TCP_SLOWTIMO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Search through tcb's and update active timers. 	 */
@@ -189,13 +207,6 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-name|tmp
-operator|=
-operator|&
-name|tp
-operator|->
-name|t_init
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -212,12 +223,20 @@ control|)
 block|{
 if|if
 condition|(
-operator|*
-name|tmp
+name|tp
+operator|->
+name|t_timer
+index|[
+name|i
+index|]
 operator|&&
 operator|--
-operator|*
-name|tmp
+name|tp
+operator|->
+name|t_timer
+index|[
+name|i
+index|]
 operator|==
 literal|0
 condition|)
@@ -251,11 +270,6 @@ name|tmp
 operator|++
 expr_stmt|;
 block|}
-name|tp
-operator|->
-name|t_xmt
-operator|++
-expr_stmt|;
 block|}
 name|tcp_iss
 operator|+=
@@ -277,7 +291,7 @@ comment|/*  * Cancel all timers for TCP tp.  */
 end_comment
 
 begin_macro
-name|tcp_tcancel
+name|tcp_canceltimers
 argument_list|(
 argument|tp
 argument_list|)
@@ -297,6 +311,11 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|TCP_CANCELTIMERS
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -356,7 +375,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|timertype
+name|timer
 condition|)
 block|{
 case|case
@@ -371,30 +390,12 @@ return|return;
 case|case
 name|TCPT_REXMT
 case|:
-name|tp
-operator|->
-name|t_xmtime
-operator|<<=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_xmtime
-operator|>
-name|TCPT_TOOLONG
-condition|)
-block|{
-name|tcp_drop
-argument_list|(
-name|tp
-argument_list|,
-name|ETIMEDOUT
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+if|#
+directive|if
+literal|0
+block|tp->t_xmtime<<= 1; 		if (tp->t_xmtime> TCPSC_TOOLONG) { 			tcp_drop(tp, ETIMEDOUT); 			return; 		}
+endif|#
+directive|endif
 name|tcp_output
 argument_list|(
 name|tp
@@ -431,9 +432,12 @@ operator|->
 name|snd_wnd
 operator|--
 expr_stmt|;
+comment|/* reset? */
+return|return;
 case|case
 name|TCPT_KEEP
 case|:
+comment|/* reset? */
 return|return;
 block|}
 block|}
