@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opielogin.c: The infamous /bin/login  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.32. Partially handle environment 		variables on the command line (a better implementation is 		coming soon). Handle failure to issue a challenge more 		gracefully. 	Modified by cmetz for OPIE 2.31. Use _PATH_NOLOGIN. Move Solaris 	        drain bamage kluge after rflag check; it breaks rlogin. 		Use TCSAFLUSH instead of TCSANOW (except where it flushes 		data we need). Sleep before kluging for Solaris. 	Modified by cmetz for OPIE 2.3. Process login environment files. 	        Made logindevperm/fbtab handling more generic. Kluge around                 Solaris drain bamage differently (maybe better?). Maybe 		allow cleartext logins even when opiechallenge() fails. 		Changed the conditions on when time.h and sys/time.h are 		included. Send debug info to syslog. Use opielogin() instead 		of dealing with utmp/setlogin() here. 	Modified by cmetz for OPIE 2.22. Call setlogin(). Decreased default 	        timeout to two minutes. Use opiereadpass() flags to get 		around Solaris drain bamage. 	Modified by cmetz for OPIE 2.21. Took the sizeof() the wrong thing.         Modified by cmetz for OPIE 2.2. Changed prompts to ask for OTP                 response where appropriate. Simple though small speed-up.                 Don't allow cleartext if echo on. Don't try to clear                 non-blocking I/O. Use opiereadpass(). Don't mess with                 termios (as much, at least) -- that's opiereadpass()'s                 job. Change opiereadpass() calls to add echo arg. Fixed                 CONTROL macro. Don't modify argv (at least, unless                 we have a reason to). Allow user in if ruserok() says                 so. Removed useless strings (I don't think that                 removing the ucb copyright one is a problem -- please                 let me know if I'm wrong). Use FUNCTION declaration et                 al. Moved definition of TRUE here. Ifdef around more                 headers. Make everything static. Removed support for                 omitting domain name if same domain -- it generally                 didn't work and it would be a big portability problem.                 Use opiereadpass() in getloginname() and then post-                 process. Added code to grab hpux time zone from                 /etc/src.sh. Renamed MAIL_DIR to PATH_MAIL. Removed                 dupe catchexit and extraneous closelog. openlog() as                 soon as possible because SunOS syslog is broken.                 Don't print an extra blank line before a new Response                 prompt.         Modified at NRL for OPIE 2.2. Changed strip_crlf to stripcrlf.                 Do opiebackspace() on entries. 	Modified at NRL for OPIE 2.1. Since we don't seem to use the 	        result of opiechallenge() anymore, discard it. Changed 		BSD4_3 to HAVE_GETTTYNAM. Other symbol changes for 		autoconf. Removed obselete usage comment. Removed 		des_crypt.h. File renamed to opielogin.c. Added bletch 		for setpriority. Added slash between MAIL_DIR and name.         Modified at NRL for OPIE 2.02. Flush stdio after printing login                 prompt. Fixed Solaris shadow password problem introduced                 in OPIE 2.01 (the shadow password structure is spwd, not                 spasswd).         Modified at NRL for OPIE 2.01. Changed password lookup handling                 to use a static structure to avoid problems with drain-                 bamaged shadow password packages. Make sure to close                 syslog by function to avoid problems with drain bamaged                 syslog implementations. Log a few interesting errors. 	Modified at NRL for OPIE 2.0. 	Modified at Bellcore for the Bellcore S/Key Version 1 software 		distribution. 	Originally from BSD. */
+comment|/* opielogin.c: The infamous /bin/login  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1999 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.4. Omit "/dev/" in lastlog entry. 		Don't chdir for invalid users. Fixed bug where getloginname() 		didn't actually change spaces to underscores. Use struct 		opie_key for key blocks. Do the home directory chdir() after 		doing the setuid() in case we're on superuser-mapped NFS. 		Initialize some variables explicitly. Call opieverify() if 		login times out. Use opiestrncpy().	 	Modified by cmetz for OPIE 2.32. Partially handle environment 		variables on the command line (a better implementation is 		coming soon). Handle failure to issue a challenge more 		gracefully. 	Modified by cmetz for OPIE 2.31. Use _PATH_NOLOGIN. Move Solaris 	        drain bamage kluge after rflag check; it breaks rlogin. 		Use TCSAFLUSH instead of TCSANOW (except where it flushes 		data we need). Sleep before kluging for Solaris. 	Modified by cmetz for OPIE 2.3. Process login environment files. 	        Made logindevperm/fbtab handling more generic. Kluge around                 Solaris drain bamage differently (maybe better?). Maybe 		allow cleartext logins even when opiechallenge() fails. 		Changed the conditions on when time.h and sys/time.h are 		included. Send debug info to syslog. Use opielogin() instead 		of dealing with utmp/setlogin() here. 	Modified by cmetz for OPIE 2.22. Call setlogin(). Decreased default 	        timeout to two minutes. Use opiereadpass() flags to get 		around Solaris drain bamage. 	Modified by cmetz for OPIE 2.21. Took the sizeof() the wrong thing.         Modified by cmetz for OPIE 2.2. Changed prompts to ask for OTP                 response where appropriate. Simple though small speed-up.                 Don't allow cleartext if echo on. Don't try to clear                 non-blocking I/O. Use opiereadpass(). Don't mess with                 termios (as much, at least) -- that's opiereadpass()'s                 job. Change opiereadpass() calls to add echo arg. Fixed                 CONTROL macro. Don't modify argv (at least, unless                 we have a reason to). Allow user in if ruserok() says                 so. Removed useless strings (I don't think that                 removing the ucb copyright one is a problem -- please                 let me know if I'm wrong). Use FUNCTION declaration et                 al. Moved definition of TRUE here. Ifdef around more                 headers. Make everything static. Removed support for                 omitting domain name if same domain -- it generally                 didn't work and it would be a big portability problem.                 Use opiereadpass() in getloginname() and then post-                 process. Added code to grab hpux time zone from                 /etc/src.sh. Renamed MAIL_DIR to PATH_MAIL. Removed                 dupe catchexit and extraneous closelog. openlog() as                 soon as possible because SunOS syslog is broken.                 Don't print an extra blank line before a new Response                 prompt.         Modified at NRL for OPIE 2.2. Changed strip_crlf to stripcrlf.                 Do opiebackspace() on entries. 	Modified at NRL for OPIE 2.1. Since we don't seem to use the 	        result of opiechallenge() anymore, discard it. Changed 		BSD4_3 to HAVE_GETTTYNAM. Other symbol changes for 		autoconf. Removed obselete usage comment. Removed 		des_crypt.h. File renamed to opielogin.c. Added bletch 		for setpriority. Added slash between MAIL_DIR and name.         Modified at NRL for OPIE 2.02. Flush stdio after printing login                 prompt. Fixed Solaris shadow password problem introduced                 in OPIE 2.01 (the shadow password structure is spwd, not                 spasswd).         Modified at NRL for OPIE 2.01. Changed password lookup handling                 to use a static structure to avoid problems with drain-                 bamaged shadow password packages. Make sure to close                 syslog by function to avoid problems with drain bamaged                 syslog implementations. Log a few interesting errors. 	Modified at NRL for OPIE 2.0. 	Modified at Bellcore for the Bellcore S/Key Version 1 software 		distribution. 	Originally from BSD. */
 end_comment
 
 begin_comment
@@ -485,6 +485,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|stopmotd
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -549,7 +551,7 @@ index|[
 literal|64
 index|]
 init|=
-literal|"\0"
+literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -567,7 +569,7 @@ operator|+
 literal|1
 index|]
 init|=
-literal|"\0"
+literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -781,6 +783,23 @@ directive|define
 name|TRUE
 value|-1
 end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|need_opieverify
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|opie
+name|opie
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -1120,13 +1139,9 @@ name|VOIDRET
 name|getloginname
 name|FUNCTION_NOARGS
 block|{
-specifier|register
 name|char
 modifier|*
 name|namep
-decl_stmt|;
-name|char
-name|c
 decl_stmt|,
 name|d
 decl_stmt|;
@@ -1190,8 +1205,6 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"%s"
-argument_list|,
 name|ttyprompt
 argument_list|)
 expr_stmt|;
@@ -1265,11 +1278,13 @@ control|)
 block|{
 if|if
 condition|(
-name|c
+operator|*
+name|namep
 operator|==
 literal|' '
 condition|)
-name|c
+operator|*
+name|namep
 operator|=
 literal|'_'
 expr_stmt|;
@@ -1307,6 +1322,18 @@ argument_list|,
 literal|"Login timed out after %d seconds!"
 argument_list|,
 name|timeout
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|need_opieverify
+condition|)
+name|opieverify
+argument_list|(
+operator|&
+name|opie
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2596,10 +2623,6 @@ name|char
 modifier|*
 name|namep
 decl_stmt|;
-name|struct
-name|opie
-name|opie
-decl_stmt|;
 name|int
 name|invalid
 decl_stmt|,
@@ -2656,6 +2679,8 @@ name|af_pwok
 decl_stmt|;
 name|int
 name|authsok
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -2686,7 +2711,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"This program requires super-user priveleges.\n"
+literal|"This program requires super-user privileges.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2768,7 +2793,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
-name|strncpy
+name|opiestrncpy
 argument_list|(
 name|term
 argument_list|,
@@ -2912,17 +2937,13 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG
-block|{
-name|int
-name|foo
-decl_stmt|;
 name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"my args are: (argc=%d)"
 argument_list|,
-name|foo
+name|i
 operator|=
 name|argc
 argument_list|)
@@ -2930,7 +2951,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|--
-name|foo
+name|i
 condition|)
 name|syslog
 argument_list|(
@@ -2938,15 +2959,14 @@ name|LOG_DEBUG
 argument_list|,
 literal|"%d: %s"
 argument_list|,
-name|foo
+name|i
 argument_list|,
 name|argv
 index|[
-name|foo
+name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* DEBUG */
@@ -3111,7 +3131,7 @@ name|rflag
 operator|=
 literal|1
 expr_stmt|;
-name|strncpy
+name|opiestrncpy
 argument_list|(
 name|host
 argument_list|,
@@ -3194,7 +3214,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|opiestrncpy
 argument_list|(
 name|host
 argument_list|,
@@ -3267,7 +3287,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|opiestrncpy
 argument_list|(
 name|name
 argument_list|,
@@ -3324,7 +3344,7 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|strncpy
+name|opiestrncpy
 argument_list|(
 name|term
 argument_list|,
@@ -3344,18 +3364,6 @@ argument_list|(
 name|term
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|term
-index|[
-sizeof|sizeof
-argument_list|(
-name|term
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3402,7 +3410,7 @@ empty_stmt|;
 continue|continue;
 block|}
 empty_stmt|;
-name|strncpy
+name|opiestrncpy
 argument_list|(
 name|name
 argument_list|,
@@ -4815,6 +4823,10 @@ argument_list|,
 name|opieprompt
 argument_list|)
 expr_stmt|;
+name|need_opieverify
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5045,14 +5057,13 @@ directive|else
 comment|/* NEW_PROMPTS */
 if|if
 condition|(
-operator|!
 operator|(
 name|authsok
 operator|&
-literal|1
+literal|3
 operator|)
-operator|&&
-name|authsok
+operator|==
+literal|1
 condition|)
 name|printf
 argument_list|(
@@ -5176,6 +5187,10 @@ name|opie
 argument_list|,
 name|buf
 argument_list|)
+expr_stmt|;
+name|need_opieverify
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5471,63 +5486,6 @@ name|pw_shell
 operator|=
 literal|"/bin/sh"
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|chdir
-argument_list|(
-name|thisuser
-operator|.
-name|pw_dir
-argument_list|)
-operator|<
-literal|0
-operator|)
-operator|&&
-operator|!
-name|invalid
-condition|)
-block|{
-if|if
-condition|(
-name|chdir
-argument_list|(
-literal|"/"
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No directory!\n"
-argument_list|)
-expr_stmt|;
-name|invalid
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"No directory! %s\n"
-argument_list|,
-literal|"Logging in with HOME=/"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|thisuser
-operator|.
-name|pw_dir
-argument_list|,
-literal|"/"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* Remote login invalid must have been because of a restriction of some        sort, no extra chances. */
 if|if
 condition|(
@@ -5848,7 +5806,38 @@ operator|.
 name|ll_time
 argument_list|)
 expr_stmt|;
-name|strncpy
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|tty
+argument_list|,
+literal|"/dev/"
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+name|opiestrncpy
+argument_list|(
+name|ll
+operator|.
+name|ll_line
+argument_list|,
+name|tty
+operator|+
+literal|5
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ll
+operator|.
+name|ll_line
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|opiestrncpy
 argument_list|(
 name|ll
 operator|.
@@ -5864,7 +5853,7 @@ name|ll_line
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|opiestrncpy
 argument_list|(
 name|ll
 operator|.
@@ -6064,6 +6053,82 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|chdir
+argument_list|(
+name|thisuser
+operator|.
+name|pw_dir
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|#
+directive|if
+name|DEBUG
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"chdir(%s): %s(%d)"
+argument_list|,
+name|thisuser
+operator|.
+name|pw_dir
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
+if|if
+condition|(
+name|chdir
+argument_list|(
+literal|"/"
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"No directory!\n"
+argument_list|)
+expr_stmt|;
+name|invalid
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"No directory! %s\n"
+argument_list|,
+literal|"Logging in with HOME=/"
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|thisuser
+operator|.
+name|pw_dir
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
 operator|!
 name|term
 index|[
@@ -6114,7 +6179,7 @@ argument_list|(
 name|c
 argument_list|)
 condition|)
-name|strncpy
+name|opiestrncpy
 argument_list|(
 name|term
 argument_list|,
@@ -6580,7 +6645,7 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|strncpy
+name|opiestrncpy
 argument_list|(
 name|buf
 argument_list|,
@@ -6593,18 +6658,6 @@ argument_list|)
 operator|-
 literal|2
 argument_list|)
-expr_stmt|;
-name|buf
-index|[
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-operator|-
-literal|2
-index|]
-operator|=
-literal|0
 expr_stmt|;
 name|len
 operator|=

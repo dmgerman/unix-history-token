@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opie_cfg.h: Various configuration-type pieces of information for OPIE.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.32. Include<sys/types.h> before<dirent.h> to make *BSD happy. 	Modified by cmetz for OPIE 2.31. Added 4.4BSD-Lite pathnames.h 		definitions from ftpd. Added struct spwd definition and 		HAVE_SHADOW logic for SunOS C2 shadow password support. 		Moved user locking config to configure script. Removed 		options.h. 	Modified by cmetz for OPIE 2.3. Splatted with opie_auto.h. 	        Obseleted many symbols. Changed OPIE_PASS_{MIN,MAX} to 		OPIE_SECRET_{MIN,MAX}. Fixed SHADOW+UTMP definitions. 		Removed a lot of symbols.         Modified by cmetz for OPIE 2.2. Got rid of ANSIPROTO and ARGS.                 Got rid of TRUE and FALSE definitions. Moved UINT4 to                 opie.h and removed UINT2. 	Modified at NRL for OPIE 2.1. Fixed sigprocmask declaration. 		Gutted for autoconf. Split up for autoconf. 	Written at NRL for OPIE 2.0.  	History of opie_auto.h:  	Modified by cmetz for OPIE 2.22. Support the Solaris TTYPROMPT drain 		bamage on all systems -- it doesn't hurt others, and it's 		not something Autoconf can check for yet.         Modified by cmetz for OPIE 2.2. Don't replace sigprocmask by ifdef.                 Added configure check for LS_COMMAND. Added setreuid/setgid                 band-aids.         Modified at NRL for OPIE 2.2. Require /etc/shadow for Linux to use                 shadow passwords.         Modified at NRL for OPIE 2.11. Removed version defines. 	Modified at NRL for OPIE 2.1. Fixed sigprocmask declaration. 		Gutted for autoconf. Split up for autoconf. 	Written at NRL for OPIE 2.0.  $FreeBSD$ */
+comment|/* opie_cfg.h: Various configuration-type pieces of information for OPIE.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1999 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.4. Removed NBBY definition. 	Modified by cmetz for OPIE 2.32. Include<sys/types.h> before<dirent.h> to make *BSD happy. 	Modified by cmetz for OPIE 2.31. Added 4.4BSD-Lite pathnames.h 		definitions from ftpd. Added struct spwd definition and 		HAVE_SHADOW logic for SunOS C2 shadow password support. 		Moved user locking config to configure script. Removed 		options.h. 	Modified by cmetz for OPIE 2.3. Splatted with opie_auto.h. 	        Obseleted many symbols. Changed OPIE_PASS_{MIN,MAX} to 		OPIE_SECRET_{MIN,MAX}. Fixed SHADOW+UTMP definitions. 		Removed a lot of symbols.         Modified by cmetz for OPIE 2.2. Got rid of ANSIPROTO and ARGS.                 Got rid of TRUE and FALSE definitions. Moved UINT4 to                 opie.h and removed UINT2. 	Modified at NRL for OPIE 2.1. Fixed sigprocmask declaration. 		Gutted for autoconf. Split up for autoconf. 	Written at NRL for OPIE 2.0.  	History of opie_auto.h:  	Modified by cmetz for OPIE 2.22. Support the Solaris TTYPROMPT drain 		bamage on all systems -- it doesn't hurt others, and it's 		not something Autoconf can check for yet.         Modified by cmetz for OPIE 2.2. Don't replace sigprocmask by ifdef.                 Added configure check for LS_COMMAND. Added setreuid/setgid                 band-aids.         Modified at NRL for OPIE 2.2. Require /etc/shadow for Linux to use                 shadow passwords.         Modified at NRL for OPIE 2.11. Removed version defines. 	Modified at NRL for OPIE 2.1. Fixed sigprocmask declaration. 		Gutted for autoconf. Split up for autoconf. 	Written at NRL for OPIE 2.0.  $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -20,14 +20,14 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"2.32"
+value|"2.4"
 end_define
 
 begin_define
 define|#
 directive|define
 name|DATE
-value|"Thursday, January 1, 1998"
+value|"Friday, January 19, 2001"
 end_define
 
 begin_ifndef
@@ -660,32 +660,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NBBY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NBBY
-value|8
-end_define
-
-begin_comment
-comment|/* Reasonable for modern systems */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NBBY */
-end_comment
 
 begin_ifndef
 ifndef|#

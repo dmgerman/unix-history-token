@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* writerec.c: The __opiewriterec() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  	History:  	Modified by cmetz for OPIE 2.31. Removed active attack protection 		support. Fixed passwd bug. 	Created by cmetz for OPIE 2.3 from passwd.c. */
+comment|/* writerec.c: The __opiewriterec() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-2001 by Craig Metz, All Rights Reserved. The Inner Net License Version 3 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  	History:  	Modified by cmetz for OPIE 2.4. Check that seed and sequence number are 		valid. 	Modified by cmetz for OPIE 2.31. Removed active attack protection 		support. Fixed passwd bug. 	Created by cmetz for OPIE 2.3 from passwd.c. */
 end_comment
 
 begin_include
@@ -123,6 +123,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opie.h"
 end_include
 
@@ -177,6 +183,10 @@ name|int
 name|i
 init|=
 literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|c
 decl_stmt|;
 name|time
 argument_list|(
@@ -255,6 +265,55 @@ operator|.
 name|opie_recstart
 expr_stmt|;
 block|}
+for|for
+control|(
+name|c
+operator|=
+name|opie
+operator|->
+name|opie_seed
+init|;
+operator|*
+name|c
+condition|;
+name|c
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|isalnum
+argument_list|(
+operator|*
+name|c
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
+operator|(
+name|opie
+operator|->
+name|opie_n
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|opie
+operator|->
+name|opie_n
+operator|>
+literal|9999
+operator|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 switch|switch
 condition|(
 name|i

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* acconfig.h: Extra commentary for Autoheader  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  /* Define if the closedir function returns void instead of int.  */
+comment|/* acconfig.h: Extra commentary for Autoheader  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1999 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  /* Define if the closedir function returns void instead of int.  */
 end_comment
 
 begin_undef
@@ -340,6 +340,36 @@ name|HAVE_UT_HOST
 end_undef
 
 begin_comment
+comment|/* Define if there is a ut_id field in struct utmp */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_UT_ID
+end_undef
+
+begin_comment
+comment|/* Define if there is a ut_syslen field in struct utmp */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_UT_SYSLEN
+end_undef
+
+begin_comment
+comment|/* Define if there is a utx_syslen field in struct utmpx */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_UTX_SYSLEN
+end_undef
+
+begin_comment
 comment|/* Define if the system has getutline() */
 end_comment
 
@@ -447,6 +477,226 @@ begin_undef
 undef|#
 directive|undef
 name|USER_LOCKING
+end_undef
+
+begin_comment
+comment|/* Defined if opieauto is to be used */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|OPIEAUTO
+end_undef
+
+begin_comment
+comment|/* Define if you have the atexit function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_ATEXIT
+end_undef
+
+begin_comment
+comment|/* Define if you have the endutent function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_ENDUTENT
+end_undef
+
+begin_comment
+comment|/* Define if you have the initgroups function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_INITGROUPS
+end_undef
+
+begin_comment
+comment|/* Define if you have the memcmp function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_MEMCMP
+end_undef
+
+begin_comment
+comment|/* Define if you have the memcpy function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_MEMCPY
+end_undef
+
+begin_comment
+comment|/* Define if you have the memset function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_MEMSET
+end_undef
+
+begin_comment
+comment|/* Define if you have the getcwd function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GETCWD
+end_undef
+
+begin_comment
+comment|/* Define if you have the getenv function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GETENV
+end_undef
+
+begin_comment
+comment|/* Define if you have the getutline function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GETUTLINE
+end_undef
+
+begin_comment
+comment|/* Define if you have the pututline function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PUTUTLINE
+end_undef
+
+begin_comment
+comment|/* Define if you have the setenv function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SETENV
+end_undef
+
+begin_comment
+comment|/* Define if you have the setegid function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SETEGID
+end_undef
+
+begin_comment
+comment|/* Define if you have the seteuid function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SETEUID
+end_undef
+
+begin_comment
+comment|/* Define if you have the setutent function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SETUTENT
+end_undef
+
+begin_comment
+comment|/* Define if you have the sigprocmask function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SIGPROCMASK
+end_undef
+
+begin_comment
+comment|/* Define if you have the strchr function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRCHR
+end_undef
+
+begin_comment
+comment|/* Define if you have the strrchr function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRRCHR
+end_undef
+
+begin_comment
+comment|/* Define if you have the strtoul function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRTOUL
+end_undef
+
+begin_comment
+comment|/* Define if you have the sysconf function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SYSCONF
+end_undef
+
+begin_comment
+comment|/* Define if you have the uname function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_UNAME
+end_undef
+
+begin_comment
+comment|/* Define if you have the unsetenv function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_UNSETENV
 end_undef
 
 end_unit

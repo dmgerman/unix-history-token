@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opieinfo: Print a user's current OPIE sequence number and seed  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.3. Removed unneeded debug message. 	Modified by cmetz for OPIE 2.2. Use FUNCTION definition et al.                Fixed include order. Make everything static. Ifdef around                some headers.         Modified at NRL for OPIE 2.1. Substitute @@KEY_FILE@@. Re-write in 	       C.         Modified at NRL for OPIE 2.01. Remove hard-coded paths for grep and                awk and let PATH take care of it. Substitute for Makefile                 variables $(EXISTS) and $(KEY_FILE). Only compute $WHO if                 there's a key file. Got rid of grep since awk can do the job                itself. 	Modified at NRL for OPIE 2.0. 	Written at Bellcore for the S/Key Version 1 software distribution 		(keyinfo) */
+comment|/* opieinfo: Print a user's current OPIE sequence number and seed  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1999 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.3. Removed unneeded debug message. 	Modified by cmetz for OPIE 2.2. Use FUNCTION definition et al.                Fixed include order. Make everything static. Ifdef around                some headers.         Modified at NRL for OPIE 2.1. Substitute @@KEY_FILE@@. Re-write in 	       C.         Modified at NRL for OPIE 2.01. Remove hard-coded paths for grep and                awk and let PATH take care of it. Substitute for Makefile                 variables $(EXISTS) and $(KEY_FILE). Only compute $WHO if                 there's a key file. Got rid of grep since awk can do the job                itself. 	Modified at NRL for OPIE 2.0. 	Written at Bellcore for the S/Key Version 1 software distribution 		(keyinfo)  $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_if
@@ -36,27 +54,6 @@ begin_comment
 comment|/* HAVE_UNISTD_H */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|HAVE_PWD_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_PWD_H */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -67,14 +64,9 @@ begin_comment
 comment|/* extern char *optarg; */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|,
-name|optind
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* extern int errno, optind; */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -83,30 +75,37 @@ modifier|*
 name|getusername
 name|FUNCTION_NOARGS
 block|{
-name|struct
-name|passwd
+name|char
 modifier|*
-name|p
-init|=
-name|getpwuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
+name|login
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|p
-condition|)
-return|return
+name|login
+operator|=
 name|getlogin
 argument_list|()
-return|;
+expr_stmt|;
+if|if
+condition|(
+name|login
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Cannot find login name\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 return|return
-name|p
-operator|->
-name|pw_name
+name|login
 return|;
 block|}
 end_decl_stmt
@@ -200,6 +199,28 @@ name|optind
 operator|<
 name|argc
 condition|)
+block|{
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Only superuser may get another user's keys\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|username
 operator|=
 name|argv
@@ -207,12 +228,36 @@ index|[
 name|optind
 index|]
 expr_stmt|;
+block|}
 else|else
 name|username
 operator|=
 name|getusername
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|username
+argument_list|)
+operator|>=
+name|MAXLOGNAME
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Username too long.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(

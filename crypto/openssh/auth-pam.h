@@ -1,19 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * OpenSSH PAM authentication support.  *  * $FreeBSD$  */
+comment|/* $Id: auth-pam.h,v 1.12 2002/04/04 19:02:28 stevesk Exp $ */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AUTH_PAM_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|AUTH_PAM_H
-end_define
 
 begin_include
 include|#
@@ -30,12 +18,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"auth.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pwd.h>
 end_include
 
@@ -47,10 +29,10 @@ begin_function_decl
 name|void
 name|start_pam
 parameter_list|(
-name|struct
-name|passwd
+specifier|const
+name|char
 modifier|*
-name|pw
+name|user
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -93,6 +75,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|do_pam_authenticate
+parameter_list|(
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|do_pam_account
 parameter_list|(
 name|char
@@ -126,7 +118,8 @@ begin_function_decl
 name|void
 name|do_pam_setcred
 parameter_list|(
-name|void
+name|int
+name|init
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -142,7 +135,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pam_password_change_required
+name|is_pam_password_change_required
 parameter_list|(
 name|void
 parameter_list|)
@@ -158,71 +151,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct
-struct|struct
-name|inverted_pam_cookie
-block|{
-name|int
-name|state
-decl_stmt|;
-comment|/* Which state have we reached? */
-name|pid_t
-name|pid
-decl_stmt|;
-comment|/* PID of child process */
-comment|/* Only valid in state STATE_CONV */
-name|int
-name|num_msg
-decl_stmt|;
-comment|/* Number of messages */
-name|struct
-name|pam_message
-modifier|*
-modifier|*
-name|msg
-decl_stmt|;
-comment|/* Message structures */
-name|struct
-name|pam_response
-modifier|*
-modifier|*
-name|resp
-decl_stmt|;
-comment|/* Response structures */
-name|struct
-name|inverted_pam_userdata
-modifier|*
-name|userdata
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_function_decl
 name|void
-name|ipam_free_cookie
+name|do_pam_set_conv
 parameter_list|(
 name|struct
-name|inverted_pam_cookie
+name|pam_conv
 modifier|*
-name|cookie
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|inverted_pam_cookie
-modifier|*
-name|ipam_start_auth
+name|void
+name|message_cat
 parameter_list|(
-specifier|const
 name|char
 modifier|*
+modifier|*
+name|p
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|a
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -234,15 +186,6 @@ end_endif
 
 begin_comment
 comment|/* USE_PAM */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AUTH_PAM_H */
 end_comment
 
 end_unit

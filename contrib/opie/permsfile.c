@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* permsfile.c: implement SunOS /etc/fbtab and Solaris /etc/logindevperm    functionality to set device permissions on login  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.31. Include unistd.h. 	Modified by cmetz for OPIE 2.3. Check for NULL return from 	    ftpglob(), combine some expressions, fix a typo. Made file 	    selection a bit more generic. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.             Add opie.h. Ifdef around a header. 	Written at NRL for OPIE 2.0. */
+comment|/* permsfile.c: implement SunOS /etc/fbtab and Solaris /etc/logindevperm    functionality to set device permissions on login  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1999 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.31. Include unistd.h. 	Modified by cmetz for OPIE 2.3. Check for NULL return from 	    ftpglob(), combine some expressions, fix a typo. Made file 	    selection a bit more generic. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.             Add opie.h. Ifdef around a header. 	Written at NRL for OPIE 2.0. */
 end_comment
 
 begin_include
@@ -150,8 +150,6 @@ block|{
 name|fprintf
 argument_list|(
 name|stderr
-argument_list|,
-literal|"%s"
 argument_list|,
 name|x
 argument_list|)
