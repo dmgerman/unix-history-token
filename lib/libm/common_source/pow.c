@@ -645,6 +645,10 @@ name|tx
 decl_stmt|,
 name|ty
 decl_stmt|;
+specifier|volatile
+name|double
+name|errtmp
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|tahoe
@@ -654,9 +658,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* tahoe */
-name|double
-name|errtmp
-decl_stmt|;
 name|float
 name|sx
 decl_stmt|,
@@ -941,21 +942,18 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* m := nint(y*log(x)) */
-name|k
-operator|=
-name|y
-expr_stmt|;
+comment|/* 	    * The case where y is an integer can be handled faster. 	    * Be careful to avoid overflow while checking if it is an integer. 	    * XXX - this is probably still wrong - can (long)y*n overflow? 	    */
 if|if
 condition|(
 name|y
-operator|>
+operator|>=
 operator|(
 name|double
 operator|)
 name|LONG_MIN
 operator|&&
 name|y
-operator|<
+operator|<=
 operator|(
 name|double
 operator|)
@@ -1033,7 +1031,6 @@ operator|+
 name|t
 expr_stmt|;
 block|}
-comment|/* end of checking whether k==y */
 name|sy
 operator|=
 name|y
