@@ -146,6 +146,12 @@ name|UNSET
 enum|;
 end_enum
 
+begin_decl_stmt
+name|int
+name|nflag
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|usage
@@ -162,7 +168,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tmdconfig -a -t type [-o [no]option]... [ -f file] [-s size] [-S sectorsize] [-u unit]\n"
+literal|"\tmdconfig -a -t type [-n] [-o [no]option]... [ -f file] [-s size] [-S sectorsize] [-u unit]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -176,7 +182,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tmdconfig -l [-u unit]\n"
+literal|"\tmdconfig -l [-n] [-u unit]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -251,7 +257,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ab:df:lo:s:S:t:u:x:y:"
+literal|"ab:df:lno:s:S:t:u:x:y:"
 argument_list|)
 expr_stmt|;
 if|if
@@ -340,6 +346,14 @@ expr_stmt|;
 name|cmdline
 operator|=
 literal|3
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|nflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1185,6 +1199,10 @@ name|printf
 argument_list|(
 literal|"%s%d\n"
 argument_list|,
+name|nflag
+condition|?
+literal|""
+else|:
 name|MD_NAME
 argument_list|,
 name|mdio
@@ -1355,7 +1373,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%smd%d"
+literal|"%s%s%d"
 argument_list|,
 name|unit
 operator|>
@@ -1364,6 +1382,12 @@ condition|?
 literal|" "
 else|:
 literal|""
+argument_list|,
+name|nflag
+condition|?
+literal|""
+else|:
+name|MD_NAME
 argument_list|,
 name|mdio
 operator|.
