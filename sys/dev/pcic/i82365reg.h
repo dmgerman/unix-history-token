@@ -37,6 +37,17 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * I/o ports  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_INDEX0
+value|0x3e0
+end_define
+
+begin_comment
 comment|/*  * The PCIC allows two chips to share the same address.  In order not to run  * afoul of the netbsd device model, this driver will treat those chips as  * the same device.  */
 end_comment
 
@@ -1704,6 +1715,54 @@ directive|define
 name|PCIC_CIRRUS_EXT_CONTROL_1_PCI_INTR_MASK
 value|0x18
 end_define
+
+begin_comment
+comment|/* Plug and play */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_82365
+value|0x000ED040
+end_define
+
+begin_comment
+comment|/* PNP0E00 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_CL_PD6720
+value|0x010ED040
+end_define
+
+begin_comment
+comment|/* PNP0E01 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_VLSI_82C146
+value|0x020ED040
+end_define
+
+begin_comment
+comment|/* PNP0E02 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_82365_CARDBUS
+value|0x030ED040
+end_define
+
+begin_comment
+comment|/* PNP0E03 */
+end_comment
 
 end_unit
 
