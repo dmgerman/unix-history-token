@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,26 +39,23 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwho.c	5.2 (Berkeley) %G%"
+literal|"@(#)rwho.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
@@ -67,7 +67,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<protocols/rwhod.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_decl_stmt
@@ -105,7 +117,7 @@ block|{
 name|char
 name|myhost
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|int
@@ -172,7 +184,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|time_t
 name|now
 decl_stmt|;
 end_decl_stmt
@@ -199,6 +211,18 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+name|int
+name|ch
+decl_stmt|;
 name|struct
 name|direct
 modifier|*
@@ -237,67 +261,52 @@ name|n
 decl_stmt|,
 name|i
 decl_stmt|;
-name|argc
-operator|--
-operator|,
-name|argv
-operator|++
-expr_stmt|;
-name|again
-label|:
-if|if
-condition|(
-name|argc
-operator|>
-literal|0
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|"-a"
-argument_list|)
-condition|)
-block|{
-name|argc
-operator|--
-operator|,
-name|argv
-operator|++
-expr_stmt|;
-name|aflg
-operator|++
-expr_stmt|;
-goto|goto
-name|again
-goto|;
-block|}
-operator|(
-name|void
-operator|)
+name|time_t
 name|time
-argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
-if|if
+parameter_list|()
+function_decl|;
+while|while
 condition|(
-name|chdir
+operator|(
+name|ch
+operator|=
+name|getopt
 argument_list|(
-name|RWHODIR
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"a"
 argument_list|)
-operator|<
-literal|0
+operator|)
+operator|!=
+name|EOF
+condition|)
+switch|switch
+condition|(
+operator|(
+name|char
+operator|)
+name|ch
 condition|)
 block|{
-name|perror
+case|case
+literal|'a'
+case|:
+name|aflg
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+default|default:
+name|fprintf
 argument_list|(
-name|RWHODIR
+name|stderr
+argument_list|,
+literal|"usage: rwho [-a]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -306,16 +315,21 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|RWHODIR
+argument_list|)
+operator|||
+operator|(
 name|dirp
 operator|=
 name|opendir
 argument_list|(
 literal|"."
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dirp
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -335,6 +349,15 @@ name|mp
 operator|=
 name|myutmp
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|dp
@@ -352,10 +375,7 @@ operator|->
 name|d_ino
 operator|==
 literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
+operator|||
 name|strncmp
 argument_list|(
 name|dp
@@ -376,7 +396,7 @@ name|dp
 operator|->
 name|d_name
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
