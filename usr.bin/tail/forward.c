@@ -210,6 +210,15 @@ name|kq
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|file_info_t
+modifier|*
+name|last
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * forward -- display the file, from an offset, forward.  *  * There are eight separate cases for this -- regular and non-regular  * files, by bytes or lines and from the beginning or end of the file.  *  * FBYTES	byte offset from the beginning of the file  *	REG	seek  *	NOREG	read, counting bytes  *  * FLINES	line offset from the beginning of the file  *	REG	read, counting lines  *	NOREG	read, counting lines  *  * RBYTES	byte offset from the end of the file  *	REG	seek  *	NOREG	cyclically read characters into a wrap-around buffer  *  * RLINES  *	REG	mmap the file and step back until reach the correct offset.  *	NOREG	cyclically read lines into a wrap-around array of buffers  */
 end_comment
@@ -871,10 +880,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  * follow -- display the file, from an offset, forward.  *  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -887,11 +892,6 @@ parameter_list|)
 block|{
 name|int
 name|ch
-decl_stmt|;
-specifier|static
-name|file_info_t
-modifier|*
-name|last
 decl_stmt|;
 while|while
 condition|(
@@ -1172,6 +1172,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * follow -- display the file, from an offset, forward.  *  */
+end_comment
+
 begin_function
 name|void
 name|follow
@@ -1312,6 +1316,11 @@ operator|!
 name|active
 condition|)
 return|return;
+name|last
+operator|=
+operator|--
+name|file
+expr_stmt|;
 name|kq
 operator|=
 name|kqueue
