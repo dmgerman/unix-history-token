@@ -2205,12 +2205,19 @@ goto|goto
 name|printit
 goto|;
 block|}
+comment|/* 	 * If not "real" (-r), send a HIDDEN-USER error for everything. 	 * If -d is used to set a fallback username, this is used to 	 * override it, and the fallback is returned instead. 	 */
 if|if
 condition|(
 operator|!
 name|rflag
 condition|)
-comment|/* Send HIDDEN-USER immediately if not "real" */
+block|{
+if|if
+condition|(
+name|fallback
+operator|==
+name|NULL
+condition|)
 name|iderror
 argument_list|(
 name|lport
@@ -2223,6 +2230,17 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|cp
+operator|=
+name|fallback
+expr_stmt|;
+goto|goto
+name|printit
+goto|;
+block|}
+block|}
 comment|/* 	 * We take the input and construct an array of two sockaddr_ins 	 * which contain the local address information and foreign 	 * address information, respectively, used to look up the 	 * credentials for the socket (which are returned by the 	 * sysctl "net.inet.tcp.getcred" when we call it.) The 	 * arrays have been filled in above via get{peer,sock}name(), 	 * so right here we are only setting the ports. 	 */
 if|if
 condition|(
