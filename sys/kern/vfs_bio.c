@@ -10363,6 +10363,13 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|bp
+operator|->
+name|b_object
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -10436,6 +10443,13 @@ expr_stmt|;
 block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|bp
+operator|->
+name|b_object
+argument_list|)
 expr_stmt|;
 name|pmap_qremove
 argument_list|(
