@@ -431,18 +431,18 @@ name|u_short
 name|defid_pad
 decl_stmt|;
 comment|/* force long alignment */
-name|u_long
+name|u_int32_t
 name|defid_dirclust
 decl_stmt|;
 comment|/* cluster this dir entry came from */
-name|u_long
+name|u_int32_t
 name|defid_dirofs
 decl_stmt|;
 comment|/* offset of entry within the cluster */
 if|#
 directive|if
 literal|0
-block|u_long	defid_gen;
+block|u_int32_t defid_gen;
 comment|/* generation number */
 endif|#
 directive|endif
