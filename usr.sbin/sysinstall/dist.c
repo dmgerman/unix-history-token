@@ -1440,6 +1440,8 @@ name|XF86Dists
 operator|=
 name|DIST_XF86_BIN
 operator||
+name|DIST_COMPAT21
+operator||
 name|DIST_XF86_SET
 operator||
 name|DIST_XF86_CFG
@@ -1557,6 +1559,8 @@ expr_stmt|;
 name|XF86Dists
 operator|=
 name|DIST_XF86_BIN
+operator||
+name|DIST_COMPAT21
 operator||
 name|DIST_XF86_SET
 operator||
@@ -1923,7 +1927,11 @@ name|XF86Dists
 condition|)
 name|Dists
 operator||=
+operator|(
 name|DIST_XF86
+operator||
+name|DIST_COMPAT21
+operator|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
