@@ -1059,6 +1059,41 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|rwlock_held
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|rwlock_held
+argument_list|)
+name|rh_link
+expr_stmt|;
+name|struct
+name|pthread_rwlock
+modifier|*
+name|rh_rwlock
+decl_stmt|;
+name|int
+name|rh_rdcount
+decl_stmt|;
+name|int
+name|rh_wrcount
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|rwlock_listhead
+argument_list|,
+name|rwlock_held
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Thread structure.  */
 end_comment
@@ -1246,6 +1281,12 @@ argument|pthread_mutex
 argument_list|)
 name|mutexq
 expr_stmt|;
+comment|/* 	 * List of read-write locks owned for reading _OR_ writing. 	 * This is accessed only by the current thread, so there's 	 * no need for mutual exclusion. 	 */
+name|struct
+name|rwlock_listhead
+modifier|*
+name|rwlockList
+decl_stmt|;
 name|void
 modifier|*
 name|ret

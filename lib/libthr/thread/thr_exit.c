@@ -304,6 +304,22 @@ name|_thread_cleanupspecific
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* 	 * Remove read-write lock list. It is allocated as-needed. 	 * Therefore, it must be checked for validity before freeing. 	 */
+if|if
+condition|(
+name|curthread
+operator|->
+name|rwlockList
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|curthread
+operator|->
+name|rwlockList
+argument_list|)
+expr_stmt|;
 name|retry
 label|:
 comment|/* 	 * Proper lock order, to minimize deadlocks, between joining 	 * and exiting threads is: DEAD_LIST, THREAD_LIST, exiting, joiner. 	 * In order to do this *and* protect from races, we must resort 	 * this test-and-retry loop. 	 */
