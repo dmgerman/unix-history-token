@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)join.c	5.2 (Berkeley) %G%"
+literal|"@(#)join.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,7 +218,7 @@ typedef|typedef
 struct|struct
 block|{
 name|u_long
-name|fileno
+name|filenum
 decl_stmt|;
 comment|/* file number */
 name|u_long
@@ -1933,7 +1933,7 @@ index|[
 name|cnt
 index|]
 operator|.
-name|fileno
+name|filenum
 operator|==
 name|F
 operator|->
@@ -2071,7 +2071,7 @@ index|[
 name|cnt
 index|]
 operator|.
-name|fileno
+name|filenum
 operator|==
 literal|1
 condition|)
@@ -2088,7 +2088,7 @@ name|fieldno
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* if (olist[cnt].fileno == 2) */
+comment|/* if (olist[cnt].filenum == 2) */
 name|outfield
 argument_list|(
 name|lp2
@@ -2476,7 +2476,7 @@ index|[
 name|olistcnt
 index|]
 operator|.
-name|fileno
+name|filenum
 operator|=
 name|token
 index|[
