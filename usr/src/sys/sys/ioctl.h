@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	3.4	%G%	*/
+comment|/*	ioctl.h	3.5	%G%	*/
 end_comment
 
 begin_comment
@@ -593,6 +593,17 @@ end_define
 
 begin_comment
 comment|/* get local special characters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCOUTQ
+value|(('t'<<8)|115)
+end_define
+
+begin_comment
+comment|/* number of chars in output queue */
 end_comment
 
 begin_define
