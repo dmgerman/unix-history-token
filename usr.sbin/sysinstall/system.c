@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/console.h>
+file|<sys/consio.h>
 end_include
 
 begin_include

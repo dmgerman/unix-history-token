@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/console.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pc/vesa.h>
 end_include
 

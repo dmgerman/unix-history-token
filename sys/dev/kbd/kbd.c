@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/console.h>
+file|<sys/kbio.h>
 end_include
 
 begin_include

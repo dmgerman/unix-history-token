@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/consio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -55,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/filio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kbio.h>
 end_include
 
 begin_include
@@ -115,12 +127,6 @@ begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/console.h>
 end_include
 
 begin_include

@@ -242,7 +242,7 @@ comment|/* a nonresponding keyboard	*/
 end_comment
 
 begin_comment
-comment|/*  * The following values are defined in machine/console.h, but the header  * file is not included here due to conflicts with pcvt_ioctl.h.  */
+comment|/*  * The following values are defined in sys/kbio.h, but the header  * file is not included here due to conflicts with pcvt_ioctl.h.  * XXX: Still relevant ?  */
 end_comment
 
 begin_define

@@ -119,13 +119,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
+file|<sys/consio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/console.h>
+file|<sys/kbio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fbio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include

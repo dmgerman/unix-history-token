@@ -1321,7 +1321,7 @@ value|(1<< 30)
 end_define
 
 begin_comment
-comment|/* lock key state (defined in machine/console.h) */
+comment|/* lock key state (defined in sys/kbio.h) */
 end_comment
 
 begin_comment

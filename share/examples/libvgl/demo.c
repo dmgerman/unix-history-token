@@ -12,7 +12,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/console.h>
+file|<sys/fbio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kbio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/consio.h>
 end_include
 
 begin_include
@@ -50,7 +62,7 @@ modifier|*
 name|tmp
 decl_stmt|;
 comment|// set graphics mode, here 320x240 256 colors
-comment|// supported modes are (from<machine/console.h>):
+comment|// supported modes are (from<sys/consio.h>):
 comment|// SW_VGA_CG320:	std VGA 320x200 256 colors
 comment|// SW_VGA_MODEX:	Modex VGA 320x240 256 colors
 comment|// SW_VGA_VG640:	std VGA 640x480 16 colors

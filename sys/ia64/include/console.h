@@ -15,6 +15,23 @@ directive|define
 name|_MACHINE_CONSOLE_H_
 end_define
 
+begin_if
+if|#
+directive|if
+name|__GNUC__
+end_if
+
+begin_warning
+warning|#
+directive|warning
+literal|"this file includes<machine/console.h> which is deprecated, use<sys/{kb,cons,fb}io.h> instead"
+end_warning
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
