@@ -18,7 +18,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * TU58 DECtape II device driver  *  * This driver controls the console TU58(s) on a VAX-11/750 or VAX-11/730.  * The TU58 is treated as a block device (only).  The error detection and  * recovery is not extensive, but sufficient for most situations. It is   * assumed that the TU58 will follow the RSP (or MRSP) protocol   * exactly, very few protocol errors are checked for.    * It is also assumed that the 730 uses Modified RSP  * (MRSP), while the 750 may use either RSP or MRSP depending on  * whether defined(MRSP) is true or not.  * In the case of a 750 without MRSP, the only way for the CPU to  * keep up with the tu58 is to lock out virtually everything else.  * This is taken care of by a pseudo DMA routine in locore.s.  */
+comment|/*  * TU58 DECtape II device driver  *  * This driver controls the console TU58(s) on a VAX-11/750 or VAX-11/730.  * The TU58 is treated as a block device (only).  The error detection and  * recovery is not extensive, but sufficient for most situations. It is   * assumed that the TU58 will follow the RSP (or MRSP) protocol   * exactly, very few protocol errors are checked for.    * It is also assumed that the 730 uses Modified RSP  * (MRSP), while the 750 may use either RSP or MRSP depending on  * whether defined(MRSP) is true or not.  * In the case of a 750 without MRSP, the only way for the CPU to  * keep up with the tu58 is to lock out virtually everything else.  * This is taken care of by a pseudo DMA routine in locore.s.  *  * NOTE: This driver will not work in multiuser mode   *	 unless MRSP is used!!  */
 end_comment
 
 begin_include
