@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dumprestor.h>
+file|<protocols/dumprestore.h>
 end_include
 
 begin_include
