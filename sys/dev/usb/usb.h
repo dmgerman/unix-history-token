@@ -1938,6 +1938,17 @@ begin_comment
 comment|/* ms */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_EXTRA_POWER_UP_TIME
+value|0
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -2018,6 +2029,17 @@ define|#
 directive|define
 name|USB_RESUME_RECOVERY
 value|50
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_EXTRA_POWER_UP_TIME
+value|20
 end_define
 
 begin_comment
@@ -2498,6 +2520,13 @@ define|#
 directive|define
 name|USB_GET_REPORT
 value|_IOWR('U', 23, struct usb_ctl_report)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_SET_REPORT
+value|_IOW ('U', 24, struct usb_ctl_report)
 end_define
 
 begin_comment
