@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.7 1995/05/30 08:07:43 rgrimes Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.8 1995/11/07 14:06:44 phk Exp $ */
 end_comment
 
 begin_comment
@@ -3021,6 +3021,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vfsops
 name|msdosfs_vfsops
