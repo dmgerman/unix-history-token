@@ -121,14 +121,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|char
@@ -184,7 +176,8 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 literal|"realpath"
 argument_list|)
@@ -379,7 +372,8 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 literal|"realpath"
 argument_list|)
