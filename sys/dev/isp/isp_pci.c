@@ -1213,6 +1213,7 @@ decl_stmt|;
 name|bus_size_t
 name|lim
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sptr
