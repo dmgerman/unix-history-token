@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.52 1998/01/11 17:50:35 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.53 1998/01/11 17:53:19 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -493,8 +493,9 @@ block|,
 comment|/* Protocol Number */
 name|LCP_MAXCODE
 block|,
-name|OPEN_ACTIVE
+literal|1
 block|,
+comment|/* Open mode delay */
 name|ST_INITIAL
 block|,
 comment|/* State of machine */
@@ -520,6 +521,7 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* FSM timer */
 block|{
 literal|0
 block|,
@@ -534,6 +536,22 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* Open timer */
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+comment|/* Stopped timer */
 name|LogLCP
 block|,
 name|LcpLayerUp
@@ -784,17 +802,39 @@ name|fprintf
 argument_list|(
 name|VarTerm
 argument_list|,
-literal|"Open Mode: %s\n"
+literal|"Open Mode: %s"
 argument_list|,
 operator|(
 name|VarOpenMode
 operator|==
-name|OPEN_ACTIVE
+name|OPEN_PASSIVE
 operator|)
 condition|?
-literal|"active"
-else|:
 literal|"passive"
+else|:
+literal|"active"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|VarOpenMode
+operator|>
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
+literal|" (delay %d)"
+argument_list|,
+name|VarOpenMode
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|VarTerm
 argument_list|)
 expr_stmt|;
 return|return

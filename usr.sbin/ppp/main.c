@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.116 1998/01/08 23:47:52 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.117 1998/01/11 17:53:21 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -2659,7 +2659,10 @@ end_comment
 begin_function
 name|void
 name|PacketMode
-parameter_list|()
+parameter_list|(
+name|int
+name|delay
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2700,7 +2703,7 @@ argument_list|()
 expr_stmt|;
 name|LcpOpen
 argument_list|(
-name|VarOpenMode
+name|delay
 argument_list|)
 expr_stmt|;
 if|if
@@ -3028,15 +3031,11 @@ name|state
 operator|<=
 name|ST_CLOSED
 condition|)
-block|{
-name|VarOpenMode
-operator|=
-name|OPEN_ACTIVE
-expr_stmt|;
 name|PacketMode
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'.'
@@ -3505,7 +3504,9 @@ literal|"Packet mode enabled\n"
 argument_list|)
 expr_stmt|;
 name|PacketMode
-argument_list|()
+argument_list|(
+name|VarOpenMode
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -3714,14 +3715,10 @@ name|mode
 operator|&
 name|MODE_DEDICATED
 condition|)
-if|if
-condition|(
-name|VarOpenMode
-operator|==
-name|OPEN_ACTIVE
-condition|)
 name|PacketMode
-argument_list|()
+argument_list|(
+name|VarOpenMode
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * If Ip packet for output is enqueued and require dial up, Just do it!      */
@@ -3890,19 +3887,15 @@ operator|==
 name|EX_DONE
 condition|)
 block|{
-name|nointr_sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* little pause to allow peer starts */
 name|ModemTimeout
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
 name|PacketMode
-argument_list|()
+argument_list|(
+name|VarOpenMode
+argument_list|)
 expr_stmt|;
 name|dial_up
 operator|=
@@ -4757,7 +4750,9 @@ argument_list|)
 expr_stmt|;
 block|}
 name|PacketMode
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 else|else
