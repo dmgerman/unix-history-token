@@ -240,8 +240,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CTL_MAXID
+name|CTL_USER
 value|8
+end_define
+
+begin_comment
+comment|/* user-level */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_MAXID
+value|9
 end_define
 
 begin_comment
@@ -252,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "kern", CTLTYPE_NODE }, \ 	{ "vm", CTLTYPE_NODE }, \ 	{ "fs", CTLTYPE_NODE }, \ 	{ "net", CTLTYPE_NODE }, \ 	{ "debug", CTLTYPE_NODE }, \ 	{ "hw", CTLTYPE_NODE }, \ 	{ "machdep", CTLTYPE_NODE }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "kern", CTLTYPE_NODE }, \ 	{ "vm", CTLTYPE_NODE }, \ 	{ "fs", CTLTYPE_NODE }, \ 	{ "net", CTLTYPE_NODE }, \ 	{ "debug", CTLTYPE_NODE }, \ 	{ "hw", CTLTYPE_NODE }, \ 	{ "machdep", CTLTYPE_NODE }, \ 	{ "user", CTLTYPE_NODE }, \ }
 end_define
 
 begin_comment
@@ -449,8 +460,140 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERN_MAXID
+name|KERN_NGROUPS
 value|18
+end_define
+
+begin_comment
+comment|/* int: # of supplemental group ids */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_JOB_CONTROL
+value|19
+end_define
+
+begin_comment
+comment|/* int: is job control available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_SAVED_IDS
+value|20
+end_define
+
+begin_comment
+comment|/* int: saved set-user/group-ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_LINK_MAX
+value|21
+end_define
+
+begin_comment
+comment|/* int: max file link count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_MAX_CANON
+value|22
+end_define
+
+begin_comment
+comment|/* int: max bytes in term canon input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_MAX_INPUT
+value|23
+end_define
+
+begin_comment
+comment|/* int: max bytes in term input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_NAME_MAX
+value|24
+end_define
+
+begin_comment
+comment|/* int: max bytes in file name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PATH_MAX
+value|25
+end_define
+
+begin_comment
+comment|/* int: max bytes in pathname */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PIPE_BUF
+value|26
+end_define
+
+begin_comment
+comment|/* int: max bytes for atomic pipe  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_CHOWN_RESTRICTED
+value|27
+end_define
+
+begin_comment
+comment|/* int: chown requires privilege */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_NO_TRUNC
+value|28
+end_define
+
+begin_comment
+comment|/* int: no path truncation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_VDISABLE
+value|29
+end_define
+
+begin_comment
+comment|/* int: terminal character disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_MAXID
+value|30
 end_define
 
 begin_comment
@@ -461,7 +604,7 @@ begin_define
 define|#
 directive|define
 name|CTL_KERN_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "ngroups", CTLTYPE_INT }, \ 	{ "job_control", CTLTYPE_INT }, \ 	{ "saved_ids", CTLTYPE_INT }, \ 	{ "link_max", CTLTYPE_INT }, \ 	{ "max_canon", CTLTYPE_INT }, \ 	{ "max_input", CTLTYPE_INT }, \ 	{ "name_max", CTLTYPE_INT }, \ 	{ "path_max", CTLTYPE_INT }, \ 	{ "pipe_buf", CTLTYPE_INT }, \ 	{ "chown_restricted", CTLTYPE_INT }, \ 	{ "no_trunc", CTLTYPE_INT }, \ 	{ "vdisable", CTLTYPE_INT }, \ }
 end_define
 
 begin_comment
@@ -822,6 +965,226 @@ define|#
 directive|define
 name|CTL_HW_NAMES
 value|{ \ 	{ 0, 0 }, \ 	{ "machine", CTLTYPE_STRING }, \ 	{ "model", CTLTYPE_STRING }, \ 	{ "ncpu", CTLTYPE_INT }, \ 	{ "byteorder", CTLTYPE_INT }, \ 	{ "physmem", CTLTYPE_INT }, \ 	{ "usermem", CTLTYPE_INT }, \ 	{ "pagesize", CTLTYPE_INT }, \ 	{ "disknames", CTLTYPE_STRUCT }, \ 	{ "diskstats", CTLTYPE_STRUCT }, \ }
+end_define
+
+begin_comment
+comment|/*  * CTL_USER definitions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_CS_PATH
+value|1
+end_define
+
+begin_comment
+comment|/* string: _CS_PATH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_BC_BASE_MAX
+value|2
+end_define
+
+begin_comment
+comment|/* int: BC_BASE_MAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_BC_DIM_MAX
+value|3
+end_define
+
+begin_comment
+comment|/* int: BC_DIM_MAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_BC_SCALE_MAX
+value|4
+end_define
+
+begin_comment
+comment|/* int: BC_SCALE_MAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_BC_STRING_MAX
+value|5
+end_define
+
+begin_comment
+comment|/* int: BC_STRING_MAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_COLL_WEIGHTS_MAX
+value|6
+end_define
+
+begin_comment
+comment|/* int: COLL_WEIGHTS_MAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_EXPR_NEST_MAX
+value|7
+end_define
+
+begin_comment
+comment|/* int: EXPR_NEST_MAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_LINE_MAX
+value|8
+end_define
+
+begin_comment
+comment|/* int: LINE_MAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_RE_DUP_MAX
+value|9
+end_define
+
+begin_comment
+comment|/* int: RE_DUP_MAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_POSIX2_VERSION
+value|10
+end_define
+
+begin_comment
+comment|/* int: POSIX2_VERSION */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_POSIX2_C_BIND
+value|11
+end_define
+
+begin_comment
+comment|/* int: POSIX2_C_BIND */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_POSIX2_C_DEV
+value|12
+end_define
+
+begin_comment
+comment|/* int: POSIX2_C_DEV */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_POSIX2_CHAR_TERM
+value|13
+end_define
+
+begin_comment
+comment|/* int: POSIX2_CHAR_TERM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_POSIX2_FORT_DEV
+value|14
+end_define
+
+begin_comment
+comment|/* int: POSIX2_FORT_DEV */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_POSIX2_FORT_RUN
+value|15
+end_define
+
+begin_comment
+comment|/* int: POSIX2_FORT_RUN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_POSIX2_LOCALEDEF
+value|16
+end_define
+
+begin_comment
+comment|/* int: POSIX2_LOCALEDEF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_POSIX2_SW_DEV
+value|17
+end_define
+
+begin_comment
+comment|/* int: POSIX2_SW_DEV */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_POSIX2_UPE
+value|18
+end_define
+
+begin_comment
+comment|/* int: POSIX2_UPE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_MAXID
+value|19
+end_define
+
+begin_comment
+comment|/* number of valid user ids */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_USER_NAMES
+value|{ \ 	{ 0, 0 }, \ 	{ "cs_path", CTLTYPE_STRING }, \ 	{ "bc_base_max", CTLTYPE_INT }, \ 	{ "bc_dim_max", CTLTYPE_INT }, \ 	{ "bc_scale_max", CTLTYPE_INT }, \ 	{ "bc_string_max", CTLTYPE_INT }, \ 	{ "coll_weights_max", CTLTYPE_INT }, \ 	{ "expr_nest_max", CTLTYPE_INT }, \ 	{ "line_max", CTLTYPE_INT }, \ 	{ "re_dup_max", CTLTYPE_INT }, \ 	{ "posix2_version", CTLTYPE_INT }, \ 	{ "posix2_c_bind", CTLTYPE_INT }, \ 	{ "posix2_c_dev", CTLTYPE_INT }, \ 	{ "posix2_char_term", CTLTYPE_INT }, \ 	{ "posix2_fort_dev", CTLTYPE_INT }, \ 	{ "posix2_fort_run", CTLTYPE_INT }, \ 	{ "posix2_localedef", CTLTYPE_INT }, \ 	{ "posix2_sw_dev", CTLTYPE_INT }, \ 	{ "posix2_upe", CTLTYPE_INT }, \ }
 end_define
 
 begin_comment

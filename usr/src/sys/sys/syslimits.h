@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)syslimits.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)syslimits.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -44,7 +44,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* max bytes in terminal canonical input line */
+comment|/* max bytes in term canon input line */
 end_comment
 
 begin_define
@@ -66,7 +66,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* max number of bytes in a file name */
+comment|/* max bytes in a file name */
 end_comment
 
 begin_define
@@ -77,7 +77,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* max number of supplemental group id's */
+comment|/* max supplemental group id's */
 end_comment
 
 begin_define
@@ -99,7 +99,7 @@ value|1024
 end_define
 
 begin_comment
-comment|/* max number of bytes in pathname */
+comment|/* max bytes in pathname */
 end_comment
 
 begin_define
@@ -110,7 +110,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* max number of bytes for atomic pipe writes */
+comment|/* max bytes for atomic pipe writes */
 end_comment
 
 begin_define
@@ -121,7 +121,7 @@ value|99
 end_define
 
 begin_comment
-comment|/* max ibase/obase values allowed by bc(1) */
+comment|/* max ibase/obase values in bc(1) */
 end_comment
 
 begin_define
@@ -132,7 +132,7 @@ value|2048
 end_define
 
 begin_comment
-comment|/* max array elements allowed by bc(1) */
+comment|/* max array elements in bc(1) */
 end_comment
 
 begin_define
@@ -143,7 +143,7 @@ value|99
 end_define
 
 begin_comment
-comment|/* max scale value allowed by bc(1) */
+comment|/* max scale value in bc(1) */
 end_comment
 
 begin_define
@@ -154,18 +154,18 @@ value|1000
 end_define
 
 begin_comment
-comment|/* max const string length allowed by bc(1) */
+comment|/* max const string length in bc(1) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EQUIV_CLASS_MAX
-value|2
+name|COLL_WEIGHTS_MAX
+value|0
 end_define
 
 begin_comment
-comment|/* max weights for order keyword; see locale */
+comment|/* max weights for order keyword */
 end_comment
 
 begin_define
@@ -187,7 +187,7 @@ value|2048
 end_define
 
 begin_comment
-comment|/* max length in bytes of an input line */
+comment|/* max bytes in an input line */
 end_comment
 
 begin_define
@@ -198,7 +198,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* max repeated RE's using interval notation */
+comment|/* max RE's in interval notation */
 end_comment
 
 end_unit
