@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -303,7 +309,7 @@ name|exp
 parameter_list|,
 name|msg
 parameter_list|)
-value|do { if (!(exp)) panic msg; } while (0)
+value|do {						\ 	if (__predict_false(!(exp)))					\ 		panic msg;						\ } while (0)
 end_define
 
 begin_else
