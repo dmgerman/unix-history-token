@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_bio.c	8.5 (Berkeley) 1/4/94  * $Id: nfs_bio.c,v 1.4 1994/08/08 09:11:41 davidg Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_bio.c	8.5 (Berkeley) 1/4/94  * $Id: nfs_bio.c,v 1.5 1994/08/18 22:35:35 wollman Exp $  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
 end_include
 
 begin_include
@@ -365,8 +371,6 @@ operator|!=
 name|VREG
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_vinvalbuf
@@ -381,6 +385,10 @@ name|p
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -400,8 +408,6 @@ name|n_direofoffset
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -415,6 +421,10 @@ name|cred
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -434,8 +444,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -449,6 +457,10 @@ name|cred
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -474,8 +486,6 @@ name|n_direofoffset
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_vinvalbuf
@@ -490,6 +500,10 @@ name|p
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -621,8 +635,6 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_vinvalbuf
@@ -637,6 +649,10 @@ name|p
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -682,8 +698,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_vinvalbuf
@@ -698,6 +712,10 @@ name|p
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -764,6 +782,17 @@ argument_list|,
 name|uio
 argument_list|,
 name|cred
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|" NQNFSNONCACHE: type %x unexpected\n"
+argument_list|,
+name|vp
+operator|->
+name|v_type
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1080,8 +1109,6 @@ name|not_readin
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_doio
@@ -1092,6 +1119,10 @@ name|cred
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|brelse
@@ -1355,8 +1386,6 @@ name|b_flags
 operator||=
 name|B_READ
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_doio
@@ -1367,6 +1396,10 @@ name|cred
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|brelse
@@ -1464,8 +1497,6 @@ name|b_flags
 operator||=
 name|B_READ
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_doio
@@ -1476,6 +1507,10 @@ name|cred
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|brelse
@@ -1622,6 +1657,17 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+default|default:
+name|printf
+argument_list|(
+literal|" nfsbioread: type %x unexpected\n"
+argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 empty_stmt|;
 if|if
@@ -1690,8 +1736,18 @@ operator|->
 name|b_blkno
 expr_stmt|;
 break|break;
+default|default:
+name|printf
+argument_list|(
+literal|" nfsbioread: type %x unexpected\n"
+argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|got_buf
@@ -1932,8 +1988,6 @@ name|n_attrstamp
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_vinvalbuf
@@ -1948,6 +2002,10 @@ name|p
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1968,8 +2026,6 @@ name|n_attrstamp
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -1983,6 +2039,10 @@ name|cred
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2151,8 +2211,6 @@ name|NQNFSNONCACHE
 operator|)
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_vinvalbuf
@@ -2167,6 +2225,10 @@ name|p
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2482,8 +2544,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_vinvalbuf
@@ -2498,6 +2558,10 @@ name|p
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2517,8 +2581,6 @@ name|again
 goto|;
 block|}
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|uiomove
@@ -2537,6 +2599,10 @@ name|n
 argument_list|,
 name|uio
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|bp
@@ -2747,14 +2813,16 @@ name|b_proc
 operator|=
 name|p
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_BWRITE
 argument_list|(
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -3511,7 +3579,7 @@ modifier|*
 name|bp
 decl_stmt|;
 name|struct
-name|cred
+name|ucred
 modifier|*
 name|cr
 decl_stmt|;
@@ -3965,6 +4033,17 @@ operator|=
 name|uiop
 operator|->
 name|uio_offset
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"nfs_doio:  type %x unexpected\n"
+argument_list|,
+name|vp
+operator|->
+name|v_type
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

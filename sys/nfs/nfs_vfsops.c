@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vfsops.c	8.3 (Berkeley) 1/4/94  * $Id: nfs_vfsops.c,v 1.3 1994/08/20 16:03:19 davidg Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vfsops.c	8.3 (Berkeley) 1/4/94  * $Id: nfs_vfsops.c,v 1.4 1994/09/21 03:47:22 wollman Exp $  */
 end_comment
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socketvar.h>
 end_include
 
 begin_include
@@ -427,8 +433,6 @@ operator|&
 name|NFSMNT_NQNFS
 operator|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_nget
@@ -443,6 +447,10 @@ argument_list|,
 operator|&
 name|np
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -860,8 +868,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Do enough of ifconfig(8) so that the critical net interface can 	 * talk to the server. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|socreate
@@ -881,6 +887,10 @@ name|SOCK_DGRAM
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|panic
 argument_list|(
@@ -889,8 +899,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ifioctl
@@ -909,6 +917,10 @@ name|myif
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|panic
 argument_list|(
@@ -973,8 +985,6 @@ argument_list|(
 name|sin
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|rtrequest
@@ -1019,6 +1029,10 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|panic
 argument_list|(
@@ -1483,8 +1497,6 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|mountnfs
@@ -1501,6 +1513,10 @@ name|path
 argument_list|,
 name|vpp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|panic
 argument_list|(
@@ -1697,8 +1713,6 @@ decl_stmt|;
 name|nfsv2fh_t
 name|nfh
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|copyin
@@ -1717,14 +1731,16 @@ expr|struct
 name|nfs_args
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|copyin
@@ -1747,14 +1763,16 @@ argument_list|(
 name|nfsv2fh_t
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|copyinstr
@@ -1770,6 +1788,10 @@ argument_list|,
 operator|&
 name|len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1789,8 +1811,6 @@ operator|-
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|copyinstr
@@ -1808,6 +1828,10 @@ argument_list|,
 operator|&
 name|len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1828,8 +1852,6 @@ name|len
 argument_list|)
 expr_stmt|;
 comment|/* sockargs() call must be after above copyin() calls */
-if|if
-condition|(
 name|error
 operator|=
 name|sockargs
@@ -1850,6 +1872,10 @@ name|addrlen
 argument_list|,
 name|MT_SONAME
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2670,8 +2696,6 @@ operator|=
 name|NFS_MAXDGRAMDATA
 expr_stmt|;
 comment|/* 	 * A reference count is needed on the nfsnode representing the 	 * remote root.  If this object is not persistent, then backward 	 * traversals of the mount point (i.e. "..") will not work if 	 * the nfsnode gets flushed out of the cache. Ufs does not have 	 * this problem, because one can identify root inodes by their 	 * number == ROOTINO (2). 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_nget
@@ -2686,6 +2710,10 @@ argument_list|,
 operator|&
 name|np
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|bad
@@ -2819,8 +2847,6 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Goes something like this.. 	 * - Check for activity on the root vnode (other than ourselves). 	 * - Call vflush() to clear out vnodes for this file system, 	 *   except for the root vnode. 	 * - Decrement reference on the vnode representing remote root. 	 * - Close the socket 	 * - Free up the data structures 	 */
 comment|/* 	 * We need to decrement the ref. count on the nfsnode representing 	 * the remote root.  See comment in mountnfs().  The VFS unmount() 	 * has done vput on this vnode, otherwise we would get deadlock! 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_nget
@@ -2835,6 +2861,10 @@ argument_list|,
 operator|&
 name|np
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2901,8 +2931,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|vflush
@@ -2913,6 +2941,10 @@ name|vp
 argument_list|,
 name|flags
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -3064,8 +3096,6 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_nget
@@ -3080,6 +3110,10 @@ argument_list|,
 operator|&
 name|np
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -3243,8 +3277,6 @@ condition|)
 goto|goto
 name|loop
 goto|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_FSYNC
@@ -3257,6 +3289,10 @@ name|waitfor
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|allerror
 operator|=

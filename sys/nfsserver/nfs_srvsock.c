@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_socket.c	8.3 (Berkeley) 1/12/94  * $Id$  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_socket.c	8.3 (Berkeley) 1/12/94  * $Id: nfs_socket.c,v 1.3 1994/08/02 07:52:11 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -830,8 +830,6 @@ name|sockaddr
 operator|*
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|socreate
@@ -853,6 +851,10 @@ name|nmp
 operator|->
 name|nm_soproto
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|bad
@@ -1028,8 +1030,6 @@ block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|soconnect
@@ -1040,6 +1040,10 @@ name|nmp
 operator|->
 name|nm_nam
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|bad
@@ -1446,8 +1450,6 @@ operator|*
 literal|2
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|soreserve
@@ -1458,6 +1460,10 @@ name|sndreserve
 argument_list|,
 name|rcvreserve
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|bad
@@ -1641,6 +1647,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|error
 operator|=
 name|nfs_connect
@@ -1649,6 +1656,7 @@ name|nmp
 argument_list|,
 name|rep
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -2210,8 +2218,6 @@ operator|!=
 name|SOCK_DGRAM
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_sndlock
@@ -2225,6 +2231,10 @@ name|nm_flag
 argument_list|,
 name|rep
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2266,9 +2276,6 @@ name|EINTR
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|(
 name|so
 operator|=
 name|rep
@@ -2276,19 +2283,23 @@ operator|->
 name|r_nmp
 operator|->
 name|nm_so
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
+operator|!
+name|so
+condition|)
+block|{
 name|error
 operator|=
 name|nfs_reconnect
 argument_list|(
 name|rep
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|nfs_sndunlock
@@ -2340,8 +2351,6 @@ operator|.
 name|rpcretries
 operator|++
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_send
@@ -2358,6 +2367,10 @@ name|m
 argument_list|,
 name|rep
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 if|if
@@ -3228,14 +3241,16 @@ condition|;
 control|)
 block|{
 comment|/* 		 * Lock against other receivers so that I don't get stuck in 		 * sbwait() after someone else has received my reply for me. 		 * Also necessary for connection based protocols to avoid 		 * race conditions during a reconnect. 		 */
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_rcvlock
 argument_list|(
 name|myrep
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -5809,6 +5824,7 @@ name|void
 modifier|*
 name|arg
 decl_stmt|;
+comment|/* never used */
 block|{
 specifier|register
 name|struct
@@ -7604,8 +7620,6 @@ operator|=
 name|m
 expr_stmt|;
 comment|/* 		 * Now try and parse record(s) out of the raw stream data. 		 */
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_getstream
@@ -7614,6 +7628,10 @@ name|slp
 argument_list|,
 name|waitflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 if|if
@@ -8508,8 +8526,6 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
-if|if
-condition|(
 name|slp
 operator|->
 name|ns_rec
@@ -8517,6 +8533,12 @@ operator|=
 name|m
 operator|->
 name|m_nextpkt
+expr_stmt|;
+if|if
+condition|(
+name|slp
+operator|->
+name|ns_rec
 condition|)
 name|m
 operator|->
@@ -8617,8 +8639,6 @@ argument_list|,
 name|caddr_t
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_getreq
@@ -8627,6 +8647,10 @@ name|nd
 argument_list|,
 name|TRUE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|m_freem

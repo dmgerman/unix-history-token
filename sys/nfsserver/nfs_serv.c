@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_serv.c	8.3 (Berkeley) 1/12/94  * $Id: nfs_serv.c,v 1.5 1994/09/22 19:38:25 wollman Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_serv.c	8.3 (Berkeley) 1/12/94  * $Id: nfs_serv.c,v 1.6 1994/09/28 16:45:18 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -329,8 +329,6 @@ operator|*
 name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -353,6 +351,10 @@ argument_list|,
 operator|&
 name|rdonly
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -573,8 +575,6 @@ argument_list|(
 name|fhp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -597,6 +597,10 @@ argument_list|,
 operator|&
 name|rdonly
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -840,8 +844,6 @@ name|NQL_NOVAL
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -864,6 +866,10 @@ argument_list|,
 operator|&
 name|rdonly
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -1183,9 +1189,8 @@ goto|goto
 name|out
 goto|;
 block|}
-elseif|else
-if|if
-condition|(
+else|else
+block|{
 name|error
 operator|=
 name|nfsrv_access
@@ -1202,13 +1207,16 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|out
 goto|;
 block|}
-if|if
-condition|(
+block|}
 name|error
 operator|=
 name|VOP_SETATTR
@@ -1223,6 +1231,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -1439,11 +1451,12 @@ literal|0
 decl_stmt|,
 name|cache
 decl_stmt|,
-name|duration2
-decl_stmt|,
 name|cache2
 decl_stmt|,
 name|len
+decl_stmt|;
+name|u_long
+name|duration2
 decl_stmt|;
 name|char
 modifier|*
@@ -1554,8 +1567,6 @@ name|LOCKLEAF
 operator||
 name|SAVESTART
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_namei
@@ -1583,6 +1594,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -1647,8 +1662,6 @@ name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VFS_VPTOFH
@@ -1660,6 +1673,10 @@ name|fhp
 operator|->
 name|fh_fid
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -2205,8 +2222,6 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -2229,6 +2244,10 @@ argument_list|,
 operator|&
 name|rdonly
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|m_freem
@@ -2617,8 +2636,6 @@ argument_list|,
 name|NFS_MAXDATA
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -2641,6 +2658,10 @@ argument_list|,
 operator|&
 name|rdonly
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -2740,8 +2761,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -2756,6 +2775,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -3549,8 +3572,6 @@ name|siz
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -3573,6 +3594,10 @@ argument_list|,
 operator|&
 name|rdonly
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -3620,8 +3645,6 @@ argument_list|,
 name|NQL_WRITE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_access
@@ -3638,6 +3661,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -3872,8 +3899,6 @@ name|uio_resid
 operator|=
 name|siz
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_WRITE
@@ -3886,6 +3911,10 @@ name|ioflags
 argument_list|,
 name|cred
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -4203,8 +4232,6 @@ name|LOCKLEAF
 operator||
 name|SAVESTART
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_namei
@@ -4232,6 +4259,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -4374,8 +4405,6 @@ argument_list|,
 name|NQL_WRITE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_CREATE
@@ -4396,6 +4425,10 @@ name|ni_cnd
 argument_list|,
 name|vap
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -4463,9 +4496,8 @@ operator|==
 name|VFIFO
 condition|)
 block|{ 			}
-elseif|else
-if|if
-condition|(
+else|else
+block|{
 name|error
 operator|=
 name|suser
@@ -4478,6 +4510,10 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_ABORTOP
@@ -4513,6 +4549,7 @@ name|dev_t
 operator|)
 name|rdev
 expr_stmt|;
+block|}
 name|nqsrv_getl
 argument_list|(
 name|nd
@@ -4522,8 +4559,6 @@ argument_list|,
 name|NQL_WRITE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_MKNOD
@@ -4544,6 +4579,10 @@ name|ni_cnd
 argument_list|,
 name|vap
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vrele
@@ -4602,8 +4641,6 @@ name|nd_procp
 operator|->
 name|p_ucred
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|lookup
@@ -4611,6 +4648,10 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|free
@@ -4855,8 +4896,6 @@ operator|-
 literal|1
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_access
@@ -4881,6 +4920,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -4901,8 +4944,6 @@ argument_list|,
 name|NQL_WRITE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_SETATTR
@@ -4917,6 +4958,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -4957,8 +5002,6 @@ name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VFS_VPTOFH
@@ -4970,6 +5013,10 @@ name|fhp
 operator|->
 name|fh_fid
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -5320,8 +5367,6 @@ name|LOCKPARENT
 operator||
 name|LOCKLEAF
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_namei
@@ -5349,6 +5394,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -5721,8 +5770,6 @@ name|WANTPARENT
 operator||
 name|SAVESTART
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_namei
@@ -5750,6 +5797,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -5810,8 +5861,6 @@ name|NOCACHE
 operator||
 name|SAVESTART
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_namei
@@ -5839,6 +5888,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_ABORTOP
@@ -6499,8 +6552,6 @@ argument_list|,
 name|NFS_MAXNAMLEN
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -6523,6 +6574,10 @@ argument_list|,
 operator|&
 name|rdonly
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -6579,8 +6634,6 @@ name|cn_flags
 operator|=
 name|LOCKPARENT
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_namei
@@ -6608,6 +6661,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|out1
@@ -6956,8 +7013,6 @@ name|cn_flags
 operator|=
 name|LOCKPARENT
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_namei
@@ -6985,6 +7040,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|out
@@ -7495,8 +7554,6 @@ name|cn_flags
 operator|=
 name|LOCKPARENT
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_namei
@@ -7524,6 +7581,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -7634,8 +7695,6 @@ argument_list|,
 name|NQL_WRITE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_MKDIR
@@ -7656,6 +7715,10 @@ name|ni_cnd
 argument_list|,
 name|vap
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -7693,8 +7756,6 @@ name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VFS_VPTOFH
@@ -7706,6 +7767,10 @@ name|fhp
 operator|->
 name|fh_fid
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -8005,8 +8070,6 @@ name|LOCKPARENT
 operator||
 name|LOCKLEAF
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_namei
@@ -8034,6 +8097,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -8503,8 +8570,6 @@ name|fullsiz
 operator|=
 name|siz
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -8527,6 +8592,10 @@ argument_list|,
 operator|&
 name|rdonly
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -8540,8 +8609,6 @@ argument_list|,
 name|NQL_READ
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_access
@@ -8558,6 +8625,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -9483,8 +9554,6 @@ name|error
 init|=
 literal|0
 decl_stmt|,
-name|duration2
-decl_stmt|,
 name|cache2
 decl_stmt|;
 name|int
@@ -9499,6 +9568,9 @@ decl_stmt|,
 name|rdonly
 decl_stmt|,
 name|cache
+decl_stmt|;
+name|u_long
+name|duration2
 decl_stmt|;
 name|u_quad_t
 name|frev
@@ -9612,8 +9684,6 @@ name|fullsiz
 operator|=
 name|siz
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -9636,6 +9706,10 @@ argument_list|,
 operator|&
 name|rdonly
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -9649,8 +9723,6 @@ argument_list|,
 name|NQL_READ
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_access
@@ -9667,6 +9739,10 @@ name|nfsd
 operator|->
 name|nd_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vput
@@ -10836,8 +10912,6 @@ argument_list|(
 name|fhp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -10860,6 +10934,10 @@ argument_list|,
 operator|&
 name|rdonly
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|nfsm_reply
 argument_list|(
@@ -11318,6 +11396,8 @@ operator|(
 name|EROFS
 operator|)
 return|;
+default|default:
+break|break;
 block|}
 block|}
 comment|/* 		 * If there's shared text associated with 		 * the inode, try to free it up once.  If 		 * we fail, we can't allow writing. 		 */
@@ -11343,8 +11423,6 @@ name|ETXTBSY
 operator|)
 return|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -11358,6 +11436,10 @@ name|cred
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(

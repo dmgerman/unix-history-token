@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.5 (Berkeley) 2/13/94  * $Id: nfs_vnops.c,v 1.6 1994/09/21 03:47:25 wollman Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.5 (Berkeley) 2/13/94  * $Id: nfs_vnops.c,v 1.7 1994/09/22 19:38:28 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -1992,8 +1992,6 @@ name|n_direofoffset
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -2011,6 +2009,10 @@ name|ap
 operator|->
 name|a_p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2030,8 +2032,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -2049,6 +2049,10 @@ name|ap
 operator|->
 name|a_p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -3986,8 +3990,6 @@ name|EISDIR
 operator|)
 return|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_nget
@@ -4001,6 +4003,10 @@ argument_list|,
 operator|&
 name|np
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|m_freem
@@ -4021,8 +4027,6 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_loadattrcache
@@ -4043,6 +4047,10 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vrele
@@ -4115,8 +4123,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_nget
@@ -4130,6 +4136,10 @@ argument_list|,
 operator|&
 name|np
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|m_freem
@@ -4151,8 +4161,6 @@ name|np
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_loadattrcache
@@ -4173,6 +4181,10 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|vrele
@@ -5504,8 +5516,6 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -5523,6 +5533,10 @@ name|cnp
 operator|->
 name|cn_proc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_ABORTOP
@@ -5913,8 +5927,6 @@ name|struct
 name|vattr
 name|vattr
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -5932,6 +5944,10 @@ name|cnp
 operator|->
 name|cn_proc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_ABORTOP
@@ -8040,8 +8056,6 @@ name|struct
 name|vattr
 name|vattr
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -8059,6 +8073,10 @@ name|cnp
 operator|->
 name|cn_proc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_ABORTOP
@@ -10150,8 +10168,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_nget
@@ -10165,6 +10181,10 @@ argument_list|,
 operator|&
 name|np
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|doit
 operator|=
@@ -10178,8 +10198,6 @@ name|np
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_loadattrcache
@@ -10200,6 +10218,10 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 name|doit
 operator|=
@@ -11051,8 +11073,6 @@ name|bad
 goto|;
 block|}
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_renameit
@@ -11063,6 +11083,10 @@ name|cnp
 argument_list|,
 name|sp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|bad
@@ -12167,7 +12191,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_NFS, fileid %d fsid 0x%x"
+literal|"tag VT_NFS, fileid %ld fsid 0x%lx"
 argument_list|,
 name|np
 operator|->
@@ -12420,8 +12444,6 @@ operator|=
 operator|&
 name|vattr
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -12438,6 +12460,10 @@ name|ap
 operator|->
 name|a_p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_syscalls.c	8.3 (Berkeley) 1/4/94  * $Id$  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_syscalls.c	8.3 (Berkeley) 1/4/94  * $Id: nfs_syscalls.c,v 1.3 1994/08/02 07:52:15 davidg Exp $  */
 end_comment
 
 begin_include
@@ -472,8 +472,6 @@ name|nameidata
 name|nd
 decl_stmt|;
 comment|/* 	 * Must be super user 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|suser
@@ -487,6 +485,10 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -513,8 +515,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|namei
@@ -522,6 +522,10 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -729,8 +733,6 @@ name|int
 name|error
 decl_stmt|;
 comment|/* 	 * Must be super user 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|suser
@@ -744,6 +746,10 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -809,8 +815,6 @@ operator|&
 name|NFSSVC_MNTD
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|copyin
@@ -830,6 +834,10 @@ argument_list|(
 name|ncd
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -856,8 +864,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|namei
@@ -865,6 +871,10 @@ argument_list|(
 operator|&
 name|nd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -982,8 +992,6 @@ operator|&
 name|NFSSVC_ADDSOCK
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|copyin
@@ -1003,14 +1011,16 @@ argument_list|(
 name|nfsdarg
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|getsock
@@ -1026,6 +1036,10 @@ argument_list|,
 operator|&
 name|fp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1056,9 +1070,8 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-elseif|else
-if|if
-condition|(
+else|else
+block|{
 name|error
 operator|=
 name|sockargs
@@ -1076,12 +1089,17 @@ name|namelen
 argument_list|,
 name|MT_SONAME
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|error
 operator|=
 name|nfssvc_addsock
@@ -1094,8 +1112,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|copyin
@@ -1115,6 +1131,10 @@ operator|*
 name|nsd
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1132,11 +1152,13 @@ name|NFSSVC_AUTHIN
 operator|)
 operator|&&
 operator|(
+operator|(
 name|nfsd
 operator|=
 name|nsd
 operator|->
 name|nsd_nfsd
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -1401,14 +1423,18 @@ name|nsd_uid
 argument_list|)
 index|]
 expr_stmt|;
-if|if
-condition|(
 name|nuidp
 operator|->
 name|nu_hnext
 operator|=
 operator|*
 name|nuh
+expr_stmt|;
+if|if
+condition|(
+name|nuidp
+operator|->
+name|nu_hnext
 condition|)
 name|nuidp
 operator|->
@@ -1674,8 +1700,6 @@ name|siz
 operator|=
 name|NFS_MAXPACKET
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|soreserve
@@ -1686,6 +1710,10 @@ name|siz
 argument_list|,
 name|siz
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|m_freem
@@ -2586,13 +2614,15 @@ operator|)
 literal|0
 expr_stmt|;
 comment|/* 		 * nam == nam2 for connectionless protocols such as UDP 		 * nam2 == NULL for connection based protocols to disable 		 *    recent request caching. 		 */
-if|if
-condition|(
 name|nam2
 operator|=
 name|nd
 operator|->
 name|nd_nam
+expr_stmt|;
+if|if
+condition|(
+name|nam2
 condition|)
 block|{
 name|nam
@@ -3753,13 +3783,15 @@ operator|&=
 operator|~
 name|SLP_ALLFLAGS
 expr_stmt|;
-if|if
-condition|(
 name|fp
 operator|=
 name|slp
 operator|->
 name|ns_fp
+expr_stmt|;
+if|if
+condition|(
+name|fp
 condition|)
 block|{
 name|slp
@@ -4014,8 +4046,6 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|nfs_sigintr
@@ -4028,6 +4058,10 @@ name|rep
 operator|->
 name|r_procp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|nmp
