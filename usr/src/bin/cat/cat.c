@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cat.c	5.14 (Berkeley) %G%"
+literal|"@(#)cat.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,7 +384,7 @@ name|stdin
 expr_stmt|;
 name|filename
 operator|=
-literal|"-"
+literal|"stdin"
 expr_stmt|;
 do|do
 block|{
@@ -849,7 +849,7 @@ argument_list|)
 expr_stmt|;
 name|filename
 operator|=
-literal|"-"
+literal|"stdin"
 expr_stmt|;
 do|do
 block|{
