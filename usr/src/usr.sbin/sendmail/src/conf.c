@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.118 (Berkeley) %G%"
+literal|"@(#)conf.c	8.119 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3090,6 +3090,24 @@ directive|include
 file|<nlist.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IRIX64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|nlist
+value|nlist64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3857,6 +3875,31 @@ argument_list|,
 name|DG_SYS_INFO_LOAD_INFO_TYPE
 argument_list|,
 name|DG_SYS_INFO_LOAD_VERSION_0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|3
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"getla: %d\n"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|load_info
+operator|.
+name|one_minute
+operator|+
+literal|0.5
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
