@@ -60,6 +60,12 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
 end_if
 
 begin_include
@@ -107,6 +113,12 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
 name|u_int
 name|regs
 index|[
@@ -127,6 +139,12 @@ directive|if
 name|defined
 argument_list|(
 name|__i386__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PC98
 argument_list|)
 name|do_cpuid
 argument_list|(
