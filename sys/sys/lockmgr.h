@@ -271,17 +271,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LK_NOPAUSE
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* no spinloop */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LK_TIMELOCK
 value|0x00000100
 end_define
