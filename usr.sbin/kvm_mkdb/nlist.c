@@ -15,26 +15,22 @@ directive|if
 literal|0
 end_if
 
-begin_else
-unit|static char sccsid[] = "from: @(#)nlist.c	8.1 (Berkeley) 6/6/93";
-else|#
-directive|else
-end_else
+begin_endif
+unit|static char sccsid[] = "@(#)from: nlist.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
 literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -723,6 +719,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
