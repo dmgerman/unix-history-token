@@ -5288,7 +5288,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"locks held:\n"
+literal|" locks held:\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5356,7 +5356,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"locks held:\n"
+literal|" locks held:\n"
 argument_list|)
 expr_stmt|;
 block|}
