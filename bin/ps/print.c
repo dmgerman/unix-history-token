@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print.c,v 1.29 1998/06/28 18:19:13 bde Exp $"
+literal|"$Id: print.c,v 1.30 1998/06/28 18:26:18 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2234,12 +2234,15 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*d"
+literal|"%*lu"
 argument_list|,
 name|v
 operator|->
 name|width
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pgtok
 argument_list|(
 name|KI_EPROC
