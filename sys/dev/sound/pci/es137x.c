@@ -3484,11 +3484,14 @@ literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"one b_s_w: 0x%x 0x%x 0x%x\n"
+literal|"one b_s_w: 0x%lx 0x%x 0x%x\n"
 argument_list|,
+name|rman_get_start
+argument_list|(
 name|es
 operator|->
-name|sh
+name|reg
+argument_list|)
 argument_list|,
 name|ES1371_REG_CODEC
 argument_list|,
@@ -3560,11 +3563,14 @@ literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"two b_s_w: 0x%x 0x%x 0x%x\n"
+literal|"two b_s_w: 0x%lx 0x%x 0x%x\n"
 argument_list|,
+name|rman_get_start
+argument_list|(
 name|es
 operator|->
-name|sh
+name|reg
+argument_list|)
 argument_list|,
 name|ES1371_REG_SMPRATE
 argument_list|,
