@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.60 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.61 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1855,8 +1855,79 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  SCO Unix */
+comment|/* **  SCO Unix ** **	This includes two parts -- the first is for SCO Open Server 3.2v4 **	(contributed by Philippe Brand<phb@colombo.telesys-innov.fr>). **	The second is, I believe, for an older version. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SCO_unix_4_2
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_SCO_unix_
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* has setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/unix"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/etc/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
