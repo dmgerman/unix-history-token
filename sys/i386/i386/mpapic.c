@@ -341,15 +341,6 @@ name|svr
 operator|=
 name|temp
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|apic_dump
-argument_list|(
-literal|"apic_initialize()"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
