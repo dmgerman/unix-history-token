@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	4.4	81/04/19	*/
+comment|/*	tty.h	4.5	81/06/11	*/
 end_comment
 
 begin_ifdef
@@ -435,7 +435,7 @@ begin_define
 define|#
 directive|define
 name|TTYHOG
-value|256
+value|255
 end_define
 
 begin_comment
