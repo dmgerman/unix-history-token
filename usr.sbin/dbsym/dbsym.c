@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dbsym.c,v 1.2 1993/09/26 16:40:41 rgrimes Exp $"
+literal|"$Id: dbsym.c,v 1.3 1994/01/19 03:52:25 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_statistics.h>
+file|<vm/pmap.h>
 end_include
 
 begin_include
