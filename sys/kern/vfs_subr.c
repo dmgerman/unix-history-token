@@ -10929,7 +10929,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"tag %s, type %s, usecount %d, writecount %d, refcount %d,"
+literal|"tag %s, type %s\n    "
 argument_list|,
 name|vp
 operator|->
@@ -10941,6 +10941,11 @@ name|vp
 operator|->
 name|v_type
 index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"usecount %d, writecount %d, refcount %d mountedhere %p\n"
 argument_list|,
 name|vp
 operator|->
@@ -10953,6 +10958,10 @@ argument_list|,
 name|vp
 operator|->
 name|v_holdcnt
+argument_list|,
+name|vp
+operator|->
+name|v_mountedhere
 argument_list|)
 expr_stmt|;
 name|buf
@@ -11093,13 +11102,33 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|" flags (%s),"
+literal|"    flags (%s)"
 argument_list|,
 operator|&
 name|buf
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+name|VI_MTX
+argument_list|(
+name|vp
+argument_list|)
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" VI_LOCKed"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n    "
 argument_list|)
 expr_stmt|;
 name|lockmgr_printinfo
