@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)bad144.c	4.5 (Berkeley) 83/06/12"
+literal|"@(#)bad144.c	4.6 (Berkeley) 83/07/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,12 +312,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bad block information at 0x%x in %s:\n"
+literal|"bad block information at sector %d in %s:\n"
 argument_list|,
 name|tell
 argument_list|(
 name|f
 argument_list|)
+operator|/
+literal|512
 argument_list|,
 name|name
 argument_list|)
@@ -550,14 +552,6 @@ if|if
 condition|(
 name|argc
 operator|>
-literal|2
-operator|*
-name|dp
-operator|->
-name|d_nsectors
-operator|||
-name|argc
-operator|>
 literal|126
 condition|)
 block|{
@@ -566,31 +560,9 @@ argument_list|(
 literal|"bad144: too many bad sectors specified\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-literal|2
-operator|*
-name|dp
-operator|->
-name|d_nsectors
-operator|>
-literal|126
-condition|)
 name|printf
 argument_list|(
 literal|"limited to 126 by information format\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"limited to %d (only 2 tracks of sectors)\n"
-argument_list|,
-literal|2
-operator|*
-name|dp
-operator|->
-name|d_nsectors
 argument_list|)
 expr_stmt|;
 name|exit
@@ -839,7 +811,7 @@ name|bt_bad
 init|;
 name|i
 operator|<
-literal|128
+literal|126
 condition|;
 name|i
 operator|++
@@ -1240,8 +1212,6 @@ argument_list|(
 literal|"ioctl"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|read
 argument_list|(
 name|fd
@@ -1251,15 +1221,6 @@ argument_list|,
 name|fp
 operator|->
 name|f_bufsize
-argument_list|)
-operator|!=
-name|fp
-operator|->
-name|f_bufsize
-condition|)
-name|Perror
-argument_list|(
-literal|"read"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1311,6 +1272,13 @@ argument_list|,
 name|blk
 argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"formatting blk %d..."
+argument_list|,
+name|blk
 argument_list|)
 expr_stmt|;
 if|if
@@ -1374,6 +1342,11 @@ condition|)
 name|Perror
 argument_list|(
 literal|"write"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Done..\n"
 argument_list|)
 expr_stmt|;
 block|}
