@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	5.4 (Berkeley) %G%"
+literal|"@(#)query.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -747,6 +747,8 @@ return|return;
 name|printf
 argument_list|(
 literal|"%d bytes from "
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -976,20 +978,12 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|subnet
-operator|!=
-name|net
-operator|)
-operator|&&
-operator|(
-operator|(
 name|lna
 operator|&
 literal|0xff
 operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
 operator|(
 name|np
