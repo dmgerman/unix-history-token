@@ -186,22 +186,22 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|issort
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* do directories in lexicographical order */
+end_comment
+
+begin_decl_stmt
+name|int
 name|isxargs
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* don't permit xargs delimiting chars */
-end_comment
-
-begin_decl_stmt
-name|int
-name|issort
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* travel the file hierarchy lexicographical order */
 end_comment
 
 begin_decl_stmt
@@ -559,7 +559,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: find [-H | -L | -P] [-Xdx] [-f file] [file ...] [expression]\n"
+literal|"usage: find [-H | -L | -P] [-Xdsx] [-f file] [file ...] [expression]\n"
 argument_list|)
 expr_stmt|;
 name|exit
