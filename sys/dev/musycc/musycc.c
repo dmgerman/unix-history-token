@@ -1354,7 +1354,7 @@ argument_list|(
 name|csc
 argument_list|,
 name|PZERO
-operator||
+operator|+
 name|PCATCH
 argument_list|,
 literal|"icard"
@@ -1517,7 +1517,7 @@ argument_list|(
 name|sc
 argument_list|,
 name|PZERO
-operator||
+operator|+
 name|PCATCH
 argument_list|,
 literal|"ds8370"
