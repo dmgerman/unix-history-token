@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.88 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.89 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1134,25 +1134,6 @@ goto|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_expr_stmt
-name|lfs_dump_super
-argument_list|(
-name|fs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Allocate the mount structure, copy the superblock into it. */
 end_comment
@@ -2200,7 +2181,15 @@ name|lfs_segwrite
 argument_list|(
 name|mp
 argument_list|,
-literal|1
+name|SEGM_CKP
+operator||
+operator|(
+name|waitfor
+condition|?
+name|SEGM_SYNC
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
