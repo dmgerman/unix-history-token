@@ -52,6 +52,10 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|_kse_isthreaded
+argument_list|()
+operator|||
 name|curthread
 operator|->
 name|attr
@@ -110,6 +114,10 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|_kse_isthreaded
+argument_list|()
+operator|||
 name|curthread
 operator|->
 name|attr
