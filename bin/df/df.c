@@ -1983,24 +1983,36 @@ name|printf
 argument_list|(
 literal|"%-*s %-*s %*s %*s Capacity"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|mntfrom
 argument_list|,
 literal|"Filesystem"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|total
 argument_list|,
 name|header
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|used
 argument_list|,
 literal|"Used"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|avail
@@ -2052,6 +2064,9 @@ name|printf
 argument_list|(
 literal|" %*s %*s %%iused"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|iused
@@ -2060,6 +2075,9 @@ literal|2
 argument_list|,
 literal|"iused"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|ifree
@@ -2084,6 +2102,9 @@ name|printf
 argument_list|(
 literal|"%-*s"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|mntfrom
@@ -2133,6 +2154,9 @@ name|printf
 argument_list|(
 literal|" %*ld %*ld %*ld"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|total
@@ -2150,6 +2174,9 @@ argument_list|,
 name|blocksize
 argument_list|)
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|used
@@ -2165,6 +2192,9 @@ argument_list|,
 name|blocksize
 argument_list|)
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|avail
@@ -2236,12 +2266,18 @@ name|printf
 argument_list|(
 literal|" %*ld %*ld %4.0f%% "
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|iused
 argument_list|,
 name|used
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|mwp
 operator|->
 name|ifree
