@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Jake Burkholder  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003 David O'Brien.  All rights reserved.  * Copyright (c) 2001 Jake Burkholder  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -2094,7 +2094,7 @@ begin_function_decl
 name|void
 name|elf_print_ehdr
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|)
@@ -2105,7 +2105,7 @@ begin_function_decl
 name|void
 name|elf_print_phdr
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -2120,7 +2120,7 @@ begin_function_decl
 name|void
 name|elf_print_shdr
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -2135,7 +2135,7 @@ begin_function_decl
 name|void
 name|elf_print_symtab
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -2154,7 +2154,7 @@ begin_function_decl
 name|void
 name|elf_print_dynamic
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -2169,7 +2169,7 @@ begin_function_decl
 name|void
 name|elf_print_rel
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -2184,7 +2184,7 @@ begin_function_decl
 name|void
 name|elf_print_rela
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -2199,7 +2199,7 @@ begin_function_decl
 name|void
 name|elf_print_interp
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -2214,7 +2214,7 @@ begin_function_decl
 name|void
 name|elf_print_got
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -2229,7 +2229,7 @@ begin_function_decl
 name|void
 name|elf_print_hash
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -2244,7 +2244,7 @@ begin_function_decl
 name|void
 name|elf_print_note
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -2314,7 +2314,7 @@ decl_stmt|;
 name|u_int
 name|flags
 decl_stmt|;
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 decl_stmt|;
@@ -2679,12 +2679,20 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|e
 operator|+
 name|phoff
 expr_stmt|;
 name|sh
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|e
 operator|+
 name|shoff
@@ -2706,6 +2714,10 @@ argument_list|)
 expr_stmt|;
 name|shstrtab
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|e
 operator|+
 name|offset
@@ -2769,6 +2781,10 @@ literal|0
 condition|)
 name|strtab
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|e
 operator|+
 name|offset
@@ -2788,6 +2804,10 @@ literal|0
 condition|)
 name|dynstr
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|e
 operator|+
 name|offset
@@ -3153,7 +3173,7 @@ begin_function
 name|void
 name|elf_print_ehdr
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|)
@@ -3551,7 +3571,7 @@ begin_function
 name|void
 name|elf_print_phdr
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -3840,7 +3860,7 @@ begin_function
 name|void
 name|elf_print_shdr
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -4177,7 +4197,7 @@ begin_function
 name|void
 name|elf_print_symtab
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -4298,6 +4318,10 @@ control|)
 block|{
 name|st
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|e
 operator|+
 name|offset
@@ -4446,7 +4470,7 @@ begin_function
 name|void
 name|elf_print_dynamic
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -4538,6 +4562,10 @@ control|)
 block|{
 name|d
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|e
 operator|+
 name|offset
@@ -4726,7 +4754,7 @@ begin_function
 name|void
 name|elf_print_rela
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -4810,6 +4838,10 @@ argument_list|)
 expr_stmt|;
 name|v
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|e
 operator|+
 name|offset
@@ -4933,7 +4965,7 @@ begin_function
 name|void
 name|elf_print_rel
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -5117,7 +5149,7 @@ begin_function
 name|void
 name|elf_print_interp
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -5146,6 +5178,10 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|e
 operator|+
 name|offset
@@ -5173,7 +5209,7 @@ begin_function
 name|void
 name|elf_print_got
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -5236,6 +5272,10 @@ argument_list|)
 expr_stmt|;
 name|v
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|e
 operator|+
 name|offset
@@ -5311,7 +5351,7 @@ begin_function
 name|void
 name|elf_print_hash
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -5326,7 +5366,7 @@ begin_function
 name|void
 name|elf_print_note
 parameter_list|(
-name|void
+name|Elf32_Ehdr
 modifier|*
 name|e
 parameter_list|,
@@ -5399,6 +5439,10 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|e
 operator|+
 name|offset
@@ -5418,6 +5462,10 @@ while|while
 condition|(
 name|n
 operator|<
+operator|(
+name|void
+operator|*
+operator|)
 name|e
 operator|+
 name|offset
