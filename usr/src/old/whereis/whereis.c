@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)whereis.c	4.4 (Berkeley) %G%"
+literal|"@(#)whereis.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<whoami.h>
 end_include
 
 begin_decl_stmt
@@ -224,45 +218,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|CORY
-if|if
-condition|(
-name|getuid
-argument_list|()
-operator|==
-literal|0
-condition|)
-name|nice
-argument_list|(
-operator|-
-literal|20
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|(
-name|getuid
-argument_list|()
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0377
-operator|)
-operator|>
-literal|10
-condition|)
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|argc
 operator|--
 operator|,
