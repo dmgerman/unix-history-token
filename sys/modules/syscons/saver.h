@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<i386/include/apm_bios.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/i386/cons.h>
 end_include
 
