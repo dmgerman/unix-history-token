@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fsplit.c	5.4 (Berkeley) %G%"
+literal|"@(#)fsplit.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1279,6 +1279,17 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ptr
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/*  copy to buffer and converting to lower case */
 name|p
 operator|=
