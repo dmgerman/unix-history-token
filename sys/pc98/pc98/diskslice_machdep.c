@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_pc98.h"
+file|"compat_atdisk.h"
 end_include
 
 begin_include
@@ -321,11 +321,13 @@ parameter_list|)
 value|((cyl)*(lp->d_secpercyl))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_ATDISK
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NCOMPAT_ATDISK
+operator|>
+literal|0
+end_if
 
 begin_decl_stmt
 name|int
@@ -333,10 +335,6 @@ name|atcompat_dsinit
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-name|dname
-operator|,
 name|dev_t
 name|dev
 operator|,
@@ -1651,9 +1649,11 @@ goto|goto
 name|done
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|COMPAT_ATDISK
+if|#
+directive|if
+name|NCOMPAT_ATDISK
+operator|>
+literal|0
 comment|/*  	 * Check magic number of 'extended format' for PC-9801. 	 * If no magic, it may be formatted on IBM-PC. 	 */
 if|if
 condition|(
@@ -1751,13 +1751,6 @@ expr_stmt|;
 return|return
 name|atcompat_dsinit
 argument_list|(
-name|devtoname
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|lp
