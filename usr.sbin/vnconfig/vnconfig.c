@@ -1507,7 +1507,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"open"
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
