@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -83,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"collate.h"
 end_include
 
 begin_include
@@ -4457,7 +4457,7 @@ name|void
 operator|)
 name|REQUIRE
 argument_list|(
-name|collate_range_cmp
+name|__collate_range_cmp
 argument_list|(
 name|start
 argument_list|,
@@ -4485,7 +4485,7 @@ control|)
 block|{
 if|if
 condition|(
-name|collate_range_cmp
+name|__collate_range_cmp
 argument_list|(
 name|start
 argument_list|,
@@ -4494,7 +4494,7 @@ argument_list|)
 operator|<=
 literal|0
 operator|&&
-name|collate_range_cmp
+name|__collate_range_cmp
 argument_list|(
 name|i
 argument_list|,
