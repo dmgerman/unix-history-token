@@ -66,17 +66,44 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<curses.h>
-end_include
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<strings.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* defined(unix) */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(unix) */
+end_comment
 
 begin_define
 define|#
@@ -427,7 +454,9 @@ index|[
 literal|200
 index|]
 init|=
+block|{
 literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -926,6 +955,128 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/*  * Construct a control character sequence  * for a special character.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG
+argument_list|)
+end_if
+
+begin_function
+name|char
+modifier|*
+name|uncontrol
+parameter_list|(
+name|c
+parameter_list|)
+specifier|register
+name|int
+name|c
+decl_stmt|;
+block|{
+specifier|static
+name|char
+name|buf
+index|[
+literal|3
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|0x7f
+condition|)
+return|return
+operator|(
+literal|"^?"
+operator|)
+return|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'\377'
+condition|)
+block|{
+return|return
+literal|"-1"
+return|;
+block|}
+if|if
+condition|(
+name|c
+operator|>=
+literal|0x20
+condition|)
+block|{
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+name|c
+expr_stmt|;
+name|buf
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'^'
+expr_stmt|;
+name|buf
+index|[
+literal|1
+index|]
+operator|=
+literal|'@'
+operator|+
+name|c
+expr_stmt|;
+name|buf
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|buf
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(DEBUG) */
+end_comment
 
 begin_escape
 end_escape
@@ -2085,7 +2236,7 @@ name|stderr
 argument_list|,
 literal|"%s"
 argument_list|,
-name|unctrl
+name|uncontrol
 argument_list|(
 operator|*
 name|string
@@ -3319,7 +3470,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|msdos
+name|MSDOS
 argument_list|)
 name|fprintf
 argument_list|(
@@ -3332,7 +3483,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !defined(msdos) */
+comment|/* !defined(MSDOS) */
 name|Return
 argument_list|(
 literal|0
@@ -3495,7 +3646,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|msdos
+name|MSDOS
 argument_list|)
 name|fprintf
 argument_list|(
@@ -3510,7 +3661,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !defined(msdos) */
+comment|/* !defined(MSDOS) */
 name|Return
 argument_list|(
 literal|0
@@ -3678,7 +3829,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|msdos
+name|MSDOS
 argument_list|)
 operator|&&
 operator|(
@@ -3691,7 +3842,7 @@ literal|'\\'
 operator|)
 endif|#
 directive|endif
-endif|defined(msdos)
+comment|/* defined(MSDOS) */
 operator|&&
 operator|(
 name|strncmp
@@ -3738,7 +3889,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|msdos
+name|MSDOS
 argument_list|)
 operator|||
 operator|(
@@ -3749,7 +3900,7 @@ literal|'\\'
 operator|)
 endif|#
 directive|endif
-comment|/* defined(msdos) */
+comment|/* defined(MSDOS) */
 operator|||
 operator|(
 operator|*
@@ -3778,7 +3929,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|msdos
+name|MSDOS
 argument_list|)
 name|fprintf
 argument_list|(
@@ -3797,7 +3948,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !defined(msdos) */
+comment|/* !defined(MSDOS) */
 block|}
 else|else
 block|{
@@ -3882,7 +4033,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|msdos
+name|MSDOS
 argument_list|)
 name|fprintf
 argument_list|(
@@ -3893,7 +4044,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !defined(msdos) */
+comment|/* !defined(MSDOS) */
 name|environPointer
 operator|=
 name|keys3a

@@ -35,14 +35,47 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<curses.h>
+file|<stdio.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<strings.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* defined(unix) */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(unix) */
+end_comment
 
 begin_include
 include|#
@@ -696,6 +729,11 @@ literal|';'
 else|:
 literal|'|'
 decl_stmt|;
+name|char
+modifier|*
+name|uncontrol
+parameter_list|()
+function_decl|;
 name|st1
 operator|=
 name|begin
@@ -1053,7 +1091,7 @@ break|break;
 default|default:
 name|st2
 operator|=
-name|unctrl
+name|uncontrol
 argument_list|(
 name|pchar
 argument_list|)
