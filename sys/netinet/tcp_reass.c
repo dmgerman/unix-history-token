@@ -4592,7 +4592,7 @@ name|th
 operator|->
 name|th_seq
 expr_stmt|;
-comment|/* last rec'vd segment*/
+comment|/* last recv'd segment*/
 name|tp
 operator|->
 name|rcv_lastend
