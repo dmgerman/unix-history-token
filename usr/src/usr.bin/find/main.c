@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,31 +64,23 @@ name|relative
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|newsyntax
-argument_list|(
-argument|argc
-argument_list|,
-argument|argvp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argvp
+parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 modifier|*
 name|argvp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|char
@@ -243,7 +235,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

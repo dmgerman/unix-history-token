@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)oldsyntax.c	5.1 (Berkeley) %G%"
+literal|"@(#)oldsyntax.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,9 +39,7 @@ comment|/*  * oldsyntax --  *	move the path names to the beginning of the argv a
 end_comment
 
 begin_function
-name|char
-modifier|*
-modifier|*
+name|void
 name|oldsyntax
 parameter_list|(
 name|argvp
