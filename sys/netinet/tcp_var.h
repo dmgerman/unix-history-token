@@ -267,6 +267,11 @@ directive|define
 name|TF_LQ_OVERFLOW
 value|0x20000
 comment|/* listen queue overflow */
+define|#
+directive|define
+name|TF_RXWIN0SENT
+value|0x40000
+comment|/* sent a receiver win 0 in response */
 name|int
 name|t_force
 decl_stmt|;

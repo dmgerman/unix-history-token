@@ -765,7 +765,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Indicate whether this ack should be delayed.  */
+comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  *	- delayed acks are enabled and  *	- there is no delayed ack timer in progress and  *	- our last ack wasn't a 0-sized window.  We never want to delay  *	  the ack that opens up a 0-sized window.  */
 end_comment
 
 begin_define
@@ -776,7 +776,7 @@ parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|(tcp_delack_enabled&& !callout_pending(tp->tt_delack))
+value|(tcp_delack_enabled&& !callout_pending(tp->tt_delack)&& \ 	(tp->t_flags& TF_RXWIN0SENT) == 0)
 end_define
 
 begin_function
@@ -3554,6 +3554,8 @@ operator|(
 name|TF_NOPUSH
 operator||
 name|TF_NOOPT
+operator||
+name|TF_NODELAY
 operator|)
 expr_stmt|;
 comment|/* Compute proper scaling value from buffer space */
