@@ -7979,8 +7979,7 @@ name|bp
 operator|->
 name|b_lblkno
 condition|)
-block|{
-name|VOP_BMAP
+name|ufs_bmaparray
 argument_list|(
 name|bp
 operator|->
@@ -7989,8 +7988,6 @@ argument_list|,
 name|bp
 operator|->
 name|b_lblkno
-argument_list|,
-name|NULL
 argument_list|,
 operator|&
 name|bp
@@ -8002,7 +7999,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 name|newindirdep
 operator|->
 name|ir_savebp
