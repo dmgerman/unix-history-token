@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	5.12 (Berkeley) %G%"
+literal|"@(#)rexecd.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,7 +85,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -97,19 +97,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -133,7 +133,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<unistd.h>
 end_include
 
 begin_comment
@@ -1293,7 +1293,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|pwd
 operator|->
