@@ -131,6 +131,10 @@ index|[
 name|NBLIST
 operator|*
 name|BLK
+operator|+
+name|NEV
+operator|*
+name|EVS
 index|]
 decl_stmt|;
 end_decl_stmt
