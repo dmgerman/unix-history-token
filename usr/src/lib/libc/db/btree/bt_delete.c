@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_delete.c	5.7 (Berkeley) %G%"
+literal|"@(#)bt_delete.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -918,7 +918,9 @@ name|index
 operator|=
 name|NEXTINDEX
 argument_list|(
-name|h
+name|e
+operator|->
+name|page
 argument_list|)
 expr_stmt|;
 block|}
