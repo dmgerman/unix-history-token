@@ -47,13 +47,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<curses.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"../general.h"
 end_include
 
 begin_include
@@ -1953,13 +1953,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
+name|outbound
+argument_list|,
 name|outbound
 operator|+
 name|count
-argument_list|,
-name|outbound
 argument_list|,
 name|outnext
 operator|-
@@ -2013,13 +2013,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
+name|inbound
+argument_list|,
 name|inbound
 operator|+
 name|count
-argument_list|,
-name|inbound
 argument_list|,
 name|innext
 operator|-
@@ -2099,9 +2099,11 @@ name|c
 decl_stmt|,
 name|c1
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|Orders
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|Orders

@@ -35,7 +35,9 @@ index|[
 literal|192
 index|]
 init|=
+block|{
 literal|0
+block|}
 decl_stmt|;
 name|int
 name|i

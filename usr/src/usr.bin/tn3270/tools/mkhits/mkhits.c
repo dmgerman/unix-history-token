@@ -9,11 +9,44 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<strings.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* defined(unix) */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(unix) */
+end_comment
 
 begin_include
 include|#
@@ -46,7 +79,7 @@ file|"dohits.h"
 end_include
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -448,6 +481,9 @@ argument_list|(
 literal|"};\n"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
