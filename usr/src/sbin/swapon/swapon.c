@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)swapon.c	4.5 (Berkeley) %G%"
+literal|"@(#)swapon.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,22 +163,8 @@ operator|-
 literal|1
 condition|)
 block|{
-extern|extern errno;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-name|printf
+name|perror
 argument_list|(
-literal|"%s: %s\n"
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
-argument_list|,
 name|fsp
 operator|->
 name|fs_spec
