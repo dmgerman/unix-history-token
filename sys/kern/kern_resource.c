@@ -1661,13 +1661,14 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|sched_class
+argument_list|(
 name|kg
-operator|->
-name|kg_pri_class
-operator|=
+argument_list|,
 name|rtp
 operator|->
 name|type
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

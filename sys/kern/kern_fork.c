@@ -1956,11 +1956,9 @@ expr_stmt|;
 comment|/* 	 * Allow the scheduler to adjust the priority of the child and 	 * parent while we hold the sched_lock. 	 */
 name|sched_fork
 argument_list|(
-name|td
-operator|->
-name|td_ksegrp
+name|p1
 argument_list|,
-name|kg2
+name|p2
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin

@@ -1236,7 +1236,7 @@ block|}
 block|}
 name|sched_clock
 argument_list|(
-name|td
+name|ke
 argument_list|)
 expr_stmt|;
 comment|/* Update resource usage integrals and maximums. */
