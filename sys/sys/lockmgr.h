@@ -18,14 +18,14 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/lock.h>
 end_include
+
+begin_struct_decl
+struct_decl|struct
+name|mtx
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * The general lock structure.  Provides for multiple shared locks,  * upgrading from shared to exclusive, and sleeping until the lock  * can be gained. The simple locks are defined in<machine/param.h>.  */
