@@ -657,6 +657,14 @@ name|int
 name|td_xsig
 decl_stmt|;
 comment|/* (c) Signal for ptrace */
+name|u_long
+name|td_profil_addr
+decl_stmt|;
+comment|/* (k) Temporary addr until AST. */
+name|u_int
+name|td_profil_ticks
+decl_stmt|;
+comment|/* (k) Temporary ticks until AST. */
 define|#
 directive|define
 name|td_endzero
@@ -850,17 +858,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_OWEPREEMPT
-value|0x000200
-end_define
-
-begin_comment
-comment|/* Thread has a pending preemption. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TDF_ASTPENDING
 value|0x000800
 end_define
@@ -889,28 +886,6 @@ end_define
 
 begin_comment
 comment|/* Thread is marked as interrupted. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDF_USTATCLOCK
-value|0x004000
-end_define
-
-begin_comment
-comment|/* Finish user statclock hit at next AST. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDF_OWEUPC
-value|0x008000
-end_define
-
-begin_comment
-comment|/* Owe thread an addupc() call at next AST. */
 end_comment
 
 begin_define
@@ -1069,6 +1044,39 @@ end_define
 
 begin_comment
 comment|/* A scheduler activation based thread. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_OWEPREEMPT
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Thread has a pending preemption. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_OWEUPC
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Owe thread an addupc() call at next AST. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_USTATCLOCK
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Finish user statclock hit at next AST. */
 end_comment
 
 begin_define

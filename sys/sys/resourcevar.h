@@ -108,14 +108,6 @@ name|u_long
 name|pr_scale
 decl_stmt|;
 comment|/* (c + j) PC scaling. */
-name|u_long
-name|pr_addr
-decl_stmt|;
-comment|/* (k) Temporary addr until AST. */
-name|u_int
-name|pr_ticks
-decl_stmt|;
-comment|/* (k) Temporary ticks until AST. */
 block|}
 name|p_prof
 struct|;

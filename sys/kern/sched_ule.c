@@ -5209,11 +5209,14 @@ operator|->
 name|td_flags
 operator|&=
 operator|~
-operator|(
 name|TDF_NEEDRESCHED
-operator||
-name|TDF_OWEPREEMPT
-operator|)
+expr_stmt|;
+name|td
+operator|->
+name|td_pflags
+operator|&=
+operator|~
+name|TDP_OWEPREEMPT
 expr_stmt|;
 comment|/* 	 * If the KSE has been assigned it may be in the process of switching 	 * to the new cpu.  This is the case in sched_bind(). 	 */
 if|if

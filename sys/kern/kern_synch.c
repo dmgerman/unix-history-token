@@ -1140,9 +1140,9 @@ operator|&&
 operator|(
 name|td
 operator|->
-name|td_flags
+name|td_pflags
 operator|&
-name|TDF_OWEPREEMPT
+name|TDP_OWEPREEMPT
 operator|)
 operator|!=
 literal|0
@@ -1181,6 +1181,17 @@ literal|0
 argument_list|,
 operator|(
 literal|"mi_switch: switch must be voluntary or involuntary"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|newtd
+operator|!=
+name|curthread
+argument_list|,
+operator|(
+literal|"mi_switch: preempting back to ourself"
 operator|)
 argument_list|)
 expr_stmt|;

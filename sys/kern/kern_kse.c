@@ -3800,6 +3800,12 @@ name|user
 condition|)
 block|{
 comment|/* Current always do via ast() */
+name|td
+operator|->
+name|td_pflags
+operator||=
+name|TDP_USTATCLOCK
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -3810,11 +3816,7 @@ name|td
 operator|->
 name|td_flags
 operator||=
-operator|(
-name|TDF_USTATCLOCK
-operator||
 name|TDF_ASTPENDING
-operator|)
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -5080,9 +5082,9 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_flags
+name|td_pflags
 operator|&
-name|TDF_USTATCLOCK
+name|TDP_USTATCLOCK
 condition|)
 block|{
 name|thread_update_usr_ticks
@@ -5092,24 +5094,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
-name|td_flags
+name|td_pflags
 operator|&=
 operator|~
-name|TDF_USTATCLOCK
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
+name|TDP_USTATCLOCK
 expr_stmt|;
 block|}
 comment|/* 	 * Check if we should unbind and schedule upcall 	 * after returned from interrupt or etcs, this 	 * is usually true when process is being debugged. 	 */
