@@ -667,6 +667,9 @@ decl_stmt|;
 name|u_int16_t
 name|tport
 decl_stmt|;
+name|u_int32_t
+name|saddr
+decl_stmt|;
 comment|/* 	 * Validate address family. 	 * Sorry, this is INET specific... 	 */
 if|if
 condition|(
@@ -1185,7 +1188,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|procp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1219,13 +1222,9 @@ name|timo
 operator|++
 expr_stmt|;
 else|else
-name|printf
-argument_list|(
-literal|"RPC timeout for server 0x%lx\n"
-argument_list|,
-operator|(
-name|u_long
-operator|)
+block|{
+name|saddr
+operator|=
 name|ntohl
 argument_list|(
 name|sa
@@ -1234,8 +1233,41 @@ name|sin_addr
 operator|.
 name|s_addr
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"RPC timeout for server %d.%d.%d.%d\n"
+argument_list|,
+operator|(
+name|saddr
+operator|>>
+literal|24
+operator|)
+operator|&
+literal|255
+argument_list|,
+operator|(
+name|saddr
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|255
+argument_list|,
+operator|(
+name|saddr
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|255
+argument_list|,
+name|saddr
+operator|&
+literal|255
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Wait for up to timo seconds for a reply. 		 * The socket receive timeout was set to 1 second. 		 */
 name|secs
 operator|=
