@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: popen.c,v 1.4.2.4 1998/02/24 22:18:18 danny Exp $"
+literal|"$Id: popen.c,v 1.4.2.5 1998/05/15 16:09:38 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,37 +524,13 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|pid
-operator|=
-operator|(
-name|strcmp
-argument_list|(
-name|gargv
-index|[
-literal|0
-index|]
-argument_list|,
-name|_PATH_LS
-argument_list|)
-operator|==
-literal|0
-operator|)
-condition|?
-name|fork
-argument_list|()
-else|:
-name|vfork
-argument_list|()
-expr_stmt|;
-else|#
-directive|else
-name|pid
-operator|=
-name|vfork
-argument_list|()
-expr_stmt|;
 endif|#
 directive|endif
+name|pid
+operator|=
+name|fork
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|pid
