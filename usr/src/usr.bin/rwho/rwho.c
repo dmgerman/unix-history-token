@@ -117,6 +117,22 @@ name|RWHODIR
 value|"/usr/spool/rwho"
 end_define
 
+begin_comment
+comment|/*   * this macro should be shared with ruptime.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|down
+parameter_list|(
+name|w
+parameter_list|,
+name|now
+parameter_list|)
+value|((now) - (w)->wd_recvtime> 11 * 60)
+end_define
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -383,15 +399,12 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|now
-operator|-
+name|down
+argument_list|(
 name|w
-operator|->
-name|wd_recvtime
-operator|>
-literal|5
-operator|*
-literal|60
+argument_list|,
+name|now
+argument_list|)
 condition|)
 block|{
 operator|(
@@ -621,6 +634,9 @@ index|[
 literal|22
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
