@@ -895,6 +895,9 @@ decl_stmt|;
 if|if
 condition|(
 name|uid
+operator|&&
+operator|!
+name|debugonly
 condition|)
 block|{
 name|errx
