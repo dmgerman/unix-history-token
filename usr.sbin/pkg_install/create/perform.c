@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.32.2.9 1998/09/08 10:42:41 jkh Exp $"
+literal|"$Id: perform.c,v 1.32.2.10 1998/09/11 07:27:18 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,13 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+name|char
+modifier|*
+name|suf
+decl_stmt|;
+name|int
+name|compress
+decl_stmt|;
 comment|/* Preliminary setup */
 name|sanity_check
 argument_list|()
@@ -227,7 +234,7 @@ name|tail
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* chop suffix off if already specified */
+comment|/* chop suffix off if already specified, remembering if we want to compress  */
 name|len
 operator|=
 name|strlen
@@ -240,7 +247,9 @@ condition|(
 name|len
 operator|>
 literal|4
-operator|&&
+condition|)
+if|if
+condition|(
 operator|!
 name|strcmp
 argument_list|(
@@ -255,6 +264,11 @@ argument_list|,
 literal|".tgz"
 argument_list|)
 condition|)
+block|{
+name|compress
+operator|=
+name|TRUE
+expr_stmt|;
 name|pkg
 index|[
 name|len
@@ -263,6 +277,58 @@ literal|4
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|&
+name|pkg
+index|[
+name|len
+operator|-
+literal|4
+index|]
+argument_list|,
+literal|".tar"
+argument_list|)
+condition|)
+block|{
+name|compress
+operator|=
+name|FALSE
+expr_stmt|;
+name|pkg
+index|[
+name|len
+operator|-
+literal|4
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+else|else
+comment|/* default is to compress packages */
+name|compress
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
+name|compress
+condition|)
+name|suf
+operator|=
+literal|"tgz"
+expr_stmt|;
+else|else
+name|suf
+operator|=
+literal|"tar"
 expr_stmt|;
 comment|/* Stick the dependencies, if any, at the top */
 if|if
@@ -824,7 +890,7 @@ name|home
 argument_list|,
 name|pkg
 argument_list|,
-literal|"tgz"
+name|suf
 argument_list|,
 operator|&
 name|plist
