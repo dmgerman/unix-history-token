@@ -707,6 +707,8 @@ name|cpumask_t
 name|id
 decl_stmt|,
 name|map
+decl_stmt|,
+name|me
 decl_stmt|;
 name|mtx_assert
 argument_list|(
@@ -743,6 +745,13 @@ name|map
 operator|=
 literal|0
 expr_stmt|;
+name|me
+operator|=
+name|PCPU_GET
+argument_list|(
+name|cpumask
+argument_list|)
+expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|pc
@@ -768,10 +777,7 @@ if|if
 condition|(
 name|id
 operator|!=
-name|PCPU_GET
-argument_list|(
-name|cpumask
-argument_list|)
+name|me
 operator|&&
 operator|(
 name|id
