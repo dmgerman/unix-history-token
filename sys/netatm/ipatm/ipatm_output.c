@@ -83,9 +83,6 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 name|ipatm_print
@@ -99,8 +96,6 @@ literal|"ipatm_ifoutput"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * See if we've already got an appropriate VCC 	 */
 name|ivp
 operator|=

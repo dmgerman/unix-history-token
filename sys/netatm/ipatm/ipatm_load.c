@@ -27,6 +27,24 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netatm/kern_include.h>
 end_include
 
@@ -78,14 +96,6 @@ name|int
 name|ipatm_vcidle
 init|=
 name|IPATM_VCIDLE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ipatm_print
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -232,6 +242,61 @@ comment|/* si_maxallow */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * net.harp.ip  */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_harp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ip
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"IPv4 over ATM"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * net.harp.ip.ipatm_print  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ipatm_print
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_harp_ip
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ipatm_print
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ipatm_print
+argument_list|,
+literal|0
+argument_list|,
+literal|"dump IPv4-over-ATM packets"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Local functions  */
