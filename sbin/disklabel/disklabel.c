@@ -2271,8 +2271,9 @@ name|flag
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|f
@@ -2281,13 +2282,6 @@ name|DIOCWLABEL
 argument_list|,
 operator|&
 name|flag
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|warn
-argument_list|(
-literal|"ioctl DIOCWLABEL"
 argument_list|)
 expr_stmt|;
 if|if
