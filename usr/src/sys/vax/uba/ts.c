@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.7	81/03/13	*/
+comment|/*	ts.c	4.8	81/03/21	*/
 end_comment
 
 begin_include
@@ -16,6 +16,19 @@ name|NTS
 operator|>
 literal|0
 end_if
+
+begin_define
+define|#
+directive|define
+name|printd
+value|if(tsdebug)printf
+end_define
+
+begin_decl_stmt
+name|int
+name|tsdebug
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * TS11 tape driver  *  * TODO:  *	test driver with more than one controller  *	test reset code  *	test dump code  *	test rewinds without hanging in driver  *	what happens if you offline tape during rewind?  *	test using file system on tape  */
@@ -197,6 +210,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|buf
+name|tsbuf
+index|[
+name|NTS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|u_short
 name|tsstd
 index|[]
@@ -233,7 +256,7 @@ literal|"ts"
 block|,
 name|tsdinfo
 block|,
-literal|"ts"
+literal|"zs"
 block|,
 name|tsminfo
 block|,
@@ -286,6 +309,10 @@ name|char
 name|sc_lastiow
 decl_stmt|;
 comment|/* last op was a write */
+name|short
+name|sc_resid
+decl_stmt|;
+comment|/* copy of last bc */
 name|daddr_t
 name|sc_blkno
 decl_stmt|;
@@ -294,10 +321,6 @@ name|daddr_t
 name|sc_nxrec
 decl_stmt|;
 comment|/* position of end of tape, if known */
-name|short
-name|sc_resid
-decl_stmt|;
-comment|/* copy of last bc */
 name|struct
 name|ts_cmd
 name|sc_cmd
@@ -633,8 +656,18 @@ name|u_error
 operator|=
 name|ENXIO
 expr_stmt|;
+name|printd
+argument_list|(
+literal|"init failed\n"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|printd
+argument_list|(
+literal|"init ok\n"
+argument_list|)
+expr_stmt|;
 name|tscommand
 argument_list|(
 name|dev
@@ -642,6 +675,17 @@ argument_list|,
 name|TS_SENSE
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|printd
+argument_list|(
+literal|"sense xs0 %o\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_sts
+operator|.
+name|s_xs0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1013,6 +1057,24 @@ operator|.
 name|sc_cmd
 expr_stmt|;
 comment|/* Unibus addr of cmd */
+if|if
+condition|(
+name|i
+operator|&
+literal|3
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"addr mod 4 != 0\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 name|sc
 operator|->
 name|sc_uba
@@ -1081,11 +1143,7 @@ name|TS_ACK
 operator||
 name|TS_SETCHR
 expr_stmt|;
-name|sc
-operator|->
-name|sc_cmd
-operator|.
-name|c_addr
+name|i
 operator|=
 operator|(
 name|int
@@ -1097,6 +1155,28 @@ name|unit
 index|]
 operator|.
 name|sc_char
+expr_stmt|;
+name|sc
+operator|->
+name|sc_cmd
+operator|.
+name|c_loba
+operator|=
+name|i
+expr_stmt|;
+name|sc
+operator|->
+name|sc_cmd
+operator|.
+name|c_hiba
+operator|=
+operator|(
+name|i
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|3
 expr_stmt|;
 name|sc
 operator|->
@@ -1123,6 +1203,20 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+comment|/* 		printd("%o %o %o %o %o %o %o %o\n", addr->tssr, sc->sc_sts.s_sts, sc->sc_sts.s_len, sc->sc_sts.s_rbpcr, sc->sc_sts.s_xs0, sc->sc_sts.s_xs1,sc->sc_sts.s_xs1,sc->sc_sts.s_xs2,sc->sc_sts.s_xs3); */
+if|if
+condition|(
+name|addr
+operator|->
+name|tssr
+operator|&
+name|TS_NBA
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 return|return
 operator|(
@@ -1244,6 +1338,17 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
+name|printd
+argument_list|(
+literal|"command %o dev %x count %d\n"
+argument_list|,
+name|com
+argument_list|,
+name|dev
+argument_list|,
+name|count
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|b_dev
@@ -1346,6 +1451,12 @@ name|uba_ctlr
 modifier|*
 name|um
 decl_stmt|;
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|dp
+decl_stmt|;
 comment|/* 	 * Put transfer at end of controller queue 	 */
 name|bp
 operator|->
@@ -1362,6 +1473,14 @@ index|]
 operator|->
 name|ui_mi
 expr_stmt|;
+name|dp
+operator|=
+operator|&
+name|tsbuf
+index|[
+name|tsunit
+index|]
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1370,40 +1489,46 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|um
+name|dp
 operator|->
-name|um_tab
-operator|.
 name|b_actf
 operator|==
 name|NULL
 condition|)
-name|um
+name|dp
 operator|->
-name|um_tab
-operator|.
 name|b_actf
 operator|=
 name|bp
 expr_stmt|;
 else|else
-name|um
+name|dp
 operator|->
-name|um_tab
-operator|.
 name|b_actl
 operator|->
 name|av_forw
 operator|=
 name|bp
 expr_stmt|;
+name|dp
+operator|->
+name|b_actl
+operator|=
+name|bp
+expr_stmt|;
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_actf
+operator|=
 name|um
 operator|->
 name|um_tab
 operator|.
 name|b_actl
 operator|=
-name|bp
+name|dp
 expr_stmt|;
 comment|/* 	 * If the controller is not busy, get 	 * it going. 	 */
 if|if
@@ -1508,6 +1633,8 @@ name|um
 operator|->
 name|um_tab
 operator|.
+name|b_actf
+operator|->
 name|b_actf
 operator|)
 operator|==
@@ -1620,6 +1747,11 @@ operator|=
 name|bp
 operator|->
 name|b_repcnt
+expr_stmt|;
+name|printd
+argument_list|(
+literal|"strat: do cmd\n"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|dobpcmd
@@ -1797,7 +1929,22 @@ name|TS_ACK
 operator||
 name|TS_CVC
 operator||
+name|TS_IE
+operator||
 name|cmd
+expr_stmt|;
+name|printd
+argument_list|(
+literal|"r/w %o size %d\n"
+argument_list|,
+name|tc
+operator|->
+name|c_cmd
+argument_list|,
+name|tc
+operator|->
+name|c_size
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -1817,6 +1964,17 @@ operator|.
 name|b_active
 operator|=
 name|SSEEK
+expr_stmt|;
+name|printd
+argument_list|(
+literal|"seek blkno %d b_blkno %d\n"
+argument_list|,
+name|blkno
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1883,6 +2041,8 @@ name|TS_ACK
 operator||
 name|TS_CVC
 operator||
+name|TS_IE
+operator||
 name|bp
 operator|->
 name|b_command
@@ -1922,6 +2082,8 @@ name|um
 operator|->
 name|um_tab
 operator|.
+name|b_actf
+operator|->
 name|b_actf
 operator|=
 name|bp
@@ -1987,17 +2149,46 @@ operator|->
 name|um_ctlr
 index|]
 decl_stmt|;
-name|sc
-operator|->
-name|sc_cmd
-operator|.
-name|c_addr
+specifier|register
+name|int
+name|i
+decl_stmt|;
+name|i
 operator|=
 name|um
 operator|->
 name|um_ubinfo
 operator|&
 literal|0777777
+expr_stmt|;
+name|printd
+argument_list|(
+literal|"dgo addr %o\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_cmd
+operator|.
+name|c_loba
+operator|=
+name|i
+expr_stmt|;
+name|sc
+operator|->
+name|sc_cmd
+operator|.
+name|c_hiba
+operator|=
+operator|(
+name|i
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|3
 expr_stmt|;
 name|addr
 operator|->
@@ -2068,6 +2259,11 @@ decl_stmt|;
 specifier|register
 name|state
 expr_stmt|;
+name|printd
+argument_list|(
+literal|"intr\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2077,6 +2273,8 @@ name|um
 operator|->
 name|um_tab
 operator|.
+name|b_actf
+operator|->
 name|b_actf
 operator|)
 operator|==
@@ -2141,6 +2339,11 @@ condition|)
 return|return;
 block|}
 comment|/* 	 * An operation completed... record status 	 */
+name|printd
+argument_list|(
+literal|"  ok1\n"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 operator|&
@@ -2606,6 +2809,8 @@ operator|->
 name|um_tab
 operator|.
 name|b_actf
+operator|->
+name|b_actf
 operator|=
 name|bp
 operator|->
@@ -2626,6 +2831,11 @@ argument_list|(
 name|um
 argument_list|)
 expr_stmt|;
+name|printd
+argument_list|(
+literal|"  iodone\n"
+argument_list|)
+expr_stmt|;
 name|iodone
 argument_list|(
 name|bp
@@ -2637,6 +2847,8 @@ name|um
 operator|->
 name|um_tab
 operator|.
+name|b_actf
+operator|->
 name|b_actf
 operator|==
 literal|0
@@ -3630,22 +3842,11 @@ argument_list|)
 operator|->
 name|uh_physuba
 expr_stmt|;
-if|#
-directive|if
-name|VAX780
-if|if
-condition|(
-name|cpu
-operator|==
-name|VAX_780
-condition|)
 name|ubainit
 argument_list|(
 name|up
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|DELAY
 argument_list|(
 literal|1000000
