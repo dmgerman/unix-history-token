@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: portmap.c,v 1.4.2.3 1998/03/09 13:51:55 jkh Exp $"
+literal|"$Id: portmap.c,v 1.4.2.4 1998/06/04 15:41:32 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
