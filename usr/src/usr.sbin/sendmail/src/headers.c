@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.30 (Berkeley) %G%"
+literal|"@(#)headers.c	6.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3609,7 +3609,6 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
-comment|/* strip off quote bits as we output */
 while|while
 condition|(
 operator|(
@@ -3630,29 +3629,12 @@ index|[
 name|MAXLINE
 index|]
 condition|)
-block|{
-if|if
-condition|(
-name|bitnset
-argument_list|(
-name|M_7BITS
-argument_list|,
-name|m
-operator|->
-name|m_flags
-argument_list|)
-condition|)
-name|c
-operator|&=
-literal|0177
-expr_stmt|;
 operator|*
 name|obp
 operator|++
 operator|=
 name|c
 expr_stmt|;
-block|}
 name|firstone
 operator|=
 name|FALSE
