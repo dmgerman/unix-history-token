@@ -1565,7 +1565,7 @@ block|}
 comment|/* 	 * Set the PIRQD enable bit and switch off all the others. We don't 	 * want legacy support to interfere with us XXX Does this also mean 	 * that the BIOS won't touch the keyboard anymore if it is connected 	 * to the ports of the root hub? 	 */
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|pci_read_config
