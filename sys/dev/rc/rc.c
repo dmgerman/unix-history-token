@@ -242,7 +242,7 @@ name|CALLOUT
 parameter_list|(
 name|dev
 parameter_list|)
-value|(((int)(dev)->si_drv2) != 0)
+value|(((intptr_t)(dev)->si_drv2) != 0)
 end_define
 
 begin_comment
