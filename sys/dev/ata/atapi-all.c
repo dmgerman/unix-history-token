@@ -3488,11 +3488,15 @@ directive|ifdef
 name|ATAPI_DEBUG
 name|ata_printf
 argument_list|(
-name|atp
+name|request
+operator|->
+name|device
 operator|->
 name|controller
 argument_list|,
-name|atp
+name|request
+operator|->
+name|device
 operator|->
 name|unit
 argument_list|,
