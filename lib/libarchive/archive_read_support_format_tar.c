@@ -5490,7 +5490,7 @@ name|tar_atol
 argument_list|(
 name|header
 operator|->
-name|atime
+name|ctime
 argument_list|,
 sizeof|sizeof
 argument_list|(
