@@ -44,6 +44,11 @@ directive|define
 name|UQ_BAD_ADC
 value|0x10
 comment|/* bad audio spec version number. */
+define|#
+directive|define
+name|UQ_SPUR_BUT_UP
+value|0x20
+comment|/* spurious mouse button up events */
 block|}
 struct|;
 end_struct
