@@ -1401,13 +1401,6 @@ name|pdev
 operator|->
 name|si_drv1
 expr_stmt|;
-name|snd_mtxlock
-argument_list|(
-name|m
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|hwvol_mixer
@@ -1490,13 +1483,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|snd_mtxunlock
-argument_list|(
-name|m
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
