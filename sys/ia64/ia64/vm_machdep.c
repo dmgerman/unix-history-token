@@ -268,6 +268,29 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|user
+modifier|*
+name|up
+decl_stmt|;
+name|struct
+name|trapframe
+modifier|*
+name|p2tf
+decl_stmt|;
+name|u_int64_t
+name|bspstore
+decl_stmt|,
+modifier|*
+name|p1bs
+decl_stmt|,
+modifier|*
+name|p2bs
+decl_stmt|,
+name|rnatloc
+decl_stmt|,
+name|rnat
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -355,38 +378,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * create the child's kernel stack, from scratch. 	 */
-block|{
-name|struct
-name|user
-modifier|*
-name|up
-init|=
-name|p2
-operator|->
-name|p_addr
-decl_stmt|;
-name|struct
-name|trapframe
-modifier|*
-name|p2tf
-decl_stmt|;
-name|u_int64_t
-name|bspstore
-decl_stmt|,
-modifier|*
-name|p1bs
-decl_stmt|,
-modifier|*
-name|p2bs
-decl_stmt|,
-name|rnatloc
-decl_stmt|,
-name|rnat
-decl_stmt|;
-comment|/* 		 * Pick a stack pointer, leaving room for a trapframe; 		 * copy trapframe from parent so return to user mode 		 * will be to right address, with correct registers. 		 */
-name|p2tf
-operator|=
+comment|/* 	 * create the child's kernel stack, from scratch. 	 * 	 * Pick a stack pointer, leaving room for a trapframe; 	 * copy trapframe from parent so return to user mode 	 * will be to right address, with correct registers. 	 */
 name|p2
 operator|->
 name|p_frame
@@ -431,7 +423,13 @@ name|trapframe
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Set up return-value registers as fork() libc stub expects. 		 */
+comment|/* 	 * Set up return-value registers as fork() libc stub expects. 	 */
+name|p2tf
+operator|=
+name|p2
+operator|->
+name|p_frame
+expr_stmt|;
 name|p2tf
 operator|->
 name|tf_r
@@ -462,7 +460,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* no error 		*/
-comment|/* 		 * Turn off RSE for a moment and work out our current 		 * ar.bspstore. This assumes that p1==curproc. Also 		 * flush dirty regs to ensure that the user's stacked 		 * regs are written out to backing store. 		 * 		 * We could cope with p1!=curproc by digging values 		 * out of its PCB but I don't see the point since 		 * current usage never allows it. 		 */
+comment|/* 	 * Turn off RSE for a moment and work out our current 	 * ar.bspstore. This assumes that p1==curproc. Also 	 * flush dirty regs to ensure that the user's stacked 	 * regs are written out to backing store. 	 * 	 * We could cope with p1!=curproc by digging values 	 * out of its PCB but I don't see the point since 	 * current usage never allows it. 	 */
 asm|__asm __volatile("mov ar.rsc=0;;");
 asm|__asm __volatile("flushrs;;" ::: "memory");
 asm|__asm __volatile("mov %0=ar.bspstore" : "=r"(bspstore));
@@ -494,7 +492,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/* 		 * Copy enough of p1's backing store to include all 		 * the user's stacked regs. 		 */
+comment|/* 	 * Copy enough of p1's backing store to include all 	 * the user's stacked regs. 	 */
 name|bcopy
 argument_list|(
 name|p1bs
@@ -508,7 +506,7 @@ operator|->
 name|tf_ndirty
 argument_list|)
 expr_stmt|;
-comment|/* 		 * To calculate the ar.rnat for p2, we need to decide 		 * if p1's ar.bspstore has advanced past the place 		 * where the last ar.rnat which covers the user's 		 * saved registers would be placed. If so, we read 		 * that one from memory, otherwise we take p1's 		 * current ar.rnat. 		 */
+comment|/* 	 * To calculate the ar.rnat for p2, we need to decide 	 * if p1's ar.bspstore has advanced past the place 	 * where the last ar.rnat which covers the user's 	 * saved registers would be placed. If so, we read 	 * that one from memory, otherwise we take p1's 	 * current ar.rnat. 	 */
 name|rnatloc
 operator|=
 operator|(
@@ -543,9 +541,15 @@ name|rnatloc
 expr_stmt|;
 else|else
 asm|__asm __volatile("mov %0=ar.rnat;;" : "=r"(rnat));
-comment|/* 		 * Switch the RSE back on. 		 */
+comment|/* 	 * Switch the RSE back on. 	 */
 asm|__asm __volatile("mov ar.rsc=3;;");
-comment|/* 		 * Setup the child's pcb so that its ar.bspstore 		 * starts just above the region which we copied. This 		 * should work since the child will normally return 		 * straight into exception_restore. 		 */
+comment|/* 	 * Setup the child's pcb so that its ar.bspstore 	 * starts just above the region which we copied. This 	 * should work since the child will normally return 	 * straight into exception_restore. 	 */
+name|up
+operator|=
+name|p2
+operator|->
+name|p_addr
+expr_stmt|;
 name|up
 operator|->
 name|u_pcb
@@ -579,7 +583,7 @@ name|pcb_pfs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Arrange for continuation at fork_return(), which 		 * will return to exception_restore().  Note that the 		 * child process doesn't stay in the kernel for long! 		 */
+comment|/* 	 * Arrange for continuation at fork_return(), which 	 * will return to exception_restore().  Note that the 	 * child process doesn't stay in the kernel for long! 	 */
 name|up
 operator|->
 name|u_pcb
@@ -637,7 +641,6 @@ argument_list|(
 name|fork_trampoline
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
