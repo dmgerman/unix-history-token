@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -76,11 +76,11 @@ name|f_flags
 decl_stmt|;
 comment|/* copy of mount flags */
 name|long
-name|f_fsize
+name|f_bsize
 decl_stmt|;
 comment|/* fundamental file system block size */
 name|long
-name|f_bsize
+name|f_iosize
 decl_stmt|;
 comment|/* optimal transfer block size */
 name|long
