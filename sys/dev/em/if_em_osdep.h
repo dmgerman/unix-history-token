@@ -109,6 +109,31 @@ directive|include
 file|<machine/clock.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|502000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -120,6 +145,11 @@ include|#
 directive|include
 file|<pci/pcireg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
