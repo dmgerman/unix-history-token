@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*  * Hacks to support "-a|c|n" flags on the command line which enable VJ  * header compresion and disable ICMP.  * If this is good all rights go to B& L Jolitz, otherwise send your  * comments to Reagan (/dev/null).  *  * nerd@percival.rain.com (Michael Galassi) 92.09.03  *  * Hacked to change from sgtty to POSIX termio style serial line control  * and added flag to enable cts/rts style flow control.  *  * blymn@awadi.com.au (Brett Lymn) 93.04.04  *  * Put slattach in it's own process group so it can't be killed  * accidentally. Close the connection on SIGHUP and SIGINT. Write a  * syslog entry upon opening and closing the connection.  Rich Murphey  * and Brad Huntting.  *  * Add '-r command' option: runs 'command' upon recieving SIGHUP  * resulting from loss of carrier.  Log any errors after forking.  * Rich 8/13/93  *  * This version of slattach includes many changes by David Greenman, Brian  * Smith, Chris Bradley, and me (Michael Galassi).  None of them are  * represented as functional anywhere outside of RAINet though they do work  * for us.  Documentation is limited to the usage message for now.  If you  * make improovments please pass them back.  *  * Added '-u UCMD' which runs 'UCMD<old><new>' whenever the slip  * unit number changes where<old> and<new> are the old and new unit  * numbers, respectively.  Also added the '-z' option which forces  * invocation of the redial command (-r CMD) upon startup regardless  * of whether the com driver claims (sometimes mistakenly) that  * carrier is present. Also added '-e ECMD' which runs ECMD before  * exiting.  *  * marc@escargot.rain.com (Marc Frajola) 93/09/10  *  * Minor fixes to allow passive SLIP links to work (connections with  * modem control that do not have an associated dial command). Added  * code to re-check for carrier after dial command has been executed.  * Added SIGTERM handler to properly handle normal kill signals. Fixed  * bug in logic that caused message about no -u command to be logged  * even when -u was specified and the sl number changes. Tried to get  * rid of redundant syslog()'s to minimize console log output. Improved  * logging of improper command line options or number of command  * arguments. Removed spurious newline characters from syslog() calls.  */
+comment|/*  * Hacks to support "-a|c|n" flags on the command line which enable VJ  * header compresion and disable ICMP.  * If this is good all rights go to B& L Jolitz, otherwise send your  * comments to Reagan (/dev/null).  *  * nerd@percival.rain.com (Michael Galassi) 92.09.03  *  * Hacked to change from sgtty to POSIX termio style serial line control  * and added flag to enable cts/rts style flow control.  *  * blymn@awadi.com.au (Brett Lymn) 93.04.04  *  * Put slattach in it's own process group so it can't be killed  * accidentally. Close the connection on SIGHUP and SIGINT. Write a  * syslog entry upon opening and closing the connection.  Rich Murphey  * and Brad Huntting.  *  * Add '-r command' option: runs 'command' upon recieving SIGHUP  * resulting from loss of carrier.  Log any errors after forking.  * Rich 8/13/93  *  * This version of slattach includes many changes by David Greenman, Brian  * Smith, Chris Bradley, and me (Michael Galassi).  None of them are  * represented as functional anywhere outside of RAINet though they do work  * for us.  Documentation is limited to the usage message for now.  If you  * make improovments please pass them back.  *  * Added '-u UCMD' which runs 'UCMD<old><new>' whenever the slip  * unit number changes where<old> and<new> are the old and new unit  * numbers, respectively.  Also added the '-z' option which forces  * invocation of the redial command (-r CMD) upon startup regardless  * of whether the com driver claims (sometimes mistakenly) that  * carrier is present. Also added '-e ECMD' which runs ECMD before  * exiting.  *  * marc@escargot.rain.com (Marc Frajola) 93/09/10  *  * Minor fixes to allow passive SLIP links to work (connections with  * modem control that do not have an associated dial command). Added  * code to re-check for carrier after dial command has been executed.  * Added SIGTERM handler to properly handle normal kill signals. Fixed  * bug in logic that caused message about no -u command to be logged  * even when -u was specified and the sl number changes. Tried to get  * rid of redundant syslog()'s to minimize console log output. Improved  * logging of improper command line options or number of command  * arguments. Removed spurious newline characters from syslog() calls.  *  * gjung@gjbsd.franken.de  *  * sighup_handler changed to set CLOCAL before running redial_cmd.  * added flag exiting, so exit_handler is not run twice.  *  */
 end_comment
 
 begin_ifndef
@@ -374,9 +374,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|exiting
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* allready running exit_handler */
+end_comment
+
+begin_decl_stmt
 name|FILE
 modifier|*
 name|console
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|termios
+name|tty
 decl_stmt|;
 end_decl_stmt
 
@@ -1064,10 +1083,6 @@ name|void
 name|setup_line
 parameter_list|()
 block|{
-name|struct
-name|termios
-name|tty
-decl_stmt|;
 name|tty
 operator|.
 name|c_lflag
@@ -1397,6 +1412,11 @@ name|void
 name|sighup_handler
 parameter_list|()
 block|{
+if|if
+condition|(
+name|exiting
+condition|)
+return|return;
 name|again
 label|:
 comment|/* reset discipline */
@@ -1447,6 +1467,51 @@ argument_list|,
 name|redial_cmd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|modem_control
+operator|&
+name|CLOCAL
+operator|)
+condition|)
+block|{
+name|tty
+operator|.
+name|c_cflag
+operator||=
+name|CLOCAL
+expr_stmt|;
+if|if
+condition|(
+name|tcsetattr
+argument_list|(
+name|fd
+argument_list|,
+name|TCSAFLUSH
+argument_list|,
+operator|&
+name|tty
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"tcsetattr(TCSAFLUSH): %m"
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|system
 argument_list|(
 name|redial_cmd
@@ -1463,6 +1528,41 @@ name|CLOCAL
 operator|)
 condition|)
 block|{
+name|tty
+operator|.
+name|c_cflag
+operator|&=
+operator|~
+name|CLOCAL
+expr_stmt|;
+if|if
+condition|(
+name|tcsetattr
+argument_list|(
+name|fd
+argument_list|,
+name|TCSAFLUSH
+argument_list|,
+operator|&
+name|tty
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"tcsetattr(TCSAFLUSH): %m"
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|ioctl
 argument_list|(
 name|fd
@@ -1588,6 +1688,11 @@ name|void
 name|sigint_handler
 parameter_list|()
 block|{
+if|if
+condition|(
+name|exiting
+condition|)
+return|return;
 name|syslog
 argument_list|(
 name|LOG_NOTICE
@@ -1616,6 +1721,11 @@ name|void
 name|sigterm_handler
 parameter_list|()
 block|{
+if|if
+condition|(
+name|exiting
+condition|)
+return|return;
 name|syslog
 argument_list|(
 name|LOG_NOTICE
@@ -1647,6 +1757,15 @@ name|int
 name|ret
 parameter_list|)
 block|{
+if|if
+condition|(
+name|exiting
+condition|)
+return|return;
+name|exiting
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * First close the slip line in case exit_cmd wants it (like to hang 	 * up a modem or something). 	 */
 if|if
 condition|(
