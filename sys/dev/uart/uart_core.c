@@ -29,12 +29,6 @@ directive|include
 file|"opt_comconsole.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_ddb.h"
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -80,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -140,12 +140,6 @@ begin_include
 include|#
 directive|include
 file|<machine/stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
 end_include
 
 begin_include
@@ -260,7 +254,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DDB
+name|KDB
 argument_list|)
 operator|&&
 name|defined
@@ -284,8 +278,10 @@ operator|==
 name|UART_DEV_CONSOLE
 condition|)
 block|{
-name|breakpoint
-argument_list|()
+name|kdb_enter
+argument_list|(
+literal|"Line break on console"
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -411,7 +407,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DDB
+name|KDB
 argument_list|)
 operator|&&
 name|defined
@@ -446,7 +442,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|db_alt_break
+name|kdb_alt_break
 argument_list|(
 name|sc
 operator|->
@@ -462,8 +458,10 @@ operator|->
 name|sc_altbrk
 argument_list|)
 condition|)
-name|breakpoint
-argument_list|()
+name|kdb_enter
+argument_list|(
+literal|"Break sequence on console"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
