@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nl.c 1.9 %G%"
+literal|"@(#)nl.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,7 +198,7 @@ block|{
 operator|-
 literal|128L
 block|,
-literal|128L
+literal|127L
 block|,
 operator|-
 literal|32768L
