@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine clears the window.  *  * %G% (Berkeley) @(#)clear.c	1.1  */
+comment|/*  *	This routine clears the window.  *  * @(#)clear.c	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_macro
@@ -26,51 +26,6 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|win
-operator|==
-name|curscr
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|fprintf
-argument_list|(
-name|outf
-argument_list|,
-literal|"WCLEAR: win == curscr\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|outf
-argument_list|,
-literal|"WCLEAR: curscr = %d\n"
-argument_list|,
-name|curscr
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|outf
-argument_list|,
-literal|"WCLEAR: stdscr = %d\n"
-argument_list|,
-name|stdscr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|clear
-argument_list|()
-expr_stmt|;
-return|return
-name|refresh
-argument_list|()
-return|;
-block|}
 name|werase
 argument_list|(
 name|win
