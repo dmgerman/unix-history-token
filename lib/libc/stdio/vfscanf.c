@@ -631,6 +631,14 @@ name|size_t
 name|nconv
 decl_stmt|;
 comment|/* length of multibyte sequence converted */
+specifier|static
+specifier|const
+name|mbstate_t
+name|initial
+decl_stmt|;
+name|mbstate_t
+name|mbs
+decl_stmt|;
 comment|/* `basefix' is used to avoid `if' tests in the integer scanner */
 specifier|static
 name|short
@@ -1539,6 +1547,10 @@ operator|->
 name|_r
 operator|--
 expr_stmt|;
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 name|nconv
 operator|=
 name|mbrtowc
@@ -1549,7 +1561,8 @@ name|buf
 argument_list|,
 name|n
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 expr_stmt|;
 if|if
@@ -1929,6 +1942,10 @@ operator|->
 name|_r
 operator|--
 expr_stmt|;
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 name|nconv
 operator|=
 name|mbrtowc
@@ -1939,7 +1956,8 @@ name|buf
 argument_list|,
 name|n
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 expr_stmt|;
 if|if
@@ -2440,6 +2458,10 @@ operator|->
 name|_r
 operator|--
 expr_stmt|;
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 name|nconv
 operator|=
 name|mbrtowc
@@ -2450,7 +2472,8 @@ name|buf
 argument_list|,
 name|n
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 expr_stmt|;
 if|if

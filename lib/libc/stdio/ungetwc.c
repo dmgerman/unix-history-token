@@ -81,6 +81,14 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|mbstate_t
+name|initial
+decl_stmt|;
+name|mbstate_t
+name|mbs
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -101,6 +109,10 @@ operator|(
 name|WEOF
 operator|)
 return|;
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -112,7 +124,8 @@ name|buf
 argument_list|,
 name|wc
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 operator|)
 operator|==

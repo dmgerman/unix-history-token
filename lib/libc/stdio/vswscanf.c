@@ -157,6 +157,14 @@ name|va_list
 name|ap
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|mbstate_t
+name|initial
+decl_stmt|;
+name|mbstate_t
+name|mbs
+decl_stmt|;
 name|FILE
 name|f
 decl_stmt|;
@@ -200,6 +208,10 @@ operator|(
 name|EOF
 operator|)
 return|;
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -214,7 +226,8 @@ name|str
 argument_list|,
 name|SIZE_T_MAX
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 operator|)
 operator|==

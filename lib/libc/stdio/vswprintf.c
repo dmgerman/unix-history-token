@@ -85,6 +85,14 @@ name|__va_list
 name|ap
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|mbstate_t
+name|initial
+decl_stmt|;
+name|mbstate_t
+name|mbs
+decl_stmt|;
 name|FILE
 name|f
 decl_stmt|;
@@ -263,6 +271,10 @@ operator|.
 name|_base
 expr_stmt|;
 comment|/* 	 * XXX Undo the conversion from wide characters to multibyte that 	 * fputwc() did in __vfwprintf(). 	 */
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 if|if
 condition|(
 name|mbsrtowcs
@@ -280,7 +292,8 @@ name|mbp
 argument_list|,
 name|n
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 operator|==
 operator|(

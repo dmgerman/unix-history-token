@@ -625,6 +625,14 @@ name|MB_LEN_MAX
 index|]
 decl_stmt|;
 comment|/* temporary mb. character buffer */
+specifier|static
+specifier|const
+name|mbstate_t
+name|initial
+decl_stmt|;
+name|mbstate_t
+name|mbs
+decl_stmt|;
 comment|/* `basefix' is used to avoid `if' tests in the integer scanner */
 specifier|static
 name|short
@@ -1589,6 +1597,10 @@ name|n
 operator|=
 literal|0
 expr_stmt|;
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 while|while
 condition|(
 name|width
@@ -1629,7 +1641,8 @@ name|mbp
 argument_list|,
 name|wi
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 expr_stmt|;
 if|if
@@ -1656,7 +1669,8 @@ name|mbbuf
 argument_list|,
 name|wi
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 expr_stmt|;
 if|if
@@ -1960,6 +1974,10 @@ name|n
 operator|=
 literal|0
 expr_stmt|;
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2005,7 +2023,8 @@ name|mbp
 argument_list|,
 name|wi
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 expr_stmt|;
 if|if
@@ -2032,7 +2051,8 @@ name|mbbuf
 argument_list|,
 name|wi
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 expr_stmt|;
 if|if
@@ -2311,6 +2331,10 @@ name|char
 operator|*
 argument_list|)
 expr_stmt|;
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2357,7 +2381,8 @@ name|mbp
 argument_list|,
 name|wi
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 expr_stmt|;
 if|if
@@ -2384,7 +2409,8 @@ name|mbbuf
 argument_list|,
 name|wi
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 expr_stmt|;
 if|if

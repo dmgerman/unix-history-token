@@ -187,6 +187,14 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|mbstate_t
+name|initial
+decl_stmt|;
+name|mbstate_t
+name|mbs
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -253,6 +261,10 @@ name|char
 operator|)
 name|c
 expr_stmt|;
+name|mbs
+operator|=
+name|initial
+expr_stmt|;
 name|nconv
 operator|=
 name|mbrtowc
@@ -264,7 +276,8 @@ name|buf
 argument_list|,
 name|n
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 expr_stmt|;
 if|if
