@@ -2563,6 +2563,35 @@ begin_comment
 comment|/*  * Write, release buffer on completion.  (Done by iodone  * if async).  Do not bother writing anything if the buffer  * is invalid.  *  * Note that we set B_CACHE here, indicating that buffer is  * fully valid and thus cacheable.  This is true even of NFS  * now so we set it generally.  This could be set either here   * or in biodone() since the I/O is synchronous.  We put it  * here.  */
 end_comment
 
+begin_decl_stmt
+name|int
+name|dobkgrdwrite
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dobkgrdwrite
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|dobkgrdwrite
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|bwrite
@@ -2706,6 +2735,8 @@ expr_stmt|;
 comment|/* 	 * If this buffer is marked for background writing and we 	 * do not have to wait for it, make a copy and write the 	 * copy so as to leave this buffer ready for further use. 	 * 	 * This optimization eats a lot of memory.  If we have a page 	 * or buffer shortfall we can't do it. 	 */
 if|if
 condition|(
+name|dobkgrdwrite
+operator|&&
 operator|(
 name|bp
 operator|->
