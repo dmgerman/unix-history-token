@@ -3693,13 +3693,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|NETGRAPH
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_bpf
-condition|)
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -5406,7 +5400,7 @@ comment|/* copy from DPRAM */
 ifndef|#
 directive|ifndef
 name|NETGRAPH
-argument|if (ifp->if_bpf) 				bpf_mtap(ifp, m);
+argument|BPF_MTAP(ifp, m);
 if|#
 directive|if
 name|BUGGY

@@ -1810,13 +1810,7 @@ literal|0
 condition|)
 return|return;
 comment|/* 	 * If bpf is listening on this interface, let it 	 * see the packet before we commit it to the wire 	 * 	 * (can't give the copy in A2060 card RAM to bpf, because 	 * that RAM is just accessed as on every other byte) 	 */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_bpf
-condition|)
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,

@@ -1561,7 +1561,11 @@ name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|,
-name|ETHER_BPF_SUPPORTED
+name|sc
+operator|->
+name|sc_arpcom
+operator|.
+name|ac_enaddr
 argument_list|)
 expr_stmt|;
 if|#
@@ -7411,17 +7415,6 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/* We're already off by two */
-name|eh
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr
@@ -7444,23 +7437,15 @@ name|len
 operator|-
 name|ETHER_CRC_LEN
 expr_stmt|;
-name|m_adj
-argument_list|(
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Pass it on. */
-name|ether_input
+call|(
+modifier|*
+name|ifp
+operator|->
+name|if_input
+call|)
 argument_list|(
 name|ifp
-argument_list|,
-name|eh
 argument_list|,
 name|m
 argument_list|)
@@ -9288,6 +9273,7 @@ name|error
 operator|=
 name|ENOTTY
 expr_stmt|;
+comment|/* XXX EINVAL??? */
 break|break;
 block|}
 comment|/* Try to get things going again */

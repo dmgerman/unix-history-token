@@ -139,13 +139,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|ETHER_ALIGN
-value|2
-end_define
-
 begin_comment
 comment|/* CSR_WRITE_8 assumes the register is in low/high order */
 end_comment

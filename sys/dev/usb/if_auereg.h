@@ -1089,13 +1089,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ETHER_ALIGN
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|AUE_BUFSZ
 value|1536
 end_define

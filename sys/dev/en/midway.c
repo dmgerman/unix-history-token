@@ -693,18 +693,6 @@ parameter_list|)
 value|bpfattach((ifp), (dlt), (hlen))
 end_define
 
-begin_define
-define|#
-directive|define
-name|BPF_MTAP
-parameter_list|(
-name|ifp
-parameter_list|,
-name|m
-parameter_list|)
-value|bpf_mtap((ifp), (m))
-end_define
-
 begin_else
 else|#
 directive|else

@@ -1290,8 +1290,6 @@ operator|->
 name|arpcom
 operator|.
 name|ac_if
-argument_list|,
-name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 name|splx

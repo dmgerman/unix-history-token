@@ -1185,15 +1185,7 @@ name|if_ibytes
 operator|+=
 name|len
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|ic_if
-operator|.
-name|if_bpf
-condition|)
-name|bpf_tap
+name|BPF_TAP
 argument_list|(
 operator|&
 name|sc
@@ -1634,7 +1626,7 @@ operator|=
 operator|&
 name|m0
 expr_stmt|;
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,

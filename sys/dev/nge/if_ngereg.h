@@ -3487,13 +3487,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ETHER_ALIGN
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|NGE_RXLEN
 value|1536
 end_define

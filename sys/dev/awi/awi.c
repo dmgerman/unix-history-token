@@ -1182,7 +1182,7 @@ name|m
 parameter_list|,
 name|raw
 parameter_list|)
-value|do {					\ 	if ((sc)->sc_ifp->if_bpf&& (sc)->sc_rawbpf == (raw))		\ 		bpf_mtap((sc)->sc_ifp, (m));				\ } while (0);
+value|do {					\ 	if ((sc)->sc_rawbpf == (raw))					\ 		BPF_MTAP((sc)->sc_ifp, (m));				\ } while (0);
 end_define
 
 begin_else
@@ -1275,6 +1275,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500043
+end_if
+
 begin_comment
 comment|/* NetBSD compatible functions  */
 end_comment
@@ -1327,6 +1335,11 @@ name|strbuf
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1642,7 +1655,11 @@ name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|,
-name|ETHER_BPF_SUPPORTED
+name|sc
+operator|->
+name|sc_mib_addr
+operator|.
+name|aMAC_Address
 argument_list|)
 expr_stmt|;
 else|#
@@ -7202,16 +7219,6 @@ name|ieee80211_frame
 modifier|*
 name|wh
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__NetBSD__
-name|struct
-name|ether_header
-modifier|*
-name|eh
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* trim CRC here for WEP can find its own CRC at the end of packet. */
 name|m_adj
 argument_list|(
@@ -7538,9 +7545,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__NetBSD__
 call|(
 modifier|*
 name|ifp
@@ -7553,41 +7557,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|eh
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-expr_stmt|;
-name|m_adj
-argument_list|(
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|eh
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ether_input
-argument_list|(
-name|ifp
-argument_list|,
-name|eh
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|IEEE80211_FC0_TYPE_MGT

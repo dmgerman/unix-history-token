@@ -1857,7 +1857,7 @@ operator|)
 operator|&
 name|af
 expr_stmt|;
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,

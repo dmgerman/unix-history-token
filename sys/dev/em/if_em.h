@@ -420,12 +420,23 @@ name|PCI_ANY_ID
 value|(~0U)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHER_ALIGN
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ETHER_ALIGN
 value|2
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
