@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ex.c	6.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ex.c	6.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -400,7 +400,7 @@ modifier|*
 name|xs_x2hnext
 decl_stmt|;
 comment|/* host pointer to reply queue */
-name|u_long
+name|int
 name|xs_ubaddr
 decl_stmt|;
 comment|/* map info for structs below */
@@ -460,7 +460,7 @@ name|INCORE_BASE
 parameter_list|(
 name|p
 parameter_list|)
-value|(((u_long)(&(p)->xs_h2xhdr))& 0xFFFFFFF0)
+value|((caddr_t)((u_long)(&(p)->xs_h2xhdr)& 0xFFFFFFF0))
 define|#
 directive|define
 name|RVAL_OFF
@@ -470,7 +470,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|((u_long)(&(ex_softc[unit].n)) - INCORE_BASE(&ex_softc[unit]))
+value|((caddr_t)(&(ex_softc[unit].n)) - INCORE_BASE(&ex_softc[unit]))
 define|#
 directive|define
 name|LVAL_OFF
@@ -480,7 +480,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|((u_long)(ex_softc[unit].n) - INCORE_BASE(&ex_softc[unit]))
+value|((caddr_t)(ex_softc[unit].n) - INCORE_BASE(&ex_softc[unit]))
 define|#
 directive|define
 name|H2XHDR_OFFSET
@@ -713,6 +713,11 @@ name|lint
 name|br
 operator|=
 name|br
+expr_stmt|;
+name|excdint
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1514,6 +1519,10 @@ name|EX_SETADDR
 condition|)
 name|ex_setaddr
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|unit
@@ -4875,10 +4884,16 @@ name|PHYSSLOT
 expr_stmt|;
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|xs
 operator|->
 name|xs_addr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|bp
 operator|->
 name|mb_na

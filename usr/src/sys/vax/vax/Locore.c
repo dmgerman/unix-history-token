@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"nexus.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ioa.h"
 end_include
 
 begin_include
@@ -910,6 +916,21 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|pte
+name|Ioamap
+index|[
+name|MAXNIOA
+index|]
+index|[
+name|IOAMAPSIZ
+operator|/
+name|NBPG
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pte
 name|UMEMmap
 index|[
 name|NUBA
@@ -1679,6 +1700,12 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -1705,6 +1732,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -2407,15 +2439,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|cp
+name|int
+name|size
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|size
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 end_decl_stmt
 
@@ -2557,6 +2589,12 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_macro
 name|imin
 argument_list|(
@@ -2678,6 +2716,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|ntohs

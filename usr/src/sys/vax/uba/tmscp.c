@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	5.3 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	5.4 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -2612,64 +2612,19 @@ operator|.
 name|ca_bdp
 condition|)
 block|{
-comment|/* 		 * THIS IS A KLUDGE. 		 * Maybe we should change the entire 		 * UBA interface structure. 		 */
-name|int
-name|s
-init|=
-name|spl6
-argument_list|()
-decl_stmt|;
-name|i
-operator|=
+name|UBAPURGE
+argument_list|(
 name|um
 operator|->
-name|um_ubinfo
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printd
-argument_list|(
-literal|"tmscp: purge bdp %d\n"
+name|um_hd
+operator|->
+name|uh_uba
 argument_list|,
 name|tm
 operator|->
 name|tmscp_ca
 operator|.
 name|ca_bdp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|um
-operator|->
-name|um_ubinfo
-operator|=
-name|tm
-operator|->
-name|tmscp_ca
-operator|.
-name|ca_bdp
-operator|<<
-literal|28
-expr_stmt|;
-name|ubapurge
-argument_list|(
-name|um
-argument_list|)
-expr_stmt|;
-name|um
-operator|->
-name|um_ubinfo
-operator|=
-name|i
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|tm
@@ -2802,6 +2757,9 @@ name|tmscp_cp_wait
 condition|)
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|tmscp_cp_wait
 argument_list|)
@@ -3165,6 +3123,9 @@ operator|++
 expr_stmt|;
 name|sleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|tmscp_cp_wait
 argument_list|,
@@ -4522,6 +4483,9 @@ operator|->
 name|sc_state
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tmscpinit
 argument_list|(
 name|um
@@ -5659,6 +5623,9 @@ operator|&
 literal|0xffff
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tmscpinit
 argument_list|(
 name|um
@@ -6356,7 +6323,6 @@ name|wakeup
 argument_list|(
 operator|(
 name|caddr_t
-operator|*
 operator|)
 name|mp
 operator|->
@@ -9512,6 +9478,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|tmscpinit
 argument_list|(
 name|d

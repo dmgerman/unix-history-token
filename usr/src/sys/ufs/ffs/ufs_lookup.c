@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_lookup.c	6.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_lookup.c	6.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3088,6 +3088,9 @@ name|dp
 operator|->
 name|i_size
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|,
 literal|1
@@ -4138,10 +4141,6 @@ name|blkatoff
 argument_list|(
 name|dp
 argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
 name|ndp
 operator|->
 name|ni_offset
@@ -4149,7 +4148,6 @@ operator|-
 name|ndp
 operator|->
 name|ni_count
-argument_list|)
 argument_list|,
 operator|(
 name|char

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_var.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_var.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -102,7 +102,6 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|in_ifaddr
 modifier|*
@@ -111,7 +110,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|struct
 name|in_ifaddr
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_syscalls.c	6.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_syscalls.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1593,6 +1593,9 @@ literal|0
 expr_stmt|;
 name|free2
 label|:
+operator|(
+name|void
+operator|)
 name|soclose
 argument_list|(
 name|so2
@@ -1600,6 +1603,9 @@ argument_list|)
 expr_stmt|;
 name|free
 label|:
+operator|(
+name|void
+operator|)
 name|soclose
 argument_list|(
 name|so1
@@ -4137,6 +4143,9 @@ literal|0
 expr_stmt|;
 name|free2
 label|:
+operator|(
+name|void
+operator|)
 name|soclose
 argument_list|(
 name|wso
@@ -4144,6 +4153,9 @@ argument_list|)
 expr_stmt|;
 name|free
 label|:
+operator|(
+name|void
+operator|)
 name|soclose
 argument_list|(
 name|rso

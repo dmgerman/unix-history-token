@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lp.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lp.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -133,6 +133,13 @@ define|#
 directive|define
 name|LPHWAT
 value|800
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPBUFSIZE
+value|1024
 end_define
 
 begin_define
@@ -609,7 +616,7 @@ name|sc_inbuf
 operator|=
 name|geteblk
 argument_list|(
-literal|512
+name|LPBUFSIZE
 argument_list|)
 expr_stmt|;
 name|sc
@@ -804,9 +811,9 @@ while|while
 condition|(
 name|n
 operator|=
-name|min
+name|MIN
 argument_list|(
-literal|512
+name|LPBUFSIZE
 argument_list|,
 operator|(
 name|unsigned

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -459,21 +459,16 @@ begin_comment
 comment|/*  * Return the host portion of an internet address.  */
 end_comment
 
-begin_macro
+begin_function
+name|u_long
 name|in_lnaof
-argument_list|(
-argument|in
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|in
+parameter_list|)
 name|struct
 name|in_addr
 name|in
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_long
@@ -595,10 +590,36 @@ name|host
 operator|)
 return|;
 block|}
-end_block
+end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SUBNETSARELOCAL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SUBNETSARELOCAL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|int
+name|subnetsarelocal
+init|=
+name|SUBNETSARELOCAL
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/*  * Return 1 if an internet address is for a ``local'' host  * (one to which we have a connection through a local logical net).  */
+comment|/*  * Return 1 if an internet address is for a ``local'' host  * (one to which we have a connection).  If subnetsarelocal  * is true, this includes other subnets of the local net.  * Otherwise, it includes only the directly-connected (sub)nets.  */
 end_comment
 
 begin_macro
@@ -690,9 +711,15 @@ if|if
 condition|(
 name|net
 operator|==
+name|subnetsarelocal
+condition|?
 name|ia
 operator|->
 name|ia_net
+else|:
+name|ia
+operator|->
+name|ia_subnet
 condition|)
 return|return
 operator|(

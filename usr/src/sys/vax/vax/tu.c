@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tu.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tu.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -164,8 +164,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TUIPL
-value|((cpu == VAX_750) ? 0x17 : 0x14)
+name|spltu
+parameter_list|()
+value|((cpu == VAX_750) ? spl7() : spl4())
 end_define
 
 begin_ifndef
@@ -539,10 +540,8 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|splx
-argument_list|(
-name|TUIPL
-argument_list|)
+name|spltu
+argument_list|()
 expr_stmt|;
 name|tu
 operator|.
@@ -733,10 +732,8 @@ name|NULL
 decl_stmt|;
 name|s
 operator|=
-name|splx
-argument_list|(
-name|TUIPL
-argument_list|)
+name|spltu
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -890,6 +887,9 @@ begin_block
 block|{
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|bp
 argument_list|)
 expr_stmt|;
@@ -1076,10 +1076,8 @@ name|NULL
 expr_stmt|;
 name|s
 operator|=
-name|splx
-argument_list|(
-name|TUIPL
-argument_list|)
+name|spltu
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1164,10 +1162,8 @@ condition|)
 return|return;
 name|s
 operator|=
-name|splx
-argument_list|(
-name|TUIPL
-argument_list|)
+name|spltu
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1585,7 +1581,8 @@ name|tudata
 operator|)
 argument_list|,
 operator|(
-name|caddr_t
+name|u_short
+operator|*
 operator|)
 name|tu
 operator|.
@@ -2899,7 +2896,7 @@ end_comment
 
 begin_decl_stmt
 specifier|register
-name|char
+name|u_short
 modifier|*
 name|wp
 decl_stmt|;
@@ -3073,10 +3070,8 @@ endif|#
 directive|endif
 name|s
 operator|=
-name|splx
-argument_list|(
-name|TUIPL
-argument_list|)
+name|spltu
+argument_list|()
 expr_stmt|;
 name|tu
 operator|.
@@ -3244,10 +3239,8 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splx
-argument_list|(
-name|TUIPL
-argument_list|)
+name|spltu
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3296,10 +3289,8 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splx
-argument_list|(
-name|TUIPL
-argument_list|)
+name|spltu
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	6.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	6.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -550,6 +550,9 @@ argument_list|)
 expr_stmt|;
 name|printn
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|level
 argument_list|,
 literal|10

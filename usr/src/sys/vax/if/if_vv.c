@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -330,9 +330,6 @@ name|vvoutput
 argument_list|()
 decl_stmt|,
 name|vvioctl
-argument_list|()
-decl_stmt|,
-name|vvsetaddr
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -1822,7 +1819,10 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+operator|&
+name|vs
+operator|->
+name|vs_if
 argument_list|)
 expr_stmt|;
 if|if

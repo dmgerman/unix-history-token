@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lpa.c	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lpa.c	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1210,7 +1210,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|spl7
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|lpaaddr
@@ -1484,7 +1484,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|spl7
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|lpaaddr
@@ -1533,7 +1533,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|spl6
+name|splclock
 argument_list|()
 expr_stmt|;
 name|vsunlock
@@ -2149,7 +2149,7 @@ name|ADIO5
 expr_stmt|;
 name|n
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|uio
 operator|->
@@ -3698,7 +3698,7 @@ argument_list|)
 expr_stmt|;
 name|spx
 operator|=
-name|spl7
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|sc
@@ -3725,9 +3725,6 @@ operator|&=
 operator|~
 name|DONE
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|splx
 argument_list|(
 name|spx
@@ -3862,7 +3859,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|spl7
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|lpaaddr

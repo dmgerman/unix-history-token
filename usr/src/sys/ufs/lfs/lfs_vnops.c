@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lfs_vnops.c	6.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lfs_vnops.c	6.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1561,6 +1561,9 @@ name|target
 argument_list|,
 name|nc
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|,
 literal|0
@@ -2441,6 +2444,9 @@ name|uap
 operator|->
 name|count
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|,
 literal|0
@@ -3215,6 +3221,9 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
+operator|(
+name|uid_t
+operator|)
 name|uid
 argument_list|,
 literal|1

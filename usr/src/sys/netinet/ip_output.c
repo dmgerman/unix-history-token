@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_output.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_output.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1219,7 +1219,7 @@ name|ip
 operator|*
 argument_list|)
 decl_stmt|;
-name|int
+name|unsigned
 name|optlen
 decl_stmt|;
 name|optlen
@@ -1431,6 +1431,9 @@ operator|+
 literal|1
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|optlen
 argument_list|)
 expr_stmt|;
@@ -1870,10 +1873,13 @@ argument_list|,
 name|caddr_t
 argument_list|)
 argument_list|,
-operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 operator|*
 name|m
-operator|)
+argument_list|)
 operator|->
 name|m_len
 argument_list|)
@@ -1905,6 +1911,9 @@ name|op
 operator|==
 name|PRCO_SETOPT
 condition|)
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 operator|*
@@ -1971,6 +1980,9 @@ condition|(
 operator|*
 name|pcbopt
 condition|)
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 operator|*
@@ -2005,6 +2017,9 @@ if|if
 condition|(
 name|m
 condition|)
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m
@@ -2130,8 +2145,14 @@ argument_list|,
 name|caddr_t
 argument_list|)
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|cp
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cnt
 argument_list|)
 expr_stmt|;
@@ -2281,6 +2302,9 @@ expr_stmt|;
 comment|/* 			 * Move first hop before start of options. 			 */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cp
 index|[
@@ -2306,6 +2330,10 @@ expr_stmt|;
 comment|/* 			 * Then copy rest of options back 			 * to close up the deleted entry. 			 */
 name|ovbcopy
 argument_list|(
+call|(
+name|caddr_t
+call|)
+argument_list|(
 operator|&
 name|cp
 index|[
@@ -2319,7 +2347,11 @@ argument_list|(
 expr|struct
 name|in_addr
 argument_list|)
+argument_list|)
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cp
 index|[
@@ -2328,6 +2360,9 @@ operator|+
 literal|1
 index|]
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cnt
 operator|+
 sizeof|sizeof
@@ -2352,6 +2387,9 @@ operator|)
 return|;
 name|bad
 label|:
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m

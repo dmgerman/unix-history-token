@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_inode.c	6.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_inode.c	6.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2360,7 +2360,7 @@ operator|--
 control|)
 block|{
 specifier|register
-name|int
+name|off_t
 name|bsize
 decl_stmt|;
 name|bn
@@ -2445,7 +2445,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|int
+name|off_t
 name|oldspace
 decl_stmt|,
 name|newspace
@@ -2983,7 +2983,7 @@ argument_list|,
 name|nb
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 name|fs
 operator|->

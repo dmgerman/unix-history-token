@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_error.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_error.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -674,12 +674,6 @@ name|code
 decl_stmt|,
 name|param
 decl_stmt|;
-specifier|extern
-name|struct
-name|ns_addr
-name|if_makeaddr
-parameter_list|()
-function_decl|;
 comment|/* 	 * Locate ns_err structure in mbuf, and check 	 * that not corrupted and of at least minimum length. 	 */
 ifdef|#
 directive|ifdef
@@ -1224,6 +1218,11 @@ name|ns_output
 argument_list|(
 name|m
 argument_list|,
+operator|(
+expr|struct
+name|route
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|NS_FORWARDING

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	6.18 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	6.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -679,22 +679,6 @@ end_decl_stmt
 begin_comment
 comment|/* I/O wait queue, per controller */
 end_comment
-
-begin_decl_stmt
-name|int
-name|nNRA
-init|=
-name|NRA
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nNUDA
-init|=
-name|NUDA
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1841,7 +1825,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|nNRA
+name|NRA
 operator|||
 operator|(
 name|ui
@@ -2042,6 +2026,9 @@ operator|++
 expr_stmt|;
 name|sleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|uda_cp_wait
 argument_list|,
@@ -2508,7 +2495,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|nNRA
+name|NRA
 condition|)
 block|{
 name|bp
@@ -3155,6 +3142,9 @@ operator|->
 name|sc_state
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|udinit
 argument_list|(
 name|um
@@ -4471,21 +4461,6 @@ operator|.
 name|ca_bdp
 condition|)
 block|{
-comment|/* 		 * THIS IS A KLUDGE. 		 * Maybe we should change the entire 		 * UBA interface structure. 		 */
-name|int
-name|s
-init|=
-name|spl6
-argument_list|()
-decl_stmt|;
-comment|/* was spl7 but I don't like turning */
-comment|/* off machine checks */
-name|i
-operator|=
-name|um
-operator|->
-name|um_ubinfo
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -4502,35 +4477,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|UBAPURGE
+argument_list|(
 name|um
 operator|->
-name|um_ubinfo
-operator|=
+name|um_hd
+operator|->
+name|uh_uba
+argument_list|,
 name|ud
 operator|->
 name|uda_ca
 operator|.
 name|ca_bdp
-operator|<<
-literal|28
-expr_stmt|;
-name|ubapurge
-argument_list|(
-name|um
-argument_list|)
-expr_stmt|;
-name|um
-operator|->
-name|um_ubinfo
-operator|=
-name|i
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|ud
@@ -4663,6 +4622,9 @@ name|uda_cp_wait
 condition|)
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|uda_cp_wait
 argument_list|)
@@ -5420,7 +5382,6 @@ name|wakeup
 argument_list|(
 operator|(
 name|caddr_t
-operator|*
 operator|)
 name|mp
 operator|->
@@ -6466,7 +6427,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|nNRA
+name|NRA
 condition|)
 return|return
 operator|(
@@ -6536,7 +6497,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|nNRA
+name|NRA
 condition|)
 return|return
 operator|(
@@ -6712,7 +6673,7 @@ literal|0
 init|;
 name|unit
 operator|<
-name|nNRA
+name|NRA
 condition|;
 name|unit
 operator|++
@@ -6912,6 +6873,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|udinit
 argument_list|(
 name|d
@@ -7052,7 +7016,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|nNRA
+name|NRA
 condition|)
 return|return
 operator|(
@@ -7981,7 +7945,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|nNRA
+name|NRA
 operator|||
 operator|(
 name|ui

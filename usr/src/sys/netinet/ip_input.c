@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2525,9 +2525,14 @@ block|}
 comment|/* 			 * locate outgoing interface 			 */
 name|bcopy
 argument_list|(
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|cp
 operator|+
 name|off
+argument_list|)
 argument_list|,
 operator|(
 name|caddr_t
@@ -2601,6 +2606,9 @@ name|sin_addr
 expr_stmt|;
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 operator|(
 name|IA_SIN
@@ -2611,9 +2619,14 @@ operator|->
 name|sin_addr
 operator|)
 argument_list|,
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|cp
 operator|+
 name|off
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2689,9 +2702,14 @@ condition|)
 break|break;
 name|bcopy
 argument_list|(
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|cp
 operator|+
 name|off
+argument_list|)
 argument_list|,
 operator|(
 name|caddr_t
@@ -2740,6 +2758,9 @@ goto|;
 block|}
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 operator|(
 name|IA_SIN
@@ -2750,9 +2771,14 @@ operator|->
 name|sin_addr
 operator|)
 argument_list|,
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|cp
 operator|+
 name|off
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3241,7 +3267,8 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|caddr_t
+name|u_char
+modifier|*
 name|option
 decl_stmt|;
 end_decl_stmt
@@ -3255,7 +3282,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|unsigned
 name|olen
 decl_stmt|;
 extern|extern ipprintfs;
@@ -3293,6 +3320,9 @@ return|return;
 block|}
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|option
 argument_list|,
 operator|(

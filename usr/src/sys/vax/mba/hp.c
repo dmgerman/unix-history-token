@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.20 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1387,6 +1387,29 @@ parameter_list|)
 value|((reg)&0xffff)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HPWAIT
+parameter_list|(
+name|mi
+parameter_list|,
+name|addr
+parameter_list|)
+value|(hpwait(mi))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1398,6 +1421,11 @@ name|addr
 parameter_list|)
 value|(((addr)->hpds& HPDS_DRY) || hpwait(mi))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -2503,6 +2531,9 @@ block|{
 case|case
 literal|1
 case|:
+operator|(
+name|void
+operator|)
 name|HPWAIT
 argument_list|(
 name|mi
@@ -2794,6 +2825,9 @@ name|HP_OFFSET
 operator||
 name|HP_GO
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HPWAIT
 argument_list|(
 name|mi
@@ -4031,6 +4065,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|HPWAIT
 argument_list|(
 name|mi
@@ -4067,6 +4104,9 @@ name|HP_RTC
 operator||
 name|HP_GO
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|HPWAIT
 argument_list|(
 name|mi
@@ -5167,16 +5207,8 @@ name|st
 operator|->
 name|nsect
 expr_stmt|;
-name|mbp
-operator|->
-name|mba_bcr
+name|bcr
 operator|=
-operator|-
-operator|(
-name|min
-argument_list|(
-literal|512
-argument_list|,
 name|bp
 operator|->
 name|b_bcount
@@ -5188,8 +5220,22 @@ name|ptob
 argument_list|(
 name|npf
 argument_list|)
+expr_stmt|;
+name|bcr
+operator|=
+name|MIN
+argument_list|(
+name|bcr
+argument_list|,
+literal|512
 argument_list|)
-operator|)
+expr_stmt|;
+name|mbp
+operator|->
+name|mba_bcr
+operator|=
+operator|-
+name|bcr
 expr_stmt|;
 ifdef|#
 directive|ifdef

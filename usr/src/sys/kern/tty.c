@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	6.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	6.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5479,10 +5479,9 @@ name|colp
 operator|>
 literal|0
 condition|)
+block|{
 name|c
 operator|=
-name|max
-argument_list|(
 operator|(
 operator|(
 operator|(
@@ -5496,13 +5495,21 @@ literal|4
 operator|)
 operator|+
 literal|3
-argument_list|,
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|unsigned
 operator|)
+name|c
+operator|>
 literal|6
-argument_list|)
+condition|)
+name|c
+operator|=
+literal|6
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_exec.c	6.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_exec.c	6.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -224,9 +224,10 @@ name|ucp
 decl_stmt|,
 name|ap
 decl_stmt|,
-name|len
-decl_stmt|,
 name|cc
+decl_stmt|;
+name|unsigned
+name|len
 decl_stmt|;
 name|int
 name|indir
@@ -509,6 +510,9 @@ argument_list|(
 name|exdata
 argument_list|)
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|,
 literal|1
@@ -1260,6 +1264,9 @@ name|sharg
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cc
 argument_list|,
 operator|&
@@ -1284,6 +1291,9 @@ name|ap
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cc
 argument_list|,
 operator|&
@@ -1674,6 +1684,9 @@ name|caddr_t
 operator|)
 name|ucp
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cc
 argument_list|,
 operator|&
@@ -1743,6 +1756,9 @@ name|nc
 operator|=
 name|ffs
 argument_list|(
+operator|(
+name|long
+operator|)
 name|u
 operator|.
 name|u_procp
@@ -2529,7 +2545,7 @@ operator|->
 name|a_data
 argument_list|,
 call|(
-name|int
+name|off_t
 call|)
 argument_list|(
 sizeof|sizeof
@@ -2609,7 +2625,7 @@ name|CLSIZE
 argument_list|)
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|btoc
 argument_list|(

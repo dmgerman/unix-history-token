@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket2.c	6.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket2.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2291,6 +2291,9 @@ name|sbdrop
 argument_list|(
 name|sb
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sb
 operator|->
 name|sb_cc
@@ -2322,26 +2325,29 @@ begin_comment
 comment|/*  * Drop data from (the front of) a sockbuf.  */
 end_comment
 
-begin_function
-name|struct
-name|mbuf
-modifier|*
+begin_expr_stmt
 name|sbdrop
-parameter_list|(
+argument_list|(
 name|sb
-parameter_list|,
+argument_list|,
 name|len
-parameter_list|)
+argument_list|)
 specifier|register
-name|struct
+expr|struct
 name|sockbuf
-modifier|*
+operator|*
 name|sb
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|register
 name|int
 name|len
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -2519,34 +2525,27 @@ name|sb_mb
 operator|=
 name|next
 expr_stmt|;
-return|return
-operator|(
-name|sb
-operator|->
-name|sb_mb
-operator|)
-return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Drop a record off the front of a sockbuf  * and move the next record to the front.  */
 end_comment
 
-begin_function
-name|struct
-name|mbuf
-modifier|*
+begin_expr_stmt
 name|sbdroprecord
-parameter_list|(
+argument_list|(
 name|sb
-parameter_list|)
+argument_list|)
 specifier|register
-name|struct
+expr|struct
 name|sockbuf
-modifier|*
+operator|*
 name|sb
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -2601,15 +2600,8 @@ name|mn
 condition|)
 do|;
 block|}
-return|return
-operator|(
-name|sb
-operator|->
-name|sb_mb
-operator|)
-return|;
 block|}
-end_function
+end_block
 
 end_unit
 

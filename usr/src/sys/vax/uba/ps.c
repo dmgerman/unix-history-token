@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ps.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ps.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1855,7 +1855,7 @@ name|psaddr
 parameter_list|,
 name|savepsaddr
 parameter_list|)
-value|{ \ 	register short i, xx1; \ 	xx1 = spl6(); \ 	i = psaddr->ps_addr; \ 	while ((psaddr->ps_iostat& DIOREADY) == 0) \ 		; \ 	savepsaddr = psaddr->ps_data; \ 	splx(xx1); \ }
+value|{ \ 	register short i, xx1; \ 	xx1 = splclock(); \ 	i = psaddr->ps_addr; \ 	while ((psaddr->ps_iostat& DIOREADY) == 0) \ 		; \ 	savepsaddr = psaddr->ps_data; \ 	splx(xx1); \ }
 end_define
 
 begin_define
@@ -1867,7 +1867,7 @@ name|psaddr
 parameter_list|,
 name|savepsaddr
 parameter_list|)
-value|{ \ 	register short xx2; \ 	xx2 = spl6(); \ 	while ((psaddr->ps_iostat& DIOREADY) == 0) \ 		;\ 	psaddr->ps_addr = savepsaddr; \ 	splx(xx2); \ }
+value|{ \ 	register short xx2; \ 	xx2 = splclock(); \ 	while ((psaddr->ps_iostat& DIOREADY) == 0) \ 		;\ 	psaddr->ps_addr = savepsaddr; \ 	splx(xx2); \ }
 end_define
 
 begin_macro
@@ -2394,7 +2394,7 @@ directive|ifdef
 name|EXTERNAL_SYNC
 name|x
 operator|=
-name|spl6
+name|splclock
 argument_list|()
 expr_stmt|;
 endif|#
@@ -2645,7 +2645,7 @@ directive|ifdef
 name|EXTERNAL_SYNC
 name|x
 operator|=
-name|spl6
+name|splclock
 argument_list|()
 expr_stmt|;
 endif|#

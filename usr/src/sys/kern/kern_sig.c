@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_sig.c	6.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_sig.c	6.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2167,6 +2167,9 @@ name|sig
 operator|=
 name|ffs
 argument_list|(
+operator|(
+name|long
+operator|)
 name|sigbits
 argument_list|)
 expr_stmt|;
@@ -3062,6 +3065,9 @@ argument_list|(
 name|UPAGES
 argument_list|)
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|,
 literal|1
@@ -3106,6 +3112,9 @@ literal|0
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ctob
 argument_list|(
 name|u
@@ -3113,6 +3122,9 @@ operator|.
 name|u_dsize
 argument_list|)
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|ctob
 argument_list|(
 name|UPAGES
@@ -3164,6 +3176,9 @@ literal|1
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ctob
 argument_list|(
 name|u
@@ -3171,6 +3186,9 @@ operator|.
 name|u_ssize
 argument_list|)
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|ctob
 argument_list|(
 name|UPAGES

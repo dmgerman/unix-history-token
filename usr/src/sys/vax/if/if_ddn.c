@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_ddn.c	6.4 (Berkeley) %G% */
+comment|/*	@(#)if_ddn.c	6.5 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -2811,14 +2811,16 @@ expr_stmt|;
 comment|/* set cmnd ext length */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|init_msg
 argument_list|,
 name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|u_char
-operator|*
+name|caddr_t
 argument_list|)
 argument_list|,
 sizeof|sizeof
@@ -3850,8 +3852,7 @@ modifier|*
 name|m_callbfr
 decl_stmt|;
 specifier|register
-name|u_char
-modifier|*
+name|caddr_t
 name|cb
 decl_stmt|;
 name|MGET
@@ -3881,8 +3882,7 @@ name|mtod
 argument_list|(
 name|m_callbfr
 argument_list|,
-name|u_char
-operator|*
+name|caddr_t
 argument_list|)
 expr_stmt|;
 name|convert_ip_addr
@@ -4068,6 +4068,9 @@ expr_stmt|;
 comment|/* copy command header */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|cb_cmnd
 argument_list|,
 name|cb
@@ -4082,6 +4085,9 @@ expr_stmt|;
 comment|/* copy called address */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|cb_called_addr
 argument_list|,
 name|cb
@@ -4108,6 +4114,9 @@ expr_stmt|;
 comment|/* copy calling address */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|cb_calling_addr
 argument_list|,
 name|cb
@@ -4134,6 +4143,9 @@ expr_stmt|;
 comment|/* copy protocol */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|cb_protocol
 argument_list|,
 name|cb
@@ -4160,6 +4172,9 @@ expr_stmt|;
 comment|/* copy facilities */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|cb_facilities
 argument_list|,
 name|cb
@@ -4186,6 +4201,9 @@ expr_stmt|;
 comment|/* copy user data */
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|cb_user_data
 argument_list|,
 name|cb

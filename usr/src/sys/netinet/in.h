@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.h	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.h	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -186,7 +186,7 @@ name|IN_CLASSA
 parameter_list|(
 name|i
 parameter_list|)
-value|((((long)(i))&0x80000000)==0)
+value|(((long)(i)& 0x80000000) == 0)
 end_define
 
 begin_define
@@ -224,7 +224,7 @@ name|IN_CLASSB
 parameter_list|(
 name|i
 parameter_list|)
-value|((((long)(i))&0xc0000000)==0x80000000)
+value|(((long)(i)& 0xc0000000) == 0x80000000)
 end_define
 
 begin_define
@@ -262,7 +262,7 @@ name|IN_CLASSC
 parameter_list|(
 name|i
 parameter_list|)
-value|((((long)(i))&0xc0000000)==0xc0000000)
+value|(((long)(i)& 0xc0000000) == 0xc0000000)
 end_define
 
 begin_define
@@ -290,14 +290,14 @@ begin_define
 define|#
 directive|define
 name|INADDR_ANY
-value|0x00000000
+value|(u_long)0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|INADDR_BROADCAST
-value|0xffffffff
+value|(u_long)0xffffffff
 end_define
 
 begin_comment
@@ -354,6 +354,12 @@ operator|!
 name|defined
 argument_list|(
 name|vax
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ntohl
 argument_list|)
 end_if
 
@@ -437,12 +443,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|u_long
 name|in_netof
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|in_lnaof
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

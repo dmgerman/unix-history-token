@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.h	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.h	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -261,7 +261,7 @@ parameter_list|,
 name|nmr
 parameter_list|)
 define|\
-value|if_ubaminit(&(ifuba)->ifu_info, uban, hlen, nmr, \&(ifuba)->ifu_r, 1,&(ifuba)->ifu_w, 1)
+value|if_ubaminit(&(ifuba)->ifu_info, uban, hlen, nmr, \&(ifuba)->ifu_r, 1,&(ifuba)->ifu_xmt, 1)
 end_define
 
 begin_define
@@ -291,7 +291,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|if_ubaput(&(ifu)->ifu_info,&(ifu)->ifu_w, m)
+value|if_ubaput(&(ifu)->ifu_info,&(ifu)->ifu_xmt, m)
 end_define
 
 begin_function_decl

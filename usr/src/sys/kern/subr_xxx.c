@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_xxx.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_xxx.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -119,11 +119,11 @@ return|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|vax
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
 
 begin_macro
 name|imin
@@ -234,7 +234,7 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|not vax
+endif|notdef
 end_endif
 
 begin_extern
@@ -414,6 +414,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/*  * Stub routine in case it is ever possible to free space.  */
 end_comment
@@ -452,6 +458,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -133,6 +133,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|spluba
+value|spl7
+end_define
+
+begin_comment
+comment|/* IPL 17 */
+end_comment
+
 begin_comment
 comment|/*  * Do transfer on device argument.  The controller  * and uba involved are implied by the device.  * We queue for resource wait in the uba code if necessary.  * We return 1 if the transfer was started, 0 if it was not.  * If you call this routine with the head of the queue for a  * UBA, it will automatically remove the device from the UBA  * queue before it returns.  If some other device is given  * as argument, it will be added to the request queue if the  * request cannot be started immediately.  This means that  * passing a device which is on the queue but not at the head  * of the request queue is likely to be a disaster.  */
 end_comment
@@ -186,7 +197,7 @@ index|]
 expr_stmt|;
 name|s
 operator|=
-name|spl6
+name|spluba
 argument_list|()
 expr_stmt|;
 if|if
@@ -597,7 +608,7 @@ literal|1
 expr_stmt|;
 name|a
 operator|=
-name|spl6
+name|spluba
 argument_list|()
 expr_stmt|;
 while|while
@@ -720,6 +731,9 @@ name|bdp
 operator|=
 name|ffs
 argument_list|(
+operator|(
+name|long
+operator|)
 name|uh
 operator|->
 name|uh_bdpfree
@@ -1198,7 +1212,7 @@ decl_stmt|;
 comment|/* 	 * Carefully see if we should release the space, since 	 * it may be released asynchronously at uba reset time. 	 */
 name|s
 operator|=
-name|spl6
+name|spluba
 argument_list|()
 expr_stmt|;
 name|mr
@@ -1683,7 +1697,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|spl6
+name|spluba
 argument_list|()
 expr_stmt|;
 name|uh
@@ -2218,7 +2232,7 @@ name|uba_sr
 expr_stmt|;
 name|s
 operator|=
-name|spl7
+name|spluba
 argument_list|()
 expr_stmt|;
 name|printf
@@ -2603,7 +2617,7 @@ literal|1
 expr_stmt|;
 name|s
 operator|=
-name|spl6
+name|spluba
 argument_list|()
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	6.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -357,21 +357,19 @@ begin_struct
 struct|struct
 name|dmfl_softc
 block|{
-name|unsigned
+name|u_int
 name|dmfl_state
 decl_stmt|;
 comment|/* soft state bits */
-name|unsigned
+name|int
 name|dmfl_info
 decl_stmt|;
 comment|/* uba info */
-name|unsigned
-name|short
+name|u_short
 name|dmfl_lines
 decl_stmt|;
 comment|/* lines per page (66 def.) */
-name|unsigned
-name|short
+name|u_short
 name|dmfl_cols
 decl_stmt|;
 comment|/* cols per line (132 def.) */
@@ -735,7 +733,9 @@ end_expr_stmt
 
 begin_expr_stmt
 name|dmflint
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -4685,6 +4685,9 @@ index|[
 name|dmf
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|dmflout
 argument_list|(
 name|dev
@@ -4711,16 +4714,12 @@ condition|)
 name|ubarelse
 argument_list|(
 operator|(
-expr|struct
-name|dmfdevice
-operator|*
+name|int
 operator|)
-operator|(
 name|dmfinfo
 index|[
 name|dmf
 index|]
-operator|)
 operator|->
 name|ui_ubanum
 argument_list|,
@@ -4755,11 +4754,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 
@@ -4789,7 +4783,6 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|unsigned
 name|int
 name|n
 decl_stmt|;
@@ -4831,7 +4824,7 @@ while|while
 condition|(
 name|n
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|DMFL_BUFSIZ
 argument_list|,
@@ -4971,12 +4964,7 @@ name|dmfdevice
 modifier|*
 name|d
 decl_stmt|;
-specifier|register
-name|unsigned
-name|info
-decl_stmt|;
-specifier|register
-name|unsigned
+name|int
 name|i
 decl_stmt|;
 name|dmf
@@ -5018,8 +5006,6 @@ comment|/* 	 * allocate unibus resources, will be released when io 	 * operation
 name|sc
 operator|->
 name|dmfl_info
-operator|=
-name|info
 operator|=
 name|uballoc
 argument_list|(
@@ -5090,7 +5076,9 @@ index|[
 literal|1
 index|]
 operator|=
-name|info
+name|sc
+operator|->
+name|dmfl_info
 expr_stmt|;
 comment|/* dma lo 16 bits addr */
 comment|/* NOT DOCUMENTED !! */
@@ -5115,7 +5103,9 @@ index|]
 operator|=
 operator|(
 operator|(
-name|info
+name|sc
+operator|->
+name|dmfl_info
 operator|>>
 literal|16
 operator|)
@@ -5227,6 +5217,9 @@ name|timeout
 argument_list|(
 name|dmflint
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|dmf
 argument_list|,
 literal|10
@@ -5236,6 +5229,9 @@ argument_list|)
 expr_stmt|;
 name|sleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|sc
 operator|->
@@ -5375,6 +5371,9 @@ name|ERROR
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|sc
 operator|->
@@ -5474,6 +5473,9 @@ name|ASLP
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|sc
 operator|->

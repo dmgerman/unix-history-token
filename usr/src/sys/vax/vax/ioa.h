@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)ioa.h	1.2 (Berkeley) %G%  */
+comment|/*  * @(#)ioa.h	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -247,27 +247,6 @@ define|#
 directive|define
 name|IOA_SBIA
 value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOA_SBI780
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOA_CMI750
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOA_XXX730
-value|0x04
 end_define
 
 end_unit
