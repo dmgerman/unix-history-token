@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.5	85/09/09	*/
+comment|/*	defs.h	4.6	86/03/26	*/
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ptrace.h>
+file|<sys/ptrace.h>
 end_include
 
 begin_include
@@ -209,7 +209,7 @@ value|0200
 end_define
 
 begin_comment
-comment|/* puns from<ptrace.h> */
+comment|/* puns from<sys/ptrace.h> */
 end_comment
 
 begin_define
