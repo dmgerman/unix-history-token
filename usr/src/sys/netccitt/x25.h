@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)x25.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)x25.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -385,9 +385,19 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* packet level tracing flag */
+name|xc_nodnic
+range|:
+literal|1
+decl_stmt|,
+comment|/* remove our dnic when calling on net */
+name|xc_prepnd0
+range|:
+literal|1
+decl_stmt|,
+comment|/* prepend 0 when making offnet calls */
 name|xc_rsvd2
 range|:
-literal|5
+literal|3
 decl_stmt|;
 name|u_short
 name|xc_maxlcn
