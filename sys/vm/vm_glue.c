@@ -84,13 +84,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|vm_pageout_free_min
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|avefree
 init|=
@@ -424,7 +417,6 @@ argument_list|(
 name|addr
 argument_list|)
 argument_list|,
-comment|/* round_page(addr+len-1), FALSE); */
 name|round_page
 argument_list|(
 name|addr
@@ -1000,6 +992,11 @@ index|]
 operator|.
 name|rlim_cur
 operator|=
+name|ptoa
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_rlimit
@@ -1009,10 +1006,7 @@ index|]
 operator|.
 name|rlim_max
 operator|=
-name|ptoa
-argument_list|(
-name|tmp
-argument_list|)
+name|RLIM_INFINITY
 expr_stmt|;
 block|}
 end_function
@@ -1645,6 +1639,13 @@ define|\
 value|(((p)->p_flag& (STRC|SSYS|SLOAD|SLOCK|SKEEP|SWEXIT|SPHYSIO)) == SLOAD)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|vm_pageout_free_min
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Swapout is driven by the pageout daemon.  Very simple, we find eligible  * procs and unwire their u-areas.  We try to always "swap" at least one  * process in case we need the room for a swapin.  * If any procs have been sleeping/stopped for at least maxslp seconds,  * they are swapped.  Else, we swap the longest-sleeping or stopped process,  * if any, otherwise the longest-resident process.  */
 end_comment
@@ -1749,16 +1750,6 @@ name|SRUN
 case|:
 if|if
 condition|(
-name|p
-operator|->
-name|p_pri
-operator|<=
-name|PUSER
-condition|)
-comment|/* possible deadlock unless this check */
-continue|continue;
-if|if
-condition|(
 operator|(
 name|tpri
 operator|=
@@ -1796,25 +1787,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_pri
-operator|<=
-name|PRIBIO
-condition|)
-comment|/* possible deadlock unless this check */
-continue|continue;
-if|if
-condition|(
-name|p
-operator|->
 name|p_slptime
 operator|>
 name|maxslp
-operator|||
-name|p
-operator|->
-name|p_pri
-operator|==
-name|PWAIT
 condition|)
 block|{
 name|swapout
@@ -1870,11 +1845,7 @@ name|swapinreq
 operator|&&
 name|vm_page_free_count
 operator|<=
-operator|(
-name|vm_page_free_reserved
-operator|+
-name|UPAGES
-operator|)
+name|vm_pageout_free_min
 operator|)
 condition|)
 block|{
@@ -1890,8 +1861,8 @@ literal|0
 operator|&&
 operator|(
 name|vm_page_free_count
-operator|<
-name|vm_page_free_reserved
+operator|<=
+name|vm_pageout_free_min
 operator|)
 condition|)
 name|p

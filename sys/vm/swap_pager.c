@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  * from: @(#)swap_pager.c	7.4 (Berkeley) 5/7/91  *  * $Id: swap_pager.c,v 1.13 1994/01/14 16:45:06 davidg Exp $  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  * from: @(#)swap_pager.c	7.4 (Berkeley) 5/7/91  *  * $Id: swap_pager.c,v 1.14 1994/01/17 09:33:20 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -395,12 +395,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|swiopend
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|pendingiowait
 decl_stmt|;
 end_decl_stmt
@@ -594,20 +588,6 @@ condition|)
 name|npendingio
 operator|=
 name|nswbuf
-expr_stmt|;
-if|if
-condition|(
-name|npendingio
-operator|>
-name|vm_page_count
-operator|/
-literal|32
-condition|)
-name|npendingio
-operator|=
-name|vm_page_count
-operator|/
-literal|32
 expr_stmt|;
 comment|/* 		 * kva's are allocated here so that we dont need to keep 		 * doing kmem_alloc pageables at runtime 		 */
 for|for
@@ -3122,11 +3102,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -3152,11 +3127,6 @@ name|m
 index|[
 name|i
 index|]
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -3975,6 +3945,7 @@ name|swap_pager_free
 argument_list|)
 condition|)
 block|{
+comment|/* 			if ((flags& (B_ASYNC|B_READ)) == B_ASYNC) 				return VM_PAGER_TRYAGAIN; */
 name|s
 operator|=
 name|splbio
@@ -4926,6 +4897,19 @@ expr_stmt|;
 comment|/* 		 * optimization, if a page has been read during the 		 * pageout process, we activate it. 		 */
 if|if
 condition|(
+operator|(
+name|m
+index|[
+name|reqpage
+index|]
+operator|->
+name|flags
+operator|&
+name|PG_ACTIVE
+operator|)
+operator|==
+literal|0
+operator|&&
 name|pmap_is_referenced
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -5018,26 +5002,7 @@ operator|!=
 name|reqpage
 condition|)
 block|{
-comment|/* 				 * whether or not to leave the page activated 				 * is up in the air, but we should put the page 				 * on a page queue somewhere. (it already is in 				 * the object). 				 */
-if|if
-condition|(
-name|i
-operator|<
-operator|(
-name|reqpage
-operator|+
-literal|3
-operator|)
-condition|)
-name|vm_page_activate
-argument_list|(
-name|m
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-else|else
+comment|/* 				 * whether or not to leave the page activated 				 * is up in the air, but we should put the page 				 * on a page queue somewhere. (it already is in 				 * the object). 				 * After some emperical results, it is best 				 * to deactivate the readahead pages. 				 */
 name|vm_page_deactivate
 argument_list|(
 name|m
@@ -5366,6 +5331,16 @@ block|}
 comment|/* 	 * if a page has been read during pageout, then 	 * we activate the page. 	 */
 if|if
 condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_ACTIVE
+operator|)
+operator|==
+literal|0
+operator|&&
 name|pmap_is_referenced
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -5855,6 +5830,33 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * return true if any swap control structures can be allocated  */
+end_comment
+
+begin_function
+name|int
+name|swap_pager_ready
+parameter_list|()
+block|{
+if|if
+condition|(
+name|queue_empty
+argument_list|(
+operator|&
+name|swap_pager_free
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+else|else
+return|return
+literal|1
+return|;
 block|}
 end_function
 
