@@ -125,12 +125,12 @@ comment|/* Map page into kernel space */
 end_comment
 
 begin_comment
-unit|map =&procp->p_vmspace->vm_map;  	page_offset = addr - trunc_page(addr); 	pageno = trunc_page(addr);  	tmap = map; 	rv = vm_map_lookup (&tmap, pageno, VM_PROT_READ,&out_entry,&object,&pindex,&out_prot,&wired);  	if (rv != KERN_SUCCESS) 		return EINVAL;  	vm_map_lookup_done (tmap, out_entry);
+unit|map =&procp->p_vmspace->vm_map;  	page_offset = addr - trunc_page(addr); 	pageno = trunc_page(addr);  	tmap = map; 	rv = vm_map_lookup (&tmap, pageno, VM_PROT_READ,&out_entry,&object,&pindex,&out_prot,&wired);  	if (rv != KERN_SUCCESS) 		return (EINVAL);  	vm_map_lookup_done (tmap, out_entry);
 comment|/* Find space in kernel_map for the page we're interested in */
 end_comment
 
 begin_comment
-unit|rv = vm_map_find (kernel_map, object, IDX_TO_OFF(pindex),&kva, PAGE_SIZE, 0, VM_PROT_ALL, VM_PROT_ALL, 0);  	if (!rv) { 		vm_object_reference (object);  		rv = vm_map_pageable (kernel_map, kva, kva + PAGE_SIZE, 0); 		if (!rv) { 			*retval = 0; 			bcopy ((caddr_t)kva + page_offset, 			       retval, sizeof *retval); 		} 		vm_map_remove (kernel_map, kva, kva + PAGE_SIZE); 	}  	return rv; }  static int pwrite (struct proc *procp, unsigned int addr, unsigned int datum) { 	int		rv; 	vm_map_t	map, tmap; 	vm_object_t	object; 	vm_offset_t	kva = 0; 	int		page_offset;
+unit|rv = vm_map_find (kernel_map, object, IDX_TO_OFF(pindex),&kva, PAGE_SIZE, 0, VM_PROT_ALL, VM_PROT_ALL, 0);  	if (!rv) { 		vm_object_reference (object);  		rv = vm_map_pageable (kernel_map, kva, kva + PAGE_SIZE, 0); 		if (!rv) { 			*retval = 0; 			bcopy ((caddr_t)kva + page_offset, 			       retval, sizeof *retval); 		} 		vm_map_remove (kernel_map, kva, kva + PAGE_SIZE); 	}  	return (rv); }  static int pwrite (struct proc *procp, unsigned int addr, unsigned int datum) { 	int		rv; 	vm_map_t	map, tmap; 	vm_object_t	object; 	vm_offset_t	kva = 0; 	int		page_offset;
 comment|/* offset into page */
 end_comment
 
@@ -160,7 +160,7 @@ comment|/* The page isn't writable, so let's try making it so... */
 end_comment
 
 begin_comment
-unit|if ((rv = vm_map_protect (map, pageno, pageno + PAGE_SIZE, 			VM_PROT_ALL, 0)) != KERN_SUCCESS) 		  return EFAULT;
+unit|if ((rv = vm_map_protect (map, pageno, pageno + PAGE_SIZE, 			VM_PROT_ALL, 0)) != KERN_SUCCESS) 		  return (EFAULT);
 comment|/* I guess... */
 end_comment
 
@@ -170,7 +170,7 @@ comment|/* 	 * Now we need to get the page.  out_entry, out_prot, wired, and 	 *
 end_comment
 
 begin_comment
-unit|tmap = map; 	rv = vm_map_lookup (&tmap, pageno, VM_PROT_WRITE,&out_entry,&object,&pindex,&out_prot,&wired); 	if (rv != KERN_SUCCESS) { 		return EINVAL; 	}
+unit|tmap = map; 	rv = vm_map_lookup (&tmap, pageno, VM_PROT_WRITE,&out_entry,&object,&pindex,&out_prot,&wired); 	if (rv != KERN_SUCCESS) { 		return (EINVAL); 	}
 comment|/* 	 * Okay, we've got the page.  Let's release tmap. 	 */
 end_comment
 
@@ -180,12 +180,12 @@ comment|/* 	 * Fault the page in... 	 */
 end_comment
 
 begin_comment
-unit|rv = vm_fault(map, pageno, VM_PROT_WRITE|VM_PROT_READ, FALSE); 	if (rv != KERN_SUCCESS) 		return EFAULT;
+unit|rv = vm_fault(map, pageno, VM_PROT_WRITE|VM_PROT_READ, FALSE); 	if (rv != KERN_SUCCESS) 		return (EFAULT);
 comment|/* Find space in kernel_map for the page we're interested in */
 end_comment
 
 begin_endif
-unit|rv = vm_map_find (kernel_map, object, IDX_TO_OFF(pindex),&kva, PAGE_SIZE, 0, 		VM_PROT_ALL, VM_PROT_ALL, 0); 	if (!rv) { 		vm_object_reference (object);  		rv = vm_map_pageable (kernel_map, kva, kva + PAGE_SIZE, 0); 		if (!rv) { 		  bcopy (&datum, (caddr_t)kva + page_offset, sizeof datum); 		} 		vm_map_remove (kernel_map, kva, kva + PAGE_SIZE); 	}  	if (fix_prot) 		vm_map_protect (map, pageno, pageno + PAGE_SIZE, 			VM_PROT_READ|VM_PROT_EXECUTE, 0); 	return rv; }
+unit|rv = vm_map_find (kernel_map, object, IDX_TO_OFF(pindex),&kva, PAGE_SIZE, 0, 		VM_PROT_ALL, VM_PROT_ALL, 0); 	if (!rv) { 		vm_object_reference (object);  		rv = vm_map_pageable (kernel_map, kva, kva + PAGE_SIZE, 0); 		if (!rv) { 		  bcopy (&datum, (caddr_t)kva + page_offset, sizeof datum); 		} 		vm_map_remove (kernel_map, kva, kva + PAGE_SIZE); 	}  	if (fix_prot) 		vm_map_protect (map, pageno, pageno + PAGE_SIZE, 			VM_PROT_READ|VM_PROT_EXECUTE, 0); 	return (rv); }
 endif|#
 directive|endif
 end_endif
@@ -315,7 +315,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ESRCH
+operator|)
 return|;
 block|}
 if|if
@@ -373,7 +375,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* Already traced */
@@ -392,7 +396,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EBUSY
+operator|)
 return|;
 block|}
 if|if
@@ -415,7 +421,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 comment|/* OK */
@@ -512,7 +520,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EPERM
+operator|)
 return|;
 block|}
 comment|/* not being traced by YOU */
@@ -531,7 +541,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EBUSY
+operator|)
 return|;
 block|}
 comment|/* not currently stopped */
@@ -572,7 +584,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EBUSY
+operator|)
 return|;
 block|}
 name|mtx_unlock_spin
@@ -590,7 +604,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|PROC_UNLOCK
@@ -673,7 +689,9 @@ name|proctree_lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 case|case
 name|PT_ATTACH
@@ -773,7 +791,9 @@ name|NSIG
 operator|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|PHOLD
 argument_list|(
@@ -810,7 +830,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
@@ -869,7 +891,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
@@ -1063,7 +1087,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 case|case
 name|PT_WRITE_I
@@ -1279,7 +1305,9 @@ argument_list|)
 condition|)
 comment|/* no P_SYSTEM procs please */
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 else|else
 block|{
@@ -1416,7 +1444,9 @@ argument_list|)
 condition|)
 comment|/* no P_SYSTEM procs please */
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 else|else
 block|{
@@ -1553,7 +1583,9 @@ argument_list|)
 condition|)
 comment|/* no P_SYSTEM procs please */
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 else|else
 block|{
@@ -1649,7 +1681,9 @@ default|default:
 break|break;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1667,7 +1701,9 @@ name|p
 decl_stmt|;
 block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
