@@ -2211,6 +2211,8 @@ name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|,
+literal|0
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -2877,6 +2879,8 @@ label|:
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
 argument_list|,
 name|p
 argument_list|)
