@@ -105,10 +105,6 @@ name|ks_memuse
 decl_stmt|;
 comment|/* total memory held in bytes */
 name|long
-name|ks_limit
-decl_stmt|;
-comment|/* most that are allowed to exist */
-name|long
 name|ks_size
 decl_stmt|;
 comment|/* sizes of this thing that are allocated */
@@ -134,14 +130,6 @@ modifier|*
 name|ks_shortdesc
 decl_stmt|;
 comment|/* short description */
-name|u_short
-name|ks_limblocks
-decl_stmt|;
-comment|/* number of times blocked for hitting limit */
-name|u_short
-name|ks_mapblocks
-decl_stmt|;
-comment|/* number of times blocked for kernel map */
 block|}
 struct|;
 end_struct
@@ -164,7 +152,7 @@ parameter_list|,
 name|longdesc
 parameter_list|)
 define|\
-value|struct malloc_type type[1] = { \ 		{ NULL, 0, 0, 0, 0, 0, 0, M_MAGIC, shortdesc, 0, 0 } \ 	}; \ 	SYSINIT(type##_init, SI_SUB_KMEM, SI_ORDER_SECOND, malloc_init, type); \ 	SYSUNINIT(type##_uninit, SI_SUB_KMEM, SI_ORDER_ANY, malloc_uninit, type)
+value|struct malloc_type type[1] = { \ 		{ NULL, 0, 0, 0, 0, 0, M_MAGIC, shortdesc } \ 	}; \ 	SYSINIT(type##_init, SI_SUB_KMEM, SI_ORDER_SECOND, malloc_init, type); \ 	SYSUNINIT(type##_uninit, SI_SUB_KMEM, SI_ORDER_ANY, malloc_uninit, type)
 end_define
 
 begin_define
