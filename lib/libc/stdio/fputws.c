@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -151,12 +157,14 @@ do|do
 block|{
 name|nbytes
 operator|=
-name|__wcsrtombs
+name|__wcsnrtombs
 argument_list|(
 name|buf
 argument_list|,
 operator|&
 name|ws
+argument_list|,
+name|SIZE_T_MAX
 argument_list|,
 sizeof|sizeof
 argument_list|(

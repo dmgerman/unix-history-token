@@ -75,7 +75,7 @@ specifier|extern
 name|size_t
 function_decl|(
 modifier|*
-name|__mbsrtowcs
+name|__mbsnrtowcs
 function_decl|)
 parameter_list|(
 name|wchar_t
@@ -87,6 +87,8 @@ name|char
 modifier|*
 modifier|*
 name|__restrict
+parameter_list|,
+name|size_t
 parameter_list|,
 name|size_t
 parameter_list|,
@@ -123,7 +125,7 @@ specifier|extern
 name|size_t
 function_decl|(
 modifier|*
-name|__wcsrtombs
+name|__wcsnrtombs
 function_decl|)
 parameter_list|(
 name|char
@@ -135,6 +137,8 @@ name|wchar_t
 modifier|*
 modifier|*
 name|__restrict
+parameter_list|,
+name|size_t
 parameter_list|,
 name|size_t
 parameter_list|,
@@ -187,7 +191,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|size_t
-name|_none_mbsrtowcs
+name|_none_mbsnrtowcs
 parameter_list|(
 name|wchar_t
 modifier|*
@@ -198,6 +202,8 @@ name|char
 modifier|*
 modifier|*
 name|__restrict
+parameter_list|,
+name|size_t
 parameter_list|,
 name|size_t
 parameter_list|,
@@ -229,7 +235,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|size_t
-name|_none_wcsrtombs
+name|_none_wcsnrtombs
 parameter_list|(
 name|char
 modifier|*
@@ -240,6 +246,8 @@ name|wchar_t
 modifier|*
 modifier|*
 name|__restrict
+parameter_list|,
+name|size_t
 parameter_list|,
 name|size_t
 parameter_list|,
@@ -253,7 +261,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|size_t
-name|__mbsrtowcs_std
+name|__mbsnrtowcs_std
 parameter_list|(
 name|wchar_t
 modifier|*
@@ -264,6 +272,8 @@ name|char
 modifier|*
 modifier|*
 name|__restrict
+parameter_list|,
+name|size_t
 parameter_list|,
 name|size_t
 parameter_list|,
@@ -277,7 +287,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|size_t
-name|__wcsrtombs_std
+name|__wcsnrtombs_std
 parameter_list|(
 name|char
 modifier|*
@@ -288,6 +298,8 @@ name|wchar_t
 modifier|*
 modifier|*
 name|__restrict
+parameter_list|,
+name|size_t
 parameter_list|,
 name|size_t
 parameter_list|,

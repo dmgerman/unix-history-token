@@ -2044,7 +2044,7 @@ begin_function_decl
 name|size_t
 function_decl|(
 modifier|*
-name|__mbsrtowcs
+name|__mbsnrtowcs
 function_decl|)
 parameter_list|(
 name|wchar_t
@@ -2059,12 +2059,14 @@ name|__restrict
 parameter_list|,
 name|size_t
 parameter_list|,
+name|size_t
+parameter_list|,
 name|mbstate_t
 modifier|*
 name|__restrict
 parameter_list|)
 init|=
-name|_none_mbsrtowcs
+name|_none_mbsnrtowcs
 function_decl|;
 end_function_decl
 
@@ -2094,7 +2096,7 @@ begin_function_decl
 name|size_t
 function_decl|(
 modifier|*
-name|__wcsrtombs
+name|__wcsnrtombs
 function_decl|)
 parameter_list|(
 name|char
@@ -2109,12 +2111,14 @@ name|__restrict
 parameter_list|,
 name|size_t
 parameter_list|,
+name|size_t
+parameter_list|,
 name|mbstate_t
 modifier|*
 name|__restrict
 parameter_list|)
 init|=
-name|_none_wcsrtombs
+name|_none_wcsnrtombs
 function_decl|;
 end_function_decl
 

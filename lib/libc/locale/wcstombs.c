@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -68,12 +74,14 @@ name|initial
 expr_stmt|;
 return|return
 operator|(
-name|__wcsrtombs
+name|__wcsnrtombs
 argument_list|(
 name|s
 argument_list|,
 operator|&
 name|pwcs
+argument_list|,
+name|SIZE_T_MAX
 argument_list|,
 name|n
 argument_list|,
