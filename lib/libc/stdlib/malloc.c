@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.21 1997/02/22 15:03:12 peter Exp $  *  */
 end_comment
 
 begin_comment
@@ -3173,6 +3173,22 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|size
+operator|+
+name|malloc_pagesize
+operator|)
+operator|<
+name|size
+condition|)
+comment|/* Check for overflow */
+name|result
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|size
