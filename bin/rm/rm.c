@@ -244,7 +244,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * rm --  *	This rm is different from historic rm's, but is expected to match  *	POSIX 1003.2 behavior.  The most visible difference is that -f  *	has two specific effects now, ignore non-existent files and force  * 	file removal.  */
+comment|/*  * rm --  *	This rm is different from historic rm's, but is expected to match  *	POSIX 1003.2 behavior.	The most visible difference is that -f  *	has two specific effects now, ignore non-existent files and force  *	file removal.  */
 end_comment
 
 begin_function
@@ -1851,7 +1851,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.  Symbolic links are excluded 		 * because their permissions are meaningless.  Check stdin_ok 		 * first because we may not have stat'ed the file. 		 * Also skip this check if the -P option was specified because 		 * we will not be able to overwrite file contents and will 		 * barf later. 		 */
+comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.	Symbolic links are excluded 		 * because their permissions are meaningless.  Check stdin_ok 		 * first because we may not have stat'ed the file. 		 * Also skip this check if the -P option was specified because 		 * we will not be able to overwrite file contents and will 		 * barf later. 		 */
 if|if
 condition|(
 operator|!
