@@ -1679,7 +1679,7 @@ name|acl_entry
 operator|.
 name|ae_id
 operator|=
-literal|0
+name|ACL_UNDEFINED_ID
 expr_stmt|;
 break|break;
 default|default:
@@ -1687,7 +1687,7 @@ name|acl_entry
 operator|.
 name|ae_id
 operator|=
-literal|0
+name|ACL_UNDEFINED_ID
 expr_stmt|;
 name|printf
 argument_list|(
