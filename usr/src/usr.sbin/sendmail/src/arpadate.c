@@ -2,6 +2,12 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
+file|"conf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -34,7 +40,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)arpadate.c	3.6	%G%"
+literal|"@(#)arpadate.c	3.6.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 

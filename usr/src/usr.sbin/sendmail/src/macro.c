@@ -5,13 +5,19 @@ directive|include
 file|"useful.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"conf.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)macro.c	3.4	%G%"
+literal|"@(#)macro.c	3.4.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 

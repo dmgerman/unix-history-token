@@ -21,19 +21,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.31	%G%"
+literal|"@(#)conf.c	3.31.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|<whoami.h>
-end_include
-
-begin_comment
-comment|/* definitions of machine id's at berkeley */
-end_comment
+begin_escape
+end_escape
 
 begin_comment
 comment|/* **  Header info table **	Final (null) entry contains the flags used for any other field. ** **	Not all of these are actually handled specially by sendmail **	at this time.  They are included as placeholders, to let **	you know that "someday" I intend to have sendmail do **	something with them. */

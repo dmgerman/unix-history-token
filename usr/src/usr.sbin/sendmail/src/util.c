@@ -23,13 +23,19 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"conf.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	3.8	%G%"
+literal|"@(#)util.c	3.8.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 

@@ -9,7 +9,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)rmail.c	3.3	%G%"
+literal|"@(#)rmail.c	3.3.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"useful.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"conf.h"
 end_include
 
 begin_function_decl
