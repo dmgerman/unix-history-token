@@ -391,7 +391,7 @@ name|ULCK_BUF
 parameter_list|(
 name|bp
 parameter_list|)
-value|{ \ 	int s; \ 	s = splbio(); \ 	(bp)->b_flags&= ~B_LOCKED; \ 	splx(s); \ 	bremfree(bp); \ 	brelse(bp); \ }
+value|{ \ 	long flags; \ 	int s; \ 	s = splbio(); \ 	flags = (bp)->b_flags; \ 	(bp)->b_flags&= ~(B_DIRTY | B_LOCKED); \ 	bremfree(bp); \ 	(bp)->b_flags |= B_BUSY; \ 	splx(s); \ 	if (flags& B_DIRTY) \ 		bdwrite(bp); \ 	else \ 		brelse(bp); \ }
 end_define
 
 end_unit
