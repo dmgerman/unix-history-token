@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.33	81/06/30	*/
+comment|/*	uba.c	4.34	81/07/08	*/
 end_comment
 
 begin_include
@@ -1848,6 +1848,14 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|up
+operator|->
+name|uba_sr
+operator|=
+name|UBASR_CRD
+operator||
+name|UBASR_LEB
+expr_stmt|;
 name|uh
 operator|->
 name|uh_hangcnt
