@@ -1568,9 +1568,6 @@ name|ccb_calc_geometry
 modifier|*
 name|ccg
 decl_stmt|;
-name|u_int32_t
-name|secs_per_cylinder
-decl_stmt|;
 name|ccg
 operator|=
 operator|&
@@ -1583,7 +1580,7 @@ directive|ifdef
 name|VP0_DEBUG
 name|printf
 argument_list|(
-literal|"vpo%d: XPT_CALC_GEOMETRY (%d, %d) request\n"
+literal|"vpo%d: XPT_CALC_GEOMETRY (bs=%d,vs=%d,c=%d,h=%d,spt=%d) request\n"
 argument_list|,
 name|vpo
 operator|->
@@ -1591,11 +1588,23 @@ name|vpo_unit
 argument_list|,
 name|ccg
 operator|->
+name|block_size
+argument_list|,
+name|ccg
+operator|->
 name|volume_size
 argument_list|,
 name|ccg
 operator|->
-name|block_size
+name|cylinders
+argument_list|,
+name|ccg
+operator|->
+name|heads
+argument_list|,
+name|ccg
+operator|->
+name|secs_per_track
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1612,16 +1621,6 @@ name|secs_per_track
 operator|=
 literal|32
 expr_stmt|;
-name|secs_per_cylinder
-operator|=
-name|ccg
-operator|->
-name|heads
-operator|*
-name|ccg
-operator|->
-name|secs_per_track
-expr_stmt|;
 name|ccg
 operator|->
 name|cylinders
@@ -1630,7 +1629,15 @@ name|ccg
 operator|->
 name|volume_size
 operator|/
-name|secs_per_cylinder
+operator|(
+name|ccg
+operator|->
+name|heads
+operator|*
+name|ccg
+operator|->
+name|secs_per_track
+operator|)
 expr_stmt|;
 name|ccb
 operator|->
