@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.5 1993/09/04 05:06:33 jkh Exp $"
+literal|"$Id: perform.c,v 1.6 1993/09/12 20:56:40 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -671,7 +671,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Creating gzip'd tar ball in '%s', contents:\n"
+literal|"Creating gzip'd tar ball in '%s'\n"
 argument_list|,
 name|tball
 argument_list|)
