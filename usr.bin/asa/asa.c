@@ -47,6 +47,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -54,12 +60,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_decl_stmt
@@ -127,11 +127,12 @@ if|if
 condition|(
 operator|*
 name|argv
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|fp
 operator|=
@@ -143,6 +144,8 @@ argument_list|,
 literal|"r"
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|warn
@@ -181,6 +184,8 @@ condition|(
 operator|*
 name|argv
 operator|++
+operator|!=
+name|NULL
 condition|)
 do|;
 name|exit
@@ -203,12 +208,12 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
+name|size_t
+name|len
+decl_stmt|;
 name|char
 modifier|*
 name|buf
-decl_stmt|;
-name|size_t
-name|len
 decl_stmt|;
 if|if
 condition|(
@@ -246,7 +251,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* special case the first line  */
+comment|/* special case the first line */
 switch|switch
 condition|(
 name|buf
@@ -290,7 +295,6 @@ index|[
 literal|1
 index|]
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%.*s"
@@ -309,7 +313,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 while|while
 condition|(
 operator|(
@@ -413,7 +416,6 @@ index|[
 literal|1
 index|]
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%.*s"
@@ -432,7 +434,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|putchar
 argument_list|(
