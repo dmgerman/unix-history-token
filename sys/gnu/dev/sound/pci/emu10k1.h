@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  **********************************************************************  *     8010.h  *     Copyright 1999, 2000 Creative Labs, Inc.  *  **********************************************************************  *  *     Date		    Author	    Summary of changes  *     ----		    ------	    ------------------  *     October 20, 1999     Bertrand Lee    base code release  *     November 2, 1999     Alan Cox	    Cleaned of 8bit chars, DOS  *					    line endings  *     December 8, 1999     Jon Taylor	    Added lots of new register info  *  **********************************************************************  *  *     This program is free software; you can redistribute it and/or  *     modify it under the terms of the GNU General Public License as  *     published by the Free Software Foundation; either version 2 of  *     the License, or (at your option) any later version.  *  *     This program is distributed in the hope that it will be useful,  *     but WITHOUT ANY WARRANTY; without even the implied warranty of  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *     GNU General Public License for more details.  *  *     You should have received a copy of the GNU General Public  *     License along with this program; if not, write to the Free  *     Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,  *     USA.  *  *  **********************************************************************  */
+comment|/*  **********************************************************************  *     8010.h  *     Copyright 1999-2001 Creative Labs, Inc.  *  **********************************************************************  *  *     Date		    Author	    Summary of changes  *     ----		    ------	    ------------------  *     October 20, 1999     Bertrand Lee    base code release  *     November 2, 1999     Alan Cox	    Cleaned of 8bit chars, DOS  *					    line endings  *     December 8, 1999     Jon Taylor	    Added lots of new register info  *     May 16, 2001         Daniel Bertrand Added unofficial DBG register info  *     Oct-Nov 2001         D.B.            Added unofficial Audigy registers   *  **********************************************************************  *  *     This program is free software; you can redistribute it and/or  *     modify it under the terms of the GNU General Public License as  *     published by the Free Software Foundation; either version 2 of  *     the License, or (at your option) any later version.  *  *     This program is distributed in the hope that it will be useful,  *     but WITHOUT ANY WARRANTY; without even the implied warranty of  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *     GNU General Public License for more details.  *  *     You should have received a copy of the GNU General Public  *     License along with this program; if not, write to the Free  *     Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139,  *     USA.  *  *  **********************************************************************  */
 end_comment
 
 begin_ifndef
@@ -22,81 +22,33 @@ file|<linux/types.h>
 end_include
 
 begin_comment
-comment|/* ------------------- DEFINES -------------------- */
+comment|// Driver version:
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CMD_WRITEFN0
-value|0x0
+name|MAJOR_VER
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|CMD_READFN0
-value|0x1
+name|MINOR_VER
+value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|CMD_WRITEPTR
-value|0x2
+name|DRIVER_VERSION
+value|"0.20a"
 end_define
 
-begin_define
-define|#
-directive|define
-name|CMD_READPTR
-value|0x3
-end_define
-
-begin_define
-define|#
-directive|define
-name|CMD_SETRECSRC
-value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|CMD_GETRECSRC
-value|0x5
-end_define
-
-begin_define
-define|#
-directive|define
-name|CMD_GETVOICEPARAM
-value|0x6
-end_define
-
-begin_define
-define|#
-directive|define
-name|CMD_SETVOICEPARAM
-value|0x7
-end_define
-
-begin_struct
-struct|struct
-name|mixer_private_ioctl
-block|{
-name|u32
-name|cmd
-decl_stmt|;
-name|u32
-name|val
-index|[
-literal|10
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_comment
+comment|// Audigy specify registers are prefixed with 'A_'
+end_comment
 
 begin_comment
 comment|/************************************************************************************************/
@@ -191,6 +143,32 @@ end_comment
 
 begin_comment
 comment|/* the relevant bits and zero to the other bits	*/
+end_comment
+
+begin_comment
+comment|/* The next two interrupts are for the midi port on the Audigy Drive (A_MPU1)			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_IPR_MIDITRANSBUFEMPTY2
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* MIDI UART transmit buffer empty		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_IPR_MIDIRECVBUFEMPTY2
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* MIDI UART receive buffer empty		*/
 end_comment
 
 begin_define
@@ -432,6 +410,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|A_IPR_MIDITRANSBUFEMPTY1
+value|IPR_MIDITRANSBUFEMPTY
+end_define
+
+begin_comment
+comment|/* MIDI UART transmit buffer empty		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_IPR_MIDIRECVBUFEMPTY1
+value|IPR_MIDIRECVBUFEMPTY
+end_define
+
+begin_comment
+comment|/* MIDI UART receive buffer empty		*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INTE
 value|0x0c
 end_define
@@ -665,6 +665,32 @@ begin_comment
 comment|/* lockups if enabled.				*/
 end_comment
 
+begin_comment
+comment|/* The next two interrupts are for the midi port on the Audigy Drive (A_MPU1)			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_INTE_MIDITXENABLE2
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Enable MIDI transmit-buffer-empty interrupts	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_INTE_MIDIRXENABLE2
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Enable MIDI receive-buffer-empty interrupts	*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -822,6 +848,24 @@ end_define
 begin_comment
 comment|/* Enable MIDI receive-buffer-empty interrupts	*/
 end_comment
+
+begin_comment
+comment|/* The next two interrupts are for the midi port on the Audigy (A_MPU2)	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_INTE_MIDITXENABLE1
+value|INTE_MIDITXENABLE
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_INTE_MIDIRXENABLE1
+value|INTE_MIDIRXENABLE
+end_define
 
 begin_define
 define|#
@@ -1107,6 +1151,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HCFG_GPOUT0
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* set to enable digital out on 5.1 cards	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HCFG_JOYENABLE
 value|0x00000200
 end_define
@@ -1288,6 +1343,10 @@ begin_comment
 comment|/* completely initialized.			*/
 end_comment
 
+begin_comment
+comment|//For Audigy, MPU port move to 0x70-0x74 ptr register
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1372,12 +1431,37 @@ end_comment
 begin_define
 define|#
 directive|define
+name|A_IOCFG
+value|0x18
+end_define
+
+begin_comment
+comment|/* GPIO on Audigy card (16bits)			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_GPINPUT_MASK
+value|0xff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_GPOUTPUT_MASK
+value|0x00ff
+end_define
+
+begin_define
+define|#
+directive|define
 name|TIMER
 value|0x1a
 end_define
 
 begin_comment
-comment|/* Timer terminal count register		*/
+comment|/* Timer terminal count register (16-bit)	*/
 end_comment
 
 begin_comment
@@ -1396,7 +1480,7 @@ begin_define
 define|#
 directive|define
 name|TIMER_RATE_MASK
-value|0x000003ff
+value|0x03ff
 end_define
 
 begin_comment
@@ -1406,13 +1490,6 @@ end_comment
 begin_comment
 comment|/* 0 == 1024 periods, [1..4] are not useful	*/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMER_RATE
-value|0x0a00001a
-end_define
 
 begin_define
 define|#
@@ -1457,332 +1534,6 @@ end_define
 begin_comment
 comment|/* Address of indexed AC97 register		*/
 end_comment
-
-begin_comment
-comment|/************************************************************************************************/
-end_comment
-
-begin_comment
-comment|/* PCI function 1 registers, address =<val> + PCIBASE1						*/
-end_comment
-
-begin_comment
-comment|/************************************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JOYSTICK1
-value|0x00
-end_define
-
-begin_comment
-comment|/* Analog joystick port register		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JOYSTICK2
-value|0x01
-end_define
-
-begin_comment
-comment|/* Analog joystick port register		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JOYSTICK3
-value|0x02
-end_define
-
-begin_comment
-comment|/* Analog joystick port register		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JOYSTICK4
-value|0x03
-end_define
-
-begin_comment
-comment|/* Analog joystick port register		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JOYSTICK5
-value|0x04
-end_define
-
-begin_comment
-comment|/* Analog joystick port register		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JOYSTICK6
-value|0x05
-end_define
-
-begin_comment
-comment|/* Analog joystick port register		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JOYSTICK7
-value|0x06
-end_define
-
-begin_comment
-comment|/* Analog joystick port register		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JOYSTICK8
-value|0x07
-end_define
-
-begin_comment
-comment|/* Analog joystick port register		*/
-end_comment
-
-begin_comment
-comment|/* When writing, any write causes JOYSTICK_COMPARATOR output enable to be pulsed on write.	*/
-end_comment
-
-begin_comment
-comment|/* When reading, use these bitfields: */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JOYSTICK_BUTTONS
-value|0x0f
-end_define
-
-begin_comment
-comment|/* Joystick button data				*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JOYSTICK_COMPARATOR
-value|0xf0
-end_define
-
-begin_comment
-comment|/* Joystick comparator data			*/
-end_comment
-
-begin_comment
-comment|/********************************************************************************************************/
-end_comment
-
-begin_comment
-comment|/* AC97 pointer-offset register set, accessed through the AC97ADDRESS and AC97DATA registers		*/
-end_comment
-
-begin_comment
-comment|/********************************************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AC97_RESET
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_MASTERVOLUME
-value|0x02
-end_define
-
-begin_comment
-comment|/* Master volume					*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AC97_HEADPHONEVOLUME
-value|0x04
-end_define
-
-begin_comment
-comment|/* Headphone volume					*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AC97_MASTERVOLUMEMONO
-value|0x06
-end_define
-
-begin_comment
-comment|/* Mast volume mono					*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AC97_MASTERTONE
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_PCBEEPVOLUME
-value|0x0a
-end_define
-
-begin_comment
-comment|/* PC speaker system beep volume			*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AC97_PHONEVOLUME
-value|0x0c
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_MICVOLUME
-value|0x0e
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_LINEINVOLUME
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_CDVOLUME
-value|0x12
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_VIDEOVOLUME
-value|0x14
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_AUXVOLUME
-value|0x16
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_PCMOUTVOLUME
-value|0x18
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_RECORDSELECT
-value|0x1a
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_RECORDGAIN
-value|0x1c
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_RECORDGAINMIC
-value|0x1e
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_GENERALPURPOSE
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_3DCONTROL
-value|0x22
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_MODEMRATE
-value|0x24
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_POWERDOWN
-value|0x26
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_VENDORID1
-value|0x7c
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_VENDORID2
-value|0x7e
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_ZVIDEOVOLUME
-value|0xec
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_AC3VOLUME
-value|0xed
-end_define
 
 begin_comment
 comment|/********************************************************************************************************/
@@ -3071,6 +2822,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TREMFRQ_FREQUENCY
+value|0x000000ff
+end_define
+
+begin_comment
+comment|/* Tremolo LFO frequency				*/
+end_comment
+
+begin_comment
+comment|/* ??Hz steps, maximum of ?? Hz.			*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FM2FRQ2
 value|0x1d
 end_define
@@ -3403,6 +3169,31 @@ end_comment
 begin_define
 define|#
 directive|define
+name|A_ADCCR_RCHANENABLE
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_ADCCR_LCHANENABLE
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_ADCCR_SAMPLERATE_MASK
+value|0x0000000F
+end_define
+
+begin_comment
+comment|/* Audigy sample rate convertor output rate		*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ADCCR_SAMPLERATE_MASK
 value|0x00000007
 end_define
@@ -3502,6 +3293,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|A_ADCCR_SAMPLERATE_12
+value|0x00000006
+end_define
+
+begin_comment
+comment|/* 12kHz sample rate					*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_ADCCR_SAMPLERATE_11
+value|0x00000007
+end_define
+
+begin_comment
+comment|/* 11.025kHz sample rate				*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_ADCCR_SAMPLERATE_8
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* 8kHz sample rate					*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FXWC
 value|0x43
 end_define
@@ -3515,7 +3339,19 @@ comment|/* When set, each bit enables the writing of the	*/
 end_comment
 
 begin_comment
-comment|/* corresponding FX output channel into host memory	*/
+comment|/* corresponding FX output channel (internal registers  */
+end_comment
+
+begin_comment
+comment|/* 0x20-0x3f) into host memory. This mode of recording	*/
+end_comment
+
+begin_comment
+comment|/* is 16bit, 48KHz only. All 32	channels can be enabled */
+end_comment
+
+begin_comment
+comment|/* simultaneously.					*/
 end_comment
 
 begin_define
@@ -3956,6 +3792,87 @@ begin_comment
 comment|/* DO NOT PROGRAM THIS REGISTER!!! MAY DESTROY CHIP */
 end_comment
 
+begin_comment
+comment|/* definitions for debug register - taken from the alsa drivers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBG_ZC
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* zero tram counter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBG_SATURATION_OCCURED
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* saturation control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBG_SATURATION_ADDR
+value|0x01ff0000
+end_define
+
+begin_comment
+comment|/* saturation address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBG_SINGLE_STEP
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* single step mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBG_STEP
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* start single step */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBG_CONDITION_CODE
+value|0x00003e00
+end_define
+
+begin_comment
+comment|/* condition code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBG_SINGLE_STEP_ADDR
+value|0x000001ff
+end_define
+
+begin_comment
+comment|/* single step address */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3966,6 +3883,56 @@ end_define
 begin_comment
 comment|/* DO NOT PROGRAM THIS REGISTER!!! MAY DESTROY CHIP */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|A_DBG
+value|0x53
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_DBG_SINGLE_STEP
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Set to zero to start dsp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_DBG_ZC
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* zero tram counter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_DBG_STEP_ADDR
+value|0x000003ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_DBG_SATURATION_OCCURED
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_DBG_SATURATION_ADDR
+value|0x0ffc0000
+end_define
 
 begin_define
 define|#
@@ -4348,6 +4315,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AC97SLOT
+value|0x5f
+end_define
+
+begin_comment
+comment|/* additional AC97 slots enable bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AC97SLOT_CNTR
+value|0x10
+end_define
+
+begin_comment
+comment|/* Center enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AC97SLOT_LFE
+value|0x20
+end_define
+
+begin_comment
+comment|/* LFE enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CDSRCS
 value|0x60
 end_define
@@ -4423,6 +4423,31 @@ begin_comment
 comment|/* Do not modify this field.			*/
 end_comment
 
+begin_comment
+comment|/* Note that these values can vary +/- by a small amount                                        */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SRCS_SPDIFRATE_44
+value|0x0003acd9
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRCS_SPDIFRATE_48
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SRCS_SPDIFRATE_96
+value|0x00080000
+end_define
+
 begin_define
 define|#
 directive|define
@@ -4449,6 +4474,20 @@ begin_define
 define|#
 directive|define
 name|MICIDX_IDX
+value|0x10000063
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_ADCIDX
+value|0x63
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_ADCIDX_IDX
 value|0x10000063
 end_define
 
@@ -4511,6 +4550,247 @@ value|0x10000065
 end_define
 
 begin_comment
+comment|/* This is the MPU port on the card (via the game port)						*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_MUDATA1
+value|0x70
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_MUCMD1
+value|0x71
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_MUSTAT1
+value|A_MUCMD1
+end_define
+
+begin_comment
+comment|/* This is the MPU port on the Audigy Drive 							*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_MUDATA2
+value|0x72
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_MUCMD2
+value|0x73
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_MUSTAT2
+value|A_MUCMD2
+end_define
+
+begin_comment
+comment|/* The next two are the Audigy equivalent of FXWC						*/
+end_comment
+
+begin_comment
+comment|/* the Audigy can record any output (16bit, 48kHz, up to 64 channel simultaneously) 		*/
+end_comment
+
+begin_comment
+comment|/* Each bit selects a channel for recording */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_FXWC1
+value|0x74
+end_define
+
+begin_comment
+comment|/* Selects 0x7f-0x60 for FX recording           */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_FXWC2
+value|0x75
+end_define
+
+begin_comment
+comment|/* Selects 0x9f-0x80 for FX recording           */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_SPDIF_SAMPLERATE
+value|0x76
+end_define
+
+begin_comment
+comment|/* Set the sample rate of SPDIF output		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_SPDIF_48000
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_SPDIF_44100
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_SPDIF_96000
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_FXRT2
+value|0x7c
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_FXRT_CHANNELE
+value|0x0000003f
+end_define
+
+begin_comment
+comment|/* Effects send bus number for channel's effects send E	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_FXRT_CHANNELF
+value|0x00003f00
+end_define
+
+begin_comment
+comment|/* Effects send bus number for channel's effects send F	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_FXRT_CHANNELG
+value|0x003f0000
+end_define
+
+begin_comment
+comment|/* Effects send bus number for channel's effects send G	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_FXRT_CHANNELH
+value|0x3f000000
+end_define
+
+begin_comment
+comment|/* Effects send bus number for channel's effects send H	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_SENDAMOUNTS
+value|0x7d
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_FXSENDAMOUNT_E_MASK
+value|0xff000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_FXSENDAMOUNT_F_MASK
+value|0x00ff0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_FXSENDAMOUNT_G_MASK
+value|0x0000ff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_FXSENDAMOUNT_H_MASK
+value|0x000000ff
+end_define
+
+begin_comment
+comment|/* The send amounts for this one are the same as used with the emu10k1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_FXRT1
+value|0x7e
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_FXRT_CHANNELA
+value|0x0000003f
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_FXRT_CHANNELB
+value|0x00003f00
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_FXRT_CHANNELC
+value|0x003f0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_FXRT_CHANNELD
+value|0x3f000000
+end_define
+
+begin_comment
 comment|/* Each FX general purpose register is 32 bits in length, all bits are used			*/
 end_comment
 
@@ -4523,6 +4803,17 @@ end_define
 
 begin_comment
 comment|/* FX general purpose registers base       	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_FXGPREGBASE
+value|0x400
+end_define
+
+begin_comment
+comment|/* Audigy GPRs, 0x400 to 0x5ff			*/
 end_comment
 
 begin_comment
@@ -4702,6 +4993,52 @@ end_define
 begin_comment
 comment|/* Instruction operand A			*/
 end_comment
+
+begin_comment
+comment|/* Audigy Soundcard have a different instruction format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUDIGY_CODEBASE
+value|0x600
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_LOWORD_OPY_MASK
+value|0x000007ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_LOWORD_OPX_MASK
+value|0x007ff000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_HIWORD_OPCODE_MASK
+value|0x0f000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_HIWORD_RESULT_MASK
+value|0x007ff000
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_HIWORD_OPA_MASK
+value|0x000007ff
+end_define
 
 begin_endif
 endif|#
