@@ -786,6 +786,26 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Intelligent Stick USB disk-on-key 		 * Reported by: Samuel Tardieu<sam@rfc1149.net> 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"USB Card"
+block|,
+literal|"IntelligentStick*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * Sony DSC cameras (DSC-S30, DSC-S50, DSC-S70) 		 */
 block|{
 name|T_DIRECT
