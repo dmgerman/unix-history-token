@@ -365,7 +365,9 @@ name|struct
 name|ACPIrsdp
 modifier|*
 name|acpi_find_rsd_ptr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ACPIrsdp
