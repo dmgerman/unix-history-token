@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.8	%G%	*/
+comment|/*	dz.c	4.9	%G%	*/
 end_comment
 
 begin_include
@@ -3180,6 +3180,16 @@ operator|->
 name|dzmsr
 operator|&
 name|bit
+operator|||
+operator|(
+name|i
+operator|==
+literal|6
+operator|||
+name|i
+operator|==
+literal|7
+operator|)
 condition|)
 block|{
 comment|/* carrier present */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.5	%G%	*/
+comment|/*	hp.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -3423,7 +3423,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"hp dump dsk err: (%d,%d,%d) ds=%X er=%X\n"
+literal|"hp dump dsk err: (%d,%d,%d) ds=%x er=%x\n"
 argument_list|,
 name|cn
 argument_list|,

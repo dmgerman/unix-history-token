@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.5	%G%	*/
+comment|/*	rk.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -1716,6 +1716,21 @@ argument_list|,
 name|B_WRITE
 argument_list|,
 name|minphys
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|rkdump
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|printf
+argument_list|(
+literal|"don't know how to dump to rk (yet)\n"
 argument_list|)
 expr_stmt|;
 block|}
