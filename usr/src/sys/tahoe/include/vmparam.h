@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmparam.h	1.7	87/06/01	*/
+comment|/*	vmparam.h	1.8	88/01/07	*/
 end_comment
 
 begin_comment
@@ -420,10 +420,6 @@ name|LOTSOFMEM
 value|2
 end_define
 
-begin_comment
-comment|/*  * BEWARE THIS DEFINITION WORKS ONLY WITH COUNT OF 1  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -435,12 +431,10 @@ name|v
 parameter_list|,
 name|pfnum
 parameter_list|,
-name|count
-parameter_list|,
 name|prot
 parameter_list|)
 define|\
-value|(*(int *)(pte) = (pfnum) | (prot), mtpr(TBIS, ptob(v)))
+value|(*(int *)(pte) = (pfnum) | (prot), mtpr(TBIS, v))
 end_define
 
 begin_comment
