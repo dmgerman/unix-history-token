@@ -2178,7 +2178,6 @@ name|TZ_THFLAG_NONE
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|sc
 operator|->
 name|tz_zone
@@ -2187,9 +2186,7 @@ name|psv
 operator|!=
 operator|-
 literal|1
-operator|)
 operator|&&
-operator|(
 name|temp
 operator|>=
 name|sc
@@ -2197,7 +2194,6 @@ operator|->
 name|tz_zone
 operator|.
 name|psv
-operator|)
 condition|)
 name|newflags
 operator||=
@@ -2205,7 +2201,6 @@ name|TZ_THFLAG_PSV
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|sc
 operator|->
 name|tz_zone
@@ -2214,9 +2209,7 @@ name|hot
 operator|!=
 operator|-
 literal|1
-operator|)
 operator|&&
-operator|(
 name|temp
 operator|>=
 name|sc
@@ -2224,7 +2217,6 @@ operator|->
 name|tz_zone
 operator|.
 name|hot
-operator|)
 condition|)
 name|newflags
 operator||=
@@ -2232,7 +2224,6 @@ name|TZ_THFLAG_HOT
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|sc
 operator|->
 name|tz_zone
@@ -2241,9 +2232,7 @@ name|crt
 operator|!=
 operator|-
 literal|1
-operator|)
 operator|&&
-operator|(
 name|temp
 operator|>=
 name|sc
@@ -2251,7 +2240,6 @@ operator|->
 name|tz_zone
 operator|.
 name|crt
-operator|)
 condition|)
 name|newflags
 operator||=
@@ -2418,7 +2406,11 @@ name|tz_temperature
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* shutdown_nice(RB_POWEROFF);*/
+name|shutdown_nice
+argument_list|(
+name|RB_POWEROFF
+argument_list|)
+expr_stmt|;
 block|}
 name|sc
 operator|->
