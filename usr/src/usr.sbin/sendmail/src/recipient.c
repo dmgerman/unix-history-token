@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.3 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,7 +387,6 @@ name|q_flags
 operator||=
 name|QPRIMARY
 expr_stmt|;
-comment|/* put on send queue or suppress self-reference */
 if|if
 condition|(
 name|ctladdr
@@ -405,7 +404,6 @@ name|selfref
 operator|=
 name|TRUE
 expr_stmt|;
-else|else
 name|al
 operator|=
 name|a
@@ -425,12 +423,37 @@ name|ctladdr
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|25
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sendtolist: QDONTSEND "
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|ctladdr
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 name|ctladdr
 operator|->
 name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
+block|}
 comment|/* arrange to send to everyone on the local send list */
 name|prev
 operator|=
@@ -669,7 +692,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  RECIPIENT -- Designate a message recipient ** **	Saves the named person for future mailing. ** **	Parameters: **		a -- the (preparsed) address header for the recipient. **		sendq -- a pointer to the head of a queue to put the **			recipient in.  Duplicate supression is done **			in this queue. ** **	Returns: **		pointer to address actually inserted in send list. ** **	Side Effects: **		none. */
+comment|/* **  RECIPIENT -- Designate a message recipient ** **	Saves the named person for future mailing. ** **	Parameters: **		a -- the (preparsed) address header for the recipient. **		sendq -- a pointer to the head of a queue to put the **			recipient in.  Duplicate supression is done **			in this queue. **		e -- the current envelope. ** **	Returns: **		pointer to address actually inserted in send list. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function_decl
@@ -905,9 +928,6 @@ operator|&&
 name|m
 operator|==
 name|ProgMailer
-operator|&&
-operator|!
-name|ForceMail
 condition|)
 block|{
 name|a
@@ -1272,9 +1292,6 @@ operator|->
 name|q_alias
 operator|==
 name|NULL
-operator|&&
-operator|!
-name|ForceMail
 condition|)
 block|{
 name|a
@@ -1367,9 +1384,6 @@ name|NULL
 operator|&&
 operator|!
 name|QueueRun
-operator|&&
-operator|!
-name|ForceMail
 condition|)
 block|{
 name|a

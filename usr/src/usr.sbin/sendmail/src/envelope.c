@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.2 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1830,6 +1830,32 @@ name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|45
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"setsender: QDONTSEND "
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_from
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 name|loweraddr
 argument_list|(
 operator|&

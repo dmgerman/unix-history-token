@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.5 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.6 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.5 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.6 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1855,6 +1855,10 @@ literal|"running queue: %s"
 argument_list|,
 name|QueueDir
 argument_list|)
+expr_stmt|;
+name|ForceMail
+operator|=
+name|TRUE
 expr_stmt|;
 ifdef|#
 directive|ifdef

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.9 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5983,6 +5983,14 @@ name|first
 init|=
 name|TRUE
 decl_stmt|;
+specifier|register
+name|MAILER
+modifier|*
+name|m
+decl_stmt|;
+name|MAILER
+name|pseudomailer
+decl_stmt|;
 specifier|static
 name|int
 name|indent
@@ -6035,6 +6043,39 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+comment|/* find the mailer -- carefully */
+name|m
+operator|=
+name|a
+operator|->
+name|q_mailer
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+name|m
+operator|=
+operator|&
+name|pseudomailer
+expr_stmt|;
+name|m
+operator|->
+name|m_mno
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|m
+operator|->
+name|m_name
+operator|=
+literal|"NULL"
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -6957,6 +6998,29 @@ name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"maplocaluser: QDONTSEND "
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|a
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 name|a1
 operator|->
 name|q_alias

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.10 (Berkeley) %G%"
+literal|"@(#)main.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3657,6 +3657,35 @@ operator||=
 name|QDONTSEND
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|1
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"main: QDONTSEND "
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+operator|&
+name|CurEnv
+operator|->
+name|e_from
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+end_if
 
 begin_expr_stmt
 name|CurEnv
