@@ -309,7 +309,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never chagnes   *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - either by curproc or a lock which prevents the lock from  *          going away, such as (d,e)  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *  * If the locking identifier is followed by a plus '+', then the specified  * member follows these special rules:  *      - It is only written to by the current process.  *      - It can be read by the current process and other processes.  * Thus, the locking rules for it are slightly different, and allow us to  * optimize the case where a process reads its own such value:  *	- Writes to this member are locked.  *	- Reads of this value by other processes are locked.  *	- Reads of this value by the current process need not be locked.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never chagnes   *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - either by curproc or a lock which prevents the lock from  *          going away, such as (d,e)  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -349,7 +349,7 @@ name|pcred
 modifier|*
 name|p_cred
 decl_stmt|;
-comment|/* (c+) Process owner's identity. */
+comment|/* (c + k) Process owner's identity. */
 name|struct
 name|filedesc
 modifier|*
@@ -439,7 +439,7 @@ name|proc
 modifier|*
 name|p_pptr
 decl_stmt|;
-comment|/* (e) Pointer to parent process. */
+comment|/* (c + e) Pointer to parent process. */
 name|LIST_ENTRY
 argument_list|(
 argument|proc
@@ -463,7 +463,7 @@ value|p_oppid
 name|pid_t
 name|p_oppid
 decl_stmt|;
-comment|/* (c) Save parent pid during ptrace. XXX */
+comment|/* (c + e) Save parent pid during ptrace. XXX */
 name|int
 name|p_dupfd
 decl_stmt|;
@@ -735,7 +735,7 @@ name|pargs
 modifier|*
 name|p_args
 decl_stmt|;
-comment|/* (b?) Process arguments. */
+comment|/* (c + k) Process arguments. */
 comment|/* End area that is copied on creation. */
 define|#
 directive|define
@@ -1632,10 +1632,6 @@ parameter_list|)
 value|{							\ 	if (--(s)->s_count == 0)					\ 		FREE(s, M_SESSION);					\ }
 end_define
 
-begin_comment
-comment|/* STOPEVENT() is MP safe. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1647,7 +1643,21 @@ name|e
 parameter_list|,
 name|v
 parameter_list|)
-value|do {						\ 	PROC_LOCK(p);							\ 	if ((p)->p_stops& (e)) {					\ 		stopevent((p), (e), (v));				\ 	}								\ 	PROC_UNLOCK(p);							\ } while (0)
+value|do {						\ 	PROC_LOCK(p);							\ 	_STOPEVENT((p), (e), (v));					\ 	PROC_UNLOCK(p);							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_STOPEVENT
+parameter_list|(
+name|p
+parameter_list|,
+name|e
+parameter_list|,
+name|v
+parameter_list|)
+value|do {					\ 	PROC_LOCK_ASSERT(p, MA_OWNED);					\ 	if ((p)->p_stops& (e)) {					\ 		stopevent((p), (e), (v));				\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -1672,6 +1682,29 @@ parameter_list|(
 name|p
 parameter_list|)
 value|mtx_unlock(&(p)->p_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_UNLOCK_NOSWITCH
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|mtx_unlock_flags(&(p)->p_mtx, MTX_NOSWITCH)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_LOCK_ASSERT
+parameter_list|(
+name|p
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(&(p)->p_mtx, (type))
 end_define
 
 begin_comment
@@ -1768,7 +1801,17 @@ name|PHOLD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK(p);							\ 	if ((p)->p_lock++ == 0)						\ 		faultin(p);						\ 	PROC_UNLOCK(p);							\ } while (0)
+value|do {							\ 	PROC_LOCK(p);							\ 	_PHOLD(p);							\ 	PROC_UNLOCK(p);							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PHOLD
+parameter_list|(
+name|p
+parameter_list|)
+value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	if ((p)->p_lock++ == 0)						\ 		faultin((p));						\ } while (0)
 end_define
 
 begin_define
@@ -1778,7 +1821,17 @@ name|PRELE
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK(p);							\ 	(--(p)->p_lock);						\ 	PROC_UNLOCK(p);							\ } while (0)
+value|do {							\ 	PROC_LOCK((p));							\ 	_PRELE((p));							\ 	PROC_UNLOCK((p));						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PRELE
+parameter_list|(
+name|p
+parameter_list|)
+value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	(--(p)->p_lock);						\ } while (0)
 end_define
 
 begin_define
