@@ -1600,6 +1600,12 @@ literal|"FreeBSD/NetBSD/386BSD"
 block|}
 block|,
 block|{
+literal|0xA6
+block|,
+literal|"OpenBSD"
+block|}
+block|,
+block|{
 literal|0xA7
 block|,
 literal|"NEXTSTEP"
