@@ -109,6 +109,8 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -167,6 +169,27 @@ begin_function_decl
 name|void
 modifier|*
 name|nfsm_dissect_xx
+parameter_list|(
+name|int
+name|s
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|md
+parameter_list|,
+name|caddr_t
+modifier|*
+name|dpos
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|nfsm_dissect_xx_nonblock
 parameter_list|(
 name|int
 name|s
@@ -269,6 +292,19 @@ name|s
 parameter_list|)
 define|\
 value|({ \ 	void *ret; \ 	ret = nfsm_dissect_xx((s),&md,&dpos); \ 	nfsm_dcheckp(ret, mrep); \ 	(c)ret; \ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_dissect_nonblock
+parameter_list|(
+name|c
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|({ \ 	void *ret; \ 	ret = nfsm_dissect_xx_nonblock((s),&md,&dpos); \ 	nfsm_dcheckp(ret, mrep); \ 	(c)ret; \ })
 end_define
 
 begin_define

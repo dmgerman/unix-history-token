@@ -2182,6 +2182,8 @@ name|v3
 argument_list|)
 argument_list|,
 name|t1
+argument_list|,
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if
