@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setvbuf.c	8.1 (Berkeley) %G%"
+literal|"@(#)setvbuf.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
