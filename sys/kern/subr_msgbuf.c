@@ -215,6 +215,11 @@ operator|->
 name|msg_cksum
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"msgbuf cksum mismatch (read %x, calc %x)\n"
@@ -226,6 +231,12 @@ argument_list|,
 name|cksum
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Old msgbuf not recovered\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|msgbuf_clear
 argument_list|(
 name|mbp
