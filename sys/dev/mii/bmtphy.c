@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mii/miidevs.h>
+file|"miidevs.h"
 end_include
 
 begin_include
