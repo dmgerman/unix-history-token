@@ -692,9 +692,6 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SERVICING_INTERRUPT
 name|isp
 operator|->
 name|isp_osinfo
@@ -703,8 +700,6 @@ name|intsok
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Release our hook so that the boot can continue. */
 name|config_intrhook_disestablish
 argument_list|(
