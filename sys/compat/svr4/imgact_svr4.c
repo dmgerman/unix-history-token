@@ -287,10 +287,16 @@ name|printf
 argument_list|(
 literal|"imgact: text: %08lx, data: %08lx, bss: %08lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|a_out
 operator|->
 name|a_text
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|a_out
 operator|->
 name|a_data
@@ -736,6 +742,9 @@ name|u_long
 operator|)
 name|vmaddr
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|a_out
 operator|->
 name|a_text
