@@ -5593,6 +5593,13 @@ name|ai_socktype
 operator|=
 name|SOCK_DGRAM
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
 name|printf
 argument_list|(
 literal|"Looking for host %s and service %s\n"
@@ -5602,6 +5609,8 @@ argument_list|,
 name|service
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|getaddrinfo
@@ -5647,7 +5656,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|else
+ifdef|#
+directive|ifdef
+name|DEBUG
+elseif|else
+if|if
+condition|(
+name|debug
+condition|)
 block|{
 name|fprintf
 argument_list|(
@@ -5669,6 +5685,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|server
 operator|=
 operator|(
