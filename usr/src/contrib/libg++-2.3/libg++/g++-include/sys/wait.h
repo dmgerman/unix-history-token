@@ -144,7 +144,7 @@ name|wait4
 name|_G_ARGS
 argument_list|(
 operator|(
-name|int
+name|_G_pid_t
 operator|,
 name|int
 operator|*

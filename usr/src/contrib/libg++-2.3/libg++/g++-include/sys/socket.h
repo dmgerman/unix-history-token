@@ -50,13 +50,13 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|void
+name|fd_set
 operator|*
 operator|,
-name|void
+name|fd_set
 operator|*
 operator|,
-name|void
+name|fd_set
 operator|*
 operator|,
 expr|struct
@@ -89,7 +89,8 @@ operator|(
 name|int
 operator|,
 specifier|const
-name|void
+expr|struct
+name|sockaddr
 operator|*
 operator|,
 name|int
@@ -103,6 +104,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 expr|struct
 name|sockaddr
 operator|*
@@ -227,7 +229,8 @@ name|int
 operator|,
 name|int
 operator|,
-name|void
+expr|struct
+name|sockaddr
 operator|*
 operator|,
 name|int
@@ -311,7 +314,9 @@ name|int
 operator|,
 name|int
 operator|,
-name|void
+specifier|const
+expr|struct
+name|sockaddr
 operator|*
 operator|,
 name|int
@@ -346,7 +351,7 @@ operator|,
 name|int
 operator|,
 specifier|const
-name|char
+name|void
 operator|*
 operator|,
 name|int
