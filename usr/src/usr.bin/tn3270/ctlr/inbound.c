@@ -125,7 +125,7 @@ define|#
 directive|define
 name|SetXIsProtected
 parameter_list|()
-value|XFormattedScreen = FormattedScreen()
+value|(XWasSF = 1)
 end_define
 
 begin_define
@@ -135,7 +135,7 @@ name|XIsProtected
 parameter_list|(
 name|p
 parameter_list|)
-value|(XFormattedScreen&& IsProtected(p))
+value|(IsStartField(p)? \ 			    XWasSF = 1 : \ 			    (XWasSF? \ 				(XWasSF = 0, XProtected = IsProtected(p))  : \ 				XProtected))
 end_define
 
 begin_escape
@@ -205,7 +205,9 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|XFormattedScreen
+name|XWasSF
+decl_stmt|,
+name|XProtected
 decl_stmt|;
 end_decl_stmt
 
