@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.8 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2943,7 +2943,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" locore.o ${OBJS} param.o ioconf.o swap%s.o\n"
+literal|" locore.o emulate.o ${OBJS} param.o ioconf.o swap%s.o\n"
 argument_list|,
 name|fl
 operator|->
@@ -3010,7 +3010,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"locore.o ${OBJS} vers.o ioconf.o param.o "
+literal|"locore.o emulate.o ${OBJS} vers.o ioconf.o param.o "
 argument_list|)
 expr_stmt|;
 name|fprintf
