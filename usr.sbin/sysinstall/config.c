@@ -1845,6 +1845,19 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+operator|(
+name|void
+operator|)
+name|vsystem
+argument_list|(
+literal|"cp %s %s.previous"
+argument_list|,
+name|config
+argument_list|,
+name|config
+argument_list|)
+expr_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -1854,6 +1867,7 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
