@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	2.2 (Berkeley) %G%"
+literal|"@(#)langpats.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,6 +300,30 @@ block|{
 literal|"1,__dequeue\n"
 block|,
 literal|"	movl	(sp)+,r0\n\ 	remque	*(r0),r0\n"
+block|}
+block|,
+block|{
+literal|"2,_imin\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r5\n\ 	cmpl	r0,r5\n\ 	bleq	1f\n\ 	movl	r5,r0\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|"2,_imax\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r5\n\ 	cmpl	r0,r5\n\ 	bgeq	1f\n\ 	movl	r5,r0\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|"2,_min\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r5\n\ 	cmpl	r0,r5\n\ 	blequ	1f\n\ 	movl	r5,r0\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|"2,_max\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r5\n\ 	cmpl	r0,r5\n\ 	bgequ	1f\n\ 	movl	r5,r0\n\ 1:\n"
 block|}
 block|,
 endif|#
