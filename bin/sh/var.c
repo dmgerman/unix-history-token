@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: var.c,v 1.4 1996/08/11 22:51:00 ache Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: var.c,v 1.5 1996/08/12 22:14:50 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)var.c	8.3 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_comment
 comment|/*  * Shell variables.  */
@@ -130,6 +142,23 @@ directive|include
 file|"mystring.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_HISTORY
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"myhistedit.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -175,12 +204,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_HISTORY
+end_ifndef
+
 begin_decl_stmt
 name|struct
 name|var
 name|vhistsize
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -275,6 +315,9 @@ block|}
 block|,
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|NO_HISTORY
 block|{
 operator|&
 name|vhistsize
@@ -288,6 +331,8 @@ block|,
 literal|"HISTSIZE="
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 operator|&
 name|vifs
@@ -333,7 +378,7 @@ name|VSTRFIXED
 operator||
 name|VTEXTFIXED
 block|,
-literal|"PATH=:/bin:/usr/bin"
+literal|"PATH=/bin:/usr/bin"
 block|}
 block|,
 comment|/* 	 * vps1 depends on uid 	 */
@@ -700,6 +745,12 @@ name|val
 decl_stmt|;
 end_function
 
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|char
@@ -1024,6 +1075,9 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
 block|{
 name|struct
 name|var
@@ -1188,6 +1242,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_HISTORY
 if|if
 condition|(
 name|vp
@@ -1198,6 +1255,8 @@ condition|)
 name|sethistsize
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -1466,6 +1525,9 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|int
+name|doall
+decl_stmt|;
 block|{
 name|struct
 name|strlist
@@ -1549,12 +1611,15 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|v
 operator|->
 name|flags
 operator|&
 name|VUNSET
+operator|)
 operator|||
+operator|(
 operator|!
 name|doall
 operator|&&
@@ -1567,6 +1632,7 @@ name|VEXPORT
 operator|)
 operator|==
 literal|0
+operator|)
 condition|)
 return|return
 name|NULL
@@ -1951,6 +2017,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -2041,6 +2110,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -2311,24 +2383,22 @@ begin_comment
 comment|/*  * The "local" command.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|localcmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -2368,7 +2438,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Make a variable a local variable.  When a variable is made local, it's  * value and flags are saved in a localvar structure.  The saved values  * will be restored when the shell function returns.  We handle the name  * "-" as a special case.  */
@@ -2441,13 +2511,13 @@ sizeof|sizeof
 name|optlist
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|optlist
-argument_list|,
 name|lvp
 operator|->
 name|text
+argument_list|,
+name|optlist
 argument_list|,
 sizeof|sizeof
 name|optlist
@@ -2666,13 +2736,13 @@ name|NULL
 condition|)
 block|{
 comment|/* $- saved */
-name|bcopy
+name|memcpy
 argument_list|(
+name|optlist
+argument_list|,
 name|lvp
 operator|->
 name|text
-argument_list|,
-name|optlist
 argument_list|,
 sizeof|sizeof
 name|optlist
@@ -2762,24 +2832,22 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|setvarcmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2827,30 +2895,28 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * The unset builtin command.  We unset the function before we unset the  * variable to allow a function to be unset when there is a readonly variable  * with the same name.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|unsetcmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -2961,7 +3027,7 @@ return|return
 name|ret
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unset the specified variable.  */

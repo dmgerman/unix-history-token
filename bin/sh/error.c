@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: error.c,v 1.2 1994/09/24 02:57:27 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: error.c,v 1.3 1995/05/30 00:07:10 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)error.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)error.c	8.2 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,36 +65,20 @@ end_include
 begin_include
 include|#
 directive|include
+file|"show.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"stdarg.h"
+file|<unistd.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -151,6 +135,9 @@ name|exraise
 parameter_list|(
 name|e
 parameter_list|)
+name|int
+name|e
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -186,6 +173,9 @@ name|void
 name|onint
 parameter_list|()
 block|{
+name|sigset_t
+name|sigset
+decl_stmt|;
 if|if
 condition|(
 name|suppressint
@@ -200,16 +190,22 @@ name|intpending
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BSD
-name|sigsetmask
+name|sigemptyset
 argument_list|(
-literal|0
+operator|&
+name|sigset
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|sigset
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rootshell
@@ -267,32 +263,37 @@ begin_comment
 comment|/*  * Error is called to raise the error exception.  If the first argument  * is not NULL then error prints an error message using printf style  * formatting.  It then raises the error exception.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__STDC__
-end_ifdef
+end_if
 
-begin_function
+begin_decl_stmt
 name|void
 name|error
-parameter_list|(
+argument_list|(
 name|char
-modifier|*
+operator|*
 name|msg
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
+argument_list|,
+operator|...
+argument_list|)
 else|#
 directive|else
 name|void
 name|error
-parameter_list|(
+argument_list|(
 name|va_alist
-parameter_list|)
-function|va_dcl
+argument_list|)
+name|va_dcl
+endif|#
+directive|endif
 block|{
+if|#
+directive|if
+operator|!
+name|__STDC__
 name|char
 modifier|*
 name|msg
@@ -306,8 +307,8 @@ name|CLEAR_PENDING_INT
 expr_stmt|;
 name|INTOFF
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|__STDC__
 name|va_start
 argument_list|(
@@ -416,7 +417,13 @@ name|EXERROR
 argument_list|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/*  * Table of error messages.  */
+end_comment
+
+begin_struct
 struct|struct
 name|errname
 block|{
@@ -435,10 +442,16 @@ decl_stmt|;
 comment|/* text describing the error */
 block|}
 struct|;
+end_struct
+
+begin_define
 define|#
 directive|define
 name|ALL
 value|(E_OPEN|E_CREAT|E_EXEC)
+end_define
+
+begin_expr_stmt
 name|STATIC
 specifier|const
 expr|struct
@@ -447,227 +460,301 @@ name|errormsg
 index|[]
 operator|=
 block|{
+block|{
 name|EINTR
 block|,
 name|ALL
 block|,
 literal|"interrupted"
+block|}
 block|,
+block|{
 name|EACCES
 block|,
 name|ALL
 block|,
 literal|"permission denied"
+block|}
 block|,
+block|{
 name|EIO
 block|,
 name|ALL
 block|,
 literal|"I/O error"
+block|}
 block|,
+block|{
 name|ENOENT
 block|,
 name|E_OPEN
 block|,
 literal|"no such file"
+block|}
 block|,
+block|{
 name|ENOENT
 block|,
 name|E_CREAT
 block|,
 literal|"directory nonexistent"
+block|}
 block|,
+block|{
 name|ENOENT
 block|,
 name|E_EXEC
 block|,
 literal|"not found"
+block|}
 block|,
+block|{
 name|ENOTDIR
 block|,
 name|E_OPEN
 block|,
 literal|"no such file"
+block|}
 block|,
+block|{
 name|ENOTDIR
 block|,
 name|E_CREAT
 block|,
 literal|"directory nonexistent"
+block|}
 block|,
+block|{
 name|ENOTDIR
 block|,
 name|E_EXEC
 block|,
 literal|"not found"
+block|}
 block|,
+block|{
 name|EISDIR
 block|,
 name|ALL
 block|,
 literal|"is a directory"
+block|}
 block|,
-comment|/*    EMFILE, ALL,	"too many open files", */
+ifdef|#
+directive|ifdef
+name|notdef
+block|{
+name|EMFILE
+block|,
+name|ALL
+block|,
+literal|"too many open files"
+block|}
+block|,
+endif|#
+directive|endif
+block|{
 name|ENFILE
 block|,
 name|ALL
 block|,
 literal|"file table overflow"
+block|}
 block|,
+block|{
 name|ENOSPC
 block|,
 name|ALL
 block|,
 literal|"file system full"
+block|}
 block|,
 ifdef|#
 directive|ifdef
 name|EDQUOT
+block|{
 name|EDQUOT
 block|,
 name|ALL
 block|,
 literal|"disk quota exceeded"
+block|}
 block|,
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|ENOSR
+block|{
 name|ENOSR
 block|,
 name|ALL
 block|,
 literal|"no streams resources"
+block|}
 block|,
 endif|#
 directive|endif
+block|{
 name|ENXIO
 block|,
 name|ALL
 block|,
 literal|"no such device or address"
+block|}
 block|,
+block|{
 name|EROFS
 block|,
 name|ALL
 block|,
 literal|"read-only file system"
+block|}
 block|,
+block|{
 name|ETXTBSY
 block|,
 name|ALL
 block|,
 literal|"text busy"
+block|}
 block|,
 ifdef|#
 directive|ifdef
 name|SYSV
+block|{
 name|EAGAIN
 block|,
 name|E_EXEC
 block|,
 literal|"not enough memory"
+block|}
 block|,
 endif|#
 directive|endif
+block|{
 name|ENOMEM
 block|,
 name|ALL
 block|,
 literal|"not enough memory"
+block|}
 block|,
 ifdef|#
 directive|ifdef
 name|ENOLINK
+block|{
 name|ENOLINK
 block|,
 name|ALL
 block|,
 literal|"remote access failed"
+block|}
 block|,
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|EMULTIHOP
+block|{
 name|EMULTIHOP
 block|,
 name|ALL
 block|,
 literal|"remote access failed"
+block|}
 block|,
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|ECOMM
+block|{
 name|ECOMM
 block|,
 name|ALL
 block|,
 literal|"remote access failed"
+block|}
 block|,
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|ESTALE
+block|{
 name|ESTALE
 block|,
 name|ALL
 block|,
 literal|"remote access failed"
+block|}
 block|,
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|ETIMEDOUT
+block|{
 name|ETIMEDOUT
 block|,
 name|ALL
 block|,
 literal|"remote access failed"
+block|}
 block|,
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|ELOOP
+block|{
 name|ELOOP
 block|,
 name|ALL
 block|,
 literal|"symbolic link loop"
+block|}
 block|,
 endif|#
 directive|endif
+block|{
 name|E2BIG
 block|,
 name|E_EXEC
 block|,
 literal|"argument list too long"
+block|}
 block|,
 ifdef|#
 directive|ifdef
 name|ELIBACC
+block|{
 name|ELIBACC
 block|,
 name|E_EXEC
 block|,
 literal|"shared library missing"
+block|}
 block|,
 endif|#
 directive|endif
+block|{
 literal|0
 block|,
 literal|0
 block|,
 name|NULL
 block|}
+block|, }
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Return a string describing an error.  The returned string may be a  * pointer to a static buffer that will be overwritten on the next call.  * Action describes the operation that got the error.  */
+end_comment
+
+begin_function
 name|char
 modifier|*
 name|errmsg
@@ -676,6 +763,12 @@ name|e
 parameter_list|,
 name|action
 parameter_list|)
+name|int
+name|e
+decl_stmt|;
+name|int
+name|action
+decl_stmt|;
 block|{
 name|struct
 name|errname

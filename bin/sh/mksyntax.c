@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mksyntax.c,v 1.4 1996/08/12 12:31:28 ache Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mksyntax.c,v 1.5 1996/08/12 22:14:47 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mksyntax.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)mksyntax.c	8.2 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -96,65 +102,95 @@ name|synclass
 index|[]
 init|=
 block|{
+block|{
 literal|"CWORD"
 block|,
 literal|"character is nothing special"
+block|}
 block|,
+block|{
 literal|"CNL"
 block|,
 literal|"newline character"
+block|}
 block|,
+block|{
 literal|"CBACK"
 block|,
 literal|"a backslash character"
+block|}
 block|,
+block|{
 literal|"CSQUOTE"
 block|,
 literal|"single quote"
+block|}
 block|,
+block|{
 literal|"CDQUOTE"
 block|,
 literal|"double quote"
+block|}
 block|,
+block|{
 literal|"CENDQUOTE"
 block|,
 literal|"a terminating quote"
+block|}
 block|,
+block|{
 literal|"CBQUOTE"
 block|,
 literal|"backwards single quote"
+block|}
 block|,
+block|{
 literal|"CVAR"
 block|,
 literal|"a dollar sign"
+block|}
 block|,
+block|{
 literal|"CENDVAR"
 block|,
 literal|"a '}' character"
+block|}
 block|,
+block|{
 literal|"CLP"
 block|,
 literal|"a left paren in arithmetic"
+block|}
 block|,
+block|{
 literal|"CRP"
 block|,
 literal|"a right paren in arithmetic"
+block|}
 block|,
+block|{
 literal|"CEOF"
 block|,
 literal|"end of file"
+block|}
 block|,
+block|{
 literal|"CCTL"
 block|,
 literal|"like CWORD, except it must be escaped"
+block|}
 block|,
+block|{
 literal|"CSPCL"
 block|,
 literal|"these terminate a word"
+block|}
 block|,
+block|{
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -170,34 +206,47 @@ name|is_entry
 index|[]
 init|=
 block|{
+block|{
 literal|"ISDIGIT"
 block|,
 literal|"a digit"
+block|}
 block|,
+block|{
 literal|"ISUPPER"
 block|,
 literal|"an upper case letter"
+block|}
 block|,
+block|{
 literal|"ISLOWER"
 block|,
 literal|"a lower case letter"
+block|}
 block|,
+block|{
 literal|"ISUNDER"
 block|,
 literal|"an underscore"
+block|}
 block|,
+block|{
 literal|"ISSPECL"
 block|,
 literal|"the name of a special parameter"
+block|}
 block|,
+block|{
 name|NULL
 block|,
 name|NULL
-block|, }
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|writer
 index|[]
@@ -207,6 +256,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|cfile
@@ -214,6 +264,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|hfile
@@ -221,6 +272,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|syntax
@@ -231,12 +283,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|base
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|size
 decl_stmt|;
@@ -247,6 +301,7 @@ comment|/* number of values which a char variable can have */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nbits
 decl_stmt|;
@@ -257,6 +312,7 @@ comment|/* number of bits in a character */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|digit_contig
 decl_stmt|;
@@ -266,9 +322,106 @@ begin_comment
 comment|/* true if digits are contiguous */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|filltable
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|add
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|print
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|output_type_macros
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|digit_convert
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
 block|{
 name|char
 name|c
@@ -589,9 +742,11 @@ literal|32
 condition|;
 name|pos
 operator|=
+operator|(
 name|pos
 operator|+
 literal|8
+operator|)
 operator|&
 operator|~
 literal|07
@@ -689,9 +844,11 @@ literal|32
 condition|;
 name|pos
 operator|=
+operator|(
 name|pos
 operator|+
 literal|8
+operator|)
 operator|&
 operator|~
 literal|07
@@ -935,14 +1092,14 @@ argument_list|,
 literal|"CENDVAR"
 argument_list|)
 expr_stmt|;
+comment|/* ':/' for tilde expansion, '-' for [a\-x] pattern ranges */
 name|add
 argument_list|(
-literal|"!*?[=~:/"
+literal|"!*?[=~:/-"
 argument_list|,
 literal|"CCTL"
 argument_list|)
 expr_stmt|;
-comment|/* ':/' for tilde - yuck */
 name|print
 argument_list|(
 literal|"dqsyntax"
@@ -972,14 +1129,14 @@ argument_list|,
 literal|"CENDQUOTE"
 argument_list|)
 expr_stmt|;
+comment|/* ':/' for tilde expansion, '-' for [a\-x] pattern ranges */
 name|add
 argument_list|(
-literal|"!*?[=~:/"
+literal|"!*?[=~:/-"
 argument_list|,
 literal|"CCTL"
 argument_list|)
 expr_stmt|;
-comment|/* ':/' for tilde - yuck */
 name|print
 argument_list|(
 literal|"sqsyntax"
@@ -1135,21 +1292,17 @@ begin_comment
 comment|/*  * Clear the syntax table.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|filltable
-argument_list|(
-argument|dftval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dftval
+parameter_list|)
 name|char
 modifier|*
 name|dftval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -1175,18 +1328,17 @@ operator|=
 name|dftval
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initialize the syntax table with default values.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|filltable
 argument_list|(
@@ -1266,30 +1418,29 @@ operator|=
 literal|"CCTL"
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Add entries to the syntax table.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|add
-argument_list|(
-argument|p
-argument_list|,
-argument|type
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|type
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|,
-modifier|*
+decl|*
 name|type
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -1316,21 +1467,17 @@ begin_comment
 comment|/*  * Output the syntax table.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|print
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -1474,13 +1621,14 @@ name|cfile
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Output character classification macros (e.g. is_digit).  If digits are  * contiguous, we can test for them quickly.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|macro
@@ -1502,12 +1650,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|output_type_macros
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -1567,18 +1714,17 @@ name|hfile
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Output digit conversion table (if digits are not contiguous).  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|digit_convert
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|maxdigit
@@ -1702,7 +1848,7 @@ name|cfile
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
