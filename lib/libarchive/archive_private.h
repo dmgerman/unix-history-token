@@ -438,13 +438,9 @@ parameter_list|)
 function_decl|;
 comment|/* 	 * Various information needed by archive_extract. 	 */
 name|struct
-name|archive_string
-name|extract_mkdirpath
-decl_stmt|;
-name|struct
-name|archive_extract_fixup
+name|extract
 modifier|*
-name|archive_extract_fixup
+name|extract
 decl_stmt|;
 name|void
 function_decl|(

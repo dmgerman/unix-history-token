@@ -562,14 +562,6 @@ argument_list|(
 operator|&
 name|a
 operator|->
-name|extract_mkdirpath
-argument_list|)
-expr_stmt|;
-name|archive_string_free
-argument_list|(
-operator|&
-name|a
-operator|->
 name|error_string
 argument_list|)
 expr_stmt|;
