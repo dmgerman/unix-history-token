@@ -8978,9 +8978,19 @@ condition|)
 name|catastrophic
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|catastrophic
+operator|||
+name|debug
+condition|)
 name|log
 argument_list|(
+name|catastrophic
+condition|?
 name|LOG_INFO
+else|:
+name|LOG_DEBUG
 argument_list|,
 name|SPP_FMT
 literal|"%s: RXJ%c (%s) for proto 0x%x (%s/%s)\n"
