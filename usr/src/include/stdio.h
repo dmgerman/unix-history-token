@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	stdio.h	1.10	84/11/29	*/
+comment|/*	stdio.h	1.11	85/01/08	*/
 end_comment
 
 begin_define
@@ -14,7 +14,7 @@ begin_define
 define|#
 directive|define
 name|_NFILE
-value|20
+value|48
 end_define
 
 begin_ifndef
