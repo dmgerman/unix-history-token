@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.168 (Berkeley) %G%"
+literal|"@(#)conf.c	8.169 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -12288,6 +12288,13 @@ if|#
 directive|if
 name|NIS
 literal|"NIS"
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|NISPLUS
+literal|"NISPLUS"
 block|,
 endif|#
 directive|endif
