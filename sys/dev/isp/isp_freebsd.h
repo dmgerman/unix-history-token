@@ -1208,16 +1208,5 @@ begin_comment
 comment|/* _ISP_FREEBSD_H */
 end_comment
 
-begin_comment
-comment|/*  * There seems to be some problems with Fast Posting for us.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_NO_FASTPOST_SCSI
-value|1
-end_define
-
 end_unit
 
