@@ -932,6 +932,21 @@ name|mntsize
 argument_list|)
 condition|)
 continue|continue;
+name|options
+operator|=
+name|update_options
+argument_list|(
+name|options
+argument_list|,
+name|fs
+operator|->
+name|fs_mntops
+argument_list|,
+name|mntbuf
+operator|->
+name|f_flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mountfs
@@ -3627,7 +3642,7 @@ literal|"%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: mount [-dfpruvw] [-o options] [-t ufs | external_type] special node"
 argument_list|,
-literal|"       mount [-adfpruvw] [-t ufs | external_type]"
+literal|"       mount [-adfpruvw] [-o options] [-t ufs | external_type]"
 argument_list|,
 literal|"       mount [-dfpruvw] special | node"
 argument_list|)
