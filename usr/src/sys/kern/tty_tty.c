@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_tty.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_tty.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -130,9 +130,15 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|ttyvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -196,6 +202,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|ttyvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -243,6 +253,15 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|uio
+operator|->
+name|uio_procp
+decl_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -251,9 +270,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|uio
-operator|->
-name|uio_procp
+name|p
 argument_list|)
 decl_stmt|;
 name|int
@@ -270,9 +287,15 @@ operator|(
 name|EIO
 operator|)
 return|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|ttyvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -291,6 +314,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|ttyvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -338,7 +365,15 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|uio
+operator|->
+name|uio_procp
+decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -365,9 +400,15 @@ operator|(
 name|EIO
 operator|)
 return|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|ttyvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -386,6 +427,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|ttyvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -140,6 +140,15 @@ operator|&
 name|ndp
 operator|->
 name|ni_cnd
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|cnp
+operator|->
+name|cn_proc
 decl_stmt|;
 name|ndp
 operator|->
@@ -555,6 +564,10 @@ argument_list|(
 name|ndp
 operator|->
 name|ni_dvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -916,6 +929,15 @@ name|ndp
 operator|->
 name|ni_cnd
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|cnp
+operator|->
+name|cn_proc
+decl_stmt|;
 comment|/* 	 * Setup: break out flag bits into variables. 	 */
 name|wantparent
 operator|=
@@ -996,9 +1018,15 @@ name|ni_startdir
 operator|=
 name|NULLVP
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|dp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|dirloop
@@ -1296,6 +1324,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1410,9 +1442,15 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|dp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -1520,9 +1558,15 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|dp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1958,6 +2002,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1989,6 +2037,10 @@ argument_list|(
 name|ndp
 operator|->
 name|ni_dvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -2054,7 +2106,15 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|cnp
+operator|->
+name|cn_proc
+decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -2160,9 +2220,15 @@ name|dp
 operator|=
 name|dvp
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|dp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* dirloop: */
@@ -2320,6 +2386,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2571,6 +2641,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -2601,6 +2675,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vrele

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1254,6 +1254,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -2131,9 +2135,15 @@ operator|->
 name|ktr_len
 expr_stmt|;
 block|}
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -2157,6 +2167,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if

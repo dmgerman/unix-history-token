@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.8 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1827,6 +1827,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
