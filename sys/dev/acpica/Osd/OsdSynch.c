@@ -77,7 +77,6 @@ argument_list|)
 end_macro
 
 begin_expr_stmt
-specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_ACPISEM
@@ -179,7 +178,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Simple counting semaphore implemented using a mutex. (Subsequently used  * in the OSI code to implement a mutex.  Go figure.)  */
+comment|/*  * Simple counting semaphore implemented using a mutex.  (Subsequently used  * in the OSI code to implement a mutex.  Go figure.)  */
 end_comment
 
 begin_struct
@@ -294,6 +293,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* !ACPI_NO_SEMAPHORES */
+end_comment
+
 begin_function
 name|ACPI_STATUS
 name|AcpiOsCreateSemaphore
@@ -335,11 +338,11 @@ name|OutHandle
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_BAD_PARAMETER
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|InitialUnits
@@ -367,6 +370,8 @@ argument_list|,
 name|M_ACPISEM
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 operator|==
@@ -375,17 +380,6 @@ condition|)
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|as
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|as
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -458,11 +452,6 @@ name|ACPI_HANDLE
 operator|)
 name|as
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
 else|#
 directive|else
 operator|*
@@ -473,13 +462,14 @@ name|ACPI_HANDLE
 operator|)
 name|OutHandle
 expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
 endif|#
 directive|endif
+comment|/* !ACPI_NO_SEMAPHORES */
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -551,20 +541,14 @@ argument_list|,
 name|M_ACPISEM
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !ACPI_NO_SEMAPHORES */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -589,6 +573,9 @@ block|{
 ifndef|#
 directive|ifndef
 name|ACPI_NO_SEMAPHORES
+name|ACPI_STATUS
+name|result
+decl_stmt|;
 name|struct
 name|acpi_semaphore
 modifier|*
@@ -600,9 +587,6 @@ name|acpi_semaphore
 operator|*
 operator|)
 name|Handle
-decl_stmt|;
-name|ACPI_STATUS
-name|result
 decl_stmt|;
 name|int
 name|rv
@@ -654,7 +638,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (as->as_units< Units&& as->as_timeouts> 10) { 	printf("%s: semaphore %p too many timeouts, resetting\n", __func__, as); 	AS_LOCK(as); 	as->as_units = as->as_maxunits; 	if (as->as_pendings) 	    as->as_resetting = 1; 	as->as_timeouts = 0; 	wakeup(as); 	AS_UNLOCK(as); 	return_ACPI_STATUS(AE_TIME);     }      if (as->as_resetting) { 	return_ACPI_STATUS(AE_TIME);     }
+block|if (as->as_units< Units&& as->as_timeouts> 10) { 	printf("%s: semaphore %p too many timeouts, resetting\n", __func__, as); 	AS_LOCK(as); 	as->as_units = as->as_maxunits; 	if (as->as_pendings) 	    as->as_resetting = 1; 	as->as_timeouts = 0; 	wakeup(as); 	AS_UNLOCK(as); 	return_ACPI_STATUS (AE_TIME);     }      if (as->as_resetting) 	return_ACPI_STATUS (AE_TIME);
 endif|#
 directive|endif
 comment|/* a timeout of ACPI_WAIT_FOREVER means "forever" */
@@ -1048,7 +1032,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Wakeup timeleft(%lu, %lu), tmo %u, semaphore %p, thread %d\n"
+literal|"%s: Wakeup timeleft(%lu, %lu), tmo %u, sem %p, thread %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1125,7 +1109,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Acquire %d, units %d, pending %d, semaphore %p, thread %d\n"
+literal|"%s: Acquire %d, units %d, pending %d, sem %p, thread %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1153,22 +1137,18 @@ name|result
 operator|==
 name|AE_TIME
 condition|)
-block|{
 name|as
 operator|->
 name|as_timeouts
 operator|++
 expr_stmt|;
-block|}
 else|else
-block|{
 name|as
 operator|->
 name|as_timeouts
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|AS_UNLOCK
 argument_list|(
 name|as
@@ -1181,13 +1161,14 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+comment|/* !ACPI_NO_SEMAPHORES */
 block|}
 end_function
 
@@ -1350,20 +1331,14 @@ argument_list|(
 name|as
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !ACPI_NO_SEMAPHORES */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1392,14 +1367,10 @@ operator|(
 name|AE_BAD_PARAMETER
 operator|)
 return|;
-name|MALLOC
-argument_list|(
 name|m
-argument_list|,
-expr|struct
-name|mtx
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
