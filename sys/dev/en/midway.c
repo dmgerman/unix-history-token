@@ -4234,6 +4234,12 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * From here on we need access to sc 		 */
+name|EN_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Allocate a map. We do this here rather then in en_txdma, 		 * because en_txdma is also called from the interrupt handler 		 * and we are going to have a locking problem then. We must 		 * use NOWAIT here, because the ip_output path holds various 		 * locks. 		 */
 name|map
 operator|=
@@ -4289,6 +4295,11 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
+name|EN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -4296,12 +4307,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * From here on we need access to sc 		 */
-name|EN_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
