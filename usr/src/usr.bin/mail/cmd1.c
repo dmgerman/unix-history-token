@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd1.c	2.1 %G%"
+literal|"@(#)cmd1.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1036,14 +1036,14 @@ operator|!=
 name|stdout
 condition|)
 block|{
+name|pipef
+operator|=
+name|NULL
+expr_stmt|;
 name|pclose
 argument_list|(
 name|obuf
 argument_list|)
-expr_stmt|;
-name|pipef
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 name|sigset
@@ -1221,14 +1221,14 @@ operator|!=
 name|stdout
 condition|)
 block|{
+name|pipef
+operator|=
+name|NULL
+expr_stmt|;
 name|pclose
 argument_list|(
 name|obuf
 argument_list|)
-expr_stmt|;
-name|pipef
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 name|sigset
@@ -1257,16 +1257,16 @@ end_macro
 
 begin_block
 block|{
+name|sigrelse
+argument_list|(
+name|SIGPIPE
+argument_list|)
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|pipestop
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|sigrelse
-argument_list|(
-name|SIGPIPE
 argument_list|)
 expr_stmt|;
 block|}
