@@ -31,6 +31,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"gprof.h"
 end_include
 
@@ -71,11 +77,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|arctype
-modifier|*
-name|calloc
-parameter_list|()
-function_decl|;
 name|arctype
 modifier|*
 name|arcp
@@ -161,6 +162,10 @@ return|return;
 block|}
 name|arcp
 operator|=
+operator|(
+name|arctype
+operator|*
+operator|)
 name|calloc
 argument_list|(
 literal|1
