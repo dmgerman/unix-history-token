@@ -445,7 +445,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Kill off the other threads. This requires 		 * Some co-operation from other parts of the kernel 		 * so it may not be instant. 		 * With this state set: 		 * Any thread entering the kernel from userspace will 		 * thread_exit() in trap().  Any thread attempting to 		 * sleep will return immediatly 		 * with EINTR or EWOULDBLOCK, which will hopefully force them 		 * to back out to userland, freeing resources as they go, and 		 * anything attempting to return to userland will thread_exit() 		 * from userret().  thread_exit() will unsuspend us 		 * when the last other thread exits. 		 */
+comment|/* 		 * Kill off the other threads. This requires 		 * Some co-operation from other parts of the kernel 		 * so it may not be instant. 		 * With this state set: 		 * Any thread entering the kernel from userspace will 		 * thread_exit() in trap().  Any thread attempting to 		 * sleep will return immediatly with EINTR or EWOULDBLOCK, 		 * which will hopefully force them to back out to userland, 		 * freeing resources as they go, and anything attempting 		 * to return to userland will thread_exit() from userret(). 		 * thread_exit() will unsuspend us when the last other 		 * thread exits. 		 */
 if|if
 condition|(
 name|thread_single
@@ -471,7 +471,6 @@ argument_list|()
 expr_stmt|;
 comment|/* Don't need this any more. */
 block|}
-comment|/* 	 * With this state set: 	 * Any thread entering the kernel from userspace will thread_exit() 	 * in trap().  Any thread attempting to sleep will return immediatly 	 * with EINTR or EWOULDBLOCK, which will hopefully force them 	 * to back out to userland, freeing resources as they go, and 	 * anything attempting to return to userland will thread_exit() 	 * from userret().  thread_exit() will do a wakeup on p->p_numthreads 	 * if it transitions to 1. 	 */
 name|p
 operator|->
 name|p_flag
