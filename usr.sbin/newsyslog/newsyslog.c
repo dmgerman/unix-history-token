@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.6 1996/09/06 06:36:07 jkh Exp $"
+literal|"$Id: newsyslog.c,v 1.7 1996/09/09 15:32:26 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -585,7 +585,7 @@ name|int
 name|numdays
 parameter_list|,
 name|int
-name|falgs
+name|flags
 parameter_list|,
 name|int
 name|perm
