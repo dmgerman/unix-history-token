@@ -5872,6 +5872,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * We mount devfs prior to mounting the / FS, so the first 		 * entry will typically be devfs. 		 */
 name|mp
 operator|=
 name|TAILQ_FIRST
@@ -5880,12 +5881,17 @@ operator|&
 name|mountlist
 argument_list|)
 expr_stmt|;
-comment|/* sanity check system clock against root fs timestamp */
-name|inittodr
+name|KASSERT
 argument_list|(
 name|mp
-operator|->
-name|mnt_time
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: mountlist is empty"
+operator|,
+name|__func__
+operator|)
 argument_list|)
 expr_stmt|;
 name|vfs_unbusy
@@ -5895,6 +5901,41 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Iterate over all currently mounted file systems and use 		 * the time stamp found to check and/or initialize the RTC. 		 * Typically devfs has no time stamp and the only other FS 		 * is the actual / FS. 		 */
+do|do
+block|{
+if|if
+condition|(
+name|mp
+operator|->
+name|mnt_time
+operator|!=
+literal|0
+condition|)
+name|inittodr
+argument_list|(
+name|mp
+operator|->
+name|mnt_time
+argument_list|)
+expr_stmt|;
+name|mp
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|mp
+argument_list|,
+name|mnt_list
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|mp
+operator|!=
+name|NULL
+condition|)
+do|;
 name|devfs_fixup
 argument_list|(
 name|curthread
