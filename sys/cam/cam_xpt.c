@@ -24900,17 +24900,8 @@ name|CCB_TRANS_TQ_VALID
 operator|)
 operator|!=
 literal|0
-operator|&&
-operator|(
-name|async_update
-operator|==
-name|FALSE
-operator|)
 condition|)
 block|{
-name|int
-name|device_tagenb
-decl_stmt|;
 comment|/* 		 * If we are transitioning from tags to no-tags or 		 * vice-versa, we need to carefully freeze and restart 		 * the queue so that we don't overlap tagged and non-tagged 		 * commands.  We also temporarily stop tags if there is 		 * a change in transfer negotiation settings to allow 		 * "tag-less" negotiation. 		 */
 if|if
 condition|(
