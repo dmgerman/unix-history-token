@@ -63,6 +63,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_function
 name|int
 name|gethostname
@@ -75,7 +81,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|int
+name|size_t
 name|namelen
 decl_stmt|;
 block|{
@@ -84,9 +90,6 @@ name|mib
 index|[
 literal|2
 index|]
-decl_stmt|;
-name|size_t
-name|size
 decl_stmt|;
 name|mib
 index|[
@@ -102,10 +105,6 @@ index|]
 operator|=
 name|KERN_HOSTNAME
 expr_stmt|;
-name|size
-operator|=
-name|namelen
-expr_stmt|;
 if|if
 condition|(
 name|sysctl
@@ -117,7 +116,7 @@ argument_list|,
 name|name
 argument_list|,
 operator|&
-name|size
+name|namelen
 argument_list|,
 name|NULL
 argument_list|,
@@ -127,12 +126,24 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOMEM
+condition|)
+name|errno
+operator|=
+name|ENAMETOOLONG
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0
