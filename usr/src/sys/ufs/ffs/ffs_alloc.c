@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	2.5	82/05/07	*/
+comment|/*	ffs_alloc.c	2.6	82/06/07	*/
 end_comment
 
 begin_include
@@ -1834,6 +1834,12 @@ name|NULL
 operator|)
 return|;
 block|}
+name|cgp
+operator|->
+name|cg_time
+operator|=
+name|time
+expr_stmt|;
 name|bno
 operator|=
 name|dtogd
@@ -2176,6 +2182,12 @@ name|NULL
 operator|)
 return|;
 block|}
+name|cgp
+operator|->
+name|cg_time
+operator|=
+name|time
+expr_stmt|;
 if|if
 condition|(
 name|size
@@ -3229,6 +3241,12 @@ name|NULL
 operator|)
 return|;
 block|}
+name|cgp
+operator|->
+name|cg_time
+operator|=
+name|time
+expr_stmt|;
 if|if
 condition|(
 name|ipref
@@ -3630,6 +3648,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|cgp
+operator|->
+name|cg_time
+operator|=
+name|time
+expr_stmt|;
 name|bno
 operator|=
 name|dtogd
@@ -4226,6 +4250,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|cgp
+operator|->
+name|cg_time
+operator|=
+name|time
+expr_stmt|;
 name|ino
 operator|%=
 name|fs
