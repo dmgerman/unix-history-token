@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.28	81/03/16	*/
+comment|/*	autoconf.c	4.29	81/03/21	*/
 end_comment
 
 begin_comment
-comment|/*  * Setup the system to run on the current machine.  *  * Configure() is called at boot time and initializes the uba and mba  * device tables and the memory controller monitoring.  Available  * devices are determined (from possibilities mentioned in ioconf.c),  * and the drivers are initialized.  *  * N.B.: A lot of the conditionals based on processor type say  *	#if VAX780  * and  *	#if VAX750  * which may be incorrect after more processors are introduced if they  * are like either of these machines.  */
+comment|/*  * Setup the system to run on the current machine.  *  * Configure() is called at boot time and initializes the uba and mba  * device tables and the memory controller monitoring.  Available  * devices are determined (from possibilities mentioned in ioconf.c),  * and the drivers are initialized.  *  * N.B.: A lot of the conditionals based on processor type say  *	#if VAX780  * and  *	#if VAX750  * which may be incorrect after more processors are introduced if they  * are like either of these machines.  *  * TODO:  *	use pcpu info about whether a ubasr exists  */
 end_comment
 
 begin_include
@@ -794,6 +794,12 @@ block|}
 if|#
 directive|if
 name|VAX780
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_780
+condition|)
 block|{
 name|int
 name|ubawatch
@@ -1798,6 +1804,15 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX730
+case|case
+name|VAX_730
+case|:
 break|break;
 endif|#
 directive|endif
