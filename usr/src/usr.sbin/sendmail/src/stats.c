@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stats.c	5.3 (Berkeley) %G%"
+literal|"@(#)stats.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,6 +243,13 @@ name|off_t
 name|lseek
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|sfile
+operator|==
+name|NULL
+condition|)
+return|return;
 operator|(
 name|void
 operator|)

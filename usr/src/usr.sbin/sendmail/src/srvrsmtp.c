@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.4 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.5 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.4 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1227,6 +1227,18 @@ operator|->
 name|e_to
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* save statistics */
+name|markstats
+argument_list|(
+name|CurEnv
+argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
+name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* issue success if appropriate and reset */
 if|if
