@@ -900,6 +900,8 @@ decl_stmt|,
 name|hs
 decl_stmt|,
 name|he
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|bounds
