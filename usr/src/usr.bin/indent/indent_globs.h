@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)indent_globs.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)indent_globs.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -431,6 +431,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* the maximum allowable line length */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pointer_as_binop
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* when true, "->" is treated as a binary 				   operator (giving, e.g., "p -> f") */
 end_comment
 
 begin_decl_stmt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lexi.c	5.3 (Berkeley) %G%"
+literal|"@(#)lexi.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1732,6 +1732,13 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|token
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
 operator|*
 name|buf_ptr
 operator|==
@@ -1747,6 +1754,12 @@ operator|*
 name|buf_ptr
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pointer_as_binop
+condition|)
+block|{
 name|code
 operator|=
 name|unary_op
@@ -1761,6 +1774,7 @@ name|want_blank
 operator|=
 name|false
 expr_stmt|;
+block|}
 block|}
 comment|/* buffer overflow will be checked at end of switch */
 break|break;

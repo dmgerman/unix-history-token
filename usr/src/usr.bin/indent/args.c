@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)args.c	5.1 (Berkeley) %G%"
+literal|"@(#)args.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -724,6 +724,28 @@ name|OFF
 block|,
 operator|&
 name|blanklines_before_blockcomments
+block|,
+literal|"ps"
+block|,
+name|PRO_BOOL
+block|,
+name|false
+block|,
+name|ON
+block|,
+operator|&
+name|pointer_as_binop
+block|,
+literal|"nps"
+block|,
+name|PRO_BOOL
+block|,
+name|false
+block|,
+name|OFF
+block|,
+operator|&
+name|pointer_as_binop
 block|,
 literal|"troff"
 block|,

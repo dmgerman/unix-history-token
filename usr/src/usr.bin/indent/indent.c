@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)indent.c	5.3 (Berkeley) %G%"
+literal|"@(#)indent.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2302,6 +2302,22 @@ operator|=
 literal|"\\(br"
 expr_stmt|;
 break|break;
+case|case
+literal|'-'
+case|:
+if|if
+condition|(
+name|token
+index|[
+literal|1
+index|]
+operator|==
+literal|'>'
+condition|)
+name|res
+operator|=
+literal|"\\(->"
+expr_stmt|;
 block|}
 for|for
 control|(
