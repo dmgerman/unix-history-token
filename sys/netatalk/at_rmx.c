@@ -42,6 +42,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|prsockaddr
@@ -512,6 +513,7 @@ comment|/*  * Initialize our routing tree with debugging hooks.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|at_inithead
 parameter_list|(
