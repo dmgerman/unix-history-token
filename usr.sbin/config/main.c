@@ -569,6 +569,11 @@ name|dtab
 operator|=
 name|NULL
 expr_stmt|;
+name|yyfile
+operator|=
+operator|*
+name|argv
+expr_stmt|;
 if|if
 condition|(
 name|yyparse
