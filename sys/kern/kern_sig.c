@@ -7517,6 +7517,14 @@ operator|&
 name|TDF_SA
 condition|)
 block|{
+if|if
+condition|(
+name|td
+operator|->
+name|td_mailbox
+operator|==
+name|NULL
+condition|)
 name|thread_user_enter
 argument_list|(
 name|p

@@ -1147,6 +1147,21 @@ case|case
 name|T_PAGEFLT
 case|:
 comment|/* page fault */
+if|if
+condition|(
+name|td
+operator|->
+name|td_flags
+operator|&
+name|TDF_SA
+condition|)
+name|thread_user_enter
+argument_list|(
+name|p
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|trap_pfault
