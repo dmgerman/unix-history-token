@@ -87,9 +87,9 @@ define|#
 directive|define
 name|ISR_RELLOCK
 define|\
-value|pushl	$_mp_lock ;
+value|movl	$_mp_lock,%edx ;
 comment|/* GIANT_LOCK */
-value|\ 	call	_MPrellock ;						\ 	add	$4, %esp
+value|\ 	call	_MPrellock_edx
 end_define
 
 begin_comment
