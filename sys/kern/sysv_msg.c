@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of SVID messages  *  * Author:  Daniel Boulet  *  * Copyright 1993 Daniel Boulet and RTMX Inc.  *  * This system call was implemented by Daniel Boulet under contract from RTMX.  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  */
+comment|/*-  * Implementation of SVID messages  *  * Author:  Daniel Boulet  *  * Copyright 1993 Daniel Boulet and RTMX Inc.  *  * This system call was implemented by Daniel Boulet under contract from RTMX.  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  */
 end_comment
 
 begin_include
