@@ -280,7 +280,8 @@ index|]
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|j
 decl_stmt|;
 name|char
