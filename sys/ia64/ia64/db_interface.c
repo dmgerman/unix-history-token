@@ -2600,7 +2600,7 @@ operator|&
 name|RB_GDB
 operator|)
 decl_stmt|;
-name|int
+name|critical_t
 name|s
 decl_stmt|;
 comment|/* 	 * Don't bother checking for usermode, since a benign entry 	 * by the kernel (call to Debugger() or a breakpoint) has 	 * already checked for usermode.  If neither of those 	 * conditions exist, something Bad has happened. 	 */
@@ -2677,7 +2677,7 @@ asm|__asm __volatile("flushrs");
 comment|/* so we can look at them */
 name|s
 operator|=
-name|splhigh
+name|critical_enter
 argument_list|()
 expr_stmt|;
 if|#
@@ -2733,7 +2733,7 @@ literal|0
 block|restart_cpus(stopped_cpus);
 endif|#
 directive|endif
-name|splx
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)
