@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lam.c	4.1	(Berkeley)	%G%"
+literal|"@(#)lam.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,10 @@ name|pad
 decl_stmt|;
 comment|/* pad flag for missing columns */
 name|char
+name|eol
+decl_stmt|;
+comment|/* end of line character */
+name|char
 modifier|*
 name|sepstring
 decl_stmt|;
@@ -87,30 +91,22 @@ end_struct
 
 begin_decl_stmt
 name|int
-name|P
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|S
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|F
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|morefiles
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* set by getargs(), changed by gatherline() */
+end_comment
+
+begin_decl_stmt
+name|int
+name|nofinalnl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* normally append \n to each output line */
 end_comment
 
 begin_decl_stmt
@@ -247,6 +243,11 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|nofinalnl
+condition|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -304,6 +305,26 @@ name|fmtp
 init|=
 name|fmtbuf
 decl_stmt|;
+name|int
+name|P
+decl_stmt|,
+name|S
+decl_stmt|,
+name|F
+decl_stmt|,
+name|T
+decl_stmt|;
+name|P
+operator|=
+name|S
+operator|=
+name|F
+operator|=
+name|T
+operator|=
+literal|0
+expr_stmt|;
+comment|/* capitalized options */
 while|while
 condition|(
 name|p
@@ -429,6 +450,31 @@ else|:
 literal|"%s"
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ip
+operator|->
+name|eol
+condition|)
+name|ip
+operator|->
+name|eol
+operator|=
+operator|(
+name|T
+condition|?
+operator|(
+name|ip
+operator|-
+literal|1
+operator|)
+operator|->
+name|eol
+else|:
+literal|'\n'
+operator|)
+expr_stmt|;
 name|ip
 operator|++
 expr_stmt|;
@@ -490,6 +536,56 @@ literal|1
 else|:
 literal|0
 operator|)
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+if|if
+condition|(
+operator|*
+operator|++
+name|p
+operator|||
+operator|(
+name|p
+operator|=
+operator|*
+operator|++
+name|av
+operator|)
+condition|)
+name|ip
+operator|->
+name|eol
+operator|=
+operator|*
+name|p
+expr_stmt|;
+else|else
+name|error
+argument_list|(
+literal|"Need character after -%s"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+name|T
+operator|=
+operator|(
+operator|*
+name|c
+operator|==
+literal|'T'
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+expr_stmt|;
+name|nofinalnl
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -748,7 +844,9 @@ operator|=
 name|c
 operator|)
 operator|==
-literal|'\n'
+name|ip
+operator|->
+name|eol
 condition|)
 break|break;
 operator|*
@@ -889,7 +987,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nUsage:  lam [ -[fp] min.max ] [ -s sepstring ] file ...\n"
+literal|"\nUsage:  lam [ -[fp] min.max ] [ -s sepstring ] [ -t c ] file ...\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -909,13 +1007,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Options:\n\t%s\t%s\t%s"
+literal|"Options:\n\t%s\t%s\t%s\t%s\t%s"
 argument_list|,
 literal|"-f min.max	field widths for file fragments\n"
 argument_list|,
 literal|"-p min.max	like -f, but pad missing fragments\n"
 argument_list|,
 literal|"-s sepstring	fragment separator\n"
+argument_list|,
+literal|"-t c		input line terminator is c, no \\n after output lines\n"
+argument_list|,
+literal|"Capitalized options affect more than one file.\n"
 argument_list|)
 expr_stmt|;
 name|exit
