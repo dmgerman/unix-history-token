@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.39	81/10/11	*/
+comment|/*	dh.c	4.39	81/11/08	*/
 end_comment
 
 begin_include
@@ -103,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"../h/clist.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mx.h"
 end_include
 
 begin_include
@@ -1355,12 +1349,6 @@ operator|->
 name|t_oproc
 operator|=
 name|dhstart
-expr_stmt|;
-name|tp
-operator|->
-name|t_iproc
-operator|=
-name|NULL
 expr_stmt|;
 name|tp
 operator|->
@@ -2905,28 +2893,6 @@ operator|&=
 operator|~
 name|ASLEEP
 expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_chan
-condition|)
-name|mcstart
-argument_list|(
-name|tp
-operator|->
-name|t_chan
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|tp
-operator|->
-name|t_outq
-argument_list|)
-expr_stmt|;
-else|else
 name|wakeup
 argument_list|(
 operator|(
