@@ -1534,6 +1534,14 @@ name|ENXIO
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|scp
+operator|->
+name|irq
+operator|!=
+name|NULL
+condition|)
 name|bus_setup_intr
 argument_list|(
 name|dev
