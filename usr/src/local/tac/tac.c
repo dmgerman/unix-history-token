@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tac.c	1.1 %G%"
+literal|"@(#)tac.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * tac.c - Print file segments in reverse order  *  * Original line-only version by unknown author off the net.  * 1985 mods by Jay Lepreau, Univ of Utah, to allocate memory dynamically  * and handle string bounded segments.  */
+comment|/*  * tac.c - Print file segments in reverse order  *  * Original line-only version by unknown author off the net.  * 1985 mods by Jay Lepreau, Univ of Utah, to allocate memory  * dynamically and handle string bounded segments (latter idea  * suggested by Rob Pike).  */
 end_comment
 
 begin_include
@@ -459,7 +459,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 	 * Arrange for the first read to lop off enough to 	 * leave the rest of the file a multiple of readsize. 	 * Since readsize can change, this may not always hold during 	 * the pgm run, but since it usually will, leave it here 	 * for i/o efficiency (page/sector boundaries and all that). 	 * Note: Above statement has never been verified! 	 */
+comment|/* 	 * Arrange for the first read to lop off enough to 	 * leave the rest of the file a multiple of readsize. 	 * Since readsize can change, this may not always hold during 	 * the pgm run, but since it usually will, leave it here 	 * for i/o efficiency (page/sector boundaries and all that). 	 * Note: the efficiency gain has never been verified... 	 */
 if|if
 condition|(
 operator|(
