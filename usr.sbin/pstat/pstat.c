@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pstat.c,v 1.31 1997/10/09 07:22:08 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1367,11 +1367,24 @@ case|case
 literal|'i'
 case|:
 comment|/* Backward compatibility. */
-name|vnodeflag
-operator|=
-literal|1
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"vnode mode not supported\n"
+argument_list|)
 expr_stmt|;
-break|break;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|vnodeflag = 1; 			break;
+endif|#
+directive|endif
 default|default:
 name|usage
 argument_list|()
@@ -1553,8 +1566,6 @@ expr_stmt|;
 if|if
 condition|(
 name|vnodeflag
-operator|||
-name|totalflag
 condition|)
 name|vnodemode
 argument_list|()
