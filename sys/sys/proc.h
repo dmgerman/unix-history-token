@@ -540,6 +540,10 @@ name|int
 name|td_intr_nesting_level
 decl_stmt|;
 comment|/* (k) Interrupt recursion. */
+name|int
+name|td_pinned
+decl_stmt|;
+comment|/* (k) Temporary cpu pin count. */
 name|struct
 name|kse_thr_mailbox
 modifier|*

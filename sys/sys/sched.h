@@ -333,6 +333,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|sched_pin
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|sched_unbind
 parameter_list|(
@@ -344,20 +355,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* these only work for curthread */
-end_comment
-
 begin_function_decl
-name|void
-name|sched_pin
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
+name|__inline
 name|void
 name|sched_unpin
 parameter_list|(
@@ -365,26 +365,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-end_ifdef
-
-begin_function_decl
-name|int
-name|sched_ispinned
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * These procedures tell the process data structure allocation code how  * many bytes to actually allocate.  */
@@ -416,6 +396,40 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|sched_pin
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|curthread
+operator|->
+name|td_pinned
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|sched_unpin
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|curthread
+operator|->
+name|td_pinned
+operator|--
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* temporarily here */
