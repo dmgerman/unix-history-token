@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_access[] = "@(#)access_.c	1.2";  *  * determine accessability of a file  *  * calling format:  *	integer access  *	ierror = access(filename, mode)  * where:  *	ierror will be 0 for successful access; an error number otherwise.  *	filename is a character string  *	mode is a character string which may include any combination of  *	'r', 'w', 'x', ' '. (' ' => test for existence)  */
+comment|/* char id_access[] = "@(#)access_.c	1.3";  *  * determine accessability of a file  *  * calling format:  *	integer access  *	ierror = access(filename, mode)  * where:  *	ierror will be 0 for successful access; an error number otherwise.  *	filename is a character string  *	mode is a character string which may include any combination of  *	'r', 'w', 'x', ' '. (' ' => test for existence)  */
 end_comment
 
 begin_include
@@ -8,6 +8,30 @@ include|#
 directive|include
 file|"../libI77/f_errno.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPATHLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|long
@@ -43,7 +67,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|128
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|int

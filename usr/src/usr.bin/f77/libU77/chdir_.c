@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_chdir[] = "@(#)chdir_.c	1.2";  *  * change default directory  *  * calling sequence:  *	integer chdir  *	ierror = chdir(dirname)  * where:  *	ierror will receive a returned status (0 == OK)  *	dirname is the directory name  */
+comment|/* char id_chdir[] = "@(#)chdir_.c	1.3";  *  * change default directory  *  * calling sequence:  *	integer chdir  *	ierror = chdir(dirname)  * where:  *	ierror will receive a returned status (0 == OK)  *	dirname is the directory name  */
 end_comment
 
 begin_include
@@ -8,6 +8,30 @@ include|#
 directive|include
 file|"../libI77/f_errno.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPATHLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|long
@@ -28,7 +52,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|128
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 if|if
