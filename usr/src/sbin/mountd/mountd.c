@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	5.11 (Berkeley) %G%"
+literal|"@(#)mountd.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2116,6 +2116,10 @@ modifier|*
 name|ep2
 decl_stmt|;
 name|struct
+name|statfs
+name|stfsbuf
+decl_stmt|;
+name|struct
 name|ufs_args
 name|args
 decl_stmt|;
@@ -2888,6 +2892,18 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+name|statfs
+argument_list|(
+name|ep
+operator|->
+name|ex_dirp
+argument_list|,
+operator|&
+name|stfsbuf
+argument_list|)
+operator|<
+literal|0
+operator|||
 name|mount
 argument_list|(
 name|MOUNT_UFS
@@ -2896,6 +2912,10 @@ name|ep
 operator|->
 name|ex_dirp
 argument_list|,
+name|stfsbuf
+operator|.
+name|f_flags
+operator||
 name|MNT_UPDATE
 argument_list|,
 operator|&
