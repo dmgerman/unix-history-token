@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.2 1994/10/20 04:59:56 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -194,7 +194,7 @@ if|if
 condition|(
 name|getenv
 argument_list|(
-literal|"PAUL"
+literal|"STAGE0"
 argument_list|)
 operator|||
 operator|!
@@ -257,17 +257,16 @@ name|stage2
 argument_list|()
 expr_stmt|;
 block|}
-else|else
-block|{
-name|stage3
-argument_list|()
-expr_stmt|;
-block|}
-return|return
-literal|0
-return|;
-block|}
+elseif|else
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"STAGE3)) { 		stage3(); 	} else { 		fprintf(stderr,"
+argument|Must setenv STAGE0 or STAGE3
+literal|"
 end_function
 
+unit|);  	return 0; }
 end_unit
 
