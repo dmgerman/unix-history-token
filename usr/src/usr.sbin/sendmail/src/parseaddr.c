@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.9 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5612,6 +5612,8 @@ directive|endif
 comment|/* LOG */
 name|usrerr
 argument_list|(
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
