@@ -1792,6 +1792,16 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|catch_child
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+block|{ }
+end_function
+
 begin_comment
 comment|/*-  * main --  *	The main function, for obvious reasons. Initializes variables  *	and a few modules, then parses the arguments give it in the  *	environment and on the command line. Reads the system makefile  *	followed by either Makefile, makefile or the file given by the  *	-f argument. Sets the .MAKEFLAGS PMake variable based on all the  *	flags it has received by then uses either the Make or the Compat  *	module to create the initial list of targets.  *  * Results:  *	If -q was given, exits -1 if anything was out-of-date. Else it exits  *	0.  *  * Side Effects:  *	The program exits when done. Targets are created. etc. etc. etc.  */
 end_comment
@@ -1925,6 +1935,45 @@ index|[]
 init|=
 name|_PATH_DEFSYSPATH
 decl_stmt|;
+block|{
+comment|/* 	 * Catch SIGCHLD so that we get kicked out of select() when we 	 * need to look at a child.  This is only known to matter for the 	 * -j case (perhaps without -P). 	 * 	 * XXX this is intentionally misplaced. 	 */
+name|struct
+name|sigaction
+name|sa
+decl_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|sa
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sa
+operator|.
+name|sa_flags
+operator|=
+name|SA_RESTART
+operator||
+name|SA_NOCLDSTOP
+expr_stmt|;
+name|sa
+operator|.
+name|sa_handler
+operator|=
+name|catch_child
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGCHLD
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|RLIMIT_NOFILE
