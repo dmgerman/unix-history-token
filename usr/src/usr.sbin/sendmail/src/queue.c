@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.51
+literal|3.52
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.51
+literal|3.52
 operator|%
 name|G
 operator|%
@@ -377,8 +377,6 @@ operator|->
 name|e_class
 argument_list|)
 expr_stmt|;
-comment|/* output macro definitions */
-comment|/* I don't think this is needed any more..... 	for (i = 0; i< 128; i++) 	{ 		register char *p = e->e_macro[i];  		if (p != NULL&& i != (int) 'b') 			fprintf(tfp, "M%c%s\n", i, p); 	} 	.....  */
 comment|/* output list of recipient addresses */
 for|for
 control|(
@@ -616,9 +614,14 @@ name|h_value
 argument_list|,
 name|tfp
 argument_list|,
+name|bitset
+argument_list|(
+name|EF_OLDSTYLE
+argument_list|,
 name|e
 operator|->
-name|e_oldstyle
+name|e_flags
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
@@ -1690,9 +1693,12 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|FatalErrors
-operator|=
-name|FALSE
+name|CurEnv
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_FATALERRS
 expr_stmt|;
 name|QueueRun
 operator|=
@@ -1701,14 +1707,6 @@ expr_stmt|;
 name|MailBack
 operator|=
 name|TRUE
-expr_stmt|;
-name|CurEnv
-operator|->
-name|e_qf
-operator|=
-name|w
-operator|->
-name|w_name
 expr_stmt|;
 name|CurEnv
 operator|->
@@ -1823,10 +1821,19 @@ expr_stmt|;
 comment|/* read the queue control file */
 name|readqf
 argument_list|(
+name|queuename
+argument_list|(
+name|CurEnv
+argument_list|,
+literal|'q'
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|CurEnv
 operator|->
-name|e_qf
-argument_list|)
+name|e_flags
+operator||=
+name|EF_INQUEUE
 expr_stmt|;
 name|eatheader
 argument_list|()
@@ -1835,7 +1842,14 @@ comment|/* do the delivery */
 if|if
 condition|(
 operator|!
-name|FatalErrors
+name|bitset
+argument_list|(
+name|EF_FATALERRS
+argument_list|,
+name|CurEnv
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 name|sendall
 argument_list|(
@@ -1876,10 +1890,6 @@ directive|endif
 endif|DEBUG
 if|if
 condition|(
-name|CurEnv
-operator|->
-name|e_queueup
-operator|&&
 name|curtime
 argument_list|()
 operator|>
@@ -1889,10 +1899,11 @@ name|e_ctime
 operator|+
 name|TimeOut
 condition|)
-name|timeout
-argument_list|(
-name|w
-argument_list|)
+name|CurEnv
+operator|->
+name|e_flags
+operator||=
+name|EF_TIMEOUT
 expr_stmt|;
 comment|/* finish up and exit */
 name|finis
@@ -2277,18 +2288,18 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  TIMEOUT -- process timeout on queue file. ** **	Parameters: **		w -- pointer to work request that timed out. ** **	Returns: **		none. ** **	Side Effects: **		Returns a message to the sender saying that this **		message has timed out. */
+comment|/* **  TIMEOUT -- process timeout on queue file. ** **	Parameters: **		e -- the envelope that timed out. ** **	Returns: **		none. ** **	Side Effects: **		Returns a message to the sender saying that this **		message has timed out. */
 end_comment
 
 begin_expr_stmt
 name|timeout
 argument_list|(
-name|w
+name|e
 argument_list|)
 specifier|register
-name|WORK
+name|ENVELOPE
 operator|*
-name|w
+name|e
 expr_stmt|;
 end_expr_stmt
 
@@ -2322,14 +2333,20 @@ name|printf
 argument_list|(
 literal|"timeout(%s)\n"
 argument_list|,
-name|w
+name|e
 operator|->
-name|w_name
+name|e_id
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+name|e
+operator|->
+name|e_to
+operator|=
+name|NULL
+expr_stmt|;
 name|message
 argument_list|(
 name|Arpa_Info
@@ -2363,7 +2380,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|&
-name|CurEnv
+name|e
 operator|->
 name|e_from
 argument_list|,
@@ -2371,11 +2388,11 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* arrange to remove files from queue */
-name|CurEnv
+name|e
 operator|->
-name|e_dontqueue
-operator|=
-name|TRUE
+name|e_flags
+operator||=
+name|EF_CLRQUEUE
 expr_stmt|;
 block|}
 end_block

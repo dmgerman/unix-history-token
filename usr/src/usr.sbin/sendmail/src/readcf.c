@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
@@ -2134,7 +2134,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"setoption %c=%s\n"
+literal|"setoption %c=%s"
 argument_list|,
 name|opt
 argument_list|,
@@ -2191,12 +2191,12 @@ name|tTd
 argument_list|(
 literal|37
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"(ignored)\n"
+literal|" (ignored)\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2204,6 +2204,27 @@ directive|endif
 endif|DEBUG
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+elseif|else
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|37
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 if|if
 condition|(
 name|sticky
@@ -2622,11 +2643,23 @@ case|case
 literal|'o'
 case|:
 comment|/* assume old style headers */
+if|if
+condition|(
+name|bval
+condition|)
 name|CurEnv
 operator|->
-name|e_oldstyle
-operator|=
-name|bval
+name|e_flags
+operator||=
+name|EF_OLDSTYLE
+expr_stmt|;
+else|else
+name|CurEnv
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_OLDSTYLE
 expr_stmt|;
 break|break;
 case|case

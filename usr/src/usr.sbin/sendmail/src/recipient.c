@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.46
+literal|3.47
 operator|%
 name|G
 operator|%
@@ -183,9 +183,10 @@ operator|)
 condition|)
 name|CurEnv
 operator|->
-name|e_oldstyle
-operator|=
-name|FALSE
+name|e_flags
+operator|&=
+operator|~
+name|EF_OLDSTYLE
 expr_stmt|;
 name|firstone
 operator|=

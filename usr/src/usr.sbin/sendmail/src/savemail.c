@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.47
+literal|3.48
 operator|%
 name|G
 operator|%
@@ -30,13 +30,20 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  SAVEMAIL -- Save mail on error ** **	If the MailBack flag is set, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. */
+comment|/* **  SAVEMAIL -- Save mail on error ** **	If the MailBack flag is set, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		e -- the envelope containing the message in error. ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|savemail
-argument_list|()
-end_macro
+argument_list|(
+name|e
+argument_list|)
+specifier|register
+name|ENVELOPE
+operator|*
+name|e
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -119,7 +126,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_class
 operator|<
@@ -139,9 +146,12 @@ name|ForceMail
 operator|=
 name|TRUE
 expr_stmt|;
-name|FatalErrors
-operator|=
-name|FALSE
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_FATALERRS
 expr_stmt|;
 comment|/* 	**  In the unhappy event we don't know who to return the mail 	**  to, make someone up. 	*/
 if|if
@@ -193,7 +203,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -274,6 +284,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|Xscript
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
@@ -286,7 +302,12 @@ name|xfile
 operator|=
 name|fopen
 argument_list|(
-name|Transcript
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+literal|'x'
+argument_list|)
 argument_list|,
 literal|"r"
 argument_list|)
@@ -301,7 +322,12 @@ name|syserr
 argument_list|(
 literal|"Cannot open %s"
 argument_list|,
-name|Transcript
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+literal|'x'
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|expand
@@ -319,7 +345,7 @@ operator|-
 literal|1
 index|]
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 name|printf
@@ -392,14 +418,6 @@ condition|(
 name|MailBack
 condition|)
 block|{
-if|if
-condition|(
-name|CurEnv
-operator|->
-name|e_errorqueue
-operator|==
-name|NULL
-condition|)
 if|if
 condition|(
 name|returntosender
@@ -574,10 +592,10 @@ operator|-
 literal|1
 index|]
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -1137,6 +1155,10 @@ operator|->
 name|m_flags
 argument_list|)
 decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
 comment|/* 	**  Output transcript of errors 	*/
 operator|(
 name|void
@@ -1146,6 +1168,17 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+name|p
+operator|=
+name|queuename
+argument_list|(
+name|CurEnv
+operator|->
+name|e_parent
+argument_list|,
+literal|'x'
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1153,7 +1186,7 @@ name|xfile
 operator|=
 name|fopen
 argument_list|(
-name|Transcript
+name|p
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1166,7 +1199,7 @@ name|syserr
 argument_list|(
 literal|"Cannot open %s"
 argument_list|,
-name|Transcript
+name|p
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1186,6 +1219,12 @@ argument_list|,
 literal|"   ----- Transcript of session follows -----\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Xscript
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)

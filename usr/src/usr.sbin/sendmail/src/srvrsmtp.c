@@ -2,6 +2,12 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sendmail.h"
 end_include
 
@@ -21,7 +27,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.36
+literal|3.37
 operator|%
 name|G
 operator|%
@@ -49,7 +55,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.36
+literal|3.37
 operator|%
 name|G
 operator|%
@@ -141,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|CMDRSET
-value|5
+value|4
 end_define
 
 begin_comment
@@ -152,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|CMDVRFY
-value|6
+value|5
 end_define
 
 begin_comment
@@ -163,7 +169,7 @@ begin_define
 define|#
 directive|define
 name|CMDHELP
-value|7
+value|6
 end_define
 
 begin_comment
@@ -174,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|CMDNOOP
-value|8
+value|7
 end_define
 
 begin_comment
@@ -185,7 +191,7 @@ begin_define
 define|#
 directive|define
 name|CMDQUIT
-value|9
+value|8
 end_define
 
 begin_comment
@@ -195,19 +201,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CMDMRSQ
-value|10
-end_define
-
-begin_comment
-comment|/* mrsq -- for old mtp compat only */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CMDHELO
-value|11
+value|9
 end_define
 
 begin_comment
@@ -217,8 +212,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CMDDBGSHOWQ
-value|12
+name|CMDDBGQSHOW
+value|10
 end_define
 
 begin_comment
@@ -229,7 +224,7 @@ begin_define
 define|#
 directive|define
 name|CMDDBGDEBUG
-value|13
+value|11
 end_define
 
 begin_comment
@@ -240,7 +235,7 @@ begin_define
 define|#
 directive|define
 name|CMDVERB
-value|14
+value|12
 end_define
 
 begin_comment
@@ -251,7 +246,7 @@ begin_define
 define|#
 directive|define
 name|CMDDBGKILL
-value|15
+value|13
 end_define
 
 begin_comment
@@ -262,7 +257,7 @@ begin_define
 define|#
 directive|define
 name|CMDDBGWIZ
-value|16
+value|14
 end_define
 
 begin_comment
@@ -273,11 +268,22 @@ begin_define
 define|#
 directive|define
 name|CMDONEX
-value|17
+value|15
 end_define
 
 begin_comment
 comment|/* onex -- sending one transaction only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDDBGSHELL
+value|16
+end_define
+
+begin_comment
+comment|/* shell -- give us a shell */
 end_comment
 
 begin_decl_stmt
@@ -296,11 +302,6 @@ literal|"rcpt"
 block|,
 name|CMDRCPT
 block|,
-literal|"mrcp"
-block|,
-name|CMDRCPT
-block|,
-comment|/* for old MTP compatability */
 literal|"data"
 block|,
 name|CMDDATA
@@ -333,10 +334,6 @@ literal|"quit"
 block|,
 name|CMDQUIT
 block|,
-literal|"mrsq"
-block|,
-name|CMDMRSQ
-block|,
 literal|"helo"
 block|,
 name|CMDHELO
@@ -358,7 +355,7 @@ directive|ifdef
 name|DEBUG
 literal|"showq"
 block|,
-name|CMDDBGSHOWQ
+name|CMDDBGQSHOW
 block|,
 literal|"debug"
 block|,
@@ -371,6 +368,10 @@ block|,
 literal|"wiz"
 block|,
 name|CMDDBGWIZ
+block|,
+literal|"shell"
+block|,
+name|CMDDBGSHELL
 block|,
 endif|#
 directive|endif
@@ -418,6 +419,29 @@ endif|#
 directive|endif
 endif|DEBUG
 end_endif
+
+begin_decl_stmt
+name|bool
+name|InChild
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if running in a subprocess */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EX_QUIT
+value|22
+end_define
+
+begin_comment
+comment|/* special code for QUIT command */
+end_comment
 
 begin_macro
 name|smtp
@@ -603,6 +627,12 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* echo command to transcript */
+if|if
+condition|(
+name|Xscript
+operator|!=
+name|NULL
+condition|)
 name|fprintf
 argument_list|(
 name|Xscript
@@ -749,6 +779,37 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|InChild
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Nested MAIL command"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* fork a subprocess to process this command */
+if|if
+condition|(
+name|runinchild
+argument_list|(
+literal|"SMTP-MAIL"
+argument_list|)
+operator|>
+literal|0
+condition|)
+break|break;
+name|initsys
+argument_list|()
+expr_stmt|;
+comment|/* child -- go do the processing */
 name|p
 operator|=
 name|skipword
@@ -765,30 +826,6 @@ operator|==
 name|NULL
 condition|)
 break|break;
-if|if
-condition|(
-name|index
-argument_list|(
-name|p
-argument_list|,
-literal|','
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|message
-argument_list|(
-literal|"501"
-argument_list|,
-literal|"Source routing not implemented"
-argument_list|)
-expr_stmt|;
-name|Errors
-operator|++
-expr_stmt|;
-break|break;
-block|}
 name|setsender
 argument_list|(
 name|p
@@ -813,6 +850,14 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|InChild
+condition|)
+name|finis
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|CMDRCPT
@@ -940,7 +985,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
-comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing FatalErrors. 			*/
+comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing error bit. 			*/
 if|if
 condition|(
 name|rcps
@@ -953,9 +998,12 @@ name|MailBack
 operator|=
 name|TRUE
 expr_stmt|;
-name|FatalErrors
-operator|=
-name|FALSE
+name|CurEnv
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_FATALERRS
 expr_stmt|;
 comment|/* send to all recipients */
 name|sendall
@@ -994,9 +1042,20 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|FatalErrors
-operator|=
-name|FALSE
+name|CurEnv
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_FATALERRS
+expr_stmt|;
+comment|/* if in a child, pop back to our parent */
+if|if
+condition|(
+name|InChild
+condition|)
+name|finis
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -1010,13 +1069,28 @@ argument_list|,
 literal|"Reset state"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|InChild
+condition|)
 name|finis
 argument_list|()
 expr_stmt|;
+break|break;
 case|case
 name|CMDVRFY
 case|:
 comment|/* vrfy -- verify address */
+if|if
+condition|(
+name|runinchild
+argument_list|(
+literal|"SMTP-VRFY"
+argument_list|)
+operator|>
+literal|0
+condition|)
+break|break;
 name|paddrtree
 argument_list|(
 name|a
@@ -1069,120 +1143,17 @@ argument_list|,
 name|HostName
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|InChild
+condition|)
+name|ExitStat
+operator|=
+name|EX_QUIT
+expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
-case|case
-name|CMDMRSQ
-case|:
-comment|/* mrsq -- negotiate protocol */
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'R'
-operator|||
-operator|*
-name|p
-operator|==
-literal|'T'
-condition|)
-block|{
-comment|/* recipients first or text first */
-name|message
-argument_list|(
-literal|"200"
-argument_list|,
-literal|"%c ok, please continue"
-argument_list|,
-operator|*
-name|p
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'?'
-condition|)
-block|{
-comment|/* what do I prefer?  anything, anytime */
-name|message
-argument_list|(
-literal|"215"
-argument_list|,
-literal|"R Recipients first is my choice"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'\0'
-condition|)
-block|{
-comment|/* no meaningful scheme */
-name|message
-argument_list|(
-literal|"200"
-argument_list|,
-literal|"okey dokie boobie"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* bad argument */
-name|message
-argument_list|(
-literal|"504"
-argument_list|,
-literal|"Scheme unknown"
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|CMDHOPS
-case|:
-comment|/* specify hop count */
-name|HopCount
-operator|=
-name|atoi
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|++
-name|HopCount
-operator|>
-name|MAXHOP
-condition|)
-name|message
-argument_list|(
-literal|"501"
-argument_list|,
-literal|"Hop count exceeded"
-argument_list|)
-expr_stmt|;
-else|else
-name|message
-argument_list|(
-literal|"200"
-argument_list|,
-literal|"Hop count ok"
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|CMDVERB
 case|:
@@ -1219,7 +1190,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 case|case
-name|CMDDBGSHOWQ
+name|CMDDBGQSHOW
 case|:
 comment|/* show queues */
 name|printf
@@ -1299,6 +1270,43 @@ argument_list|(
 literal|"500"
 argument_list|,
 literal|"Can't kill Mom"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMDDBGSHELL
+case|:
+comment|/* give us an interactive shell */
+if|if
+condition|(
+operator|!
+name|iswiz
+argument_list|()
+condition|)
+break|break;
+name|execl
+argument_list|(
+literal|"/bin/csh"
+argument_list|,
+literal|"sendmail"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|execl
+argument_list|(
+literal|"/bin/sh"
+argument_list|,
+literal|"sendmail"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+literal|"500"
+argument_list|,
+literal|"Can't"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1783,6 +1791,148 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  RUNINCHILD -- return twice -- once in the child, then in the parent again ** **	Parameters: **		label -- a string used in error messages ** **	Returns: **		zero in the child **		one in the parent ** **	Side Effects: **		none. */
+end_comment
+
+begin_macro
+name|runinchild
+argument_list|(
+argument|label
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|label
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|childpid
+decl_stmt|;
+name|childpid
+operator|=
+name|dofork
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|childpid
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"%s: cannot fork"
+argument_list|,
+name|label
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|childpid
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* parent -- wait for child to complete */
+specifier|auto
+name|int
+name|st
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|i
+operator|=
+name|wait
+argument_list|(
+operator|&
+name|st
+argument_list|)
+operator|)
+operator|!=
+name|childpid
+condition|)
+block|{
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|EINTR
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"%s: lost child"
+argument_list|,
+name|label
+argument_list|)
+expr_stmt|;
+comment|/* if we exited on a QUIT command, complete the process */
+if|if
+condition|(
+name|st
+operator|==
+operator|(
+name|EX_QUIT
+operator|<<
+literal|8
+operator|)
+condition|)
+name|finis
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+else|else
+block|{
+comment|/* child */
+name|InChild
+operator|=
+name|TRUE
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
+end_block
 
 begin_escape
 end_escape

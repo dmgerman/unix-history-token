@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.33
+literal|3.34
 operator|%
 name|G
 operator|%
@@ -536,7 +536,7 @@ if|if
 condition|(
 name|Xscript
 operator|!=
-name|OutChannel
+name|NULL
 condition|)
 name|fprintf
 argument_list|(
@@ -637,9 +637,11 @@ block|{
 case|case
 literal|'5'
 case|:
-name|FatalErrors
-operator|=
-name|TRUE
+name|CurEnv
+operator|->
+name|e_flags
+operator||=
+name|EF_FATALERRS
 expr_stmt|;
 comment|/* fall through.... */
 case|case

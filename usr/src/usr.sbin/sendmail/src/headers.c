@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -569,9 +569,10 @@ condition|)
 block|{
 name|CurEnv
 operator|->
-name|e_oldstyle
-operator|=
-name|FALSE
+name|e_flags
+operator|&=
+operator|~
+name|EF_OLDSTYLE
 expr_stmt|;
 block|}
 comment|/* send to this person if we so desire */

@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.26
+literal|3.27
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.26
+literal|3.27
 operator|%
 name|G
 operator|%
@@ -1091,6 +1091,12 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* actually do the read */
+if|if
+condition|(
+name|Xscript
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
@@ -1148,6 +1154,12 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Xscript
+operator|!=
+name|NULL
+condition|)
 name|fprintf
 argument_list|(
 name|Xscript
@@ -1282,6 +1294,12 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Xscript
+operator|!=
+name|NULL
+condition|)
 name|fprintf
 argument_list|(
 name|Xscript

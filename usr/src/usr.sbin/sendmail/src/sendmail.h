@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.100		%G%"
+literal|"@(#)sendmail.h	3.101		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -795,22 +795,6 @@ name|time_t
 name|e_ctime
 decl_stmt|;
 comment|/* time message appeared in the queue */
-name|bool
-name|e_queueup
-decl_stmt|;
-comment|/* queue this message */
-name|bool
-name|e_dontqueue
-decl_stmt|;
-comment|/* override queueing */
-name|bool
-name|e_oldstyle
-decl_stmt|;
-comment|/* use spaces (not commas) in hdrs */
-name|bool
-name|e_sendreceipt
-decl_stmt|;
-comment|/* actually send a receipt back */
 name|char
 modifier|*
 name|e_to
@@ -854,6 +838,10 @@ name|short
 name|e_class
 decl_stmt|;
 comment|/* msg class (priority, junk, etc.) */
+name|short
+name|e_flags
+decl_stmt|;
+comment|/* flags, see below */
 name|int
 function_decl|(
 modifier|*
@@ -876,16 +864,17 @@ modifier|*
 name|e_parent
 decl_stmt|;
 comment|/* the message this one encloses */
+name|struct
+name|envelope
+modifier|*
+name|e_sibling
+decl_stmt|;
+comment|/* the next envelope of interest */
 name|char
 modifier|*
 name|e_df
 decl_stmt|;
 comment|/* location of temp file */
-name|char
-modifier|*
-name|e_qf
-decl_stmt|;
-comment|/* queue control file */
 name|char
 modifier|*
 name|e_id
@@ -910,6 +899,87 @@ name|envelope
 name|ENVELOPE
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* values for e_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_OLDSTYLE
+value|000001
+end_define
+
+begin_comment
+comment|/* use spaces (not commas) in hdrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_INQUEUE
+value|000002
+end_define
+
+begin_comment
+comment|/* this message is fully queued */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_TIMEOUT
+value|000004
+end_define
+
+begin_comment
+comment|/* this message is too old */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_CLRQUEUE
+value|000010
+end_define
+
+begin_comment
+comment|/* disk copy is no longer needed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_SENDRECEIPT
+value|000020
+end_define
+
+begin_comment
+comment|/* send a return receipt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_FATALERRS
+value|000040
+end_define
+
+begin_comment
+comment|/* fatal errors occured */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_KEEPQUEUE
+value|000100
+end_define
+
+begin_comment
+comment|/* keep queue files always */
+end_comment
 
 begin_decl_stmt
 name|EXTERN
@@ -1927,17 +1997,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|FatalErrors
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if fatal errors during processing */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|SuperSafe
 decl_stmt|;
 end_decl_stmt
@@ -2202,18 +2261,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* name of this host for SMTP messages */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|Transcript
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the transcript file name */
 end_comment
 
 begin_decl_stmt
