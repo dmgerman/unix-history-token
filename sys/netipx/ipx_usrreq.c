@@ -2245,7 +2245,6 @@ argument_list|,
 name|nam
 argument_list|)
 expr_stmt|;
-comment|/* XXX what if alloc fails? */
 return|return
 operator|(
 literal|0
@@ -2528,7 +2527,6 @@ argument_list|,
 name|nam
 argument_list|)
 expr_stmt|;
-comment|/* XXX what if alloc fails? */
 return|return
 operator|(
 literal|0
