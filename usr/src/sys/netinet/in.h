@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)in.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)in.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).  * Ports> IPPORT_USERRESERVED are reserved  * for servers, not necessarily privileged.  */
+comment|/*  * Local port number conventions:  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).  * Ports> IPPORT_USERRESERVED are reserved  * for servers, not necessarily privileged.  */
 end_comment
 
 begin_define
@@ -155,31 +155,6 @@ define|#
 directive|define
 name|IPPORT_USERRESERVED
 value|5000
-end_define
-
-begin_comment
-comment|/*  * Link numbers  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IMPLINK_IP
-value|155
-end_define
-
-begin_define
-define|#
-directive|define
-name|IMPLINK_LOWEXPER
-value|156
-end_define
-
-begin_define
-define|#
-directive|define
-name|IMPLINK_HIGHEXPER
-value|158
 end_define
 
 begin_comment
@@ -431,7 +406,31 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Options for use with [gs]etsockopt at the IP level.  */
+comment|/*  * Structure used to describe IP options.  * Used to store options internally, to pass them to a process,  * or to restore options retrieved earlier.  * The ip_dst is used for the first-hop gateway when using a source route  * (this gets put into the header proper).  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_opts
+block|{
+name|struct
+name|in_addr
+name|ip_dst
+decl_stmt|;
+comment|/* first hop, 0 w/o src rt */
+name|char
+name|ip_opts
+index|[
+literal|40
+index|]
+decl_stmt|;
+comment|/* actually variable in size */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Options for use with [gs]etsockopt at the IP level.  * First word of comment is data type; bool is stored in int.  */
 end_comment
 
 begin_define
@@ -442,7 +441,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* set/get IP per-packet options */
+comment|/* buf/ip_opts; set/get IP per-packet options */
 end_comment
 
 begin_define
@@ -453,7 +452,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* header is included with data */
+comment|/* int; header is included with data (raw) */
 end_comment
 
 begin_define
@@ -464,7 +463,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* IP type of service and precedence */
+comment|/* int; IP type of service and precedence */
 end_comment
 
 begin_define
@@ -475,7 +474,51 @@ value|4
 end_define
 
 begin_comment
-comment|/* IP time to live */
+comment|/* int; IP time to live */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RECVOPTS
+value|5
+end_define
+
+begin_comment
+comment|/* bool; receive all IP options w/datagram */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RECVRETOPTS
+value|6
+end_define
+
+begin_comment
+comment|/* bool; receive IP options for response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RECVDSTADDR
+value|7
+end_define
+
+begin_comment
+comment|/* bool; receive IP dst addr w/datagram */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RETOPTS
+value|8
+end_define
+
+begin_comment
+comment|/* ip_opts; set/get IP per-packet options */
 end_comment
 
 begin_ifdef
