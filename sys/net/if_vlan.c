@@ -612,6 +612,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|if_clone
 name|vlan_cloner
@@ -1707,7 +1708,7 @@ name|if_softc
 operator|=
 name|ifv
 expr_stmt|;
-comment|/* 	 * Set the name manually rather then using if_initname because 	 * we don't conform to the default naming convention for interfaces. 	 */
+comment|/* 	 * Set the name manually rather than using if_initname because 	 * we don't conform to the default naming convention for interfaces. 	 */
 name|strlcpy
 argument_list|(
 name|ifp
