@@ -212,91 +212,91 @@ begin_define
 define|#
 directive|define
 name|ED_TYPE98_BASE
-value|0x80
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_GENERIC
-value|0x80
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_LPC
-value|0x81
+value|0x11
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_BDN
-value|0x82
+value|0x12
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_EGY
-value|0x83
+value|0x13
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_LGY
-value|0x84
+value|0x14
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_ICM
-value|0x85
+value|0x15
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_SIC
-value|0x86
+value|0x16
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_108
-value|0x88
+value|0x18
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_LA98
-value|0x89
+value|0x19
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_CNET98
-value|0x8a
+value|0x1a
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_CNET98EL
-value|0x8b
+value|0x1b
 end_define
 
 begin_define
 define|#
 directive|define
 name|ED_TYPE98_UE2212
-value|0x8c
+value|0x1c
 end_define
 
 begin_define
