@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lock.c	4.4 (Berkeley) %G%"
+literal|"@(#)lock.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -490,6 +490,8 @@ argument_list|(
 literal|"Key: "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|s
@@ -499,12 +501,28 @@ name|s
 argument_list|,
 name|stdin
 argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
 expr_stmt|;
+name|quit
+argument_list|()
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\nAgain: "
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Don't need EOF test here, if we get EOF, then s1 != s 	 * and the right things will happen. 	 */
+operator|(
+name|void
+operator|)
 name|fgets
 argument_list|(
 name|s1
@@ -659,6 +677,8 @@ argument_list|(
 literal|"Key: "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|s
@@ -668,7 +688,20 @@ name|s
 argument_list|,
 name|stdin
 argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|clearerr
+argument_list|(
+name|stdin
+argument_list|)
 expr_stmt|;
+name|hi
+argument_list|()
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|strcmp
