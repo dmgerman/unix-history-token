@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.22 (Berkeley) %G%"
+literal|"@(#)lex.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5125,7 +5125,7 @@ operator|&&
 operator|!
 name|any
 argument_list|(
-literal|"{}:"
+literal|"${}:"
 argument_list|,
 name|c
 argument_list|)
