@@ -15,6 +15,18 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"calendar.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -28,32 +40,6 @@ directive|define
 name|PASKHALEN
 value|(sizeof(PASKHA) - 1)
 end_define
-
-begin_comment
-comment|/* KOI8-R encoding, needed to fully handle Russian case */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PASKHA1
-value|"ÐÁÓÈÁ"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PASKHALEN1
-value|(sizeof(PASKHA1) - 1)
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-modifier|*
-name|cumdays
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* return year day for Orthodox Easter using Gauss formula */
@@ -97,6 +83,11 @@ name|int
 name|y
 init|=
 literal|6
+decl_stmt|;
+specifier|extern
+name|int
+modifier|*
+name|cumdays
 decl_stmt|;
 name|a
 operator|=
@@ -194,6 +185,11 @@ block|{
 name|int
 name|offset
 decl_stmt|;
+specifier|extern
+name|struct
+name|fixs
+name|npaskha
+decl_stmt|;
 if|if
 condition|(
 name|strncasecmp
@@ -214,20 +210,32 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|npaskha
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
 name|strncasecmp
 argument_list|(
 name|s
 argument_list|,
-name|PASKHA1
+name|npaskha
+operator|.
+name|name
 argument_list|,
-name|PASKHALEN1
+name|npaskha
+operator|.
+name|len
 argument_list|)
 operator|==
 literal|0
 condition|)
 name|s
 operator|+=
-name|PASKHALEN1
+name|npaskha
+operator|.
+name|len
 expr_stmt|;
 else|else
 return|return

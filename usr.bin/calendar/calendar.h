@@ -337,5 +337,20 @@ begin_comment
 comment|/* days bevore current date */
 end_comment
 
+begin_struct
+struct|struct
+name|fixs
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 end_unit
 

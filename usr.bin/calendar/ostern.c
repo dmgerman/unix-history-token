@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995 Wolfram Schneider. Public domain.  *  * $Id: ostern.c,v 1.1 1996/02/02 06:02:40 wosch Exp $ */
+comment|/*   * Copyright (c) 1995 Wolfram Schneider. Public domain.  *  * $Id: ostern.c,v 1.2 1996/05/10 16:29:42 ache Exp $ */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"calendar.h"
 end_include
 
 begin_comment
@@ -336,6 +348,11 @@ name|offset
 init|=
 literal|0
 decl_stmt|;
+specifier|extern
+name|struct
+name|fixs
+name|neaster
+decl_stmt|;
 define|#
 directive|define
 name|EASTER
@@ -344,7 +361,6 @@ define|#
 directive|define
 name|EASTERNAMELEN
 value|(sizeof(EASTER) - 1)
-comment|/* no easter */
 if|if
 condition|(
 name|strncasecmp
@@ -355,7 +371,44 @@ name|EASTER
 argument_list|,
 name|EASTERNAMELEN
 argument_list|)
+operator|==
+literal|0
 condition|)
+name|s
+operator|+=
+name|EASTERNAMELEN
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|neaster
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strncasecmp
+argument_list|(
+name|s
+argument_list|,
+name|neaster
+operator|.
+name|name
+argument_list|,
+name|neaster
+operator|.
+name|len
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|s
+operator|+=
+name|neaster
+operator|.
+name|len
+expr_stmt|;
+else|else
 return|return
 operator|(
 literal|0
@@ -381,31 +434,12 @@ comment|/* Easter+1  or Easter-2 	 *       ^            ^   */
 switch|switch
 condition|(
 operator|*
-operator|(
 name|s
-operator|+
-name|EASTERNAMELEN
-operator|)
 condition|)
 block|{
 case|case
 literal|'-'
 case|:
-name|offset
-operator|=
-operator|-
-operator|(
-name|atoi
-argument_list|(
-name|s
-operator|+
-name|EASTERNAMELEN
-operator|+
-literal|1
-argument_list|)
-operator|)
-expr_stmt|;
-break|break;
 case|case
 literal|'+'
 case|:
@@ -414,10 +448,6 @@ operator|=
 name|atoi
 argument_list|(
 name|s
-operator|+
-name|EASTERNAMELEN
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 break|break;
