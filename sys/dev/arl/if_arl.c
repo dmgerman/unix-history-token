@@ -151,7 +151,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net80211/ieee80211_var.h>
+file|<net/if_ieee80211.h>
 end_include
 
 begin_ifdef
@@ -1902,9 +1902,10 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-name|d_thread_t
+name|struct
+name|proc
 modifier|*
-name|td
+name|p
 init|=
 name|_ARL_CURPROC
 decl_stmt|;
@@ -2226,7 +2227,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|td
+name|p
 argument_list|)
 operator|)
 condition|)
@@ -2521,7 +2522,7 @@ condition|(
 operator|!
 name|suser
 argument_list|(
-name|td
+name|p
 argument_list|)
 condition|)
 block|{
@@ -2687,7 +2688,7 @@ if|if
 condition|(
 name|suser
 argument_list|(
-name|td
+name|p
 argument_list|)
 condition|)
 break|break;
