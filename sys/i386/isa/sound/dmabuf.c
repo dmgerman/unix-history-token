@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/include/md_var.h>
+file|<machine/md_var.h>
 end_include
 
 begin_if
