@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.18 %G%"
+literal|"@(#)c21.c 4.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6415,12 +6415,28 @@ name|cp1
 argument_list|)
 argument_list|)
 operator|)
-operator|||
+condition|)
+return|return;
+if|if
+condition|(
 name|p
 operator|->
 name|subop
 operator|!=
 name|BYTE
+operator|&&
+operator|!
+operator|(
+name|b
+operator|==
+literal|0
+operator|&&
+name|p
+operator|->
+name|subop
+operator|==
+name|LONG
+operator|)
 operator|&&
 operator|(
 name|source
@@ -6592,6 +6608,15 @@ operator|==
 name|LONG
 operator|||
 operator|!
+operator|(
+name|source
+argument_list|(
+name|regs
+index|[
+name|RT2
+index|]
+argument_list|)
+operator|||
 name|indexa
 argument_list|(
 name|regs
@@ -6599,6 +6624,7 @@ index|[
 name|RT2
 index|]
 argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
