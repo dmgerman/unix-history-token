@@ -986,7 +986,7 @@ operator|<
 literal|0
 operator|||
 name|algo
-operator|>
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|awi_wep_algo
