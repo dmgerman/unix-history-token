@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.10 (Berkeley) %G%"
+literal|"@(#)print.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,7 +168,7 @@ index|]
 operator|.
 name|lstat
 operator|.
-name|st_flags
+name|st_btotal
 argument_list|)
 expr_stmt|;
 for|for
@@ -483,7 +483,7 @@ index|]
 operator|.
 name|lstat
 operator|.
-name|st_flags
+name|st_maxlen
 expr_stmt|;
 if|if
 condition|(
@@ -544,6 +544,27 @@ name|numcols
 condition|)
 operator|++
 name|numrows
+expr_stmt|;
+if|if
+condition|(
+name|f_size
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"total %lu\n"
+argument_list|,
+name|stats
+index|[
+literal|0
+index|]
+operator|.
+name|lstat
+operator|.
+name|st_btotal
+argument_list|)
 expr_stmt|;
 for|for
 control|(
