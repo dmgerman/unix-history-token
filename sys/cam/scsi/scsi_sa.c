@@ -9645,7 +9645,7 @@ name|char
 modifier|*
 name|toobig
 init|=
-literal|"%d-byte tape record bigger than suplied buffer\n"
+literal|"%d-byte tape record bigger than supplied buffer\n"
 decl_stmt|;
 name|struct
 name|cam_periph
