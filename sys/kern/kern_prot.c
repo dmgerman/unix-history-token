@@ -8033,6 +8033,13 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_flag
