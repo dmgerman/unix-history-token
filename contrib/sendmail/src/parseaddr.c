@@ -3398,7 +3398,7 @@ begin_define
 define|#
 directive|define
 name|NOCHAR
-value|-1
+value|(-1)
 end_define
 
 begin_comment
@@ -3776,6 +3776,8 @@ literal|5
 index|]
 condition|)
 block|{
+name|addrtoolong
+label|:
 name|usrerr
 argument_list|(
 literal|"553 5.1.1 Address too long"
@@ -3821,6 +3823,38 @@ name|NULL
 return|;
 block|}
 comment|/* squirrel it away */
+if|#
+directive|if
+operator|!
+name|ALLOW_255
+if|if
+condition|(
+operator|(
+name|char
+operator|)
+name|c
+operator|==
+operator|(
+name|char
+operator|)
+operator|-
+literal|1
+operator|&&
+operator|!
+name|tTd
+argument_list|(
+literal|82
+argument_list|,
+literal|101
+argument_list|)
+condition|)
+name|c
+operator|&=
+literal|0x7f
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !ALLOW_255 */
 operator|*
 name|q
 operator|++
@@ -3831,9 +3865,13 @@ block|}
 comment|/* read a new input character */
 name|c
 operator|=
+operator|(
 operator|*
 name|p
 operator|++
+operator|)
+operator|&
+literal|0x00ff
 expr_stmt|;
 if|if
 condition|(
@@ -4009,6 +4047,22 @@ operator|==
 name|QST
 condition|)
 block|{
+comment|/* see if there is room */
+if|if
+condition|(
+name|q
+operator|>=
+operator|&
+name|pvpbuf
+index|[
+name|pvpbsize
+operator|-
+literal|5
+index|]
+condition|)
+goto|goto
+name|addrtoolong
+goto|;
 operator|*
 name|q
 operator|++
@@ -4344,6 +4398,22 @@ operator|!=
 name|q
 condition|)
 block|{
+comment|/* see if there is room */
+if|if
+condition|(
+name|q
+operator|>=
+operator|&
+name|pvpbuf
+index|[
+name|pvpbsize
+operator|-
+literal|5
+index|]
+condition|)
+goto|goto
+name|addrtoolong
+goto|;
 operator|*
 name|q
 operator|++

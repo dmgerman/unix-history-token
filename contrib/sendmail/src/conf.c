@@ -1423,6 +1423,16 @@ name|MaxHeadersLength
 operator|=
 name|MAXHDRSLEN
 expr_stmt|;
+name|MaxMimeHeaderLength
+operator|=
+name|MAXLINE
+expr_stmt|;
+name|MaxMimeFieldLength
+operator|=
+name|MaxMimeHeaderLength
+operator|/
+literal|2
+expr_stmt|;
 name|MaxForwardEntries
 operator|=
 literal|0
