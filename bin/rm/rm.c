@@ -506,6 +506,15 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"POSIXLY_CORRECT"
+argument_list|)
+operator|==
+name|NULL
+condition|)
 name|checkslash
 argument_list|(
 name|argv
