@@ -69,32 +69,72 @@ name|ip_fw
 block|{
 name|u_int64_t
 name|fw_pcnt
-decl_stmt|,
+decl_stmt|;
+comment|/* Packet counters */
+name|u_int64_t
 name|fw_bcnt
 decl_stmt|;
-comment|/* Packet and byte counters */
+comment|/* Byte counters */
 name|struct
 name|in_addr
 name|fw_src
-decl_stmt|,
+decl_stmt|;
+comment|/* Source IP address */
+name|struct
+name|in_addr
 name|fw_dst
 decl_stmt|;
-comment|/* Source and destination IP addr */
+comment|/* Destination IP address */
 name|struct
 name|in_addr
 name|fw_smsk
-decl_stmt|,
+decl_stmt|;
+comment|/* Mask for source IP address */
+name|struct
+name|in_addr
 name|fw_dmsk
 decl_stmt|;
-comment|/* Mask for src and dest IP addr */
+comment|/* Mask for destination address */
 name|u_short
 name|fw_number
 decl_stmt|;
 comment|/* Rule number */
+define|#
+directive|define
+name|IP_FW_GETNSRCP
+parameter_list|(
+name|rule
+parameter_list|)
+value|((rule)->fw_nports& 0x0f)
+define|#
+directive|define
+name|IP_FW_SETNSRCP
+parameter_list|(
+name|rule
+parameter_list|,
+name|n
+parameter_list|)
+value|do {				\ 					    (rule)->fw_nports&= ~0x0f;	\ 					    (rule)->fw_nports |= (n);	\ 					} while (0)
+define|#
+directive|define
+name|IP_FW_GETNDSTP
+parameter_list|(
+name|rule
+parameter_list|)
+value|((rule)->fw_nports>> 4)
+define|#
+directive|define
+name|IP_FW_SETNDSTP
+parameter_list|(
+name|rule
+parameter_list|,
+name|n
+parameter_list|)
+value|do {				  \ 					    (rule)->fw_nports&= ~0xf0;	  \ 					    (rule)->fw_nports |= (n)<< 4;\ 					} while (0)
 name|u_int
 name|fw_flg
 decl_stmt|;
-comment|/* Flags word */
+comment|/* Operational Flags word */
 define|#
 directive|define
 name|IP_FW_MAX_PORTS
@@ -108,7 +148,7 @@ index|[
 name|IP_FW_MAX_PORTS
 index|]
 decl_stmt|;
-comment|/* Array of port numbers to match */
+comment|/* port numbers to match */
 define|#
 directive|define
 name|IP_FW_ICMPTYPES_MAX
@@ -123,7 +163,7 @@ index|[
 name|IP_FW_ICMPTYPES_DIM
 index|]
 decl_stmt|;
-comment|/* ICMP types bitmap */
+comment|/*ICMP types bitmap*/
 block|}
 name|fw_uar
 union|;
@@ -133,19 +173,25 @@ decl_stmt|;
 comment|/* IP flags word */
 name|u_char
 name|fw_ipopt
-decl_stmt|,
+decl_stmt|;
+comment|/* IP options set */
+name|u_char
 name|fw_ipnopt
 decl_stmt|;
-comment|/* IP options set/unset */
+comment|/* IP options unset */
 name|u_char
 name|fw_tcpopt
-decl_stmt|,
+decl_stmt|;
+comment|/* TCP options set */
+name|u_char
 name|fw_tcpnopt
 decl_stmt|;
-comment|/* TCP options set/unset */
+comment|/* TCP options unset */
 name|u_char
 name|fw_tcpf
-decl_stmt|,
+decl_stmt|;
+comment|/* TCP flags set/unset */
+name|u_char
 name|fw_tcpnf
 decl_stmt|;
 comment|/* TCP flags set/unset */
@@ -156,10 +202,13 @@ comment|/* timestamp (tv_sec) of last match */
 name|union
 name|ip_fw_if
 name|fw_in_if
-decl_stmt|,
+decl_stmt|;
+comment|/* Incoming interfaces */
+name|union
+name|ip_fw_if
 name|fw_out_if
 decl_stmt|;
-comment|/* Incoming and outgoing interfaces */
+comment|/* Outgoing interfaces */
 union|union
 block|{
 name|u_short
@@ -224,7 +273,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * extended ipfw structure... some fields in the original struct  * can be used to pass parameters up/down, namely pointers  *     void *pipe_ptr  *     void *next_rule_ptr   * some others can be used to pass parameters down, namely counters etc.  *     u_int64_t fw_pcnt,fw_bcnt;  *     long timestamp;  */
+comment|/*  * extended ipfw structure... some fields in the original struct  * can be used to pass parameters up/down, namely pointers  *     void *pipe_ptr  *     void *next_rule_ptr  * some others can be used to pass parameters down, namely counters etc.  *     u_int64_t fw_pcnt,fw_bcnt;  *     long timestamp;  */
 end_comment
 
 begin_struct
@@ -240,7 +289,7 @@ comment|/* must be at offset 0 */
 name|long
 name|dont_match_prob
 decl_stmt|;
-comment|/* 0x7fffffff means 1.0, always fail */
+comment|/* 0x7fffffff means 1.0, 					 * always fail 					 */
 name|u_int
 name|dyn_type
 decl_stmt|;
@@ -248,50 +297,6 @@ comment|/* type for dynamic rule */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|IP_FW_GETNSRCP
-parameter_list|(
-name|rule
-parameter_list|)
-value|((rule)->fw_nports& 0x0f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_SETNSRCP
-parameter_list|(
-name|rule
-parameter_list|,
-name|n
-parameter_list|)
-value|do {				\ 					  (rule)->fw_nports&= ~0x0f;	\ 					  (rule)->fw_nports |= (n);	\ 					} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_GETNDSTP
-parameter_list|(
-name|rule
-parameter_list|)
-value|((rule)->fw_nports>> 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_SETNDSTP
-parameter_list|(
-name|rule
-parameter_list|,
-name|n
-parameter_list|)
-value|do {				\ 					  (rule)->fw_nports&= ~0xf0;	\ 					  (rule)->fw_nports |= (n)<< 4;\ 					} while (0)
-end_define
 
 begin_define
 define|#
@@ -357,12 +362,14 @@ name|ipfw_flow_id
 block|{
 name|u_int32_t
 name|dst_ip
-decl_stmt|,
+decl_stmt|;
+name|u_int32_t
 name|src_ip
 decl_stmt|;
 name|u_int16_t
 name|dst_port
-decl_stmt|,
+decl_stmt|;
+name|u_int16_t
 name|src_port
 decl_stmt|;
 name|u_int8_t
@@ -402,30 +409,31 @@ name|ip_fw_chain
 modifier|*
 name|chain
 decl_stmt|;
-comment|/* pointer to parent rule	*/
+comment|/* pointer to parent rule */
 name|u_int32_t
 name|type
 decl_stmt|;
-comment|/* rule type			*/
+comment|/* rule type */
 name|u_int32_t
 name|expire
 decl_stmt|;
-comment|/* expire time			*/
+comment|/* expire time */
 name|u_int64_t
 name|pcnt
-decl_stmt|,
+decl_stmt|;
+comment|/* packet match counters */
+name|u_int64_t
 name|bcnt
 decl_stmt|;
-comment|/* match counters		*/
+comment|/* byte match counters */
 name|u_int32_t
 name|bucket
 decl_stmt|;
-comment|/* which bucket in hash table	*/
+comment|/* which bucket in hash table */
 name|u_int32_t
 name|state
 decl_stmt|;
-comment|/* state of this rule (typ. a   */
-comment|/* combination of TCP flags)	*/
+comment|/* state of this rule (typically a 					 * combination of TCP flags) 					 */
 block|}
 struct|;
 end_struct
@@ -442,7 +450,7 @@ value|0x000000ff
 end_define
 
 begin_comment
-comment|/* Mask for type of chain entry:	*/
+comment|/* Mask for type of chain entry: */
 end_comment
 
 begin_define
@@ -453,7 +461,7 @@ value|0x00000000
 end_define
 
 begin_comment
-comment|/* This is a deny rule			*/
+comment|/* This is a deny rule */
 end_comment
 
 begin_define
@@ -464,7 +472,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* Deny and send a response packet	*/
+comment|/* Deny and send a response packet */
 end_comment
 
 begin_define
@@ -475,7 +483,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* This is an accept rule		*/
+comment|/* This is an accept rule */
 end_comment
 
 begin_define
@@ -486,7 +494,7 @@ value|0x00000003
 end_define
 
 begin_comment
-comment|/* This is a count rule			*/
+comment|/* This is a count rule */
 end_comment
 
 begin_define
@@ -497,7 +505,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* This is a divert rule		*/
+comment|/* This is a divert rule */
 end_comment
 
 begin_define
@@ -508,7 +516,7 @@ value|0x00000005
 end_define
 
 begin_comment
-comment|/* This is a tee rule			*/
+comment|/* This is a tee rule */
 end_comment
 
 begin_define
@@ -519,7 +527,7 @@ value|0x00000006
 end_define
 
 begin_comment
-comment|/* This is a skipto rule		*/
+comment|/* This is a skipto rule */
 end_comment
 
 begin_define
@@ -530,7 +538,7 @@ value|0x00000007
 end_define
 
 begin_comment
-comment|/* This is a "change forwarding address" rule */
+comment|/* This is a "change forwarding 					 * address" rule 					 */
 end_comment
 
 begin_define
@@ -563,7 +571,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* Check inbound packets		*/
+comment|/* Check inbound packets */
 end_comment
 
 begin_define
@@ -574,7 +582,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* Check outbound packets		*/
+comment|/* Check outbound packets */
 end_comment
 
 begin_define
@@ -585,7 +593,7 @@ value|0x00000400
 end_define
 
 begin_comment
-comment|/* Apply inbound interface test		*/
+comment|/* Apply inbound interface test */
 end_comment
 
 begin_define
@@ -596,7 +604,7 @@ value|0x00000800
 end_define
 
 begin_comment
-comment|/* Apply outbound interface test	*/
+comment|/* Apply outbound interface test */
 end_comment
 
 begin_define
@@ -607,7 +615,7 @@ value|0x00001000
 end_define
 
 begin_comment
-comment|/* Print if this rule matches		*/
+comment|/* Print if this rule matches */
 end_comment
 
 begin_define
@@ -618,7 +626,7 @@ value|0x00002000
 end_define
 
 begin_comment
-comment|/* The first two src ports are a min	* 					 * and max range (stored in host byte	* 					 * order).				*/
+comment|/* The first two src ports are a min 					 * and max range (stored in host byte 					 * order). 					 */
 end_comment
 
 begin_define
@@ -629,7 +637,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/* The first two dst ports are a min	* 					 * and max range (stored in host byte	* 					 * order).				*/
+comment|/* The first two dst ports are a min 					 * and max range (stored in host byte 					 * order). 					 */
 end_comment
 
 begin_define
@@ -640,7 +648,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* Fragment				*/
+comment|/* Fragment */
 end_comment
 
 begin_define
@@ -651,7 +659,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* In interface by name/unit (not IP)	*/
+comment|/* In interface by name/unit (not IP) */
 end_comment
 
 begin_define
@@ -662,7 +670,7 @@ value|0x00020000
 end_define
 
 begin_comment
-comment|/* Out interface by name/unit (not IP)	*/
+comment|/* Out interface by name/unit (not IP)*/
 end_comment
 
 begin_define
@@ -673,7 +681,7 @@ value|0x00040000
 end_define
 
 begin_comment
-comment|/* Invert sense of src check		*/
+comment|/* Invert sense of src check */
 end_comment
 
 begin_define
@@ -684,7 +692,7 @@ value|0x00080000
 end_define
 
 begin_comment
-comment|/* Invert sense of dst check		*/
+comment|/* Invert sense of dst check */
 end_comment
 
 begin_define
@@ -695,7 +703,7 @@ value|0x00100000
 end_define
 
 begin_comment
-comment|/* ICMP type bitmap is valid		*/
+comment|/* ICMP type bitmap is valid */
 end_comment
 
 begin_define
@@ -706,7 +714,7 @@ value|0x00200000
 end_define
 
 begin_comment
-comment|/* filter by uid			*/
+comment|/* filter by uid */
 end_comment
 
 begin_define
@@ -717,7 +725,7 @@ value|0x00400000
 end_define
 
 begin_comment
-comment|/* filter by gid			*/
+comment|/* filter by gid */
 end_comment
 
 begin_define
@@ -728,7 +736,7 @@ value|0x00800000
 end_define
 
 begin_comment
-comment|/* probabilistic rule match		*/
+comment|/* probabilistic rule match */
 end_comment
 
 begin_define
@@ -739,7 +747,7 @@ value|0x01000000
 end_define
 
 begin_comment
-comment|/* src-port + mask 			*/
+comment|/* src-port + mask */
 end_comment
 
 begin_define
@@ -750,7 +758,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* dst-port + mask 			*/
+comment|/* dst-port + mask */
 end_comment
 
 begin_define
@@ -761,7 +769,7 @@ value|0x04000000
 end_define
 
 begin_comment
-comment|/* only match bridged packets		*/
+comment|/* only match bridged packets */
 end_comment
 
 begin_define
@@ -772,7 +780,7 @@ value|0x08000000
 end_define
 
 begin_comment
-comment|/* keep state	 			*/
+comment|/* keep state */
 end_comment
 
 begin_define
@@ -783,7 +791,7 @@ value|0x10000000
 end_define
 
 begin_comment
-comment|/* check state	 			*/
+comment|/* check state */
 end_comment
 
 begin_define
@@ -794,7 +802,7 @@ value|0x20000000
 end_define
 
 begin_comment
-comment|/* source = me				*/
+comment|/* source = me */
 end_comment
 
 begin_define
@@ -805,7 +813,7 @@ value|0x40000000
 end_define
 
 begin_comment
-comment|/* destination = me			*/
+comment|/* destination = me */
 end_comment
 
 begin_define
@@ -816,11 +824,11 @@ value|0x7FFFFFFF
 end_define
 
 begin_comment
-comment|/* All possible flag bits mask		*/
+comment|/* All possible flag bits mask */
 end_comment
 
 begin_comment
-comment|/*  * Flags for the 'fw_ipflg' field, for comparing values of ip and its protocols.  */
+comment|/*  * Flags for the 'fw_ipflg' field, for comparing values  * of ip and its protocols.  */
 end_comment
 
 begin_define
@@ -1068,7 +1076,7 @@ modifier|*
 typedef|,
 name|u_int16_t
 modifier|*
-typedef|, 	     struct
+typedef|,     struct
 name|mbuf
 modifier|*
 modifier|*
