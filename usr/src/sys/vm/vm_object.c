@@ -669,7 +669,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -686,12 +685,6 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|vm_object_unlock
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Now free the pages. 	 * For internal objects, this also removes them from paging queues. 	 */
 while|while
 condition|(
@@ -730,18 +723,6 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|object
-operator|->
-name|flags
-operator|&
-name|OBJ_INTERNAL
-operator|)
-operator|==
-literal|0
-condition|)
 name|vm_object_unlock
 argument_list|(
 name|object
