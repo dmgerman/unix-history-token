@@ -1,21 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
-
-begin_comment
-comment|/*  * Getname / getuserid for those with no  * hashed passwd data base).  * Do not compile this module in if you DO have hashed  * passwd's -- this is slower.  *  * Also provided here is a getpw routine which can share  * the open file.  This is used for the Version 6 getenv  * implementation.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
-name|SccsId
+name|sccsid
+index|[]
 init|=
-literal|"@(#)getname.c	2.1 %G%"
+literal|"@(#)getname.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Getname / getuserid for those with no  * hashed passwd data base).  * Do not compile this module in if you DO have hashed  * passwd's -- this is slower.  *  * Also provided here is a getpw routine which can share  * the open file.  This is used for the Version 6 getenv  * implementation.  */
+end_comment
 
 begin_include
 include|#

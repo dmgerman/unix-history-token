@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
+begin_comment
+comment|/*	def.h	2.13	83/08/11	*/
+end_comment
 
 begin_include
 include|#
@@ -44,10 +44,6 @@ undef|#
 directive|undef
 name|isdigit
 end_undef
-
-begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	2.12 %G%";  */
-end_comment
 
 begin_comment
 comment|/*  * Mail -- a mail program  *  * Commands are:  *	t<message list>		print out these messages  *	r<message list>		reply to messages  *	m<user list>			mail to users (analogous to send)  *	e<message list>		edit messages  *	c [directory]			chdir to dir or home if none  *	x				exit quickly  *	w<message list> file		save messages in file  *	q				quit, save remaining stuff in mbox  *	d<message list>		delete messages  *	u<message list>		undelete messages  *	h				print message headers  *  * Author: Kurt Shoens (UCB) March 25, 1978  */

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Declarations and constants specific to an installation.  *  * Vax/Unix version 7.  */
+comment|/*	pathnames.h	2.6	83/08/11	*/
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)pathnames.h	2.5 %G%";  */
+comment|/*  * Declarations and constants specific to an installation.  *  * Vax/Unix version 7.  */
 end_comment
 
 begin_define

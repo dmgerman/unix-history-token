@@ -1,21 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
-
-begin_comment
-comment|/*  * Mail -- a mail program  *  * Collect input from standard input, handling  * ~ escapes.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
-name|SccsId
+name|sccsid
+index|[]
 init|=
-literal|"@(#)collect.c	2.14 %G%"
+literal|"@(#)collect.c	2.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Mail -- a mail program  *  * Collect input from standard input, handling  * ~ escapes.  */
+end_comment
 
 begin_include
 include|#

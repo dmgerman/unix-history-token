@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
-
 begin_comment
-comment|/*  * This file contains the definitions of data structures used in  * configuring the network behavior of Mail when replying.  */
+comment|/*	configdefs.h	1.4	83/08/11	*/
 end_comment
 
 begin_comment
-comment|/*  * Sccs ID @(#)configdefs.h	1.3 %G%  */
+comment|/*  * This file contains the definitions of data structures used in  * configuring the network behavior of Mail when replying.  */
 end_comment
 
 begin_comment

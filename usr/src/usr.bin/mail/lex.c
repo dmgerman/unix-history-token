@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)lex.c	2.14 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -12,16 +29,6 @@ end_include
 begin_comment
 comment|/*  * Mail -- a mail program  *  * Lexical processing of commands.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|SccsId
-init|=
-literal|"@(#)lex.c	2.13 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * A bunch of global variable declarations lie herein.  * def.h must be included first.  */
+comment|/*	glob.h	2.10	83/08/11	*/
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)glob.h	2.9 %G%;  */
+comment|/*  * A bunch of global variable declarations lie herein.  * def.h must be included first.  */
 end_comment
 
 begin_decl_stmt

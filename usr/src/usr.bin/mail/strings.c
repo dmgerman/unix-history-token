@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)strings.c	2.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Mail -- a mail program  *  * String allocation routines.  * Strings handed out here are reclaimed at the top of the command  * loop each time, so they need not be freed.  */
@@ -12,16 +29,6 @@ include|#
 directive|include
 file|"rcv.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|SccsId
-init|=
-literal|"@(#)strings.c	2.1 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Allocate size more bytes of space and return the address of the  * first byte to the caller.  An even number of bytes are always  * allocated so that the space will always be on a word boundary.  * The string spaces are of exponentially increasing size, to satisfy  * the occasional user with enormous string size requests.  */

@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
-
 begin_comment
-comment|/*  * Mail -- a mail program  *  * This file is included by normal files which want both  * globals and declarations.  */
+comment|/*	rcv.h	2.3	83/08/11	*/
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)rcv.h	2.2 %G%";  */
+comment|/*  * Mail -- a mail program  *  * This file is included by normal files which want both  * globals and declarations.  */
 end_comment
 
 begin_ifdef

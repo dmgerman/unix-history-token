@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)list.c	2.3 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -18,16 +35,6 @@ end_include
 begin_comment
 comment|/*  * Mail -- a mail program  *  * Message list handling.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|SccsId
-init|=
-literal|"@(#)list.c	2.2 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Convert the user string of message numbers and  * store the numbers into vector.  *  * Returns the count of messages picked up or -1 on error.  */

@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)optim.c	2.9 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Mail -- a program for sending and receiving mail.  *  * Network name modification routines.  */
@@ -24,16 +41,6 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|SccsId
-init|=
-literal|"@(#)optim.c	2.8 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Map a name into the correct network "view" of the  * name.  This is done by prepending the name with the  * network address of the sender, then optimizing away  * nonsense.  */
