@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.13 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -170,6 +170,14 @@ name|short
 name|fts_namelen
 decl_stmt|;
 comment|/* strlen(fts_name) */
+define|#
+directive|define
+name|FTS_ROOTPARENTLEVEL
+value|-1
+define|#
+directive|define
+name|FTS_ROOTLEVEL
+value|0
 name|short
 name|fts_level
 decl_stmt|;
