@@ -5954,9 +5954,6 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
-operator|&
-operator|~
-name|PAGE_MASK
 expr_stmt|;
 comment|/* 	 * Mapping has not changed, must be protection or wiring change. 	 */
 if|if

@@ -7670,8 +7670,6 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
-operator|&
-name|PG_FRAME
 expr_stmt|;
 name|origpte
 operator|=
