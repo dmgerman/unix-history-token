@@ -2928,7 +2928,7 @@ condition|(
 operator|(
 name|securelevel
 operator|>=
-literal|2
+literal|3
 operator|)
 operator|&&
 operator|(
