@@ -239,8 +239,9 @@ decl_stmt|;
 name|struct
 name|cdev
 modifier|*
-name|sc_dev
+name|__remove00
 decl_stmt|;
+comment|/* XXX: remove when convenient */
 block|}
 struct|;
 end_struct
