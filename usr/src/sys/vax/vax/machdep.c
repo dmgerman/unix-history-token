@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.9.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2646,6 +2646,27 @@ index|]
 operator|&=
 operator|~
 name|PSL_USERCLR
+expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_ar0
+index|[
+name|PS
+index|]
+operator|&
+name|PSL_CM
+condition|)
+name|u
+operator|.
+name|u_ar0
+index|[
+name|PS
+index|]
+operator|&=
+operator|~
+name|PSL_CM_CLR
 expr_stmt|;
 name|u
 operator|.
