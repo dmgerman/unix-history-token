@@ -943,33 +943,12 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Read and evaluate commands. The commands are described in commands.l 	 * Yylex returns 0 when ^D or 'exit' is typed.  	 */
-name|printf
-argument_list|(
-literal|"> "
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|yylex
 argument_list|()
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"> "
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
+empty_stmt|;
 block|}
 name|exit
 argument_list|(
