@@ -682,7 +682,7 @@ argument_list|(
 name|NOUDEV
 argument_list|)
 condition|)
-name|Debugger
+name|panic
 argument_list|(
 literal|"makedev of NOUDEV"
 argument_list|)
@@ -1716,6 +1716,17 @@ condition|)
 return|return
 operator|(
 name|error
+operator|)
+return|;
+if|if
+condition|(
+name|ud
+operator|==
+name|NOUDEV
+condition|)
+return|return
+operator|(
+name|EINVAL
 operator|)
 return|;
 name|dev
