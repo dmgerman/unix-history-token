@@ -1663,7 +1663,7 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
-name|td
+name|td2
 operator|->
 name|td_startzero
 argument_list|,
