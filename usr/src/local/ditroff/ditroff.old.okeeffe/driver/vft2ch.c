@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vft2ch.c	(Berkeley)	1.2	85/04/29  *  * Font translation for vfont-style fonts to character format.  *  *	Use:  vft2ch  fontfile  [ character_list ]  *  *		Reads "fontfile" from current directory (or if not found,  *	from BITDIR defined below) and converts it to a character font format  *	editable by real people, and convertable BACK to vfont format by the  *	ch2vft program.  Output goes to stdout.  */
+comment|/*	vft2ch.c	(Berkeley)	1.3	85/07/03  *  * Font translation for vfont-style fonts to character format.  *  *	Use:  vft2ch  fontfile  [ character_list ]  *  *		Reads "fontfile" from current directory (or if not found,  *	from BITDIR defined below) and converts it to a character font format  *	editable by real people, and convertable BACK to vfont format by the  *	ch2vft program.  Output goes to stdout.  */
 end_comment
 
 begin_include
@@ -531,6 +531,25 @@ name|left
 operator|+
 name|right
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
+name|bwidth
+operator|=
+operator|(
+operator|(
+name|width
+operator|+
+literal|15
+operator|)
+operator|/
+literal|16
+operator|)
+operator|*
+literal|2
+expr_stmt|;
+else|#
+directive|else
 name|bwidth
 operator|=
 operator|(
@@ -541,6 +560,8 @@ operator|)
 operator|/
 literal|8
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|k
