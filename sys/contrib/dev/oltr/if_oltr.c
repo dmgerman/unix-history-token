@@ -220,6 +220,16 @@ directive|include
 file|<sys/rman.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -231,6 +241,28 @@ include|#
 directive|include
 file|<pci/pcivar.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
