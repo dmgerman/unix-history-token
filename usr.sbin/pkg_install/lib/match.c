@@ -345,6 +345,13 @@ return|;
 comment|/* Not reached */
 block|}
 comment|/* Count number of patterns */
+if|if
+condition|(
+name|patterns
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|len
@@ -402,6 +409,12 @@ return|return
 name|NULL
 return|;
 block|}
+block|}
+else|else
+name|len
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
