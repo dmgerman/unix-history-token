@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_nfs.h"
 end_include
 
@@ -192,19 +198,11 @@ argument|NULL
 argument_list|)
 end_macro
 
-begin_include
-include|#
-directive|include
-file|"isa.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
 
 begin_include
 include|#
@@ -275,11 +273,9 @@ name|root_bus_configure
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Probe ISA devices after everything. 	 */
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_ISA
 if|if
 condition|(
 name|isa_bus_device

@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_maxmem.h"
 end_include
 
@@ -10011,14 +10017,9 @@ comment|/* 	 * Initialize the console before we print anything out. 	 */
 name|cninit
 argument_list|()
 expr_stmt|;
-include|#
-directive|include
-file|"isa.h"
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_ISA
 name|isa_defaultirq
 argument_list|()
 expr_stmt|;

@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2323,12 +2329,6 @@ begin_comment
 comment|/*  * Tell whether this address is in some physical memory region.  * Currently used by the kernel coredump code in order to avoid  * dumping the ``ISA memory hole'' which could cause indefinite hangs,  * or other unpredictable behaviour.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"isa.h"
-end_include
-
 begin_function
 name|int
 name|is_physical_memory
@@ -2339,11 +2339,9 @@ name|vm_offset_t
 name|addr
 decl_stmt|;
 block|{
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_ISA
 comment|/* The ISA ``memory hole''. */
 if|if
 condition|(

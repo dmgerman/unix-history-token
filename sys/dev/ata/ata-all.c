@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"isa.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"card.h"
 end_include
 
@@ -55,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"opt_global.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_isa.h"
 end_include
 
 begin_include
@@ -487,13 +487,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
 
 begin_decl_stmt
 specifier|static

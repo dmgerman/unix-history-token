@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -109,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|"alphapci_if.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"isa.h"
 end_include
 
 begin_define
@@ -401,13 +401,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
 
 begin_function
 name|struct
@@ -698,11 +696,9 @@ modifier|*
 name|cookiep
 parameter_list|)
 block|{
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_ISA
 comment|/* 	 * XXX - If we aren't the resource manager for this IRQ, assume that 	 * it is actually handled by the ISA PIC. 	 */
 if|if
 condition|(
@@ -775,11 +771,9 @@ modifier|*
 name|cookie
 parameter_list|)
 block|{
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_ISA
 comment|/* 	 * XXX - If we aren't the resource manager for this IRQ, assume that 	 * it is actually handled by the ISA PIC. 	 */
 if|if
 condition|(
@@ -1039,11 +1033,9 @@ block|{
 case|case
 name|SYS_RES_IRQ
 case|:
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_ISA
 if|if
 condition|(
 operator|(
