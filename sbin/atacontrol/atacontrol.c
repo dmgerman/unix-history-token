@@ -1008,7 +1008,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SATA NCQ                       %s	%s	%d/0x%02X\n"
+literal|"Native Command Queuing (NCQ)   %s	%s	%d/0x%02X\n"
 argument_list|,
 name|parm
 operator|->
@@ -1022,26 +1022,45 @@ literal|"no"
 argument_list|,
 literal|" -"
 argument_list|,
+operator|(
+name|parm
+operator|->
+name|satacapabilities
+operator|&
+name|ATA_SUPPORT_NCQ
+operator|)
+condition|?
 name|ATA_QUEUE_LEN
 argument_list|(
 name|parm
 operator|->
 name|queue
 argument_list|)
+else|:
+literal|0
 argument_list|,
+operator|(
+name|parm
+operator|->
+name|satacapabilities
+operator|&
+name|ATA_SUPPORT_NCQ
+operator|)
+condition|?
 name|ATA_QUEUE_LEN
 argument_list|(
 name|parm
 operator|->
 name|queue
 argument_list|)
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
-else|else
 name|printf
 argument_list|(
-literal|"dma queued                     %s	%s	%d/0x%02X\n"
+literal|"Tagged Command Queuing (TCQ)   %s	%s	%d/0x%02X\n"
 argument_list|,
 name|parm
 operator|->
