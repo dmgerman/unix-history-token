@@ -4419,7 +4419,10 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-comment|/* 	 * Find or fabricate a new pagetable page 	 */
+comment|/* 	 * Allocate a page table page. 	 */
+if|if
+condition|(
+operator|(
 name|m
 operator|=
 name|vm_page_alloc
@@ -4428,24 +4431,26 @@ name|NULL
 argument_list|,
 name|ptepindex
 argument_list|,
+name|VM_ALLOC_NOOBJ
+operator||
 name|VM_ALLOC_WIRED
 operator||
 name|VM_ALLOC_ZERO
-operator||
-name|VM_ALLOC_NOOBJ
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
+operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|VM_WAIT
+expr_stmt|;
+comment|/* 		 * Indicate the need to retry.  While waiting, the page table 		 * page may have been allocated. 		 */
 return|return
 operator|(
-name|m
+name|NULL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
