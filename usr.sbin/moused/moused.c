@@ -8794,6 +8794,7 @@ operator|->
 name|dx
 operator|=
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -8825,6 +8826,7 @@ operator|->
 name|dy
 operator|=
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -8899,6 +8901,7 @@ operator|->
 name|dx
 operator|=
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -8930,6 +8933,7 @@ operator|->
 name|dy
 operator|=
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -8992,6 +8996,7 @@ operator|->
 name|dx
 operator|=
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -9002,6 +9007,7 @@ index|]
 argument_list|)
 operator|+
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -9018,6 +9024,7 @@ operator|=
 operator|-
 operator|(
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -9028,6 +9035,7 @@ index|]
 argument_list|)
 operator|+
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -9419,6 +9427,7 @@ operator|->
 name|dx
 operator|=
 operator|(
+name|signed
 name|char
 operator|)
 name|pBuf
@@ -9432,6 +9441,7 @@ name|dy
 operator|=
 operator|-
 operator|(
+name|signed
 name|char
 operator|)
 name|pBuf
@@ -9606,6 +9616,7 @@ operator|->
 name|dz
 operator|=
 operator|(
+name|signed
 name|char
 operator|)
 name|pBuf
@@ -10483,6 +10494,7 @@ operator|->
 name|dx
 operator|=
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -10493,6 +10505,7 @@ index|]
 argument_list|)
 operator|+
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -10509,6 +10522,7 @@ operator|=
 operator|-
 operator|(
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -10519,6 +10533,7 @@ index|]
 argument_list|)
 operator|+
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -10544,6 +10559,7 @@ name|dz
 operator|=
 operator|(
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -10556,6 +10572,7 @@ literal|1
 argument_list|)
 operator|+
 call|(
+name|signed
 name|char
 call|)
 argument_list|(
@@ -10567,8 +10584,8 @@ operator|<<
 literal|1
 argument_list|)
 operator|)
-operator|/
-literal|2
+operator|>>
+literal|1
 expr_stmt|;
 name|act
 operator|->
