@@ -7985,17 +7985,19 @@ name|dot3StatsFrameTooLongs
 operator|++
 expr_stmt|;
 block|}
-comment|/* 		 * Be fairly liberal about what we allow as a "reasonable" length 		 * so that a [crufty] packet will make it to BPF (and can thus 		 * be analyzed). Note that all that is really important is that 		 * we have a length that will fit into one mbuf cluster or less; 		 * the upper layer protocols can then figure out the length from 		 * their own length field(s). 		 */
+comment|/* 		 * Be fairly liberal about what we allow as a "reasonable" length 		 * so that a [crufty] packet will make it to BPF (and can thus 		 * be analyzed). Note that all that is really important is that 		 * we have a length that will fit into one mbuf cluster or less; 		 * the upper layer protocols can then figure out the length from 		 * their own length field(s). 		 * But make sure that we have at least a full ethernet header 		 * or we would be unable to call ether_input() later. 		 */
 if|if
 condition|(
 operator|(
 name|len
-operator|>
+operator|>=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ed_ring
 argument_list|)
+operator|+
+name|ETHER_HDR_LEN
 operator|)
 operator|&&
 operator|(
@@ -9415,10 +9417,31 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BRIDGE
-comment|/* 	 * Don't read in the entire packet if we know we're going to drop it 	 */
+comment|/* 	 * Don't read in the entire packet if we know we're going to drop it 	 * and no bpf is active. 	 */
 if|if
 condition|(
+operator|!
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_bpf
+operator|&&
 name|do_bridge
+operator|&&
+name|BDG_USED
+argument_list|(
+operator|(
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|)
+argument_list|)
 condition|)
 block|{
 name|struct
@@ -9441,9 +9464,6 @@ argument_list|,
 name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|bif
 operator|=
 name|bridge_in
@@ -9457,7 +9477,10 @@ name|ac_if
 argument_list|,
 name|eh
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|bif
 operator|==
 name|BDG_DROP
 condition|)
@@ -9469,6 +9492,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|len
+operator|>
+name|ETHER_HDR_LEN
+condition|)
 name|ed_ring_copy
 argument_list|(
 name|sc
@@ -9481,9 +9510,11 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
 name|eh
 operator|+
-name|ETHER_HDR_LEN
+literal|1
+operator|)
 argument_list|,
 name|len
 operator|-
