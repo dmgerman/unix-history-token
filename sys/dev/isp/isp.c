@@ -3826,7 +3826,7 @@ condition|)
 block|{
 name|IDPRINTF
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 operator|(
 literal|"%s: skipping target %d bus %d settings\n"
@@ -6655,25 +6655,6 @@ operator|!=
 name|loopid
 condition|)
 block|{
-name|IDPRINTF
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"%s: wankage (%d != %d)\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|,
-name|pdb
-operator|.
-name|pdb_loopid
-operator|,
-name|loopid
-operator|)
-argument_list|)
-expr_stmt|;
 name|loopid
 operator|=
 literal|0
@@ -9902,7 +9883,7 @@ condition|)
 block|{
 name|IDPRINTF
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 operator|(
 literal|"%s: Request Queue Overflow\n"
@@ -10069,7 +10050,7 @@ condition|)
 block|{
 name|IDPRINTF
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 operator|(
 literal|"%s: Request Queue Overflow+\n"
@@ -11199,7 +11180,7 @@ argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
-name|MBOX_COMMAND_PARAM_ERROR
+name|MBOX_COMMAND_ERROR
 case|:
 break|break;
 default|default:
@@ -12759,11 +12740,10 @@ condition|)
 block|{
 name|IDPRINTF
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 operator|(
-literal|"%s: check condition with no sense"
-literal|" data\n"
+literal|"%s: check condition with no sense data\n"
 operator|,
 name|isp
 operator|->
@@ -14115,7 +14095,7 @@ argument_list|)
 expr_stmt|;
 name|IDPRINTF
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 operator|(
 literal|"%s: Port Database Changed\n"
@@ -19141,7 +19121,7 @@ condition|)
 block|{
 name|IDPRINTF
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 operator|(
 literal|"%s: skipping target %d bus %d update\n"
