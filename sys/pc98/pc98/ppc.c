@@ -900,7 +900,7 @@ condition|)
 block|{
 name|LOG_PPC
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ppc
 argument_list|,
@@ -986,7 +986,7 @@ condition|)
 block|{
 name|LOG_PPC
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ppc
 argument_list|,
@@ -1087,7 +1087,7 @@ condition|)
 block|{
 name|LOG_PPC
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ppc
 argument_list|,
@@ -1163,7 +1163,7 @@ condition|)
 block|{
 name|LOG_PPC
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ppc
 argument_list|,
@@ -1217,7 +1217,7 @@ condition|)
 block|{
 name|LOG_PPC
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ppc
 argument_list|,
@@ -1245,7 +1245,7 @@ condition|)
 block|{
 name|LOG_PPC
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ppc
 argument_list|,
@@ -4890,7 +4890,7 @@ name|printf
 argument_list|(
 literal|"%s: unknown case (0x%x)!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|r
 argument_list|)
@@ -6534,7 +6534,7 @@ name|panic
 argument_list|(
 literal|"%s: too much calls"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -6611,7 +6611,7 @@ name|panic
 argument_list|(
 literal|"%s: can't return to ppb level"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* update pc for ppb level of execution */
@@ -6631,7 +6631,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown microsequence opcode 0x%x"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|mi
 operator|->
@@ -9111,7 +9111,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown I/O operation"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 break|break;

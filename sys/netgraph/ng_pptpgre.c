@@ -1546,7 +1546,7 @@ name|panic
 argument_list|(
 literal|"%s: weird hook"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1685,7 +1685,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown hook"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* Go away if no longer connected to anything */
@@ -3424,7 +3424,7 @@ argument_list|,
 operator|(
 literal|"%s: rackTimer"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3641,7 +3641,7 @@ argument_list|,
 operator|(
 literal|"%s: no nd_refs"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3912,7 +3912,7 @@ argument_list|,
 operator|(
 literal|"%s: sackTimer"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4075,7 +4075,7 @@ argument_list|,
 operator|(
 literal|"%s: no nd_refs"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;

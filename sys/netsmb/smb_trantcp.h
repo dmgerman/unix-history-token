@@ -37,7 +37,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s(%d): "format,	\ 					    __FUNCTION__ , __LINE__ ,## args)
+value|printf("%s(%d): "format,	\ 					    __func__ , __LINE__ ,## args)
 end_define
 
 begin_else

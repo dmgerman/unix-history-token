@@ -152,7 +152,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do { if (level<= MLY_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args); } while(0)
+value|do { if (level<= MLY_DEBUG) printf("%s: " fmt "\n", __func__ , ##args); } while(0)
 end_define
 
 begin_define
@@ -162,7 +162,7 @@ name|debug_called
 parameter_list|(
 name|level
 parameter_list|)
-value|do { if (level<= MLY_DEBUG) printf(__FUNCTION__ ": called\n"); } while(0)
+value|do { if (level<= MLY_DEBUG) printf("%s: called\n", __func__); } while(0)
 end_define
 
 begin_define

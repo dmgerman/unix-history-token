@@ -109,7 +109,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if(bits& i4b_l1_debug)						\ 	{ printf("i4b-L1 %s: " fmt "\n", __FUNCTION__ , ##args ); }
+value|if(bits& i4b_l1_debug)						\ 	{ printf("i4b-L1 %s: " fmt "\n", __func__ , ##args ); }
 end_define
 
 begin_define
@@ -125,7 +125,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if(bits& i4b_l2_debug)						\ 	{ printf("i4b-L2 %s: " fmt "\n", __FUNCTION__ , ##args ); }
+value|if(bits& i4b_l2_debug)						\ 	{ printf("i4b-L2 %s: " fmt "\n", __func__ , ##args ); }
 end_define
 
 begin_define
@@ -141,7 +141,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if(bits& i4b_l3_debug)						\ 	{ printf("i4b-L3 %s: " fmt "\n", __FUNCTION__ , ##args ); }
+value|if(bits& i4b_l3_debug)						\ 	{ printf("i4b-L3 %s: " fmt "\n", __func__ , ##args ); }
 end_define
 
 begin_define
@@ -157,7 +157,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if(bits& i4b_l4_debug)						\ 	{ printf("i4b-L4 %s: " fmt "\n", __FUNCTION__ , ##args ); }
+value|if(bits& i4b_l4_debug)						\ 	{ printf("i4b-L4 %s: " fmt "\n", __func__ , ##args ); }
 end_define
 
 begin_else

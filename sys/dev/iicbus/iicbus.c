@@ -545,7 +545,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown class!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -746,7 +746,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown class!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}

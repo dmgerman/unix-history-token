@@ -4310,7 +4310,7 @@ argument_list|,
 operator|(
 literal|"%s: numhooks=%d?"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|NG_NODE_NUMHOOKS
 argument_list|(
@@ -4491,7 +4491,7 @@ argument_list|,
 operator|(
 literal|"%s: wrong socket"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;

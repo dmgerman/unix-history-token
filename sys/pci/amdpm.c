@@ -1525,7 +1525,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown QUICK command (%x)!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|how
 argument_list|)

@@ -1167,7 +1167,7 @@ argument_list|,
 operator|(
 literal|"%s: word=%d bit=%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|ng_iface_units
 index|[
@@ -1252,7 +1252,7 @@ argument_list|,
 operator|(
 literal|"%s: unit=%d len=%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|unit
 operator|,
@@ -1280,7 +1280,7 @@ argument_list|,
 operator|(
 literal|"%s: unit=%d is free"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|unit
 operator|)
@@ -1871,7 +1871,7 @@ name|ifp
 operator|->
 name|if_unit
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1921,7 +1921,7 @@ argument_list|,
 operator|(
 literal|"%s: family=AF_UNSPEC"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3027,7 +3027,7 @@ argument_list|,
 operator|(
 literal|"%s: iffam"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3042,7 +3042,7 @@ argument_list|,
 operator|(
 literal|"%s: not pkthdr"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3261,7 +3261,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 operator|*

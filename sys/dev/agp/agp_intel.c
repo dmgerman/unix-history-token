@@ -772,7 +772,7 @@ name|printf
 argument_list|(
 literal|"%s: set MCHCFG to %x\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 call|(
 name|unsigned
@@ -831,7 +831,7 @@ name|printf
 argument_list|(
 literal|"%s: set RDCR to %x\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 call|(
 name|unsigned
@@ -890,7 +890,7 @@ name|printf
 argument_list|(
 literal|"%s: set MCHCFG to %x\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 call|(
 name|unsigned
@@ -947,7 +947,7 @@ name|printf
 argument_list|(
 literal|"%s: set NBXCFG to %x\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 operator|(
 name|pci_read_config

@@ -4263,7 +4263,7 @@ name|printf
 argument_list|(
 literal|"%s(%d, %d)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|blkcnt
 argument_list|,
@@ -4381,7 +4381,7 @@ name|printf
 argument_list|(
 literal|"%s: defaulting to (%d, %d)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|blkcnt
 argument_list|,
@@ -4412,7 +4412,7 @@ name|printf
 argument_list|(
 literal|"%s: updating (%d, %d)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|blkcnt
 argument_list|,
@@ -4518,7 +4518,7 @@ name|printf
 argument_list|(
 literal|"%s: soft bps %d, spd %d, irqhz == %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|sndbuf_getbps
 argument_list|(
@@ -4605,7 +4605,7 @@ name|printf
 argument_list|(
 literal|"%s: hard blksz requested %d (maxsize %d), "
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|blksz
 argument_list|,

@@ -231,7 +231,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|do {								\       struct mbuf	**mp;						\       int		k;						\ 									\       for (k = 0, mp =&sc->qhead;					\ 	k<= MAX_MBUFQ&& *mp;						\ 	k++, mp =&(*mp)->m_nextpkt);					\       if (k != sc->qlen || k> MAX_MBUFQ || *mp || mp != sc->qtail)	\ 	panic(__FUNCTION__ ": queue");					\     } while (0)
+value|do {								\       struct mbuf	**mp;						\       int		k;						\ 									\       for (k = 0, mp =&sc->qhead;					\ 	k<= MAX_MBUFQ&& *mp;						\ 	k++, mp =&(*mp)->m_nextpkt);					\       if (k != sc->qlen || k> MAX_MBUFQ || *mp || mp != sc->qtail)	\ 	panic("%s: queue", __func__);					\     } while (0)
 end_define
 
 begin_else
@@ -2202,7 +2202,7 @@ name|hook
 condition|)
 name|panic
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2373,7 +2373,7 @@ name|hook
 condition|)
 name|panic
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|NGI_GET_M
@@ -2779,7 +2779,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: can't register line discipline"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return

@@ -1922,7 +1922,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown slave mode (%d)!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|pcf
 operator|->

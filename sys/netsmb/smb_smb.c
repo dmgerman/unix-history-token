@@ -313,7 +313,7 @@ name|vcp
 argument_list|,
 name|scred
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 operator|!=
 literal|0
@@ -1284,7 +1284,7 @@ name|vcp
 argument_list|,
 name|scred
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 operator|!=
 literal|0
@@ -1930,7 +1930,7 @@ name|vcp
 argument_list|,
 name|scred
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 operator|!=
 literal|0

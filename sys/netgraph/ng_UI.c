@@ -730,7 +730,7 @@ block|}
 else|else
 name|panic
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|done
@@ -865,7 +865,7 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are not already shutting down, 	 * and we have no more hooks, then DO shut down. 	 */

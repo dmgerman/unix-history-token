@@ -896,7 +896,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {				\     panic("ray%d: %s(%d) " fmt "\n", device_get_unit((sc)->dev),	\ 	__FUNCTION__ , __LINE__ , ##args);				\ } while (0)
+value|do {				\     panic("ray%d: %s(%d) " fmt "\n", device_get_unit((sc)->dev),	\ 	__func__ , __LINE__ , ##args);					\ } while (0)
 end_define
 
 begin_define
@@ -911,7 +911,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {				\     device_printf((sc)->dev, "%s(%d) " fmt "\n",			\         __FUNCTION__ , __LINE__ , ##args);				\ } while (0)
+value|do {				\     device_printf((sc)->dev, "%s(%d) " fmt "\n",			\         __func__ , __LINE__ , ##args);					\ } while (0)
 end_define
 
 begin_define
@@ -1068,7 +1068,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {				\     struct ifnet *ifp =&(sc)->arpcom.ac_if;				\     if (ifp->if_flags& IFF_DEBUG) {					\ 	    device_printf((sc)->dev, "%s(%d) " fmt "\n",		\ 		__FUNCTION__ , __LINE__ , ##args);			\ } } while (0)
+value|do {				\     struct ifnet *ifp =&(sc)->arpcom.ac_if;				\     if (ifp->if_flags& IFF_DEBUG) {					\ 	    device_printf((sc)->dev, "%s(%d) " fmt "\n",		\ 		__func__ , __LINE__ , ##args);				\ } } while (0)
 end_define
 
 begin_endif
@@ -1101,7 +1101,7 @@ name|status
 parameter_list|,
 name|iferrcounter
 parameter_list|)
-value|do {			\     struct ifnet *ifp =&(sc)->arpcom.ac_if;				\     char *ss[] = RAY_CCS_STATUS_STRINGS;				\     if ((status) != RAY_CCS_STATUS_COMPLETE) {				\ 	if (ifp->if_flags& IFF_DEBUG) {				\ 	    device_printf((sc)->dev,					\ 	        "%s(%d) ECF command completed with status %s\n",	\ 		__FUNCTION__ , __LINE__ , ss[(status)]);		\ } } } while (0)
+value|do {			\     struct ifnet *ifp =&(sc)->arpcom.ac_if;				\     char *ss[] = RAY_CCS_STATUS_STRINGS;				\     if ((status) != RAY_CCS_STATUS_COMPLETE) {				\ 	if (ifp->if_flags& IFF_DEBUG) {				\ 	    device_printf((sc)->dev,					\ 	        "%s(%d) ECF command completed with status %s\n",	\ 		__func__ , __LINE__ , ss[(status)]);			\ } } } while (0)
 end_define
 
 begin_endif

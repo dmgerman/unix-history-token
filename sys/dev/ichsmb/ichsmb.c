@@ -126,7 +126,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do { log(LOG_DEBUG, "%s: " fmt, __FUNCTION__ , ## args); } while (0)
+value|do { log(LOG_DEBUG, "%s: " fmt, __func__ , ## args); } while (0)
 end_define
 
 begin_else
@@ -469,7 +469,7 @@ argument_list|,
 operator|(
 literal|"%s: ich_cmd=%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -639,7 +639,7 @@ argument_list|,
 operator|(
 literal|"%s: ich_cmd=%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -794,7 +794,7 @@ argument_list|,
 operator|(
 literal|"%s: ich_cmd=%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -974,7 +974,7 @@ argument_list|,
 operator|(
 literal|"%s: ich_cmd=%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -1156,7 +1156,7 @@ argument_list|,
 operator|(
 literal|"%s: ich_cmd=%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -1353,7 +1353,7 @@ argument_list|,
 operator|(
 literal|"%s: ich_cmd=%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -1544,7 +1544,7 @@ argument_list|,
 operator|(
 literal|"%s: ich_cmd=%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -1766,7 +1766,7 @@ argument_list|,
 operator|(
 literal|"%s: ich_cmd=%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -2186,7 +2186,7 @@ argument_list|,
 operator|(
 literal|"%s: ich_cmd=%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -2431,7 +2431,7 @@ argument_list|,
 operator|(
 literal|"%s: ich_cmd=%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sc
 operator|->
@@ -3507,7 +3507,7 @@ argument_list|,
 operator|(
 literal|"%s: ich_cmd=%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sc
 operator|->

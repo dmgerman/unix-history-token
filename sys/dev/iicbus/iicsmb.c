@@ -725,7 +725,7 @@ name|printf
 argument_list|(
 literal|"%s: too much data from 0x%x\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|sc
 operator|->
@@ -837,7 +837,7 @@ name|printf
 argument_list|(
 literal|"%s unknown error 0x%x!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 operator|(
 name|int
@@ -854,7 +854,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown event (%d)!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|event
 argument_list|)

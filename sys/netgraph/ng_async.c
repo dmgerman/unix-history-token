@@ -889,7 +889,7 @@ operator|)
 return|;
 name|panic
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1506,7 +1506,7 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -1517,8 +1517,9 @@ name|hookp
 condition|)
 name|panic
 argument_list|(
-name|__FUNCTION__
-literal|"2"
+literal|"%s 2"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 operator|*

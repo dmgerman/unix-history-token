@@ -5298,7 +5298,7 @@ name|mlx_dev
 argument_list|,
 literal|"%s: unknown command 0x%x"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|mc
 operator|->

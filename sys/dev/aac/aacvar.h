@@ -1344,7 +1344,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {								\ 	if (level<=AAC_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args); \ 	} while (0)
+value|do {								\ 	if (level<=AAC_DEBUG) printf("%s: " fmt "\n", __func__ , ##args); \ 	} while (0)
 end_define
 
 begin_define
@@ -1355,7 +1355,7 @@ parameter_list|(
 name|level
 parameter_list|)
 define|\
-value|do {								\ 	if (level<= AAC_DEBUG) printf(__FUNCTION__ ": called\n");	\ 	} while (0)
+value|do {								\ 	if (level<= AAC_DEBUG) printf(__func__ ": called\n");	\ 	} while (0)
 end_define
 
 begin_function_decl
@@ -1437,7 +1437,7 @@ name|sc
 parameter_list|,
 name|fib
 parameter_list|)
-value|aac_print_fib(sc, fib, __FUNCTION__)
+value|aac_print_fib(sc, fib, __func__)
 end_define
 
 begin_else

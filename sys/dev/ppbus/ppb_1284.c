@@ -495,7 +495,7 @@ name|panic
 argument_list|(
 literal|"%s: unsupported mode %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|mode
 argument_list|)
@@ -2217,7 +2217,7 @@ name|panic
 argument_list|(
 literal|"%s: unsupported mode %d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|mode
 argument_list|)
@@ -2940,7 +2940,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown mode (%d)!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|mode
 argument_list|)

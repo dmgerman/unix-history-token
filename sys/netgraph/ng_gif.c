@@ -747,7 +747,7 @@ argument_list|,
 operator|(
 literal|"%s: node already exists?"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -791,7 +791,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: can't %s for %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"create node"
 argument_list|,
@@ -833,7 +833,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: can't %s for %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"allocate memory"
 argument_list|,
@@ -886,7 +886,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"%s: can't name node %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|name
 argument_list|)
@@ -1572,7 +1572,7 @@ name|panic
 argument_list|(
 literal|"%s: weird hook"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1858,7 +1858,7 @@ name|panic
 argument_list|(
 literal|"%s: weird hook"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if

@@ -840,7 +840,7 @@ name|printf
 argument_list|(
 literal|"%s: vn types other than VREG or VDIR are unsupported !\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -1133,7 +1133,7 @@ name|printf
 argument_list|(
 literal|"%s: vn types other than VREG unsupported !\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return

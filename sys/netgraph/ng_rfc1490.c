@@ -1062,7 +1062,7 @@ block|}
 else|else
 name|panic
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|done
@@ -1256,7 +1256,7 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return

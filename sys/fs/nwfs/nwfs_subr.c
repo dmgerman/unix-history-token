@@ -1155,7 +1155,7 @@ name|printf
 argument_list|(
 literal|"%s: knows NOTHING about '..'\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return

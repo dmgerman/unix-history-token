@@ -154,7 +154,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown opcode (%d)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|opcode
 argument_list|)
@@ -229,7 +229,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown EPP protocol (0x%x)!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|epp
 argument_list|)
@@ -249,7 +249,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown mode (%d)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ppbdev
 operator|->
@@ -728,7 +728,7 @@ name|panic
 argument_list|(
 literal|"%s: parameter out of range (0x%x)!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|param
 argument_list|)
@@ -736,7 +736,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("%s: param = %d, ins = %d, arg = %d, type = %d\n",  			__FUNCTION__, param, ins, arg, type);
+block|printf("%s: param = %d, ins = %d, arg = %d, type = %d\n",  			__func__, param, ins, arg, type);
 endif|#
 directive|endif
 comment|/* properly cast the parameter */
@@ -847,7 +847,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown parameter (0x%x)!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|param
 argument_list|)
@@ -1079,7 +1079,7 @@ name|panic
 argument_list|(
 literal|"%s: IEEE1284 read not supported"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}

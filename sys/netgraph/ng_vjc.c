@@ -1788,7 +1788,7 @@ name|panic
 argument_list|(
 literal|"%s: type=%d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|type
 argument_list|)
@@ -2301,7 +2301,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown hook"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* Send result back out */
@@ -2480,7 +2480,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown hook"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* Go away if no hooks left */

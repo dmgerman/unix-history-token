@@ -139,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|ENTRY
-value|if(coda_vfsop_print_entry) myprintf(("Entered %s\n",__FUNCTION__))
+value|if(coda_vfsop_print_entry) myprintf(("Entered %s\n",__func__))
 end_define
 
 begin_decl_stmt

@@ -1330,7 +1330,7 @@ name|ncp_conn_assert_locked
 argument_list|(
 name|ncp
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|p
 argument_list|)
@@ -1724,7 +1724,7 @@ name|printf
 argument_list|(
 literal|"%s: Warning: use unencrypted login\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|error

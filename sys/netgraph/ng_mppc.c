@@ -1662,7 +1662,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown hook"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2202,7 +2202,7 @@ argument_list|,
 operator|(
 literal|"%s: invalid"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2700,7 +2700,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: insane jump %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|numLost
 argument_list|)
@@ -2929,7 +2929,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: rec'd unexpectedly %s packet"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"encrypted"
 argument_list|)
@@ -3034,7 +3034,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: rec'd unexpectedly %s packet"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"unencrypted"
 argument_list|)
@@ -3080,7 +3080,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: rec'd unexpectedly %s packet"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"compressed"
 argument_list|)
@@ -3246,7 +3246,7 @@ argument_list|,
 operator|(
 literal|"%s: invalid"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3275,7 +3275,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: decomp returned 0x%x"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rtn
 argument_list|)

@@ -1297,7 +1297,7 @@ name|panic
 argument_list|(
 literal|"%s: no hook!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1590,7 +1590,7 @@ argument_list|,
 operator|(
 literal|"%s: null info"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;

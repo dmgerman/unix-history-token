@@ -1262,8 +1262,9 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-name|__FUNCTION__
-literal|" vm_map_remove failed"
+literal|"%s vm_map_remove failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|fail

@@ -1986,7 +1986,7 @@ name|printf
 argument_list|(
 literal|"%s: driver already attached!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2033,7 +2033,7 @@ name|printf
 argument_list|(
 literal|"%s: port resource allocation failed!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2101,7 +2101,7 @@ name|printf
 argument_list|(
 literal|"%s: enhanced port resource allocation failed!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2167,7 +2167,7 @@ name|printf
 argument_list|(
 literal|"%s: mem resource allocation failed!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2259,7 +2259,7 @@ name|printf
 argument_list|(
 literal|"%s: VGA adapter not found or VESA module not loaded!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto

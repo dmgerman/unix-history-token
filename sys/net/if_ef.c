@@ -256,7 +256,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s: "format, __FUNCTION__ ,## args)
+value|printf("%s: "format, __func__ ,## args)
 end_define
 
 begin_else
@@ -291,7 +291,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s: "format, __FUNCTION__ ,## args)
+value|printf("%s: "format, __func__ ,## args)
 end_define
 
 begin_struct

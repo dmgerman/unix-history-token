@@ -1549,7 +1549,7 @@ name|CHECK_DATA_MBUF
 parameter_list|(
 name|m
 parameter_list|)
-value|do {					\ 		struct mbuf *n;						\ 		int total;						\ 									\ 		if (((m)->m_flags& M_PKTHDR) == 0)			\ 			panic("%s: !PKTHDR", __FUNCTION__);		\ 		for (total = 0, n = (m); n != NULL; n = n->m_next)	\ 			total += n->m_len;				\ 		if ((m)->m_pkthdr.len != total) {			\ 			panic("%s: %d != %d",				\ 			    __FUNCTION__, (m)->m_pkthdr.len, total);	\ 		}							\ 	} while (0)
+value|do {					\ 		struct mbuf *n;						\ 		int total;						\ 									\ 		if (((m)->m_flags& M_PKTHDR) == 0)			\ 			panic("%s: !PKTHDR", __func__);		\ 		for (total = 0, n = (m); n != NULL; n = n->m_next)	\ 			total += n->m_len;				\ 		if ((m)->m_pkthdr.len != total) {			\ 			panic("%s: %d != %d",				\ 			    __func__, (m)->m_pkthdr.len, total);	\ 		}							\ 	} while (0)
 end_define
 
 begin_else
@@ -9092,7 +9092,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: number of %s changed\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"hooks"
 argument_list|)
@@ -9399,7 +9399,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: number of %s changed\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"nodes"
 argument_list|)
@@ -9643,7 +9643,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: number of %s changed\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"types"
 argument_list|)

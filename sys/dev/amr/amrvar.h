@@ -40,7 +40,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {if (level<= AMR_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args);} while(0)
+value|do {if (level<= AMR_DEBUG) printf("%s: " fmt "\n", __func__ , ##args);} while(0)
 end_define
 
 begin_define
@@ -50,7 +50,7 @@ name|debug_called
 parameter_list|(
 name|level
 parameter_list|)
-value|do {if (level<= AMR_DEBUG) printf("%s: called\n", __FUNCTION__);} while(0)
+value|do {if (level<= AMR_DEBUG) printf("%s: called\n", __func__);} while(0)
 end_define
 
 begin_else
@@ -96,7 +96,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s: " fmt "\n", __FUNCTION__ , ##args)
+value|printf("%s: " fmt "\n", __func__ , ##args)
 end_define
 
 begin_comment

@@ -2912,8 +2912,9 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-name|__FUNCTION__
-literal|":wi_has_wep = %d\n"
+literal|"%s:wi_has_wep = %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sc
 operator|->

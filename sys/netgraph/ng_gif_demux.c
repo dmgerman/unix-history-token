@@ -1357,7 +1357,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 operator|*

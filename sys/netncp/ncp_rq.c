@@ -1266,7 +1266,7 @@ name|printf
 argument_list|(
 literal|"%s: ncp_so is NULL !\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|ncp_conn_invalidate
@@ -1732,7 +1732,7 @@ name|printf
 argument_list|(
 literal|"%s: reply too short\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 continue|continue;

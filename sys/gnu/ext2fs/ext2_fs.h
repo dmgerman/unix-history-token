@@ -196,7 +196,7 @@ parameter_list|,
 name|a
 modifier|...
 parameter_list|)
-value|{ \ 					printf ("EXT2-fs DEBUG (%s, %d): %s:", \ 						__FILE__, __LINE__, __FUNCTION__); \ 				  	printf (f, ## a); \ 					}
+value|{ \ 					printf ("EXT2-fs DEBUG (%s, %d): %s:", \ 						__FILE__, __LINE__, __func__); \ 				  	printf (f, ## a); \ 					}
 end_define
 
 begin_else

@@ -10635,8 +10635,9 @@ operator|==
 name|IFNAMSIZ
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|"(): LINUX_IFNAMSIZ != IFNAMSIZ"
+literal|"%s(): LINUX_IFNAMSIZ != IFNAMSIZ"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10787,8 +10788,9 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-name|__FUNCTION__
-literal|"(): ioctl %d\n"
+literal|"%s(): ioctl %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|args
 operator|->
@@ -10878,8 +10880,9 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-name|__FUNCTION__
-literal|"(): ioctl %d on %.*s\n"
+literal|"%s(): ioctl %d on %.*s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|args
 operator|->
@@ -10948,8 +10951,9 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-name|__FUNCTION__
-literal|"(): %s translated to %s\n"
+literal|"%s(): %s translated to %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|lifname
 argument_list|,
@@ -11484,8 +11488,9 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-name|__FUNCTION__
-literal|"(): returning %d\n"
+literal|"%s(): returning %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|error
 argument_list|)

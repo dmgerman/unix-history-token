@@ -22,7 +22,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {										\ 	    if (level<= TWE_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args);	\ 	} while(0)
+value|do {										\ 	    if (level<= TWE_DEBUG) printf("%s: " fmt "\n", __func__ , ##args);	\ 	} while(0)
 end_define
 
 begin_define
@@ -33,7 +33,7 @@ parameter_list|(
 name|level
 parameter_list|)
 define|\
-value|do {								\ 	    if (level<= TWE_DEBUG) printf(__FUNCTION__ ": called\n");	\ 	} while(0)
+value|do {								\ 	    if (level<= TWE_DEBUG) printf("%s: called\n", __func__);	\ 	} while(0)
 end_define
 
 begin_else

@@ -2738,7 +2738,7 @@ argument_list|,
 operator|(
 literal|"%s: bogus index 0x%x"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|index
 operator|)
@@ -3348,7 +3348,7 @@ name|panic
 argument_list|(
 literal|"%s: bogus index 0x%x"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|index
 argument_list|)
@@ -5621,7 +5621,7 @@ argument_list|,
 operator|(
 literal|"%s: no packet"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5663,7 +5663,7 @@ argument_list|,
 operator|(
 literal|"%s: empty q"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5887,7 +5887,7 @@ argument_list|,
 operator|(
 literal|"%s: last frag< MSEQ?"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5960,7 +5960,7 @@ argument_list|,
 operator|(
 literal|"%s: empty q"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6186,7 +6186,7 @@ argument_list|,
 operator|(
 literal|"%s: empty q"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6594,7 +6594,7 @@ argument_list|,
 operator|(
 literal|"%s: empty q"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6836,7 +6836,7 @@ argument_list|,
 operator|(
 literal|"%s: !timerActive"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6857,7 +6857,7 @@ argument_list|,
 operator|(
 literal|"%s: nd_refs=%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|node
 operator|->
@@ -9585,7 +9585,7 @@ argument_list|,
 operator|(
 literal|"%s: nd_refs=%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|node
 operator|->

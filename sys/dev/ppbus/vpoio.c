@@ -1238,7 +1238,7 @@ name|printf
 argument_list|(
 literal|"%s: can't request bus!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2591,7 +2591,7 @@ name|printf
 argument_list|(
 literal|"%s: not in disk mode!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#

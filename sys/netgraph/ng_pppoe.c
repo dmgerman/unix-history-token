@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|AAA
-value|printf("pppoe: %s\n", __FUNCTION__ );
+value|printf("pppoe: %s\n", __func__ );
 end_define
 
 begin_define

@@ -543,7 +543,7 @@ name|panic
 argument_list|(
 literal|"%s: iic_count< 0!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -870,7 +870,7 @@ name|panic
 argument_list|(
 literal|"%s: too much data read!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|iicbus_release_bus

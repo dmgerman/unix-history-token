@@ -1360,7 +1360,7 @@ name|panic
 argument_list|(
 literal|"%s: unknown event (%d)!"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|event
 argument_list|)

@@ -186,7 +186,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {if (RAY_DEBUG& (mask)) {\     device_printf((sc)->dev, "%s(%d) " fmt "\n",			\     	__FUNCTION__ , __LINE__ , ##args);				\ } } while (0)
+value|do {if (RAY_DEBUG& (mask)) {\     device_printf((sc)->dev, "%s(%d) " fmt "\n",			\     	__func__ , __LINE__ , ##args);					\ } } while (0)
 end_define
 
 begin_comment
@@ -208,7 +208,7 @@ name|len
 parameter_list|,
 name|s
 parameter_list|)
-value|do { if (RAY_DEBUG& (mask)) {	\     int i, j;								\     device_printf((sc)->dev, "%s(%d) %s\n",				\     	__FUNCTION__ , __LINE__ , (s));					\     for (i = (off); i< (off)+(len); i += 8) {				\ 	    printf(".  0x%04x ", i);					\ 	    for (j = 0; j< 8; j++)					\ 		    printf("%02x ", SRAM_READ_1((sc), i+j));		\ 	    printf("\n");						\     }									\ } } while (0)
+value|do { if (RAY_DEBUG& (mask)) {	\     int i, j;								\     device_printf((sc)->dev, "%s(%d) %s\n",				\     	__func__ , __LINE__ , (s));					\     for (i = (off); i< (off)+(len); i += 8) {				\ 	    printf(".  0x%04x ", i);					\ 	    for (j = 0; j< 8; j++)					\ 		    printf("%02x ", SRAM_READ_1((sc), i+j));		\ 	    printf("\n");						\     }									\ } } while (0)
 end_define
 
 begin_define
@@ -224,7 +224,7 @@ name|com
 parameter_list|,
 name|s
 parameter_list|)
-value|do { if (RAY_DEBUG& (mask)) {	\     device_printf((sc)->dev, "%s(%d) %s com entry 0x%p\n",		\         __FUNCTION__ , __LINE__ , (s) , (com));				\     printf(".  c_mesg %s\n", (com)->c_mesg);				\     printf(".  c_flags 0x%b\n", (com)->c_flags, RAY_COM_FLAGS_PRINTFB);	\     printf(".  c_retval 0x%x\n", (com)->c_retval);			\     printf(".  c_ccs 0x%0x index 0x%02x\n",				\         (com)->c_ccs, RAY_CCS_INDEX((com)->c_ccs));			\ } } while (0)
+value|do { if (RAY_DEBUG& (mask)) {	\     device_printf((sc)->dev, "%s(%d) %s com entry 0x%p\n",		\         __func__ , __LINE__ , (s) , (com));				\     printf(".  c_mesg %s\n", (com)->c_mesg);				\     printf(".  c_flags 0x%b\n", (com)->c_flags, RAY_COM_FLAGS_PRINTFB);	\     printf(".  c_retval 0x%x\n", (com)->c_retval);			\     printf(".  c_ccs 0x%0x index 0x%02x\n",				\         (com)->c_ccs, RAY_CCS_INDEX((com)->c_ccs));			\ } } while (0)
 end_define
 
 begin_else
@@ -311,7 +311,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {				\     device_printf((sc)->dev, "%s(%d) " fmt "\n",			\ 	__FUNCTION__ , __LINE__ , ##args);				\ } while (0)
+value|do {				\     device_printf((sc)->dev, "%s(%d) " fmt "\n",			\ 	__func__ , __LINE__ , ##args);					\ } while (0)
 end_define
 
 begin_endif
@@ -340,7 +340,7 @@ name|sc
 parameter_list|,
 name|com
 parameter_list|)
-value|do { if (RAY_DEBUG& RAY_DBG_COM) {	\     ray_com_ecf_check((sc), (com), __FUNCTION__ );			\ } } while (0)
+value|do { if (RAY_DEBUG& RAY_DBG_COM) {	\     ray_com_ecf_check((sc), (com), __func__ );				\ } } while (0)
 end_define
 
 begin_endif

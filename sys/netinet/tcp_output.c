@@ -3053,7 +3053,7 @@ argument_list|,
 operator|(
 literal|"%s: IP version incorrect: %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|ip
 operator|->

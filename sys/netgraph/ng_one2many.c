@@ -1426,7 +1426,7 @@ argument_list|,
 operator|(
 literal|"%s: linkNum=%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|linkNum
 operator|)
@@ -1465,7 +1465,7 @@ argument_list|,
 operator|(
 literal|"%s: no src%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|linkNum
 operator|)
@@ -1768,7 +1768,7 @@ name|panic
 argument_list|(
 literal|"%s: invalid xmitAlg"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1858,7 +1858,7 @@ argument_list|,
 operator|(
 literal|"%s: numActiveMany=%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|priv
 operator|->
@@ -1951,7 +1951,7 @@ argument_list|,
 operator|(
 literal|"%s: linkNum=%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|linkNum
 operator|)
@@ -2145,7 +2145,7 @@ name|panic
 argument_list|(
 literal|"%s: invalid failAlg"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2194,7 +2194,7 @@ name|panic
 argument_list|(
 literal|"%s: invalid xmitAlg"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#

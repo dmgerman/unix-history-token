@@ -164,8 +164,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|"(): parent is NULL"
+literal|"%s(): parent is NULL"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -178,8 +179,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|"(): parent has no pn_info"
+literal|"%s(): parent has no pn_info"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -204,8 +206,9 @@ operator|==
 name|pfstype_root
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|"(): parent is not a directory"
+literal|"%s(): parent is not a directory"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -465,8 +468,9 @@ operator|<
 name|PFS_NAMELEN
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|"(): node name is too long"
+literal|"%s(): node name is too long"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -634,8 +638,9 @@ operator|<
 name|PFS_NAMELEN
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|"(): node name is too long"
+literal|"%s(): node name is too long"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -838,8 +843,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|"(): node is NULL"
+literal|"%s(): node is NULL"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -852,8 +858,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|"(): node has no pn_info"
+literal|"%s(): node has no pn_info"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -918,8 +925,9 @@ operator|->
 name|pn_info
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|"(): parent has different pn_info"
+literal|"%s(): parent has different pn_info"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;

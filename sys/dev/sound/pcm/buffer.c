@@ -1447,7 +1447,7 @@ argument_list|,
 operator|(
 literal|"%s: ofs invalid %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|ofs
 operator|)
@@ -1716,7 +1716,7 @@ argument_list|,
 operator|(
 literal|"%s: b->rl invalid %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|b
 operator|->
@@ -1771,7 +1771,7 @@ argument_list|,
 operator|(
 literal|"%s: b->rp invalid %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|b
 operator|->
@@ -1826,7 +1826,7 @@ argument_list|,
 operator|(
 literal|"%s: b->rl invalid %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|b
 operator|->
@@ -1885,7 +1885,7 @@ argument_list|,
 operator|(
 literal|"%s: b->rp invalid %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|b
 operator|->
@@ -1916,7 +1916,7 @@ argument_list|,
 operator|(
 literal|"%s: b->rl invalid %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|b
 operator|->
@@ -2085,7 +2085,7 @@ argument_list|,
 operator|(
 literal|"%s: count %d> free %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|count
 operator|,
@@ -2119,7 +2119,7 @@ argument_list|,
 operator|(
 literal|"%s: b->rl invalid %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|b
 operator|->
@@ -2227,7 +2227,7 @@ argument_list|,
 operator|(
 literal|"%s: b->rl invalid %d, count %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|b
 operator|->
@@ -2276,7 +2276,7 @@ argument_list|,
 operator|(
 literal|"%s: count %d> ready %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|count
 operator|,
@@ -2310,7 +2310,7 @@ argument_list|,
 operator|(
 literal|"%s: b->rl invalid %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|b
 operator|->
@@ -2446,7 +2446,7 @@ argument_list|,
 operator|(
 literal|"%s: b->rl invalid %d, count %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|b
 operator|->

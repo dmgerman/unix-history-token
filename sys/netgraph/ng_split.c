@@ -628,7 +628,7 @@ argument_list|,
 operator|(
 literal|"%s: null info"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;

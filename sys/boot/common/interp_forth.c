@@ -65,7 +65,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s: " fmt "\n" , __FUNCTION__ , ## args)
+value|printf("%s: " fmt "\n" , __func__ , ## args)
 end_define
 
 begin_else

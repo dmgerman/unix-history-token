@@ -3244,7 +3244,7 @@ argument_list|,
 operator|(
 literal|"%s: no lladdr!\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;

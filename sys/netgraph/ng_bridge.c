@@ -2142,7 +2142,7 @@ argument_list|,
 operator|(
 literal|"%s: linkNum=%u"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|linkNum
 operator|)
@@ -2166,7 +2166,7 @@ argument_list|,
 operator|(
 literal|"%s: link%d null"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|linkNum
 operator|)
@@ -2714,7 +2714,7 @@ argument_list|,
 operator|(
 literal|"%s: link%d null"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|host
 operator|->
@@ -3149,7 +3149,7 @@ argument_list|,
 operator|(
 literal|"%s: numLinks=%d numHosts=%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|priv
 operator|->
@@ -3249,7 +3249,7 @@ argument_list|,
 operator|(
 literal|"%s: linkNum=%u"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|linkNum
 operator|)
@@ -3278,7 +3278,7 @@ argument_list|,
 operator|(
 literal|"%s: no link"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3517,7 +3517,7 @@ argument_list|,
 operator|(
 literal|"%s: entry %6D exists in table"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|addr
 operator|,
@@ -4200,7 +4200,7 @@ argument_list|,
 operator|(
 literal|"%s: host %6D on nonexistent link %d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|hent
 operator|->
@@ -4304,7 +4304,7 @@ argument_list|,
 operator|(
 literal|"%s: hosts: %d != %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|priv
 operator|->
@@ -4421,7 +4421,7 @@ argument_list|,
 operator|(
 literal|"%s: links: %d != %d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|priv
 operator|->
