@@ -1917,6 +1917,13 @@ condition|)
 block|{
 name|shutUp
 operator|=
+name|DEBUG
+argument_list|(
+name|LOUD
+argument_list|)
+condition|?
+name|FALSE
+else|:
 name|TRUE
 expr_stmt|;
 block|}
