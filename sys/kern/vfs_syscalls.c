@@ -9609,6 +9609,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Implementation of the NetBSD stat() function.  * XXX This should probably be collapsed with the FreeBSD version,  * as the differences are only due to vn_stat() clearing spares at  * the end of the structures.  vn_stat could be split to avoid this,  * and thus collapse the following to close to zero code.  */
+end_comment
+
 begin_function
 name|void
 name|cvtnstat
@@ -9973,7 +9977,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get file status; this version does not follow links.  */
+comment|/*  * NetBSD lstat.  Get file status; this version does not follow links.  */
 end_comment
 
 begin_ifndef
@@ -10593,6 +10597,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Common implementation code for chflags() and fchflags().  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -11027,6 +11035,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Common implementation code for chmod(), lchmod() and fchmod().  */
+end_comment
 
 begin_function
 specifier|static
@@ -11562,6 +11574,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Common implementation for chown(), lchown(), and fchown()  */
+end_comment
 
 begin_function
 specifier|static
@@ -12141,6 +12157,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Common implementation code for utimes(), lutimes(), and futimes().  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -12277,6 +12297,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Common implementation code for utimes(), lutimes(), and futimes().  */
+end_comment
 
 begin_function
 specifier|static
@@ -18216,6 +18240,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Stat an (NFS) file handle.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18430,6 +18458,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Implement fstatfs() for (NFS) file handles.  */
+end_comment
 
 begin_ifndef
 ifndef|#
