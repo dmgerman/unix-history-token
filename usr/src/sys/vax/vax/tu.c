@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.20	83/06/17	*/
+comment|/*	tu.c	4.21	83/07/07	*/
 end_comment
 
 begin_if
@@ -18,7 +18,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * TU58 DECtape II device driver  *  * This driver controls the console TU58(s) on a VAX-11/750 or VAX-11/730.  * The TU58 is treated as a block device (only).  The error detection and  * recovery is not extensive, but sufficient for most situations. It is   * assumed that the TU58 will follow the RSP (or MRSP) protocol   * exactly, very few protocol errors are checked for.    * It is also assumed that the 730 uses Modified RSP  * (MRSP), while the 750 may use either RSP or MRSP depending on  * whether defined(MRSP) is true or not.  * In the case of a 750 without MRSP, the only way for the CPU to  * keep up with the tu58 is to lock out virtually everything else.  * This is taken care of by a pseudo DMA routine in locore.s.  *  * NOTE: This driver will not work in multiuser mode   *	 unless MRSP is used!!  */
+comment|/*  * TU58 DECtape II device driver  *  * TU58 console cassette driver (for VAX-11/750 or VAX-11/730).  * The TU58 is treated as a block device (only).  Error detection and  * recovery is not extensive, but sufficient for most situations. It is   * assumed that the TU58 will follow the RSP (or MRSP) protocol exactly,  * very few protocol errors are checked for.  It is also assumed that  * the 730 uses Modified RSP (MRSP), while the 750 may use either RSP  * or MRSP depending on whether defined(MRSP) is true or not.  * In the case of a 750 without MRSP, the only way for the CPU to  * keep up with the tu58 is to lock out virtually everything else.  * This is taken care of by a pseudo DMA routine in locore.s.  *  * NOTE: This driver will not work multiuser without MRSP  */
 end_comment
 
 begin_include
@@ -2822,6 +2822,9 @@ operator|.
 name|pk_unit
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|printf
 argument_list|(
 literal|"%X %X %X %X %X %X %X %X\n"
@@ -2859,6 +2862,8 @@ operator|.
 name|tu_count
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|s
 operator|=
 name|splx
