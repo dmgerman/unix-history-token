@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	4.4	82/08/22	*/
+comment|/*	mem.c	4.5	82/10/13	*/
 end_comment
 
 begin_comment
@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/vm.h"
 end_include
 
@@ -71,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"../h/uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/mtpr.h"
 end_include
 
 begin_macro
@@ -98,6 +98,8 @@ end_decl_stmt
 
 begin_block
 block|{
+return|return
+operator|(
 name|mmrw
 argument_list|(
 name|dev
@@ -106,7 +108,8 @@ name|uio
 argument_list|,
 name|UIO_READ
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -135,6 +138,8 @@ end_decl_stmt
 
 begin_block
 block|{
+return|return
+operator|(
 name|mmrw
 argument_list|(
 name|dev
@@ -143,7 +148,8 @@ name|uio
 argument_list|,
 name|UIO_WRITE
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -197,6 +203,11 @@ name|iovec
 modifier|*
 name|iov
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 while|while
 condition|(
 name|uio
@@ -205,9 +216,7 @@ name|uio_resid
 operator|>
 literal|0
 operator|&&
-name|u
-operator|.
-name|u_error
+name|error
 operator|==
 literal|0
 condition|)
@@ -358,9 +367,7 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|uiomove
 argument_list|(
@@ -380,15 +387,6 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|u
-operator|.
-name|u_error
-condition|)
-goto|goto
-name|fault
-goto|;
 continue|continue;
 comment|/* minor device 1 is kernel memory */
 case|case
@@ -492,9 +490,7 @@ condition|)
 goto|goto
 name|fault
 goto|;
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|uiomove
 argument_list|(
@@ -512,15 +508,6 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|u
-operator|.
-name|u_error
-condition|)
-goto|goto
-name|fault
-goto|;
 continue|continue;
 comment|/* minor device 2 is EOF/RATHOLE */
 case|case
@@ -599,6 +586,8 @@ condition|)
 goto|goto
 name|fault
 goto|;
+name|error
+operator|=
 name|UNIcpy
 argument_list|(
 operator|(
@@ -621,13 +610,9 @@ break|break;
 block|}
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
-goto|goto
-name|fault
-goto|;
+break|break;
 name|iov
 operator|->
 name|iov_base
@@ -653,16 +638,18 @@ operator|-=
 name|c
 expr_stmt|;
 block|}
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|fault
 label|:
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EFAULT
-expr_stmt|;
-return|return;
+operator|)
+return|;
 block|}
 end_block
 
@@ -786,6 +773,11 @@ operator|*
 name|from
 operator|++
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

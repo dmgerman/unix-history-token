@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.63	82/10/05	*/
+comment|/*	machdep.c	4.64	82/10/13	*/
 end_comment
 
 begin_include
@@ -48,18 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vax/clock.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/pte.h"
 end_include
 
@@ -90,24 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubavar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ubareg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/cons.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/reboot.h"
 end_include
 
@@ -115,18 +85,6 @@ begin_include
 include|#
 directive|include
 file|"../h/conf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mem.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/cpu.h"
 end_include
 
 begin_include
@@ -180,12 +138,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/rpb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/msgbuf.h"
 end_include
 
@@ -193,6 +145,54 @@ begin_include
 include|#
 directive|include
 file|"../h/quota.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/clock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/cons.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/mem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/mtpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/rpb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubareg.h"
 end_include
 
 begin_decl_stmt

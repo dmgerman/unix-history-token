@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.7	82/08/22	*/
+comment|/*	tu.c	4.8	82/10/13	*/
 end_comment
 
 begin_if
@@ -60,13 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
+file|"../vax/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/cpu.h"
+file|"../vax/mtpr.h"
 end_include
 
 begin_define

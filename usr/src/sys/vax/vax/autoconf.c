@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.41	82/07/21	*/
+comment|/*	autoconf.c	4.42	82/10/13	*/
 end_comment
 
 begin_comment
@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/nexus.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/pte.h"
 end_include
 
@@ -47,18 +41,6 @@ begin_include
 include|#
 directive|include
 file|"../h/buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mbareg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mbavar.h"
 end_include
 
 begin_include
@@ -76,37 +58,55 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubareg.h"
+file|"../vax/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ubavar.h"
+file|"../vax/mem.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
+file|"../vax/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/cpu.h"
+file|"../vax/nexus.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/scb.h"
+file|"../vax/scb.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mem.h"
+file|"../vaxmba/mbareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxmba/mbavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubavar.h"
 end_include
 
 begin_comment

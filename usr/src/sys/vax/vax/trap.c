@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.17	82/09/12	*/
+comment|/*	trap.c	4.18	82/10/13	*/
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/trap.h"
+file|"../vax/trap.h"
 end_include
 
 begin_include
@@ -72,19 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/inline.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/acct.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/mtpr.h"
 end_include
 
 begin_define
@@ -143,7 +137,15 @@ literal|"Trace trap"
 block|,
 literal|"Compatibility mode trap"
 block|,
-comment|/**					these never get to "default" case 	"Page fault", 	"Page table fault", **/
+ifdef|#
+directive|ifdef
+name|notdef
+literal|"Page fault"
+block|,
+literal|"Page table fault"
+block|,
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -179,8 +181,24 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|int
+name|sp
+decl_stmt|,
+name|type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|code
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pc
+decl_stmt|,
+name|psl
 decl_stmt|;
 end_decl_stmt
 

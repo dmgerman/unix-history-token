@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	4.15	82/08/22	*/
+comment|/*	cons.c	4.16	82/10/13	*/
 end_comment
 
 begin_comment
@@ -52,19 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/cons.h"
+file|"../vax/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
+file|"../vax/cons.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/cpu.h"
+file|"../vax/mtpr.h"
 end_include
 
 begin_decl_stmt
@@ -121,12 +121,10 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-name|tp
-operator|=
+init|=
 operator|&
 name|cons
-expr_stmt|;
+decl_stmt|;
 name|tp
 operator|->
 name|t_oproc
@@ -263,12 +261,10 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-name|tp
-operator|=
+init|=
 operator|&
 name|cons
-expr_stmt|;
+decl_stmt|;
 operator|(
 operator|*
 name|linesw
@@ -326,12 +322,12 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-name|tp
-operator|=
+init|=
 operator|&
 name|cons
-expr_stmt|;
+decl_stmt|;
+return|return
+operator|(
 operator|(
 operator|*
 name|linesw
@@ -348,7 +344,8 @@ name|tp
 operator|,
 name|uio
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -386,12 +383,12 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-name|tp
-operator|=
+init|=
 operator|&
 name|cons
-expr_stmt|;
+decl_stmt|;
+return|return
+operator|(
 operator|(
 operator|*
 name|linesw
@@ -408,7 +405,8 @@ name|tp
 operator|,
 name|uio
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -538,12 +536,10 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-name|tp
-operator|=
+init|=
 operator|&
 name|cons
-expr_stmt|;
+decl_stmt|;
 name|cmd
 operator|=
 operator|(
@@ -632,14 +628,12 @@ name|struct
 name|tty
 modifier|*
 name|tp
+init|=
+operator|&
+name|cons
 decl_stmt|;
 name|consdone
 operator|++
-expr_stmt|;
-name|tp
-operator|=
-operator|&
-name|cons
 expr_stmt|;
 name|tp
 operator|->
@@ -718,11 +712,11 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|c
-expr_stmt|;
-specifier|register
+decl_stmt|,
 name|s
-expr_stmt|;
+decl_stmt|;
 name|s
 operator|=
 name|spl5
@@ -960,6 +954,7 @@ argument_list|(
 name|c
 argument_list|)
 specifier|register
+name|int
 name|c
 expr_stmt|;
 end_expr_stmt
@@ -967,10 +962,11 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|s
-operator|,
+decl_stmt|,
 name|timo
-expr_stmt|;
+decl_stmt|;
 name|timo
 operator|=
 literal|30000

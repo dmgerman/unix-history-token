@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cpudata.c	4.6	82/05/26	*/
+comment|/*	cpudata.c	4.7	82/10/13	*/
 end_comment
 
 begin_include
@@ -18,19 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubareg.h"
+file|"../vax/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/nexus.h"
+file|"../vax/nexus.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/cpu.h"
+file|"../vaxuba/ubareg.h"
 end_include
 
 begin_comment

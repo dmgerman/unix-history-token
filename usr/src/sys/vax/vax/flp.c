@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	flp.c	4.7	82/08/22	*/
+comment|/*	flp.c	4.8	82/10/13	*/
 end_comment
 
 begin_if
@@ -8,12 +8,6 @@ if|#
 directive|if
 name|VAX780
 end_if
-
-begin_include
-include|#
-directive|include
-file|"../h/flp.h"
-end_include
 
 begin_include
 include|#
@@ -48,31 +42,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/cons.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/cpu.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/cons.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/flp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/mtpr.h"
 end_include
 
 begin_struct
@@ -276,6 +276,9 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * Assume one block read/written for each call -  	 * and enforce this by checking for block size of 128. 	 * Use the b_blkno field to address 	 * physical, 128-byte blocks (u.u_offset/128). 	 * This is checked for validity, and is further interpreted as: 	 * 	 *	track# * (sectors/track) + sector # 	 */
 if|if
 condition|(
@@ -285,7 +288,11 @@ name|uio_resid
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 operator|(
 name|void
 operator|)
@@ -328,6 +335,10 @@ operator|=
 name|fltab
 operator|.
 name|fl_buf
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -378,12 +389,11 @@ condition|)
 block|{
 comment|/* block number out of range */
 comment|/* or offset in middle of block */
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
+operator|)
+return|;
 break|break;
 block|}
 if|if
@@ -393,9 +403,7 @@ operator|==
 name|UIO_WRITE
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|uiomove
 argument_list|(
@@ -414,9 +422,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
 break|break;
 block|}
@@ -478,9 +484,7 @@ operator|&
 name|B_ERROR
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|EIO
 expr_stmt|;
@@ -493,9 +497,7 @@ operator|==
 name|UIO_READ
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|uiomove
 argument_list|(
@@ -514,9 +516,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
 break|break;
 block|}
@@ -537,6 +537,11 @@ operator|&
 name|fltab
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 
@@ -569,13 +574,16 @@ end_decl_stmt
 
 begin_block
 block|{
+return|return
+operator|(
 name|floperation
 argument_list|(
 name|UIO_READ
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -608,13 +616,16 @@ end_decl_stmt
 
 begin_block
 block|{
+return|return
+operator|(
 name|floperation
 argument_list|(
 name|UIO_WRITE
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
