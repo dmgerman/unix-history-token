@@ -315,6 +315,7 @@ specifier|const
 struct|struct
 name|arg
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -899,15 +900,20 @@ end_function
 
 begin_block
 block|{
+typedef|typedef
+specifier|const
+name|struct
+name|arg
+modifier|*
+name|c_arg_p
+typedef|;
 return|return
 operator|(
 name|strcmp
 argument_list|(
 operator|(
 operator|(
-expr|struct
-name|arg
-operator|*
+name|c_arg_p
 operator|)
 name|a
 operator|)
@@ -916,9 +922,7 @@ name|name
 argument_list|,
 operator|(
 operator|(
-expr|struct
-name|arg
-operator|*
+name|c_arg_p
 operator|)
 name|b
 operator|)
@@ -1345,6 +1349,7 @@ specifier|const
 struct|struct
 name|conv
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1673,15 +1678,20 @@ end_function
 
 begin_block
 block|{
+typedef|typedef
+specifier|const
+name|struct
+name|conv
+modifier|*
+name|c_conv_p
+typedef|;
 return|return
 operator|(
 name|strcmp
 argument_list|(
 operator|(
 operator|(
-expr|struct
-name|conv
-operator|*
+name|c_conv_p
 operator|)
 name|a
 operator|)
@@ -1690,9 +1700,7 @@ name|name
 argument_list|,
 operator|(
 operator|(
-expr|struct
-name|conv
-operator|*
+name|c_conv_p
 operator|)
 name|b
 operator|)
