@@ -55,15 +55,9 @@ directive|include
 file|<string.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|size_t
-name|CAP_MAX_BUF_LEN
-init|=
-literal|1024
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * this one is in sys/capability.h now:  * static const size_t CAP_MAX_BUF_LEN = 1024;  */
+end_comment
 
 begin_decl_stmt
 specifier|static
