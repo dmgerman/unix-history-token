@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socketvar.h	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socketvar.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -115,8 +115,7 @@ name|sb_mb
 decl_stmt|;
 comment|/* the mbuf chain */
 name|struct
-name|proc
-modifier|*
+name|selinfo
 name|sb_sel
 decl_stmt|;
 comment|/* process selecting read/write */
@@ -167,11 +166,6 @@ define|#
 directive|define
 name|SB_NOTIFY
 value|(SB_WAIT|SB_SEL|SB_ASYNC)
-define|#
-directive|define
-name|SB_COLL
-value|0x20
-comment|/* collision selecting */
 define|#
 directive|define
 name|SB_NOINTR
