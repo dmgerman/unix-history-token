@@ -48,12 +48,20 @@ file|"back.h"
 end_include
 
 begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|list
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|prompt
-decl_stmt|,
-modifier|*
-name|list
 decl_stmt|,
 modifier|*
 name|opts
