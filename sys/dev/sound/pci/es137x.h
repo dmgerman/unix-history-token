@@ -1191,17 +1191,6 @@ name|ES_SMPREG_VOL_DAC2
 value|0x7e
 end_define
 
-begin_define
-define|#
-directive|define
-name|ES_BUFFSIZE
-value|0x10000
-end_define
-
-begin_comment
-comment|/* We're PCI! Use a large buffer */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
