@@ -1745,6 +1745,10 @@ operator|&&
 operator|!
 name|witness_dead
 operator|&&
+name|panicstr
+operator|==
+name|NULL
+operator|&&
 operator|(
 name|lock
 operator|->
@@ -2240,6 +2244,8 @@ operator|==
 name|NULL
 operator|||
 name|panicstr
+operator|!=
+name|NULL
 condition|)
 return|return;
 name|w
@@ -3467,6 +3473,8 @@ operator|==
 name|NULL
 operator|||
 name|panicstr
+operator|!=
+name|NULL
 condition|)
 return|return;
 name|p
@@ -3978,6 +3986,8 @@ condition|(
 name|witness_dead
 operator|||
 name|panicstr
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
@@ -4251,6 +4261,10 @@ operator|!
 name|witness_watch
 operator|||
 name|witness_dead
+operator|||
+name|panicstr
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
@@ -6424,6 +6438,10 @@ operator|==
 name|NULL
 operator|||
 name|witness_dead
+operator|||
+name|panicstr
+operator|!=
+name|NULL
 condition|)
 return|return;
 name|KASSERT
@@ -6548,6 +6566,10 @@ operator|==
 name|NULL
 operator|||
 name|witness_dead
+operator|||
+name|panicstr
+operator|!=
+name|NULL
 condition|)
 return|return;
 name|KASSERT
@@ -6680,6 +6702,10 @@ operator|==
 name|NULL
 operator|||
 name|witness_dead
+operator|||
+name|panicstr
+operator|!=
+name|NULL
 condition|)
 return|return;
 if|if
