@@ -88,10 +88,6 @@ literal|2
 index|]
 decl_stmt|;
 comment|/*   4: Ffs: old user and group ids. */
-name|int32_t
-name|inumber
-decl_stmt|;
-comment|/*   4: Lfs: inode number. */
 block|}
 name|di_u
 union|;
@@ -171,13 +167,6 @@ end_struct
 begin_comment
 comment|/*  * The di_db fields may be overlaid with other information for  * file types that do not have associated disk storage. Block  * and character devices overlay the first data block with their  * dev_t value. Short symbolic links place their path in the  * di_db area.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|di_inumber
-value|di_u.inumber
-end_define
 
 begin_define
 define|#
