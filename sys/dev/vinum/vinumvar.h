@@ -354,11 +354,6 @@ init|=
 literal|32
 block|,
 comment|/* host name field in label */
-name|VINUM_BSIZE_BEST
-init|=
-literal|4096
-block|,
-comment|/* best sector size */
 block|}
 enum|;
 end_enum
@@ -1234,6 +1229,14 @@ modifier|*
 name|lock
 decl_stmt|;
 comment|/* ranges of locked addresses */
+name|u_int64_t
+name|checkblock
+decl_stmt|;
+comment|/* block number for check parity op */
+name|u_int64_t
+name|rebuildblock
+decl_stmt|;
+comment|/* block number for rebuild parity op */
 comment|/* Statistics */
 name|u_int64_t
 name|reads
@@ -1613,6 +1616,21 @@ literal|2
 block|,
 comment|/* we're currently configuring, don't save */
 block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Operations for parityops to perform. */
+end_comment
+
+begin_enum
+enum|enum
+name|parityop
+block|{
+name|checkparity
+block|,
+name|rebuildparity
+block|, }
 enum|;
 end_enum
 
