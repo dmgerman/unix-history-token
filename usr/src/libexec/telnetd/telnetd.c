@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.28 (Berkeley) %G%"
+literal|"@(#)telnetd.c	4.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_define
@@ -401,21 +407,23 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|openlog
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
 name|argv
 index|[
 literal|0
 index|]
+argument_list|,
+name|LOG_PID
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|perror
+name|syslog
 argument_list|(
-literal|"setsockopt (SO_KEEPALIVE)"
+name|LOG_WARNING
+argument_list|,
+literal|"setsockopt (SO_KEEPALIVE): %m"
 argument_list|)
 expr_stmt|;
 block|}

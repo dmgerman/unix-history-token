@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftpd.c	4.13 (Berkeley) %G%"
+literal|"@(#)tftpd.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,12 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_define
@@ -281,9 +287,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|openlog
 argument_list|(
-literal|"tftpd: socket"
+literal|"tftpd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"socket: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -313,9 +330,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|openlog
 argument_list|(
-literal|"tftpd: bind"
+literal|"tftpd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"bind: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -345,9 +373,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|openlog
 argument_list|(
-literal|"tftpd: connect"
+literal|"tftpd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"connect: %m"
 argument_list|)
 expr_stmt|;
 name|exit

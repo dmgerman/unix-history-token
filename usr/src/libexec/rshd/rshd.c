@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	4.20 (Berkeley) %G%"
+literal|"@(#)rshd.c	4.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,20 +84,17 @@ directive|include
 file|<netdb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
-name|getpwnam
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|char
@@ -107,10 +104,6 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|rindex
-argument_list|()
-decl_stmt|,
-modifier|*
-name|sprintf
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -225,21 +218,23 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|openlog
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
 name|argv
 index|[
 literal|0
 index|]
+argument_list|,
+name|LOG_PID
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|perror
+name|syslog
 argument_list|(
-literal|"setsockopt (SO_KEEPALIVE)"
+name|LOG_WARNING
+argument_list|,
+literal|"setsockopt (SO_KEEPALIVE): %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -278,21 +273,23 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|openlog
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
 name|argv
 index|[
 literal|0
 index|]
+argument_list|,
+name|LOG_PID
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|perror
+name|syslog
 argument_list|(
-literal|"setsockopt (SO_LINGER)"
+name|LOG_WARNING
+argument_list|,
+literal|"setsockopt (SO_LINGER): %m"
 argument_list|)
 expr_stmt|;
 block|}
@@ -568,11 +565,20 @@ operator|>=
 name|IPPORT_RESERVED
 condition|)
 block|{
-name|fprintf
+name|openlog
 argument_list|(
-name|stderr
+literal|"rshd"
 argument_list|,
-literal|"rshd: malformed from address\n"
+name|LOG_PID
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"malformed from address\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -617,9 +623,20 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|perror
+name|openlog
 argument_list|(
-literal|"rshd: read"
+literal|"rshd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"read: %m"
 argument_list|)
 expr_stmt|;
 name|shutdown
@@ -694,9 +711,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|openlog
 argument_list|(
-literal|"rshd: can't get stderr port"
+literal|"rshd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"can't get stderr port: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -712,11 +740,20 @@ operator|>=
 name|IPPORT_RESERVED
 condition|)
 block|{
-name|fprintf
+name|openlog
 argument_list|(
-name|stderr
+literal|"rshd"
 argument_list|,
-literal|"rshd: 2nd port not reserved\n"
+name|LOG_PID
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"2nd port not reserved\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -757,9 +794,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|openlog
 argument_list|(
-literal|"rshd: connect"
+literal|"rshd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"connect: %m"
 argument_list|)
 expr_stmt|;
 name|exit
