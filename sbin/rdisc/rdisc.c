@@ -4132,6 +4132,11 @@ name|whereto
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|verbose
+condition|)
+block|{
 name|logtrace
 argument_list|(
 literal|"\n----%s rdisc Statistics----\n"
@@ -4153,11 +4158,6 @@ argument_list|,
 name|nreceived
 argument_list|)
 expr_stmt|;
-name|logtrace
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4166,6 +4166,7 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
