@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.46	82/12/09	*/
+comment|/*	kern_clock.c	4.47	82/12/16	*/
 end_comment
 
 begin_include
@@ -1096,6 +1096,14 @@ name|p1
 operator|=
 name|p2
 control|)
+if|if
+condition|(
+name|p2
+operator|->
+name|c_time
+operator|>
+literal|0
+condition|)
 name|t
 operator|-=
 name|p2
