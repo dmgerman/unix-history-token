@@ -21,7 +21,7 @@ operator|)
 name|delta
 operator|.
 name|c
-literal|4.1
+literal|4.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3104,7 +3104,7 @@ name|type
 operator|=
 name|DEL
 expr_stmt|;
-name|skipline
+name|skiplines
 argument_list|(
 name|line
 argument_list|,
@@ -3179,7 +3179,7 @@ name|type
 operator|=
 name|DEL
 expr_stmt|;
-name|skipline
+name|skiplines
 argument_list|(
 name|line
 argument_list|,
