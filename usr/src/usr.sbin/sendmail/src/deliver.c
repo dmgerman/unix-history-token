@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.63 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.64 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2820,7 +2820,7 @@ name|e_id
 argument_list|,
 name|mxhosts
 index|[
-literal|1
+name|j
 index|]
 argument_list|,
 literal|"user open"
