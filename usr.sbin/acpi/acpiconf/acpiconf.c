@@ -54,9 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica
-comment|//
-include|actypes.h>
+file|<contrib/dev/acpica/actypes.h>
 end_include
 
 begin_define
