@@ -2163,14 +2163,14 @@ name|len
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|int
+name|long
 argument_list|)
 expr_stmt|;
 name|p
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|int
+name|long
 argument_list|)
 expr_stmt|;
 block|}
