@@ -409,11 +409,6 @@ name|ch
 decl_stmt|;
 while|while
 condition|(
-name|cnt
-operator|--
-condition|)
-while|while
-condition|(
 operator|(
 name|ch
 operator|=
@@ -424,6 +419,8 @@ argument_list|)
 operator|)
 operator|!=
 name|EOF
+operator|&&
+name|cnt
 condition|)
 block|{
 if|if
@@ -453,7 +450,9 @@ name|ch
 operator|==
 literal|'\n'
 condition|)
-break|break;
+name|cnt
+operator|--
+expr_stmt|;
 block|}
 block|}
 end_function
