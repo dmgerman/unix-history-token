@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)routed.c	4.3 %G%"
+literal|"@(#)routed.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,9 +337,6 @@ name|struct
 name|sockaddr
 name|from
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 block|{
 name|int
 name|t
@@ -374,8 +371,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|trace
