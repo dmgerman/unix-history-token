@@ -47,17 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -67,8 +56,22 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * Lock a terminal up until the given key is entered, until the root  * password is entered, or the given interval times out.  *  * Timeout interval is by default TIMEOUT, it can be changed with  * an argument of the form -time where time is in minutes  */
+comment|/*  * Lock a terminal up until the given key is entered or the given  * interval times out.  *  * Timeout interval is by default TIMEOUT, it can be changed with  * an argument of the form -time where time is in minutes  */
 end_comment
 
 begin_include
@@ -93,6 +96,12 @@ begin_include
 include|#
 directive|include
 file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/consio.h>
 end_include
 
 begin_include
@@ -162,31 +171,42 @@ name|TIMEOUT
 value|15
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|quit
-argument_list|()
-decl_stmt|,
-name|bye
-argument_list|()
-decl_stmt|,
-name|hi
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+name|void
+name|bye
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|hi
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -229,6 +249,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* lock terminal forever */
+end_comment
+
+begin_decl_stmt
+name|int
+name|vtyunlock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Unlock flag and code. */
 end_comment
 
 begin_comment
@@ -283,6 +313,8 @@ decl_stmt|,
 name|sectimeout
 decl_stmt|,
 name|usemine
+decl_stmt|,
+name|vtylock
 decl_stmt|;
 name|char
 modifier|*
@@ -313,15 +345,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|crypt
-argument_list|()
-decl_stmt|,
-modifier|*
-name|ttyname
-argument_list|()
-decl_stmt|;
 name|openlog
 argument_list|(
 literal|"lock"
@@ -347,6 +370,10 @@ name|no_timeout
 operator|=
 literal|0
 expr_stmt|;
+name|vtylock
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -358,7 +385,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"npt:"
+literal|"npt:v"
 argument_list|)
 operator|)
 operator|!=
@@ -441,6 +468,14 @@ case|case
 literal|'n'
 case|:
 name|no_timeout
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|vtylock
 operator|=
 literal|1
 expr_stmt|;
@@ -656,7 +691,9 @@ operator|==
 literal|'\n'
 condition|)
 name|quit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -805,47 +842,116 @@ operator|&
 name|otimer
 argument_list|)
 expr_stmt|;
-comment|/* header info */
 if|if
 condition|(
-name|no_timeout
+name|vtylock
+condition|)
+block|{
+comment|/* 		 * If this failed, we want to err out; warn isn't good 		 * enough, since we don't want the user to think that 		 * everything is nice and locked because they got a 		 * "Key:" prompt. 		 */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|VT_LOCKSWITCH
+argument_list|,
+operator|&
+name|vtylock
+argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|ioctl
 argument_list|(
-literal|"lock: %s on %s. no timeout\ntime now is %.20s%s%s"
+literal|0
 argument_list|,
-name|ttynam
+name|TIOCSETP
 argument_list|,
-name|hostname
+operator|&
+name|tty
+argument_list|)
+expr_stmt|;
+name|err
+argument_list|(
+literal|1
 argument_list|,
-name|ap
-argument_list|,
-name|tzn
-argument_list|,
-name|ap
-operator|+
-literal|19
+literal|"locking vty"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+name|vtyunlock
+operator|=
+literal|0x2
+expr_stmt|;
+block|}
+comment|/* header info */
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"lock: %s on %s. timeout in %d minutes\ntime now is %.20s%s%s"
+literal|"lock: %s on %s."
 argument_list|,
 name|ttynam
 argument_list|,
 name|hostname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|no_timeout
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" no timeout."
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" timeout in %d minute%s."
 argument_list|,
 name|sectimeout
+argument_list|,
+name|sectimeout
+operator|!=
+literal|1
+condition|?
+literal|"s"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vtylock
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" vty locked."
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\ntime now is %.20s%s%s"
 argument_list|,
 name|ap
 argument_list|,
@@ -856,7 +962,6 @@ operator|+
 literal|19
 argument_list|)
 expr_stmt|;
-block|}
 name|failures
 operator|=
 literal|0
@@ -897,7 +1002,9 @@ name|stdin
 argument_list|)
 expr_stmt|;
 name|hi
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
@@ -1029,7 +1136,9 @@ name|ttynam
 argument_list|)
 expr_stmt|;
 name|quit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1053,7 +1162,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lock [-n] [-p] [-t timeout]\n"
+literal|"usage: lock [-npv] [-t timeout]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1067,7 +1176,11 @@ end_function
 begin_function
 name|void
 name|hi
-parameter_list|()
+parameter_list|(
+name|int
+name|signo
+name|__unused
+parameter_list|)
 block|{
 name|struct
 name|timeval
@@ -1150,7 +1263,11 @@ end_function
 begin_function
 name|void
 name|quit
-parameter_list|()
+parameter_list|(
+name|int
+name|signo
+name|__unused
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -1173,6 +1290,23 @@ operator|&
 name|tty
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vtyunlock
+condition|)
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|VT_LOCKSWITCH
+argument_list|,
+operator|&
+name|vtyunlock
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -1184,7 +1318,11 @@ end_function
 begin_function
 name|void
 name|bye
-parameter_list|()
+parameter_list|(
+name|int
+name|signo
+name|__unused
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1203,6 +1341,23 @@ name|TIOCSETP
 argument_list|,
 operator|&
 name|tty
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vtyunlock
+condition|)
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|VT_LOCKSWITCH
+argument_list|,
+operator|&
+name|vtyunlock
 argument_list|)
 expr_stmt|;
 operator|(
