@@ -481,9 +481,9 @@ name|queue_mtx
 argument_list|,
 literal|"ATA disk bioqueue lock"
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|bioq_init

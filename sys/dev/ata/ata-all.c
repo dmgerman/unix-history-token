@@ -825,9 +825,9 @@ name|queue_mtx
 argument_list|,
 literal|"ATA queue lock"
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT

@@ -8739,9 +8739,9 @@ name|mtx
 argument_list|,
 literal|"ATA promise HPKT lock"
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|hpkt
