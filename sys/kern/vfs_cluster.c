@@ -3431,14 +3431,6 @@ literal|0
 expr_stmt|;
 name|bp
 operator|->
-name|b_bufobj
-operator|=
-name|tbp
-operator|->
-name|b_bufobj
-expr_stmt|;
-name|bp
-operator|->
 name|b_bufsize
 operator|=
 literal|0
