@@ -23502,6 +23502,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PERL_OBJECT
+end_ifndef
+
 begin_decl_stmt
 name|int
 name|yydebug
@@ -23551,6 +23557,11 @@ name|YYSTYPE
 name|yylval
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_line
 line|#
@@ -24138,7 +24149,7 @@ operator|(
 name|YYSTYPE
 operator|*
 operator|)
-name|realloc
+name|PerlMem_realloc
 argument_list|(
 operator|(
 name|char
@@ -24164,7 +24175,7 @@ operator|(
 name|short
 operator|*
 operator|)
-name|realloc
+name|PerlMem_realloc
 argument_list|(
 operator|(
 name|char
@@ -24437,7 +24448,7 @@ operator|(
 name|YYSTYPE
 operator|*
 operator|)
-name|realloc
+name|PerlMem_realloc
 argument_list|(
 operator|(
 name|char
@@ -24463,7 +24474,7 @@ operator|(
 name|short
 operator|*
 operator|)
-name|realloc
+name|PerlMem_realloc
 argument_list|(
 operator|(
 name|char
@@ -26671,6 +26682,9 @@ directive|line
 number|302
 file|"perly.y"
 block|{
+name|STRLEN
+name|n_a
+decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -26692,7 +26706,7 @@ operator|)
 operator|->
 name|op_sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 decl_stmt|;
 if|if
@@ -26718,7 +26732,7 @@ argument_list|,
 literal|"INIT"
 argument_list|)
 condition|)
-name|CvUNIQUE_on
+name|CvSPECIAL_on
 argument_list|(
 name|PL_compcv
 argument_list|)
@@ -26837,7 +26851,7 @@ directive|line
 number|325
 file|"perly.y"
 block|{
-name|CvUNIQUE_on
+name|CvSPECIAL_on
 argument_list|(
 name|PL_compcv
 argument_list|)
@@ -29480,13 +29494,7 @@ name|yyval
 operator|.
 name|opval
 operator|=
-name|newUNOP
-argument_list|(
-name|OP_DOFILE
-argument_list|,
-literal|0
-argument_list|,
-name|scalar
+name|dofile
 argument_list|(
 name|yyvsp
 index|[
@@ -29494,7 +29502,6 @@ literal|0
 index|]
 operator|.
 name|opval
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -30967,7 +30974,7 @@ operator|(
 name|YYSTYPE
 operator|*
 operator|)
-name|realloc
+name|PerlMem_realloc
 argument_list|(
 operator|(
 name|char
@@ -30993,7 +31000,7 @@ operator|(
 name|short
 operator|*
 operator|)
-name|realloc
+name|PerlMem_realloc
 argument_list|(
 operator|(
 name|char

@@ -202,6 +202,11 @@ name|defined
 argument_list|(
 name|atarist
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__MINT__
+argument_list|)
 operator|)
 end_if
 
@@ -776,6 +781,11 @@ operator|||
 name|defined
 argument_list|(
 name|atarist
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__MINT__
 argument_list|)
 operator|)
 operator|&&
@@ -2529,6 +2539,49 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MUTEX_INIT_CALLS_MALLOC
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|MUTEX_LOCK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|MUTEX_LOCK
+parameter_list|(
+name|m
+parameter_list|)
+value|STMT_START { if (*m) mutex_lock(*m); } STMT_END
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|MUTEX_UNLOCK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|MUTEX_UNLOCK
+parameter_list|(
+name|m
+parameter_list|)
+value|STMT_START { if (*m) mutex_unlock(*m); } STMT_END
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -2544,16 +2597,25 @@ name|emergency_buffer_size
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|Malloc_t
+name|emergency_sbrk
+parameter_list|(
+name|MEM_SIZE
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|Malloc_t
 name|emergency_sbrk
 parameter_list|(
-name|size
-parameter_list|)
 name|MEM_SIZE
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 name|MEM_SIZE
 name|rsize
@@ -2660,6 +2722,9 @@ name|int
 name|have
 init|=
 literal|0
+decl_stmt|;
+name|STRLEN
+name|n_a
 decl_stmt|;
 if|if
 condition|(
@@ -2773,7 +2838,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 expr_stmt|;
 comment|/* Check alignment: */
@@ -3069,6 +3134,12 @@ ifdef|#
 directive|ifdef
 name|DEBUGGING
 end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|ASSERT
+end_undef
 
 begin_define
 define|#
@@ -4468,9 +4539,19 @@ name|slack
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|atarist
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__MINT__
+argument_list|)
 comment|/* on the atari we dont have to worry about this */
 ifndef|#
 directive|ifndef
@@ -4522,7 +4603,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* atarist */
+comment|/* !atarist&& !MINT */
 if|if
 condition|(
 name|add
@@ -7781,28 +7862,19 @@ directive|ifdef
 name|USE_PERL_SBRK
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NeXT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PERL_SBRK_VIA_MALLOC
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__MACHTEN_PPC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NeXT__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -7975,11 +8047,9 @@ begin_function
 name|Malloc_t
 name|Perl_sbrk
 parameter_list|(
-name|size
-parameter_list|)
 name|int
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 name|IV
 name|got

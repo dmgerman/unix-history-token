@@ -60,7 +60,7 @@ name|ppaddr
 parameter_list|,
 name|nxt
 parameter_list|)
-value|do {		\ 	dJMPENV;				\ 	int ret;				\ 	PUTBACK;				\ 	JMPENV_PUSH(ret);			\ 	switch (ret) {				\ 	case 0:					\ 	    PL_op = ppaddr(ARGS);			\ 	    PL_retstack[PL_retstack_ix - 1] = Nullop;	\ 	    if (PL_op != nxt) runops();		\ 	    JMPENV_POP;				\ 	    break;				\ 	case 1: JMPENV_POP; JMPENV_JUMP(1);	\ 	case 2: JMPENV_POP; JMPENV_JUMP(2);	\ 	case 3:					\ 	    JMPENV_POP;				\ 	    if (PL_restartop != nxt)		\ 		JMPENV_JUMP(3);			\ 	}					\ 	PL_op = nxt;				\ 	SPAGAIN;				\     } while (0)
+value|do {		\ 	dJMPENV;				\ 	int ret;				\ 	PUTBACK;				\ 	JMPENV_PUSH(ret);			\ 	switch (ret) {				\ 	case 0:					\ 	    PL_op = ppaddr(ARGS);			\ 	    PL_retstack[PL_retstack_ix - 1] = Nullop;	\ 	    if (PL_op != nxt) CALLRUNOPS();		\ 	    JMPENV_POP;				\ 	    break;				\ 	case 1: JMPENV_POP; JMPENV_JUMP(1);	\ 	case 2: JMPENV_POP; JMPENV_JUMP(2);	\ 	case 3:					\ 	    JMPENV_POP;				\ 	    if (PL_restartop != nxt)		\ 		JMPENV_JUMP(3);			\ 	}					\ 	PL_op = nxt;				\ 	SPAGAIN;				\     } while (0)
 end_define
 
 begin_define

@@ -181,6 +181,232 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|I_MACH_CTHREADS
+end_ifdef
+
+begin_comment
+comment|/* cthreads interface */
+end_comment
+
+begin_comment
+comment|/* #include<mach/cthreads.h> is in perl.h #ifdef I_MACH_CTHREADS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MUTEX_INIT
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|STMT_START {					\ 		*m = mutex_alloc();			\ 		if (*m) {				\ 			mutex_init(*m);			\ 		} else {				\ 			croak("panic: MUTEX_INIT");	\ 		}					\ 	} STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_LOCK
+parameter_list|(
+name|m
+parameter_list|)
+value|mutex_lock(*m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_UNLOCK
+parameter_list|(
+name|m
+parameter_list|)
+value|mutex_unlock(*m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_DESTROY
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|STMT_START {					\ 		mutex_free(*m);				\ 		*m = 0;					\ 	} STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|COND_INIT
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|STMT_START {					\ 		*c = condition_alloc();			\ 		if (*c) {				\ 			condition_init(*c);		\ 		} else {				\ 			croak("panic: COND_INIT");	\ 		}					\ 	} STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|COND_SIGNAL
+parameter_list|(
+name|c
+parameter_list|)
+value|condition_signal(*c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COND_BROADCAST
+parameter_list|(
+name|c
+parameter_list|)
+value|condition_broadcast(*c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COND_WAIT
+parameter_list|(
+name|c
+parameter_list|,
+name|m
+parameter_list|)
+value|condition_wait(*c, *m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COND_DESTROY
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|STMT_START {				\ 		condition_free(*c);		\ 		*c = 0;				\ 	} STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_CREATE
+parameter_list|(
+name|thr
+parameter_list|,
+name|f
+parameter_list|)
+value|(thr->self = cthread_fork(f, thr), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_POST_CREATE
+parameter_list|(
+name|thr
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_RET_TYPE
+value|any_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_RET_CAST
+parameter_list|(
+name|x
+parameter_list|)
+value|((any_t) x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DETACH
+parameter_list|(
+name|t
+parameter_list|)
+value|cthread_detach(t->self)
+end_define
+
+begin_define
+define|#
+directive|define
+name|JOIN
+parameter_list|(
+name|t
+parameter_list|,
+name|avp
+parameter_list|)
+value|(*(avp) = (AV *)cthread_join(t->self))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_THR
+parameter_list|(
+name|thr
+parameter_list|)
+value|cthread_set_data(cthread_self(), thr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR
+value|cthread_data(cthread_self())
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT_THREADS
+value|cthread_init()
+end_define
+
+begin_define
+define|#
+directive|define
+name|YIELD
+value|cthread_yield()
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALLOC_THREAD_KEY
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_THREAD_SELF
+parameter_list|(
+name|thr
+parameter_list|)
+value|(thr->self = cthread_self())
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* I_MACH_CTHREADS */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -233,11 +459,54 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__hpux
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MUTEX_INIT_NEEDS_MUTEX_ZEROED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|MUTEX_INIT
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MUTEX_INIT_NEEDS_MUTEX_ZEROED
+end_ifdef
+
+begin_comment
+comment|/* Temporary workaround, true bug is deeper. --jhi 1999-02-25 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MUTEX_INIT
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|STMT_START {						\ 	Zero((m), 1, perl_mutex);                               \  	if (pthread_mutex_init((m), pthread_mutexattr_default))	\ 	    croak("panic: MUTEX_INIT");				\     } STMT_END
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -249,6 +518,11 @@ parameter_list|)
 define|\
 value|STMT_START {						\ 	if (pthread_mutex_init((m), pthread_mutexattr_default))	\ 	    croak("panic: MUTEX_INIT");				\     } STMT_END
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -512,7 +786,7 @@ comment|/* THR */
 end_comment
 
 begin_comment
-comment|/*  * dTHR is performance-critical. Here, we only do the pthread_get_specific  * if there may be more than one thread in existence, otherwise we get thr  * from thrsv which is cached in the per-interpreter structure.  * Systems with very fast pthread_get_specific (which should be all systems  * but unfortunately isn't) may wish to simplify to "...*thr = THR".  */
+comment|/*  * dTHR is performance-critical. Here, we only do the pthread_get_specific  * if there may be more than one thread in existence, otherwise we get thr  * from thrsv which is cached in the per-interpreter structure.  * Systems with very fast pthread_get_specific (which should be all systems  * but unfortunately isn't) may wish to simplify to "...*thr = THR".  *  * The use of PL_threadnum should be safe here.  */
 end_comment
 
 begin_ifndef
@@ -594,7 +868,7 @@ value|(thr->threadsvp[i])
 end_define
 
 begin_comment
-comment|/*  * LOCK_SV_MUTEX and UNLOCK_SV_MUTEX are performance-critical. Here, we  * try only locking them if there may be more than one thread in existence.  * Systems with very fast mutexes (and/or slow conditionals) may wish to  * remove the "if (threadnum) ..." test.  */
+comment|/*  * LOCK_SV_MUTEX and UNLOCK_SV_MUTEX are performance-critical. Here, we  * try only locking them if there may be more than one thread in existence.  * Systems with very fast mutexes (and/or slow conditionals) may wish to  * remove the "if (threadnum) ..." test.  * XXX do NOT use C<if (PL_threadnum) ...> -- it sets up race conditions!  */
 end_comment
 
 begin_define
@@ -602,7 +876,7 @@ define|#
 directive|define
 name|LOCK_SV_MUTEX
 define|\
-value|STMT_START {			\ 	if (PL_threadnum)			\ 	    MUTEX_LOCK(&PL_sv_mutex);	\     } STMT_END
+value|STMT_START {				\ 	MUTEX_LOCK(&PL_sv_mutex);		\     } STMT_END
 end_define
 
 begin_define
@@ -610,7 +884,27 @@ define|#
 directive|define
 name|UNLOCK_SV_MUTEX
 define|\
-value|STMT_START {			\ 	if (PL_threadnum)			\ 	    MUTEX_UNLOCK(&PL_sv_mutex);	\     } STMT_END
+value|STMT_START {				\ 	MUTEX_UNLOCK(&PL_sv_mutex);		\     } STMT_END
+end_define
+
+begin_comment
+comment|/* Likewise for strtab_mutex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCK_STRTAB_MUTEX
+define|\
+value|STMT_START {				\ 	MUTEX_LOCK(&PL_strtab_mutex);	\     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNLOCK_STRTAB_MUTEX
+define|\
+value|STMT_START {				\ 	MUTEX_UNLOCK(&PL_strtab_mutex);	\     } STMT_END
 end_define
 
 begin_ifndef
@@ -892,6 +1186,18 @@ begin_define
 define|#
 directive|define
 name|UNLOCK_SV_MUTEX
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_STRTAB_MUTEX
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNLOCK_STRTAB_MUTEX
 end_define
 
 begin_define

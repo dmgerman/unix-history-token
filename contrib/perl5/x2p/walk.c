@@ -845,7 +845,7 @@ name|str_cat
 argument_list|(
 name|str
 argument_list|,
-literal|"chop;\t# strip record separator\n"
+literal|"chomp;\t# strip record separator\n"
 argument_list|)
 expr_stmt|;
 name|tab
@@ -1177,7 +1177,7 @@ name|str_cat
 argument_list|(
 name|str
 argument_list|,
-literal|"chop;\t# strip record separator\n"
+literal|"chomp;\t# strip record separator\n"
 argument_list|)
 expr_stmt|;
 name|tab

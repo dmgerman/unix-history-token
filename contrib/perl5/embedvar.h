@@ -1622,6 +1622,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PL_strtab_mutex
+value|(PL_curinterp->Istrtab_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PL_sub_generation
 value|(PL_curinterp->Isub_generation)
 end_define
@@ -2543,6 +2550,13 @@ define|#
 directive|define
 name|PL_Istrtab
 value|PL_strtab
+end_define
+
+begin_define
+define|#
+directive|define
+name|PL_Istrtab_mutex
+value|PL_strtab_mutex
 end_define
 
 begin_define
@@ -4283,6 +4297,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PL_cred_mutex
+value|(PL_Vars.Gcred_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PL_cryptseen
 value|(PL_Vars.Gcryptseen)
 end_define
@@ -5036,6 +5057,13 @@ define|#
 directive|define
 name|PL_Gcop_seqmax
 value|PL_cop_seqmax
+end_define
+
+begin_define
+define|#
+directive|define
+name|PL_Gcred_mutex
+value|PL_cred_mutex
 end_define
 
 begin_define

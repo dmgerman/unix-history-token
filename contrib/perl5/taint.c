@@ -61,6 +61,15 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|f
+condition|)
+name|f
+operator|=
+name|no_security
+expr_stmt|;
+if|if
+condition|(
 name|PL_euid
 operator|!=
 name|PL_uid
@@ -160,9 +169,16 @@ comment|/* bash dain bramage -- I guess it's contagious */
 name|NULL
 block|}
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|PL_envgv
+condition|)
+return|return;
 ifdef|#
 directive|ifdef
 name|VMS
+block|{
 name|int
 name|i
 init|=
@@ -290,6 +306,7 @@ name|i
 operator|++
 expr_stmt|;
 block|}
+block|}
 endif|#
 directive|endif
 comment|/* VMS */
@@ -408,6 +425,9 @@ block|{
 name|dTHR
 expr_stmt|;
 comment|/* just for taint */
+name|STRLEN
+name|n_a
+decl_stmt|;
 name|bool
 name|was_tainted
 init|=
@@ -422,7 +442,7 @@ argument_list|(
 operator|*
 name|svp
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 decl_stmt|;
 name|char
@@ -431,7 +451,7 @@ name|e
 init|=
 name|t
 operator|+
-name|PL_na
+name|n_a
 decl_stmt|;
 name|PL_tainted
 operator|=

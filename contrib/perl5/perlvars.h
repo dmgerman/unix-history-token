@@ -1456,7 +1456,7 @@ argument|Ghexdigit
 argument_list|,
 argument|char *
 argument_list|,
-literal|"0123456789abcdef0123456789ABCDEFx"
+literal|"0123456789abcdef0123456789ABCDEF"
 argument_list|)
 end_macro
 
@@ -1485,6 +1485,30 @@ end_macro
 begin_comment
 comment|/* from byterun.h */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_THREADS
+end_ifdef
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Gcred_mutex
+argument_list|,
+argument|perl_mutex
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* altered credentials in effect */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

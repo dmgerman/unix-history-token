@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    doio.c  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    doio.c  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -38,11 +38,22 @@ name|HAS_SHM
 argument_list|)
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAS_SEM
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/ipc.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -54,23 +65,6 @@ begin_include
 include|#
 directive|include
 file|<sys/msg.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAS_SEM
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/sem.h>
 end_include
 
 begin_endif
@@ -1957,6 +1951,12 @@ name|defined
 argument_list|(
 name|F_SETFD
 argument_list|)
+block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
 name|fd
 operator|=
 name|PerlIO_fileno
@@ -1975,6 +1975,12 @@ operator|>
 name|PL_maxsysfd
 argument_list|)
 expr_stmt|;
+comment|/* can change errno */
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|IoIFP
@@ -3060,7 +3066,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|oldlen
 argument_list|)
 argument_list|,
 name|Strerror
@@ -4152,9 +4158,17 @@ comment|/* Not implemented yet */
 ifdef|#
 directive|ifdef
 name|DOSISH
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|atarist
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__MINT__
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -4850,6 +4864,9 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|STRLEN
+name|n_a
+decl_stmt|;
 name|PUTBACK
 expr_stmt|;
 if|if
@@ -4914,7 +4931,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 expr_stmt|;
 name|PL_statgv
@@ -4980,6 +4997,9 @@ expr_stmt|;
 name|SV
 modifier|*
 name|sv
+decl_stmt|;
+name|STRLEN
+name|n_a
 decl_stmt|;
 if|if
 condition|(
@@ -5049,7 +5069,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5064,7 +5084,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|,
 operator|&
@@ -5081,7 +5101,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|,
 operator|&
@@ -5104,7 +5124,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|,
 literal|'\n'
@@ -5150,6 +5170,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|tmps
+decl_stmt|;
+name|STRLEN
+name|n_a
 decl_stmt|;
 if|if
 condition|(
@@ -5202,7 +5225,7 @@ argument_list|(
 operator|*
 name|mark
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 expr_stmt|;
 else|else
@@ -5245,7 +5268,7 @@ name|SvPV
 argument_list|(
 name|really
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 operator|)
 condition|)
@@ -5922,12 +5945,15 @@ name|oldmark
 init|=
 name|mark
 decl_stmt|;
+name|STRLEN
+name|n_a
+decl_stmt|;
 define|#
 directive|define
 name|APPLY_TAINT_PROPER
 parameter_list|()
 define|\
-value|STMT_START {							\ 	if (PL_tainting&& PL_tainted) { goto taint_proper_label; }	\     } STMT_END
+value|STMT_START {							\ 	if (PL_tainted) { TAINT_PROPER(what); }				\     } STMT_END
 comment|/* This is a first heuristic; it doesn't catch tainting magic. */
 if|if
 condition|(
@@ -6018,7 +6044,7 @@ argument_list|(
 operator|*
 name|mark
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 decl_stmt|;
 name|APPLY_TAINT_PROPER
@@ -6105,7 +6131,7 @@ argument_list|(
 operator|*
 name|mark
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 decl_stmt|;
 name|APPLY_TAINT_PROPER
@@ -6159,7 +6185,7 @@ operator|*
 operator|++
 name|mark
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 expr_stmt|;
 if|if
@@ -6489,7 +6515,7 @@ argument_list|(
 operator|*
 name|mark
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 expr_stmt|;
 name|APPLY_TAINT_PROPER
@@ -6621,10 +6647,10 @@ else|#
 directive|else
 struct|struct
 block|{
-name|long
+name|Time_t
 name|actime
 decl_stmt|;
-name|long
+name|Time_t
 name|modtime
 decl_stmt|;
 block|}
@@ -6682,6 +6708,9 @@ name|utbuf
 operator|.
 name|actime
 operator|=
+operator|(
+name|Time_t
+operator|)
 name|SvIVx
 argument_list|(
 operator|*
@@ -6694,6 +6723,9 @@ name|utbuf
 operator|.
 name|modtime
 operator|=
+operator|(
+name|Time_t
+operator|)
 name|SvIVx
 argument_list|(
 operator|*
@@ -6730,7 +6762,7 @@ argument_list|(
 operator|*
 name|mark
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 decl_stmt|;
 name|APPLY_TAINT_PROPER
@@ -6763,17 +6795,6 @@ block|}
 return|return
 name|tot
 return|;
-name|taint_proper_label
-label|:
-name|TAINT_PROPER
-argument_list|(
-name|what
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-comment|/* this should never happen */
 undef|#
 directive|undef
 name|APPLY_TAINT_PROPER

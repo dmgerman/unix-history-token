@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    sv.c  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    sv.c  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -234,8 +234,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|XPVIV
-modifier|*
+name|void
 name|more_xiv
 name|_
 argument_list|(
@@ -248,8 +247,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|XPVNV
-modifier|*
+name|void
 name|more_xnv
 name|_
 argument_list|(
@@ -262,8 +260,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|XPV
-modifier|*
+name|void
 name|more_xpv
 name|_
 argument_list|(
@@ -276,8 +273,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|XRV
-modifier|*
+name|void
 name|more_xrv
 name|_
 argument_list|(
@@ -1839,16 +1835,21 @@ name|IV
 modifier|*
 name|xiv
 decl_stmt|;
+name|LOCK_SV_MUTEX
+expr_stmt|;
 if|if
 condition|(
+operator|!
 name|PL_xiv_root
 condition|)
-block|{
+name|more_xiv
+argument_list|()
+expr_stmt|;
 name|xiv
 operator|=
 name|PL_xiv_root
 expr_stmt|;
-comment|/* 	 * See comment in more_xiv() -- RAM. 	 */
+comment|/*      * See comment in more_xiv() -- RAM.      */
 name|PL_xiv_root
 operator|=
 operator|*
@@ -1858,6 +1859,8 @@ operator|*
 operator|*
 operator|)
 name|xiv
+expr_stmt|;
+name|UNLOCK_SV_MUTEX
 expr_stmt|;
 return|return
 operator|(
@@ -1878,11 +1881,6 @@ argument_list|,
 name|xiv_iv
 argument_list|)
 operator|)
-return|;
-block|}
-return|return
-name|more_xiv
-argument_list|()
 return|;
 block|}
 end_function
@@ -1922,6 +1920,8 @@ name|xiv_iv
 argument_list|)
 operator|)
 decl_stmt|;
+name|LOCK_SV_MUTEX
+expr_stmt|;
 operator|*
 operator|(
 name|IV
@@ -1936,13 +1936,14 @@ name|PL_xiv_root
 operator|=
 name|xiv
 expr_stmt|;
+name|UNLOCK_SV_MUTEX
+expr_stmt|;
 block|}
 end_function
 
 begin_function
 name|STATIC
-name|XPVIV
-modifier|*
+name|void
 name|more_xiv
 parameter_list|(
 name|void
@@ -2079,10 +2080,6 @@ name|xiv
 operator|=
 literal|0
 expr_stmt|;
-return|return
-name|new_xiv
-argument_list|()
-return|;
 block|}
 end_function
 
@@ -2099,11 +2096,16 @@ name|double
 modifier|*
 name|xnv
 decl_stmt|;
+name|LOCK_SV_MUTEX
+expr_stmt|;
 if|if
 condition|(
+operator|!
 name|PL_xnv_root
 condition|)
-block|{
+name|more_xnv
+argument_list|()
+expr_stmt|;
 name|xnv
 operator|=
 name|PL_xnv_root
@@ -2117,6 +2119,8 @@ operator|*
 operator|*
 operator|)
 name|xnv
+expr_stmt|;
+name|UNLOCK_SV_MUTEX
 expr_stmt|;
 return|return
 operator|(
@@ -2137,11 +2141,6 @@ argument_list|,
 name|xnv_nv
 argument_list|)
 operator|)
-return|;
-block|}
-return|return
-name|more_xnv
-argument_list|()
 return|;
 block|}
 end_function
@@ -2181,6 +2180,8 @@ name|xnv_nv
 argument_list|)
 operator|)
 decl_stmt|;
+name|LOCK_SV_MUTEX
+expr_stmt|;
 operator|*
 operator|(
 name|double
@@ -2195,13 +2196,14 @@ name|PL_xnv_root
 operator|=
 name|xnv
 expr_stmt|;
+name|UNLOCK_SV_MUTEX
+expr_stmt|;
 block|}
 end_function
 
 begin_function
 name|STATIC
-name|XPVNV
-modifier|*
+name|void
 name|more_xnv
 parameter_list|(
 name|void
@@ -2310,10 +2312,6 @@ name|xnv
 operator|=
 literal|0
 expr_stmt|;
-return|return
-name|new_xnv
-argument_list|()
-return|;
 block|}
 end_function
 
@@ -2330,11 +2328,16 @@ name|XRV
 modifier|*
 name|xrv
 decl_stmt|;
+name|LOCK_SV_MUTEX
+expr_stmt|;
 if|if
 condition|(
+operator|!
 name|PL_xrv_root
 condition|)
-block|{
+name|more_xrv
+argument_list|()
+expr_stmt|;
 name|xrv
 operator|=
 name|PL_xrv_root
@@ -2349,13 +2352,10 @@ name|xrv
 operator|->
 name|xrv_rv
 expr_stmt|;
+name|UNLOCK_SV_MUTEX
+expr_stmt|;
 return|return
 name|xrv
-return|;
-block|}
-return|return
-name|more_xrv
-argument_list|()
 return|;
 block|}
 end_function
@@ -2370,6 +2370,8 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|LOCK_SV_MUTEX
+expr_stmt|;
 name|p
 operator|->
 name|xrv_rv
@@ -2384,13 +2386,14 @@ name|PL_xrv_root
 operator|=
 name|p
 expr_stmt|;
+name|UNLOCK_SV_MUTEX
+expr_stmt|;
 block|}
 end_function
 
 begin_function
 name|STATIC
-name|XRV
-modifier|*
+name|void
 name|more_xrv
 parameter_list|(
 name|void
@@ -2472,10 +2475,6 @@ name|xrv_rv
 operator|=
 literal|0
 expr_stmt|;
-return|return
-name|new_xrv
-argument_list|()
-return|;
 block|}
 end_function
 
@@ -2492,11 +2491,16 @@ name|XPV
 modifier|*
 name|xpv
 decl_stmt|;
+name|LOCK_SV_MUTEX
+expr_stmt|;
 if|if
 condition|(
+operator|!
 name|PL_xpv_root
 condition|)
-block|{
+name|more_xpv
+argument_list|()
+expr_stmt|;
 name|xpv
 operator|=
 name|PL_xpv_root
@@ -2511,13 +2515,10 @@ name|xpv
 operator|->
 name|xpv_pv
 expr_stmt|;
+name|UNLOCK_SV_MUTEX
+expr_stmt|;
 return|return
 name|xpv
-return|;
-block|}
-return|return
-name|more_xpv
-argument_list|()
 return|;
 block|}
 end_function
@@ -2532,6 +2533,8 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|LOCK_SV_MUTEX
+expr_stmt|;
 name|p
 operator|->
 name|xpv_pv
@@ -2546,13 +2549,14 @@ name|PL_xpv_root
 operator|=
 name|p
 expr_stmt|;
+name|UNLOCK_SV_MUTEX
+expr_stmt|;
 block|}
 end_function
 
 begin_function
 name|STATIC
-name|XPV
-modifier|*
+name|void
 name|more_xpv
 parameter_list|(
 name|void
@@ -2634,10 +2638,6 @@ name|xpv_pv
 operator|=
 literal|0
 expr_stmt|;
-return|return
-name|new_xpv
-argument_list|()
-return|;
 block|}
 end_function
 
@@ -5432,7 +5432,7 @@ name|SvPV
 argument_list|(
 name|t
 argument_list|,
-name|PL_na
+name|prevlen
 argument_list|)
 return|;
 else|#
@@ -17843,6 +17843,18 @@ condition|)
 return|return;
 if|if
 condition|(
+name|SvGMAGICAL
+argument_list|(
+name|sv
+argument_list|)
+condition|)
+name|mg_get
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|SvTHINKFIRST
 argument_list|(
 name|sv
@@ -17928,18 +17940,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|SvGMAGICAL
-argument_list|(
-name|sv
-argument_list|)
-condition|)
-name|mg_get
-argument_list|(
-name|sv
-argument_list|)
-expr_stmt|;
 name|flags
 operator|=
 name|SvFLAGS
@@ -18344,6 +18344,18 @@ condition|)
 return|return;
 if|if
 condition|(
+name|SvGMAGICAL
+argument_list|(
+name|sv
+argument_list|)
+condition|)
+name|mg_get
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|SvTHINKFIRST
 argument_list|(
 name|sv
@@ -18429,18 +18441,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|SvGMAGICAL
-argument_list|(
-name|sv
-argument_list|)
-condition|)
-name|mg_get
-argument_list|(
-name|sv
-argument_list|)
-expr_stmt|;
 name|flags
 operator|=
 name|SvFLAGS
@@ -19610,6 +19610,34 @@ argument_list|(
 name|gv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SvTHINKFIRST
+argument_list|(
+name|sv
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|SvREADONLY
+argument_list|(
+name|sv
+argument_list|)
+operator|&&
+name|SvROK
+argument_list|(
+name|sv
+argument_list|)
+condition|)
+name|sv_unref
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 operator|(
 name|void
 operator|)
@@ -19744,6 +19772,9 @@ name|GV
 modifier|*
 name|gv
 decl_stmt|;
+name|STRLEN
+name|n_a
+decl_stmt|;
 switch|switch
 condition|(
 name|SvTYPE
@@ -19838,7 +19869,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|,
 name|FALSE
@@ -19875,7 +19906,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -19917,6 +19948,9 @@ decl_stmt|;
 name|CV
 modifier|*
 name|cv
+decl_stmt|;
+name|STRLEN
+name|n_a
 decl_stmt|;
 if|if
 condition|(
@@ -20024,12 +20058,8 @@ name|sv
 argument_list|)
 condition|)
 block|{
-name|cv
+name|sv
 operator|=
-operator|(
-name|CV
-operator|*
-operator|)
 name|SvRV
 argument_list|(
 name|sv
@@ -20039,15 +20069,19 @@ if|if
 condition|(
 name|SvTYPE
 argument_list|(
-name|cv
+name|sv
 argument_list|)
-operator|!=
+operator|==
 name|SVt_PVCV
 condition|)
-name|croak
-argument_list|(
-literal|"Not a subroutine reference"
-argument_list|)
+block|{
+name|cv
+operator|=
+operator|(
+name|CV
+operator|*
+operator|)
+name|sv
 expr_stmt|;
 operator|*
 name|gvp
@@ -20066,6 +20100,30 @@ return|return
 name|cv
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|isGV
+argument_list|(
+name|sv
+argument_list|)
+condition|)
+name|gv
+operator|=
+operator|(
+name|GV
+operator|*
+operator|)
+name|sv
+expr_stmt|;
+else|else
+name|croak
+argument_list|(
+literal|"Not a subroutine reference"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|isGV
@@ -20090,7 +20148,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|,
 name|lref
@@ -20197,7 +20255,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -22651,6 +22709,9 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* large enough for "%#.#f" */
+ifndef|#
+directive|ifndef
+name|PERL_OBJECT
 specifier|static
 name|char
 modifier|*
@@ -22664,6 +22725,8 @@ name|efloatsize
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|c
 decl_stmt|;
@@ -26232,6 +26295,10 @@ argument_list|(
 name|sv
 argument_list|)
 condition|)
+block|{
+name|STRLEN
+name|n_a
+decl_stmt|;
 name|PerlIO_printf
 argument_list|(
 name|Perl_debug_log
@@ -26242,10 +26309,11 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* FALL THROUGH */
 case|case
 name|SVt_PVFM

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    cv.h  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    cv.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -587,6 +587,70 @@ parameter_list|(
 name|cv
 parameter_list|)
 value|(CvFLAGS(cv)&= ~CVf_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CvEVAL
+parameter_list|(
+name|cv
+parameter_list|)
+value|(CvUNIQUE(cv)&& !SvFAKE(cv))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CvEVAL_on
+parameter_list|(
+name|cv
+parameter_list|)
+value|(CvUNIQUE_on(cv),SvFAKE_off(cv))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CvEVAL_off
+parameter_list|(
+name|cv
+parameter_list|)
+value|CvUNIQUE_off(cv)
+end_define
+
+begin_comment
+comment|/* BEGIN|INIT|END */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CvSPECIAL
+parameter_list|(
+name|cv
+parameter_list|)
+value|(CvUNIQUE(cv)&& SvFAKE(cv))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CvSPECIAL_on
+parameter_list|(
+name|cv
+parameter_list|)
+value|(CvUNIQUE_on(cv),SvFAKE_on(cv))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CvSPECIAL_off
+parameter_list|(
+name|cv
+parameter_list|)
+value|(CvUNIQUE_off(cv),SvFAKE_off(cv))
 end_define
 
 end_unit

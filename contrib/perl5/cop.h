@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    cop.h  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    cop.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_struct
@@ -356,7 +356,7 @@ directive|define
 name|POPLOOP2
 parameter_list|()
 define|\
-value|SvREFCNT_dec(cxloop.iterlval);					\ 	if (cxloop.itervar) {						\ 	    SvREFCNT_dec(*cxloop.itervar);				\ 	    *cxloop.itervar = cxloop.itersave;				\ 	}								\ 	if (cxloop.iterary&& cxloop.iterary != PL_curstack)		\ 	    SvREFCNT_dec(cxloop.iterary);
+value|SvREFCNT_dec(cxloop.iterlval);					\ 	if (cxloop.itervar) {						\ 	    sv_2mortal(*cxloop.itervar);				\ 	    *cxloop.itervar = cxloop.itersave;				\ 	}								\ 	if (cxloop.iterary&& cxloop.iterary != PL_curstack)		\ 	    SvREFCNT_dec(cxloop.iterary);
 end_define
 
 begin_comment
@@ -503,7 +503,7 @@ name|t
 parameter_list|,
 name|sp
 parameter_list|)
-value|CXINC, cx =&cxstack[cxstack_ix],		\ 	cx->cx_type		= t,					\ 	cx->blk_oldsp		= sp - PL_stack_base,			\ 	cx->blk_oldcop		= PL_curcop,				\ 	cx->blk_oldmarksp	= PL_markstack_ptr - PL_markstack,		\ 	cx->blk_oldscopesp	= PL_scopestack_ix,			\ 	cx->blk_oldretsp	= PL_retstack_ix,				\ 	cx->blk_oldpm		= PL_curpm,				\ 	cx->blk_gimme		= gimme;				\ 	DEBUG_l( PerlIO_printf(PerlIO_stderr(), "Entering block %ld, type %s\n",	\ 		    (long)cxstack_ix, block_type[t]); )
+value|CXINC, cx =&cxstack[cxstack_ix],		\ 	cx->cx_type		= t,					\ 	cx->blk_oldsp		= sp - PL_stack_base,			\ 	cx->blk_oldcop		= PL_curcop,				\ 	cx->blk_oldmarksp	= PL_markstack_ptr - PL_markstack,	\ 	cx->blk_oldscopesp	= PL_scopestack_ix,			\ 	cx->blk_oldretsp	= PL_retstack_ix,			\ 	cx->blk_oldpm		= PL_curpm,				\ 	cx->blk_gimme		= gimme;				\ 	DEBUG_l( PerlIO_printf(PerlIO_stderr(), "Entering block %ld, type %s\n",	\ 		    (long)cxstack_ix, block_type[CxTYPE(cx)]); )
 end_define
 
 begin_comment
@@ -519,7 +519,7 @@ name|cx
 parameter_list|,
 name|pm
 parameter_list|)
-value|cx =&cxstack[cxstack_ix--],			\ 	newsp		 = PL_stack_base + cx->blk_oldsp,			\ 	PL_curcop	 = cx->blk_oldcop,				\ 	PL_markstack_ptr = PL_markstack + cx->blk_oldmarksp,		\ 	PL_scopestack_ix = cx->blk_oldscopesp,				\ 	PL_retstack_ix	 = cx->blk_oldretsp,				\ 	pm		 = cx->blk_oldpm,				\ 	gimme		 = cx->blk_gimme;				\ 	DEBUG_l( PerlIO_printf(PerlIO_stderr(), "Leaving block %ld, type %s\n",		\ 		    (long)cxstack_ix+1,block_type[cx->cx_type]); )
+value|cx =&cxstack[cxstack_ix--],			\ 	newsp		 = PL_stack_base + cx->blk_oldsp,		\ 	PL_curcop	 = cx->blk_oldcop,				\ 	PL_markstack_ptr = PL_markstack + cx->blk_oldmarksp,		\ 	PL_scopestack_ix = cx->blk_oldscopesp,				\ 	PL_retstack_ix	 = cx->blk_oldretsp,				\ 	pm		 = cx->blk_oldpm,				\ 	gimme		 = cx->blk_gimme;				\ 	DEBUG_l( PerlIO_printf(PerlIO_stderr(), "Leaving block %ld, type %s\n",		\ 		    (long)cxstack_ix+1,block_type[CxTYPE(cx)]); )
 end_define
 
 begin_comment
@@ -533,7 +533,7 @@ name|TOPBLOCK
 parameter_list|(
 name|cx
 parameter_list|)
-value|cx  =&cxstack[cxstack_ix],			\ 	PL_stack_sp	 = PL_stack_base + cx->blk_oldsp,			\ 	PL_markstack_ptr = PL_markstack + cx->blk_oldmarksp,		\ 	PL_scopestack_ix = cx->blk_oldscopesp,				\ 	PL_retstack_ix	 = cx->blk_oldretsp
+value|cx  =&cxstack[cxstack_ix],			\ 	PL_stack_sp	 = PL_stack_base + cx->blk_oldsp,		\ 	PL_markstack_ptr = PL_markstack + cx->blk_oldmarksp,		\ 	PL_scopestack_ix = cx->blk_oldscopesp,				\ 	PL_retstack_ix	 = cx->blk_oldretsp,				\ 	PL_curpm         = cx->blk_oldpm
 end_define
 
 begin_comment
@@ -720,7 +720,7 @@ begin_struct
 struct|struct
 name|context
 block|{
-name|I32
+name|U32
 name|cx_type
 decl_stmt|;
 comment|/* what kind of context this is */
@@ -740,6 +740,13 @@ union|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|CXTYPEMASK
+value|0xff
+end_define
 
 begin_define
 define|#
@@ -781,6 +788,41 @@ define|#
 directive|define
 name|CXt_BLOCK
 value|5
+end_define
+
+begin_comment
+comment|/* private flags for CXt_EVAL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CXp_REAL
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* truly eval'', not a lookalike */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CxTYPE
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->cx_type& CXTYPEMASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CxREALEVAL
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)->cx_type& (CXt_EVAL|CXp_REAL)) == (CXt_EVAL|CXp_REAL))
 end_define
 
 begin_define
