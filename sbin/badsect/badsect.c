@@ -474,7 +474,7 @@ operator|&
 name|IFMT
 operator|)
 operator|==
-name|IFBLK
+name|IFCHR
 condition|)
 break|break;
 block|}
@@ -513,28 +513,6 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Opening of a mounted on device is not allowed. 	 * Attempt to open the raw device instead. 	 */
-name|memcpy
-argument_list|(
-name|name_dir_end
-operator|+
-literal|1
-argument_list|,
-name|name_dir_end
-argument_list|,
-name|strlen
-argument_list|(
-name|name_dir_end
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-operator|*
-name|name_dir_end
-operator|=
-literal|'r'
-expr_stmt|;
 if|if
 condition|(
 operator|(
