@@ -186,9 +186,12 @@ literal|"isp"
 argument_list|,
 name|isp
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|isp
 operator|->
-name|isp_unit
+name|isp_dev
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -408,9 +411,12 @@ literal|"isp"
 argument_list|,
 name|isp
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|isp
 operator|->
-name|isp_unit
+name|isp_dev
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -2081,10 +2087,10 @@ parameter_list|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|lfmt
+index|[]
 init|=
-literal|"Lun now %sabled for target mode\n"
+literal|"Lun now %sabled for target mode"
 decl_stmt|;
 name|struct
 name|ccb_en_lun
@@ -2351,9 +2357,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"could not get a good port database read\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"could not get a good port database read"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -2762,8 +2772,12 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
 name|lfmt
 argument_list|,
 operator|(
@@ -2967,9 +2981,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"isp_lun_cmd failed\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"isp_lun_cmd failed"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2997,9 +3015,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"wait for ENABLE LUN timed out\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"wait for ENABLE LUN timed out"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3030,9 +3052,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"ENABLE LUN returned 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"ENABLE LUN returned 0x%x"
 argument_list|,
 name|rstat
 argument_list|)
@@ -3088,9 +3114,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"isp_lun_cmd failed\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"isp_lun_cmd failed"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3118,9 +3148,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"wait for MODIFY LUN timed out\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"wait for MODIFY LUN timed out"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3151,9 +3185,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"MODIFY LUN returned 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"MODIFY LUN returned 0x%x"
 argument_list|,
 name|rstat
 argument_list|)
@@ -3203,9 +3241,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"isp_lun_cmd failed\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"isp_lun_cmd failed"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3233,9 +3275,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"wait for ENABLE LUN timed out\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"wait for ENABLE LUN timed out"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3266,9 +3312,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"ENABLE LUN returned 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"ENABLE LUN returned 0x%x"
 argument_list|,
 name|rstat
 argument_list|)
@@ -3306,9 +3356,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"lun %sable failed\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"lun %sable failed"
 argument_list|,
 operator|(
 name|cel
@@ -3361,8 +3415,12 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
 name|lfmt
 argument_list|,
 operator|(
@@ -4945,13 +5003,13 @@ name|AT_PHASE_ERROR
 condition|)
 block|{
 comment|/* 		 * Bus Phase Sequence error. We should have sense data 		 * suggested by the f/w. I'm not sure quite yet what 		 * to do about this for CAM. 		 */
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: PHASE ERROR\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"PHASE ERROR"
 argument_list|)
 expr_stmt|;
 name|isp_endcmd
@@ -4983,13 +5041,13 @@ operator|!=
 name|AT_CDB
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: bogus atio (0x%x) leaked to platform\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"bogus atio (0x%x) leaked to platform"
 argument_list|,
 name|status
 argument_list|)
@@ -5094,9 +5152,13 @@ operator|->
 name|owner
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"no ATIOS for lun %d from initiator %d\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"no ATIOS for lun %d from initiator %d"
 argument_list|,
 name|aep
 operator|->
@@ -5465,13 +5527,13 @@ operator|!=
 name|AT_CDB
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: bogus atio (0x%x) leaked to platform\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"bogus atio (0x%x) leaked to platform"
 argument_list|,
 name|aep
 operator|->
@@ -5607,9 +5669,13 @@ operator|->
 name|owner
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"no ATIOS for lun %d from initiator %d\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"no ATIOS for lun %d from initiator %d"
 argument_list|,
 name|lun
 argument_list|,
@@ -6662,13 +6728,13 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: isp_attach Async Code 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"isp_cam_async: Code 0x%x"
 argument_list|,
 name|code
 argument_list|)
@@ -7033,13 +7099,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: watchdog timeout (%x, %x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"watchdog timeout (%x, %x)"
 argument_list|,
 name|handle
 argument_list|,
@@ -8139,9 +8205,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"XPT_CONT_TARGET_IO freeze simq\n"
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"XPT_CONT_TARGET_IO freeze simq"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10001,9 +10071,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"cam completion status 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"cam completion status 0x%x"
 argument_list|,
 name|sccb
 operator|->
@@ -11795,9 +11869,12 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|isp
 operator|->
-name|isp_name
+name|isp_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|va_start
