@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 112 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 113 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -167,6 +167,18 @@ modifier|*
 name|ObjectArg
 parameter_list|)
 block|{
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|16
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+else|#
+directive|else
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -256,6 +268,8 @@ operator|(
 name|Status
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
