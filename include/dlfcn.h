@@ -21,6 +21,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
+end_include
+
 begin_comment
 comment|/*  * Modes and flags for dlopen().  */
 end_comment
@@ -88,7 +94,39 @@ comment|/* Trace loaded objects and exit */
 end_comment
 
 begin_comment
-comment|/*  * Special handle arguments for dlsym().  */
+comment|/*  * Request arguments for dlinfo().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_DI_LINKMAP
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTLD_DI_SERINFO
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTLD_DI_SERINFOSIZE
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTLD_DI_ORIGIN
+value|6
+end_define
+
+begin_comment
+comment|/*  * Special handle arguments for dlsym()/dlinfo().  */
 end_comment
 
 begin_define
@@ -111,6 +149,17 @@ end_define
 
 begin_comment
 comment|/* Use default search algorithm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_SELF
+value|((void *) -3)
+end_define
+
+begin_comment
+comment|/* Search the caller itself. */
 end_comment
 
 begin_comment
@@ -146,6 +195,84 @@ decl_stmt|;
 comment|/* Address of nearest symbol */
 block|}
 name|Dl_info
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Avoid sys/types.h namespace pollution.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_SIZE_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_BSD_SIZE_T_
+name|size_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_SIZE_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Structures, returned by the RTLD_DI_SERINFO dlinfo() request.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|dl_serpath
+block|{
+name|char
+modifier|*
+name|dls_name
+decl_stmt|;
+comment|/* single search path entry */
+name|unsigned
+name|int
+name|dls_flags
+decl_stmt|;
+comment|/* path information */
+block|}
+name|Dl_serpath
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|dl_serinfo
+block|{
+name|size_t
+name|dls_size
+decl_stmt|;
+comment|/* total buffer size */
+name|unsigned
+name|int
+name|dls_cnt
+decl_stmt|;
+comment|/* number of path entries */
+name|Dl_serpath
+name|dls_serpath
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* there may be more than one */
+block|}
+name|Dl_serinfo
 typedef|;
 end_typedef
 
@@ -189,6 +316,24 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dlinfo
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

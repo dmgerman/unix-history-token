@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|STANDARD_LIBRARY_PATH
-value|"/usr/lib/elf:/usr/lib"
+value|"/usr/lib"
 end_define
 
 begin_endif
@@ -557,7 +557,7 @@ name|struct
 name|link_map
 name|linkmap
 decl_stmt|;
-comment|/* for GDB */
+comment|/* for GDB and dlinfo() */
 name|Objlist
 name|dldags
 decl_stmt|;

@@ -47,7 +47,78 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_struct
+begin_comment
+comment|/*  * Flags that describe the origin of the entries in Dl_serinfo.  * SunOS has these in<sys/link.h>, we follow the suit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_SER_ORIG
+value|0x01
+end_define
+
+begin_comment
+comment|/* original (needed) name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_SER_LIBPATH
+value|0x02
+end_define
+
+begin_comment
+comment|/* LD_LIBRARY_PATH entry prepended */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_SER_RUNPATH
+value|0x04
+end_define
+
+begin_comment
+comment|/* runpath entry prepended */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_SER_CONFIG
+value|0x08
+end_define
+
+begin_comment
+comment|/* configuration entry prepended */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_SER_DEFAULT
+value|0x40
+end_define
+
+begin_comment
+comment|/* default path prepended */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_SER_SECURE
+value|0x80
+end_define
+
+begin_comment
+comment|/* default (secure) path prepended */
+end_comment
+
+begin_typedef
+typedef|typedef
 struct|struct
 name|link_map
 block|{
@@ -86,8 +157,9 @@ name|l_prev
 decl_stmt|;
 comment|/* linked list of of mapped libs */
 block|}
-struct|;
-end_struct
+name|Link_map
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
