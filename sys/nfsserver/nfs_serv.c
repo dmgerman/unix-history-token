@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * nfs version 2 and 3 server calls to vnode ops  * - these routines generally have 3 phases  *   1 - break down and validate rpc request in mbuf list  *   2 - do the vnode ops for the request  *       (surprisingly ?? many are very similar to syscalls in vfs_syscalls.c)  *   3 - build the rpc reply in an mbuf list  *   nb:  *	- do not mix the phases, since the nfsm_?? macros can return failures  *	  on a bad rpc or similar and do not do any vrele() or vput()'s  *  *      - the nfsm_reply() macro generates an nfs rpc reply with the nfs  *	error number iff error != 0 whereas  *	returning an error from the server function implies a fatal error  *	such as a badly constructed rpc request that should be dropped without  *	a reply.  *	For Version 3, nfsm_reply() does not return for the error case, since  *	most version 3 rpcs return more than the status for error cases.  *  * Other notes:  *	Warning: always pay careful attention to resource cleanup on return  *	and note that nfsm_*() macros can terminate a procedure on certain  *	errors.  *  *	lookup() and namei()  *	may return garbage in various structural fields/return elements  *	if an error is returned, and may garbage up nd.ni_dvp even if no  *	error is returned and you did not request LOCKPARENT or WANTPARENT.  *  *	We use the ni_cnd.cn_flags 'HASBUF' flag to track whether the name  *	buffer has been freed or not.  */
+comment|/*  * nfs version 2 and 3 server calls to vnode ops  * - these routines generally have 3 phases  *   1 - break down and validate rpc request in mbuf list  *   2 - do the vnode ops for the request  *       (surprisingly ?? many are very similar to syscalls in vfs_syscalls.c)  *   3 - build the rpc reply in an mbuf list  *   nb:  *	- do not mix the phases, since the nfsm_?? macros can return failures  *	  on a bad rpc or similar and do not do any vrele() or vput()'s  *  *      - the nfsm_reply() macro generates an nfs rpc reply with the nfs  *	error number iff error != 0 whereas  *	returning an error from the server function implies a fatal error  *	such as a badly constructed rpc request that should be dropped without  *	a reply.  *	For nfsm_reply(), the case where error == EBADRPC is treated  *	specially; after constructing a reply, it does an immediate  *	`goto nfsmout' to avoid getting any V3 post-op status appended.  *  * Other notes:  *	Warning: always pay careful attention to resource cleanup on return  *	and note that nfsm_*() macros can terminate a procedure on certain  *	errors.  *  *	lookup() and namei()  *	may return garbage in various structural fields/return elements  *	if an error is returned, and may garbage up nd.ni_dvp even if no  *	error is returned and you did not request LOCKPARENT or WANTPARENT.  *  *	We use the ni_cnd.cn_flags 'HASBUF' flag to track whether the name  *	buffer has been freed or not.  */
 end_comment
 
 begin_include
@@ -2091,17 +2091,15 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|nfsmout
-goto|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|error
+condition|)
 block|{
-comment|/* v2 non-error case (see nfsm_reply). */
+comment|/* v2 non-error case. */
 name|fp
 operator|=
 name|nfsm_build
@@ -2121,6 +2119,10 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+name|error
+operator|=
+literal|0
+expr_stmt|;
 comment|/* fall through */
 name|nfsmout
 label|:
@@ -3471,7 +3473,6 @@ if|if
 condition|(
 name|v3
 condition|)
-block|{
 name|nfsm_srvpostop_attr
 argument_list|(
 name|getret
@@ -3492,7 +3493,6 @@ expr_stmt|;
 goto|goto
 name|nfsmout
 goto|;
-block|}
 block|}
 if|if
 condition|(
@@ -6123,9 +6123,14 @@ name|tv_usec
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|error
+condition|)
 block|{
-comment|/* v2, non-error case (see nfsm_reply). */
+comment|/* v2 non-error case. */
 name|fp
 operator|=
 name|nfsm_build
@@ -6145,6 +6150,10 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|nfsmout
 label|:
 if|if
@@ -9075,7 +9084,7 @@ operator|==
 name|VFIFO
 condition|)
 block|{
-comment|/* 			 * Handle SysV FIFO node special cases.  All other 			 * devices require super user to access. 			 */
+comment|/* 			 * NFSv2-specific code for creating device nodes 			 * and fifos. 			 * 			 * Handle SysV FIFO node special cases.  All other 			 * devices require super user to access. 			 */
 if|if
 condition|(
 name|vap
@@ -9117,7 +9126,7 @@ operator|)
 condition|)
 block|{
 goto|goto
-name|nfsmreply0
+name|ereply
 goto|;
 block|}
 name|vap
@@ -9161,7 +9170,7 @@ name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
 goto|goto
-name|nfsmreply0
+name|ereply
 goto|;
 block|}
 name|vput
@@ -9244,17 +9253,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
-literal|0
 condition|)
-block|{
-name|nfsm_reply
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* fall through on certain errors */
-block|}
+goto|goto
+name|ereply
+goto|;
 name|nfsrv_object_create
 argument_list|(
 name|nd
@@ -9278,7 +9280,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 goto|goto
-name|nfsmreply0
+name|ereply
 goto|;
 block|}
 block|}
@@ -9550,14 +9552,15 @@ operator|&
 name|diraft
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|error
+condition|)
 block|{
-comment|/* v2 non-error case (see nfsm_reply). */
+comment|/* v2 non-error case. */
 name|nfsm_srvfhtom
 argument_list|(
 name|fhp
@@ -9584,15 +9587,9 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-goto|goto
-name|nfsmout
-goto|;
-name|nfsmreply0
-label|:
-name|nfsm_reply
-argument_list|(
+name|error
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 name|nfsmout
 label|:
@@ -14969,9 +14966,14 @@ name|diraft
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|error
+condition|)
 block|{
-comment|/* v2, non-error case (see nfsm_reply) */
+comment|/* v2 non-error case. */
 name|nfsm_srvfhtom
 argument_list|(
 name|fhp
