@@ -796,9 +796,12 @@ name|taop
 operator|=
 name|tcp_gettaocache
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|t_inpcb
+operator|->
+name|inp_inc
 argument_list|)
 operator|)
 operator|==

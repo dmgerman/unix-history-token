@@ -107,6 +107,179 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * NOTE: ipv6 addrs should be 64-bit aligned, per RFC 2553.  * in_conninfo has some extra padding to accomplish this.  */
+end_comment
+
+begin_struct
+struct|struct
+name|in_endpoints
+block|{
+name|u_int16_t
+name|ie_fport
+decl_stmt|;
+comment|/* foreign port */
+name|u_int16_t
+name|ie_lport
+decl_stmt|;
+comment|/* local port */
+comment|/* protocol dependent part, local and foreign addr */
+union|union
+block|{
+comment|/* foreign host table entry */
+name|struct
+name|in_addr_4in6
+name|ie46_foreign
+decl_stmt|;
+name|struct
+name|in6_addr
+name|ie6_foreign
+decl_stmt|;
+block|}
+name|ie_dependfaddr
+union|;
+union|union
+block|{
+comment|/* local host table entry */
+name|struct
+name|in_addr_4in6
+name|ie46_local
+decl_stmt|;
+name|struct
+name|in6_addr
+name|ie6_local
+decl_stmt|;
+block|}
+name|ie_dependladdr
+union|;
+define|#
+directive|define
+name|ie_faddr
+value|ie_dependfaddr.ie46_foreign.ia46_addr4
+define|#
+directive|define
+name|ie_laddr
+value|ie_dependladdr.ie46_local.ia46_addr4
+define|#
+directive|define
+name|ie6_faddr
+value|ie_dependfaddr.ie6_foreign
+define|#
+directive|define
+name|ie6_laddr
+value|ie_dependladdr.ie6_local
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * XXX  * At some point struct route should possibly change to:  *   struct rtentry *rt  *   struct in_endpoints *ie;   */
+end_comment
+
+begin_struct
+struct|struct
+name|in_conninfo
+block|{
+name|u_int8_t
+name|inc_flags
+decl_stmt|;
+name|u_int8_t
+name|inc_len
+decl_stmt|;
+name|u_int16_t
+name|inc_pad
+decl_stmt|;
+comment|/* XXX alignment for in_endpoints */
+comment|/* protocol dependent part; cached route */
+name|struct
+name|in_endpoints
+name|inc_ie
+decl_stmt|;
+union|union
+block|{
+comment|/* placeholder for routing entry */
+name|struct
+name|route
+name|inc4_route
+decl_stmt|;
+name|struct
+name|route_in6
+name|inc6_route
+decl_stmt|;
+block|}
+name|inc_dependroute
+union|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|inc_isipv6
+value|inc_flags
+end_define
+
+begin_comment
+comment|/* temp compatability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|inc_fport
+value|inc_ie.ie_fport
+end_define
+
+begin_define
+define|#
+directive|define
+name|inc_lport
+value|inc_ie.ie_lport
+end_define
+
+begin_define
+define|#
+directive|define
+name|inc_faddr
+value|inc_ie.ie_faddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|inc_laddr
+value|inc_ie.ie_laddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|inc_route
+value|inc_dependroute.inc4_route
+end_define
+
+begin_define
+define|#
+directive|define
+name|inc6_faddr
+value|inc_ie.ie6_faddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|inc6_laddr
+value|inc_ie.ie6_laddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|inc6_route
+value|inc_dependroute.inc6_route
+end_define
+
+begin_comment
 comment|/*  * NB: the zone allocator is type-stable EXCEPT FOR THE FIRST TWO LONGS  * of the structure.  Therefore, it is important that the members in  * that position not contain any information which is required to be  * stable.  */
 end_comment
 
@@ -127,14 +300,6 @@ argument_list|)
 name|inp_hash
 expr_stmt|;
 comment|/* hash list */
-name|u_short
-name|inp_fport
-decl_stmt|;
-comment|/* foreign port */
-name|u_short
-name|inp_lport
-decl_stmt|;
-comment|/* local port */
 name|LIST_ENTRY
 argument_list|(
 argument|inpcb
@@ -145,35 +310,11 @@ comment|/* list for all PCBs of this proto */
 name|u_int32_t
 name|inp_flow
 decl_stmt|;
-comment|/* protocol dependent part, local and foreign addr */
-union|union
-block|{
-comment|/* foreign host table entry */
+comment|/* local and foreign ports, local and foreign addr */
 name|struct
-name|in_addr_4in6
-name|inp46_foreign
+name|in_conninfo
+name|inp_inc
 decl_stmt|;
-name|struct
-name|in6_addr
-name|inp6_foreign
-decl_stmt|;
-block|}
-name|inp_dependfaddr
-union|;
-union|union
-block|{
-comment|/* local host table entry */
-name|struct
-name|in_addr_4in6
-name|inp46_local
-decl_stmt|;
-name|struct
-name|in6_addr
-name|inp6_local
-decl_stmt|;
-block|}
-name|inp_dependladdr
-union|;
 name|caddr_t
 name|inp_ppcb
 decl_stmt|;
@@ -195,21 +336,6 @@ name|int
 name|inp_flags
 decl_stmt|;
 comment|/* generic IP/datagram flags */
-comment|/* protocol dependent part; cached route */
-union|union
-block|{
-comment|/* placeholder for routing entry */
-name|struct
-name|route
-name|inp4_route
-decl_stmt|;
-name|struct
-name|route_in6
-name|inp6_route
-decl_stmt|;
-block|}
-name|inp_dependroute
-union|;
 name|struct
 name|inpcbpolicy
 modifier|*
@@ -259,16 +385,24 @@ name|inp_depend4
 struct|;
 define|#
 directive|define
+name|inp_fport
+value|inp_inc.inc_fport
+define|#
+directive|define
+name|inp_lport
+value|inp_inc.inc_lport
+define|#
+directive|define
 name|inp_faddr
-value|inp_dependfaddr.inp46_foreign.ia46_addr4
+value|inp_inc.inc_faddr
 define|#
 directive|define
 name|inp_laddr
-value|inp_dependladdr.inp46_local.ia46_addr4
+value|inp_inc.inc_laddr
 define|#
 directive|define
 name|inp_route
-value|inp_dependroute.inp4_route
+value|inp_inc.inc_route
 define|#
 directive|define
 name|inp_ip_tos
@@ -342,15 +476,15 @@ comment|/* generation count of this instance */
 define|#
 directive|define
 name|in6p_faddr
-value|inp_dependfaddr.inp6_foreign
+value|inp_inc.inc6_faddr
 define|#
 directive|define
 name|in6p_laddr
-value|inp_dependladdr.inp6_local
+value|inp_inc.inc6_laddr
 define|#
 directive|define
 name|in6p_route
-value|inp_dependroute.inp6_route
+value|inp_inc.inc6_route
 define|#
 directive|define
 name|in6p_ip6_hlim
