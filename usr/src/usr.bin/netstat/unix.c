@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unix.c	5.2 (Berkeley) %G%"
+literal|"@(#)unix.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -495,6 +495,11 @@ decl_stmt|,
 modifier|*
 name|m
 decl_stmt|;
+name|struct
+name|sockaddr_un
+modifier|*
+name|sa
+decl_stmt|;
 specifier|static
 name|int
 name|first
@@ -587,6 +592,17 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+name|sa
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|sockaddr_un
+operator|*
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|m
@@ -605,7 +621,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-8.8s %-6.6s %-6.6s %-6.6s %8.8s %8.8s %8.8s %8.8s Remaddr\n"
+literal|"Active UNIX domain sockets\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-8.8s %-6.6s %-6.6s %-6.6s %8.8s %8.8s %8.8s %8.8s Addr\n"
 argument_list|,
 literal|"Address"
 argument_list|,
@@ -682,14 +703,17 @@ argument_list|,
 name|m
 operator|->
 name|m_len
-argument_list|,
-name|mtod
+operator|-
+sizeof|sizeof
 argument_list|(
-name|m
-argument_list|,
-name|char
-operator|*
+name|sa
+operator|->
+name|sun_family
 argument_list|)
+argument_list|,
+name|sa
+operator|->
+name|sun_path
 argument_list|)
 expr_stmt|;
 name|putchar
