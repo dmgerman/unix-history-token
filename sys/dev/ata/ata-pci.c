@@ -1495,7 +1495,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|ATA_ENABLE_BUSMASTER
+name|__sparc64__
 if|if
 condition|(
 operator|!
