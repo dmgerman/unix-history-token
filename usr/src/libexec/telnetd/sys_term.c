@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.20 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2414,6 +2414,10 @@ name|defined
 argument_list|(
 name|TIOCGPGRP
 argument_list|)
+operator|&&
+name|BSD
+operator|<
+literal|199207
 name|int
 name|dummy
 decl_stmt|;
@@ -2559,6 +2563,10 @@ name|defined
 argument_list|(
 name|TIOCGPGRP
 argument_list|)
+operator|&&
+name|BSD
+operator|<
+literal|199207
 if|if
 condition|(
 name|ioctl
@@ -2601,7 +2609,7 @@ block|}
 else|else
 endif|#
 directive|endif
-comment|/* defined(sun)&& defined(TIOCGPGRP) */
+comment|/* defined(sun)&& defined(TIOCGPGRP)&& BSD< 199207 */
 return|return
 operator|(
 name|p
