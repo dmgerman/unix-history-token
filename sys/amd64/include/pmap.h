@@ -718,25 +718,44 @@ block|{
 name|pt_entry_t
 name|r
 decl_stmt|;
+asm|__asm __volatile(
+literal|"xchgq %0,%1"
+operator|:
+literal|"=m"
+operator|(
+operator|*
+name|ptep
+operator|)
+operator|,
+literal|"=r"
+operator|(
 name|r
-operator|=
-operator|*
-name|ptep
-expr_stmt|;
-operator|*
-name|ptep
-operator|=
+operator|)
+operator|:
+literal|"1"
+operator|(
 name|pte
-expr_stmt|;
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|ptep
+operator|)
+block|)
+function|;
+end_function
+
+begin_return
 return|return
 operator|(
 name|r
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_define
+unit|}
 define|#
 directive|define
 name|pte_load_clear
@@ -746,6 +765,28 @@ parameter_list|)
 value|atomic_readandclear_long(pte)
 end_define
 
+begin_function
+unit|static
+name|__inline
+name|void
+name|pte_store
+parameter_list|(
+name|pt_entry_t
+modifier|*
+name|ptep
+parameter_list|,
+name|pt_entry_t
+name|pte
+parameter_list|)
+block|{
+operator|*
+name|ptep
+operator|=
+name|pte
+expr_stmt|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -753,19 +794,7 @@ name|pte_clear
 parameter_list|(
 name|ptep
 parameter_list|)
-value|pte_load_store((ptep), (pt_entry_t)0ULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pte_store
-parameter_list|(
-name|ptep
-parameter_list|,
-name|pte
-parameter_list|)
-value|pte_load_store((ptep), (pt_entry_t)pte)
+value|pte_store((ptep), (pt_entry_t)0ULL)
 end_define
 
 begin_define
