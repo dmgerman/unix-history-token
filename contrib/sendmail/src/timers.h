@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: timers.h,v 8.4 1999/11/04 19:31:26 ca Exp $  *  * Contributed by Exactis.com, Inc.  *  */
+comment|/*  * Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: timers.h,v 8.6 2001/04/03 01:53:18 gshapiro Exp $  *  * Contributed by Exactis.com, Inc.  *  */
 end_comment
 
 begin_ifndef
@@ -112,7 +112,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* TIMERS_H */
+comment|/* ! TIMERS_H */
 end_comment
 
 end_unit

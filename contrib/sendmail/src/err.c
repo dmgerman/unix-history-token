@@ -1,31 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: err.c,v 8.120.4.5 2001/08/17 22:09:40 ca Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -34,11 +9,18 @@ directive|include
 file|<sendmail.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: err.c,v 8.189 2002/01/09 18:52:30 ca Exp $"
+argument_list|)
+end_macro
+
+begin_if
+if|#
+directive|if
 name|LDAPMAP
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -133,7 +115,80 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic output. ** **	If the first character of the syserr message is `!' it will **	log this as an ALERT message and exit immediately.  This can **	leave queue files in an indeterminate state, so it should not **	be used lightly. ** **	Parameters: **		fmt -- the format string.  If it does not begin with **			a three-digit SMTP reply code, either 554 or **			451 is assumed depending on whether errno **			is set. **		(others) -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
+comment|/* **  FATAL_ERROR -- handle a fatal exception ** **	This function is installed as the default exception handler **	in the main sendmail process, and in all child processes **	that we create.  Its job is to handle exceptions that are not **	handled at a lower level. ** **	The theory is that unhandled exceptions will be 'fatal' class **	exceptions (with an "F:" prefix), such as the out-of-memory **	exception "F:sm.heap".  As such, they are handled by exiting **	the process in exactly the same way that xalloc() in Sendmail 8.10 **	exits the process when it fails due to lack of memory: **	we call syserr with a message beginning with "!". ** **	Parameters: **		exc -- exception which is terminating this process ** **	Returns: **		none */
+end_comment
+
+begin_function
+name|void
+name|fatal_error
+parameter_list|(
+name|exc
+parameter_list|)
+name|SM_EXC_T
+modifier|*
+name|exc
+decl_stmt|;
+block|{
+specifier|static
+name|char
+name|buf
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|SM_FILE_T
+name|f
+decl_stmt|;
+comment|/* 	**  This function may be called when the heap is exhausted. 	**  The following code writes the message for 'exc' into our 	**  static buffer without allocating memory or raising exceptions. 	*/
+name|sm_strio_init
+argument_list|(
+operator|&
+name|f
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sm_exc_write
+argument_list|(
+name|exc
+argument_list|,
+operator|&
+name|f
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_io_flush
+argument_list|(
+operator|&
+name|f
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|)
+expr_stmt|;
+comment|/* 	**  Terminate the process after logging an error and cleaning up. 	**  Problems: 	**  - syserr decides what class of error this is by looking at errno. 	**    That's no good; we should look at the exc structure. 	**  - The cleanup code should be moved out of syserr 	**    and into individual exception handlers 	**    that are part of the module they clean up after. 	*/
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"!%s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via sm_io_printf to the diagnostic output. ** **	If the first character of the syserr message is `!' it will **	log this as an ALERT message and exit immediately.  This can **	leave queue files in an indeterminate state, so it should not **	be used lightly. ** **	If the first character of the syserr message is '!' or '@' **	then syserr knows that the process is about to be terminated, **	so the SMTP reply code defaults to 421.  Otherwise, the **	reply code defaults to 451 or 554, depending on errno. ** **	Parameters: **		fmt -- the format string.  An optional '!' or '@', **			followed by an optional three-digit SMTP **			reply code, followed by message text. **		(others) -- parameters ** **	Returns: **		none **		Raises E:mta.quickabort if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
 end_comment
 
 begin_decl_stmt
@@ -241,6 +296,9 @@ decl_stmt|;
 name|bool
 name|panic
 decl_stmt|;
+name|bool
+name|exiting
+decl_stmt|;
 name|char
 modifier|*
 name|user
@@ -264,28 +322,71 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|VA_LOCAL_DECL
-name|panic
-init|=
+name|SM_VA_LOCAL_DECL
+switch|switch
+condition|(
 operator|*
 name|fmt
-operator|==
-literal|'!'
-decl_stmt|;
-if|if
-condition|(
-name|panic
 condition|)
 block|{
-name|fmt
+case|case
+literal|'!'
+case|:
 operator|++
+name|fmt
 expr_stmt|;
-name|HoldErrs
+name|panic
 operator|=
-name|FALSE
+name|true
 expr_stmt|;
+name|exiting
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'@'
+case|:
+operator|++
+name|fmt
+expr_stmt|;
+name|panic
+operator|=
+name|false
+expr_stmt|;
+name|exiting
+operator|=
+name|true
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+operator|=
+name|false
+expr_stmt|;
+name|exiting
+operator|=
+name|false
+expr_stmt|;
+break|break;
 block|}
 comment|/* format and output the error message */
+if|if
+condition|(
+name|exiting
+condition|)
+block|{
+comment|/* 		**  Since we are terminating the process, 		**  we are aborting the entire SMTP session, 		**  rather than just the current transaction. 		*/
+name|p
+operator|=
+literal|"421"
+expr_stmt|;
+name|enhsc
+operator|=
+literal|"4.0.0"
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|save_errno
@@ -313,8 +414,10 @@ operator|=
 literal|"4.0.0"
 expr_stmt|;
 block|}
-name|VA_START
+name|SM_VA_START
 argument_list|(
+name|ap
+argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
@@ -341,7 +444,10 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|VA_END
+name|SM_VA_END
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 name|puterrmsg
 argument_list|(
@@ -359,8 +465,27 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|char
+modifier|*
+name|nmsg
+init|=
+name|sm_rpool_strdup_x
+argument_list|(
+name|CurEnv
+operator|->
+name|e_rpool
+argument_list|,
+name|errtxt
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
+name|CurEnv
+operator|->
+name|e_rpool
+operator|==
+name|NULL
+operator|&&
 name|CurEnv
 operator|->
 name|e_message
@@ -378,10 +503,7 @@ name|CurEnv
 operator|->
 name|e_message
 operator|=
-name|newstr
-argument_list|(
-name|errtxt
-argument_list|)
+name|nmsg
 expr_stmt|;
 block|}
 comment|/* determine exit status if not already set */
@@ -416,7 +538,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"syserr: ExitStat = %d\n"
 argument_list|,
@@ -449,7 +571,10 @@ name|user
 operator|=
 name|ubuf
 expr_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|ubuf
 argument_list|,
@@ -560,12 +685,12 @@ directive|endif
 comment|/* ESTALE */
 name|printopenfds
 argument_list|(
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|mci_dump_all
 argument_list|(
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 break|break;
@@ -575,8 +700,8 @@ condition|(
 name|panic
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XLA
 name|xla_all_end
 argument_list|()
@@ -613,9 +738,10 @@ if|if
 condition|(
 name|QuickAbort
 condition|)
-name|longjmp
+name|sm_exc_raisenew_x
 argument_list|(
-name|TopFrame
+operator|&
+name|EtypeQuickAbort
 argument_list|,
 literal|2
 argument_list|)
@@ -623,11 +749,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt -- the format string.  If it does not begin with **			a three-digit SMTP reply code, 501 is assumed. **		(others) -- printf strings ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. */
+comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt -- the format string.  If it does not begin with **			a three-digit SMTP reply code, 550 is assumed. **		(others) -- sm_io_printf strings ** **	Returns: **		none **		Raises E:mta.quickabort if QuickAbort is set. ** **	Side Effects: **		increments Errors. */
 end_comment
 
 begin_comment
@@ -675,7 +798,7 @@ name|char
 modifier|*
 name|errtxt
 decl_stmt|;
-name|VA_LOCAL_DECL
+name|SM_VA_LOCAL_DECL
 if|if
 condition|(
 name|fmt
@@ -736,8 +859,10 @@ name|enhsc
 operator|=
 name|NULL
 expr_stmt|;
-name|VA_START
+name|SM_VA_START
 argument_list|(
+name|ap
+argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
@@ -751,7 +876,7 @@ name|CurEnv
 operator|->
 name|e_to
 argument_list|,
-literal|"501"
+literal|"550"
 argument_list|,
 name|enhsc
 argument_list|,
@@ -762,7 +887,10 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|VA_END
+name|SM_VA_END
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -804,6 +932,12 @@ if|if
 condition|(
 name|CurEnv
 operator|->
+name|e_rpool
+operator|==
+name|NULL
+operator|&&
+name|CurEnv
+operator|->
 name|e_message
 operator|!=
 name|NULL
@@ -831,7 +965,10 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -855,8 +992,12 @@ name|CurEnv
 operator|->
 name|e_message
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|CurEnv
+operator|->
+name|e_rpool
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -867,8 +1008,12 @@ name|CurEnv
 operator|->
 name|e_message
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|CurEnv
+operator|->
+name|e_rpool
+argument_list|,
 name|errtxt
 argument_list|)
 expr_stmt|;
@@ -905,9 +1050,10 @@ if|if
 condition|(
 name|QuickAbort
 condition|)
-name|longjmp
+name|sm_exc_raisenew_x
 argument_list|(
-name|TopFrame
+operator|&
+name|EtypeQuickAbort
 argument_list|,
 literal|1
 argument_list|)
@@ -915,11 +1061,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  USRERRENH -- Signal user error. ** **	Same as usrerr but with enhanced status code. ** **	Parameters: **		enhsc -- the enhanced status code. **		fmt -- the format string.  If it does not begin with **			a three-digit SMTP reply code, 501 is assumed. **		(others) -- printf strings ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. */
+comment|/* **  USRERRENH -- Signal user error. ** **	Same as usrerr but with enhanced status code. ** **	Parameters: **		enhsc -- the enhanced status code. **		fmt -- the format string.  If it does not begin with **			a three-digit SMTP reply code, 550 is assumed. **		(others) -- sm_io_printf strings ** **	Returns: **		none **		Raises E:mta.quickabort if QuickAbort is set. ** **	Side Effects: **		increments Errors. */
 end_comment
 
 begin_comment
@@ -973,7 +1116,7 @@ name|char
 modifier|*
 name|errtxt
 decl_stmt|;
-name|VA_LOCAL_DECL
+name|SM_VA_LOCAL_DECL
 if|if
 condition|(
 name|enhsc
@@ -1042,8 +1185,10 @@ operator|=
 literal|"2.0.0"
 expr_stmt|;
 block|}
-name|VA_START
+name|SM_VA_START
 argument_list|(
+name|ap
+argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
@@ -1057,7 +1202,7 @@ name|CurEnv
 operator|->
 name|e_to
 argument_list|,
-literal|"501"
+literal|"550"
 argument_list|,
 name|enhsc
 argument_list|,
@@ -1068,7 +1213,10 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|VA_END
+name|SM_VA_END
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1110,6 +1258,12 @@ if|if
 condition|(
 name|CurEnv
 operator|->
+name|e_rpool
+operator|==
+name|NULL
+operator|&&
+name|CurEnv
+operator|->
 name|e_message
 operator|!=
 name|NULL
@@ -1137,7 +1291,10 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -1161,8 +1318,12 @@ name|CurEnv
 operator|->
 name|e_message
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|CurEnv
+operator|->
+name|e_rpool
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -1173,8 +1334,12 @@ name|CurEnv
 operator|->
 name|e_message
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|CurEnv
+operator|->
+name|e_rpool
+argument_list|,
 name|errtxt
 argument_list|)
 expr_stmt|;
@@ -1211,9 +1376,10 @@ if|if
 condition|(
 name|QuickAbort
 condition|)
-name|longjmp
+name|sm_exc_raisenew_x
 argument_list|(
-name|TopFrame
+operator|&
+name|EtypeQuickAbort
 argument_list|,
 literal|1
 argument_list|)
@@ -1221,11 +1387,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MESSAGE -- print message (not necessarily an error) ** **	Parameters: **		msg -- the message (printf fmt) -- it can begin with **			an SMTP reply code.  If not, 050 is assumed. **		(others) -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
+comment|/* **  MESSAGE -- print message (not necessarily an error) ** **	Parameters: **		msg -- the message (sm_io_printf fmt) -- it can begin with **			an SMTP reply code.  If not, 050 is assumed. **		(others) -- sm_io_printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -1269,13 +1432,15 @@ name|char
 modifier|*
 name|errtxt
 decl_stmt|;
-name|VA_LOCAL_DECL
+name|SM_VA_LOCAL_DECL
 name|errno
 init|=
 literal|0
 decl_stmt|;
-name|VA_START
+name|SM_VA_START
 argument_list|(
+name|ap
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -1304,15 +1469,18 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|VA_END
+name|SM_VA_END
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 name|putoutmsg
 argument_list|(
 name|MsgBuf
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* save this message for mailq printing */
@@ -1347,6 +1515,12 @@ if|if
 condition|(
 name|CurEnv
 operator|->
+name|e_rpool
+operator|==
+name|NULL
+operator|&&
+name|CurEnv
+operator|->
 name|e_message
 operator|!=
 name|NULL
@@ -1362,8 +1536,12 @@ name|CurEnv
 operator|->
 name|e_message
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|CurEnv
+operator|->
+name|e_rpool
+argument_list|,
 name|errtxt
 argument_list|)
 expr_stmt|;
@@ -1372,11 +1550,8 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  NMESSAGE -- print message (not necessarily an error) ** **	Just like "message" except it never puts the to... tag on. ** **	Parameters: **		msg -- the message (printf fmt) -- if it begins **			with a three digit SMTP reply code, that is used, **			otherwise 050 is assumed. **		(others) -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
+comment|/* **  NMESSAGE -- print message (not necessarily an error) ** **	Just like "message" except it never puts the to... tag on. ** **	Parameters: **		msg -- the message (sm_io_printf fmt) -- if it begins **			with a three digit SMTP reply code, that is used, **			otherwise 050 is assumed. **		(others) -- sm_io_printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -1420,13 +1595,15 @@ name|char
 modifier|*
 name|errtxt
 decl_stmt|;
-name|VA_LOCAL_DECL
+name|SM_VA_LOCAL_DECL
 name|errno
 init|=
 literal|0
 decl_stmt|;
-name|VA_START
+name|SM_VA_START
 argument_list|(
+name|ap
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -1457,15 +1634,18 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|VA_END
+name|SM_VA_END
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 name|putoutmsg
 argument_list|(
 name|MsgBuf
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* save this message for mailq printing */
@@ -1500,6 +1680,12 @@ if|if
 condition|(
 name|CurEnv
 operator|->
+name|e_rpool
+operator|==
+name|NULL
+operator|&&
+name|CurEnv
+operator|->
 name|e_message
 operator|!=
 name|NULL
@@ -1515,8 +1701,12 @@ name|CurEnv
 operator|->
 name|e_message
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|CurEnv
+operator|->
+name|e_rpool
+argument_list|,
 name|errtxt
 argument_list|)
 expr_stmt|;
@@ -1525,11 +1715,8 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  PUTOUTMSG -- output error message to transcript and channel ** **	Parameters: **		msg -- message to output (in SMTP format). **		holdmsg -- if TRUE, don't output a copy of the message to **			our output channel. **		heldmsg -- if TRUE, this is a previously held message; **			don't log it to the transcript file. ** **	Returns: **		none. ** **	Side Effects: **		Outputs msg to the transcript. **		If appropriate, outputs it to the channel. **		Deletes SMTP reply code number as appropriate. */
+comment|/* **  PUTOUTMSG -- output error message to transcript and channel ** **	Parameters: **		msg -- message to output (in SMTP format). **		holdmsg -- if true, don't output a copy of the message to **			our output channel. **		heldmsg -- if true, this is a previously held message; **			don't log it to the transcript file. ** **	Returns: **		none. ** **	Side Effects: **		Outputs msg to the transcript. **		If appropriate, outputs it to the channel. **		Deletes SMTP reply code number as appropriate. */
 end_comment
 
 begin_function
@@ -1578,7 +1765,7 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"--- %s%s%s\n"
 argument_list|,
@@ -1653,11 +1840,16 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
 name|CurEnv
 operator|->
 name|e_xfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -1667,8 +1859,8 @@ expr_stmt|;
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|15
+operator|>
+literal|14
 operator|&&
 operator|(
 name|OpMode
@@ -1688,11 +1880,17 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-literal|"--> %s%s"
+literal|"--- %s%s%s"
 argument_list|,
 name|msg
 argument_list|,
 name|holdmsg
+condition|?
+literal|" (hold)"
+else|:
+literal|""
+argument_list|,
+name|heldmsg
 condition|?
 literal|" (held)"
 else|:
@@ -1753,16 +1951,17 @@ operator|==
 literal|'4'
 condition|)
 return|return;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
 argument_list|(
 name|HeldMessageBuf
 argument_list|,
+name|msg
+argument_list|,
 sizeof|sizeof
 name|HeldMessageBuf
-argument_list|,
-literal|"%s"
-argument_list|,
-name|msg
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1770,9 +1969,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|fflush
+name|sm_io_flush
 argument_list|(
-name|stdout
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1855,9 +2056,14 @@ operator|==
 name|MD_ARPAFTP
 operator|)
 condition|)
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
 name|OutChannel
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s\r\n"
 argument_list|,
@@ -1865,9 +2071,14 @@ name|msg
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
 name|OutChannel
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -1880,17 +2091,21 @@ name|TrafficLogFile
 operator|!=
 name|NULL
 condition|)
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
 name|TrafficLogFile
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%05d>>> %s\n"
 argument_list|,
 operator|(
 name|int
 operator|)
-name|getpid
-argument_list|()
+name|CurrentPid
 argument_list|,
 operator|(
 name|OpMode
@@ -1907,6 +2122,11 @@ else|:
 name|errtxt
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|PIPELINING
+comment|/* XXX can't flush here for SMTP pipelining */
 if|if
 condition|(
 name|msg
@@ -1919,15 +2139,17 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fflush
+name|sm_io_flush
 argument_list|(
 name|OutChannel
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ferror
+name|sm_io_error
 argument_list|(
 name|OutChannel
 argument_list|)
@@ -1942,12 +2164,12 @@ name|InChannel
 operator|==
 name|NULL
 operator|||
-name|feof
+name|sm_io_eof
 argument_list|(
 name|InChannel
 argument_list|)
 operator|||
-name|ferror
+name|sm_io_error
 argument_list|(
 name|InChannel
 argument_list|)
@@ -1967,7 +2189,7 @@ return|return;
 comment|/* can't call syserr, 'cause we are using MsgBuf */
 name|HoldErrs
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -1985,13 +2207,7 @@ name|e_id
 argument_list|,
 literal|"SYSERR: putoutmsg (%s): error on output channel sending \"%s\": %s"
 argument_list|,
-name|CurHostName
-operator|==
-name|NULL
-condition|?
-literal|"NO-HOST"
-else|:
-name|CurHostName
+name|CURHOSTNAME
 argument_list|,
 name|shortenstring
 argument_list|(
@@ -2000,17 +2216,17 @@ argument_list|,
 name|MAXSHORTSTR
 argument_list|)
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !PIPELINING */
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  PUTERRMSG -- like putoutmsg, but does special processing for error messages ** **	Parameters: **		msg -- the message to output. ** **	Returns: **		none. ** **	Side Effects: **		Sets the fatal error bit in the envelope as appropriate. */
@@ -2043,7 +2259,7 @@ name|msg
 argument_list|,
 name|HoldErrs
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* be careful about multiple error messages */
@@ -2053,7 +2269,7 @@ name|OnlyOneError
 condition|)
 name|HoldErrs
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 comment|/* signal the error */
 name|Errors
@@ -2108,9 +2324,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  ISENHSC -- check whether a string contains an enhanced status code ** **	Parameters: **		s -- string with possible enhanced status code. **		delim -- delim for enhanced status code. ** **	Returns: **		0  -- no enhanced status code. **>4 -- length of enhanced status code. ** **	Side Effects: **		none. */
@@ -2298,9 +2511,6 @@ name|h
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  EXTENHSC -- check and extract an enhanced status code ** **	Parameters: **		s -- string with possible enhanced status code. **		delim -- delim for enhanced status code. **		e -- pointer to storage for enhanced status code. **			must be != NULL and have space for at least **			10 characters ([245].[0-9]{1,3}.[0-9]{1,3}) ** **	Returns: **		0  -- no enhanced status code. **>4 -- length of enhanced status code. ** **	Side Effects: **		fills e with enhanced status code. */
@@ -2562,9 +2772,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  FMTMSG -- format a message into buffer. ** **	Parameters: **		eb -- error buffer to get result -- MUST BE MsgBuf. **		to -- the recipient tag for this message. **		num -- default three digit SMTP reply code. **		enhsc -- enhanced status code. **		en -- the error number to display. **		fmt -- format of string. **		ap -- arguments for fmt. ** **	Returns: **		pointer to error text beyond status codes. ** **	Side Effects: **		none. */
 end_comment
@@ -2617,9 +2824,7 @@ name|char
 modifier|*
 name|fmt
 decl_stmt|;
-name|va_list
-name|ap
-decl_stmt|;
+function|SM_VA_LOCAL_DECL
 block|{
 name|char
 name|del
@@ -2673,10 +2878,49 @@ name|del
 operator|=
 literal|' '
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_SOFT_BOUNCE
+if|if
+condition|(
+name|SoftBounce
+operator|&&
+name|num
+index|[
+literal|0
+index|]
+operator|==
+literal|'5'
+condition|)
+block|{
+comment|/* replace 5 by 4 */
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
+argument_list|(
+name|eb
+argument_list|,
+name|spaceleft
+argument_list|,
+literal|"4%2.2s%c"
+argument_list|,
+name|num
+operator|+
+literal|1
+argument_list|,
+name|del
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* _FFR_SOFT_BOUNCE */
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|eb
 argument_list|,
@@ -2726,7 +2970,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|eb
 argument_list|,
@@ -2777,7 +3021,7 @@ comment|/* copy enh.status code */
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|eb
 argument_list|,
@@ -2812,6 +3056,35 @@ operator|-=
 name|l
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_SOFT_BOUNCE
+if|if
+condition|(
+name|SoftBounce
+operator|&&
+name|eb
+index|[
+operator|-
+name|l
+index|]
+operator|==
+literal|'5'
+condition|)
+block|{
+comment|/* replace 5 by 4 */
+name|eb
+index|[
+operator|-
+name|l
+index|]
+operator|=
+literal|'4'
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_SOFT_BOUNCE */
 name|errtxt
 operator|=
 name|eb
@@ -2827,7 +3100,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|eb
 argument_list|,
@@ -2947,13 +3220,13 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_strlcpyn
 argument_list|(
 name|eb
 argument_list|,
 name|spaceleft
 argument_list|,
-literal|"%s... "
+literal|2
 argument_list|,
 name|shortenstring
 argument_list|(
@@ -2961,6 +3234,8 @@ name|to
 argument_list|,
 name|MAXSHORTSTR
 argument_list|)
+argument_list|,
+literal|"... "
 argument_list|)
 expr_stmt|;
 name|spaceleft
@@ -2988,7 +3263,7 @@ comment|/* output the message */
 operator|(
 name|void
 operator|)
-name|vsnprintf
+name|sm_vsnprintf
 argument_list|(
 name|eb
 argument_list|,
@@ -3029,15 +3304,17 @@ condition|)
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_strlcpyn
 argument_list|(
 name|eb
 argument_list|,
 name|spaceleft
 argument_list|,
-literal|": %s"
+literal|2
 argument_list|,
-name|errstring
+literal|": "
+argument_list|,
+name|sm_errstring
 argument_list|(
 name|eno
 argument_list|)
@@ -3048,9 +3325,6 @@ name|errtxt
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  BUFFER_ERRORS -- arrange to buffer future error messages ** **	Parameters: **		none ** **	Returns: **		none. */
@@ -3070,13 +3344,10 @@ literal|'\0'
 expr_stmt|;
 name|HoldErrs
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  FLUSH_ERRORS -- flush the held error message buffer ** **	Parameters: **		print -- if set, print the message, otherwise just **			delete it. ** **	Returns: **		none. */
@@ -3107,9 +3378,9 @@ name|putoutmsg
 argument_list|(
 name|HeldMessageBuf
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|HeldMessageBuf
@@ -3121,23 +3392,20 @@ literal|'\0'
 expr_stmt|;
 name|HoldErrs
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  ERRSTRING -- return string description of error code ** **	Parameters: **		errnum -- the error number to translate ** **	Returns: **		A string description of errnum. ** **	Side Effects: **		none. */
+comment|/* **  SM_ERRSTRING -- return string description of error code ** **	Parameters: **		errnum -- the error number to translate ** **	Returns: **		A string description of errnum. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
 specifier|const
 name|char
 modifier|*
-name|errstring
+name|sm_errstring
 parameter_list|(
 name|errnum
 parameter_list|)
@@ -3160,6 +3428,22 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|HASSTRERROR
+name|char
+modifier|*
+name|err
+decl_stmt|;
+name|char
+name|errbuf
+index|[
+literal|30
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* HASSTRERROR */
 if|#
 directive|if
 operator|!
@@ -3193,17 +3477,6 @@ condition|(
 name|errnum
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DAEMON
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|ETIMEDOUT
-argument_list|)
 case|case
 name|ETIMEDOUT
 case|:
@@ -3217,22 +3490,54 @@ expr_stmt|;
 if|#
 directive|if
 name|HASSTRERROR
-name|snprintf
+name|err
+operator|=
+name|strerror
+argument_list|(
+name|errnum
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|errbuf
+argument_list|,
+sizeof|sizeof
+name|errbuf
+argument_list|,
+literal|"Error %d"
+argument_list|,
+name|errnum
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|errbuf
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
 argument_list|(
 name|bp
+argument_list|,
+name|err
 argument_list|,
 name|SPACELEFT
 argument_list|(
 name|buf
 argument_list|,
 name|bp
-argument_list|)
-argument_list|,
-literal|"%s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errnum
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3249,9 +3554,17 @@ name|errnum
 operator|<
 name|sys_nerr
 condition|)
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
 argument_list|(
 name|bp
+argument_list|,
+name|sys_errlist
+index|[
+name|errnum
+index|]
 argument_list|,
 name|SPACELEFT
 argument_list|(
@@ -3259,17 +3572,13 @@ name|buf
 argument_list|,
 name|bp
 argument_list|)
-argument_list|,
-literal|"%s"
-argument_list|,
-name|sys_errlist
-index|[
-name|errnum
-index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|bp
 argument_list|,
@@ -3309,7 +3618,10 @@ operator|==
 name|ETIMEDOUT
 condition|)
 block|{
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|bp
 argument_list|,
@@ -3337,7 +3649,10 @@ name|bp
 operator|=
 name|buf
 expr_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|bp
 argument_list|,
@@ -3359,24 +3674,25 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
 argument_list|(
 name|bp
-argument_list|,
-name|SPACELEFT
-argument_list|(
-name|buf
-argument_list|,
-name|bp
-argument_list|)
-argument_list|,
-literal|"%s"
 argument_list|,
 name|shortenstring
 argument_list|(
 name|CurHostName
 argument_list|,
 name|MAXSHORTSTR
+argument_list|)
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3395,7 +3711,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|bp
 argument_list|,
@@ -3428,7 +3747,7 @@ break|break;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -3461,14 +3780,16 @@ break|break;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_strlcpyn
 argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"Connection refused by %s"
+literal|2
+argument_list|,
+literal|"Connection refused by "
 argument_list|,
 name|shortenstring
 argument_list|(
@@ -3481,9 +3802,6 @@ expr_stmt|;
 return|return
 name|buf
 return|;
-endif|#
-directive|endif
-comment|/* defined(DAEMON)&& defined(ETIMEDOUT) */
 if|#
 directive|if
 name|NAMED_BIND
@@ -3624,7 +3942,7 @@ name|buf
 expr_stmt|;
 name|bp
 operator|+=
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|bp
 argument_list|,
@@ -3641,7 +3959,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_strlcpyn
 argument_list|(
 name|bp
 argument_list|,
@@ -3652,7 +3973,7 @@ argument_list|,
 name|bp
 argument_list|)
 argument_list|,
-literal|"%s: "
+literal|2
 argument_list|,
 name|shortenstring
 argument_list|(
@@ -3660,6 +3981,8 @@ name|CurHostName
 argument_list|,
 name|MAXSHORTSTR
 argument_list|)
+argument_list|,
+literal|": "
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3670,9 +3993,14 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
 argument_list|(
 name|bp
+argument_list|,
+name|dnsmsg
 argument_list|,
 name|SPACELEFT
 argument_list|(
@@ -3680,18 +4008,14 @@ name|buf
 argument_list|,
 name|bp
 argument_list|)
-argument_list|,
-literal|"%s"
-argument_list|,
-name|dnsmsg
 argument_list|)
 expr_stmt|;
 return|return
 name|buf
 return|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|LDAPMAP
 if|if
 condition|(
@@ -3713,11 +4037,41 @@ comment|/* LDAPMAP */
 if|#
 directive|if
 name|HASSTRERROR
-return|return
+name|err
+operator|=
 name|strerror
 argument_list|(
 name|errnum
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"Error %d"
+argument_list|,
+name|errnum
+argument_list|)
+expr_stmt|;
+return|return
+name|buf
+return|;
+block|}
+return|return
+name|err
 return|;
 else|#
 directive|else
@@ -3741,7 +4095,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,

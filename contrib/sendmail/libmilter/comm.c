@@ -1,38 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: comm.c,v 8.30.4.6 2000/10/05 22:44:01 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER
-end_if
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: comm.c,v 8.48 2001/11/07 17:43:04 ca Exp $"
+argument_list|)
+end_macro
 
 begin_include
 include|#
@@ -40,11 +22,17 @@ directive|include
 file|"libmilter.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sm/errstring.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|FD_Z
-value|FD_ZERO(&readset);	\ 		FD_SET((u_int) sd,&readset);	\ 		FD_ZERO(&excset);	\ 		FD_SET((u_int) sd,&excset)
+value|FD_ZERO(&readset);			\ 		FD_SET((unsigned int) sd,&readset);	\ 		FD_ZERO(&excset);			\ 		FD_SET((unsigned int) sd,&excset)
 end_define
 
 begin_comment
@@ -210,9 +198,6 @@ return|return
 name|NULL
 return|;
 block|}
-if|if
-condition|(
-operator|(
 name|len
 operator|=
 name|MI_SOCK_READ
@@ -228,9 +213,13 @@ name|data
 operator|-
 name|i
 argument_list|)
-operator|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|MI_SOCK_READ_FAIL
+argument_list|(
+name|len
+argument_list|)
 condition|)
 block|{
 name|smi_log
@@ -243,7 +232,7 @@ name|name
 argument_list|,
 name|len
 argument_list|,
-name|strerror
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -328,7 +317,7 @@ name|name
 argument_list|,
 name|ret
 argument_list|,
-name|strerror
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -419,6 +408,21 @@ return|return
 name|NULL
 return|;
 block|}
+if|#
+directive|if
+name|_FFR_ADD_NULL
+name|buf
+operator|=
+name|malloc
+argument_list|(
+name|expl
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* _FFR_ADD_NULL */
 name|buf
 operator|=
 name|malloc
@@ -426,6 +430,9 @@ argument_list|(
 name|expl
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_ADD_NULL */
 if|if
 condition|(
 name|buf
@@ -499,9 +506,6 @@ return|return
 name|NULL
 return|;
 block|}
-if|if
-condition|(
-operator|(
 name|len
 operator|=
 name|MI_SOCK_READ
@@ -516,9 +520,13 @@ name|expl
 operator|-
 name|i
 argument_list|)
-operator|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|MI_SOCK_READ_FAIL
+argument_list|(
+name|len
+argument_list|)
 condition|)
 block|{
 name|smi_log
@@ -531,7 +539,7 @@ name|name
 argument_list|,
 name|len
 argument_list|,
-name|strerror
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -602,6 +610,20 @@ name|rlen
 operator|=
 name|expl
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_ADD_NULL
+comment|/* makes life simpler for common string routines */
+name|buf
+index|[
+name|expl
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_ADD_NULL */
 return|return
 name|buf
 return|;
@@ -656,7 +678,7 @@ name|name
 argument_list|,
 name|ret
 argument_list|,
-name|strerror
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -681,9 +703,6 @@ name|NULL
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MI_WR_CMD -- write a cmd to sd ** **	Parameters: **		sd -- socket descriptor **		timeout -- maximum time to wait (currently unused) **		cmd -- single character command to write **		buf -- buffer with further data **		len -- length of buffer (without cmd!) ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
@@ -814,7 +833,8 @@ expr_stmt|;
 name|FD_SET
 argument_list|(
 operator|(
-name|u_int
+name|unsigned
+name|int
 operator|)
 name|sd
 argument_list|,
@@ -965,7 +985,8 @@ expr_stmt|;
 name|FD_SET
 argument_list|(
 operator|(
-name|u_int
+name|unsigned
+name|int
 operator|)
 name|sd
 argument_list|,
@@ -1075,15 +1096,6 @@ name|MI_SUCCESS
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MILTER */
-end_comment
 
 end_unit
 

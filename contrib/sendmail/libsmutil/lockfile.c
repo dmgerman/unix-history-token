@@ -1,31 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: lockfile.c,v 8.3.16.11 2000/11/16 02:54:28 geir Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -34,11 +9,15 @@ directive|include
 file|<sendmail.h>
 end_include
 
-begin_escape
-end_escape
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: lockfile.c,v 8.19 2001/09/11 04:04:55 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_comment
-comment|/* **  LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		filename -- the file name (for error messages). [unused] **		ext -- the filename extension. [unused] **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. **			LOCK_UN -- unlock. ** **	Returns: **		TRUE if the lock was acquired. **		FALSE otherwise. */
+comment|/* **  LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		filename -- the file name (for error messages). [unused] **		ext -- the filename extension. [unused] **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. **			LOCK_UN -- unlock. ** **	Returns: **		true if the lock was acquired. **		false otherwise. */
 end_comment
 
 begin_function
@@ -165,7 +144,7 @@ operator|>=
 literal|0
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 comment|/* 	**  On SunOS, if you are testing using -oQ/tmp/mqueue or 	**  -oA/tmp/aliases or anything like that, and /tmp is mounted 	**  as type "tmp" (that is, served from swap space), the 	**  previous fcntl will fail with "Invalid argument" errors. 	**  Since this is fairly common during testing, we will assume 	**  that this indicates that the lock is successfully grabbed. 	*/
 if|if
@@ -175,7 +154,7 @@ operator|==
 name|EINVAL
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 else|#
 directive|else
@@ -192,13 +171,13 @@ operator|>=
 literal|0
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 endif|#
 directive|endif
 comment|/* !HASFLOCK */
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 end_function

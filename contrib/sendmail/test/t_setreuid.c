@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  This program checks to see if your version of setreuid works. **  Compile it, make it setuid root, and run it as yourself (NOT as **  root).  If it won't compile or outputs any MAYDAY messages, don't **  define HASSETREUID in conf.h. ** **  Compilation is trivial -- just "cc t_setreuid.c".  Make it setuid, **  root and then execute it as a non-root user. */
+comment|/*  * Copyright (c) 2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+end_comment
+
+begin_comment
+comment|/* **  This program checks to see if your version of setreuid works. **  Compile it, make it set-user-ID root, and run it as yourself (NOT as **  root).  If it won't compile or outputs any MAYDAY messages, don't **  define HASSETREUID in conf.h. ** **  Compilation is trivial -- just "cc t_setreuid.c".  Make it set-user-ID, **  root and then execute it as a non-root user. */
 end_comment
 
 begin_include
@@ -33,7 +37,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: t_setreuid.c,v 8.4 1999/08/28 00:25:28 gshapiro Exp $"
+literal|"@(#)$Id: t_setreuid.c,v 8.9 2001/10/12 03:04:46 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +92,7 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|int
+name|uid_t
 name|r
 decl_stmt|,
 name|e
@@ -100,13 +104,25 @@ literal|"%s (should be %d/%d): r/euid=%d/%d\n"
 argument_list|,
 name|str
 argument_list|,
+operator|(
+name|int
+operator|)
 name|r
 argument_list|,
+operator|(
+name|int
+operator|)
 name|e
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -161,7 +177,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SETUP ERROR: re-run setuid root\n"
+literal|"SETUP ERROR: re-run set-user-ID root\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -219,6 +235,23 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|fail
+operator|++
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"MAYDAY!  Wrong real uid\n"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|geteuid
@@ -287,6 +320,9 @@ name|printf
 argument_list|(
 literal|"setreuid(%d, 0) failure\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|realuid
 argument_list|)
 expr_stmt|;
@@ -386,6 +422,23 @@ literal|"MAYDAY!  Wrong effective uid\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|fail
+operator|++
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"MAYDAY!  Wrong real uid\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* do activity here */
 if|if
 condition|(
@@ -437,6 +490,9 @@ name|printf
 argument_list|(
 literal|"setreuid(%d, 0) failure\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|realuid
 argument_list|)
 expr_stmt|;

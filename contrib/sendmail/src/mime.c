@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -15,30 +15,22 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: mime.c,v 8.94.16.3 2000/10/09 02:46:10 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: mime.c,v 8.125 2001/09/11 04:05:15 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_comment
-comment|/* ! lint */
+comment|/* **  MIME support. ** **	I am indebted to John Beck of Hewlett-Packard, who contributed **	his code to me for inclusion.  As it turns out, I did not use **	his code since he used a "minimum change" approach that used **	several temp files, and I wanted a "minimum impact" approach **	that would avoid copying.  However, looking over his code **	helped me cement my understanding of the problem. ** **	I also looked at, but did not directly use, Nathaniel **	Borenstein's "code.c" module.  Again, it functioned as **	a file-to-file translator, which did not fit within my **	design bounds, but it was a useful base for understanding **	the problem. */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|MIME8TO7
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -79,33 +71,11 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mime_fromqp
-name|__P
-argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|,
-name|u_char
-operator|*
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|mime_getchar
 name|__P
 argument_list|(
 operator|(
-name|FILE
+name|SM_FILE_T
 operator|*
 operator|,
 name|char
@@ -126,7 +96,7 @@ name|mime_getchar_crlf
 name|__P
 argument_list|(
 operator|(
-name|FILE
+name|SM_FILE_T
 operator|*
 operator|,
 name|char
@@ -139,16 +109,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* **  MIME support. ** **	I am indebted to John Beck of Hewlett-Packard, who contributed **	his code to me for inclusion.  As it turns out, I did not use **	his code since he used a "minimum change" approach that used **	several temp files, and I wanted a "minimum impact" approach **	that would avoid copying.  However, looking over his code **	helped me cement my understanding of the problem. ** **	I also looked at, but did not directly use, Nathaniel **	Borenstein's "code.c" module.  Again, it functioned as **	a file-to-file translator, which did not fit within my **	design bounds, but it was a useful base for understanding **	the problem. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|MIME8TO7
-end_if
 
 begin_comment
 comment|/* character set for hex and base64 encoding */
@@ -247,9 +207,6 @@ name|bool
 name|MapNLtoCRLF
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MIME8TO7 -- output 8 bit body in 7 bit format ** **	The header has already been output -- this has to do the **	8 to 7 bit conversion.  It would be easy if we didn't have **	to deal with nested formats (multipart/xxx and message/rfc822). ** **	We won't be called if we don't have to do a conversion, and **	appropriate MIME-Version: and Content-Type: fields have been **	output.  Any Content-Transfer-Encoding: field has not been **	output, and we can add it here. ** **	Parameters: **		mci -- mailer connection information. **		header -- the header for this body part. **		e -- envelope. **		boundaries -- the currently pending message boundaries. **			NULL if we are processing the outer portion. **		flags -- to tweak processing. ** **	Returns: **		An indicator of what terminated the message part: **		  MBT_FINAL -- the final boundary **		  MBT_INTERMED -- an intermediate boundary **		  MBT_NOTSEP -- an end of file */
@@ -361,7 +318,7 @@ decl_stmt|;
 name|bool
 name|use_qp
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|struct
 name|args
@@ -389,7 +346,8 @@ name|MAXLINE
 index|]
 decl_stmt|;
 specifier|extern
-name|u_char
+name|unsigned
+name|char
 name|MimeTokenTab
 index|[
 literal|256
@@ -405,7 +363,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"mime8to7: flags = %x, boundaries ="
 argument_list|,
@@ -421,7 +379,7 @@ index|]
 operator|==
 name|NULL
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"<none>"
 argument_list|)
@@ -444,7 +402,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" %s"
 argument_list|,
@@ -455,7 +413,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -463,7 +421,7 @@ expr_stmt|;
 block|}
 name|MapNLtoCRLF
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|p
 operator|=
@@ -533,8 +491,12 @@ argument_list|)
 expr_stmt|;
 name|cte
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -642,7 +604,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"pvp[%d] = \"%s\"\n"
 argument_list|,
@@ -861,7 +823,10 @@ operator|~
 name|M87F_DIGEST
 expr_stmt|;
 comment|/* 	**  Check for cases that can not be encoded. 	** 	**	For example, you can't encode certain kinds of types 	**	or already-encoded messages.  If we find this case, 	**	just copy it through. 	*/
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -923,7 +888,7 @@ argument_list|)
 condition|)
 name|MapNLtoCRLF
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 endif|#
 directive|endif
@@ -946,12 +911,12 @@ argument_list|)
 condition|)
 name|use_qp
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 comment|/* 	**  Multipart requires special processing. 	** 	**	Do a recursive descent into the message. 	*/
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|type
 argument_list|,
@@ -980,7 +945,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|subtype
 argument_list|,
@@ -1009,7 +974,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|argv
 index|[
@@ -1087,7 +1052,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|bbuf
 argument_list|,
@@ -1125,7 +1090,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"mime8to7: multipart boundary \"%s\"\n"
 argument_list|,
@@ -1223,16 +1188,18 @@ name|MBT_FINAL
 expr_stmt|;
 while|while
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
-argument_list|,
-name|e
-operator|->
-name|e_dfp
 argument_list|)
 operator|!=
 name|NULL
@@ -1279,7 +1246,7 @@ argument_list|,
 literal|99
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  ...%s"
 argument_list|,
@@ -1289,7 +1256,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|feof
+name|sm_io_eof
 argument_list|(
 name|e
 operator|->
@@ -1314,14 +1281,19 @@ name|hdr
 init|=
 name|NULL
 decl_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_strlcpyn
 argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"--%s"
+literal|2
+argument_list|,
+literal|"--"
 argument_list|,
 name|bbuf
 argument_list|)
@@ -1342,7 +1314,7 @@ argument_list|,
 literal|35
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  ...%s\n"
 argument_list|,
@@ -1355,7 +1327,7 @@ name|e
 operator|->
 name|e_dfp
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
 operator|&
 name|hdr
@@ -1422,16 +1394,23 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_strlcpyn
 argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"--%s--"
+literal|3
+argument_list|,
+literal|"--"
 argument_list|,
 name|bbuf
+argument_list|,
+literal|"--"
 argument_list|)
 expr_stmt|;
 name|putline
@@ -1450,7 +1429,7 @@ argument_list|,
 literal|35
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  ...%s\n"
 argument_list|,
@@ -1474,16 +1453,18 @@ expr_stmt|;
 comment|/* skip the late "comment" epilogue */
 while|while
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
-argument_list|,
-name|e
-operator|->
-name|e_dfp
 argument_list|)
 operator|!=
 name|NULL
@@ -1530,7 +1511,7 @@ argument_list|,
 literal|99
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  ...%s"
 argument_list|,
@@ -1540,7 +1521,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|feof
+name|sm_io_eof
 argument_list|(
 name|e
 operator|->
@@ -1560,7 +1541,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t\t\tmime8to7=>%s (multipart)\n"
 argument_list|,
@@ -1577,7 +1558,7 @@ block|}
 comment|/* 	**  Message/xxx types -- recurse exactly once. 	** 	**	Class 's' is predefined to have "rfc822" only. 	*/
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|type
 argument_list|,
@@ -1631,7 +1612,7 @@ name|e
 operator|->
 name|e_dfp
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
 operator|&
 name|hdr
@@ -1750,11 +1731,13 @@ block|{
 comment|/* remember where we were */
 name|offset
 operator|=
-name|ftell
+name|sm_io_tell
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1766,7 +1749,9 @@ literal|1
 condition|)
 name|syserr
 argument_list|(
-literal|"mime8to7: cannot ftell on df%s"
+literal|"mime8to7: cannot sm_io_tell on %cf%s"
+argument_list|,
+name|DATAFL_LETTER
 argument_list|,
 name|e
 operator|->
@@ -1776,16 +1761,18 @@ expr_stmt|;
 comment|/* do a scan of this body type to count character types */
 while|while
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
-argument_list|,
-name|e
-operator|->
-name|e_dfp
 argument_list|)
 operator|!=
 name|NULL
@@ -1855,11 +1842,13 @@ comment|/* return to the original offset for processing */
 comment|/* XXX use relative seeks to handle>31 bit file sizes? */
 if|if
 condition|(
-name|fseek
+name|sm_io_seek
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 name|offset
 argument_list|,
@@ -1870,7 +1859,9 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"mime8to7: cannot fseek on df%s"
+literal|"mime8to7: cannot sm_io_fseek on %cf%s"
+argument_list|,
+name|DATAFL_LETTER
 argument_list|,
 name|e
 operator|->
@@ -1878,7 +1869,7 @@ name|e_id
 argument_list|)
 expr_stmt|;
 else|else
-name|clearerr
+name|sm_io_clearerr
 argument_list|(
 name|e
 operator|->
@@ -1897,7 +1888,7 @@ literal|8
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"mime8to7: %ld high bit(s) in %ld byte(s), cte=%s, type=%s/%s\n"
 argument_list|,
@@ -1943,7 +1934,7 @@ name|cte
 operator|!=
 name|NULL
 operator|&&
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|cte
 argument_list|,
@@ -2001,7 +1992,10 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			**  Skip _unless_ in MIME mode and potentially 			**  converting from 8 bit to 7 bit MIME.  See 			**  putheader() for the counterpart where the 			**  CTE header is skipped in the opposite 			**  situation. 			*/
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -2029,7 +2023,7 @@ argument_list|,
 literal|36
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  ...%s\n"
 argument_list|,
@@ -2053,16 +2047,18 @@ name|MCIF_INHEADER
 expr_stmt|;
 while|while
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
-argument_list|,
-name|e
-operator|->
-name|e_dfp
 argument_list|)
 operator|!=
 name|NULL
@@ -2094,7 +2090,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|feof
+name|sm_io_eof
 argument_list|(
 name|e
 operator|->
@@ -2139,7 +2135,7 @@ argument_list|,
 literal|36
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  ...Content-Transfer-Encoding: base64\n"
 argument_list|)
@@ -2151,7 +2147,10 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -2206,7 +2205,7 @@ name|bt
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|SM_IO_EOF
 condition|)
 block|{
 if|if
@@ -2282,7 +2281,7 @@ if|if
 condition|(
 name|c2
 operator|==
-name|EOF
+name|SM_IO_EOF
 condition|)
 block|{
 operator|*
@@ -2355,7 +2354,7 @@ if|if
 condition|(
 name|c2
 operator|==
-name|EOF
+name|SM_IO_EOF
 condition|)
 block|{
 operator|*
@@ -2537,7 +2536,7 @@ argument_list|,
 literal|36
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  ...Content-Transfer-Encoding: quoted-printable\n"
 argument_list|)
@@ -2549,7 +2548,10 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -2612,7 +2614,7 @@ name|bt
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|SM_IO_EOF
 condition|)
 block|{
 if|if
@@ -3087,7 +3089,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t\t\tmime8to7=>%s (basic)\n"
 argument_list|,
@@ -3103,11 +3105,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MIME_GETCHAR -- get a character for MIME processing ** **	Treats boundaries as EOF. ** **	Parameters: **		fp -- the input file. **		boundaries -- the current MIME boundaries. **		btp -- if the return value is EOF, *btp is set to **			the type of the boundary. ** **	Returns: **		The next character in the input stream. */
+comment|/* **  MIME_GETCHAR -- get a character for MIME processing ** **	Treats boundaries as SM_IO_EOF. ** **	Parameters: **		fp -- the input file. **		boundaries -- the current MIME boundaries. **		btp -- if the return value is SM_IO_EOF, *btp is set to **			the type of the boundary. ** **	Returns: **		The next character in the input stream. */
 end_comment
 
 begin_function
@@ -3122,7 +3121,7 @@ parameter_list|,
 name|btp
 parameter_list|)
 specifier|register
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|fp
 decl_stmt|;
@@ -3140,7 +3139,8 @@ name|int
 name|c
 decl_stmt|;
 specifier|static
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|bp
 init|=
@@ -3156,7 +3156,7 @@ specifier|static
 name|bool
 name|atbol
 init|=
-name|TRUE
+name|true
 decl_stmt|;
 comment|/* at beginning of line */
 specifier|static
@@ -3165,9 +3165,10 @@ name|bt
 init|=
 name|MBT_SYNTAX
 decl_stmt|;
-comment|/* boundary type of next EOF */
+comment|/* boundary type of next SM_IO_EOF */
 specifier|static
-name|u_char
+name|unsigned
+name|char
 name|buf
 index|[
 literal|128
@@ -3219,9 +3220,11 @@ block|}
 else|else
 name|c
 operator|=
-name|getc
+name|sm_io_getc
 argument_list|(
 name|fp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3248,13 +3251,15 @@ name|c
 expr_stmt|;
 name|atbol
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|c
 operator|=
-name|getc
+name|sm_io_getc
 argument_list|(
 name|fp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3267,11 +3272,13 @@ block|{
 operator|(
 name|void
 operator|)
-name|ungetc
+name|sm_io_ungetc
 argument_list|(
-name|c
-argument_list|,
 name|fp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 return|return
@@ -3287,7 +3294,7 @@ if|if
 condition|(
 name|c
 operator|!=
-name|EOF
+name|SM_IO_EOF
 condition|)
 operator|*
 name|bp
@@ -3312,9 +3319,11 @@ block|{
 comment|/* check for a message boundary */
 name|c
 operator|=
-name|getc
+name|sm_io_getc
 argument_list|(
 name|fp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3328,7 +3337,7 @@ if|if
 condition|(
 name|c
 operator|!=
-name|EOF
+name|SM_IO_EOF
 condition|)
 operator|*
 name|bp
@@ -3382,13 +3391,15 @@ operator|&&
 operator|(
 name|c
 operator|=
-name|getc
+name|sm_io_getc
 argument_list|(
 name|fp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|SM_IO_EOF
 operator|&&
 name|c
 operator|!=
@@ -3407,6 +3418,7 @@ name|bp
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* XXX simply cut off? */
 name|bt
 operator|=
 name|mimeboundary
@@ -3446,7 +3458,7 @@ operator|=
 name|bt
 expr_stmt|;
 return|return
-name|EOF
+name|SM_IO_EOF
 return|;
 block|}
 name|atbol
@@ -3459,7 +3471,7 @@ if|if
 condition|(
 name|c
 operator|!=
-name|EOF
+name|SM_IO_EOF
 condition|)
 operator|*
 name|bp
@@ -3489,7 +3501,7 @@ operator|=
 name|bt
 expr_stmt|;
 return|return
-name|EOF
+name|SM_IO_EOF
 return|;
 block|}
 name|bp
@@ -3504,11 +3516,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MIME_GETCHAR_CRLF -- do mime_getchar, but translate NL => CRLF ** **	Parameters: **		fp -- the input file. **		boundaries -- the current MIME boundaries. **		btp -- if the return value is EOF, *btp is set to **			the type of the boundary. ** **	Returns: **		The next character in the input stream. */
+comment|/* **  MIME_GETCHAR_CRLF -- do mime_getchar, but translate NL => CRLF ** **	Parameters: **		fp -- the input file. **		boundaries -- the current MIME boundaries. **		btp -- if the return value is SM_IO_EOF, *btp is set to **			the type of the boundary. ** **	Returns: **		The next character in the input stream. */
 end_comment
 
 begin_function
@@ -3523,7 +3532,7 @@ parameter_list|,
 name|btp
 parameter_list|)
 specifier|register
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|fp
 decl_stmt|;
@@ -3541,7 +3550,7 @@ specifier|static
 name|bool
 name|sendlf
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|int
 name|c
@@ -3553,7 +3562,7 @@ condition|)
 block|{
 name|sendlf
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 return|return
 literal|'\n'
@@ -3581,7 +3590,7 @@ condition|)
 block|{
 name|sendlf
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 return|return
 literal|'\r'
@@ -3592,9 +3601,6 @@ name|c
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MIMEBOUNDARY -- determine if this line is a MIME boundary& its type ** **	Parameters: **		line -- the input line. **		boundaries -- the set of currently pending boundaries. ** **	Returns: **		MBT_NOTSEP -- if this is not a separator line **		MBT_INTERMED -- if this is an intermediate separator **		MBT_FINAL -- if this is a final boundary **		MBT_SYNTAX -- if this is a boundary for the wrong **			enclosure -- i.e., a syntax error. */
@@ -3732,7 +3738,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"mimeboundary: line=\"%s\"... "
 argument_list|,
@@ -3839,7 +3845,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -3854,9 +3860,6 @@ name|type
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  DEFCHARSET -- return default character set for message ** **	The first choice for character set is for the mailer **	corresponding to the envelope sender.  If neither that **	nor the global configuration file has a default character **	set defined, return "unknown-8bit" as recommended by **	RFC 1428 section 3. ** **	Parameters: **		e -- the envelope for this message. ** **	Returns: **		The default character set for that mailer. */
@@ -3922,9 +3925,6 @@ literal|"unknown-8bit"
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  ISBOUNDARY -- is a given string a currently valid boundary? ** **	Parameters: **		line -- the current input line. **		boundaries -- the list of valid boundaries. ** **	Returns: **		The index number in boundaries if the line is found. **		-1 -- otherwise. ** */
@@ -4008,14 +4008,35 @@ begin_comment
 comment|/* MIME8TO7 */
 end_comment
 
-begin_escape
-end_escape
-
 begin_if
 if|#
 directive|if
 name|MIME7TO8
 end_if
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mime_fromqp
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|,
+name|unsigned
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  MIME7TO8 -- output 7 bit encoded MIME body in 8 bit format ** **  This is a hack. Supports translating the two 7-bit body-encodings **  (quoted-printable and base64) to 8-bit coded bodies. ** **  There is not much point in supporting multipart here, as the UA **  will be able to deal with encoded MIME bodies if it can parse MIME **  multipart messages. ** **  Note also that we wont be called unless it is a text/plain MIME **  message, encoded base64 or QP and mailer flag '9' has been defined **  on mailer. ** **  Contributed by Marius Olaffson<marius@rhi.hi.is>. ** **	Parameters: **		mci -- mailer connection information. **		header -- the header for this body part. **		e -- envelope. ** **	Returns: **		none. */
@@ -4402,7 +4423,8 @@ modifier|*
 modifier|*
 name|pvp
 decl_stmt|;
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|fbufp
 decl_stmt|;
@@ -4412,7 +4434,8 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-name|u_char
+name|unsigned
+name|char
 name|fbuf
 index|[
 name|MAXLINE
@@ -4427,7 +4450,8 @@ name|MAXLINE
 index|]
 decl_stmt|;
 specifier|extern
-name|u_char
+name|unsigned
+name|char
 name|MimeTokenTab
 index|[
 literal|256
@@ -4507,7 +4531,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -4543,16 +4570,18 @@ name|MCIF_INHEADER
 expr_stmt|;
 while|while
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
-argument_list|,
-name|e
-operator|->
-name|e_dfp
 argument_list|)
 operator|!=
 name|NULL
@@ -4582,8 +4611,12 @@ argument_list|)
 expr_stmt|;
 name|cte
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -4600,7 +4633,10 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -4642,7 +4678,7 @@ expr_stmt|;
 comment|/* 	**  Translate body encoding to 8-bit.  Supports two types of 	**  encodings; "base64" and "quoted-printable". Assume qp if 	**  it is not base64. 	*/
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|cte
 argument_list|,
@@ -4670,15 +4706,17 @@ condition|(
 operator|(
 name|c1
 operator|=
-name|fgetc
+name|sm_io_getc
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|SM_IO_EOF
 condition|)
 block|{
 if|if
@@ -4698,11 +4736,13 @@ do|do
 block|{
 name|c2
 operator|=
-name|fgetc
+name|sm_io_getc
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 block|}
@@ -4723,18 +4763,20 @@ if|if
 condition|(
 name|c2
 operator|==
-name|EOF
+name|SM_IO_EOF
 condition|)
 break|break;
 do|do
 block|{
 name|c3
 operator|=
-name|fgetc
+name|sm_io_getc
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 block|}
@@ -4755,18 +4797,20 @@ if|if
 condition|(
 name|c3
 operator|==
-name|EOF
+name|SM_IO_EOF
 condition|)
 break|break;
 do|do
 block|{
 name|c4
 operator|=
-name|fgetc
+name|sm_io_getc
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 block|}
@@ -4787,7 +4831,7 @@ if|if
 condition|(
 name|c4
 operator|==
-name|EOF
+name|SM_IO_EOF
 condition|)
 break|break;
 if|if
@@ -5097,16 +5141,18 @@ name|fbuf
 expr_stmt|;
 while|while
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
-argument_list|,
-name|e
-operator|->
-name|e_dfp
 argument_list|)
 operator|!=
 name|NULL
@@ -5117,7 +5163,8 @@ condition|(
 name|mime_fromqp
 argument_list|(
 operator|(
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|)
 name|buf
@@ -5212,7 +5259,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t\t\tmime7to8 => %s to 8bit done\n"
 argument_list|,
@@ -5222,11 +5269,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  The following is based on Borenstein's "codes.c" module, with simplifying **  changes as we do not deal with multipart, and to do the translation in-core, **  with an attempt to prevent overrun of output buffers. ** **  What is needed here are changes to defned this code better against **  bad encodings. Questionable to always return 0xFF for bad mappings. */
+comment|/* **  The following is based on Borenstein's "codes.c" module, with simplifying **  changes as we do not deal with multipart, and to do the translation in-core, **  with an attempt to prevent overrun of output buffers. ** **  What is needed here are changes to defend this code better against **  bad encodings. Questionable to always return 0xFF for bad mappings. */
 end_comment
 
 begin_decl_stmt
@@ -5626,11 +5670,13 @@ name|state
 parameter_list|,
 name|maxlen
 parameter_list|)
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|infile
 decl_stmt|;
-name|u_char
+name|unsigned
+name|char
 modifier|*
 modifier|*
 name|outfile
@@ -5654,6 +5700,15 @@ name|nchar
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|maxlen
+operator|<
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 while|while
 condition|(
 operator|(

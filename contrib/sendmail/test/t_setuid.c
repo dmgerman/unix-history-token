@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  This program checks to see if your version of setuid works. **  Compile it, make it setuid root, and run it as yourself (NOT as **  root). ** **	NOTE:  This should work everywhere, but Linux has the ability **	to use the undocumented setcap() call to make this break. ** **  Compilation is trivial -- just "cc t_setuid.c".  Make it setuid, **  root and then execute it as a non-root user. */
+comment|/*  * Copyright (c) 2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+end_comment
+
+begin_comment
+comment|/* **  This program checks to see if your version of setuid works. **  Compile it, make it set-user-ID root, and run it as yourself (NOT as **  root). ** **	NOTE:  This should work everywhere, but Linux has the ability **	to use the undocumented setcap() call to make this break. ** **  Compilation is trivial -- just "cc t_setuid.c".  Make it set-user-ID, **  root and then execute it as a non-root user. */
 end_comment
 
 begin_include
@@ -33,7 +37,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: t_setuid.c,v 8.2.2.1 2000/05/31 00:29:47 gshapiro Exp $"
+literal|"@(#)$Id: t_setuid.c,v 8.7 2001/09/23 03:35:41 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +65,7 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|int
+name|uid_t
 name|r
 decl_stmt|,
 name|e
@@ -73,13 +77,25 @@ literal|"%s (should be %d/%d): r/euid=%d/%d\n"
 argument_list|,
 name|str
 argument_list|,
+operator|(
+name|int
+operator|)
 name|r
 argument_list|,
+operator|(
+name|int
+operator|)
 name|e
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -134,7 +150,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SETUP ERROR: re-run setuid root\n"
+literal|"SETUP ERROR: re-run set-user-ID root\n"
 argument_list|)
 expr_stmt|;
 name|exit

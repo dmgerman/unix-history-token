@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -10,6 +14,31 @@ include|#
 directive|include
 file|<sysexits.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|id
+index|[]
+init|=
+literal|"@(#)$Id: t_snprintf.c,v 8.4 2001/09/23 03:35:41 ca Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! lint */
+end_comment
 
 begin_define
 define|#

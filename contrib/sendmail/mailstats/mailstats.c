@@ -3,55 +3,29 @@ begin_comment
 comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|copyright
-index|[]
-init|=
+begin_macro
+name|SM_IDSTR
+argument_list|(
+argument|copyright
+argument_list|,
 literal|"@(#) Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+end_macro
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: mailstats.c,v 8.53.16.13 2001/05/07 22:06:38 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
+begin_macro
+name|SM_IDSTR
+argument_list|(
+argument|id
+argument_list|,
+literal|"@(#)$Id: mailstats.c,v 8.95 2001/12/30 04:59:40 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_include
 include|#
@@ -123,6 +97,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sm/errstring.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sendmail/sendmail.h>
 end_include
 
@@ -189,7 +175,7 @@ name|char
 modifier|*
 name|cfile
 decl_stmt|;
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|cfp
 decl_stmt|;
@@ -198,6 +184,9 @@ name|mnames
 decl_stmt|;
 name|bool
 name|progmode
+decl_stmt|;
+name|bool
+name|trunc
 decl_stmt|;
 name|long
 name|frmsgs
@@ -225,6 +214,17 @@ name|dismsgs
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_QUARANTINE
+name|long
+name|quarmsgs
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
 name|time_t
 name|now
 decl_stmt|;
@@ -272,7 +272,16 @@ name|optind
 decl_stmt|;
 name|cfile
 operator|=
-name|_PATH_SENDMAILCF
+name|getcfname
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|SM_GET_SENDMAIL_CF
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|sfile
 operator|=
@@ -280,11 +289,15 @@ name|NULL
 expr_stmt|;
 name|mnames
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|progmode
 operator|=
-name|FALSE
+name|false
+expr_stmt|;
+name|trunc
+operator|=
+name|false
 expr_stmt|;
 while|while
 condition|(
@@ -297,7 +310,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"C:f:op"
+literal|"cC:f:opP"
 argument_list|)
 operator|)
 operator|!=
@@ -310,6 +323,23 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'c'
+case|:
+name|cfile
+operator|=
+name|getcfname
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|SM_GET_SUBMIT_CF
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'C'
 case|:
@@ -331,15 +361,23 @@ literal|'o'
 case|:
 name|mnames
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 break|break;
 case|case
 literal|'p'
 case|:
+name|trunc
+operator|=
+name|true
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+literal|'P'
+case|:
 name|progmode
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 break|break;
 case|case
@@ -351,11 +389,13 @@ label|:
 operator|(
 name|void
 operator|)
-name|fputs
+name|sm_io_fputs
 argument_list|(
-literal|"usage: mailstats [-C cffile] [-f stfile] [-o] [-p]\n"
+name|smioerr
 argument_list|,
-name|stderr
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"usage: mailstats [-C cffile] [-P] [-f stfile] [-o] [-p]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -387,11 +427,17 @@ condition|(
 operator|(
 name|cfp
 operator|=
-name|fopen
+name|sm_io_open
 argument_list|(
+name|SmFtStdio
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|cfile
 argument_list|,
-literal|"r"
+name|SM_IO_RDONLY
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|==
@@ -402,9 +448,14 @@ name|save_errno
 operator|=
 name|errno
 expr_stmt|;
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"mailstats: "
 argument_list|)
@@ -413,7 +464,7 @@ name|errno
 operator|=
 name|save_errno
 expr_stmt|;
-name|perror
+name|sm_perror
 argument_list|(
 name|cfile
 argument_list|)
@@ -431,7 +482,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|mtable
 index|[
@@ -449,7 +500,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|mtable
 index|[
@@ -467,7 +518,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|mtable
 index|[
@@ -484,16 +535,18 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|cfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-argument_list|,
-name|cfp
 argument_list|)
 operator|!=
 name|NULL
@@ -535,7 +588,7 @@ case|:
 comment|/* option -- see if .st file */
 if|if
 condition|(
-name|strncasecmp
+name|sm_strncasecmp
 argument_list|(
 name|b
 argument_list|,
@@ -616,7 +669,7 @@ block|}
 comment|/* this is the S or StatusFile option -- save it */
 if|if
 condition|(
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|sfilebuf
 argument_list|,
@@ -630,9 +683,14 @@ sizeof|sizeof
 name|sfilebuf
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"StatusFile filename too long: %.30s...\n"
 argument_list|,
@@ -728,9 +786,14 @@ operator|>=
 name|MAXMAILERS
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"Too many mailers defined, %d max.\n"
 argument_list|,
@@ -847,9 +910,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|cfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 for|for
@@ -879,9 +944,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"mailstats: no statistics file located\n"
 argument_list|)
@@ -934,18 +1004,20 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fputs
+name|sm_io_fputs
 argument_list|(
-literal|"mailstats: "
+name|smioerr
 argument_list|,
-name|stderr
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"mailstats: "
 argument_list|)
 expr_stmt|;
 name|errno
 operator|=
 name|save_errno
 expr_stmt|;
-name|perror
+name|sm_perror
 argument_list|(
 name|sfile
 argument_list|)
@@ -998,18 +1070,20 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fputs
+name|sm_io_fputs
 argument_list|(
-literal|"mailstats: "
+name|smioerr
 argument_list|,
-name|stderr
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"mailstats: "
 argument_list|)
 expr_stmt|;
 name|errno
 operator|=
 name|save_errno
 expr_stmt|;
-name|perror
+name|sm_perror
 argument_list|(
 name|sfile
 argument_list|)
@@ -1071,9 +1145,14 @@ operator|!=
 name|STAT_MAGIC
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"mailstats: incorrect magic number in %s\n"
 argument_list|,
@@ -1096,9 +1175,14 @@ operator|!=
 name|STAT_VERSION
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"mailstats version (%d) incompatible with %s version (%d)\n"
 argument_list|,
@@ -1138,11 +1222,13 @@ block|{
 operator|(
 name|void
 operator|)
-name|fputs
+name|sm_io_fputs
 argument_list|(
-literal|"mailstats: file size changed.\n"
+name|smioerr
 argument_list|,
-name|stderr
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"mailstats: file size changed.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1166,8 +1252,15 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-name|printf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 literal|"%ld %ld\n"
 argument_list|,
 operator|(
@@ -1186,8 +1279,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 literal|"Statistics from %s"
 argument_list|,
 name|ctime
@@ -1199,9 +1299,46 @@ name|stat_itime
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-literal|" M   msgsfr  bytes_from   msgsto    bytes_to  msgsrej msgsdis%s\n"
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|" M   msgsfr  bytes_from   msgsto    bytes_to  msgsrej msgsdis"
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|_FFR_QUARANTINE
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|" msgsqur"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"%s\n"
 argument_list|,
 name|mnames
 condition|?
@@ -1241,6 +1378,19 @@ index|[
 name|i
 index|]
 operator|||
+if|#
+directive|if
+name|_FFR_QUARANTINE
+name|stats
+operator|.
+name|stat_nq
+index|[
+name|i
+index|]
+operator|||
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
 name|stats
 operator|.
 name|stat_nr
@@ -1273,8 +1423,15 @@ name|format
 operator|=
 literal|"%2d %8ld %10ldK %8ld %10ldK   %6ld  %6ld"
 expr_stmt|;
-name|printf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|format
 argument_list|,
 name|i
@@ -1322,12 +1479,44 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_QUARANTINE
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"  %6ld"
+argument_list|,
+name|stats
+operator|.
+name|stat_nq
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
 if|if
 condition|(
 name|mnames
 condition|)
-name|printf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 literal|"  %s"
 argument_list|,
 name|mtable
@@ -1336,8 +1525,15 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1395,6 +1591,21 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_QUARANTINE
+name|quarmsgs
+operator|+=
+name|stats
+operator|.
+name|stat_nq
+index|[
+name|i
+index|]
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
 block|}
 block|}
 if|if
@@ -1402,9 +1613,16 @@ condition|(
 name|progmode
 condition|)
 block|{
-name|printf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-literal|" T %8ld %10ld %8ld %10ld   %6ld  %6ld\n"
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|" T %8ld %10ld %8ld %10ld   %6ld  %6ld"
 argument_list|,
 name|frmsgs
 argument_list|,
@@ -1419,8 +1637,47 @@ argument_list|,
 name|dismsgs
 argument_list|)
 expr_stmt|;
-name|printf
+if|#
+directive|if
+name|_FFR_QUARANTINE
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"  %6ld"
+argument_list|,
+name|quarmsgs
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 literal|" C %8ld %8ld %6ld\n"
 argument_list|,
 name|stats
@@ -1444,6 +1701,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|trunc
+condition|)
+block|{
 name|fd
 operator|=
 name|open
@@ -1470,16 +1732,61 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
 block|{
-name|printf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-literal|"=============================================================\n"
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"============================================================="
 argument_list|)
 expr_stmt|;
-name|printf
+if|#
+directive|if
+name|_FFR_QUARANTINE
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-literal|" T %8ld %10ldK %8ld %10ldK   %6ld  %6ld\n"
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"========"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|" T %8ld %10ldK %8ld %10ldK   %6ld  %6ld"
 argument_list|,
 name|frmsgs
 argument_list|,
@@ -1494,8 +1801,47 @@ argument_list|,
 name|dismsgs
 argument_list|)
 expr_stmt|;
-name|printf
+if|#
+directive|if
+name|_FFR_QUARANTINE
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"  %6ld"
+argument_list|,
+name|quarmsgs
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 literal|" C %8ld %10s  %8ld %10s    %6ld\n"
 argument_list|,
 name|stats
