@@ -38,7 +38,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* use \[nrft0..] where appropiate */
+comment|/* use \[nrft0..] where appropriate */
 end_comment
 
 begin_comment

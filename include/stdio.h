@@ -411,12 +411,12 @@ define|#
 directive|define
 name|__SOPT
 value|0x0400
-comment|/* do fseek() optimisation */
+comment|/* do fseek() optimization */
 define|#
 directive|define
 name|__SNPT
 value|0x0800
-comment|/* do not do fseek() optimisation */
+comment|/* do not do fseek() optimization */
 define|#
 directive|define
 name|__SOFF
