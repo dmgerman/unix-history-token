@@ -5003,6 +5003,23 @@ operator|(
 literal|"IBM 82351 PCI-PCI bridge"
 operator|)
 return|;
+case|case
+literal|0x00011011
+case|:
+return|return
+operator|(
+literal|"DEC 21050 PCI-PCI bridge"
+operator|)
+return|;
+comment|/* UMC United Microelectronics 0x1060 */
+case|case
+literal|0x88811060
+case|:
+return|return
+operator|(
+literal|"UMC UM8881 HB4 486 PCI Chipset"
+operator|)
+return|;
 block|}
 empty_stmt|;
 if|if
@@ -5554,6 +5571,15 @@ case|:
 return|return
 operator|(
 literal|"NEC 003B PCI to PC-98 C-bus bridge"
+operator|)
+return|;
+comment|/* UMC United Microelectronics 0x1060 */
+case|case
+literal|0x886a1060
+case|:
+return|return
+operator|(
+literal|"UMC UM8886 ISA Bridge with EIDE"
 operator|)
 return|;
 comment|/* Cypress -- vendor 0x1080 */
@@ -6497,7 +6523,7 @@ literal|0x04961039
 case|:
 return|return
 operator|(
-literal|"SiS 85c496"
+literal|"SiS 85c496 PCI/VL Bridge"
 operator|)
 return|;
 case|case
