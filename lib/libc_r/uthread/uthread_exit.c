@@ -493,6 +493,14 @@ argument_list|(
 literal|"Cannot signal gc cond"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Mark the thread as dead so it will not return if it 	 * gets context switched out when the mutex is unlocked. 	 */
+name|PTHREAD_SET_STATE
+argument_list|(
+name|_thread_run
+argument_list|,
+name|PS_DEAD
+argument_list|)
+expr_stmt|;
 comment|/* Unlock the garbage collector mutex: */
 if|if
 condition|(
@@ -510,13 +518,9 @@ literal|"Cannot lock gc mutex"
 argument_list|)
 expr_stmt|;
 comment|/* This this thread will never be re-scheduled. */
-name|_thread_kern_sched_state
+name|_thread_kern_sched
 argument_list|(
-name|PS_DEAD
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* This point should not be reached. */
