@@ -1864,6 +1864,8 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|mem_range_attr_get
 argument_list|(
 name|md
@@ -1872,6 +1874,11 @@ operator|&
 name|nd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
 name|error
 operator|=
 name|copyout
@@ -2023,7 +2030,7 @@ comment|/*  * Implementation-neutral, kernel-callable functions for manipulating
 end_comment
 
 begin_function
-name|void
+name|int
 name|mem_range_attr_get
 parameter_list|(
 name|mrd
@@ -2093,6 +2100,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

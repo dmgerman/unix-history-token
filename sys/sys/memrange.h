@@ -318,7 +318,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|mem_range_attr_get
 parameter_list|(
 name|struct
