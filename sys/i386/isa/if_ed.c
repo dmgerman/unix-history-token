@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the 3Com 3c503, the NE1000 and NE2000, and a variety of similar  *   clones.  *  * Thanks to Charles Hannum for proving to me with example code that the  *	NE1000/2000 support could be added with minimal impact. Without  *	this, I wouldn't have proceeded in this direction.  *	  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * Thanks to Charles Hannum for proving to me with example code that the  *	NE1000/2000 support could be added with minimal impact. Without  *	this, I wouldn't have proceeded in this direction.  *	  */
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 1.25 1993/11/29 17:07:26 davidg Exp $  */
-end_comment
-
-begin_comment
-comment|/*  * Modification history  *  * Revision 2.16  1993/11/29  16:55:56  davidg  * merged in Garrett Wollman's strict prototype changes  *  * Revision 2.15  1993/11/29  16:32:58  davidg  * From Thomas Sandford<t.d.g.sandford@comp.brad.ac.uk>  * Add support for the 8013W board type  *  * Revision 2.14  1993/11/22  10:55:30  davidg  * change all splnet's to splimp's  *  * Revision 2.13  1993/11/22  10:53:52  davidg  * patch to add support for SMC8216 (Elite-Ultra) boards  * from Glen H. Lowe  *  * Revision 2.12  1993/11/07  18:04:13  davidg  * fix from Garrett Wollman:  * add a return(0) at the end of ed_probe so that if the various device  * specific probes fail that we just don't fall of the end of the function.  *  * Revision 2.11  1993/10/23  04:21:03  davidg  * Novell probe changed to be invasive because of too many complaints  * about some clone boards not being reset properly and thus not  * found on a warmboot. Yuck.  *  * Revision 2.10  1993/10/23  04:07:12  davidg  * increment output errors if the device times out (done via watchdog)  *  * Revision 2.9  1993/10/23  04:01:45  davidg  * increment input error counter if a packet with a bad length is  * detected.  *  * Revision 2.8  1993/10/15  10:59:56  davidg  * increase maximum time to wait for transmit DMA to complete to 120us.  * call ed_reset() if the time limit is reached instead of trying  * to abort the remote DMA.  *  * Revision 2.7  1993/10/15  10:49:10  davidg  * minor change to way the mbuf pointer temp variable is assigned in  * ed_start (slightly improves code readability)  *  * Revision 2.6  93/10/02  01:12:20  davidg  * use ETHER_ADDR_LEN in NE probe rather than '6'.  *   * Revision 2.5  93/09/30  17:44:14  davidg  * patch from vak@zebub.msk.su (Serge V.Vakulenko) to work around  * a hardware bug in cheap WD clone boards where the PROM checksum  * byte is always zero  *   * Revision 2.4  93/09/29  21:24:30  davidg  * Added software NIC reset in NE probe to work around a problem  * with some NE boards where the 8390 doesn't reset properly on  * power-up. Remove initialization of IMR/ISR in the NE probe  * because this is inherent in the reset.  *   * Revision 2.3  93/09/29  15:10:16  davidg  * credit Charles Hannum  *   * Revision 2.2  93/09/29  13:23:25  davidg  * added no multi-buffer override for 3c503  *   * Revision 2.1  93/09/29  12:32:12  davidg  * changed multi-buffer count for 16bit 3c503's from 5 to 2 after  * noticing that the transmitter becomes idle because of so many  * packets to load.  *   * Revision 2.0  93/09/29  00:00:19  davidg  * many changes, rewrites, additions, etc. Now supports the  * NE1000, NE2000, WD8003, WD8013, 3C503, 16bit 3C503, and  * a variety of similar clones. 16bit 3c503 now does multi  * transmit buffers. Nearly every part of the driver has  * changed in some way since rev 1.30.  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   */
+comment|/*  * $Id: if_ed.c,v 1.26 1993/12/19 00:50:37 wollman Exp $  */
 end_comment
 
 begin_include
@@ -3265,13 +3261,6 @@ operator|+
 name|ED_NOVELL_RESET
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * This total and completely screwy thing is to work around braindamage 	 *	in some NE compatible boards. Why it works, I have *no* idea. 	 *	It appears that the boards watch the ISA bus for an outb, and 	 *	will lock up the ISA bus if they see an inb first. Weird. 	 */
-block|outb(0x84, 0);
-endif|#
-directive|endif
 comment|/* 	 * I don't know if this is necessary; probably cruft leftover from 	 *	Clarkson packet driver code. Doesn't do a thing on the boards 	 *	I've tested. -DG [note that a outb(0x84, 0) seems to work 	 *	here, and is non-invasive...but some boards don't seem to reset 	 *	and I don't have complete documentation on what the 'right' 	 *	thing to do is...so we do the invasive thing for now. Yuck.] 	 */
 name|outb
 argument_list|(
