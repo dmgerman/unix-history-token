@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd5.c	1.2 83/07/22"
+literal|"@(#)cmd5.c	1.3 83/07/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,6 +524,11 @@ expr_stmt|;
 block|}
 name|bad
 label|:
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
