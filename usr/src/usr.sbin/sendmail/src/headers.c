@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.29 (Berkeley) %G%"
+literal|"@(#)headers.c	6.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3235,6 +3235,13 @@ decl_stmt|;
 name|char
 name|savechar
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+specifier|auto
+name|int
+name|stat
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -3445,14 +3452,14 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* translate the name to be relative */
-name|name
+name|flags
 operator|=
-name|remotename
-argument_list|(
-name|name
-argument_list|,
-name|m
-argument_list|,
+name|RF_HEADERADDR
+operator||
+name|RF_ADDDOMAIN
+expr_stmt|;
+if|if
+condition|(
 name|bitset
 argument_list|(
 name|H_FROM
@@ -3461,12 +3468,27 @@ name|h
 operator|->
 name|h_flags
 argument_list|)
+condition|)
+name|flags
+operator||=
+name|RF_SENDERADDR
+expr_stmt|;
+name|stat
+operator|=
+name|EX_OK
+expr_stmt|;
+name|name
+operator|=
+name|remotename
+argument_list|(
+name|name
 argument_list|,
-name|TRUE
+name|m
 argument_list|,
-name|FALSE
+name|flags
 argument_list|,
-name|TRUE
+operator|&
+name|stat
 argument_list|,
 name|e
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.41 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6553,7 +6553,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. **		header -- set if this address is in the header, rather **			than an envelope header. **		canonical -- if set, strip out any comment information, **			etc. **		adddomain -- if set, OK to do domain extension. **		e -- the current envelope. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
+comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		flags -- fine tune operations. **		pstat -- pointer to status word. **		e -- the current envelope. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
 end_comment
 
 begin_function
@@ -6565,13 +6565,9 @@ name|name
 parameter_list|,
 name|m
 parameter_list|,
-name|senderaddress
+name|flags
 parameter_list|,
-name|header
-parameter_list|,
-name|canonical
-parameter_list|,
-name|adddomain
+name|pstat
 parameter_list|,
 name|e
 parameter_list|)
@@ -6583,17 +6579,12 @@ name|MAILER
 modifier|*
 name|m
 decl_stmt|;
-name|bool
-name|senderaddress
+name|int
+name|flags
 decl_stmt|;
-name|bool
-name|header
-decl_stmt|;
-name|bool
-name|canonical
-decl_stmt|;
-name|bool
-name|adddomain
+name|int
+modifier|*
+name|pstat
 decl_stmt|;
 specifier|register
 name|ENVELOPE
@@ -6685,7 +6676,12 @@ return|;
 comment|/* 	**  Do a heuristic crack of this name to extract any comment info. 	**	This will leave the name as a comment and a $g macro. 	*/
 if|if
 condition|(
-name|canonical
+name|bitset
+argument_list|(
+name|RF_CANONICAL
+argument_list|,
+name|flags
+argument_list|)
 operator|||
 name|bitnset
 argument_list|(
@@ -6733,9 +6729,8 @@ operator|(
 name|name
 operator|)
 return|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|rewrite
 argument_list|(
 name|pvp
@@ -6744,10 +6739,22 @@ literal|3
 argument_list|,
 name|e
 argument_list|)
+operator|==
+name|EX_TEMPFAIL
+condition|)
+operator|*
+name|pstat
+operator|=
+name|EX_TEMPFAIL
 expr_stmt|;
 if|if
 condition|(
-name|adddomain
+name|bitset
+argument_list|(
+name|RF_ADDDOMAIN
+argument_list|,
+name|flags
+argument_list|)
 operator|&&
 name|e
 operator|->
@@ -6820,9 +6827,8 @@ operator|!=
 name|NULL
 condition|)
 continue|continue;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|rewrite
 argument_list|(
 name|pvp
@@ -6831,14 +6837,17 @@ literal|3
 argument_list|,
 name|e
 argument_list|)
+operator|==
+name|EX_TEMPFAIL
+condition|)
+operator|*
+name|pstat
+operator|=
+name|EX_TEMPFAIL
 expr_stmt|;
 block|}
 block|}
 comment|/* 	**  Do more specific rewriting. 	**	Rewrite using ruleset 1 or 2 for envelope addresses and 	**	5 or 6 for header addresses depending on whether this 	**	is a sender address or not. 	**	Then run it through any receiving-mailer-specific rulesets. 	*/
-if|if
-condition|(
-name|senderaddress
-condition|)
 elseif|else
 if|if
 condition|(
@@ -6846,9 +6855,8 @@ name|rwset
 operator|>
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|rewrite
 argument_list|(
 name|pvp
@@ -6857,11 +6865,17 @@ name|rwset
 argument_list|,
 name|e
 argument_list|)
+operator|==
+name|EX_TEMPFAIL
+condition|)
+operator|*
+name|pstat
+operator|=
+name|EX_TEMPFAIL
 expr_stmt|;
 comment|/* 	**  Do any final sanitation the address may require. 	**	This will normally be used to turn internal forms 	**	(e.g., user@host.LOCAL) into external form.  This 	**	may be used as a default to the above rules. 	*/
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|rewrite
 argument_list|(
 name|pvp
@@ -6870,6 +6884,13 @@ literal|4
 argument_list|,
 name|e
 argument_list|)
+operator|==
+name|EX_TEMPFAIL
+condition|)
+operator|*
+name|pstat
+operator|=
+name|EX_TEMPFAIL
 expr_stmt|;
 comment|/* 	**  Now restore the comment information we had at the beginning. 	*/
 name|cataddr

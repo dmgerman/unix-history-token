@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.63 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.64 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2379,6 +2379,10 @@ return|;
 block|}
 comment|/* 	**  Do initial argv setup. 	**	Insert the mailer name.  Notice that $x expansion is 	**	NOT done on the mailer name.  Then, if the mailer has 	**	a picky -f flag, we insert it as appropriate.  This 	**	code does not check for 'pv' overflow; this places a 	**	manifest lower limit of 4 for MAXPV. 	**		The from address rewrite is expected to make 	**		the address relative to the other end. 	*/
 comment|/* rewrite from address, using rewriting rules */
+name|rcode
+operator|=
+name|EX_OK
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2396,13 +2400,12 @@ name|q_paddr
 argument_list|,
 name|m
 argument_list|,
-name|TRUE
+name|RF_SENDERADDR
+operator||
+name|RF_CANONICAL
 argument_list|,
-name|FALSE
-argument_list|,
-name|TRUE
-argument_list|,
-name|FALSE
+operator|&
+name|rcode
 argument_list|,
 name|e
 argument_list|)
