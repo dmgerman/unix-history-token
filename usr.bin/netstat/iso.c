@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso.c,v 1.5 92/06/04 00:36:32 leres Exp $  * $Source: /usr/src/usr.bin/netstat/RCS/iso.c,v $  */
+comment|/*  * $Header: /home/ncvs/src/usr.bin/netstat/iso.c,v 1.1.1.1 1994/05/27 12:32:25 rgrimes Exp $  * $Source: /home/ncvs/src/usr.bin/netstat/iso.c,v $  */
 end_comment
 
 begin_comment
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
