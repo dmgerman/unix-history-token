@@ -40,7 +40,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	1.6 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	1.7 %G%";  */
 end_comment
 
 begin_comment
@@ -506,7 +506,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|C
+name|F
 value|01000
 end_define
 
