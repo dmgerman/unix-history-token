@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.46 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.47 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4514,25 +4514,25 @@ modifier|*
 name|dp
 decl_stmt|;
 name|int
-name|flag
-decl_stmt|,
 name|error
 decl_stmt|,
 name|rdonly
 decl_stmt|;
-name|flag
-operator|=
+name|struct
+name|componentname
+modifier|*
+name|cnp
+init|=
+operator|&
 name|ndp
 operator|->
-name|ni_nameiop
-operator|&
-name|OPMASK
-expr_stmt|;
+name|ni_cnd
+decl_stmt|;
 name|MALLOC
 argument_list|(
-name|ndp
+name|cnp
 operator|->
-name|ni_pnbuf
+name|cn_pnbuf
 argument_list|,
 name|char
 operator|*
@@ -4554,9 +4554,9 @@ name|dposp
 expr_stmt|;
 name|tocp
 operator|=
-name|ndp
+name|cnp
 operator|->
-name|ni_pnbuf
+name|cn_pnbuf
 expr_stmt|;
 name|md
 operator|=
@@ -4578,9 +4578,9 @@ name|m_len
 operator|-
 name|fromcp
 expr_stmt|;
-name|ndp
+name|cnp
 operator|->
-name|ni_hash
+name|cn_hash
 operator|=
 literal|0
 expr_stmt|;
@@ -4685,7 +4685,9 @@ operator||
 literal|0200
 operator|)
 operator|||
-name|flag
+name|cnp
+operator|->
+name|cn_nameiop
 operator|!=
 name|DELETE
 condition|)
@@ -4698,9 +4700,9 @@ goto|goto
 name|out
 goto|;
 block|}
-name|ndp
+name|cnp
 operator|->
-name|ni_hash
+name|cn_hash
 operator|+=
 operator|(
 name|unsigned
@@ -4789,17 +4791,17 @@ name|ni_pathlen
 operator|=
 name|tocp
 operator|-
-name|ndp
+name|cnp
 operator|->
-name|ni_pnbuf
+name|cn_pnbuf
 expr_stmt|;
-name|ndp
+name|cnp
 operator|->
-name|ni_ptr
+name|cn_nameptr
 operator|=
-name|ndp
+name|cnp
 operator|->
-name|ni_pnbuf
+name|cn_pnbuf
 expr_stmt|;
 comment|/* 	 * Extract and set starting directory. 	 */
 if|if
@@ -4817,7 +4819,9 @@ name|dp
 argument_list|,
 name|ndp
 operator|->
-name|ni_cred
+name|ni_cnd
+operator|.
+name|cn_cred
 argument_list|,
 name|slp
 argument_list|,
@@ -4862,9 +4866,9 @@ if|if
 condition|(
 name|rdonly
 condition|)
-name|ndp
+name|cnp
 operator|->
-name|ni_nameiop
+name|cn_flags
 operator||=
 operator|(
 name|NOCROSSMOUNT
@@ -4873,13 +4877,19 @@ name|RDONLY
 operator|)
 expr_stmt|;
 else|else
-name|ndp
+name|cnp
 operator|->
-name|ni_nameiop
+name|cn_flags
 operator||=
 name|NOCROSSMOUNT
 expr_stmt|;
 comment|/* 	 * And call lookup() to do the real work 	 */
+name|cnp
+operator|->
+name|cn_proc
+operator|=
+name|p
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -4887,8 +4897,6 @@ operator|=
 name|lookup
 argument_list|(
 name|ndp
-argument_list|,
-name|p
 argument_list|)
 condition|)
 goto|goto
@@ -4897,9 +4905,9 @@ goto|;
 comment|/* 	 * Check for encountering a symbolic link 	 */
 if|if
 condition|(
-name|ndp
+name|cnp
 operator|->
-name|ni_nameiop
+name|cn_flags
 operator|&
 name|ISSYMLINK
 condition|)
@@ -4907,9 +4915,9 @@ block|{
 if|if
 condition|(
 operator|(
-name|ndp
+name|cnp
 operator|->
-name|ni_nameiop
+name|cn_flags
 operator|&
 name|LOCKPARENT
 operator|)
@@ -4959,9 +4967,9 @@ block|}
 comment|/* 	 * Check for saved name request 	 */
 if|if
 condition|(
-name|ndp
+name|cnp
 operator|->
-name|ni_nameiop
+name|cn_flags
 operator|&
 operator|(
 name|SAVENAME
@@ -4970,9 +4978,9 @@ name|SAVESTART
 operator|)
 condition|)
 block|{
-name|ndp
+name|cnp
 operator|->
-name|ni_nameiop
+name|cn_flags
 operator||=
 name|HASBUF
 expr_stmt|;
@@ -4986,9 +4994,9 @@ name|out
 label|:
 name|FREE
 argument_list|(
-name|ndp
+name|cnp
 operator|->
-name|ni_pnbuf
+name|cn_pnbuf
 argument_list|,
 name|M_NAMEI
 argument_list|)
