@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diskpart.c	4.2 (Berkeley) %G%"
+literal|"@(#)diskpart.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,19 +293,19 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Each disk has some space reserved for a bad sector  * forwarding table.  While DEC standard 144 uses only  * the first 5 even numbered sectors in the last track  * of the last cylinder, we reserve 3 tracks for expansion.  */
+comment|/*  * Each disk has some space reserved for a bad sector  * forwarding table.  DEC standard 144 uses the first  * 5 even numbered sectors in the last track of the  * last cylinder for replicated storage of the bad sector  * table; another 126 sectors past this is needed as a  * pool of replacement sectors.  */
 end_comment
 
 begin_decl_stmt
 name|int
 name|badsecttable
 init|=
-literal|3
+literal|126
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* # tracks */
+comment|/* # sectors */
 end_comment
 
 begin_decl_stmt
@@ -531,11 +531,21 @@ name|dp
 operator|->
 name|d_ntracks
 expr_stmt|;
+comment|/* 	 * Bad sector table contains one track for the replicated 	 * copies of the table and enough full tracks preceding 	 * the last track to hold the pool of free blocks to which 	 * bad sectors are mapped. 	 */
 name|badsecttable
-operator|*=
+operator|=
 name|dp
 operator|->
 name|d_nsectors
+operator|+
+name|roundup
+argument_list|(
+name|badsecttable
+argument_list|,
+name|dp
+operator|->
+name|d_nsectors
+argument_list|)
 expr_stmt|;
 name|threshhold
 operator|=
