@@ -1122,7 +1122,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: tunefs tuneup-options special-device\n"
+literal|"usage: tunefs tuneup-options special-device\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
