@@ -189,6 +189,12 @@ directive|define
 name|USE_LOCALE
 end_define
 
+begin_define
+define|#
+directive|define
+name|Honor_FLT_ROUNDS
+end_define
+
 begin_undef
 undef|#
 directive|undef
