@@ -1672,6 +1672,26 @@ name|p
 operator|->
 name|size
 expr_stmt|;
+comment|/* Update the size of the volume this plex is attached to. */
+if|if
+condition|(
+name|p
+operator|->
+name|vol_sc
+operator|!=
+name|NULL
+condition|)
+name|gv_update_vol_size
+argument_list|(
+name|p
+operator|->
+name|vol_sc
+argument_list|,
+name|p
+operator|->
+name|size
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL

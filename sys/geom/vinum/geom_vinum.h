@@ -507,6 +507,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|gv_update_vol_size
+parameter_list|(
+name|struct
+name|gv_volume
+modifier|*
+parameter_list|,
+name|off_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
