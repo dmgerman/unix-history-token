@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	5.6 (Berkeley) %G%"
+literal|"@(#)dbtest.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -396,6 +396,17 @@ name|STDOUT_FILENO
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|DB
+modifier|*
+name|XXdbp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Global for gdb. */
+end_comment
+
 begin_function
 name|int
 name|main
@@ -675,6 +686,10 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|XXdbp
+operator|=
+name|dbp
 expr_stmt|;
 name|state
 operator|=
@@ -1612,6 +1627,28 @@ name|NOSUCHKEY
 argument_list|)
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%d: %.*s: %s\n"
+argument_list|,
+name|lineno
+argument_list|,
+name|kp
+operator|->
+name|size
+argument_list|,
+name|kp
+operator|->
+name|data
+argument_list|,
+name|NOSUCHKEY
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2599,6 +2636,37 @@ block|{
 name|ib
 operator|.
 name|lorder
+operator|=
+name|strtoul
+argument_list|(
+name|eq
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|&
+name|ib
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+literal|"psize"
+argument_list|,
+name|s
+argument_list|)
+condition|)
+block|{
+name|ib
+operator|.
+name|psize
 operator|=
 name|strtoul
 argument_list|(
