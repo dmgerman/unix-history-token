@@ -699,6 +699,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|long
+name|realmem
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vm_paddr_t
 name|phys_avail
 index|[
@@ -818,6 +826,10 @@ argument_list|)
 operator|/
 literal|1048576
 argument_list|)
+expr_stmt|;
+name|realmem
+operator|=
+name|Maxmem
 expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
 if|if
