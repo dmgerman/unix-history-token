@@ -616,7 +616,7 @@ name|punt
 goto|;
 block|}
 block|}
-comment|/*      * Now that we've verified that the path we're given is ok, let's try to      * be a bit intelligent in locating the release we are looking for.  First      * off, if the release is specified as "__RELEASE" or "none", then just      * assume that the current directory is the one we want and give up.      */
+comment|/*      * Now that we've verified that the path we're given is ok, let's try to      * be a bit intelligent in locating the release we are looking for.  First      * off, if the release is specified as "__RELEASE" or "any", then just      * assume that the current directory is the one we want and give up.      */
 name|rel
 operator|=
 name|variable_get
@@ -637,7 +637,7 @@ name|strcmp
 argument_list|(
 name|rel
 argument_list|,
-literal|"none"
+literal|"any"
 argument_list|)
 condition|)
 block|{
@@ -716,7 +716,7 @@ literal|"Warning:  Can't find the `%s' distribution on this\n"
 literal|"FTP server.  You may need to visit a different server for\n"
 literal|"the release you are trying to fetch or go to the Options\n"
 literal|"menu and to set the release name to explicitly match what's\n"
-literal|"available on %s (or set to \"none\").\n\n"
+literal|"available on %s (or set to \"any\").\n\n"
 literal|"Would you like to select another FTP server?"
 argument_list|,
 name|rel
