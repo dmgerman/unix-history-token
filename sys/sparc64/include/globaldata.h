@@ -27,6 +27,18 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/intr_machdep.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -86,13 +98,38 @@ name|lock_list_entry
 modifier|*
 name|gd_spinlocks
 decl_stmt|;
+name|struct
+name|intr_queue
+name|gd_iq
+decl_stmt|;
+comment|/* interrupt queuq */
+name|u_long
+name|gd_alt_stack
+index|[
+name|ALT_STACK_SIZE
+index|]
+decl_stmt|;
+comment|/* alternate global stack */
+name|u_int
+name|gd_wp_insn
+decl_stmt|;
+comment|/* watch point support */
+name|u_long
+name|gd_wp_pstate
+decl_stmt|;
+name|u_long
+name|gd_wp_va
+decl_stmt|;
+name|int
+name|gd_wp_mask
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KTR_PERCPU
 name|int
 name|gd_ktr_idx
 decl_stmt|;
-comment|/* Index into trace table */
+comment|/* index into trace table */
 name|char
 modifier|*
 name|gd_ktr_buf
@@ -105,36 +142,6 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-name|struct
-name|intr_queue
-modifier|*
-name|gd_iq
-decl_stmt|;
-name|struct
-name|intr_vector
-modifier|*
-name|gd_ivt
-decl_stmt|;
-comment|/* Alternate global stack */
-name|u_long
-name|gd_alt_stack
-index|[
-name|ALT_STACK_SIZE
-index|]
-decl_stmt|;
-comment|/* Watch point support. */
-name|u_int
-name|gd_wp_insn
-decl_stmt|;
-name|u_long
-name|gd_wp_pstate
-decl_stmt|;
-name|u_long
-name|gd_wp_va
-decl_stmt|;
-name|int
-name|gd_wp_mask
-decl_stmt|;
 block|}
 struct|;
 end_struct
