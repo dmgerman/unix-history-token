@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)object.c 1.4 %G%"
+literal|"@(#)object.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1408,41 +1408,8 @@ break|break;
 case|case
 name|N_LENG
 case|:
-comment|/* 	     * Should complain out this, obviously the wrong symbol format. 	     */
-break|break;
 default|default:
-if|if
-condition|(
-name|name
-operator|!=
-name|nil
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s, "
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"ntype %2x, desc %x, value %x\n"
-argument_list|,
-name|np
-operator|->
-name|n_type
-argument_list|,
-name|np
-operator|->
-name|n_desc
-argument_list|,
-name|np
-operator|->
-name|n_value
-argument_list|)
-expr_stmt|;
+comment|/* 	     * Should complain out this, obviously the wrong symbol format. 	     * 	    if (name != nil) { 		printf("%s, ", name); 	    } 	    printf("ntype %2x, desc %x, value %x\n", 		np->n_type, np->n_desc, np->n_value); 	     * 	     */
 break|break;
 block|}
 block|}
@@ -2379,7 +2346,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	     * A hack for C typedefs that don't create new types, 	     * e.g. typedef unsigned int Hashvalue; 	     */
+comment|/* 	     * A hack for C typedefs that don't create new types, 	     * e.g. typedef unsigned int Hashvalue; 	     *  or  typedef struct blah BLAH; 	     */
 if|if
 condition|(
 operator|*
@@ -2406,12 +2373,21 @@ operator|==
 name|nil
 condition|)
 block|{
-name|panic
-argument_list|(
-literal|"nil type for %d"
-argument_list|,
+name|s
+operator|->
+name|type
+operator|=
+name|symbol_alloc
+argument_list|()
+expr_stmt|;
+name|typetable
+index|[
 name|i
-argument_list|)
+index|]
+operator|=
+name|s
+operator|->
+name|type
 expr_stmt|;
 block|}
 name|knowtype
