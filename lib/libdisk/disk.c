@@ -1911,7 +1911,7 @@ name|XML_FWHEADS
 case|:
 name|dl
 operator|->
-name|d_nheads
+name|d_ntracks
 operator|=
 operator|(
 name|u_int32_t
