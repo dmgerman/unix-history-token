@@ -448,10 +448,14 @@ name|found
 decl_stmt|;
 if|if
 condition|(
-operator|*
+name|strchr
+argument_list|(
 name|filename
-operator|==
+argument_list|,
 literal|'/'
+argument_list|)
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
