@@ -1555,51 +1555,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Requires interlock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VCANRECYCLE
-parameter_list|(
-name|vp
-parameter_list|)
-define|\
-value|(((vp)->v_iflag& VI_FREE)&& !(vp)->v_holdcnt)
-end_define
-
-begin_comment
-comment|/* Requires interlock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VSHOULDFREE
-parameter_list|(
-name|vp
-parameter_list|)
-define|\
-value|(!((vp)->v_iflag& VI_FREE)&& !(vp)->v_holdcnt&&		\ 	 (!(vp)->v_object || !(vp)->v_object->resident_page_count))
-end_define
-
-begin_comment
-comment|/* Requires interlock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VSHOULDBUSY
-parameter_list|(
-name|vp
-parameter_list|)
-define|\
-value|(((vp)->v_iflag& VI_FREE)&& (vp)->v_holdcnt)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -3780,17 +3735,6 @@ name|struct
 name|vop_generic_args
 modifier|*
 name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vfree
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
