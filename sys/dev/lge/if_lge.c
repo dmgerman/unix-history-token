@@ -326,7 +326,8 @@ specifier|static
 name|void
 name|lge_jfree
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -4165,7 +4166,8 @@ name|buf
 parameter_list|,
 name|args
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|buf
 decl_stmt|;
 name|void
