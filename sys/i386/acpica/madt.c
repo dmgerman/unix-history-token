@@ -135,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|NIOAPICS
-value|16
+value|32
 end_define
 
 begin_comment
@@ -146,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|NLAPICS
-value|16
+value|32
 end_define
 
 begin_comment
