@@ -153,6 +153,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -573,6 +579,13 @@ decl_stmt|;
 name|regmatch_t
 name|regmatch
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp

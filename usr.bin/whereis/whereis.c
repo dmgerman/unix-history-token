@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<regex.h>
 end_include
 
@@ -1698,6 +1704,13 @@ name|FILE
 modifier|*
 name|p
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|scanopts
 argument_list|(
 name|argc
