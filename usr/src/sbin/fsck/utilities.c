@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.35 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1407,15 +1407,24 @@ name|i
 decl_stmt|,
 name|errs
 decl_stmt|;
+name|off_t
+name|offset
+decl_stmt|;
+name|offset
+operator|=
+name|blk
+expr_stmt|;
+name|offset
+operator|*=
+name|dev_bsize
+expr_stmt|;
 if|if
 condition|(
 name|lseek
 argument_list|(
 name|fd
 argument_list|,
-name|blk
-operator|*
-name|dev_bsize
+name|offset
 argument_list|,
 literal|0
 argument_list|)
@@ -1464,9 +1473,7 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-name|blk
-operator|*
-name|dev_bsize
+name|offset
 argument_list|,
 literal|0
 argument_list|)
@@ -1546,9 +1553,7 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-name|blk
-operator|*
-name|dev_bsize
+name|offset
 operator|+
 name|i
 operator|+
@@ -1665,6 +1670,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|off_t
+name|offset
+decl_stmt|;
 if|if
 condition|(
 name|fd
@@ -1672,15 +1680,21 @@ operator|<
 literal|0
 condition|)
 return|return;
+name|offset
+operator|=
+name|blk
+expr_stmt|;
+name|offset
+operator|*=
+name|dev_bsize
+expr_stmt|;
 if|if
 condition|(
 name|lseek
 argument_list|(
 name|fd
 argument_list|,
-name|blk
-operator|*
-name|dev_bsize
+name|offset
 argument_list|,
 literal|0
 argument_list|)
@@ -1731,9 +1745,7 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-name|blk
-operator|*
-name|dev_bsize
+name|offset
 argument_list|,
 literal|0
 argument_list|)
@@ -1798,9 +1810,7 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-name|blk
-operator|*
-name|dev_bsize
+name|offset
 operator|+
 name|i
 operator|+
