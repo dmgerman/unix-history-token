@@ -8359,11 +8359,6 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-name|DC_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Handle power management nonsense. 	 */
 name|dc_acpi
 argument_list|(
@@ -8426,7 +8421,7 @@ operator|=
 name|ENXIO
 expr_stmt|;
 goto|goto
-name|fail
+name|fail_nolock
 goto|;
 block|}
 else|#
@@ -8453,7 +8448,7 @@ operator|=
 name|ENXIO
 expr_stmt|;
 goto|goto
-name|fail
+name|fail_nolock
 goto|;
 block|}
 endif|#
@@ -8506,7 +8501,7 @@ operator|=
 name|ENXIO
 expr_stmt|;
 goto|goto
-name|fail
+name|fail_nolock
 goto|;
 block|}
 name|sc
@@ -8595,7 +8590,7 @@ operator|=
 name|ENXIO
 expr_stmt|;
 goto|goto
-name|fail
+name|fail_nolock
 goto|;
 block|}
 name|error
@@ -8667,9 +8662,14 @@ name|unit
 argument_list|)
 expr_stmt|;
 goto|goto
-name|fail
+name|fail_nolock
 goto|;
 block|}
+name|DC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Need this info to decide on a chip type. */
 name|sc
 operator|->
@@ -10150,6 +10150,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|fail_nolock
+label|:
 name|mtx_destroy
 argument_list|(
 operator|&
