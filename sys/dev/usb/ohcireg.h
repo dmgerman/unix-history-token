@@ -739,7 +739,7 @@ begin_define
 define|#
 directive|define
 name|OHCI_NORMAL_INTRS
-value|(OHCI_SO | OHCI_WDH | OHCI_RD | OHCI_UE | OHCI_RHSC)
+value|(OHCI_WDH | OHCI_RD | OHCI_UE | OHCI_RHSC)
 end_define
 
 begin_define
