@@ -568,6 +568,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|msdosfs_uninit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vfsconf
+operator|*
+name|vfsp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|msdosfs_mountroot
 name|__P
 argument_list|(

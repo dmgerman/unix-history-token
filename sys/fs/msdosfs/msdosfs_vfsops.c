@@ -4982,7 +4982,7 @@ name|msdosfs_vptofh
 block|,
 name|msdosfs_init
 block|,
-name|vfs_stduninit
+name|msdosfs_uninit
 block|,
 name|vfs_stdextattrctl
 block|, }
