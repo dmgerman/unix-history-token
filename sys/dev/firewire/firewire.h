@@ -1515,12 +1515,23 @@ begin_comment
 comment|/*  * FireWire specific system requests.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|FW_SSTDV
 value|_IOWR('S', 85, unsigned int)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

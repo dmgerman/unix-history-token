@@ -432,11 +432,6 @@ modifier|*
 name|xfer
 decl_stmt|;
 name|struct
-name|fw_dvbuf
-modifier|*
-name|dvbuf
-decl_stmt|;
-name|struct
 name|fw_bind
 modifier|*
 name|fwb
@@ -630,6 +625,9 @@ name|sub
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|FWXFERQ_DV
 if|if
 condition|(
 name|sc
@@ -646,6 +644,11 @@ operator|&
 name|FWXFERQ_DV
 condition|)
 block|{
+name|struct
+name|fw_dvbuf
+modifier|*
+name|dvbuf
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -864,6 +867,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -2233,6 +2238,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|FWXFERQ_DV
 if|if
 condition|(
 name|xferq
@@ -2249,6 +2257,17 @@ name|FWXFERQ_DV
 operator|)
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|xferq
+operator|==
+name|NULL
+condition|)
+block|{
+endif|#
+directive|endif
 name|isoloop
 label|:
 if|if
@@ -2493,6 +2512,9 @@ return|return
 name|err
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|FWXFERQ_DV
 if|if
 condition|(
 name|xferq
@@ -2773,6 +2795,8 @@ return|return
 name|err
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|xferq
@@ -2984,13 +3008,7 @@ return|return
 name|EINVAL
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * ioctl support.  */
-end_comment
-
-begin_function
 name|int
 name|fw_ioctl
 parameter_list|(
@@ -3423,6 +3441,9 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|FWXFERQ_DV
 case|case
 name|FW_SSTDV
 case|:
@@ -3758,6 +3779,8 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
 case|case
 name|FW_SSTBUF
 case|:
@@ -5644,9 +5667,6 @@ return|return
 name|err
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|fw_poll
 parameter_list|(
@@ -5796,9 +5816,6 @@ return|return
 name|revents
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|fw_mmap

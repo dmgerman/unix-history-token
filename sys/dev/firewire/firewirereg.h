@@ -782,10 +782,15 @@ define|#
 directive|define
 name|FWXFERQ_BULK
 value|(1<< 11)
+if|#
+directive|if
+literal|0
 define|#
 directive|define
 name|FWXFERQ_DV
 value|(1<< 12)
+endif|#
+directive|endif
 define|#
 directive|define
 name|FWXFERQ_MODEMASK
