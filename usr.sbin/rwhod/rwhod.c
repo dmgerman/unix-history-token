@@ -1354,15 +1354,8 @@ expr|struct
 name|utmp
 argument_list|)
 expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"utmpsize(%d)"
-argument_list|,
-name|utmpsize
-argument_list|)
-expr_stmt|;
+comment|/* Commented out the following line, because it disturbs many people    that are booting/rebooting their machines often */
+comment|/*			syslog(LOG_WARNING, "utmpsize(%d)", utmpsize); */
 if|if
 condition|(
 name|utmp
