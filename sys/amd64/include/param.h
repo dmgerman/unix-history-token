@@ -517,7 +517,7 @@ begin_define
 define|#
 directive|define
 name|VM_BCACHE_SIZE_MAX
-value|(200 * 1024 * 1024)
+value|(400 * 1024 * 1024)
 end_define
 
 begin_endif
