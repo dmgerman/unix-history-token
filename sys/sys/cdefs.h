@@ -914,7 +914,7 @@ name|__RCSID
 parameter_list|(
 name|s
 parameter_list|)
-value|__IDSTRING(__CONCAT(__rcsid_,__LINE__),s)
+value|__IDSTRING(__CONCAT(__rcsid_,__LINE__),s);
 end_define
 
 begin_endif
@@ -937,7 +937,6 @@ argument_list|(
 name|lint
 argument_list|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
 name|STRIP_FBSDID
@@ -951,7 +950,7 @@ name|__FBSDID
 parameter_list|(
 name|s
 parameter_list|)
-value|__IDSTRING(__CONCAT(__rcsid_,__LINE__),s)
+value|__IDSTRING(__CONCAT(__rcsid_,__LINE__),s);
 end_define
 
 begin_else
