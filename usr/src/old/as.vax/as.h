@@ -613,7 +613,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|lgrefltn
+name|lgreflen
 index|[]
 decl_stmt|;
 end_decl_stmt

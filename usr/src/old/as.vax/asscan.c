@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan.c 4.1 %G%"
+literal|"@(#)asscan.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2255,10 +2255,6 @@ end_define
 
 begin_comment
 comment|/* 'd' 'e' 'D' 'E' */
-end_comment
-
-begin_comment
-comment|/*exponent field*/
 end_comment
 
 begin_define
