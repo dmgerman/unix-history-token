@@ -809,11 +809,17 @@ name|EXT_EXTREF
 condition|)
 name|ref_cnt
 operator|=
+name|__DEVOLATILE
+argument_list|(
+name|u_int
+operator|*
+argument_list|,
 name|mb
 operator|->
 name|m_ext
 operator|.
 name|ref_cnt
+argument_list|)
 expr_stmt|;
 name|mb
 operator|->
@@ -971,7 +977,7 @@ name|dofree
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * This is tricky.  We need to make sure to decrement the 	 * refcount in a safe way but to also clean up if we're the 	 * last reference.  This method seems to do it without race. 	 * The volatile cast is required to emit the proper load  	 * instructions. Otherwise gcc will optimize the read outside 	 * of the while loop. 	 */
+comment|/* 	 * This is tricky.  We need to make sure to decrement the 	 * refcount in a safe way but to also clean up if we're the 	 * last reference.  This method seems to do it without race. 	 */
 while|while
 condition|(
 name|dofree
@@ -982,11 +988,6 @@ block|{
 name|cnt
 operator|=
 operator|*
-operator|(
-specifier|volatile
-name|u_int
-operator|*
-operator|)
 operator|(
 name|m
 operator|->
@@ -1133,11 +1134,17 @@ name|NULL
 condition|)
 name|free
 argument_list|(
+name|__DEVOLATILE
+argument_list|(
+name|u_int
+operator|*
+argument_list|,
 name|m
 operator|->
 name|m_ext
 operator|.
 name|ref_cnt
+argument_list|)
 argument_list|,
 name|M_MBUF
 argument_list|)
