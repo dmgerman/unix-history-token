@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.9 (Berkeley) %G%"
+literal|"@(#)main.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -719,21 +719,25 @@ operator|->
 name|fs_file
 argument_list|)
 expr_stmt|;
-name|msgtail
-argument_list|(
-literal|"to %s\n"
-argument_list|,
-name|tape
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RDUMP
 name|msgtail
 argument_list|(
-literal|" on host %s\n"
+literal|"to %s on host %s\n"
+argument_list|,
+name|tape
 argument_list|,
 name|host
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|msgtail
+argument_list|(
+literal|"to %s\n"
+argument_list|,
+name|tape
 argument_list|)
 expr_stmt|;
 endif|#
