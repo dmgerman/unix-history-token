@@ -517,9 +517,14 @@ comment|/* flag to do timing */
 end_comment
 
 begin_decl_stmt
-name|long
+name|double
 name|tmin
 init|=
+literal|1000.0
+operator|*
+operator|(
+name|double
+operator|)
 name|LONG_MAX
 decl_stmt|;
 end_decl_stmt
@@ -529,7 +534,7 @@ comment|/* minimum round trip time */
 end_comment
 
 begin_decl_stmt
-name|long
+name|double
 name|tmax
 decl_stmt|;
 end_decl_stmt
@@ -539,7 +544,7 @@ comment|/* maximum round trip time */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|double
 name|tsum
 decl_stmt|;
 end_decl_stmt
@@ -1836,7 +1841,7 @@ literal|2
 operator|*
 name|tmax
 operator|/
-literal|1000
+literal|1000000.0
 expr_stmt|;
 if|if
 condition|(
@@ -2180,7 +2185,7 @@ decl_stmt|,
 modifier|*
 name|tp
 decl_stmt|;
-name|long
+name|double
 name|triptime
 decl_stmt|;
 name|int
@@ -2352,19 +2357,20 @@ argument_list|)
 expr_stmt|;
 name|triptime
 operator|=
+call|(
+name|double
+call|)
+argument_list|(
 name|tv
 operator|.
 name|tv_sec
 operator|*
-literal|1000
+literal|1000000
 operator|+
-operator|(
 name|tv
 operator|.
 name|tv_usec
-operator|/
-literal|1000
-operator|)
+argument_list|)
 expr_stmt|;
 name|tsum
 operator|+=
@@ -2509,9 +2515,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" time=%ld ms"
+literal|" time=%.3f ms"
 argument_list|,
 name|triptime
+operator|/
+literal|1000.0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3534,9 +3542,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"round-trip min/avg/max = %ld/%lu/%ld ms\n"
+literal|"round-trip min/avg/max = %.3f/%.3f/%.3f ms\n"
 argument_list|,
 name|tmin
+operator|/
+literal|1000.0
 argument_list|,
 name|tsum
 operator|/
@@ -3545,8 +3555,12 @@ name|nreceived
 operator|+
 name|nrepeats
 operator|)
+operator|/
+literal|1000.0
 argument_list|,
 name|tmax
+operator|/
+literal|1000.0
 argument_list|)
 expr_stmt|;
 name|exit
