@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rmothers.c	1.2 (Berkeley) %G%"
+literal|"@(#)rmothers.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -559,15 +559,6 @@ expr_stmt|;
 name|indent
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|othersp
-operator|==
-name|NIL
-condition|)
-block|{
-return|return;
-block|}
 name|ppkw
 argument_list|(
 literal|"else"
@@ -578,6 +569,26 @@ argument_list|(
 name|STAT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|othersp
+operator|==
+name|NIL
+condition|)
+block|{
+comment|/* 	     *	this will print a call to the routine ``null''. 	     *	but it has to be checked first, or we will indirect through 	     *	NIL to check the statement type. 	     */
+name|statement
+argument_list|(
+name|NIL
+argument_list|)
+expr_stmt|;
+name|ppgoout
+argument_list|(
+name|STAT
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|othersp
