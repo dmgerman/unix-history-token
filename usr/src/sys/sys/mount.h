@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -433,11 +433,22 @@ begin_comment
 comment|/*  * Operations supported on mounted file system.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_struct_decl
 struct_decl|struct
 name|nameidata
 struct_decl|;
 end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -538,6 +549,7 @@ name|vpp
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* int uid,		should be uid_t */
 name|int
 argument_list|(
 argument|*vfs_quotactl
@@ -556,7 +568,6 @@ operator|,
 name|int
 name|uid
 operator|,
-comment|/* should be uid_t */
 name|caddr_t
 name|arg
 operator|,
@@ -1275,6 +1286,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* KERNEL */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1413,6 +1428,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 end_unit
 
