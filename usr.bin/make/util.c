@@ -1000,12 +1000,14 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pathname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pathname
+argument_list|)
 argument_list|,
 literal|"getwd: Cannot stat directory \"%s\" (%s)"
 argument_list|,
@@ -1037,12 +1039,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pathname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pathname
+argument_list|)
 argument_list|,
 literal|"getwd: Cannot open directory \"%s\" (%s)"
 argument_list|,
@@ -1175,12 +1179,14 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pathname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pathname
+argument_list|)
 argument_list|,
 literal|"getwd: Cannot stat \"%s\" (%s)"
 argument_list|,
