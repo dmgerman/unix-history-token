@@ -1293,8 +1293,6 @@ argument_list|(
 name|n
 argument_list|,
 name|m
-argument_list|,
-literal|"."
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1385,6 +1383,60 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'p'
+case|:
+comment|/* polygon */
+name|sscanf
+argument_list|(
+name|buf
+operator|+
+literal|1
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|n
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|buf
+index|[
+name|n
+operator|++
+index|]
+operator|==
+literal|' '
+condition|)
+empty_stmt|;
+while|while
+condition|(
+name|isdigit
+argument_list|(
+name|buf
+index|[
+name|n
+index|]
+argument_list|)
+condition|)
+name|n
+operator|++
+expr_stmt|;
+name|drawwig
+argument_list|(
+name|buf
+operator|+
+name|n
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'g'
 case|:
 comment|/* "gremlin" curve */
@@ -1397,6 +1449,8 @@ argument_list|(
 name|buf
 operator|+
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1422,6 +1476,10 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
+case|case
+literal|'i'
+case|:
+comment|/* stipple pattern request - ignored */
 case|case
 literal|'s'
 case|:
@@ -3356,8 +3414,6 @@ argument_list|(
 argument|dx
 argument_list|,
 argument|dy
-argument_list|,
-argument|s
 argument_list|)
 end_macro
 
@@ -3370,13 +3426,6 @@ name|int
 name|dx
 decl_stmt|,
 name|dy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|s
 decl_stmt|;
 end_decl_stmt
 
@@ -3793,17 +3842,25 @@ begin_macro
 name|drawwig
 argument_list|(
 argument|s
+argument_list|,
+argument|poly
 argument_list|)
 end_macro
 
 begin_comment
-comment|/* draw wiggly line */
+comment|/* draw wiggly line or polygon, if "poly" set */
 end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
 name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|poly
 decl_stmt|;
 end_decl_stmt
 
@@ -3929,6 +3986,39 @@ argument_list|(
 name|temp
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|poly
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|2
+init|;
+name|i
+operator|<
+name|N
+condition|;
+name|i
+operator|++
+control|)
+name|drawline
+argument_list|(
+name|x
+index|[
+name|i
+index|]
+argument_list|,
+name|y
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|x
 index|[
@@ -5751,8 +5841,6 @@ operator|)
 name|yc
 operator|-
 name|oy1
-argument_list|,
-literal|"."
 argument_list|)
 expr_stmt|;
 block|}
