@@ -161,6 +161,9 @@ argument_list|,
 literal|0x40
 argument_list|)
 expr_stmt|;
+name|enable_intr
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -229,6 +232,9 @@ literal|0x43f
 argument_list|,
 literal|0x40
 argument_list|)
+expr_stmt|;
+name|enable_intr
+argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(
