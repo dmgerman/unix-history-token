@@ -101,6 +101,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1445,722 +1451,2971 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-argument|listf
+name|listf
 argument_list|,
 literal|"%s: unknown format, %lu bytes skipped.\n"
 argument_list|,
+name|argv0
+argument_list|,
+name|rdcnt
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
-argument|(void)fprintf(listf,
-literal|"%s: unknown format, %qu bytes skipped.\n"
-argument|,
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|listf
+argument_list|,
+literal|"%s: unknown format, %ju bytes skipped.\n"
+argument_list|,
+name|argv0
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|rdcnt
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-argument|argv0, rdcnt); 		(void)fflush(listf); 		flcnt =
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|listf
+argument_list|)
+expr_stmt|;
+name|flcnt
+operator|=
 literal|0
-argument|; 		return; 	}  	if (strcmp(NM_CPIO, argv0) ==
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|NM_CPIO
+argument_list|,
+name|argv0
+argument_list|)
+operator|==
 literal|0
-argument|) 		(void)fprintf(listf,
-literal|"%qu blocks\n"
-argument|, (rdcnt ? rdcnt : wrcnt) /
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|listf
+argument_list|,
+literal|"%llu blocks\n"
+argument_list|,
+call|(
+name|unsigned
+name|long
+name|long
+call|)
+argument_list|(
+operator|(
+name|rdcnt
+condition|?
+name|rdcnt
+else|:
+name|wrcnt
+operator|)
+operator|/
 literal|5120
-argument|); 	else if (strcmp(NM_TAR, argv0) !=
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|NM_TAR
+argument_list|,
+name|argv0
+argument_list|)
+operator|!=
 literal|0
-argument|) 		(void)fprintf(listf,
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|listf
+argument_list|,
 ifdef|#
 directive|ifdef
 name|NET2_STAT
 literal|"%s: %s vol %d, %lu files, %lu bytes read, %lu bytes written.\n"
-argument|,
+argument_list|,
+name|argv0
+argument_list|,
+name|frmt
+operator|->
+name|name
+argument_list|,
+name|arvol
+operator|-
+literal|1
+argument_list|,
+name|flcnt
+argument_list|,
+name|rdcnt
+argument_list|,
+name|wrcnt
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
-literal|"%s: %s vol %d, %lu files, %qu bytes read, %qu bytes written.\n"
-argument|,
+literal|"%s: %s vol %d, %ju files, %ju bytes read, %ju bytes written.\n"
+operator|,
+name|argv0
+operator|,
+name|frmt
+operator|->
+name|name
+operator|,
+name|arvol
+operator|-
+literal|1
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|flcnt
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|rdcnt
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|wrcnt
+block|)
+function|;
+end_function
+
+begin_endif
 endif|#
 directive|endif
-argument|argv0, frmt->name, arvol-
-literal|1
-argument|, flcnt, rdcnt, wrcnt); 	(void)fflush(listf); 	flcnt =
+end_endif
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|listf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|flcnt
+operator|=
 literal|0
-argument|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|/*  * ar_drain()  *	drain any archive format independent padding from an archive read  *	from a socket or a pipe. This is to prevent the process on the  *	other side of the pipe from getting a SIGPIPE (pax will stop  *	reading an archive once a format dependent trailer is detected).  */
-argument|void ar_drain(void) { 	int res; 	char drbuf[MAXBLK];
+end_comment
+
+begin_macro
+unit|void
+name|ar_drain
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|int
+name|res
+decl_stmt|;
+name|char
+name|drbuf
+index|[
+name|MAXBLK
+index|]
+decl_stmt|;
 comment|/* 	 * we only drain from a pipe/socket. Other devices can be closed 	 * without reading up to end of file. We sure hope that pipe is closed 	 * on the other side so we will get an EOF. 	 */
-argument|if ((artyp != ISPIPE) || (lstrval<=
+if|if
+condition|(
+operator|(
+name|artyp
+operator|!=
+name|ISPIPE
+operator|)
+operator|||
+operator|(
+name|lstrval
+operator|<=
 literal|0
-argument|)) 		return;
+operator|)
+condition|)
+return|return;
 comment|/* 	 * keep reading until pipe is drained 	 */
-argument|while ((res = read(arfd, drbuf, sizeof(drbuf)))>
+while|while
+condition|(
+operator|(
+name|res
+operator|=
+name|read
+argument_list|(
+name|arfd
+argument_list|,
+name|drbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|drbuf
+argument_list|)
+argument_list|)
+operator|)
+operator|>
 literal|0
-argument|) 		; 	lstrval = res; }
+condition|)
+empty_stmt|;
+name|lstrval
+operator|=
+name|res
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * ar_set_wr()  *	Set up device right before switching from read to write in an append.  *	device dependent code (if required) to do this should be added here.  *	For all archive devices we are already positioned at the place we want  *	to start writing when this routine is called.  * Return:  *	0 if all ready to write, -1 otherwise  */
-argument|int ar_set_wr(void) { 	off_t cpos;
+end_comment
+
+begin_function
+name|int
+name|ar_set_wr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|off_t
+name|cpos
+decl_stmt|;
 comment|/* 	 * we must make sure the trailer is rewritten on append, ar_next() 	 * will stop us if the archive containing the trailer was not written 	 */
-argument|wr_trail =
+name|wr_trail
+operator|=
 literal|0
-argument|;
+expr_stmt|;
 comment|/* 	 * Add any device dependent code as required here 	 */
-argument|if (artyp != ISREG) 		return(
+if|if
+condition|(
+name|artyp
+operator|!=
+name|ISREG
+condition|)
+return|return
+operator|(
 literal|0
-argument|);
+operator|)
+return|;
 comment|/* 	 * Ok we have an archive in a regular file. If we were rewriting a 	 * file, we must get rid of all the stuff after the current offset 	 * (it was not written by pax). 	 */
-argument|if (((cpos = lseek(arfd, (off_t)
+if|if
+condition|(
+operator|(
+operator|(
+name|cpos
+operator|=
+name|lseek
+argument_list|(
+name|arfd
+argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0L
-argument|, SEEK_CUR))<
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+operator|)
+operator|<
 literal|0
-argument|) || 	    (ftruncate(arfd, cpos)<
+operator|)
+operator|||
+operator|(
+name|ftruncate
+argument_list|(
+name|arfd
+argument_list|,
+name|cpos
+argument_list|)
+operator|<
 literal|0
-argument|)) { 		syswarn(
+operator|)
+condition|)
+block|{
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to truncate archive file"
-argument|); 		return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	} 	return(
+operator|)
+return|;
+block|}
+return|return
+operator|(
 literal|0
-argument|); }
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * ar_app_ok()  *	check if the last volume in the archive allows appends. We cannot check  *	this until we are ready to write since there is no spec that says all  *	volumes in a single archive have to be of the same type...  * Return:  *	0 if we can append, -1 otherwise.  */
-argument|int ar_app_ok(void) { 	if (artyp == ISPIPE) { 		paxwarn(
+end_comment
+
+begin_function
+name|int
+name|ar_app_ok
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|artyp
+operator|==
+name|ISPIPE
+condition|)
+block|{
+name|paxwarn
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"Cannot append to an archive obtained from a pipe."
-argument|); 		return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	}  	if (!invld_rec) 		return(
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|invld_rec
+condition|)
+return|return
+operator|(
 literal|0
-argument|); 	paxwarn(
+operator|)
+return|;
+name|paxwarn
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"Cannot append, device record size %d does not support %s spec"
-argument|, 		rdblksz, argv0); 	return(-
+argument_list|,
+name|rdblksz
+argument_list|,
+name|argv0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); }
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * ar_read()  *	read up to a specified number of bytes from the archive into the  *	supplied buffer. When dealing with tapes we may not always be able to  *	read what we want.  * Return:  *	Number of bytes in buffer. 0 for end of file, -1 for a read error.  */
-argument|int ar_read(char *buf, int cnt) { 	int res =
+end_comment
+
+begin_function
+name|int
+name|ar_read
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|cnt
+parameter_list|)
+block|{
+name|int
+name|res
+init|=
 literal|0
-argument|;
+decl_stmt|;
 comment|/* 	 * if last i/o was in error, no more reads until reset or new volume 	 */
-argument|if (lstrval<=
+if|if
+condition|(
+name|lstrval
+operator|<=
 literal|0
-argument|) 		return(lstrval);
+condition|)
+return|return
+operator|(
+name|lstrval
+operator|)
+return|;
 comment|/* 	 * how we read must be based on device type 	 */
-argument|switch (artyp) { 	case ISTAPE: 		if ((res = read(arfd, buf, cnt))>
+switch|switch
+condition|(
+name|artyp
+condition|)
+block|{
+case|case
+name|ISTAPE
+case|:
+if|if
+condition|(
+operator|(
+name|res
+operator|=
+name|read
+argument_list|(
+name|arfd
+argument_list|,
+name|buf
+argument_list|,
+name|cnt
+argument_list|)
+operator|)
+operator|>
 literal|0
-argument|) {
+condition|)
+block|{
 comment|/* 			 * CAUTION: tape systems may not always return the same 			 * sized records so we leave blksz == MAXBLK. The 			 * physical record size that a tape drive supports is 			 * very hard to determine in a uniform and portable 			 * manner. 			 */
-argument|io_ok =
+name|io_ok
+operator|=
 literal|1
-argument|; 			if (res != rdblksz) {
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|!=
+name|rdblksz
+condition|)
+block|{
 comment|/* 				 * Record size changed. If this is happens on 				 * any record after the first, we probably have 				 * a tape drive which has a fixed record size 				 * we are getting multiple records in a single 				 * read). Watch out for record blocking that 				 * violates pax spec (must be a multiple of 				 * BLKMULT). 				 */
-argument|rdblksz = res; 				if (rdblksz % BLKMULT) 					invld_rec =
+name|rdblksz
+operator|=
+name|res
+expr_stmt|;
+if|if
+condition|(
+name|rdblksz
+operator|%
+name|BLKMULT
+condition|)
+name|invld_rec
+operator|=
 literal|1
-argument|; 			} 			return(res); 		} 		break; 	case ISREG: 	case ISBLK: 	case ISCHR: 	case ISPIPE: 	default:
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|res
+operator|)
+return|;
+block|}
+break|break;
+case|case
+name|ISREG
+case|:
+case|case
+name|ISBLK
+case|:
+case|case
+name|ISCHR
+case|:
+case|case
+name|ISPIPE
+case|:
+default|default:
 comment|/* 		 * Files are so easy to deal with. These other things cannot 		 * be trusted at all. So when we are dealing with character 		 * devices and pipes we just take what they have ready for us 		 * and return. Trying to do anything else with them runs the 		 * risk of failure. 		 */
-argument|if ((res = read(arfd, buf, cnt))>
+if|if
+condition|(
+operator|(
+name|res
+operator|=
+name|read
+argument_list|(
+name|arfd
+argument_list|,
+name|buf
+argument_list|,
+name|cnt
+argument_list|)
+operator|)
+operator|>
 literal|0
-argument|) { 			io_ok =
+condition|)
+block|{
+name|io_ok
+operator|=
 literal|1
-argument|; 			return(res); 		} 		break; 	}
+expr_stmt|;
+return|return
+operator|(
+name|res
+operator|)
+return|;
+block|}
+break|break;
+block|}
 comment|/* 	 * We are in trouble at this point, something is broken... 	 */
-argument|lstrval = res; 	if (res<
+name|lstrval
+operator|=
+name|res
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|<
 literal|0
-argument|) 		syswarn(
+condition|)
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Failed read on archive volume %d"
-argument|, arvol); 	else 		paxwarn(
+argument_list|,
+name|arvol
+argument_list|)
+expr_stmt|;
+else|else
+name|paxwarn
+argument_list|(
 literal|0
-argument|,
+argument_list|,
 literal|"End of archive volume %d reached"
-argument|, arvol); 	return(res); }
+argument_list|,
+name|arvol
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|res
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * ar_write()  *	Write a specified number of bytes in supplied buffer to the archive  *	device so it appears as a single "block". Deals with errors and tries  *	to recover when faced with short writes.  * Return:  *	Number of bytes written. 0 indicates end of volume reached and with no  *	flaws (as best that can be detected). A -1 indicates an unrecoverable  *	error in the archive occured.  */
-argument|int ar_write(char *buf, int bsz) { 	int res; 	off_t cpos;
+end_comment
+
+begin_function
+name|int
+name|ar_write
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|bsz
+parameter_list|)
+block|{
+name|int
+name|res
+decl_stmt|;
+name|off_t
+name|cpos
+decl_stmt|;
 comment|/* 	 * do not allow pax to create a "bad" archive. Once a write fails on 	 * an archive volume prevent further writes to it. 	 */
-argument|if (lstrval<=
+if|if
+condition|(
+name|lstrval
+operator|<=
 literal|0
-argument|) 		return(lstrval);  	if ((res = write(arfd, buf, bsz)) == bsz) { 		wr_trail =
+condition|)
+return|return
+operator|(
+name|lstrval
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|res
+operator|=
+name|write
+argument_list|(
+name|arfd
+argument_list|,
+name|buf
+argument_list|,
+name|bsz
+argument_list|)
+operator|)
+operator|==
+name|bsz
+condition|)
+block|{
+name|wr_trail
+operator|=
 literal|1
-argument|; 		io_ok =
+expr_stmt|;
+name|io_ok
+operator|=
 literal|1
-argument|; 		return(bsz); 	}
+expr_stmt|;
+return|return
+operator|(
+name|bsz
+operator|)
+return|;
+block|}
 comment|/* 	 * write broke, see what we can do with it. We try to send any partial 	 * writes that may violate pax spec to the next archive volume. 	 */
-argument|if (res<
+if|if
+condition|(
+name|res
+operator|<
 literal|0
-argument|) 		lstrval = res; 	else 		lstrval =
+condition|)
+name|lstrval
+operator|=
+name|res
+expr_stmt|;
+else|else
+name|lstrval
+operator|=
 literal|0
-argument|;  	switch (artyp) { 	case ISREG: 		if ((res>
+expr_stmt|;
+switch|switch
+condition|(
+name|artyp
+condition|)
+block|{
+case|case
+name|ISREG
+case|:
+if|if
+condition|(
+operator|(
+name|res
+operator|>
 literal|0
-argument|)&& (res % BLKMULT)) {
+operator|)
+operator|&&
+operator|(
+name|res
+operator|%
+name|BLKMULT
+operator|)
+condition|)
+block|{
 comment|/* 		 	 * try to fix up partial writes which are not BLKMULT 			 * in size by forcing the runt record to next archive 			 * volume 		 	 */
-argument|if ((cpos = lseek(arfd, (off_t)
+if|if
+condition|(
+operator|(
+name|cpos
+operator|=
+name|lseek
+argument_list|(
+name|arfd
+argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0L
-argument|, SEEK_CUR))<
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+operator|)
+operator|<
 literal|0
-argument|) 				break; 			cpos -= (off_t)res; 			if (ftruncate(arfd, cpos)<
+condition|)
+break|break;
+name|cpos
+operator|-=
+operator|(
+name|off_t
+operator|)
+name|res
+expr_stmt|;
+if|if
+condition|(
+name|ftruncate
+argument_list|(
+name|arfd
+argument_list|,
+name|cpos
+argument_list|)
+operator|<
 literal|0
-argument|) 				break; 			res = lstrval =
+condition|)
+break|break;
+name|res
+operator|=
+name|lstrval
+operator|=
 literal|0
-argument|; 			break; 		} 		if (res>=
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|res
+operator|>=
 literal|0
-argument|) 			break;
+condition|)
+break|break;
 comment|/* 		 * if file is out of space, handle it like a return of 0 		 */
-argument|if ((errno == ENOSPC) || (errno == EFBIG) || (errno == EDQUOT)) 			res = lstrval =
+if|if
+condition|(
+operator|(
+name|errno
+operator|==
+name|ENOSPC
+operator|)
+operator|||
+operator|(
+name|errno
+operator|==
+name|EFBIG
+operator|)
+operator|||
+operator|(
+name|errno
+operator|==
+name|EDQUOT
+operator|)
+condition|)
+name|res
+operator|=
+name|lstrval
+operator|=
 literal|0
-argument|; 		break; 	case ISTAPE: 	case ISCHR: 	case ISBLK: 		if (res>=
+expr_stmt|;
+break|break;
+case|case
+name|ISTAPE
+case|:
+case|case
+name|ISCHR
+case|:
+case|case
+name|ISBLK
+case|:
+if|if
+condition|(
+name|res
+operator|>=
 literal|0
-argument|) 			break; 		if (errno == EACCES) { 			paxwarn(
+condition|)
+break|break;
+if|if
+condition|(
+name|errno
+operator|==
+name|EACCES
+condition|)
+block|{
+name|paxwarn
+argument_list|(
 literal|0
-argument|,
+argument_list|,
 literal|"Write failed, archive is write protected."
-argument|); 			res = lstrval =
+argument_list|)
+expr_stmt|;
+name|res
+operator|=
+name|lstrval
+operator|=
 literal|0
-argument|; 			return(
+expr_stmt|;
+return|return
+operator|(
 literal|0
-argument|); 		}
+operator|)
+return|;
+block|}
 comment|/* 		 * see if we reached the end of media, if so force a change to 		 * the next volume 		 */
-argument|if ((errno == ENOSPC) || (errno == EIO) || (errno == ENXIO)) 			res = lstrval =
+if|if
+condition|(
+operator|(
+name|errno
+operator|==
+name|ENOSPC
+operator|)
+operator|||
+operator|(
+name|errno
+operator|==
+name|EIO
+operator|)
+operator|||
+operator|(
+name|errno
+operator|==
+name|ENXIO
+operator|)
+condition|)
+name|res
+operator|=
+name|lstrval
+operator|=
 literal|0
-argument|; 		break; 	case ISPIPE: 	default:
+expr_stmt|;
+break|break;
+case|case
+name|ISPIPE
+case|:
+default|default:
 comment|/* 		 * we cannot fix errors to these devices 		 */
-argument|break; 	}
+break|break;
+block|}
 comment|/* 	 * Better tell the user the bad news... 	 * if this is a block aligned archive format, we may have a bad archive 	 * if the format wants the header to start at a BLKMULT boundary. While 	 * we can deal with the mis-aligned data, it violates spec and other 	 * archive readers will likely fail. if the format is not block 	 * aligned, the user may be lucky (and the archive is ok). 	 */
-argument|if (res>=
+if|if
+condition|(
+name|res
+operator|>=
 literal|0
-argument|) { 		if (res>
+condition|)
+block|{
+if|if
+condition|(
+name|res
+operator|>
 literal|0
-argument|) 			wr_trail =
+condition|)
+name|wr_trail
+operator|=
 literal|1
-argument|; 		io_ok =
+expr_stmt|;
+name|io_ok
+operator|=
 literal|1
-argument|; 	}
+expr_stmt|;
+block|}
 comment|/* 	 * If we were trying to rewrite the trailer and it didn't work, we 	 * must quit right away. 	 */
-argument|if (!wr_trail&& (res<=
+if|if
+condition|(
+operator|!
+name|wr_trail
+operator|&&
+operator|(
+name|res
+operator|<=
 literal|0
-argument|)) { 		paxwarn(
+operator|)
+condition|)
+block|{
+name|paxwarn
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"Unable to append, trailer re-write failed. Quitting."
-argument|); 		return(res); 	}  	if (res ==
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|res
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|res
+operator|==
 literal|0
-argument|) 		paxwarn(
+condition|)
+name|paxwarn
+argument_list|(
 literal|0
-argument|,
+argument_list|,
 literal|"End of archive volume %d reached"
-argument|, arvol); 	else if (res<
+argument_list|,
+name|arvol
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|res
+operator|<
 literal|0
-argument|) 		syswarn(
+condition|)
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Failed write to archive volume: %d"
-argument|, arvol); 	else if (!frmt->blkalgn || ((res % frmt->blkalgn) ==
+argument_list|,
+name|arvol
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|frmt
+operator|->
+name|blkalgn
+operator|||
+operator|(
+operator|(
+name|res
+operator|%
+name|frmt
+operator|->
+name|blkalgn
+operator|)
+operator|==
 literal|0
-argument|)) 		paxwarn(
+operator|)
+condition|)
+name|paxwarn
+argument_list|(
 literal|0
-argument|,
+argument_list|,
 literal|"WARNING: partial archive write. Archive MAY BE FLAWED"
-argument|); 	else 		paxwarn(
+argument_list|)
+expr_stmt|;
+else|else
+name|paxwarn
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"WARNING: partial archive write. Archive IS FLAWED"
-argument|); 	return(res); }
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|res
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * ar_rdsync()  *	Try to move past a bad spot on a flawed archive as needed to continue  *	I/O. Clears error flags to allow I/O to continue.  * Return:  *	0 when ok to try i/o again, -1 otherwise.  */
-argument|int ar_rdsync(void) { 	long fsbz; 	off_t cpos; 	off_t mpos; 	struct mtop mb;
+end_comment
+
+begin_function
+name|int
+name|ar_rdsync
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|long
+name|fsbz
+decl_stmt|;
+name|off_t
+name|cpos
+decl_stmt|;
+name|off_t
+name|mpos
+decl_stmt|;
+name|struct
+name|mtop
+name|mb
+decl_stmt|;
 comment|/* 	 * Fail resync attempts at user request (done) or this is going to be 	 * an update/append to a existing archive. if last i/o hit media end, 	 * we need to go to the next volume not try a resync 	 */
-argument|if ((done>
+if|if
+condition|(
+operator|(
+name|done
+operator|>
 literal|0
-argument|) || (lstrval ==
+operator|)
+operator|||
+operator|(
+name|lstrval
+operator|==
 literal|0
-argument|)) 		return(-
+operator|)
+condition|)
+return|return
+operator|(
+operator|-
 literal|1
-argument|);  	if ((act == APPND) || (act == ARCHIVE)) { 		paxwarn(
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|act
+operator|==
+name|APPND
+operator|)
+operator|||
+operator|(
+name|act
+operator|==
+name|ARCHIVE
+operator|)
+condition|)
+block|{
+name|paxwarn
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"Cannot allow updates to an archive with flaws."
-argument|); 		return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	} 	if (io_ok) 		did_io =
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|io_ok
+condition|)
+name|did_io
+operator|=
 literal|1
-argument|;  	switch(artyp) { 	case ISTAPE:
+expr_stmt|;
+switch|switch
+condition|(
+name|artyp
+condition|)
+block|{
+case|case
+name|ISTAPE
+case|:
 comment|/* 		 * if the last i/o was a successful data transfer, we assume 		 * the fault is just a bad record on the tape that we are now 		 * past. If we did not get any data since the last resync try 		 * to move the tape forward one PHYSICAL record past any 		 * damaged tape section. Some tape drives are stubborn and need 		 * to be pushed. 		 */
-argument|if (io_ok) { 			io_ok =
+if|if
+condition|(
+name|io_ok
+condition|)
+block|{
+name|io_ok
+operator|=
 literal|0
-argument|; 			lstrval =
+expr_stmt|;
+name|lstrval
+operator|=
 literal|1
-argument|; 			break; 		} 		mb.mt_op = MTFSR; 		mb.mt_count =
+expr_stmt|;
+break|break;
+block|}
+name|mb
+operator|.
+name|mt_op
+operator|=
+name|MTFSR
+expr_stmt|;
+name|mb
+operator|.
+name|mt_count
+operator|=
 literal|1
-argument|; 		if (ioctl(arfd, MTIOCTOP,&mb)<
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|arfd
+argument_list|,
+name|MTIOCTOP
+argument_list|,
+operator|&
+name|mb
+argument_list|)
+operator|<
 literal|0
-argument|) 			break; 		lstrval =
+condition|)
+break|break;
+name|lstrval
+operator|=
 literal|1
-argument|; 		break; 	case ISREG: 	case ISCHR: 	case ISBLK:
+expr_stmt|;
+break|break;
+case|case
+name|ISREG
+case|:
+case|case
+name|ISCHR
+case|:
+case|case
+name|ISBLK
+case|:
 comment|/* 		 * try to step over the bad part of the device. 		 */
-argument|io_ok =
+name|io_ok
+operator|=
 literal|0
-argument|; 		if (((fsbz = arsb.st_blksize)<=
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|fsbz
+operator|=
+name|arsb
+operator|.
+name|st_blksize
+operator|)
+operator|<=
 literal|0
-argument|) || (artyp != ISREG)) 			fsbz = BLKMULT; 		if ((cpos = lseek(arfd, (off_t)
+operator|)
+operator|||
+operator|(
+name|artyp
+operator|!=
+name|ISREG
+operator|)
+condition|)
+name|fsbz
+operator|=
+name|BLKMULT
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cpos
+operator|=
+name|lseek
+argument_list|(
+name|arfd
+argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0L
-argument|, SEEK_CUR))<
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+operator|)
+operator|<
 literal|0
-argument|) 			break; 		mpos = fsbz - (cpos % (off_t)fsbz); 		if (lseek(arfd, mpos, SEEK_CUR)<
+condition|)
+break|break;
+name|mpos
+operator|=
+name|fsbz
+operator|-
+operator|(
+name|cpos
+operator|%
+operator|(
+name|off_t
+operator|)
+name|fsbz
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|arfd
+argument_list|,
+name|mpos
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+operator|<
 literal|0
-argument|) 			break; 		lstrval =
+condition|)
+break|break;
+name|lstrval
+operator|=
 literal|1
-argument|; 		break; 	case ISPIPE: 	default:
+expr_stmt|;
+break|break;
+case|case
+name|ISPIPE
+case|:
+default|default:
 comment|/* 		 * cannot recover on these archive device types 		 */
-argument|io_ok =
+name|io_ok
+operator|=
 literal|0
-argument|; 		break; 	} 	if (lstrval<=
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|lstrval
+operator|<=
 literal|0
-argument|) { 		paxwarn(
+condition|)
+block|{
+name|paxwarn
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"Unable to recover from an archive read failure."
-argument|); 		return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	} 	paxwarn(
+operator|)
+return|;
+block|}
+name|paxwarn
+argument_list|(
 literal|0
-argument|,
+argument_list|,
 literal|"Attempting to recover from an archive read failure."
-argument|); 	return(
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 literal|0
-argument|); }
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * ar_fow()  *	Move the I/O position within the archive foward the specified number of  *	bytes as supported by the device. If we cannot move the requested  *	number of bytes, return the actual number of bytes moved in skipped.  * Return:  *	0 if moved the requested distance, -1 on complete failure, 1 on  *	partial move (the amount moved is in skipped)  */
-argument|int ar_fow(off_t sksz, off_t *skipped) { 	off_t cpos; 	off_t mpos;  	*skipped =
+end_comment
+
+begin_function
+name|int
+name|ar_fow
+parameter_list|(
+name|off_t
+name|sksz
+parameter_list|,
+name|off_t
+modifier|*
+name|skipped
+parameter_list|)
+block|{
+name|off_t
+name|cpos
+decl_stmt|;
+name|off_t
+name|mpos
+decl_stmt|;
+operator|*
+name|skipped
+operator|=
 literal|0
-argument|; 	if (sksz<=
+expr_stmt|;
+if|if
+condition|(
+name|sksz
+operator|<=
 literal|0
-argument|) 		return(
+condition|)
+return|return
+operator|(
 literal|0
-argument|);
+operator|)
+return|;
 comment|/* 	 * we cannot move foward at EOF or error 	 */
-argument|if (lstrval<=
+if|if
+condition|(
+name|lstrval
+operator|<=
 literal|0
-argument|) 		return(lstrval);
+condition|)
+return|return
+operator|(
+name|lstrval
+operator|)
+return|;
 comment|/* 	 * Safer to read forward on devices where it is hard to find the end of 	 * the media without reading to it. With tapes we cannot be sure of the 	 * number of physical blocks to skip (we do not know physical block 	 * size at this point), so we must only read foward on tapes! 	 */
-argument|if (artyp != ISREG) 		return(
+if|if
+condition|(
+name|artyp
+operator|!=
+name|ISREG
+condition|)
+return|return
+operator|(
 literal|0
-argument|);
+operator|)
+return|;
 comment|/* 	 * figure out where we are in the archive 	 */
-argument|if ((cpos = lseek(arfd, (off_t)
+if|if
+condition|(
+operator|(
+name|cpos
+operator|=
+name|lseek
+argument_list|(
+name|arfd
+argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0L
-argument|, SEEK_CUR))>=
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+operator|)
+operator|>=
 literal|0
-argument|) {
+condition|)
+block|{
 comment|/* 	 	 * we can be asked to move farther than there are bytes in this 		 * volume, if so, just go to file end and let normal buf_fill() 		 * deal with the end of file (it will go to next volume by 		 * itself) 	 	 */
-argument|if ((mpos = cpos + sksz)> arsb.st_size) { 			*skipped = arsb.st_size - cpos; 			mpos = arsb.st_size; 		} else 			*skipped = sksz; 		if (lseek(arfd, mpos, SEEK_SET)>=
+if|if
+condition|(
+operator|(
+name|mpos
+operator|=
+name|cpos
+operator|+
+name|sksz
+operator|)
+operator|>
+name|arsb
+operator|.
+name|st_size
+condition|)
+block|{
+operator|*
+name|skipped
+operator|=
+name|arsb
+operator|.
+name|st_size
+operator|-
+name|cpos
+expr_stmt|;
+name|mpos
+operator|=
+name|arsb
+operator|.
+name|st_size
+expr_stmt|;
+block|}
+else|else
+operator|*
+name|skipped
+operator|=
+name|sksz
+expr_stmt|;
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|arfd
+argument_list|,
+name|mpos
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|>=
 literal|0
-argument|) 			return(
+condition|)
+return|return
+operator|(
 literal|0
-argument|); 	} 	syswarn(
+operator|)
+return|;
+block|}
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Forward positioning operation on archive failed"
-argument|); 	lstrval = -
+argument_list|)
+expr_stmt|;
+name|lstrval
+operator|=
+operator|-
 literal|1
-argument|; 	return(-
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); }
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * ar_rev()  *	move the i/o position within the archive backwards the specified byte  *	count as supported by the device. With tapes drives we RESET rdblksz to  *	the PHYSICAL blocksize.  *	NOTE: We should only be called to move backwards so we can rewrite the  *	last records (the trailer) of an archive (APPEND).  * Return:  *	0 if moved the requested distance, -1 on complete failure  */
-argument|int ar_rev(off_t sksz) { 	off_t cpos; 	struct mtop mb; 	int phyblk;
+end_comment
+
+begin_function
+name|int
+name|ar_rev
+parameter_list|(
+name|off_t
+name|sksz
+parameter_list|)
+block|{
+name|off_t
+name|cpos
+decl_stmt|;
+name|struct
+name|mtop
+name|mb
+decl_stmt|;
+name|int
+name|phyblk
+decl_stmt|;
 comment|/* 	 * make sure we do not have try to reverse on a flawed archive 	 */
-argument|if (lstrval<
+if|if
+condition|(
+name|lstrval
+operator|<
 literal|0
-argument|) 		return(lstrval);  	switch(artyp) { 	case ISPIPE: 		if (sksz<=
+condition|)
+return|return
+operator|(
+name|lstrval
+operator|)
+return|;
+switch|switch
+condition|(
+name|artyp
+condition|)
+block|{
+case|case
+name|ISPIPE
+case|:
+if|if
+condition|(
+name|sksz
+operator|<=
 literal|0
-argument|) 			break;
+condition|)
+break|break;
 comment|/* 		 * cannot go backwards on these critters 		 */
-argument|paxwarn(
+name|paxwarn
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"Reverse positioning on pipes is not supported."
-argument|); 		lstrval = -
+argument_list|)
+expr_stmt|;
+name|lstrval
+operator|=
+operator|-
 literal|1
-argument|; 		return(-
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	case ISREG: 	case ISBLK: 	case ISCHR: 	default: 		if (sksz<=
+operator|)
+return|;
+case|case
+name|ISREG
+case|:
+case|case
+name|ISBLK
+case|:
+case|case
+name|ISCHR
+case|:
+default|default:
+if|if
+condition|(
+name|sksz
+operator|<=
 literal|0
-argument|) 			break;
+condition|)
+break|break;
 comment|/* 		 * For things other than files, backwards movement has a very 		 * high probability of failure as we really do not know the 		 * true attributes of the device we are talking to (the device 		 * may not even have the ability to lseek() in any direction). 		 * First we figure out where we are in the archive. 		 */
-argument|if ((cpos = lseek(arfd, (off_t)
+if|if
+condition|(
+operator|(
+name|cpos
+operator|=
+name|lseek
+argument_list|(
+name|arfd
+argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0L
-argument|, SEEK_CUR))<
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+operator|)
+operator|<
 literal|0
-argument|) { 			syswarn(
+condition|)
+block|{
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to obtain current archive byte offset"
-argument|); 			lstrval = -
+argument_list|)
+expr_stmt|;
+name|lstrval
+operator|=
+operator|-
 literal|1
-argument|; 			return(-
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 		}
+operator|)
+return|;
+block|}
 comment|/* 		 * we may try to go backwards past the start when the archive 		 * is only a single record. If this hapens and we are on a 		 * multi volume archive, we need to go to the end of the 		 * previous volume and continue our movement backwards from 		 * there. 		 */
-argument|if ((cpos -= sksz)< (off_t)
+if|if
+condition|(
+operator|(
+name|cpos
+operator|-=
+name|sksz
+operator|)
+operator|<
+operator|(
+name|off_t
+operator|)
 literal|0L
-argument|) { 			if (arvol>
+condition|)
+block|{
+if|if
+condition|(
+name|arvol
+operator|>
 literal|1
-argument|) {
+condition|)
+block|{
 comment|/* 				 * this should never happen 				 */
-argument|paxwarn(
+name|paxwarn
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"Reverse position on previous volume."
-argument|); 				lstrval = -
+argument_list|)
+expr_stmt|;
+name|lstrval
+operator|=
+operator|-
 literal|1
-argument|; 				return(-
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 			} 			cpos = (off_t)
+operator|)
+return|;
+block|}
+name|cpos
+operator|=
+operator|(
+name|off_t
+operator|)
 literal|0L
-argument|; 		} 		if (lseek(arfd, cpos, SEEK_SET)<
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|arfd
+argument_list|,
+name|cpos
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|<
 literal|0
-argument|) { 			syswarn(
+condition|)
+block|{
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to seek archive backwards"
-argument|); 			lstrval = -
+argument_list|)
+expr_stmt|;
+name|lstrval
+operator|=
+operator|-
 literal|1
-argument|; 			return(-
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 		} 		break; 	case ISTAPE:
+operator|)
+return|;
+block|}
+break|break;
+case|case
+name|ISTAPE
+case|:
 comment|/* 	 	 * Calculate and move the proper number of PHYSICAL tape 		 * blocks. If the sksz is not an even multiple of the physical 		 * tape size, we cannot do the move (this should never happen). 		 * (We also cannot handler trailers spread over two vols). 		 * get_phys() also makes sure we are in front of the filemark. 	 	 */
-argument|if ((phyblk = get_phys())<=
+if|if
+condition|(
+operator|(
+name|phyblk
+operator|=
+name|get_phys
+argument_list|()
+operator|)
+operator|<=
 literal|0
-argument|) { 			lstrval = -
+condition|)
+block|{
+name|lstrval
+operator|=
+operator|-
 literal|1
-argument|; 			return(-
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 		}
+operator|)
+return|;
+block|}
 comment|/* 		 * make sure future tape reads only go by physical tape block 		 * size (set rdblksz to the real size). 		 */
-argument|rdblksz = phyblk;
+name|rdblksz
+operator|=
+name|phyblk
+expr_stmt|;
 comment|/* 		 * if no movement is required, just return (we must be after 		 * get_phys() so the physical blocksize is properly set) 		 */
-argument|if (sksz<=
+if|if
+condition|(
+name|sksz
+operator|<=
 literal|0
-argument|) 			break;
+condition|)
+break|break;
 comment|/* 		 * ok we have to move. Make sure the tape drive can do it. 		 */
-argument|if (sksz % phyblk) { 			paxwarn(
+if|if
+condition|(
+name|sksz
+operator|%
+name|phyblk
+condition|)
+block|{
+name|paxwarn
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"Tape drive unable to backspace requested amount"
-argument|); 			lstrval = -
+argument_list|)
+expr_stmt|;
+name|lstrval
+operator|=
+operator|-
 literal|1
-argument|; 			return(-
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 		}
+operator|)
+return|;
+block|}
 comment|/* 		 * move backwards the requested number of bytes 		 */
-argument|mb.mt_op = MTBSR; 		mb.mt_count = sksz/phyblk; 		if (ioctl(arfd, MTIOCTOP,&mb)<
+name|mb
+operator|.
+name|mt_op
+operator|=
+name|MTBSR
+expr_stmt|;
+name|mb
+operator|.
+name|mt_count
+operator|=
+name|sksz
+operator|/
+name|phyblk
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|arfd
+argument_list|,
+name|MTIOCTOP
+argument_list|,
+operator|&
+name|mb
+argument_list|)
+operator|<
 literal|0
-argument|) { 			syswarn(
+condition|)
+block|{
+name|syswarn
+argument_list|(
 literal|1
-argument|,errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to backspace tape %d blocks."
-argument|, 			    mb.mt_count); 			lstrval = -
+argument_list|,
+name|mb
+operator|.
+name|mt_count
+argument_list|)
+expr_stmt|;
+name|lstrval
+operator|=
+operator|-
 literal|1
-argument|; 			return(-
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 		} 		break; 	} 	lstrval =
+operator|)
+return|;
+block|}
+break|break;
+block|}
+name|lstrval
+operator|=
 literal|1
-argument|; 	return(
+expr_stmt|;
+return|return
+operator|(
 literal|0
-argument|); }
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * get_phys()  *	Determine the physical block size on a tape drive. We need the physical  *	block size so we know how many bytes we skip over when we move with  *	mtio commands. We also make sure we are BEFORE THE TAPE FILEMARK when  *	return.  *	This is one really SLOW routine...  * Return:  *	physical block size if ok (ok> 0), -1 otherwise  */
-argument|static int get_phys(void) { 	int padsz =
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|get_phys
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|padsz
+init|=
 literal|0
-argument|; 	int res; 	int phyblk; 	struct mtop mb; 	char scbuf[MAXBLK];
+decl_stmt|;
+name|int
+name|res
+decl_stmt|;
+name|int
+name|phyblk
+decl_stmt|;
+name|struct
+name|mtop
+name|mb
+decl_stmt|;
+name|char
+name|scbuf
+index|[
+name|MAXBLK
+index|]
+decl_stmt|;
 comment|/* 	 * move to the file mark, and then back up one record and read it. 	 * this should tell us the physical record size the tape is using. 	 */
-argument|if (lstrval ==
+if|if
+condition|(
+name|lstrval
+operator|==
 literal|1
-argument|) {
+condition|)
+block|{
 comment|/* 		 * we know we are at file mark when we get back a 0 from 		 * read() 		 */
-argument|while ((res = read(arfd, scbuf, sizeof(scbuf)))>
+while|while
+condition|(
+operator|(
+name|res
+operator|=
+name|read
+argument_list|(
+name|arfd
+argument_list|,
+name|scbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|scbuf
+argument_list|)
+argument_list|)
+operator|)
+operator|>
 literal|0
-argument|) 			padsz += res; 		if (res<
+condition|)
+name|padsz
+operator|+=
+name|res
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|<
 literal|0
-argument|) { 			syswarn(
+condition|)
+block|{
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to locate tape filemark."
-argument|); 			return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 		} 	}
+operator|)
+return|;
+block|}
+block|}
 comment|/* 	 * move backwards over the file mark so we are at the end of the 	 * last record. 	 */
-argument|mb.mt_op = MTBSF; 	mb.mt_count =
+name|mb
+operator|.
+name|mt_op
+operator|=
+name|MTBSF
+expr_stmt|;
+name|mb
+operator|.
+name|mt_count
+operator|=
 literal|1
-argument|; 	if (ioctl(arfd, MTIOCTOP,&mb)<
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|arfd
+argument_list|,
+name|MTIOCTOP
+argument_list|,
+operator|&
+name|mb
+argument_list|)
+operator|<
 literal|0
-argument|) { 		syswarn(
+condition|)
+block|{
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to backspace over tape filemark."
-argument|); 		return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	}
+operator|)
+return|;
+block|}
 comment|/* 	 * move backwards so we are in front of the last record and read it to 	 * get physical tape blocksize. 	 */
-argument|mb.mt_op = MTBSR; 	mb.mt_count =
+name|mb
+operator|.
+name|mt_op
+operator|=
+name|MTBSR
+expr_stmt|;
+name|mb
+operator|.
+name|mt_count
+operator|=
 literal|1
-argument|; 	if (ioctl(arfd, MTIOCTOP,&mb)<
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|arfd
+argument_list|,
+name|MTIOCTOP
+argument_list|,
+operator|&
+name|mb
+argument_list|)
+operator|<
 literal|0
-argument|) { 		syswarn(
+condition|)
+block|{
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to backspace over last tape block."
-argument|); 		return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	} 	if ((phyblk = read(arfd, scbuf, sizeof(scbuf)))<=
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|phyblk
+operator|=
+name|read
+argument_list|(
+name|arfd
+argument_list|,
+name|scbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|scbuf
+argument_list|)
+argument_list|)
+operator|)
+operator|<=
 literal|0
-argument|) { 		syswarn(
+condition|)
+block|{
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Cannot determine archive tape blocksize."
-argument|); 		return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	}
+operator|)
+return|;
+block|}
 comment|/* 	 * read foward to the file mark, then back up in front of the filemark 	 * (this is a bit paranoid, but should be safe to do). 	 */
-argument|while ((res = read(arfd, scbuf, sizeof(scbuf)))>
+while|while
+condition|(
+operator|(
+name|res
+operator|=
+name|read
+argument_list|(
+name|arfd
+argument_list|,
+name|scbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|scbuf
+argument_list|)
+argument_list|)
+operator|)
+operator|>
 literal|0
-argument|) 		; 	if (res<
+condition|)
+empty_stmt|;
+if|if
+condition|(
+name|res
+operator|<
 literal|0
-argument|) { 		syswarn(
+condition|)
+block|{
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to locate tape filemark."
-argument|); 		return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	} 	mb.mt_op = MTBSF; 	mb.mt_count =
+operator|)
+return|;
+block|}
+name|mb
+operator|.
+name|mt_op
+operator|=
+name|MTBSF
+expr_stmt|;
+name|mb
+operator|.
+name|mt_count
+operator|=
 literal|1
-argument|; 	if (ioctl(arfd, MTIOCTOP,&mb)<
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|arfd
+argument_list|,
+name|MTIOCTOP
+argument_list|,
+operator|&
+name|mb
+argument_list|)
+operator|<
 literal|0
-argument|) { 		syswarn(
+condition|)
+block|{
+name|syswarn
+argument_list|(
 literal|1
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to backspace over tape filemark."
-argument|); 		return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	}
+operator|)
+return|;
+block|}
 comment|/* 	 * set lstrval so we know that the filemark has not been seen 	 */
-argument|lstrval =
+name|lstrval
+operator|=
 literal|1
-argument|;
+expr_stmt|;
 comment|/* 	 * return if there was no padding 	 */
-argument|if (padsz ==
+if|if
+condition|(
+name|padsz
+operator|==
 literal|0
-argument|) 		return(phyblk);
+condition|)
+return|return
+operator|(
+name|phyblk
+operator|)
+return|;
 comment|/* 	 * make sure we can move backwards over the padding. (this should 	 * never fail). 	 */
-argument|if (padsz % phyblk) { 		paxwarn(
+if|if
+condition|(
+name|padsz
+operator|%
+name|phyblk
+condition|)
+block|{
+name|paxwarn
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"Tape drive unable to backspace requested amount"
-argument|); 		return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	}
+operator|)
+return|;
+block|}
 comment|/* 	 * move backwards over the padding so the head is where it was when 	 * we were first called (if required). 	 */
-argument|mb.mt_op = MTBSR; 	mb.mt_count = padsz/phyblk; 	if (ioctl(arfd, MTIOCTOP,&mb)<
+name|mb
+operator|.
+name|mt_op
+operator|=
+name|MTBSR
+expr_stmt|;
+name|mb
+operator|.
+name|mt_count
+operator|=
+name|padsz
+operator|/
+name|phyblk
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|arfd
+argument_list|,
+name|MTIOCTOP
+argument_list|,
+operator|&
+name|mb
+argument_list|)
+operator|<
 literal|0
-argument|) { 		syswarn(
+condition|)
+block|{
+name|syswarn
+argument_list|(
 literal|1
-argument|,errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to backspace tape over %d pad blocks"
-argument|, 		    mb.mt_count); 		return(-
+argument_list|,
+name|mb
+operator|.
+name|mt_count
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 	} 	return(phyblk); }
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|phyblk
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * ar_next()  *	prompts the user for the next volume in this archive. For some devices  *	we may allow the media to be changed. Otherwise a new archive is  *	prompted for. By pax spec, if there is no controlling tty or an eof is  *	read on tty input, we must quit pax.  * Return:  *	0 when ready to continue, -1 when all done  */
-argument|int ar_next(void) { 	char buf[PAXPATHLEN+
+end_comment
+
+begin_function
+name|int
+name|ar_next
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+name|PAXPATHLEN
+operator|+
 literal|2
-argument|]; 	static int freeit =
+index|]
+decl_stmt|;
+specifier|static
+name|int
+name|freeit
+init|=
 literal|0
-argument|; 	sigset_t o_mask;
+decl_stmt|;
+name|sigset_t
+name|o_mask
+decl_stmt|;
 comment|/* 	 * WE MUST CLOSE THE DEVICE. A lot of devices must see last close, (so 	 * things like writing EOF etc will be done) (Watch out ar_close() can 	 * also be called via a signal handler, so we must prevent a race. 	 */
-argument|if (sigprocmask(SIG_BLOCK,&s_mask,&o_mask)<
+if|if
+condition|(
+name|sigprocmask
+argument_list|(
+name|SIG_BLOCK
+argument_list|,
+operator|&
+name|s_mask
+argument_list|,
+operator|&
+name|o_mask
+argument_list|)
+operator|<
 literal|0
-argument|) 		syswarn(
+condition|)
+name|syswarn
+argument_list|(
 literal|0
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to set signal mask"
-argument|); 	ar_close(); 	if (sigprocmask(SIG_SETMASK,&o_mask, NULL)<
+argument_list|)
+expr_stmt|;
+name|ar_close
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|o_mask
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
 literal|0
-argument|) 		syswarn(
+condition|)
+name|syswarn
+argument_list|(
 literal|0
-argument|, errno,
+argument_list|,
+name|errno
+argument_list|,
 literal|"Unable to restore signal mask"
-argument|);  	if (done || !wr_trail || strcmp(NM_TAR, argv0) ==
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|done
+operator|||
+operator|!
+name|wr_trail
+operator|||
+name|strcmp
+argument_list|(
+name|NM_TAR
+argument_list|,
+name|argv0
+argument_list|)
+operator|==
 literal|0
-argument|) 		return(-
+condition|)
+return|return
+operator|(
+operator|-
 literal|1
-argument|);  	tty_prnt(
+operator|)
+return|;
+name|tty_prnt
+argument_list|(
 literal|"\nATTENTION! %s archive volume change required.\n"
-argument|, argv0);
+argument_list|,
+name|argv0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * if i/o is on stdin or stdout, we cannot reopen it (we do not know 	 * the name), the user will be forced to type it in. 	 */
-argument|if (strcmp(arcname, STDO)&& strcmp(arcname, STDN)&& (artyp != ISREG)&& (artyp != ISPIPE)) { 		if (artyp == ISTAPE) { 			tty_prnt(
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arcname
+argument_list|,
+name|STDO
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|arcname
+argument_list|,
+name|STDN
+argument_list|)
+operator|&&
+operator|(
+name|artyp
+operator|!=
+name|ISREG
+operator|)
+operator|&&
+operator|(
+name|artyp
+operator|!=
+name|ISPIPE
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|artyp
+operator|==
+name|ISTAPE
+condition|)
+block|{
+name|tty_prnt
+argument_list|(
 literal|"%s ready for archive tape volume: %d\n"
-argument|, 				arcname, arvol); 			tty_prnt(
+argument_list|,
+name|arcname
+argument_list|,
+name|arvol
+argument_list|)
+expr_stmt|;
+name|tty_prnt
+argument_list|(
 literal|"Load the NEXT TAPE on the tape drive"
-argument|); 		} else { 			tty_prnt(
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|tty_prnt
+argument_list|(
 literal|"%s ready for archive volume: %d\n"
-argument|, 				arcname, arvol); 			tty_prnt(
+argument_list|,
+name|arcname
+argument_list|,
+name|arvol
+argument_list|)
+expr_stmt|;
+name|tty_prnt
+argument_list|(
 literal|"Load the NEXT STORAGE MEDIA (if required)"
-argument|); 		}  		if ((act == ARCHIVE) || (act == APPND)) 			tty_prnt(
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|act
+operator|==
+name|ARCHIVE
+operator|)
+operator|||
+operator|(
+name|act
+operator|==
+name|APPND
+operator|)
+condition|)
+name|tty_prnt
+argument_list|(
 literal|" and make sure it is WRITE ENABLED.\n"
-argument|); 		else 			tty_prnt(
+argument_list|)
+expr_stmt|;
+else|else
+name|tty_prnt
+argument_list|(
 literal|"\n"
-argument|);  		for(;;) { 			tty_prnt(
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|tty_prnt
+argument_list|(
 literal|"Type \"y\" to continue, \".\" to quit %s,"
-argument|, 				argv0); 			tty_prnt(
+argument_list|,
+name|argv0
+argument_list|)
+expr_stmt|;
+name|tty_prnt
+argument_list|(
 literal|" or \"s\" to switch to new device.\nIf you"
-argument|); 			tty_prnt(
+argument_list|)
+expr_stmt|;
+name|tty_prnt
+argument_list|(
 literal|" cannot change storage media, type \"s\"\n"
-argument|); 			tty_prnt(
+argument_list|)
+expr_stmt|;
+name|tty_prnt
+argument_list|(
 literal|"Is the device ready and online?> "
-argument|);  			if ((tty_read(buf,sizeof(buf))<
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tty_read
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+operator|<
 literal|0
-argument|) || !strcmp(buf,
+operator|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
 literal|"."
-argument|)){ 				done =
+argument_list|)
+condition|)
+block|{
+name|done
+operator|=
 literal|1
-argument|; 				lstrval = -
+expr_stmt|;
+name|lstrval
+operator|=
+operator|-
 literal|1
-argument|; 				tty_prnt(
+expr_stmt|;
+name|tty_prnt
+argument_list|(
 literal|"Quitting %s!\n"
-argument|, argv0); 				vfpart =
+argument_list|,
+name|argv0
+argument_list|)
+expr_stmt|;
+name|vfpart
+operator|=
 literal|0
-argument|; 				return(-
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 			}  			if ((buf[
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|buf
+index|[
 literal|0
-argument|] ==
+index|]
+operator|==
 literal|'\0'
-argument|) || (buf[
+operator|)
+operator|||
+operator|(
+name|buf
+index|[
 literal|1
-argument|] !=
+index|]
+operator|!=
 literal|'\0'
-argument|)) { 				tty_prnt(
+operator|)
+condition|)
+block|{
+name|tty_prnt
+argument_list|(
 literal|"%s unknown command, try again\n"
-argument|,buf); 				continue; 			}  			switch (buf[
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+switch|switch
+condition|(
+name|buf
+index|[
 literal|0
-argument|]) { 			case
+index|]
+condition|)
+block|{
+case|case
 literal|'y'
-argument|: 			case
+case|:
+case|case
 literal|'Y'
-argument|:
+case|:
 comment|/* 				 * we are to continue with the same device 				 */
-argument|if (ar_open(arcname)>=
+if|if
+condition|(
+name|ar_open
+argument_list|(
+name|arcname
+argument_list|)
+operator|>=
 literal|0
-argument|) 					return(
+condition|)
+return|return
+operator|(
 literal|0
-argument|); 				tty_prnt(
+operator|)
+return|;
+name|tty_prnt
+argument_list|(
 literal|"Cannot re-open %s, try again\n"
-argument|, 					arcname); 				continue; 			case
+argument_list|,
+name|arcname
+argument_list|)
+expr_stmt|;
+continue|continue;
+case|case
 literal|'s'
-argument|: 			case
+case|:
+case|case
 literal|'S'
-argument|:
+case|:
 comment|/* 				 * user wants to open a different device 				 */
-argument|tty_prnt(
+name|tty_prnt
+argument_list|(
 literal|"Switching to a different archive\n"
-argument|); 				break; 			default: 				tty_prnt(
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|tty_prnt
+argument_list|(
 literal|"%s unknown command, try again\n"
-argument|,buf); 				continue; 			} 			break; 		} 	} else 		tty_prnt(
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+break|break;
+block|}
+block|}
+else|else
+name|tty_prnt
+argument_list|(
 literal|"Ready for archive volume: %d\n"
-argument|, arvol);
+argument_list|,
+name|arvol
+argument_list|)
+expr_stmt|;
 comment|/* 	 * have to go to a different archive 	 */
-argument|for (;;) { 		tty_prnt(
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|tty_prnt
+argument_list|(
 literal|"Input archive name or \".\" to quit %s.\n"
-argument|, argv0); 		tty_prnt(
+argument_list|,
+name|argv0
+argument_list|)
+expr_stmt|;
+name|tty_prnt
+argument_list|(
 literal|"Archive name> "
-argument|);  		if ((tty_read(buf, sizeof(buf))<
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tty_read
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+operator|<
 literal|0
-argument|) || !strcmp(buf,
+operator|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
 literal|"."
-argument|)) { 			done =
+argument_list|)
+condition|)
+block|{
+name|done
+operator|=
 literal|1
-argument|; 			lstrval = -
+expr_stmt|;
+name|lstrval
+operator|=
+operator|-
 literal|1
-argument|; 			tty_prnt(
+expr_stmt|;
+name|tty_prnt
+argument_list|(
 literal|"Quitting %s!\n"
-argument|, argv0); 			vfpart =
+argument_list|,
+name|argv0
+argument_list|)
+expr_stmt|;
+name|vfpart
+operator|=
 literal|0
-argument|; 			return(-
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 		} 		if (buf[
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|buf
+index|[
 literal|0
-argument|] ==
+index|]
+operator|==
 literal|'\0'
-argument|) { 			tty_prnt(
+condition|)
+block|{
+name|tty_prnt
+argument_list|(
 literal|"Empty file name, try again\n"
-argument|); 			continue; 		} 		if (!strcmp(buf,
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
 literal|".."
-argument|)) { 			tty_prnt(
+argument_list|)
+condition|)
+block|{
+name|tty_prnt
+argument_list|(
 literal|"Illegal file name: .. try again\n"
-argument|); 			continue; 		} 		if (strlen(buf)> PAXPATHLEN) { 			tty_prnt(
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+operator|>
+name|PAXPATHLEN
+condition|)
+block|{
+name|tty_prnt
+argument_list|(
 literal|"File name too long, try again\n"
-argument|); 			continue; 		}
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 		 * try to open new archive 		 */
-argument|if (ar_open(buf)>=
+if|if
+condition|(
+name|ar_open
+argument_list|(
+name|buf
+argument_list|)
+operator|>=
 literal|0
-argument|) { 			if (freeit) { 				(void)free(arcname); 				freeit =
+condition|)
+block|{
+if|if
+condition|(
+name|freeit
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|free
+argument_list|(
+name|arcname
+argument_list|)
+expr_stmt|;
+name|freeit
+operator|=
 literal|0
-argument|; 			} 			if ((arcname = strdup(buf)) == NULL) { 				done =
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|arcname
+operator|=
+name|strdup
+argument_list|(
+name|buf
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|done
+operator|=
 literal|1
-argument|; 				lstrval = -
+expr_stmt|;
+name|lstrval
+operator|=
+operator|-
 literal|1
-argument|; 				paxwarn(
+expr_stmt|;
+name|paxwarn
+argument_list|(
 literal|0
-argument|,
+argument_list|,
 literal|"Cannot save archive name."
-argument|); 				return(-
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
 literal|1
-argument|); 			} 			freeit =
+operator|)
+return|;
+block|}
+name|freeit
+operator|=
 literal|1
-argument|; 			break; 		} 		tty_prnt(
+expr_stmt|;
+break|break;
+block|}
+name|tty_prnt
+argument_list|(
 literal|"Cannot open %s, try again\n"
-argument|, buf); 		continue; 	} 	return(
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+return|return
+operator|(
 literal|0
-argument|); }
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * ar_start_gzip()  * starts the gzip compression/decompression process as a child, using magic  * to keep the fd the same in the calling function (parent).  */
-argument|void ar_start_gzip(int fd, const char *gzip_program, int wr) { 	int fds[
+end_comment
+
+begin_function
+name|void
+name|ar_start_gzip
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|gzip_program
+parameter_list|,
+name|int
+name|wr
+parameter_list|)
+block|{
+name|int
+name|fds
+index|[
 literal|2
-argument|]; 	char *gzip_flags;  	if (pipe(fds)<
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|gzip_flags
+decl_stmt|;
+if|if
+condition|(
+name|pipe
+argument_list|(
+name|fds
+argument_list|)
+operator|<
 literal|0
-argument|) 		err(
+condition|)
+name|err
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"could not pipe"
-argument|); 	zpid = fork(); 	if (zpid<
+argument_list|)
+expr_stmt|;
+name|zpid
+operator|=
+name|fork
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|zpid
+operator|<
 literal|0
-argument|) 		err(
+condition|)
+name|err
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"could not fork"
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/* parent */
-argument|if (zpid) { 		if (wr) 			dup2(fds[
+if|if
+condition|(
+name|zpid
+condition|)
+block|{
+if|if
+condition|(
+name|wr
+condition|)
+name|dup2
+argument_list|(
+name|fds
+index|[
 literal|1
-argument|], fd); 		else 			dup2(fds[
+index|]
+argument_list|,
+name|fd
+argument_list|)
+expr_stmt|;
+else|else
+name|dup2
+argument_list|(
+name|fds
+index|[
 literal|0
-argument|], fd); 		close(fds[
+index|]
+argument_list|,
+name|fd
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fds
+index|[
 literal|0
-argument|]); 		close(fds[
+index|]
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fds
+index|[
 literal|1
-argument|]); 	} else { 		if (wr) { 			dup2(fds[
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|wr
+condition|)
+block|{
+name|dup2
+argument_list|(
+name|fds
+index|[
 literal|0
-argument|], STDIN_FILENO); 			dup2(fd, STDOUT_FILENO); 			gzip_flags =
+index|]
+argument_list|,
+name|STDIN_FILENO
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|fd
+argument_list|,
+name|STDOUT_FILENO
+argument_list|)
+expr_stmt|;
+name|gzip_flags
+operator|=
 literal|"-c"
-argument|; 		} else { 			dup2(fds[
+expr_stmt|;
+block|}
+else|else
+block|{
+name|dup2
+argument_list|(
+name|fds
+index|[
 literal|1
-argument|], STDOUT_FILENO); 			dup2(fd, STDIN_FILENO); 			gzip_flags =
+index|]
+argument_list|,
+name|STDOUT_FILENO
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|fd
+argument_list|,
+name|STDIN_FILENO
+argument_list|)
+expr_stmt|;
+name|gzip_flags
+operator|=
 literal|"-dc"
-argument|; 		} 		close(fds[
+expr_stmt|;
+block|}
+name|close
+argument_list|(
+name|fds
+index|[
 literal|0
-argument|]); 		close(fds[
+index|]
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fds
+index|[
 literal|1
-argument|]); 		if (execlp(gzip_program, gzip_program, gzip_flags, 		    (char *)NULL)<
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|execlp
+argument_list|(
+name|gzip_program
+argument_list|,
+name|gzip_program
+argument_list|,
+name|gzip_flags
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+operator|<
 literal|0
-argument|) 			err(
+condition|)
+name|err
+argument_list|(
 literal|1
-argument|,
+argument_list|,
 literal|"could not exec"
-argument|);
+argument_list|)
+expr_stmt|;
 comment|/* NOTREACHED */
-argument|} }
+block|}
+block|}
 end_function
 
 end_unit

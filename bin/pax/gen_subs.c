@@ -71,6 +71,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -520,8 +526,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%9qu "
+literal|"%9ju "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sbp
 operator|->
 name|st_size

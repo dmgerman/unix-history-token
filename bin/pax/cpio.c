@@ -71,6 +71,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -667,8 +673,11 @@ name|paxwarn
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cpio link name length is invalid: %qu"
+literal|"Cpio link name length is invalid: %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|arcn
 operator|->
 name|sb
