@@ -4146,15 +4146,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unp_list
-operator|==
-literal|0
-condition|)
-return|return
-name|ENOMEM
-return|;
 for|for
 control|(
 name|unp

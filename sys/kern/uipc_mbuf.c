@@ -1300,6 +1300,7 @@ begin_function
 name|void
 name|m_copydata
 parameter_list|(
+specifier|const
 name|struct
 name|mbuf
 modifier|*
