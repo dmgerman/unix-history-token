@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1987 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1987, 1990 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmp.c	5.1 (Berkeley) %G%"
+literal|"@(#)cmp.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,7 +110,6 @@ value|2
 end_define
 
 begin_decl_stmt
-specifier|static
 name|int
 name|all
 decl_stmt|,
@@ -123,7 +122,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|u_char
 name|buf1
 index|[
@@ -138,7 +136,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|file1
@@ -160,8 +157,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|extern
@@ -283,7 +280,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|file1
@@ -295,6 +291,8 @@ index|]
 argument_list|,
 literal|"-"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|fd1
 operator|=
@@ -325,7 +323,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|file2
@@ -337,6 +334,8 @@ index|]
 argument_list|,
 literal|"-"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|fd2
 operator|=
@@ -442,7 +441,6 @@ comment|/*  * skip --  *	skip first part of file  */
 end_comment
 
 begin_expr_stmt
-specifier|static
 name|skip
 argument_list|(
 name|dist
@@ -541,38 +539,40 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|cmp
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|u_char
-operator|*
-name|C1
-block|,
-operator|*
-name|C2
-block|;
+modifier|*
+name|p1
+decl_stmt|,
+modifier|*
+name|p2
+decl_stmt|;
 specifier|register
 name|int
 name|cnt
-block|,
+decl_stmt|,
 name|len1
-block|,
+decl_stmt|,
 name|len2
-block|;
+decl_stmt|;
 specifier|register
 name|long
 name|byte
-block|,
+decl_stmt|,
 name|line
-block|;
+decl_stmt|;
 name|int
 name|dfound
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 for|for
 control|(
 name|byte
@@ -634,6 +634,7 @@ argument_list|(
 name|file2
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 case|case
 literal|0
 case|:
@@ -646,23 +647,19 @@ else|:
 name|EXITNODIFF
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 default|default:
 name|endoffile
 argument_list|(
 name|file1
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-end_expr_stmt
-
-begin_comment
-unit|}
+block|}
 comment|/* 		 * file1 might be stdio, which means that a read of less than 		 * MAXBSIZE might not mean an EOF.  So, read whatever we read 		 * from file1 from file2. 		 */
-end_comment
-
-begin_expr_stmt
-unit|if
-operator|(
+if|if
+condition|(
 operator|(
 name|len2
 operator|=
@@ -678,15 +675,12 @@ operator|)
 operator|==
 operator|-
 literal|1
-operator|)
+condition|)
 name|error
 argument_list|(
 name|file2
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|bcmp
@@ -719,11 +713,11 @@ literal|1
 expr_stmt|;
 for|for
 control|(
-name|C1
+name|p1
 operator|=
 name|buf1
 operator|,
-name|C2
+name|p2
 operator|=
 name|buf2
 operator|,
@@ -735,10 +729,10 @@ name|cnt
 operator|--
 condition|;
 operator|++
-name|C1
+name|p1
 operator|,
 operator|++
-name|C2
+name|p2
 control|)
 block|{
 operator|++
@@ -747,10 +741,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|C1
+name|p1
 operator|!=
 operator|*
-name|C2
+name|p2
 condition|)
 name|printf
 argument_list|(
@@ -759,10 +753,10 @@ argument_list|,
 name|byte
 argument_list|,
 operator|*
-name|C1
+name|p1
 argument_list|,
 operator|*
-name|C2
+name|p2
 argument_list|)
 expr_stmt|;
 block|}
@@ -770,20 +764,20 @@ block|}
 else|else
 for|for
 control|(
-name|C1
+name|p1
 operator|=
 name|buf1
 operator|,
-name|C2
+name|p2
 operator|=
 name|buf2
 init|;
 condition|;
 operator|++
-name|C1
+name|p1
 operator|,
 operator|++
-name|C2
+name|p2
 control|)
 block|{
 operator|++
@@ -792,10 +786,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|C1
+name|p1
 operator|!=
 operator|*
-name|C2
+name|p2
 condition|)
 block|{
 name|printf
@@ -820,7 +814,7 @@ block|}
 if|if
 condition|(
 operator|*
-name|C1
+name|p1
 operator|==
 literal|'\n'
 condition|)
@@ -846,7 +840,7 @@ name|all
 condition|)
 for|for
 control|(
-name|C1
+name|p1
 operator|=
 name|buf1
 operator|,
@@ -861,7 +855,7 @@ control|)
 if|if
 condition|(
 operator|*
-name|C1
+name|p1
 operator|++
 operator|==
 literal|'\n'
@@ -870,13 +864,7 @@ operator|++
 name|line
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* 		 * couldn't read as much from file2 as from file1; checked 		 * here because there might be a difference before we got 		 * to this point, which would have precedence. 		 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|len2
@@ -888,24 +876,24 @@ argument_list|(
 name|file2
 argument_list|)
 expr_stmt|;
-end_if
+block|}
+block|}
+end_block
 
 begin_comment
-unit|} }
 comment|/*  * otoi --  *	octal/decimal string to u_long  */
 end_comment
 
 begin_function
-specifier|static
 name|u_long
 name|otoi
 parameter_list|(
-name|C
+name|s
 parameter_list|)
 specifier|register
 name|char
 modifier|*
-name|C
+name|s
 decl_stmt|;
 block|{
 specifier|register
@@ -920,7 +908,7 @@ name|base
 operator|=
 operator|(
 operator|*
-name|C
+name|s
 operator|==
 literal|'0'
 operator|)
@@ -938,11 +926,11 @@ init|;
 name|isdigit
 argument_list|(
 operator|*
-name|C
+name|s
 argument_list|)
 condition|;
 operator|++
-name|C
+name|s
 control|)
 name|val
 operator|=
@@ -951,7 +939,7 @@ operator|*
 name|base
 operator|+
 operator|*
-name|C
+name|s
 operator|-
 literal|'0'
 expr_stmt|;
@@ -967,17 +955,19 @@ begin_comment
 comment|/*  * error --  *	print I/O error message and die  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|error
 argument_list|(
 argument|filename
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|filename
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1024,21 +1014,24 @@ begin_comment
 comment|/*  * endoffile --  *	print end-of-file message and exit indicating the files were different  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|endoffile
 argument_list|(
 argument|filename
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|filename
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
 comment|/* 32V put this message on stdout, S5 does it on stderr. */
+comment|/* POSIX.2 currently does it on stdout-- Hooray! */
 if|if
 condition|(
 operator|!
@@ -1047,10 +1040,8 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"cmp: EOF on %s\n"
 argument_list|,
 name|filename
@@ -1068,10 +1059,12 @@ begin_comment
 comment|/*  * usage --  *	print usage and die  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|usage
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|fputs
 argument_list|(
@@ -1079,13 +1072,14 @@ literal|"usage: cmp [-ls] file1 file2 [skip1] [skip2]\n"
 argument_list|,
 name|stderr
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 name|EXITERR
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
