@@ -5513,9 +5513,9 @@ literal|"=windowmaker"
 block|}
 block|,
 block|{
-literal|"7 fvwm2"
+literal|"7 fvwm"
 block|,
-literal|"The fvwm2 window manager"
+literal|"The fvwm window manager"
 block|,
 name|NULL
 block|,
