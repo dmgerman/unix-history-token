@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.7 1994/01/25 05:56:06 deraadt Exp paulus $ */
+comment|/* $Id: if_ppp.c,v 1.2 1994/09/23 00:13:18 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -767,6 +767,8 @@ operator|.
 name|if_flags
 operator|=
 name|IFF_POINTOPOINT
+operator||
+name|IFF_MULTICAST
 expr_stmt|;
 name|sc
 operator|->
@@ -7321,6 +7323,38 @@ name|sc_if
 operator|.
 name|if_mtu
 expr_stmt|;
+break|break;
+case|case
+name|SIOCADDMULTI
+case|:
+case|case
+name|SIOCDELMULTI
+case|:
+switch|switch
+condition|(
+name|ifr
+operator|->
+name|ifr_addr
+operator|.
+name|sa_family
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INET
+case|case
+name|AF_INET
+case|:
+break|break;
+endif|#
+directive|endif
+default|default:
+name|error
+operator|=
+name|EAFNOSUPPORT
+expr_stmt|;
+break|break;
+block|}
 break|break;
 default|default:
 name|error
