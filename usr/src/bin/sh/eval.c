@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	8.1 (Berkeley) %G%"
+literal|"@(#)eval.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4318,6 +4318,31 @@ expr_stmt|;
 block|}
 return|return
 name|ret
+return|;
+block|}
+end_block
+
+begin_macro
+name|falsecmd
+argument_list|(
+argument|argc
+argument_list|,
+argument|argv
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+literal|1
 return|;
 block|}
 end_block
