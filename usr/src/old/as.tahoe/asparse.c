@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.17 7/1/83"
+literal|"$W$ (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
