@@ -833,7 +833,7 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_flag
+name|ki_sflag
 expr_stmt|;
 name|cp
 operator|=
