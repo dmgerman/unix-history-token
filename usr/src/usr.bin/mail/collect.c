@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	2.7.1.2 %G%"
+literal|"@(#)collect.c	2.8 %G%"
 decl_stmt|;
 end_decl_stmt
 

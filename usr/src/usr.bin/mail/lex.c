@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	2.5.1.1 %G%"
+literal|"@(#)lex.c	2.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -451,6 +451,9 @@ condition|(
 name|shudprompt
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|sigset
 argument_list|(
 name|SIGCONT
