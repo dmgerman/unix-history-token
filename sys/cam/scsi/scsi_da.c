@@ -26,6 +26,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|"opt_da.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_hw_wdog.h"
 end_include
 
