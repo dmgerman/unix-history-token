@@ -84,6 +84,9 @@ decl_stmt|;
 name|u_int32_t
 name|fmt
 decl_stmt|;
+name|int
+name|dma
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1782,6 +1785,16 @@ decl_stmt|;
 name|u_long
 name|ul
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|csa
+operator|->
+name|pch
+operator|.
+name|dma
+condition|)
+block|{
 name|resp
 operator|=
 operator|&
@@ -1824,6 +1837,15 @@ argument_list|,
 literal|0x80008000
 argument_list|)
 expr_stmt|;
+name|csa
+operator|->
+name|pch
+operator|.
+name|dma
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1845,6 +1867,16 @@ decl_stmt|;
 name|u_long
 name|ul
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|csa
+operator|->
+name|rch
+operator|.
+name|dma
+condition|)
+block|{
 name|resp
 operator|=
 operator|&
@@ -1887,6 +1919,15 @@ argument_list|,
 literal|0x80008000
 argument_list|)
 expr_stmt|;
+name|csa
+operator|->
+name|rch
+operator|.
+name|dma
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1908,6 +1949,15 @@ decl_stmt|;
 name|u_long
 name|ul
 decl_stmt|;
+if|if
+condition|(
+name|csa
+operator|->
+name|pch
+operator|.
+name|dma
+condition|)
+block|{
 name|resp
 operator|=
 operator|&
@@ -1958,6 +2008,15 @@ argument_list|(
 name|resp
 argument_list|)
 expr_stmt|;
+name|csa
+operator|->
+name|pch
+operator|.
+name|dma
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1979,6 +2038,15 @@ decl_stmt|;
 name|u_long
 name|ul
 decl_stmt|;
+if|if
+condition|(
+name|csa
+operator|->
+name|rch
+operator|.
+name|dma
+condition|)
+block|{
 name|resp
 operator|=
 operator|&
@@ -2023,6 +2091,15 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
+name|csa
+operator|->
+name|rch
+operator|.
+name|dma
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3225,6 +3302,21 @@ operator|=
 name|func
 operator|->
 name|varinfo
+expr_stmt|;
+comment|/* 	 * Fake the status of DMA so that the initial value of 	 * PCTL and CCTL can be stored into csa->pctl and csa->cctl, 	 * respectively. 	 */
+name|csa
+operator|->
+name|pch
+operator|.
+name|dma
+operator|=
+name|csa
+operator|->
+name|rch
+operator|.
+name|dma
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Allocate the resources. */
 name|resp
