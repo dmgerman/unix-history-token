@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -253,6 +253,55 @@ define|#
 directive|define
 name|mfs_advlock
 value|((int (*) __P(( \ 		struct vnode *vp, \ 		caddr_t id, \ 		int op, \ 		struct flock *fl, \ 		int flags))) mfs_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mfs_blkatoff
+value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t offset, \ 		char **res, \ 		struct buf **bpp))) mfs_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mfs_vget
+value|((int (*) __P(( \ 		struct mount *mp, \ 		ino_t ino, \ 		struct vnode **vpp))) mfs_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mfs_valloc
+value|((int (*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) mfs_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mfs_vfree
+value|((void (*) __P(( \ 		struct vnode *pvp, \ 		ino_t ino, \ 		int mode))) mfs_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mfs_truncate
+value|((int (*) __P(( \ 		struct vnode *vp, \ 		u_long length, \ 		int flags))) mfs_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mfs_update
+value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct timeval *ta, \ 		struct timeval *tm, \ 		int waitfor))) nullop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mfs_bwrite
+value|((int (*) __P(( \ 		struct buf *bp))) nullop)
 end_define
 
 end_unit

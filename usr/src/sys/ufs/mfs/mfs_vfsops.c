@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -123,7 +123,7 @@ name|mfs_start
 block|,
 name|ffs_unmount
 block|,
-name|ufs_root
+name|ffs_root
 block|,
 name|ufs_quotactl
 block|,
@@ -131,9 +131,9 @@ name|mfs_statfs
 block|,
 name|ffs_sync
 block|,
-name|ufs_fhtovp
+name|ffs_fhtovp
 block|,
-name|ufs_vptofh
+name|ffs_vptofh
 block|,
 name|mfs_init
 block|, }
