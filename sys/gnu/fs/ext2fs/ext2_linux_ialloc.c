@@ -137,6 +137,18 @@ modifier|*
 name|bh
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|bh
+operator|->
+name|b_flags
+operator|&
+name|B_DELWRI
+operator|)
+condition|)
+block|{
 name|numdirtybuffers
 operator|++
 expr_stmt|;
@@ -146,6 +158,7 @@ name|b_flags
 operator||=
 name|B_DELWRI
 expr_stmt|;
+block|}
 name|bh
 operator|->
 name|b_flags
