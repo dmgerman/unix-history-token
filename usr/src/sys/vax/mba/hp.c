@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.38	81/05/10	*/
+comment|/*	hp.c	4.39	81/05/11	*/
 end_comment
 
 begin_ifdef
@@ -202,7 +202,7 @@ block|,
 ifndef|#
 directive|ifndef
 name|NOBADSECT
-literal|291302
+literal|291280
 block|,
 literal|118
 block|,
@@ -256,7 +256,7 @@ block|,
 ifndef|#
 directive|ifndef
 name|NOBADSECT
-literal|82016
+literal|81984
 block|,
 literal|310
 block|,
@@ -308,12 +308,12 @@ comment|/* E=cyl 589 thru 680 */
 ifndef|#
 directive|ifndef
 name|NOBADSECT
-literal|86572
+literal|86240
 block|,
 literal|681
 block|,
 comment|/* F=cyl 681 thru 822 */
-literal|158624
+literal|158592
 block|,
 literal|562
 block|,
@@ -375,7 +375,7 @@ block|,
 literal|115
 block|,
 comment|/* G=cyl 115 thru 304 */
-literal|110174
+literal|110143
 block|,
 literal|305
 block|,
@@ -413,12 +413,12 @@ block|,
 literal|340
 block|,
 comment|/* E=cyl 340 thru 499 */
-literal|207900
+literal|207850
 block|,
 literal|500
 block|,
 comment|/* F=cyl 500 thru 629 */
-literal|479900
+literal|479850
 block|,
 literal|330
 block|,
