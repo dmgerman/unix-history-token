@@ -918,13 +918,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|volatile
-name|int
-name|signo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|volatile
 name|sig_atomic_t
 name|seenalrm
 decl_stmt|;
@@ -2800,10 +2793,6 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
-name|signo
-operator|=
-literal|0
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_POLL_H
@@ -2988,16 +2977,12 @@ begin_function
 name|void
 name|sighandler
 parameter_list|(
-name|sig
+name|signo
 parameter_list|)
 name|int
-name|sig
+name|signo
 decl_stmt|;
 block|{
-name|signo
-operator|=
-name|sig
-expr_stmt|;
 switch|switch
 condition|(
 name|signo
