@@ -39,7 +39,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.15
+literal|3.16
 operator|%
 name|G
 operator|%
@@ -67,7 +67,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.15
+literal|3.16
 operator|%
 name|G
 operator|%
@@ -188,6 +188,15 @@ end_block
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|canonname
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* 	**  Open the connection to the mailer. 	*/
@@ -398,9 +407,12 @@ end_expr_stmt
 begin_expr_stmt
 name|smtpmessage
 argument_list|(
-literal|"MAIL From:<%s>"
+literal|"MAIL From: %s"
 argument_list|,
+name|canonname
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -477,6 +489,12 @@ specifier|register
 name|int
 name|r
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|canonname
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|SmtpPid
@@ -490,11 +508,14 @@ operator|)
 return|;
 name|smtpmessage
 argument_list|(
-literal|"RCPT To:<%s>"
+literal|"RCPT To: %s"
 argument_list|,
+name|canonname
+argument_list|(
 name|to
 operator|->
 name|q_user
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|r
@@ -850,7 +871,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-comment|/* arrange to time out the read */
+comment|/* actually do the read */
 operator|(
 name|void
 operator|)
@@ -860,33 +881,9 @@ name|Xscript
 argument_list|)
 expr_stmt|;
 comment|/* for debugging */
-if|if
-condition|(
-name|setjmp
-argument_list|(
-name|TickFrame
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-operator|(
-name|void
-operator|)
-name|alarm
-argument_list|(
-name|ReadTimeout
-argument_list|)
-expr_stmt|;
-comment|/* actually do the read */
 name|p
 operator|=
-name|fgets
+name|sfgets
 argument_list|(
 name|buf
 argument_list|,
@@ -894,15 +891,6 @@ sizeof|sizeof
 name|buf
 argument_list|,
 name|SmtpIn
-argument_list|)
-expr_stmt|;
-comment|/* clean up timeout and check for errors */
-operator|(
-name|void
-operator|)
-name|alarm
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 if|if

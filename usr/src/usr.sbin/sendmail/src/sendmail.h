@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.76		%G%"
+literal|"@(#)sendmail.h	3.77		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1450,6 +1450,63 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  STRUCT EVENT -- event queue. ** **	Maintained in sorted order. */
+end_comment
+
+begin_struct
+struct|struct
+name|event
+block|{
+name|time_t
+name|ev_time
+decl_stmt|;
+comment|/* time of the function call */
+name|int
+function_decl|(
+modifier|*
+name|ev_func
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* function to call */
+name|int
+name|ev_arg
+decl_stmt|;
+comment|/* argument to ev_func */
+name|struct
+name|event
+modifier|*
+name|ev_link
+decl_stmt|;
+comment|/* link to next item */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|event
+name|EVENT
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|EXTERN
+name|EVENT
+modifier|*
+name|EventQueue
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* head of event queue */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  Statistics structure. */
 end_comment
 
@@ -2270,6 +2327,24 @@ specifier|extern
 name|FILE
 modifier|*
 name|dfopen
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|EVENT
+modifier|*
+name|setevent
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|sfgets
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.24
+literal|3.25
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.24
+literal|3.25
 operator|%
 name|G
 operator|%
@@ -486,42 +486,10 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-comment|/* arrange a timeout */
-if|if
-condition|(
-name|setjmp
-argument_list|(
-name|TickFrame
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|message
-argument_list|(
-literal|"421"
-argument_list|,
-literal|"%s timed out"
-argument_list|,
-name|HostName
-argument_list|)
-expr_stmt|;
-name|finis
-argument_list|()
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|alarm
-argument_list|(
-name|ReadTimeout
-argument_list|)
-expr_stmt|;
 comment|/* read the input line */
 name|p
 operator|=
-name|fgets
+name|sfgets
 argument_list|(
 name|inp
 argument_list|,
@@ -531,15 +499,7 @@ argument_list|,
 name|InChannel
 argument_list|)
 expr_stmt|;
-comment|/* clear the timeout and handle errors */
-operator|(
-name|void
-operator|)
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/* handle errors */
 if|if
 condition|(
 name|p
