@@ -1690,7 +1690,7 @@ literal|"usb_event_thread: start\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In case this controller is a companion controller to an 	 * EHCI controller we need to wait until the 	 * EHCI controller has grabbed the port. 	 * XXX It would be nicer to do this with a tsleep(), but I don't 	 * know how to synchronize the creation of the threads so it 	 * will work. 	 */
+comment|/* 	 * In case this controller is a companion controller to an 	 * EHCI controller we need to wait until the EHCI controller 	 * has grabbed the port. 	 * XXX It would be nicer to do this with a tsleep(), but I don't 	 * know how to synchronize the creation of the threads so it 	 * will work. 	 */
 name|usb_delay_ms
 argument_list|(
 name|sc
@@ -2088,8 +2088,6 @@ literal|0
 operator|)
 return|;
 block|}
-else|else
-block|{
 name|USB_GET_SC_OPEN
 argument_list|(
 name|usb
@@ -2115,7 +2113,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 end_function
 
