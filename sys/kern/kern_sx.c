@@ -1313,6 +1313,12 @@ name|sx_cnt
 operator|=
 literal|1
 expr_stmt|;
+name|sx
+operator|->
+name|sx_xholder
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|sx
