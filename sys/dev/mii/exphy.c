@@ -336,7 +336,7 @@ operator|->
 name|mii_id2
 argument_list|)
 operator|!=
-name|MII_MODEL_BROADCOM_3c905Cphy
+name|MII_MODEL_BROADCOM_3C905C
 operator|)
 condition|)
 return|return
@@ -391,7 +391,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-name|MII_STR_BROADCOM_3c905Cphy
+name|MII_STR_BROADCOM_3C905C
 argument_list|)
 expr_stmt|;
 return|return
