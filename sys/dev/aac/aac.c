@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus_dma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/resource.h>
 end_include
 
@@ -13292,7 +13298,20 @@ name|caminf
 operator|==
 name|NULL
 condition|)
-continue|continue;
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"No memory to add passthrough bus %d\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|child
 operator|=
 name|device_add_child
@@ -13320,10 +13339,19 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"device_add_child failed\n"
+literal|"device_add_child failed for passthrough bus %d\n"
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|free
+argument_list|(
+name|caminf
+argument_list|,
+name|M_AACBUF
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|caminf
 operator|->
