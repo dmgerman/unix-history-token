@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	6.8	84/08/21	*/
+comment|/*	uipc_usrreq.c	6.9	84/08/27	*/
 end_comment
 
 begin_include
@@ -1089,6 +1089,14 @@ operator|->
 name|unp_inode
 condition|)
 block|{
+name|unp
+operator|->
+name|unp_inode
+operator|->
+name|i_socket
+operator|=
+literal|0
+expr_stmt|;
 name|irele
 argument_list|(
 name|unp
@@ -2831,6 +2839,10 @@ name|int
 name|unp_discard
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|m
+condition|)
 name|unp_scan
 argument_list|(
 name|m
@@ -2887,8 +2899,6 @@ name|i
 decl_stmt|;
 name|int
 name|qfds
-init|=
-literal|0
 decl_stmt|;
 while|while
 condition|(
@@ -2977,20 +2987,9 @@ name|m0
 operator|=
 name|m0
 operator|->
-name|m_next
+name|m_act
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|qfds
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"unp_gcscan"
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
