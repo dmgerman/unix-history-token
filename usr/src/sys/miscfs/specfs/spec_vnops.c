@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)spec_vnops.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)spec_vnops.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -95,6 +95,9 @@ decl_stmt|,
 name|spec_close
 argument_list|()
 decl_stmt|,
+name|spec_ebadf
+argument_list|()
+decl_stmt|,
 name|spec_badop
 argument_list|()
 decl_stmt|,
@@ -111,64 +114,95 @@ init|=
 block|{
 name|spec_lookup
 block|,
+comment|/* lookup */
 name|spec_badop
 block|,
+comment|/* create */
 name|spec_badop
 block|,
+comment|/* mknod */
 name|spec_open
 block|,
+comment|/* open */
 name|spec_close
 block|,
-name|spec_badop
+comment|/* close */
+name|spec_ebadf
 block|,
-name|spec_badop
+comment|/* access */
+name|spec_ebadf
 block|,
-name|spec_badop
+comment|/* getattr */
+name|spec_ebadf
 block|,
+comment|/* setattr */
 name|spec_read
 block|,
+comment|/* read */
 name|spec_write
 block|,
+comment|/* write */
 name|spec_ioctl
 block|,
+comment|/* ioctl */
 name|spec_select
 block|,
+comment|/* select */
 name|spec_badop
 block|,
+comment|/* mmap */
 name|spec_nullop
 block|,
+comment|/* fsync */
 name|spec_badop
 block|,
+comment|/* seek */
 name|spec_badop
 block|,
+comment|/* remove */
 name|spec_badop
 block|,
+comment|/* link */
 name|spec_badop
 block|,
+comment|/* rename */
 name|spec_badop
 block|,
+comment|/* mkdir */
 name|spec_badop
 block|,
+comment|/* rmdir */
 name|spec_badop
 block|,
+comment|/* symlink */
 name|spec_badop
 block|,
+comment|/* readdir */
 name|spec_badop
 block|,
+comment|/* readlink */
 name|spec_badop
 block|,
+comment|/* abortop */
 name|spec_nullop
 block|,
+comment|/* inactive */
 name|spec_nullop
 block|,
+comment|/* reclaim */
 name|spec_lock
 block|,
+comment|/* lock */
 name|spec_unlock
 block|,
+comment|/* unlock */
 name|spec_badop
 block|,
+comment|/* bmap */
 name|spec_strategy
-block|, }
+block|,
+comment|/* strategy */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1232,7 +1266,26 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Block device bad operation  */
+comment|/*  * Special device failed operation  */
+end_comment
+
+begin_macro
+name|spec_ebadf
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+name|EBADF
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Special device bad operation  */
 end_comment
 
 begin_macro
@@ -1252,7 +1305,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Block device null operation  */
+comment|/*  * Special device null operation  */
 end_comment
 
 begin_macro
