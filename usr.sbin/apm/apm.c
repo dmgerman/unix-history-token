@@ -3,31 +3,19 @@ begin_comment
 comment|/*  * apm / zzz	APM BIOS utility for FreeBSD  *  * Copyright (C) 1994-1996 by Tatsumi Hosokawa<hosokawa@jp.FreeBSD.org>  *  * This software may be used, modified, copied, distributed, and sold,  * in both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep., 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -1305,11 +1293,9 @@ if|if
 condition|(
 name|apmerr
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Failed to get the resume timer: APM error0x%x\n"
+literal|"failed to get the resume timer: APM error0x%x"
 argument_list|,
 name|apmerr
 argument_list|)
@@ -1967,7 +1953,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Set resume timer"
+literal|"set resume timer"
 argument_list|)
 expr_stmt|;
 block|}
