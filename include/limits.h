@@ -581,6 +581,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|MB_LEN_MAX
+value|6
+end_define
+
+begin_comment
+comment|/* 31-bit UTF-8 */
+end_comment
+
 begin_include
 include|#
 directive|include

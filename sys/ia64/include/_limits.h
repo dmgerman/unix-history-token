@@ -22,17 +22,6 @@ begin_comment
 comment|/* number of bits in a char */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MB_LEN_MAX
-value|6
-end_define
-
-begin_comment
-comment|/* Allow 31 bit UTF2 */
-end_comment
-
 begin_comment
 comment|/*  * According to ANSI (section 2.2.4.2), the values below must be usable by  * #if preprocessing directives.  Additionally, the expression must have the  * same type as would an expression that is an object of the corresponding  * type converted according to the integral promotions.  The subtraction for  * INT_MIN, etc., is so the value is not unsigned; e.g., 0x80000000 is an  * unsigned int for 32-bit two's complement ANSI compilers (section 3.1.3.2).  * These numbers are for the default configuration of gcc.  They work for  * some other compilers as well, but this should not be depended on.  */
 end_comment
