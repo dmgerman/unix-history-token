@@ -11797,7 +11797,6 @@ name|object
 operator|.
 name|vm_object
 expr_stmt|;
-comment|/* 	 * Return whether this is the only map sharing this data. 	 */
 operator|*
 name|out_prot
 operator|=
