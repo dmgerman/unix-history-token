@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.1 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2613,16 +2613,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|gethostname
-argument_list|(
-name|host
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|host
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -2828,16 +2818,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|gethostname
-argument_list|(
-name|host
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|host
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|argc
