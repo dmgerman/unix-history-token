@@ -311,6 +311,19 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|halt
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("hlt");
+block|}
+end_function
+
 begin_if
 if|#
 directive|if
@@ -1587,6 +1600,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|enable_intr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|halt
 parameter_list|(
 name|void
 parameter_list|)
