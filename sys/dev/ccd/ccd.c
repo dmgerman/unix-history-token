@@ -390,13 +390,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_dump_t
-name|ccddump
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_psize_t
 name|ccdsize
 decl_stmt|;
@@ -454,7 +447,7 @@ comment|/* maj */
 name|CDEV_MAJOR
 block|,
 comment|/* dump */
-name|ccddump
+name|nodump
 block|,
 comment|/* psize */
 name|ccdsize
@@ -6723,22 +6716,6 @@ return|return
 operator|(
 name|size
 operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|ccddump
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-block|{
-comment|/* Not implemented. */
-return|return
-name|ENXIO
 return|;
 block|}
 end_function
