@@ -25,6 +25,12 @@ begin_comment
 comment|/* for pal inlines */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_comment
 comment|/*  * Interprocessor interrupts for SMP.  */
 end_comment
@@ -118,6 +124,11 @@ name|frame
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
