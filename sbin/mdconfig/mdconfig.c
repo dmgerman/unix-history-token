@@ -167,28 +167,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\tmdconfig -a -t type [-n] [-o [no]option]... [ -f file] [-s size] [-S sectorsize] [-u unit]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\tmdconfig -d -u unit\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\tmdconfig -l [-n] [-u unit]\n"
+literal|"usage: mdconfig -a -t type [-n] [-o [no]option] ... [ -f file]\n"
+literal|"                [-s size] [-S sectorsize] [-u unit]\n"
+literal|"                [-x sectors/track] [-y heads/cyl]\n"
+literal|"       mdconfig -d -u unit\n"
+literal|"       mdconfig -l [-n] [-u unit]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
