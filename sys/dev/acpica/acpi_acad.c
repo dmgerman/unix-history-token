@@ -457,7 +457,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"Notify %d\n"
+literal|"Notify 0x%x\n"
 argument_list|,
 name|notify
 argument_list|)
