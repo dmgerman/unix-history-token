@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: freebsd.h,v 1.15 1999/07/02 19:26:45 obrien Exp $ */
+comment|/* $Id: freebsd.h,v 1.16 1999/08/15 21:59:46 obrien Exp $ */
 end_comment
 
 begin_comment
@@ -44,6 +44,22 @@ comment|/* ignored by ld */
 value|\    || (CHAR) == 'R')
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|SWITCH_TAKES_ARG
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SWITCH_TAKES_ARG
+parameter_list|(
+name|CHAR
+parameter_list|)
+value|(FBSD_SWITCH_TAKES_ARG(CHAR))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -53,6 +69,22 @@ name|STR
 parameter_list|)
 define|\
 value|(DEFAULT_WORD_SWITCH_TAKES_ARG (STR)					\    || !strcmp (STR, "rpath") || !strcmp (STR, "rpath-link")		\    || !strcmp (STR, "soname") || !strcmp (STR, "defsym") 		\    || !strcmp (STR, "assert") || !strcmp (STR, "dynamic-linker"))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|WORD_SWITCH_TAKES_ARG
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WORD_SWITCH_TAKES_ARG
+parameter_list|(
+name|STR
+parameter_list|)
+value|(FBSD_WORD_SWITCH_TAKES_ARG(STR))
 end_define
 
 begin_comment
