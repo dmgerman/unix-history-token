@@ -24,7 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctype_.c	5.6 (Berkeley) 6/1/90"
+literal|"From: @(#)ctype_.c	5.6 (Berkeley) 6/1/90"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +51,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<octype.h>
 end_include
 
 begin_decl_stmt
