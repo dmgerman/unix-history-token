@@ -86,19 +86,24 @@ parameter_list|)
 specifier|const
 name|char
 modifier|*
-name|failedexpr
+name|function
 decl_stmt|,
 decl|*
 name|file
-decl_stmt|,
-modifier|*
-name|function
 decl_stmt|;
 end_function
 
 begin_decl_stmt
 name|int
 name|line
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|failedexpr
 decl_stmt|;
 end_decl_stmt
 
