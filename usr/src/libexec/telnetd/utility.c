@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utility.c	5.10 (Berkeley) %G%"
+literal|"@(#)utility.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3685,9 +3685,6 @@ if|if
 condition|(
 name|TELOPT_OK
 argument_list|(
-operator|(
-name|int
-operator|)
 name|pointer
 index|[
 name|i
@@ -4108,18 +4105,6 @@ block|{
 case|case
 name|ENV_VAR
 case|:
-if|if
-condition|(
-name|pointer
-index|[
-literal|1
-index|]
-operator|==
-name|TELQUAL_SEND
-condition|)
-goto|goto
-name|def_case
-goto|;
 name|sprintf
 argument_list|(
 name|nfrontp
@@ -4192,18 +4177,6 @@ break|break;
 case|case
 name|ENV_USERVAR
 case|:
-if|if
-condition|(
-name|pointer
-index|[
-literal|1
-index|]
-operator|==
-name|TELQUAL_SEND
-condition|)
-goto|goto
-name|def_case
-goto|;
 name|sprintf
 argument_list|(
 name|nfrontp
