@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.37 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1702,7 +1702,7 @@ name|NULL
 condition|)
 name|addheader
 argument_list|(
-literal|"to"
+literal|"To"
 argument_list|,
 name|q
 operator|->
@@ -1769,7 +1769,7 @@ end_expr_stmt
 begin_expr_stmt
 name|addheader
 argument_list|(
-literal|"subject"
+literal|"Subject"
 argument_list|,
 name|buf
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.31 (Berkeley) %G%"
+literal|"@(#)headers.c	6.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -281,11 +281,6 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-name|makelower
-argument_list|(
-name|fname
-argument_list|)
-expr_stmt|;
 comment|/* strip field value on front */
 if|if
 condition|(
@@ -316,7 +311,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|hi
 operator|->
@@ -405,7 +400,7 @@ operator|->
 name|e_flags
 argument_list|)
 operator|&&
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|fname
 argument_list|,
@@ -530,7 +525,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|fname
 argument_list|,
@@ -772,7 +767,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ADDHEADER -- add a header entry to the end of the queue. ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		field -- the name of the header field.  It must be **			lower-cased. **		value -- the value of the field. **		e -- the envelope to add them to. ** **	Returns: **		none. ** **	Side Effects: **		adds the field on the list of headers for this envelope. */
+comment|/* **  ADDHEADER -- add a header entry to the end of the queue. ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		field -- the name of the header field. **		value -- the value of the field. **		e -- the envelope to add them to. ** **	Returns: **		none. ** **	Side Effects: **		adds the field on the list of headers for this envelope. */
 end_comment
 
 begin_macro
@@ -844,7 +839,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|field
 argument_list|,
@@ -886,7 +881,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|field
 argument_list|,
@@ -1022,7 +1017,7 @@ operator|->
 name|h_flags
 argument_list|)
 operator|&&
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|h
 operator|->
@@ -1231,12 +1226,6 @@ operator|->
 name|h_link
 control|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|capitalize
-parameter_list|()
-function_decl|;
 comment|/* do early binding */
 if|if
 condition|(
@@ -1315,12 +1304,9 @@ name|printf
 argument_list|(
 literal|"%s: %s\n"
 argument_list|,
-name|capitalize
-argument_list|(
 name|h
 operator|->
 name|h_field
-argument_list|)
 argument_list|,
 name|h
 operator|->
@@ -1423,7 +1409,7 @@ name|h_value
 operator|!=
 name|NULL
 operator|&&
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|h
 operator|->
@@ -2957,12 +2943,6 @@ name|char
 modifier|*
 name|nlp
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|capitalize
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)
@@ -2972,12 +2952,9 @@ name|obuf
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|capitalize
-argument_list|(
 name|h
 operator|->
 name|h_field
-argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -3151,12 +3128,6 @@ operator|+
 literal|3
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|capitalize
-parameter_list|()
-function_decl|;
 comment|/* 	**  Output the address list translated by the 	**  mailer and with commas. 	*/
 if|if
 condition|(
@@ -3191,12 +3162,9 @@ name|obp
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|capitalize
-argument_list|(
 name|h
 operator|->
 name|h_field
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|opos

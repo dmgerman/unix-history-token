@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.59 (Berkeley) %G%"
+literal|"@(#)main.c	6.60 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6384,7 +6384,7 @@ name|VA_END
 expr_stmt|;
 name|addheader
 argument_list|(
-literal|"x-authentication-warning"
+literal|"X-Authentication-Warning"
 argument_list|,
 name|buf
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.14 (Berkeley) %G%"
+literal|"@(#)collect.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1056,7 +1056,7 @@ argument_list|)
 expr_stmt|;
 name|addheader
 argument_list|(
-literal|"apparently-to"
+literal|"Apparently-To"
 argument_list|,
 name|q
 operator|->
