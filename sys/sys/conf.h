@@ -256,21 +256,6 @@ name|snapdata
 modifier|*
 name|__sid_snapdata
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|__sid_copyonwrite
-function_decl|)
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
-name|struct
-name|buf
-modifier|*
-parameter_list|)
-function_decl|;
 block|}
 name|__si_disk
 struct|;
@@ -322,13 +307,6 @@ define|#
 directive|define
 name|si_snapdata
 value|__si_u.__si_disk.__sid_snapdata
-end_define
-
-begin_define
-define|#
-directive|define
-name|si_copyonwrite
-value|__si_u.__si_disk.__sid_copyonwrite
 end_define
 
 begin_ifdef

@@ -99,12 +99,6 @@ name|vop_reallocblks_args
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|vop_copyonwrite_args
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|int
 name|ffs_alloc
@@ -320,6 +314,21 @@ parameter_list|,
 name|ufs1_daddr_t
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ffs_copyonwrite
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|struct
+name|buf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
