@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	7.4 (Berkeley) %G%"
+literal|"@(#)genassym.c	7.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,16 +218,6 @@ operator|&
 name|u
 operator|->
 name|u_procp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tU_EOSYS %d\n"
-argument_list|,
-operator|&
-name|u
-operator|->
-name|u_eosys
 argument_list|)
 expr_stmt|;
 name|printf
