@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.7 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -789,12 +789,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|suspend
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|oldmask
@@ -877,7 +875,7 @@ name|naptime
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|prefix

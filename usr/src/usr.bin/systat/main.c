@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,26 +146,18 @@ literal|5
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|void
 name|die
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+argument_list|()
+decl_stmt|,
 name|display
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+argument_list|()
+decl_stmt|,
 name|suspend
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|sig_t
@@ -782,12 +774,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|display
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -994,7 +984,7 @@ name|naptime
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|load
@@ -1060,12 +1050,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|die
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|move
 argument_list|(
@@ -1089,7 +1077,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|error
