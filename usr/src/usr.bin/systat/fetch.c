@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,24 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fetch.c	5.5 (Berkeley) %G%"
+literal|"@(#)fetch.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -31,26 +40,30 @@ directive|include
 file|"systat.h"
 end_include
 
-begin_macro
-name|kvm_ckread
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|,
-argument|l
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
-begin_decl_stmt
+begin_function
+name|int
+name|kvm_ckread
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|l
+parameter_list|)
 name|void
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|int
@@ -60,14 +73,15 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|verbose
-decl_stmt|;
 if|if
 condition|(
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
+operator|(
+name|u_long
+operator|)
 name|a
 argument_list|,
 name|b
