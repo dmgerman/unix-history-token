@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.31 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3008,6 +3008,24 @@ name|getenv
 argument_list|(
 literal|"HOME"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+operator|==
+name|NULL
+condition|)
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+operator|=
+literal|""
 expr_stmt|;
 if|if
 condition|(
