@@ -26,13 +26,25 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)clnt_generic.c 1.4 87/08/11 (C) 1987 SMI";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid2
+init|=
+literal|"from: @(#)clnt_generic.c 1.4 87/08/11 (C) 1987 SMI"
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)clnt_generic.c	2.2 88/08/01 4.0 RPCSRC";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"from: @(#)clnt_generic.c	2.2 88/08/01 4.0 RPCSRC"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

@@ -26,11 +26,11 @@ comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
 end_comment
 
 begin_comment
-comment|/* From: #pragma ident	"@(#)key_prot.x	1.7	94/04/29 SMI" */
+comment|/* Copyright (c)  1990, 1991 Sun Microsystems, Inc. */
 end_comment
 
 begin_comment
-comment|/* Copyright (c)  1990, 1991 Sun Microsystems, Inc. */
+comment|/* #pragma ident	"@(#)key_prot.x	1.7	94/04/29 SMI" */
 end_comment
 
 begin_include

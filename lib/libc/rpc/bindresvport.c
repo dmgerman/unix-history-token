@@ -22,22 +22,34 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)bindresvport.c 1.8 88/02/08 SMI";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid2
+init|=
+literal|"from: @(#)bindresvport.c 1.8 88/02/08 SMI"
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)bindresvport.c	2.2 88/07/29 4.0 RPCSRC";*/
-end_comment
-
-begin_comment
-comment|/*from: OpenBSD: bindresvport.c,v 1.7 1996/07/30 16:25:47 downsj Exp */
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"from: @(#)bindresvport.c	2.2 88/07/29 4.0 RPCSRC"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* from: $OpenBSD: bindresvport.c,v 1.7 1996/07/30 16:25:47 downsj Exp $ */
+end_comment
 
 begin_include
 include|#

@@ -26,7 +26,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|sccsid
+name|sccsid2
 init|=
 literal|"@(#)rpc_dtablesize.c 1.2 87/08/11 Copyr 1987 Sun Micro"
 decl_stmt|;

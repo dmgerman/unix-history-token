@@ -140,9 +140,15 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/* from: static char sccsid[] = 	"@(#)auth_des.c	2.2 88/07/29 4.0 RPCSRC; from 1.9 88/02/08 SMI"; */
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)auth_des.c	2.2 88/07/29 4.0 RPCSRC; from 1.9 88/02/08 SMI"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

@@ -26,7 +26,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|sccsid
+name|sccsid2
 init|=
 literal|"@(#)clnt_tcp.c 1.37 87/10/05 Copyr 1984 Sun Micro"
 decl_stmt|;
@@ -45,7 +45,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|sccsid3
 index|[]
 init|=
 literal|"@(#)clnt_vc.c 1.19 89/03/16 Copyr 1988 Sun Micro"

@@ -20,7 +20,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SCCSIDS
+name|LIBC_SCCS
 argument_list|)
 operator|&&
 operator|!

@@ -11,24 +11,24 @@ begin_comment
 comment|/*  * Copyright (c) 1986-1991 by Sun Microsystems Inc.   */
 end_comment
 
-begin_comment
-comment|/* #ident	"@(#)clnt_dg.c	1.23	94/04/22 SMI" */
-end_comment
-
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|LIBC_SCCS
+argument_list|)
+operator|&&
 operator|!
 name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|SCCSIDS
-argument_list|)
 end_if
+
+begin_empty
+empty|#ident	"@(#)clnt_dg.c	1.23	94/04/22 SMI"
+end_empty
 
 begin_decl_stmt
 specifier|static

@@ -28,20 +28,27 @@ end_include
 begin_if
 if|#
 directive|if
-literal|0
+name|defined
+argument_list|(
+name|LIBC_SCCS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
 end_if
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_endif
-unit|static char sccsid[] = "@(#)des_crypt.c	2.2 88/08/10 4.0 RPCSRC; from 1.13 88/02/08 SMI";
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)des_crypt.c	2.2 88/08/10 4.0 RPCSRC; from 1.13 88/02/08 SMI"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
