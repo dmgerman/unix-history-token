@@ -57,13 +57,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
 end_include
 
 begin_include
@@ -87,6 +93,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpcsvc/yp_prot.h>
 end_include
 
@@ -94,12 +106,6 @@ begin_include
 include|#
 directive|include
 file|<rpcsvc/ypclnt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
 end_include
 
 begin_include
@@ -120,7 +126,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -138,7 +156,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resource.h>
+file|"extern.h"
 end_include
 
 begin_ifdef
@@ -256,25 +274,6 @@ directive|ifdef
 name|YP
 end_ifdef
 
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|basename
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|char
-name|SHELL
-index|[]
-init|=
-literal|"/bin/sh"
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -292,16 +291,6 @@ name|PKMAP
 index|[]
 init|=
 literal|"publickey.byname"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|UPDATEFILE
-index|[]
-init|=
-literal|"updaters"
 decl_stmt|;
 end_decl_stmt
 
@@ -880,39 +869,28 @@ begin_comment
 comment|/*  * Set the entry in the public key file  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|setpublicmap
-argument_list|(
-argument|name
-argument_list|,
-argument|public
-argument_list|,
-argument|secret
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|public
+parameter_list|,
+name|secret
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|public
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|secret
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|pkent
@@ -994,7 +972,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_ifndef
 ifndef|#
