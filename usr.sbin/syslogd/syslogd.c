@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.21 1997/03/14 01:27:02 joerg Exp $"
+literal|"$Id: syslogd.c,v 1.22 1997/03/31 05:11:26 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,18 +822,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|InetInuse
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* non-zero if INET sockets are being used */
-end_comment
-
-begin_decl_stmt
-name|int
 name|finet
 decl_stmt|;
 end_decl_stmt
@@ -1352,10 +1340,6 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|'I'
-case|:
-comment|/* backwards compatible w/FreeBSD */
-case|case
 literal|'s'
 case|:
 comment|/* no network mode */
@@ -1579,6 +1563,12 @@ argument_list|(
 name|TIMERINTVL
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|deadq_head
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|SUN_LEN
@@ -1722,11 +1712,10 @@ name|created_lsock
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|SecureMode
-condition|)
+name|inetm
+operator|=
+literal|0
+expr_stmt|;
 name|finet
 operator|=
 name|socket
@@ -1737,22 +1726,6 @@ name|SOCK_DGRAM
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-else|else
-name|finet
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|deadq_head
-argument_list|)
-expr_stmt|;
-name|inetm
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1828,6 +1801,12 @@ name|s_port
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|SecureMode
+condition|)
+block|{
+if|if
+condition|(
 name|bind
 argument_list|(
 name|finet
@@ -1874,10 +1853,7 @@ argument_list|(
 name|finet
 argument_list|)
 expr_stmt|;
-name|InetInuse
-operator|=
-literal|1
-expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -6755,12 +6731,6 @@ block|{
 case|case
 literal|'@'
 case|:
-if|if
-condition|(
-operator|!
-name|InetInuse
-condition|)
-break|break;
 operator|(
 name|void
 operator|)
