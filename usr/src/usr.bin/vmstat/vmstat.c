@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.30 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4456,20 +4456,6 @@ operator|*
 name|kp
 operator|->
 name|kb_totalfree
-expr_stmt|;
-name|totuse
-operator|+=
-name|size
-operator|*
-operator|(
-name|kp
-operator|->
-name|kb_total
-operator|-
-name|kp
-operator|->
-name|kb_totalfree
-operator|)
 expr_stmt|;
 block|}
 name|kread
