@@ -4089,6 +4089,11 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|struct
+name|thread
+modifier|*
+name|spare
+decl_stmt|;
 if|if
 condition|(
 name|td
