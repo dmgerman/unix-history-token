@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ethersubr.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ethersubr.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1647,6 +1647,26 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|ifp
 operator|->
 name|if_lastchange
