@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	time.h	4.1	83/02/10	*/
+comment|/*	time.h	4.2	83/05/21	*/
 end_comment
 
 begin_comment
@@ -59,6 +59,17 @@ end_define
 
 begin_comment
 comment|/* usa style dst */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_AUST
+value|2
+end_define
+
+begin_comment
+comment|/* Australian style dst */
 end_comment
 
 begin_comment
