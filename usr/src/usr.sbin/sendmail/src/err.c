@@ -33,7 +33,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.18
+literal|3.19
 operator|%
 name|G
 operator|%
@@ -197,6 +197,10 @@ block|}
 name|Errors
 operator|++
 expr_stmt|;
+name|FatalErrors
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* determine exit status if not already set */
 if|if
 condition|(
@@ -306,6 +310,10 @@ condition|)
 return|return;
 name|Errors
 operator|++
+expr_stmt|;
+name|FatalErrors
+operator|=
+name|TRUE
 expr_stmt|;
 name|message
 argument_list|(

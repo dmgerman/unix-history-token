@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.67
+literal|3.68
 operator|%
 name|G
 operator|%
@@ -1881,11 +1881,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\n====finis: stat %d SendReceipt %d\n"
+literal|"\n====finis: stat %d SendReceipt %d FatalErrors %d\n"
 argument_list|,
 name|ExitStat
 argument_list|,
 name|SendReceipt
+argument_list|,
+name|FatalErrors
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1910,9 +1912,7 @@ expr_stmt|;
 comment|/* mail back the transcript on errors */
 if|if
 condition|(
-name|ExitStat
-operator|!=
-name|EX_OK
+name|FatalErrors
 condition|)
 name|savemail
 argument_list|()

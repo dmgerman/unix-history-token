@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.8
+literal|3.9
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.8
+literal|3.9
 operator|%
 name|G
 operator|%
@@ -118,6 +118,17 @@ begin_comment
 comment|/* pid of mailer */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|SmtpErrstat
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* error status if open fails */
+end_comment
+
 begin_macro
 name|smtpinit
 argument_list|(
@@ -165,6 +176,12 @@ name|MAXNAME
 index|]
 decl_stmt|;
 comment|/* 	**  Open the connection to the mailer. 	*/
+name|SmtpIn
+operator|=
+name|SmtpOut
+operator|=
+name|NULL
+expr_stmt|;
 name|SmtpPid
 operator|=
 name|openmailer
@@ -184,6 +201,44 @@ operator|&
 name|SmtpIn
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SmtpPid
+operator|<
+literal|0
+condition|)
+block|{
+name|SmtpErrstat
+operator|=
+name|ExitStat
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"smtpinit: cannot open: Errstat %d errno %d\n"
+argument_list|,
+name|SmtpErrstat
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+return|return
+operator|(
+name|ExitStat
+operator|)
+return|;
+block|}
 comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously. 	*/
 name|r
 operator|=
@@ -337,6 +392,17 @@ specifier|register
 name|int
 name|r
 decl_stmt|;
+if|if
+condition|(
+name|SmtpPid
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|SmtpErrstat
+operator|)
+return|;
 name|smtpmessage
 argument_list|(
 literal|"RCPT To:<%s>"
@@ -424,6 +490,17 @@ specifier|register
 name|int
 name|r
 decl_stmt|;
+if|if
+condition|(
+name|SmtpPid
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|SmtpErrstat
+operator|)
+return|;
 comment|/* 	**  Send the data. 	**	Dot hiding is done here. 	*/
 name|smtpmessage
 argument_list|(
@@ -542,6 +619,20 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|SmtpPid
+operator|<
+literal|0
+condition|)
+block|{
+name|i
+operator|=
+name|SmtpErrstat
+expr_stmt|;
+block|}
+else|else
+block|{
 name|smtpmessage
 argument_list|(
 literal|"QUIT"
@@ -578,6 +669,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|giveresponse
 argument_list|(
 name|i

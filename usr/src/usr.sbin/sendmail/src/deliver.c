@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.71
+literal|3.72
 operator|%
 name|G
 operator|%
@@ -782,8 +782,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* send the initial SMTP protocol */
-name|i
-operator|=
 name|smtpinit
 argument_list|(
 name|m
@@ -795,15 +793,6 @@ name|ADDRESS
 operator|*
 operator|)
 name|NULL
-argument_list|)
-expr_stmt|;
-name|giveresponse
-argument_list|(
-name|i
-argument_list|,
-name|TRUE
-argument_list|,
-name|m
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2314,12 +2303,18 @@ name|i
 operator|!=
 name|EX_OK
 condition|)
+block|{
+name|ExitStat
+operator|=
+name|i
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 else|else
 return|return
 operator|(
@@ -3025,6 +3020,10 @@ block|{
 name|Errors
 operator|++
 expr_stmt|;
+name|FatalErrors
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
 name|statmsg
@@ -3448,10 +3447,9 @@ argument_list|(
 literal|"putmessage: read error"
 argument_list|)
 expr_stmt|;
-name|setstat
-argument_list|(
+name|ExitStat
+operator|=
 name|EX_IOERR
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -3480,10 +3478,9 @@ argument_list|(
 literal|"putmessage: write error"
 argument_list|)
 expr_stmt|;
-name|setstat
-argument_list|(
+name|ExitStat
+operator|=
 name|EX_IOERR
-argument_list|)
 expr_stmt|;
 block|}
 name|errno

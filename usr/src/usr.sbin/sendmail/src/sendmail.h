@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.62		%G%"
+literal|"@(#)sendmail.h	3.63		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1500,7 +1500,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* currently running something from the queue */
+comment|/* currently running message from the queue */
 end_comment
 
 begin_decl_stmt
@@ -1578,6 +1578,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* actually send a receipt back */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|FatalErrors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if fatal errors during processing */
 end_comment
 
 begin_decl_stmt
@@ -1713,7 +1724,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set if errors */
+comment|/* set if errors (local to single pass) */
 end_comment
 
 begin_decl_stmt
