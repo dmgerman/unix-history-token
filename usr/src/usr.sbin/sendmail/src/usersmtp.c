@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.32
+literal|3.33
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.32
+literal|3.33
 operator|%
 name|G
 operator|%
@@ -1098,12 +1098,19 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"reply: read error"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|fixcrlf
 argument_list|(
 name|SmtpReplyBuffer
@@ -1128,6 +1135,7 @@ argument_list|,
 name|SmtpReplyBuffer
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|CurEnv
@@ -1291,6 +1299,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|CurEnv

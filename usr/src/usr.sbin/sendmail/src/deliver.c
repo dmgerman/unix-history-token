@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.141
+literal|3.142
 operator|%
 name|G
 operator|%
@@ -1858,17 +1858,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 	**  Format and send message. 	**	We ignore broken pipes so that the mailer need not read 	**	its input if it is not convenient to do so (e.g., on 	**	some error). 	*/
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGPIPE
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
+comment|/* 	**  Format and send message. 	*/
 name|putfromline
 argument_list|(
 name|mfile
