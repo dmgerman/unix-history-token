@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)safefile.c	8.40 (Berkeley) 6/5/98"
+literal|"@(#)safefile.c	8.43 (Berkeley) 10/13/1998"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,7 +353,7 @@ name|st
 operator|->
 name|st_uid
 operator|!=
-name|TrustedFileUid
+name|TrustedUid
 condition|)
 endif|#
 directive|endif
@@ -808,15 +808,11 @@ name|uid
 operator|==
 literal|0
 operator|&&
-name|TrustedFileUid
-operator|!=
-literal|0
-operator|&&
 name|stbuf
 operator|.
 name|st_uid
 operator|==
-name|TrustedFileUid
+name|TrustedUid
 condition|)
 empty_stmt|;
 else|else
@@ -1330,15 +1326,11 @@ name|uid
 operator|==
 literal|0
 operator|&&
-name|TrustedFileUid
-operator|!=
-literal|0
-operator|&&
 name|st
 operator|->
 name|st_uid
 operator|==
-name|TrustedFileUid
+name|TrustedUid
 condition|)
 empty_stmt|;
 else|else
@@ -1513,7 +1505,7 @@ name|st
 operator|->
 name|st_uid
 operator|==
-name|TrustedFileUid
+name|TrustedUid
 operator|||
 operator|!
 name|bitset
@@ -1892,7 +1884,7 @@ name|EACCES
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		** Let OS determine access to file if we are not 		** running as a privileged user.  This allows ACLs 		** to work. 		*/
+comment|/* 		**  Let OS determine access to file if we are not 		**  running as a privileged user.  This allows ACLs 		**  to work. 		*/
 if|if
 condition|(
 name|geteuid

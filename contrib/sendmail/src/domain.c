@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.77 (Berkeley) 6/4/98 (with name server)"
+literal|"@(#)domain.c	8.80 (Berkeley) 12/17/1998 (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.77 (Berkeley) 6/4/98 (without name server)"
+literal|"@(#)domain.c	8.80 (Berkeley) 12/17/1998 (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1808,9 +1808,9 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|MXHOSTBUFSIZE
-operator|+
-literal|1
+name|PSBUFSIZE
+operator|/
+literal|2
 index|]
 decl_stmt|;
 name|_res
@@ -1916,7 +1916,7 @@ argument_list|,
 name|av
 argument_list|)
 return|;
-comment|/* 	** We were given a -z flag (return all MXs) and there are multiple 	** ones.  We need to build them all into a list. 	*/
+comment|/* 	**  We were given a -z flag (return all MXs) and there are multiple 	**  ones.  We need to build them all into a list. 	*/
 name|p
 operator|=
 name|buf
@@ -2610,7 +2610,15 @@ operator|&&
 operator|!
 name|gotmx
 operator|&&
+operator|(
 name|trymx
+operator|||
+operator|*
+operator|*
+name|dp
+operator|==
+literal|'\0'
+operator|)
 condition|)
 block|{
 name|qtype
@@ -3078,7 +3086,15 @@ operator|&&
 operator|!
 name|gotmx
 operator|&&
+operator|(
 name|trymx
+operator|||
+operator|*
+operator|*
+name|dp
+operator|==
+literal|'\0'
+operator|)
 condition|)
 name|qtype
 operator|=

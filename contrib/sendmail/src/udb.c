@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.66 (Berkeley) 6/18/98 (with USERDB)"
+literal|"@(#)udb.c	8.70 (Berkeley) 12/21/1998 (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.66 (Berkeley) 6/18/98 (without USERDB)"
+literal|"@(#)udb.c	8.70 (Berkeley) 12/21/1998 (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,6 +154,10 @@ name|int
 name|udb_type
 decl_stmt|;
 comment|/* type of entry */
+name|pid_t
+name|udb_pid
+decl_stmt|;
+comment|/* PID of process which opened db */
 name|char
 modifier|*
 name|udb_default
@@ -314,7 +318,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|option
+name|udb_option
 block|{
 name|char
 modifier|*
@@ -478,6 +482,10 @@ name|int
 name|naddrs
 decl_stmt|;
 name|char
+modifier|*
+name|user
+decl_stmt|;
+name|char
 name|keybuf
 index|[
 name|MAXKEY
@@ -581,12 +589,18 @@ condition|)
 return|return
 name|EX_OK
 return|;
-comment|/* short circuit name begins with '\\' since it can't possibly match */
-if|if
-condition|(
+comment|/* extract user to do userdb matching on */
+name|user
+operator|=
 name|a
 operator|->
 name|q_user
+expr_stmt|;
+comment|/* short circuit name begins with '\\' since it can't possibly match */
+comment|/* (might want to treat this as unquoted instead) */
+if|if
+condition|(
+name|user
 index|[
 literal|0
 index|]
@@ -601,9 +615,7 @@ if|if
 condition|(
 name|strlen
 argument_list|(
-name|a
-operator|->
-name|q_user
+name|user
 argument_list|)
 operator|>
 operator|(
@@ -620,9 +632,7 @@ return|;
 comment|/* if name begins with a colon, it indicates our metadata */
 if|if
 condition|(
-name|a
-operator|->
-name|q_user
+name|user
 index|[
 literal|0
 index|]
@@ -640,9 +650,7 @@ name|strcpy
 argument_list|(
 name|keybuf
 argument_list|,
-name|a
-operator|->
-name|q_user
+name|user
 argument_list|)
 expr_stmt|;
 operator|(
@@ -840,6 +848,44 @@ name|dbc
 operator|==
 name|NULL
 operator|&&
+if|#
+directive|if
+name|DB_VERSION_MAJOR
+operator|>
+literal|2
+operator|||
+name|DB_VERSION_MINOR
+operator|>=
+literal|6
+operator|(
+name|errno
+operator|=
+call|(
+modifier|*
+name|up
+operator|->
+name|udb_dbp
+operator|->
+name|cursor
+call|)
+argument_list|(
+name|up
+operator|->
+name|udb_dbp
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|dbc
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+else|#
+directive|else
 operator|(
 name|errno
 operator|=
@@ -864,7 +910,9 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-condition|)
+block|)
+endif|#
+directive|endif
 name|i
 operator|=
 operator|-
@@ -2504,30 +2552,36 @@ name|user
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_return
 return|return
 name|EX_OK
 return|;
-block|}
-end_function
+end_return
 
 begin_escape
+unit|}
 end_escape
 
 begin_comment
 comment|/* **  UDBSENDER -- return canonical external name of sender, given local name ** **	Parameters: **		sender -- the name of the sender on the local machine. ** **	Returns: **		The external name for this sender, if derivable from the **			database. **		NULL -- if nothing is changed from the database. ** **	Side Effects: **		none. */
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_expr_stmt
+unit|char
+operator|*
 name|udbsender
-parameter_list|(
-name|sender
-parameter_list|)
+argument_list|(
+argument|sender
+argument_list|)
 name|char
-modifier|*
+operator|*
 name|sender
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|extern
 name|char
@@ -2553,7 +2607,7 @@ literal|"mailname"
 argument_list|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|char
@@ -4075,7 +4129,7 @@ block|auto int rcode; 		int nmx; 		int i; 		register struct hostent *h; 		char *
 endif|#
 directive|endif
 name|struct
-name|option
+name|udb_option
 name|opts
 index|[
 name|MAXUDBOPTS
@@ -4093,7 +4147,7 @@ name|char
 operator|*
 operator|,
 expr|struct
-name|option
+name|udb_option
 index|[]
 operator|,
 name|int
@@ -4204,7 +4258,7 @@ directive|else
 block|mxhosts[0] = spec + 1; 				nmx = 1; 				rcode = 0;
 endif|#
 directive|endif
-block|if (tTd(28, 16)) 				{ 					int i;  					printf("getmxrr(%s): %d", spec + 1, nmx); 					for (i = 0; i<= nmx; i++) 						printf(" %s", mxhosts[i]); 					printf("\n"); 				} 			} 			else 			{ 				nmx = 1; 				mxhosts[0] = spec + 1; 			}  			for (i = 0; i< nmx; i++) 			{ 				h = sm_gethostbyname(mxhosts[i]); 				if (h == NULL) 					continue; 				up->udb_type = UDB_REMOTE; 				up->udb_addr.sin_family = h->h_addrtype; 				bcopy(h->h_addr_list[0], 				      (char *)&up->udb_addr.sin_addr, 				      INADDRSZ); 				up->udb_addr.sin_port = UdbPort; 				up->udb_timeout = UdbTimeout; 				ents++; 				up++; 			}
+block|if (tTd(28, 16)) 				{ 					int i;  					printf("getmxrr(%s): %d", spec + 1, nmx); 					for (i = 0; i<= nmx; i++) 						printf(" %s", mxhosts[i]); 					printf("\n"); 				} 			} 			else 			{ 				nmx = 1; 				mxhosts[0] = spec + 1; 			}  			for (i = 0; i< nmx; i++) 			{ 				h = sm_gethostbyname(mxhosts[i]); 				if (h == NULL) 					continue; 				up->udb_type = UDB_REMOTE; 				up->udb_pid = getpid(); 				up->udb_addr.sin_family = h->h_addrtype; 				bcopy(h->h_addr_list[0], 				      (char *)&up->udb_addr.sin_addr, 				      INADDRSZ); 				up->udb_addr.sin_port = UdbPort; 				up->udb_timeout = UdbTimeout; 				ents++; 				up++; 			}
 comment|/* set up a datagram socket */
 block|if (UdbSock< 0) 			{ 				UdbSock = socket(AF_INET, SOCK_DGRAM, 0); 				(void) fcntl(UdbSock, F_SETFD, 1); 			} 			break;
 endif|#
@@ -4218,6 +4272,13 @@ operator|->
 name|udb_type
 operator|=
 name|UDB_FORWARD
+expr_stmt|;
+name|up
+operator|->
+name|udb_pid
+operator|=
+name|getpid
+argument_list|()
 expr_stmt|;
 name|up
 operator|->
@@ -4263,6 +4324,13 @@ operator|->
 name|udb_type
 operator|=
 name|UDB_HESIOD
+expr_stmt|;
+name|up
+operator|->
+name|udb_pid
+operator|=
+name|getpid
+argument_list|()
 expr_stmt|;
 name|ents
 operator|++
@@ -4467,7 +4535,27 @@ literal|"db_open(%s): %s"
 argument|,
 endif|#
 directive|endif
-argument|up->udb_dbname, 							errstring(errno)); 					up->udb_type = UDB_EOLIST; 					if (up->udb_dbname != spec) 						free(up->udb_dbname); 					goto tempfail; 				} 				if (up->udb_dbname != spec) 					free(up->udb_dbname); 				break; 			} 			up->udb_type = UDB_DBFETCH; 			ents++; 			up++; 			break;
+argument|up->udb_dbname, 							errstring(errno)); 					up->udb_type = UDB_EOLIST; 					if (up->udb_dbname != spec) 						free(up->udb_dbname); 					goto tempfail; 				} 				if (up->udb_dbname != spec) 					free(up->udb_dbname); 				break; 			} 			if (tTd(
+literal|28
+argument|,
+literal|1
+argument|)) 			{
+if|#
+directive|if
+name|DB_VERSION_MAJOR
+operator|<
+literal|2
+argument|printf(
+literal|"_udbx_init: dbopen(%s)\n"
+argument|,
+else|#
+directive|else
+argument|printf(
+literal|"_udbx_init: db_open(%s)\n"
+argument|,
+endif|#
+directive|endif
+argument|up->udb_dbname); 			} 			up->udb_type = UDB_DBFETCH; 			up->udb_pid = getpid(); 			ents++; 			up++; 			break;
 endif|#
 directive|endif
 argument|default: badspec: 			syserr(
@@ -4527,10 +4615,30 @@ literal|0
 argument|);
 endif|#
 directive|endif
-argument|} 	}
+argument|if (tTd(
+literal|28
+argument|,
+literal|1
+argument|)) 			{
+if|#
+directive|if
+name|DB_VERSION_MAJOR
+operator|<
+literal|2
+argument|printf(
+literal|"_udbx_init: db->close(%s)\n"
+argument|,
+else|#
+directive|else
+argument|printf(
+literal|"_udbx_init: db->close(%s)\n"
+argument|,
 endif|#
 directive|endif
-argument|return EX_TEMPFAIL; }  int _udb_parsespec(udbspec, opt, maxopts) 	char *udbspec; 	struct option opt[]; 	int maxopts; { 	register char *spec; 	register char *spec_end; 	register int optnum;  	spec_end = strchr(udbspec,
+argument|up->udb_dbname); 			} 		} 	}
+endif|#
+directive|endif
+argument|return EX_TEMPFAIL; }  int _udb_parsespec(udbspec, opt, maxopts) 	char *udbspec; 	struct udb_option opt[]; 	int maxopts; { 	register char *spec; 	register char *spec_end; 	register int optnum;  	spec_end = strchr(udbspec,
 literal|':'
 argument|); 	for (optnum =
 literal|0
@@ -4541,12 +4649,53 @@ literal|'\0'
 argument|;  		opt[optnum].name = spec; 		opt[optnum].val = NULL; 		p = strchr(spec,
 literal|'='
 argument|); 		if (p != NULL) 			opt[optnum].val = ++p; 	} 	return optnum; }
+comment|/* **  _UDBX_CLOSE -- close all file based UDB entries. ** **	Parameters: **		none ** **	Returns: **		none */
+argument|void _udbx_close() { 	pid_t pid; 	struct udbent *up;  	if (!UdbInitialized) 		return;  	pid = getpid();  	for (up = UdbEnts; up->udb_type != UDB_EOLIST; up++) 	{ 		if (up->udb_pid != pid) 			continue;
+ifdef|#
+directive|ifdef
+name|NEWDB
+argument|if (up->udb_type == UDB_DBFETCH) 		{
+if|#
+directive|if
+name|DB_VERSION_MAJOR
+operator|<
+literal|2
+argument|(*up->udb_dbp->close)(up->udb_dbp);
+else|#
+directive|else
+argument|errno = (*up->udb_dbp->close)(up->udb_dbp,
+literal|0
+argument|);
+endif|#
+directive|endif
+argument|} 		if (tTd(
+literal|28
+argument|,
+literal|1
+argument|)) 		{
+if|#
+directive|if
+name|DB_VERSION_MAJOR
+operator|<
+literal|2
+argument|printf(
+literal|"_udbx_init: db->close(%s)\n"
+argument|,
+else|#
+directive|else
+argument|printf(
+literal|"_udbx_init: db->close(%s)\n"
+argument|,
+endif|#
+directive|endif
+argument|up->udb_dbname); 		}
+endif|#
+directive|endif
+argument|} }
 ifdef|#
 directive|ifdef
 name|HESIOD
-argument|int hes_udb_get(key, info) 	DBT *key; 	DBT *info; { 	char *name
-argument_list|,
-argument|*type; 	char **hp; 	char kbuf[MAXKEY +
+argument|int hes_udb_get(key, info) 	DBT *key; 	DBT *info; { 	char *name, *type; 	char **hp; 	char kbuf[MAXKEY +
 literal|1
 argument|];  	if (strlen(key->data)>= (SIZE_T) sizeof kbuf) 		return
 literal|0

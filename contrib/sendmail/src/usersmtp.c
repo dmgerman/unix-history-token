@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.104 (Berkeley) 6/30/98 (with SMTP)"
+literal|"@(#)usersmtp.c	8.108 (Berkeley) 10/6/1998 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.104 (Berkeley) 6/30/98 (without SMTP)"
+literal|"@(#)usersmtp.c	8.108 (Berkeley) 10/6/1998 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,8 +432,10 @@ name|mci_phase
 operator|=
 literal|"client greeting"
 expr_stmt|;
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"%s %s: %s"
 argument_list|,
 name|e
@@ -613,8 +615,10 @@ operator|=
 literal|"client HELO"
 expr_stmt|;
 block|}
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"%s %s: %s"
 argument_list|,
 name|e
@@ -1921,8 +1925,10 @@ name|mci_phase
 operator|=
 literal|"client MAIL"
 expr_stmt|;
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"%s %s: %s"
 argument_list|,
 name|e
@@ -2543,8 +2549,10 @@ name|mci_phase
 operator|=
 literal|"client RCPT"
 expr_stmt|;
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"%s %s: %s"
 argument_list|,
 name|e
@@ -2833,8 +2841,10 @@ name|mci_phase
 operator|=
 literal|"client DATA 354"
 expr_stmt|;
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"%s %s: %s"
 argument_list|,
 name|e
@@ -3210,8 +3220,10 @@ name|mci_phase
 operator|=
 literal|"client DATA status"
 expr_stmt|;
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"%s %s: %s"
 argument_list|,
 name|e
@@ -4129,16 +4141,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|extern
-name|time_t
-name|curtime
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
 comment|/* actually do the read */
 if|if
 condition|(
@@ -4273,6 +4275,20 @@ argument_list|,
 name|CurHostName
 argument_list|)
 expr_stmt|;
+comment|/* errors on QUIT should not be persistent */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|SmtpMsgBuffer
+argument_list|,
+literal|"QUIT"
+argument_list|,
+literal|4
+argument_list|)
+operator|!=
+literal|0
+condition|)
 name|mci_setstat
 argument_list|(
 name|mci
@@ -4388,6 +4404,12 @@ name|wbufleft
 argument_list|,
 literal|"reply(%.100s) during %s"
 argument_list|,
+name|CurHostName
+operator|==
+name|NULL
+condition|?
+literal|"NO_HOST"
+else|:
 name|CurHostName
 argument_list|,
 name|SmtpPhase

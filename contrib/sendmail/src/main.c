@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.302 (Berkeley) 6/4/98"
+literal|"@(#)main.c	8.322 (Berkeley) 12/18/1998"
 decl_stmt|;
 end_decl_stmt
 
@@ -567,6 +567,16 @@ decl_stmt|;
 specifier|extern
 name|SIGFUNC_DECL
 name|sighup
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|SIGFUNC_DECL
+name|quiesce
 name|__P
 argument_list|(
 operator|(
@@ -1355,16 +1365,10 @@ argument_list|,
 name|Version
 argument_list|)
 expr_stmt|;
-name|endpwent
-argument_list|()
-expr_stmt|;
-name|setuid
+name|finis
 argument_list|(
-name|RealUid
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OK
 argument_list|)
 expr_stmt|;
@@ -1894,7 +1898,7 @@ name|environ
 operator|=
 name|emptyenviron
 expr_stmt|;
-comment|/* 	** restore any original TZ setting until TimeZoneSpec has been 	** determined - or early log messages may get bogus time stamps 	*/
+comment|/* 	**  restore any original TZ setting until TimeZoneSpec has been 	**  determined - or early log messages may get bogus time stamps 	*/
 if|if
 condition|(
 operator|(
@@ -2569,7 +2573,7 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-comment|/* 	** Crack argv. 	*/
+comment|/* 	**  Crack argv. 	*/
 name|av
 operator|=
 name|argv
@@ -3761,12 +3765,12 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|ExitStat
-operator|=
-name|EX_USAGE
-expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|EX_USAGE
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4260,6 +4264,10 @@ operator|&&
 name|RealUid
 operator|!=
 literal|0
+operator|&&
+name|RealUid
+operator|!=
+name|TrustedUid
 condition|)
 block|{
 if|if
@@ -4292,8 +4300,10 @@ argument_list|(
 literal|"Permission denied"
 argument_list|)
 expr_stmt|;
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_USAGE
 argument_list|)
 expr_stmt|;
@@ -4635,6 +4645,46 @@ name|CurEnv
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|VENDOR_CODE
+comment|/* check for vendor mismatch */
+if|if
+condition|(
+name|VendorCode
+operator|!=
+name|VENDOR_CODE
+condition|)
+block|{
+specifier|extern
+name|char
+modifier|*
+name|getvendor
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+name|message
+argument_list|(
+literal|"Warning: .cf file vendor code mismatch: sendmail expects vendor %s, .cf file vendor is %s"
+argument_list|,
+name|getvendor
+argument_list|(
+name|VENDOR_CODE
+argument_list|)
+argument_list|,
+name|getvendor
+argument_list|(
+name|VendorCode
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* check for out of date configuration level */
 if|if
 condition|(
@@ -5172,6 +5222,110 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|_FFR_MAX_MIME_HEADER_LENGTH
+comment|/* MIME headers which have fields to check for overflow */
+name|setclass
+argument_list|(
+name|macid
+argument_list|(
+literal|"{checkMIMEFieldHeaders}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+literal|"content-disposition"
+argument_list|)
+expr_stmt|;
+name|setclass
+argument_list|(
+name|macid
+argument_list|(
+literal|"{checkMIMEFieldHeaders}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+literal|"content-type"
+argument_list|)
+expr_stmt|;
+comment|/* MIME headers to check for length overflow */
+name|setclass
+argument_list|(
+name|macid
+argument_list|(
+literal|"{checkMIMETextHeaders}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+literal|"content-description"
+argument_list|)
+expr_stmt|;
+comment|/* MIME headers to check for overflow and rebalance */
+name|setclass
+argument_list|(
+name|macid
+argument_list|(
+literal|"{checkMIMEHeaders}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+literal|"content-disposition"
+argument_list|)
+expr_stmt|;
+name|setclass
+argument_list|(
+name|macid
+argument_list|(
+literal|"{checkMIMEHeaders}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+literal|"content-id"
+argument_list|)
+expr_stmt|;
+name|setclass
+argument_list|(
+name|macid
+argument_list|(
+literal|"{checkMIMEHeaders}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+literal|"content-transfer-encoding"
+argument_list|)
+expr_stmt|;
+name|setclass
+argument_list|(
+name|macid
+argument_list|(
+literal|"{checkMIMEHeaders}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+literal|"content-type"
+argument_list|)
+expr_stmt|;
+name|setclass
+argument_list|(
+name|macid
+argument_list|(
+literal|"{checkMIMEHeaders}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+literal|"mime-version"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* operate in queue directory */
 if|if
 condition|(
@@ -5351,8 +5505,10 @@ argument_list|(
 literal|"You do not have permission to process the queue"
 argument_list|)
 expr_stmt|;
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_NOPERM
 argument_list|)
 expr_stmt|;
@@ -5372,21 +5528,13 @@ name|OpMode
 operator|!=
 name|MD_TEST
 condition|)
-block|{
-name|endpwent
-argument_list|()
-expr_stmt|;
-name|setuid
+name|finis
 argument_list|(
-name|RealUid
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+name|FALSE
+argument_list|,
 name|ExitStat
 argument_list|)
 expr_stmt|;
-block|}
 if|#
 directive|if
 name|XDEBUG
@@ -5417,19 +5565,20 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|quiesce
+argument_list|)
+expr_stmt|;
 name|printqueue
 argument_list|()
 expr_stmt|;
-name|endpwent
-argument_list|()
-expr_stmt|;
-name|setuid
+name|finis
 argument_list|(
-name|RealUid
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OK
 argument_list|)
 expr_stmt|;
@@ -5442,14 +5591,26 @@ literal|"No queue to print"
 argument_list|)
 expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|FALSE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* QUEUE */
+break|break;
 case|case
 name|MD_HOSTSTAT
 case|:
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|quiesce
+argument_list|)
+expr_stmt|;
 name|mci_traverse_persistent
 argument_list|(
 name|mci_print_persistent
@@ -5457,8 +5618,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OK
 argument_list|)
 expr_stmt|;
@@ -5473,8 +5636,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OK
 argument_list|)
 expr_stmt|;
@@ -5482,7 +5647,7 @@ break|break;
 case|case
 name|MD_INITALIAS
 case|:
-comment|/* initialize alias database */
+comment|/* initialize maps */
 name|initmaps
 argument_list|(
 name|TRUE
@@ -5490,19 +5655,14 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
-name|endpwent
-argument_list|()
-expr_stmt|;
-name|setuid
+name|finis
 argument_list|(
-name|RealUid
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+name|FALSE
+argument_list|,
 name|ExitStat
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|MD_SMTP
 case|:
@@ -5533,10 +5693,10 @@ operator||
 name|EF_NO_BODY_RETN
 operator|)
 expr_stmt|;
-comment|/* don't open alias database -- done in srvrsmtp */
+comment|/* don't open maps for daemon -- done below in child */
 break|break;
 default|default:
-comment|/* open the alias database */
+comment|/* open the maps */
 name|initmaps
 argument_list|(
 name|FALSE
@@ -5762,7 +5922,11 @@ operator|==
 name|NULL
 condition|)
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 name|p
 operator|=
@@ -5834,7 +5998,11 @@ name|Verbose
 argument_list|)
 expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -5906,8 +6074,10 @@ name|i
 operator|!=
 literal|0
 condition|)
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OK
 argument_list|)
 expr_stmt|;
@@ -6301,6 +6471,14 @@ operator|&
 name|BlankEnvelope
 argument_list|)
 expr_stmt|;
+comment|/* initialize maps now for check_relay ruleset */
+name|initmaps
+argument_list|(
+name|FALSE
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|OpMode
@@ -6485,7 +6663,11 @@ name|CurEnv
 argument_list|)
 expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	**  Scan argv and deliver the message to everyone. 	*/
@@ -6614,7 +6796,11 @@ argument_list|)
 condition|)
 block|{
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 return|return
@@ -6712,7 +6898,11 @@ argument_list|)
 expr_stmt|;
 comment|/* 	**  All done. 	**	Don't send return error message if in VERIFY mode. 	*/
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 return|return
@@ -6721,6 +6911,30 @@ literal|1
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|SIGFUNC_DECL
+name|quiesce
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
+block|{
+name|finis
+argument_list|(
+name|FALSE
+argument_list|,
+name|EX_OK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
@@ -6753,14 +6967,50 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FINIS -- Clean up and exit. ** **	Parameters: **		none ** **	Returns: **		never ** **	Side Effects: **		exits sendmail */
+comment|/* **  FINIS -- Clean up and exit. ** **	Parameters: **		drop -- whether or not to drop CurEnv envelope **		exitstat -- exit status to use for exit() call ** **	Returns: **		never ** **	Side Effects: **		exits sendmail */
 end_comment
 
 begin_function
 name|void
 name|finis
-parameter_list|()
+parameter_list|(
+name|drop
+parameter_list|,
+name|exitstat
+parameter_list|)
+name|bool
+name|drop
+decl_stmt|;
+specifier|volatile
+name|int
+name|exitstat
+decl_stmt|;
 block|{
+specifier|extern
+name|void
+name|closemaps
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USERDB
+specifier|extern
+name|void
+name|_udbx_close
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|tTd
@@ -6786,7 +7036,7 @@ name|printf
 argument_list|(
 literal|"\n====finis: stat %d e_id=%s e_flags="
 argument_list|,
-name|ExitStat
+name|exitstat
 argument_list|,
 name|CurEnv
 operator|->
@@ -6846,6 +7096,8 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+name|drop
+operator|&&
 name|CurEnv
 operator|->
 name|e_id
@@ -6867,6 +7119,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* close maps belonging to this pid */
+name|closemaps
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USERDB
+comment|/* close UserDatabase */
+name|_udbx_close
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|XLA
@@ -6901,7 +7166,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ExitStat
+name|exitstat
 operator|==
 name|EX_TEMPFAIL
 operator|||
@@ -6911,7 +7176,7 @@ name|e_errormode
 operator|==
 name|EM_BERKNET
 condition|)
-name|ExitStat
+name|exitstat
 operator|=
 name|EX_OK
 expr_stmt|;
@@ -6926,7 +7191,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ExitStat
+name|exitstat
 argument_list|)
 expr_stmt|;
 block|}
@@ -6979,6 +7244,11 @@ argument_list|(
 name|CurEnv
 argument_list|)
 expr_stmt|;
+name|closecontrolsocket
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|XLA
@@ -6987,17 +7257,10 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* reset uid for process accounting */
-name|endpwent
-argument_list|()
-expr_stmt|;
-name|setuid
+name|finis
 argument_list|(
-name|RealUid
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OK
 argument_list|)
 expr_stmt|;
@@ -8782,8 +9045,10 @@ argument_list|,
 literal|"could not restart: need full path"
 argument_list|)
 expr_stmt|;
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OSFILE
 argument_list|)
 expr_stmt|;
@@ -8818,6 +9083,11 @@ argument_list|(
 name|SIGHUP
 argument_list|)
 expr_stmt|;
+name|closecontrolsocket
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|drop_privileges
@@ -8847,8 +9117,10 @@ argument_list|,
 name|RunAsGid
 argument_list|)
 expr_stmt|;
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OSERR
 argument_list|)
 expr_stmt|;
@@ -8891,8 +9163,10 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OSFILE
 argument_list|)
 expr_stmt|;

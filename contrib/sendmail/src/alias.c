@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.92 (Berkeley) 6/5/98"
+literal|"@(#)alias.c	8.96 (Berkeley) 12/18/1998"
 decl_stmt|;
 end_decl_stmt
 
@@ -1465,7 +1465,7 @@ name|stb
 operator|.
 name|st_uid
 operator|==
-name|TrustedFileUid
+name|TrustedUid
 operator|)
 operator|)
 condition|)
@@ -2051,6 +2051,13 @@ operator||=
 name|MF_OPEN
 operator||
 name|MF_WRITABLE
+expr_stmt|;
+name|map
+operator|->
+name|map_pid
+operator|=
+name|getpid
+argument_list|()
 expr_stmt|;
 name|readaliases
 argument_list|(

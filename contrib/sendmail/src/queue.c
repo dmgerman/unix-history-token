@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.202 (Berkeley) 6/15/98 (with queueing)"
+literal|"@(#)queue.c	8.210 (Berkeley) 10/15/1998 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.202 (Berkeley) 6/15/98 (without queueing)"
+literal|"@(#)queue.c	8.210 (Berkeley) 10/15/1998 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2900,6 +2900,8 @@ expr_stmt|;
 name|proc_list_add
 argument_list|(
 name|pid
+argument_list|,
+literal|"Queue runner"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2938,8 +2940,20 @@ name|TRUE
 return|;
 block|}
 comment|/* child -- double fork and clean up signals */
+name|clrcontrol
+argument_list|()
+expr_stmt|;
 name|proc_list_clear
 argument_list|()
+expr_stmt|;
+comment|/* Add parent process as first child item */
+name|proc_list_add
+argument_list|(
+name|getpid
+argument_list|()
+argument_list|,
+literal|"Queue runner child process"
+argument_list|)
 expr_stmt|;
 name|releasesignal
 argument_list|(
@@ -2967,8 +2981,10 @@ name|intsig
 argument_list|)
 expr_stmt|;
 block|}
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"running queue: %s"
 argument_list|,
 name|QueueDir
@@ -3319,24 +3335,6 @@ block|{
 name|pid_t
 name|pid
 decl_stmt|;
-specifier|extern
-name|pid_t
-name|dowork
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|bool
-operator|,
-name|bool
-operator|,
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|Verbose
@@ -3437,7 +3435,11 @@ operator|=
 name|NULL
 expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 return|return
@@ -3845,7 +3847,45 @@ argument_list|)
 operator|>
 name|MAXQFNAME
 condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"orderq: %s too long, %d max characters\n"
+argument_list|,
+name|d
+operator|->
+name|d_name
+argument_list|,
+name|MAXQFNAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"orderq: %s too long, %d max characters"
+argument_list|,
+name|d
+operator|->
+name|d_name
+argument_list|,
+name|MAXQFNAME
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|check
 operator|=
 name|QueueLimitId
@@ -5939,6 +5979,14 @@ name|OnlyOneError
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* 			**  Since the delivery may happen in a child and the 			**  parent does not wait, the parent may close the 			**  maps thereby removing any shared memory used by 			**  the map.  Therefore, open a copy of the maps for 			**  the delivery process. 			*/
+name|initmaps
+argument_list|(
+name|FALSE
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -6025,8 +6073,10 @@ operator|=
 name|MD_DELIVER
 expr_stmt|;
 block|}
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"%s: from queue"
 argument_list|,
 name|id
@@ -6103,8 +6153,10 @@ if|if
 condition|(
 name|forkflag
 condition|)
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OK
 argument_list|)
 expr_stmt|;
@@ -6151,7 +6203,11 @@ condition|(
 name|forkflag
 condition|)
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 else|else
 name|dropenvelope
@@ -7237,17 +7293,6 @@ operator|->
 name|e_dtime
 argument_list|,
 name|TRUE
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|unlockqueue
-name|__P
-argument_list|(
-operator|(
-name|ENVELOPE
-operator|*
-operator|)
 argument_list|)
 decl_stmt|;
 if|if
@@ -8841,8 +8886,10 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_UNAVAILABLE
 argument_list|)
 expr_stmt|;
@@ -8961,8 +9008,10 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OSERR
 argument_list|)
 expr_stmt|;
@@ -9000,8 +9049,10 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|exit
+name|finis
 argument_list|(
+name|FALSE
+argument_list|,
 name|EX_OSERR
 argument_list|)
 expr_stmt|;
