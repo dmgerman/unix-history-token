@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University,  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asic.h	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University,  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asic.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -781,6 +781,334 @@ define|#
 directive|define
 name|ASIC_DECODE_CHIP_SELECT
 value|0x0000000f
+end_define
+
+begin_comment
+comment|/*  * Asic register addresses at offset from base.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCSI_DMAPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCSI_DMAPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCSI_DMANPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCSI_NEXTPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_LANCE_DMAPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_LANCE_DMAPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCC_T1_DMAPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCC_T1_DMAPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCC_R1_DMAPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCC_R1_DMAPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCC_T2_DMAPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCC_T2_DMAPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCC_R2_DMAPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCC_R2_DMAPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_FLOPPY_DMAPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_FLOPPY_DMAPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_ISDN_X_DMAPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_ISDN_X_DMAPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_ISDN_X_NEXTPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_ISDN_X_NEXTPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_ISDN_R_DMAPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_ISDN_R_DMAPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_ISDN_R_NEXTPTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_ISDN_R_NEXTPTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_BUFF0
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_BUFF0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_BUFF1
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_BUFF1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_BUFF2
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_BUFF2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_BUFF3
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_BUFF3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_CSR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_CSR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_INTR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_INTR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_IMSK
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_IMSK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_CURADDR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_CURADDR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_ISDN_X_DATA
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_ISDN_X_DATA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_ISDN_R_DATA
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_ISDN_R_DATA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_LANCE_DECODE
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_LANCE_DECODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCSI_DECODE
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCSI_DECODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCC0_DECODE
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCC0_DECODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCC1_DECODE
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCC1_DECODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_FLOPPY_DECODE
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_FLOPPY_DECODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCSI_SCR
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCSI_SCR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCSI_SDR0
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCSI_SDR0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_REG_SCSI_SDR1
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SCSI_SDR1)
+end_define
+
+begin_comment
+comment|/*  * And slot assignments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASIC_SYS_ETHER_ADDRESS
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SLOT_2_START)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASIC_SYS_LANCE
+parameter_list|(
+name|base
+parameter_list|)
+value|((base) + ASIC_SLOT_3_START)
 end_define
 
 begin_endif
