@@ -2317,7 +2317,7 @@ name|eth_bmem
 operator|+
 literal|6
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* src */
@@ -2361,7 +2361,7 @@ while|while
 condition|(
 name|s
 operator|<
-name|ETHER_MIN_LAN
+name|ETHER_MIN_LEN
 condition|)
 operator|*
 operator|(
