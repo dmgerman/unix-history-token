@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_xxx.c	6.3	84/07/28	*/
+comment|/*	subr_xxx.c	6.4	84/08/22	*/
 end_comment
 
 begin_include
@@ -119,6 +119,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|vax
+end_ifndef
+
 begin_macro
 name|imin
 argument_list|(
@@ -224,6 +230,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+endif|not vax
+end_endif
 
 begin_extern
 extern|extern	cabase
