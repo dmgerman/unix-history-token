@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.4 1995/03/24 21:21:37 wpaul Exp $"
+literal|"$Id: yplib.c,v 1.6 1995/04/09 21:52:31 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -736,6 +736,69 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|char
+modifier|*
+name|ypbinderr_string
+parameter_list|(
+name|incode
+parameter_list|)
+name|int
+name|incode
+decl_stmt|;
+block|{
+specifier|static
+name|char
+name|err
+index|[
+literal|80
+index|]
+decl_stmt|;
+switch|switch
+condition|(
+name|incode
+condition|)
+block|{
+case|case
+literal|0
+case|:
+return|return
+literal|"Success"
+return|;
+case|case
+literal|1
+case|:
+return|return
+literal|"Internal ypbind error"
+return|;
+case|case
+literal|2
+case|:
+return|return
+literal|"Domain not bound"
+return|;
+case|case
+literal|3
+case|:
+return|return
+literal|"System resource allocation failure"
+return|;
+block|}
+name|sprintf
+argument_list|(
+name|err
+argument_list|,
+literal|"Unknown ypbind error %d\n"
+argument_list|,
+name|incode
+argument_list|)
+expr_stmt|;
+return|return
+name|err
+return|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -1612,6 +1675,36 @@ expr_stmt|;
 goto|goto
 name|again
 goto|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|ypbr
+operator|.
+name|ypbind_status
+operator|!=
+name|YPBIND_SUCC_VAL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"yp_bind: %s\n"
+argument_list|,
+name|ypbinderr_string
+argument_list|(
+name|ypbr
+operator|.
+name|ypbind_status
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|YPERR_YPBIND
+return|;
+block|}
 block|}
 name|clnt_destroy
 argument_list|(

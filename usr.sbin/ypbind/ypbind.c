@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.5 1995/04/02 03:10:55 wpaul Exp $"
+literal|"$Id: ypbind.c,v 1.6 1995/04/15 23:35:46 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -520,6 +520,14 @@ name|ypbind_status
 operator|=
 name|YPBIND_FAIL_VAL
 expr_stmt|;
+name|res
+operator|.
+name|ypbind_respbody
+operator|.
+name|ypbind_error
+operator|=
+name|YPBIND_ERR_NOSERV
+expr_stmt|;
 for|for
 control|(
 name|ypdb
@@ -648,7 +656,8 @@ operator|=
 name|ypdb
 expr_stmt|;
 return|return
-name|NULL
+operator|&
+name|res
 return|;
 block|}
 if|if
@@ -660,7 +669,8 @@ operator|==
 literal|0
 condition|)
 return|return
-name|NULL
+operator|&
+name|res
 return|;
 if|#
 directive|if

@@ -389,7 +389,7 @@ name|stderr
 argument_list|,
 literal|"can't yp_bind: Reason: %s\n"
 argument_list|,
-name|yperr_string
+name|ypbinderr_string
 argument_list|(
 name|ypbr
 operator|.
