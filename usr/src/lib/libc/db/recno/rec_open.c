@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.20 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -548,66 +548,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* 			 * Kludge -- but we don't know what size an off_t 			 * is or what size a size_t is, although we do 			 * know that the former is signed and the latter 			 * unsigned. 			 */
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-name|sb
-operator|.
-name|st_size
-argument_list|)
-operator|>
-sizeof|sizeof
-argument_list|(
-name|size_t
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|sb
-operator|.
-name|st_size
-operator|>
-operator|(
-name|off_t
-operator|)
-name|SIZE_T_MAX
-condition|)
-block|{
-name|errno
-operator|=
-name|EFBIG
-expr_stmt|;
-goto|goto
-name|err
-goto|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|(
-name|size_t
-operator|)
-name|sb
-operator|.
-name|st_size
-operator|>
-name|SIZE_T_MAX
-condition|)
-block|{
-name|errno
-operator|=
-name|EFBIG
-expr_stmt|;
-goto|goto
-name|err
-goto|;
-block|}
-block|}
+comment|/* 			 * Kluge -- we'd like to test to see if the file is too 			 * big to mmap.  Since, we don't know what size or type 			 * off_t's or size_t's are, what the largest unsigned 			 * integral type is, or what random insanity the local 			 * C compiler will perpetrate, doing the comparison in 			 * a portable way is flatly impossible.  Hope that mmap 			 * fails if the file is too large. 			 */
 if|if
 condition|(
 name|sb
