@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  *	$Id: ultra14f.c,v 1.10 1993/10/14 00:07:04 rgrimes Exp $  */
+comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Slight fixes to timeouts to run with the 34F  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  *      $Id: ultra14f.c,v 2.3 93/10/16 02:01:08 julian Exp Locker: julian $  */
 end_comment
 
 begin_include
@@ -8,6 +8,16 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_comment
+comment|/* don't laugh.. this compiles to a program too.. look */
+end_comment
 
 begin_include
 include|#
@@ -42,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/buf.h>
 end_include
 
@@ -57,137 +73,6 @@ directive|include
 file|<sys/user.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MACH
-end_ifdef
-
-begin_comment
-comment|/* EITHER CMU OR OSF */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/ipl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386at/scsi.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386at/scsiconf.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OSF
-end_ifdef
-
-begin_comment
-comment|/* OSF ONLY */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/table.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/handler.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/dispatcher.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/AT386/atbus.h>
-end_include
-
-begin_else
-else|#
-directive|else
-else|OSF
-end_else
-
-begin_comment
-comment|/* CMU ONLY */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386at/atbus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/pio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|OSF
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|MACH
-end_endif
-
-begin_comment
-comment|/* end of MACH specific */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__386BSD__
-end_ifdef
-
-begin_comment
-comment|/* 386BSD specific */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|isa_dev
-value|isa_device
-end_define
-
-begin_define
-define|#
-directive|define
-name|dev_unit
-value|id_unit
-end_define
-
-begin_define
-define|#
-directive|define
-name|dev_addr
-value|id_iobase
-end_define
-
 begin_include
 include|#
 directive|include
@@ -199,6 +84,15 @@ include|#
 directive|include
 file|<i386/isa/isa_device.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*KERNEL */
+end_comment
 
 begin_include
 include|#
@@ -212,12 +106,6 @@ directive|include
 file|<scsi/scsiconf.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-endif|__386BSD__
-end_endif
-
 begin_comment
 comment|/*
 comment|*/
@@ -226,7 +114,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|KERNEL
 end_ifdef
 
 begin_include
@@ -253,8 +141,11 @@ end_function_decl
 begin_else
 else|#
 directive|else
-else|NDDB
 end_else
+
+begin_comment
+comment|/* NDDB */
+end_comment
 
 begin_define
 define|#
@@ -267,33 +158,36 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|NDDB
 end_endif
+
+begin_comment
+comment|/* NDDB */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*KERNEL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUHA
+value|1
+end_define
 
 begin_endif
 endif|#
 directive|endif
-endif|__386BSD__
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MACH
-end_ifdef
-
-begin_function_decl
-name|int
-name|Debugger
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-endif|MACH
-end_endif
+begin_comment
+comment|/*KERNEL */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -327,52 +221,6 @@ name|physlen
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MACH
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|physaddr
-name|kvtophys
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|PHYSTOKV
-parameter_list|(
-name|x
-parameter_list|)
-value|phystokv(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KVTOPHYS
-parameter_list|(
-name|x
-parameter_list|)
-value|kvtophys(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|MACH
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__386BSD__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -383,11 +231,48 @@ parameter_list|)
 value|vtophys(x)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-endif|__386BSD__
-end_endif
+begin_define
+define|#
+directive|define
+name|UHA_MSCP_MAX
+value|32
+end_define
+
+begin_comment
+comment|/* store up to 32MSCPs at any one time 				 * MAX = ? 				 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSCP_HASH_SIZE
+value|32
+end_define
+
+begin_comment
+comment|/* when we have a physical addr. for 				 * a mscp and need to find the mscp in 				 * space, look it up in the hash table 				 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSCP_HASH_SHIFT
+value|9
+end_define
+
+begin_comment
+comment|/* only hash on multiples of 512 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSCP_HASH
+parameter_list|(
+name|x
+parameter_list|)
+value|((((long int)(x))>>MSCP_HASH_SHIFT) % MSCP_HASH_SIZE)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -395,28 +280,6 @@ name|int
 name|hz
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|delaycount
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from clock setup code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NUM_CONCURRENT
-value|16
-end_define
-
-begin_comment
-comment|/* number of concurrent ops per board */
-end_comment
 
 begin_define
 define|#
@@ -426,26 +289,7 @@ value|33
 end_define
 
 begin_comment
-comment|/* number of dma segments supported     */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUDGE
-parameter_list|(
-name|X
-parameter_list|)
-value|(X>>1)
-end_define
-
-begin_comment
-comment|/* our loops are slower than spinwait() */
-end_comment
-
-begin_comment
-comment|/*
-comment|*/
+comment|/* number of dma segments supported */
 end_comment
 
 begin_comment
@@ -453,7 +297,7 @@ comment|/************************** board definitions **************************
 end_comment
 
 begin_comment
-comment|/*  * I/O Port Interface */
+comment|/*  * I/O Port Interface  */
 end_comment
 
 begin_define
@@ -633,7 +477,7 @@ comment|/* incoming mail ptr 3 */
 end_comment
 
 begin_comment
-comment|/* * UHA_LMASK bits (read only)  */
+comment|/*  * UHA_LMASK bits (read only)   */
 end_comment
 
 begin_define
@@ -681,7 +525,7 @@ comment|/* outgoing mail interrupt enabled */
 end_comment
 
 begin_comment
-comment|/* * UHA_LINT bits (read) */
+comment|/*  * UHA_LINT bits (read)  */
 end_comment
 
 begin_define
@@ -696,7 +540,7 @@ comment|/* local doorbell int pending */
 end_comment
 
 begin_comment
-comment|/* * UHA_LINT bits (write) */
+comment|/*  * UHA_LINT bits (write)  */
 end_comment
 
 begin_define
@@ -755,7 +599,7 @@ comment|/* tell adapter to get mail */
 end_comment
 
 begin_comment
-comment|/* * UHA_SMASK bits (read) */
+comment|/*  * UHA_SMASK bits (read)  */
 end_comment
 
 begin_define
@@ -792,7 +636,7 @@ comment|/* ICM interrupt enabled */
 end_comment
 
 begin_comment
-comment|/* * UHA_SMASK bits (write) */
+comment|/*  * UHA_SMASK bits (write)  */
 end_comment
 
 begin_define
@@ -829,7 +673,7 @@ comment|/* enable ICM interrupt */
 end_comment
 
 begin_comment
-comment|/* * UHA_SINT bits (read) */
+comment|/*  * UHA_SINT bits (read)  */
 end_comment
 
 begin_define
@@ -866,7 +710,7 @@ comment|/* abort MSCP failed */
 end_comment
 
 begin_comment
-comment|/* * UHA_SINT bits (write) */
+comment|/*  * UHA_SINT bits (write)  */
 end_comment
 
 begin_define
@@ -892,7 +736,7 @@ comment|/* acknowledge ICM and clear */
 end_comment
 
 begin_comment
-comment|/*  * UHA_CONF1 bits (read only) */
+comment|/*   * UHA_CONF1 bits (read only)  */
 end_comment
 
 begin_define
@@ -973,7 +817,7 @@ comment|/* 10 */
 end_comment
 
 begin_comment
-comment|/*********************************** * ha_status error codes \***********************************/
+comment|/*  * ha_status error codes  */
 end_comment
 
 begin_define
@@ -1064,11 +908,6 @@ begin_comment
 comment|/* invalid scatter gath list */
 end_comment
 
-begin_comment
-comment|/*
-comment|*/
-end_comment
-
 begin_struct
 struct|struct
 name|uha_dma_seg
@@ -1082,11 +921,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*
-comment|*/
-end_comment
 
 begin_struct
 struct|struct
@@ -1102,65 +936,65 @@ define|#
 directive|define
 name|U14_HAC
 value|0x01
-comment|/*host adapter command*/
+comment|/* host adapter command */
 define|#
 directive|define
 name|U14_TSP
 value|0x02
-comment|/*target scsi pass through command*/
+comment|/* target scsi pass through command */
 define|#
 directive|define
 name|U14_SDR
 value|0x04
-comment|/*scsi device reset*/
+comment|/* scsi device reset */
 name|unsigned
 name|char
 name|xdir
 range|:
 literal|2
 decl_stmt|;
-comment|/*xfer direction*/
+comment|/* xfer direction */
 define|#
 directive|define
 name|U14_SDET
 value|0x00
-comment|/*determined by scsi command*/
+comment|/* determined by scsi command */
 define|#
 directive|define
 name|U14_SDIN
 value|0x01
-comment|/*scsi data in*/
+comment|/* scsi data in */
 define|#
 directive|define
 name|U14_SDOUT
 value|0x02
-comment|/*scsi data out*/
+comment|/* scsi data out */
 define|#
 directive|define
 name|U14_NODATA
 value|0x03
-comment|/*no data xfer*/
+comment|/* no data xfer */
 name|unsigned
 name|char
 name|dcn
 range|:
 literal|1
 decl_stmt|;
-comment|/*disable disconnect for this command*/
+comment|/* disable disconnect for this command */
 name|unsigned
 name|char
 name|ca
 range|:
 literal|1
 decl_stmt|;
-comment|/*Cache control*/
+comment|/* cache control */
 name|unsigned
 name|char
 name|sgth
 range|:
 literal|1
 decl_stmt|;
-comment|/*scatter gather flag*/
+comment|/* scatter gather flag */
 name|unsigned
 name|char
 name|target
@@ -1173,7 +1007,7 @@ name|chan
 range|:
 literal|2
 decl_stmt|;
-comment|/*scsi channel (always 0 for 14f)*/
+comment|/* scsi channel (always 0 for 14f) */
 name|unsigned
 name|char
 name|lun
@@ -1198,8 +1032,8 @@ name|char
 name|sg_num
 decl_stmt|;
 comment|/*number of scat gath segs */
-comment|/*in s-g list if sg flag is*/
-comment|/*set. starts at 1, 8bytes per*/
+comment|/*in s-g list if sg flag is */
+comment|/*set. starts at 1, 8bytes per */
 name|unsigned
 name|char
 name|senselen
@@ -1266,14 +1100,18 @@ name|struct
 name|scsi_sense_data
 name|mscp_sense
 decl_stmt|;
+name|struct
+name|mscp
+modifier|*
+name|nexthash
+decl_stmt|;
+name|long
+name|int
+name|hashkey
+decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*
-comment|*/
-end_comment
 
 begin_struct
 struct|struct
@@ -1291,9 +1129,10 @@ name|baseport
 decl_stmt|;
 name|struct
 name|mscp
-name|mscps
+modifier|*
+name|mscphash
 index|[
-name|NUM_CONCURRENT
+name|MSCP_HASH_SIZE
 index|]
 decl_stmt|;
 name|struct
@@ -1311,8 +1150,16 @@ decl_stmt|;
 name|int
 name|dma
 decl_stmt|;
+name|int
+name|nummscps
+decl_stmt|;
+name|struct
+name|scsi_link
+name|sc_link
+decl_stmt|;
 block|}
-name|uha_data
+modifier|*
+name|uhadata
 index|[
 name|NUHA
 index|]
@@ -1341,15 +1188,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|int32
 name|uha_scsi_cmd
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|uha_timeout
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|uha_free_mscp
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1357,6 +1211,36 @@ end_function_decl
 begin_function_decl
 name|int
 name|uha_abort
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|uhaminphys
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|uha_done
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int32
+name|uha_adapter_info
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mscp
+modifier|*
+name|uha_mscp_phys_kv
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1369,21 +1253,6 @@ name|cheat
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|uhaminphys
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|long
-name|int
-name|uha_adapter_info
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|unsigned
 name|long
@@ -1392,84 +1261,6 @@ name|scratch
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MACH
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|isa_driver
-name|uhadriver
-init|=
-block|{
-name|uhaprobe
-block|,
-literal|0
-block|,
-name|uha_attach
-block|,
-literal|"uha"
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|uhaintrs
-index|[]
-function_decl|)
-parameter_list|()
-init|=
-block|{
-name|uhaintr
-operator|,
-function_decl|0
-end_function_decl
-
-begin_endif
-unit|};
-endif|#
-directive|endif
-endif|MACH
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__386BSD__
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|isa_driver
-name|uhadriver
-init|=
-block|{
-name|uhaprobe
-block|,
-name|uha_attach
-block|,
-literal|"uha"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|__386BSD__
-end_endif
-
 begin_expr_stmt
 specifier|static
 name|uha_unit
@@ -1477,29 +1268,6 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|uha_debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*UHADEBUG*/
-end_comment
 
 begin_define
 define|#
@@ -1550,9 +1318,30 @@ name|PAGESIZ
 value|4096
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_decl_stmt
 name|struct
-name|scsi_switch
+name|isa_driver
+name|uhadriver
+init|=
+block|{
+name|uhaprobe
+block|,
+name|uha_attach
+block|,
+literal|"uha"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|scsi_adapter
 name|uha_switch
 init|=
 block|{
@@ -1576,44 +1365,129 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*
-comment|*/
+comment|/* the below structure is so we have a default dev struct for out link struct */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|scsi_device
+name|uha_dev
+init|=
+block|{
+name|NULL
+block|,
+comment|/* Use default error handler */
+name|NULL
+block|,
+comment|/* have a queue, served by this */
+name|NULL
+block|,
+comment|/* have no async handler */
+name|NULL
+block|,
+comment|/* Use default 'done' routine */
+literal|"uha"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*KERNEL */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_function
+name|main
+parameter_list|()
+block|{
+name|printf
+argument_list|(
+literal|"uha_data is %d bytes\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|uha_data
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"mscp is %d bytes\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mscp
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*KERNEL*/
 end_comment
 
 begin_comment
-comment|/***********************************************************************\ * Function to send a command out through a mailbox                      * \***********************************************************************/
+comment|/*  * Function to send a command out through a mailbox  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|uha_send_mbox
-argument_list|(
-argument|int             unit
-argument_list|,
-argument|struct mscp     *mscp
-argument_list|)
-end_macro
-
-begin_block
-block|{
+parameter_list|(
 name|int
-name|port
-init|=
+name|unit
+parameter_list|,
+name|struct
+name|mscp
+modifier|*
+name|mscp
+parameter_list|)
+block|{
+name|struct
 name|uha_data
+modifier|*
+name|uha
+init|=
+name|uhadata
 index|[
 name|unit
 index|]
-operator|.
+decl_stmt|;
+name|int
+name|port
+init|=
+name|uha
+operator|->
 name|baseport
 decl_stmt|;
 name|int
 name|spincount
 init|=
-name|FUDGE
-argument_list|(
-name|delaycount
-argument_list|)
-operator|*
-literal|1000
+literal|100000
 decl_stmt|;
 comment|/* 1s should be enough */
 name|int
@@ -1624,7 +1498,12 @@ argument_list|()
 decl_stmt|;
 while|while
 condition|(
-operator|(
+operator|--
+name|spincount
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|inb
 argument_list|(
@@ -1633,28 +1512,23 @@ operator|+
 name|UHA_LINT
 argument_list|)
 operator|&
-operator|(
 name|UHA_LDIP
 operator|)
-operator|)
-operator|!=
-operator|(
+operator|==
 literal|0
-operator|)
-operator|)
-operator|&&
-operator|(
-name|spincount
-operator|--
-operator|)
 condition|)
-empty_stmt|;
+break|break;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|spincount
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|printf
@@ -1697,53 +1571,54 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/***********************************************************************\ * Function to send abort to 14f                                         * \***********************************************************************/
+comment|/*  * Function to send abort to 14f  */
 end_comment
 
-begin_macro
-name|uha_abort
-argument_list|(
-argument|int		unit
-argument_list|,
-argument|struct mscp	*mscp
-argument_list|)
-end_macro
-
-begin_block
-block|{
+begin_function
 name|int
-name|port
-init|=
+name|uha_abort
+parameter_list|(
+name|int
+name|unit
+parameter_list|,
+name|struct
+name|mscp
+modifier|*
+name|mscp
+parameter_list|)
+block|{
+name|struct
 name|uha_data
+modifier|*
+name|uha
+init|=
+name|uhadata
 index|[
 name|unit
 index|]
-operator|.
+decl_stmt|;
+name|int
+name|port
+init|=
+name|uha
+operator|->
 name|baseport
 decl_stmt|;
 name|int
 name|spincount
 init|=
-name|FUDGE
-argument_list|(
-name|delaycount
-argument_list|)
-operator|*
-literal|1
+literal|100
 decl_stmt|;
+comment|/* 1 mSec */
 name|int
 name|abortcount
 init|=
-name|FUDGE
-argument_list|(
-name|delaycount
-argument_list|)
-operator|*
-literal|2000
+literal|200000
 decl_stmt|;
+comment|/*2 secs */
 name|int
 name|s
 init|=
@@ -1752,7 +1627,12 @@ argument_list|()
 decl_stmt|;
 while|while
 condition|(
-operator|(
+operator|--
+name|spincount
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|inb
 argument_list|(
@@ -1761,28 +1641,23 @@ operator|+
 name|UHA_LINT
 argument_list|)
 operator|&
-operator|(
 name|UHA_LDIP
 operator|)
-operator|)
-operator|!=
-operator|(
+operator|==
 literal|0
-operator|)
-operator|)
-operator|&&
-operator|(
-name|spincount
-operator|--
-operator|)
 condition|)
-empty_stmt|;
+break|break;
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|spincount
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 empty_stmt|;
 block|{
@@ -1820,14 +1695,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-operator|(
-name|abortcount
 operator|--
-operator|)
-operator|&&
-operator|(
-operator|!
-operator|(
+name|abortcount
+condition|)
+block|{
+if|if
+condition|(
 name|inb
 argument_list|(
 name|port
@@ -1836,16 +1709,19 @@ name|UHA_SINT
 argument_list|)
 operator|&
 name|UHA_ABORT_FAIL
-operator|)
-operator|)
 condition|)
-empty_stmt|;
+break|break;
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|abortcount
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|printf
@@ -1908,48 +1784,40 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/***********************************************************************\ * Function to poll for command completion when in poll mode             * \***********************************************************************/
+comment|/*  * Function to poll for command completion when in poll mode.  *  *	wait = timeout in msec  */
 end_comment
 
-begin_macro
-name|uha_poll
-argument_list|(
-argument|int unit
-argument_list|,
-argument|int wait
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* in msec  */
-end_comment
-
-begin_block
-block|{
+begin_function
 name|int
-name|port
-init|=
+name|uha_poll
+parameter_list|(
+name|int
+name|unit
+parameter_list|,
+name|int
+name|wait
+parameter_list|)
+block|{
+name|struct
 name|uha_data
+modifier|*
+name|uha
+init|=
+name|uhadata
 index|[
 name|unit
 index|]
-operator|.
-name|baseport
 decl_stmt|;
 name|int
-name|spincount
+name|port
 init|=
-name|FUDGE
-argument_list|(
-name|delaycount
-argument_list|)
-operator|*
-name|wait
+name|uha
+operator|->
+name|baseport
 decl_stmt|;
-comment|/* in msec */
 name|int
 name|stport
 init|=
@@ -1957,39 +1825,36 @@ name|port
 operator|+
 name|UHA_SINT
 decl_stmt|;
-name|int
-name|start
-init|=
-name|spincount
-decl_stmt|;
 name|retry
 label|:
 while|while
 condition|(
-operator|(
-name|spincount
 operator|--
-operator|)
-operator|&&
-operator|(
-operator|!
-operator|(
+name|wait
+condition|)
+block|{
+if|if
+condition|(
 name|inb
 argument_list|(
 name|stport
 argument_list|)
 operator|&
 name|UHA_SINTP
-operator|)
-operator|)
 condition|)
-empty_stmt|;
+break|break;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* 1 mSec per loop */
+block|}
 if|if
 condition|(
-name|spincount
+name|wait
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|printf
@@ -2005,57 +1870,6 @@ name|EIO
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|(
-name|int
-operator|)
-name|cheat
-operator|!=
-name|PHYSTOKV
-argument_list|(
-name|inl
-argument_list|(
-name|port
-operator|+
-name|UHA_ICM0
-argument_list|)
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"uha%d: discarding %x\n"
-argument_list|,
-name|unit
-argument_list|,
-name|inl
-argument_list|(
-name|port
-operator|+
-name|UHA_ICM0
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|port
-operator|+
-name|UHA_SINT
-argument_list|,
-name|UHA_ICM_ACK
-argument_list|)
-expr_stmt|;
-name|spinwait
-argument_list|(
-literal|50
-argument_list|)
-expr_stmt|;
-goto|goto
-name|retry
-goto|;
-block|}
-comment|/* don't know this will work */
 name|uhaintr
 argument_list|(
 name|unit
@@ -2067,51 +1881,41 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*******************************************************\ * Check if the device can be found at the port given    * * and if so, set it up ready for further work           * * as an argument, takes the isa_dev structure from      * * autoconf.c                                            * \*******************************************************/
+comment|/*  * Check if the device can be found at the port given and if so, set it up  * ready for further work as an argument, takes the isa_device structure  * from autoconf.c  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|uhaprobe
-argument_list|(
-argument|dev
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|)
 name|struct
-name|isa_dev
+name|isa_device
 modifier|*
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|unit
 init|=
 name|uha_unit
 decl_stmt|;
-name|dev
-operator|->
-name|dev_unit
-operator|=
-name|unit
-expr_stmt|;
+name|struct
 name|uha_data
-index|[
-name|unit
-index|]
-operator|.
-name|baseport
-operator|=
+modifier|*
+name|uha
+decl_stmt|;
 name|dev
 operator|->
-name|dev_addr
+name|id_unit
+operator|=
+name|unit
 expr_stmt|;
+comment|/* 	 * find unit and check we have that many defined 	 */
 if|if
 condition|(
 name|unit
@@ -2121,7 +1925,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"uha%d: unit number too high\n"
+literal|"uha: unit number (%d) too high\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2132,7 +1936,91 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*try and initialize unit at this location*/
+name|dev
+operator|->
+name|id_unit
+operator|=
+name|unit
+expr_stmt|;
+comment|/* 	 * Allocate a storage area for us 	 */
+if|if
+condition|(
+name|uhadata
+index|[
+name|unit
+index|]
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"uha%d: memory already allocated\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|uha
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|uha_data
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|uha
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"uha%d: cannot malloc!\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|bzero
+argument_list|(
+name|uha
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|uha_data
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|uhadata
+index|[
+name|unit
+index|]
+operator|=
+name|uha
+expr_stmt|;
+name|uha
+operator|->
+name|baseport
+operator|=
+name|dev
+operator|->
+name|id_iobase
+expr_stmt|;
+comment|/* 	 * Try initialise a unit at this location 	 * sets up dma and bus speed, loads uha->vect 	 */
 if|if
 condition|(
 name|uha_init
@@ -2143,13 +2031,27 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|uhadata
+index|[
+name|unit
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+name|free
+argument_list|(
+name|uha
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-comment|/* if its there put in it's interrupt and DRQ vectors */
+comment|/* if it's there put in its interrupt and DRQ vectors */
 name|dev
 operator|->
 name|id_irq
@@ -2157,11 +2059,8 @@ operator|=
 operator|(
 literal|1
 operator|<<
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|vect
 operator|)
 expr_stmt|;
@@ -2169,11 +2068,8 @@ name|dev
 operator|->
 name|id_drq
 operator|=
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|dma
 expr_stmt|;
 name|uha_unit
@@ -2181,83 +2077,105 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|16
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/***********************************************\ * Attach all the sub-devices we can find        * \***********************************************/
+comment|/*  * Attach all the sub-devices we can find  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|uha_attach
-argument_list|(
-argument|dev
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|)
 name|struct
-name|isa_dev
+name|isa_device
 modifier|*
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|unit
 init|=
 name|dev
 operator|->
-name|dev_unit
+name|id_unit
 decl_stmt|;
-comment|/***********************************************\ 	* ask the adapter what subunits are present     * 	\***********************************************/
-name|scsi_attachdevs
-argument_list|(
-name|unit
-argument_list|,
+name|struct
 name|uha_data
+modifier|*
+name|uha
+init|=
+name|uhadata
 index|[
 name|unit
 index|]
+decl_stmt|;
+comment|/* 	 * fill in the prototype scsi_link. 	 */
+name|uha
+operator|->
+name|sc_link
 operator|.
+name|adapter_unit
+operator|=
+name|unit
+expr_stmt|;
+name|uha
+operator|->
+name|sc_link
+operator|.
+name|adapter_targ
+operator|=
+name|uha
+operator|->
 name|our_id
-argument_list|,
+expr_stmt|;
+name|uha
+operator|->
+name|sc_link
+operator|.
+name|adapter
+operator|=
 operator|&
 name|uha_switch
-argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OSF
-argument_list|)
-name|uha_attached
-index|[
-name|unit
-index|]
+name|uha
+operator|->
+name|sc_link
+operator|.
+name|device
 operator|=
-literal|1
+operator|&
+name|uha_dev
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(OSF) */
-return|return;
+comment|/* 	 * ask the adapter what subunits are present 	 */
+name|scsi_attachdevs
+argument_list|(
+operator|&
+operator|(
+name|uha
+operator|->
+name|sc_link
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/***********************************************\ * Return some information to the caller about   * * the adapter and it's capabilities             * \***********************************************/
+comment|/*  * Return some information to the caller about  * the adapter and it's capabilities  */
 end_comment
 
 begin_function
-name|long
-name|int
+name|u_int32
 name|uha_adapter_info
 parameter_list|(
 name|unit
@@ -2276,18 +2194,26 @@ block|}
 end_function
 
 begin_comment
-comment|/***********************************************\ * Catch an interrupt from the adaptor           * \***********************************************/
+comment|/*  * Catch an interrupt from the adaptor  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|uhaintr
-argument_list|(
-argument|unit
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|unit
+parameter_list|)
 block|{
+name|struct
+name|uha_data
+modifier|*
+name|uha
+init|=
+name|uhadata
+index|[
+name|unit
+index|]
+decl_stmt|;
 name|struct
 name|mscp
 modifier|*
@@ -2304,22 +2230,13 @@ decl_stmt|;
 name|int
 name|port
 init|=
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|baseport
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|PRINTROUTINES
-condition|)
 name|printf
 argument_list|(
 literal|"uhaintr "
@@ -2327,31 +2244,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*UHADEBUG*/
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OSF
-argument_list|)
-if|if
-condition|(
-operator|!
-name|uha_attached
-index|[
-name|unit
-index|]
-condition|)
-block|{
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
-comment|/* defined(OSF) */
+comment|/*UHADEBUG */
 while|while
 condition|(
 name|inb
@@ -2364,7 +2257,7 @@ operator|&
 name|UHA_SINTP
 condition|)
 block|{
-comment|/***********************************************\ 		* First get all the information and then        * 		* acknowlege the interrupt                      * 		\***********************************************/
+comment|/* 		 * First get all the information and then 		 * acknowledge the interrupt 		 */
 name|uhastat
 operator|=
 name|inb
@@ -2395,12 +2288,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|TRACEINTERRUPTS
-condition|)
 name|printf
 argument_list|(
 literal|"status = 0x%x "
@@ -2411,59 +2298,34 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*UHADEBUG*/
-comment|/***********************************************\ 		* Process the completed operation               * 		\***********************************************/
+comment|/* 		 * Process the completed operation 		 */
 name|mscp
 operator|=
-operator|(
-expr|struct
-name|mscp
-operator|*
-operator|)
-operator|(
-name|PHYSTOKV
+name|uha_mscp_phys_kv
 argument_list|(
+name|uha
+argument_list|,
 name|mboxval
 argument_list|)
-operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
 if|if
 condition|(
-name|uha_debug
-operator|&
-name|UHA_SHOWCMDS
+operator|!
+name|mscp
 condition|)
 block|{
-name|uha_show_scsi_cmd
-argument_list|(
-name|mscp
-operator|->
-name|xs
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
-name|uha_debug
-operator|&
-name|UHA_SHOWMSCPS
-operator|)
-operator|&&
-name|mscp
-condition|)
 name|printf
 argument_list|(
-literal|"<int mscp(%x)>"
-argument_list|,
-name|mscp
+literal|"uha: BAD MSCP RETURNED\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* whatever it was, it'll timeout */
+block|}
 name|untimeout
 argument_list|(
 name|uha_timeout
@@ -2485,37 +2347,39 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/***********************************************\ * We have a mscp which has been processed by the * * adaptor, now we look to see how the operation * * went.                                         * \***********************************************/
+comment|/*  * We have a mscp which has been processed by the adaptor, now we look to see  * how the operation went.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|uha_done
-argument_list|(
-argument|unit
-argument_list|,
-argument|mscp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|unit
+parameter_list|,
+name|mscp
+parameter_list|)
 name|int
 name|unit
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mscp
 modifier|*
 name|mscp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+name|struct
+name|uha_data
+modifier|*
+name|uha
+init|=
+name|uhadata
+index|[
+name|unit
+index|]
+decl_stmt|;
 name|struct
 name|scsi_sense_data
 modifier|*
@@ -2533,28 +2397,20 @@ name|mscp
 operator|->
 name|xs
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-operator|(
-name|PRINTROUTINES
-operator||
-name|TRACEINTERRUPTS
-operator|)
-condition|)
-name|printf
+name|SC_DEBUG
 argument_list|(
-literal|"uha_done "
+name|xs
+operator|->
+name|sc_link
+argument_list|,
+name|SDEV_DB2
+argument_list|,
+operator|(
+literal|"uha_done\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
-comment|/***********************************************\ 	* Otherwise, put the results of the operation   * 	* into the xfer and call whoever started it     * 	\***********************************************/
+comment|/* 	 * Otherwise, put the results of the operation 	 * into the xfer and call whoever started it 	 */
 if|if
 condition|(
 operator|(
@@ -2628,25 +2484,19 @@ case|case
 name|UHA_SBUS_TIMEOUT
 case|:
 comment|/* No response */
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|uha_debug
-operator|&
-name|UHA_SHOWMISC
-condition|)
-block|{
-name|printf
+name|SC_DEBUG
 argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|,
+name|SDEV_DB3
+argument_list|,
+operator|(
 literal|"timeout reported back\n"
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 name|xs
 operator|->
 name|error
@@ -2657,25 +2507,19 @@ break|break;
 case|case
 name|UHA_SBUS_OVER_UNDER
 case|:
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|uha_debug
-operator|&
-name|UHA_SHOWMISC
-condition|)
-block|{
-name|printf
+name|SC_DEBUG
 argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|,
+name|SDEV_DB3
+argument_list|,
+operator|(
 literal|"scsi bus xfer over/underrun\n"
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 name|xs
 operator|->
 name|error
@@ -2686,25 +2530,19 @@ break|break;
 case|case
 name|UHA_BAD_SG_LIST
 case|:
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|uha_debug
-operator|&
-name|UHA_SHOWMISC
-condition|)
-block|{
-name|printf
+name|SC_DEBUG
 argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|,
+name|SDEV_DB3
+argument_list|,
+operator|(
 literal|"bad sg list reported back\n"
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 name|xs
 operator|->
 name|error
@@ -2720,29 +2558,23 @@ name|error
 operator|=
 name|XS_DRIVER_STUFFUP
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|uha_debug
-operator|&
-name|UHA_SHOWMISC
-condition|)
-block|{
-name|printf
+name|SC_DEBUG
 argument_list|(
-literal|"unexpected ha_status: %x\n"
+name|xs
+operator|->
+name|sc_link
 argument_list|,
+name|SDEV_DB3
+argument_list|,
+operator|(
+literal|"unexpected ha_status: %x\n"
+operator|,
 name|mscp
 operator|->
 name|ha_status
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 block|}
 block|}
 else|else
@@ -2755,31 +2587,25 @@ name|targ_status
 operator|!=
 literal|0
 condition|)
-comment|/**************************************************************************\ * I have no information for any possible value of target status field     * * other than 0 means no error!! So I guess any error is unexpected in that * * event!! 								   * \**************************************************************************/
+comment|/*  * I have no information for any possible value of target status field  * other than 0 means no error!! So I guess any error is unexpected in that  * event!!  */
 block|{
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|uha_debug
-operator|&
-name|UHA_SHOWMISC
-condition|)
-block|{
-name|printf
+name|SC_DEBUG
 argument_list|(
-literal|"unexpected targ_status: %x\n"
+name|xs
+operator|->
+name|sc_link
 argument_list|,
+name|SDEV_DB3
+argument_list|,
+operator|(
+literal|"unexpected targ_status: %x\n"
+operator|,
 name|mscp
 operator|->
 name|targ_status
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 name|xs
 operator|->
 name|error
@@ -2808,83 +2634,48 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|scsi_done
+argument_list|(
 name|xs
-operator|->
-name|when_done
-condition|)
-operator|(
-operator|*
-operator|(
-name|xs
-operator|->
-name|when_done
-operator|)
-operator|)
-operator|(
-name|xs
-operator|->
-name|done_arg
-operator|,
-name|xs
-operator|->
-name|done_arg2
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/***********************************************\ * A mscp (and hence a mbx-out is put onto the    * * free list.                                    * \***********************************************/
+comment|/*  * A mscp (and hence a mbx-out) is put onto the free list.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|uha_free_mscp
-argument_list|(
-argument|unit
-argument_list|,
-argument|mscp
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|unit
+parameter_list|,
+name|mscp
+parameter_list|,
+name|flags
+parameter_list|)
 name|struct
 name|mscp
 modifier|*
 name|mscp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+name|struct
+name|uha_data
+modifier|*
+name|uha
+init|=
+name|uhadata
+index|[
+name|unit
+index|]
+decl_stmt|;
 name|unsigned
 name|int
 name|opri
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|PRINTROUTINES
-condition|)
-name|printf
-argument_list|(
-literal|"mscp%d(0x%x)> "
-argument_list|,
-name|unit
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 if|if
 condition|(
 operator|!
@@ -2903,18 +2694,12 @@ name|mscp
 operator|->
 name|next
 operator|=
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|free_mscp
 expr_stmt|;
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|free_mscp
 operator|=
 name|mscp
@@ -2925,7 +2710,7 @@ name|flags
 operator|=
 name|MSCP_FREE
 expr_stmt|;
-comment|/***********************************************\ 	* If there were none, wake abybody waiting for  * 	* one to come free, starting with queued entries* 	\***********************************************/
+comment|/* 	 * If there were none, wake abybody waiting for 	 * one to come free, starting with queued entries 	 */
 if|if
 condition|(
 operator|!
@@ -2937,11 +2722,8 @@ block|{
 name|wakeup
 argument_list|(
 operator|&
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|free_mscp
 argument_list|)
 expr_stmt|;
@@ -2961,10 +2743,10 @@ name|opri
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/***********************************************\ * Get a free mscp (and hence mbox-out entry)     * \***********************************************/
+comment|/*  * Get a free mscp  *  * If there are none, see if we can allocate a new one.  If so, put it in the  * hash table too otherwise either return an error or sleep.  */
 end_comment
 
 begin_function
@@ -2977,36 +2759,33 @@ name|unit
 parameter_list|,
 name|flags
 parameter_list|)
+name|int
+name|unit
+decl_stmt|,
+name|flags
+decl_stmt|;
 block|{
+name|struct
+name|uha_data
+modifier|*
+name|uha
+init|=
+name|uhadata
+index|[
+name|unit
+index|]
+decl_stmt|;
 name|unsigned
 name|opri
 decl_stmt|;
 name|struct
 name|mscp
 modifier|*
-name|rc
+name|mscpp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|PRINTROUTINES
-condition|)
-name|printf
-argument_list|(
-literal|"<mscp%d(0x%x) "
-argument_list|,
-name|unit
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
+name|int
+name|hashnum
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -3021,70 +2800,175 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/***********************************************\ 	* If we can and have to, sleep waiting for one  * 	* to come free                                  * 	\***********************************************/
+comment|/* 	 * If we can and have to, sleep waiting for one to come free 	 * but only if we can't allocate a new one 	 */
 while|while
 condition|(
-operator|(
 operator|!
 operator|(
-name|rc
+name|mscpp
 operator|=
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|free_mscp
 operator|)
-operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|uha
+operator|->
+name|nummscps
+operator|<
+name|UHA_MSCP_MAX
+condition|)
+block|{
+if|if
+condition|(
+name|mscpp
+operator|=
 operator|(
+expr|struct
+name|mscp
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mscp
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+condition|)
+block|{
+name|bzero
+argument_list|(
+name|mscpp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mscp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|uha
+operator|->
+name|nummscps
+operator|++
+expr_stmt|;
+name|mscpp
+operator|->
+name|flags
+operator|=
+name|MSCP_ACTIVE
+expr_stmt|;
+comment|/* 				 * put in the phystokv hash table 				 * Never gets taken out. 				 */
+name|mscpp
+operator|->
+name|hashkey
+operator|=
+name|KVTOPHYS
+argument_list|(
+name|mscpp
+argument_list|)
+expr_stmt|;
+name|hashnum
+operator|=
+name|MSCP_HASH
+argument_list|(
+name|mscpp
+operator|->
+name|hashkey
+argument_list|)
+expr_stmt|;
+name|mscpp
+operator|->
+name|nexthash
+operator|=
+name|uha
+operator|->
+name|mscphash
+index|[
+name|hashnum
+index|]
+expr_stmt|;
+name|uha
+operator|->
+name|mscphash
+index|[
+name|hashnum
+index|]
+operator|=
+name|mscpp
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"uha%d: Can't malloc MSCP\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+goto|goto
+name|gottit
+goto|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 operator|!
 operator|(
 name|flags
 operator|&
 name|SCSI_NOSLEEP
 operator|)
-operator|)
 condition|)
 block|{
 name|sleep
 argument_list|(
 operator|&
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|free_mscp
 argument_list|,
 name|PRIBIO
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+block|}
 if|if
 condition|(
-name|rc
+name|mscpp
 condition|)
 block|{
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+comment|/* Get MSCP from from free list */
+name|uha
+operator|->
 name|free_mscp
 operator|=
-name|rc
+name|mscpp
 operator|->
 name|next
 expr_stmt|;
-name|rc
+name|mscpp
 operator|->
 name|flags
 operator|=
 name|MSCP_ACTIVE
 expr_stmt|;
 block|}
+name|gottit
+label|:
 if|if
 condition|(
 operator|!
@@ -3101,31 +2985,107 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|rc
+name|mscpp
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/***********************************************\ * Start the board, ready for normal operation   * \***********************************************/
+comment|/*  * given a physical address, find the mscp that it corresponds to.  */
 end_comment
 
-begin_macro
-name|uha_init
+begin_function
+name|struct
+name|mscp
+modifier|*
+name|uha_mscp_phys_kv
+parameter_list|(
+name|uha
+parameter_list|,
+name|mscp_phys
+parameter_list|)
+name|struct
+name|uha_data
+modifier|*
+name|uha
+decl_stmt|;
+name|long
+name|int
+name|mscp_phys
+decl_stmt|;
+block|{
+name|int
+name|hashnum
+init|=
+name|MSCP_HASH
 argument_list|(
-argument|unit
+name|mscp_phys
 argument_list|)
-end_macro
+decl_stmt|;
+name|struct
+name|mscp
+modifier|*
+name|mscpp
+init|=
+name|uha
+operator|->
+name|mscphash
+index|[
+name|hashnum
+index|]
+decl_stmt|;
+while|while
+condition|(
+name|mscpp
+condition|)
+block|{
+if|if
+condition|(
+name|mscpp
+operator|->
+name|hashkey
+operator|==
+name|mscp_phys
+condition|)
+break|break;
+name|mscpp
+operator|=
+name|mscpp
+operator|->
+name|nexthash
+expr_stmt|;
+block|}
+return|return
+name|mscpp
+return|;
+block|}
+end_function
 
-begin_decl_stmt
+begin_comment
+comment|/*  * Start the board, ready for normal operation  */
+end_comment
+
+begin_function
+name|int
+name|uha_init
+parameter_list|(
+name|unit
+parameter_list|)
 name|int
 name|unit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+name|struct
+name|uha_data
+modifier|*
+name|uha
+init|=
+name|uhadata
+index|[
+name|unit
+index|]
+decl_stmt|;
 name|unsigned
 name|char
 name|ad
@@ -3166,11 +3126,8 @@ decl_stmt|;
 name|int
 name|port
 init|=
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|baseport
 decl_stmt|;
 name|int
@@ -3179,13 +3136,9 @@ decl_stmt|;
 name|int
 name|resetcount
 init|=
-name|FUDGE
-argument_list|(
-name|delaycount
-argument_list|)
-operator|*
 literal|4000
 decl_stmt|;
+comment|/* 4 secs? */
 name|model
 operator|=
 name|inb
@@ -3219,9 +3172,6 @@ literal|0x40
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|UHADEBUG
 name|printf
 argument_list|(
 literal|"uha%d: uha_init, board not responding\n"
@@ -3229,9 +3179,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 return|return
 operator|(
 name|ENXIO
@@ -3295,11 +3242,8 @@ block|{
 case|case
 name|UHA_DMA_CH5
 case|:
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|dma
 operator|=
 literal|5
@@ -3313,11 +3257,8 @@ break|break;
 case|case
 name|UHA_DMA_CH6
 case|:
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|dma
 operator|=
 literal|6
@@ -3331,11 +3272,8 @@ break|break;
 case|case
 name|UHA_DMA_CH7
 case|:
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|dma
 operator|=
 literal|7
@@ -3366,11 +3304,8 @@ block|{
 case|case
 name|UHA_IRQ10
 case|:
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|vect
 operator|=
 literal|10
@@ -3384,11 +3319,8 @@ break|break;
 case|case
 name|UHA_IRQ11
 case|:
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|vect
 operator|=
 literal|11
@@ -3402,11 +3334,8 @@ break|break;
 case|case
 name|UHA_IRQ14
 case|:
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|vect
 operator|=
 literal|14
@@ -3420,11 +3349,8 @@ break|break;
 case|case
 name|UHA_IRQ15
 case|:
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|vect
 operator|=
 literal|15
@@ -3455,80 +3381,13 @@ argument_list|,
 name|uha_id
 argument_list|)
 expr_stmt|;
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|our_id
 operator|=
 name|uha_id
 expr_stmt|;
-comment|/***********************************************\ 	* link up all our MSCPs into a free list         * 	\***********************************************/
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NUM_CONCURRENT
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
-name|mscps
-index|[
-name|i
-index|]
-operator|.
-name|next
-operator|=
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
-name|free_mscp
-expr_stmt|;
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
-name|free_mscp
-operator|=
-operator|&
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
-name|mscps
-index|[
-name|i
-index|]
-expr_stmt|;
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
-name|free_mscp
-operator|->
-name|flags
-operator|=
-name|MSCP_FREE
-expr_stmt|;
-block|}
-comment|/***********************************************\ 	* Note that we are going and return (to probe)  * 	\***********************************************/
+comment|/* 	 * Note that we are going and return (to probe) 	 */
 name|outb
 argument_list|(
 name|port
@@ -3540,30 +3399,33 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-operator|(
-name|resetcount
 operator|--
-operator|)
-operator|&&
-operator|(
-operator|!
-operator|(
+name|resetcount
+condition|)
+block|{
+if|if
+condition|(
 name|inb
 argument_list|(
 name|port
 operator|+
 name|UHA_LINT
 argument_list|)
-operator|)
-operator|)
 condition|)
 empty_stmt|;
+break|break;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* 1 mSec per loop */
+block|}
 if|if
 condition|(
 name|resetcount
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|printf
@@ -3589,11 +3451,8 @@ literal|0x81
 argument_list|)
 expr_stmt|;
 comment|/* make sure interrupts are enabled */
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|flags
 operator||=
 name|UHA_INIT
@@ -3604,7 +3463,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifndef
 ifndef|#
@@ -3627,8 +3486,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|min
 end_endif
+
+begin_comment
+comment|/* min */
+end_comment
 
 begin_function
 name|void
@@ -3642,29 +3504,6 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|MACH
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|OSF
-argument_list|)
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_NPAGES
-expr_stmt|;
-comment|/* can support scat/gather */
-endif|#
-directive|endif
-comment|/* defined(OSF) */
-endif|#
-directive|endif
-endif|MACH
 if|if
 condition|(
 name|bp
@@ -3701,11 +3540,11 @@ block|}
 end_function
 
 begin_comment
-comment|/***********************************************\ * start a scsi operation given the command and  * * the data address. Also needs the unit, target * * and lu                                        * \***********************************************/
+comment|/*  * start a scsi operation given the command and the data address.  Also  * needs the unit, target and lu.  */
 end_comment
 
 begin_function
-name|int
+name|int32
 name|uha_scsi_cmd
 parameter_list|(
 name|xs
@@ -3763,7 +3602,9 @@ name|unit
 init|=
 name|xs
 operator|->
-name|adapter
+name|sc_link
+operator|->
+name|adapter_unit
 decl_stmt|;
 name|int
 name|bytes_this_seg
@@ -3779,6 +3620,16 @@ name|iovec
 modifier|*
 name|iovp
 decl_stmt|;
+name|struct
+name|uha_data
+modifier|*
+name|uha
+init|=
+name|uhadata
+index|[
+name|unit
+index|]
+decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -3789,11 +3640,8 @@ decl_stmt|;
 name|int
 name|port
 init|=
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
+name|uha
+operator|->
 name|baseport
 decl_stmt|;
 name|unsigned
@@ -3801,24 +3649,20 @@ name|long
 name|int
 name|templen
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|PRINTROUTINES
-condition|)
-name|printf
+name|SC_DEBUG
 argument_list|(
-literal|"uha_scsi_cmd "
+name|xs
+operator|->
+name|sc_link
+argument_list|,
+name|SDEV_DB2
+argument_list|,
+operator|(
+literal|"uha_scsi_cmd\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
-comment|/***********************************************\ 	* get a mscp (mbox-out) to use. If the transfer  * 	* is from a buf (possibly from interrupt time)  * 	* then we can't allow it to sleep               * 	\***********************************************/
+comment|/* 	 * get a mscp (mbox-out) to use. If the transfer 	 * is from a buf (possibly from interrupt time) 	 * then we can't allow it to sleep 	 */
 name|flags
 operator|=
 name|xs
@@ -3915,45 +3759,28 @@ name|cheat
 operator|=
 name|mscp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|uha_debug
-operator|&
-name|UHA_SHOWMSCPS
-condition|)
-name|printf
-argument_list|(
-literal|"<start mscp(%x)>"
-argument_list|,
-name|mscp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|SHOWCOMMANDS
-condition|)
-block|{
-name|uha_show_scsi_cmd
+name|SC_DEBUG
 argument_list|(
 name|xs
+operator|->
+name|sc_link
+argument_list|,
+name|SDEV_DB3
+argument_list|,
+operator|(
+literal|"start mscp(%x)\n"
+operator|,
+name|mscp
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 name|mscp
 operator|->
 name|xs
 operator|=
 name|xs
 expr_stmt|;
-comment|/***********************************************\ 	* Put all the arguments for the xfer in the mscp * 	\***********************************************/
+comment|/* 	 * Put all the arguments for the xfer in the mscp 	 */
 if|if
 condition|(
 name|flags
@@ -4017,11 +3844,16 @@ operator|=
 literal|0x02
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|GOTTABEJOKING
 if|if
 condition|(
 name|xs
 operator|->
-name|lu
+name|sc_link
+operator|->
+name|lun
 operator|!=
 literal|0
 condition|)
@@ -4047,6 +3879,8 @@ name|HAD_ERROR
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 name|mscp
 operator|->
 name|dcn
@@ -4065,7 +3899,9 @@ name|target
 operator|=
 name|xs
 operator|->
-name|targ
+name|sc_link
+operator|->
+name|target
 expr_stmt|;
 name|mscp
 operator|->
@@ -4073,7 +3909,9 @@ name|lun
 operator|=
 name|xs
 operator|->
-name|lu
+name|sc_link
+operator|->
+name|lun
 expr_stmt|;
 name|mscp
 operator|->
@@ -4345,6 +4183,9 @@ name|sgth
 operator|=
 literal|0x01
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TFS
 if|if
 condition|(
 name|flags
@@ -4503,31 +4344,27 @@ name|iovp
 operator|->
 name|iov_len
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|SHOWSCATGATH
-condition|)
-name|printf
+name|SC_DEBUGN
 argument_list|(
-literal|"(0x%x@0x%x)"
+name|xs
+operator|->
+name|sc_link
 argument_list|,
+name|SDEV_DB4
+argument_list|,
+operator|(
+literal|"(0x%x@0x%x)"
+operator|,
 name|iovp
 operator|->
 name|iov_len
-argument_list|,
+operator|,
 name|iovp
 operator|->
 name|iov_base
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 name|sg
 operator|++
 expr_stmt|;
@@ -4543,33 +4380,32 @@ expr_stmt|;
 block|}
 block|}
 else|else
+endif|#
+directive|endif
+comment|/*TFS */
 block|{
-comment|/***********************************************\ 			* Set up the scatter gather block               * 			\***********************************************/
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|SHOWSCATGATH
-condition|)
-name|printf
+comment|/* 			 * Set up the scatter gather block 			 */
+name|SC_DEBUG
 argument_list|(
-literal|"%d @0x%x:- "
+name|xs
+operator|->
+name|sc_link
 argument_list|,
+name|SDEV_DB4
+argument_list|,
+operator|(
+literal|"%d @0x%x:- "
+operator|,
 name|xs
 operator|->
 name|datalen
-argument_list|,
+operator|,
 name|xs
 operator|->
 name|data
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 name|datalen
 operator|=
 name|xs
@@ -4686,25 +4522,21 @@ operator|&
 literal|0xff
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|SHOWSCATGATH
-condition|)
-name|printf
+name|SC_DEBUGN
 argument_list|(
-literal|"0x%x"
+name|xs
+operator|->
+name|sc_link
 argument_list|,
+name|SDEV_DB4
+argument_list|,
+operator|(
+literal|"0x%x"
+operator|,
 name|thisphys
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 comment|/* do it at least once */
 name|nextphys
 operator|=
@@ -4722,7 +4554,7 @@ operator|==
 name|nextphys
 operator|)
 condition|)
-comment|/*********************************************\ 				* This page is contiguous (physically) with   * 				* the the last, just extend the length        * 				\*********************************************/
+comment|/* 					 * This page is contiguous (physically) with  					 * the the last, just extend the length  					 */
 block|{
 comment|/* how far to the end of the page */
 name|nextphys
@@ -4796,26 +4628,22 @@ name|thiskv
 argument_list|)
 expr_stmt|;
 block|}
-comment|/********************************************\ 				* next page isn't contiguous, finish the seg * 				\********************************************/
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|SHOWSCATGATH
-condition|)
-name|printf
+comment|/* 				 * next page isn't contiguous, finish the seg 				 */
+name|SC_DEBUGN
 argument_list|(
-literal|"(0x%x)"
+name|xs
+operator|->
+name|sc_link
 argument_list|,
+name|SDEV_DB4
+argument_list|,
+operator|(
+literal|"(0x%x)"
+operator|,
 name|bytes_this_seg
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 name|sg
 operator|->
 name|len
@@ -4900,7 +4728,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/*end of iov/kv decision */
+comment|/* end of iov/kv decision */
 name|mscp
 operator|->
 name|datalen
@@ -4979,23 +4807,19 @@ name|sg_num
 operator|=
 name|seg
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|SHOWSCATGATH
-condition|)
-name|printf
+name|SC_DEBUGN
 argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|,
+name|SDEV_DB4
+argument_list|,
+operator|(
 literal|"\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 if|if
 condition|(
 name|datalen
@@ -5143,7 +4967,7 @@ operator|=
 literal|0x00
 expr_stmt|;
 block|}
-comment|/***********************************************\ 	* Put the scsi command in the mscp and start it  * 	\***********************************************/
+comment|/* 	 * Put the scsi command in the mscp and start it 	 */
 name|bcopy
 argument_list|(
 name|xs
@@ -5159,7 +4983,7 @@ operator|->
 name|cmdlen
 argument_list|)
 expr_stmt|;
-comment|/***********************************************\ 	* Usually return SUCCESSFULLY QUEUED            * 	\***********************************************/
+comment|/* 	 * Usually return SUCCESSFULLY QUEUED 	 */
 if|if
 condition|(
 operator|!
@@ -5204,30 +5028,26 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|TRACEINTERRUPTS
-condition|)
-name|printf
+name|SC_DEBUG
 argument_list|(
-literal|"cmd_sent "
+name|xs
+operator|->
+name|sc_link
+argument_list|,
+name|SDEV_DB3
+argument_list|,
+operator|(
+literal|"cmd_sent\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 return|return
 operator|(
 name|SUCCESSFULLY_QUEUED
 operator|)
 return|;
 block|}
-comment|/***********************************************\ 	* If we can't use interrupts, poll on completion* 	\***********************************************/
+comment|/* 	 * If we can't use interrupts, poll on completion 	 */
 name|uha_send_mbox
 argument_list|(
 name|unit
@@ -5235,23 +5055,19 @@ argument_list|,
 name|mscp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UHADEBUG
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|TRACEINTERRUPTS
-condition|)
-name|printf
+name|SC_DEBUG
 argument_list|(
-literal|"cmd_wait "
+name|xs
+operator|->
+name|sc_link
+argument_list|,
+name|SDEV_DB3
+argument_list|,
+operator|(
+literal|"cmd_wait\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*UHADEBUG*/
 do|do
 block|{
 if|if
@@ -5361,17 +5177,23 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|uha_timeout
-argument_list|(
-argument|struct mscp *mscp
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|mscp
+modifier|*
+name|mscp
+parameter_list|)
 block|{
 name|int
 name|unit
+decl_stmt|;
+name|struct
+name|uha_data
+modifier|*
+name|uha
 decl_stmt|;
 name|int
 name|s
@@ -5379,27 +5201,27 @@ init|=
 name|splbio
 argument_list|()
 decl_stmt|;
-name|int
-name|port
-init|=
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
-name|baseport
-decl_stmt|;
+comment|/*int   port = uha->baseport; */
 name|unit
 operator|=
 name|mscp
 operator|->
 name|xs
 operator|->
-name|adapter
+name|sc_link
+operator|->
+name|adapter_unit
+expr_stmt|;
+name|uha
+operator|=
+name|uhadata
+index|[
+name|unit
+index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"uha%d:%d device timed out\n"
+literal|"uha%d:%d:%d (%s%d) timed out "
 argument_list|,
 name|unit
 argument_list|,
@@ -5407,18 +5229,40 @@ name|mscp
 operator|->
 name|xs
 operator|->
-name|targ
+name|sc_link
+operator|->
+name|target
+argument_list|,
+name|mscp
+operator|->
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|lun
+argument_list|,
+name|mscp
+operator|->
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|device
+operator|->
+name|name
+argument_list|,
+name|mscp
+operator|->
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|dev_unit
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UHADEBUG
-if|if
-condition|(
-name|uha_debug
-operator|&
-name|UHA_SHOWMSCPS
-condition|)
 name|uha_print_active_mscp
 argument_list|(
 name|unit
@@ -5426,7 +5270,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*UHADEBUG*/
+comment|/*UHADEBUG */
 if|if
 condition|(
 operator|(
@@ -5474,8 +5318,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* abort the operation that has timed out */
 block|{
+comment|/* abort the operation that has timed out */
 name|printf
 argument_list|(
 literal|"\n"
@@ -5505,138 +5349,25 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|uha_show_scsi_cmd
-argument_list|(
-argument|struct scsi_xfer *xs
-argument_list|)
-end_macro
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UHADEBUG
+end_ifdef
 
-begin_block
-block|{
-name|u_char
-modifier|*
-name|b
-init|=
-operator|(
-name|u_char
-operator|*
-operator|)
-name|xs
-operator|->
-name|cmd
-decl_stmt|;
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|xs
-operator|->
-name|flags
-operator|&
-name|SCSI_RESET
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"uha%d:%d:%d-"
-argument_list|,
-name|xs
-operator|->
-name|adapter
-argument_list|,
-name|xs
-operator|->
-name|targ
-argument_list|,
-name|xs
-operator|->
-name|lu
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|i
-operator|<
-name|xs
-operator|->
-name|cmdlen
-condition|)
-block|{
-if|if
-condition|(
-name|i
-condition|)
-name|printf
-argument_list|(
-literal|","
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%x"
-argument_list|,
-name|b
-index|[
-name|i
-operator|++
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"-\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"uha%d:%d:%d-RESET-\n"
-argument_list|,
-name|xs
-operator|->
-name|adapter
-argument_list|,
-name|xs
-operator|->
-name|targ
-argument_list|,
-name|xs
-operator|->
-name|lu
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_block
-
-begin_macro
+begin_function
+name|void
 name|uha_print_mscp
-argument_list|(
-argument|mscp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mscp
+parameter_list|)
 name|struct
 name|mscp
 modifier|*
 name|mscp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -5686,7 +5417,7 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-name|uha_show_scsi_cmd
+name|show_scsi_cmd
 argument_list|(
 name|mscp
 operator|->
@@ -5694,38 +5425,55 @@ name|xs
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|uha_print_active_mscp
-argument_list|(
-argument|int unit
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
 block|{
+name|struct
+name|uha_data
+modifier|*
+name|uha
+init|=
+name|uhadata
+index|[
+name|unit
+index|]
+decl_stmt|;
 name|struct
 name|mscp
 modifier|*
 name|mscp
-init|=
-name|uha_data
-index|[
-name|unit
-index|]
-operator|.
-name|mscps
 decl_stmt|;
 name|int
 name|i
 init|=
-name|NUHA
+literal|0
 decl_stmt|;
 while|while
 condition|(
 name|i
-operator|--
+operator|<
+name|MSCP_HASH_SIZE
+condition|)
+block|{
+name|mscp
+operator|=
+name|uha
+operator|->
+name|mscphash
+index|[
+name|i
+index|]
+expr_stmt|;
+while|while
+condition|(
+name|mscp
 condition|)
 block|{
 if|if
@@ -5736,17 +5484,44 @@ name|flags
 operator|!=
 name|MSCP_FREE
 condition|)
+block|{
 name|uha_print_mscp
 argument_list|(
 name|mscp
 argument_list|)
 expr_stmt|;
+block|}
 name|mscp
+operator|=
+name|mscp
+operator|->
+name|nexthash
+expr_stmt|;
+block|}
+name|i
 operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*UHADEBUG */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*KERNEL */
+end_comment
 
 end_unit
 

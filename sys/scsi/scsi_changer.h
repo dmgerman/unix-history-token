@@ -4,19 +4,19 @@ comment|/*  * SCSI changer interface description  */
 end_comment
 
 begin_comment
-comment|/*  * Written by Stefan Grefen   (grefen@goofy.zdv.uni-mainz.de soon grefen@convex.com)  * based on the SCSI System by written Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_changer.h,v 1.4 1993/08/21 20:01:53 rgrimes Exp $  */
+comment|/*  * Written by Stefan Grefen   (grefen@goofy.zdv.uni-mainz.de soon grefen@convex.com)  * based on the SCSI System by written Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_changer.h,v 1.5 93/08/26 21:09:22 julian Exp Locker: julian $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SCSI_SCSI_CHANGER_H_
+name|_SCSI_SCSI_CHANGER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SCSI_SCSI_CHANGER_H_
+name|_SCSI_SCSI_CHANGER_H
 value|1
 end_define
 
@@ -287,7 +287,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SCSI_SCSI_CHANGER_H_ */
+comment|/*_SCSI_SCSI_CHANGER_H*/
 end_comment
 
 end_unit

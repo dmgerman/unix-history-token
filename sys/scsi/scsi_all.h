@@ -4,19 +4,19 @@ comment|/*  * SCSI general  interface description  */
 end_comment
 
 begin_comment
-comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_all.h,v 1.4 1993/08/21 20:01:51 rgrimes Exp $  */
+comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_all.h,v 2.0 93/10/06 21:10:28 julian Exp Locker: julian $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SCSI_SCSI_ALL_H_
+name|_SCSI_SCSI_ALL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SCSI_SCSI_ALL_H_
+name|_SCSI_SCSI_ALL_H
 value|1
 end_define
 
@@ -57,7 +57,7 @@ value|0xA0
 end_define
 
 begin_comment
-comment|/*these two should not be needed*/
+comment|/* these two should not be needed */
 end_comment
 
 begin_define
@@ -452,6 +452,52 @@ name|PR_ALLOW
 value|0x00
 end_define
 
+begin_struct
+struct|struct
+name|scsi_changedef
+block|{
+name|u_char
+name|op_code
+decl_stmt|;
+name|u_char
+name|byte2
+decl_stmt|;
+name|u_char
+name|unused1
+decl_stmt|;
+name|u_char
+name|how
+decl_stmt|;
+name|u_char
+name|unused
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u_char
+name|datalen
+decl_stmt|;
+name|u_char
+name|control
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SC_SCSI_1
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SC_SCSI_2
+value|0x03
+end_define
+
 begin_comment
 comment|/*  * Opcodes  */
 end_comment
@@ -524,6 +570,13 @@ define|#
 directive|define
 name|POSITION_TO_ELEMENT
 value|0x2b
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANGE_DEFINITION
+value|0x40
 end_define
 
 begin_define
@@ -781,6 +834,7 @@ begin_struct
 struct|struct
 name|scsi_sense_data
 block|{
+comment|/* 1*/
 name|u_char
 name|error_code
 decl_stmt|;
@@ -789,12 +843,15 @@ union|union
 block|{
 struct|struct
 block|{
+comment|/* 2*/
 name|u_char
 name|blockhi
 decl_stmt|;
+comment|/* 3*/
 name|u_char
 name|blockmed
 decl_stmt|;
+comment|/* 4*/
 name|u_char
 name|blocklow
 decl_stmt|;
@@ -803,27 +860,32 @@ name|unextended
 struct|;
 struct|struct
 block|{
+comment|/* 2*/
 name|u_char
 name|segment
 decl_stmt|;
+comment|/* 3*/
 name|u_char
 name|flags
 decl_stmt|;
 comment|/* same bits as new version */
+comment|/* 7*/
 name|u_char
 name|info
 index|[
 literal|4
 index|]
 decl_stmt|;
+comment|/* 8*/
 name|u_char
 name|extra_len
 decl_stmt|;
-comment|/* allocate enough room to hold new stuff 			( by increasing 16 to 26 below) */
+comment|/* allocate enough room to hold new stuff 			( by increasing 16 to 24 below) */
+comment|/*32*/
 name|u_char
 name|extra_bytes
 index|[
-literal|26
+literal|24
 index|]
 decl_stmt|;
 block|}
@@ -836,10 +898,15 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* total of 32 bytes */
+end_comment
+
 begin_struct
 struct|struct
 name|scsi_sense_data_new
 block|{
+comment|/* 1*/
 name|u_char
 name|error_code
 decl_stmt|;
@@ -854,14 +921,17 @@ value|0x80
 union|union
 block|{
 struct|struct
-comment|/* this is depreciated, the standard says "DON'T"*/
+comment|/* this is deprecated, the standard says "DON'T"*/
 block|{
+comment|/* 2*/
 name|u_char
 name|blockhi
 decl_stmt|;
+comment|/* 3*/
 name|u_char
 name|blockmed
 decl_stmt|;
+comment|/* 4*/
 name|u_char
 name|blocklow
 decl_stmt|;
@@ -870,9 +940,11 @@ name|unextended
 struct|;
 struct|struct
 block|{
+comment|/* 2*/
 name|u_char
 name|segment
 decl_stmt|;
+comment|/* 3*/
 name|u_char
 name|flags
 decl_stmt|;
@@ -892,30 +964,37 @@ define|#
 directive|define
 name|SSD_FILEMARK
 value|0x80
+comment|/* 7*/
 name|u_char
 name|info
 index|[
 literal|4
 index|]
 decl_stmt|;
+comment|/* 8*/
 name|u_char
 name|extra_len
 decl_stmt|;
+comment|/*12*/
 name|u_char
 name|cmd_spec_info
 index|[
 literal|4
 index|]
 decl_stmt|;
+comment|/*13*/
 name|u_char
 name|add_sense_code
 decl_stmt|;
+comment|/*14*/
 name|u_char
 name|add_sense_code_qual
 decl_stmt|;
+comment|/*15*/
 name|u_char
 name|fru
 decl_stmt|;
+comment|/*16*/
 name|u_char
 name|sense_key_spec_1
 decl_stmt|;
@@ -923,16 +1002,19 @@ define|#
 directive|define
 name|SSD_SCS_VALID
 value|0x80
+comment|/*17*/
 name|u_char
 name|sense_key_spec_2
 decl_stmt|;
+comment|/*18*/
 name|u_char
 name|sense_key_spec_3
 decl_stmt|;
+comment|/*32*/
 name|u_char
 name|extra_bytes
 index|[
-literal|16
+literal|14
 index|]
 decl_stmt|;
 block|}
@@ -944,6 +1026,10 @@ union|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* total of 32 bytes */
+end_comment
 
 begin_struct
 struct|struct
@@ -1063,7 +1149,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SCSI_SCSI_ALL_H_ */
+comment|/*_SCSI_SCSI_ALL_H*/
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  *  *	$Id$  */
+comment|/*  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  *  *	$Id: chio.h,v 1.3 1993/10/16 17:16:27 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -14,13 +14,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CHIO_H_
+name|_SYS_CHIO_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CHIO_H_
+name|_SYS_CHIO_H_
 end_define
 
 begin_define
@@ -304,6 +304,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*_SYS_CHIO_H*/
+end_comment
 
 end_unit
 

@@ -4,29 +4,29 @@ comment|/*  * SCSI interface description  */
 end_comment
 
 begin_comment
-comment|/*  * Some lines of this file comes from a file of the name "scsi.h"  * distributed by OSF as part of mach2.5,  *  so the following disclaimer has been kept.  *  * Copyright 1990 by Open Software Foundation,  * Grenoble, FRANCE  *  * 		All Rights Reserved  *   *   Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both the copyright notice and this permission notice appear in  * supporting documentation, and that the name of OSF or Open Software  * Foundation not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission.  *   *   OSF DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE  * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS,  * IN NO EVENT SHALL OSF BE LIABLE FOR ANY SPECIAL, INDIRECT, OR  * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN ACTION OF CONTRACT,  * NEGLIGENCE, OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Some lines of this file come from a file of the name "scsi.h"  * distributed by OSF as part of mach2.5,  *  so the following disclaimer has been kept.  *  * Copyright 1990 by Open Software Foundation,  * Grenoble, FRANCE  *  * 		All Rights Reserved  *   *   Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby granted,  * provided that the above copyright notice appears in all copies and  * that both the copyright notice and this permission notice appear in  * supporting documentation, and that the name of OSF or Open Software  * Foundation not be used in advertising or publicity pertaining to  * distribution of the software without specific, written prior  * permission.  *   *   OSF DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE  * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS,  * IN NO EVENT SHALL OSF BE LIABLE FOR ANY SPECIAL, INDIRECT, OR  * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN ACTION OF CONTRACT,  * NEGLIGENCE, OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION  * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_disk.h,v 1.4 1993/08/21 20:01:54 rgrimes Exp $  */
+comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_disk.h,v 1.4 93/08/26 21:09:23 julian Exp Locker: julian $  */
+end_comment
+
+begin_comment
+comment|/*  * SCSI command format  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SCSI_SCSI_DISK_H_
+name|_SCSI_SCSI_DISK_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SCSI_SCSI_DISK_H_
+name|_SCSI_SCSI_DISK_H
 value|1
 end_define
-
-begin_comment
-comment|/*  * SCSI command format  */
-end_comment
 
 begin_struct
 struct|struct
@@ -567,7 +567,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SCSI_SCSI_DISK_H_ */
+comment|/* _SCSI_SCSI_DISK_H*/
 end_comment
 
 end_unit
