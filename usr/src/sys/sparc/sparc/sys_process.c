@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -267,13 +267,6 @@ name|p_flag
 operator||=
 name|STRC
 expr_stmt|;
-name|curp
-operator|->
-name|p_oppid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX put in the zeroed section */
 return|return
 operator|(
 literal|0
@@ -340,7 +333,7 @@ break|break;
 case|case
 name|PT_ATTACH
 case|:
-comment|/* 		 * Must be root if the process has used set user or 		 * group privileges or does not belong to the real 		 * user. Must not be already traced. 		 */
+comment|/* 		 * Must be root if the process has used set user or group 		 * privileges or does not belong to the real user.  Must 		 * not be already traced.  Can't attach to ourselves. 		 */
 if|if
 condition|(
 operator|(
@@ -400,6 +393,17 @@ name|EALREADY
 operator|)
 return|;
 comment|/* ??? */
+if|if
+condition|(
+name|p
+operator|==
+name|curp
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* 		 * It would be nice if the tracing relationship was separate 		 * from the parent relationship but that would require 		 * another set of links in the proc struct or for "wait" 		 * to scan the entire proc table.  To make life easier, 		 * we just re-parent the process we're trying to trace. 		 * The old parent is remembered so we can put things back 		 * on a "detach". 		 */
 name|p
 operator|->
@@ -424,6 +428,20 @@ argument_list|,
 name|curp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_stat
+operator|==
+name|SSTOP
+condition|)
+name|setrun
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* long enough to stop */
 name|psignal
 argument_list|(
 name|p
@@ -826,8 +844,6 @@ operator|)
 name|addr
 operator|+
 name|len
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1212,7 +1228,7 @@ operator|&
 name|ipc
 argument_list|)
 expr_stmt|;
-name|exit
+name|exit1
 argument_list|(
 name|p
 argument_list|,
