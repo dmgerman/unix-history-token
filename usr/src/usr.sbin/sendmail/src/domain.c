@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.13 (Berkeley) %G%"
+literal|"@(#)domain.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -842,7 +842,7 @@ name|host
 argument_list|,
 name|C_IN
 argument_list|,
-name|T_ANY
+name|T_CNAME
 argument_list|,
 operator|(
 name|char
