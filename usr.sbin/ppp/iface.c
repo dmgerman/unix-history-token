@@ -360,6 +360,8 @@ name|s
 decl_stmt|;
 name|size_t
 name|needed
+decl_stmt|,
+name|namelen
 decl_stmt|;
 name|char
 modifier|*
@@ -622,6 +624,13 @@ name|iface
 operator|=
 name|NULL
 expr_stmt|;
+name|namelen
+operator|=
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|ptr
@@ -668,6 +677,12 @@ expr_stmt|;
 comment|/* Single _dl at end */
 if|if
 condition|(
+name|dl
+operator|->
+name|sdl_nlen
+operator|==
+name|namelen
+operator|&&
 operator|!
 name|strncmp
 argument_list|(
@@ -677,9 +692,7 @@ name|dl
 operator|->
 name|sdl_data
 argument_list|,
-name|dl
-operator|->
-name|sdl_nlen
+name|namelen
 argument_list|)
 condition|)
 block|{
