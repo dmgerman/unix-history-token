@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)kdb_machdep.c	7.2 (Berkeley) %G%	*/
+comment|/*	@(#)kdb_machdep.c	7.3 (Berkeley) %G%	*/
 end_comment
 
 begin_include
@@ -366,7 +366,7 @@ begin_define
 define|#
 directive|define
 name|ESC
-value|`\033'
+value|'\033'
 end_define
 
 begin_comment
