@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.25 (Berkeley) %G%"
+literal|"@(#)function.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,8 +217,8 @@ decl_stmt|,
 modifier|*
 name|str
 decl_stmt|;
-comment|/* pointer to character ending conversion */
-comment|/* determine comparison from leading + or - */
+comment|/* Pointer to character ending conversion. */
+comment|/* Determine comparison from leading + or -. */
 name|str
 operator|=
 name|vp
@@ -351,7 +351,24 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * -atime n functions --  *  *	True if the difference between the file access time and the  *	current time is n 24 hour periods.  *  */
+comment|/*  * The value of n for the inode times (atime, ctime, and mtime) is a range,  * i.e. n matches from (n - 1) to n 24 hour periods.  This interacts with  * -n, such that "-mtime -1" would be less than 0 days, which isn't what the  * user wanted.  Correct so that -1 is "less than 1".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIME_CORRECT
+parameter_list|(
+name|p
+parameter_list|,
+name|ttype
+parameter_list|)
+define|\
+value|if ((p)->type == ttype&& (p)->flags == F_LESSTHAN)		\ 		++((p)->t_data);
+end_define
+
+begin_comment
+comment|/*  * -atime n functions --  *  *	True if the difference between the file access time and the  *	current time is n 24 hour periods.  */
 end_comment
 
 begin_function
@@ -444,6 +461,13 @@ argument_list|,
 name|arg
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|TIME_CORRECT
+argument_list|(
+name|new
+argument_list|,
+name|N_ATIME
 argument_list|)
 expr_stmt|;
 return|return
@@ -548,6 +572,13 @@ argument_list|,
 name|arg
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|TIME_CORRECT
+argument_list|(
+name|new
+argument_list|,
+name|N_CTIME
 argument_list|)
 expr_stmt|;
 return|return
@@ -2208,6 +2239,13 @@ argument_list|,
 name|arg
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|TIME_CORRECT
+argument_list|(
+name|new
+argument_list|,
+name|N_MTIME
 argument_list|)
 expr_stmt|;
 return|return
