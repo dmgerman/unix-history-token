@@ -139,7 +139,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|savestring
+name|rl_savestring
 parameter_list|(
 name|s
 parameter_list|)
