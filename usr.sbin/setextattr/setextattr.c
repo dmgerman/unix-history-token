@@ -49,6 +49,15 @@ directive|include
 file|<string.h>
 end_include
 
+begin_function_decl
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|usage
