@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mbuf.c,v 1.12 1998/07/06 21:01:26 bde Exp $"
+literal|"$Id: mbuf.c,v 1.13 1998/08/18 13:36:47 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,12 +218,17 @@ block|,
 literal|"socket names and addresses"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|MT_SOOPTS
 block|{
 name|MT_SOOPTS
 block|,
 literal|"socket options"
 block|}
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|MT_RIGHTS
