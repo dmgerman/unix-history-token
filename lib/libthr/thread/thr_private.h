@@ -1684,6 +1684,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Precomputed signal set for _thread_suspend. */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|sigset_t
+name|_thread_suspend_sigset
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Tracks the number of threads blocked while waiting for a spinlock. */
 end_comment
 
