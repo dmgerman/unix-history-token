@@ -1012,7 +1012,7 @@ modifier|*
 name|devq
 parameter_list|)
 block|{
-name|camq_free
+name|camq_fini
 argument_list|(
 operator|&
 name|devq
@@ -1020,7 +1020,7 @@ operator|->
 name|alloc_queue
 argument_list|)
 expr_stmt|;
-name|camq_free
+name|camq_fini
 argument_list|(
 operator|&
 name|devq
