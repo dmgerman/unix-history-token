@@ -11,7 +11,6 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|copyright
 index|[]
@@ -37,12 +36,11 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.105 (Berkeley) 8/17/94"
+literal|"@(#)main.c	8.106 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 
