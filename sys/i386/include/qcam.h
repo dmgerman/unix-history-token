@@ -46,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|QC_IOCTL_VERSION
-value|2
+value|3
 end_define
 
 begin_comment
@@ -85,6 +85,10 @@ name|int
 name|qc_zoom
 decl_stmt|;
 comment|/* zoom mode */
+name|int
+name|qc_exposure
+decl_stmt|;
+comment|/* length of exposure */
 name|u_char
 name|qc_brightness
 decl_stmt|;

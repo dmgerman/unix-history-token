@@ -43,8 +43,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"version=%d, (%d,%d) at (%d,%d) @%dbpp,"
-literal|"zoom=%d, b/w/c=%d/%d/%d\n"
+literal|"version=%d, (%d,%d) at (%d,%d) @%dbpp "
+literal|"zoom=%d, exp=%d, b/w/c=%d/%d/%d\n"
 argument_list|,
 name|data
 operator|->
@@ -73,6 +73,10 @@ argument_list|,
 name|data
 operator|->
 name|qc_zoom
+argument_list|,
+name|data
+operator|->
+name|qc_exposure
 argument_list|,
 name|data
 operator|->
@@ -106,7 +110,7 @@ argument_list|,
 literal|"usage: qcamcontrol [-p port] [-x xsize] [-y ysize] "
 literal|"[-z zoom] [-d depth]\n"
 literal|"                   [-b brightness] [-w whitebal] "
-literal|"[-c contrast]\n"
+literal|"[-c contrast] [-e exposure]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -173,6 +177,8 @@ decl_stmt|,
 name|whitebalance
 decl_stmt|,
 name|contrast
+decl_stmt|,
+name|exposure
 decl_stmt|;
 comment|/* 	 * Default everything to unset. 	 */
 name|x_size
@@ -189,6 +195,8 @@ name|whitebalance
 operator|=
 name|contrast
 operator|=
+name|exposure
+operator|=
 operator|-
 literal|1
 expr_stmt|;
@@ -203,7 +211,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"p:x:y:z:d:b;w:c:"
+literal|"p:x:y:z:d:b;w:c:e:"
 argument_list|)
 operator|)
 operator|!=
@@ -450,6 +458,37 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+case|case
+literal|'e'
+case|:
+name|exposure
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|exposure
+operator|<
+literal|100
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"bad exposure (min 100)\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 default|default:
 name|usage
 argument_list|()
@@ -607,6 +646,19 @@ operator|.
 name|qc_contrast
 operator|=
 name|contrast
+expr_stmt|;
+if|if
+condition|(
+name|exposure
+operator|>
+operator|-
+literal|1
+condition|)
+name|info
+operator|.
+name|qc_exposure
+operator|=
+name|exposure
 expr_stmt|;
 comment|/* 	 * make sure we're in sync with the kernel version of the driver 	 * ioctl structure 	 */
 name|info
