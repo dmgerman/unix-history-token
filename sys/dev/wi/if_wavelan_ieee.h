@@ -125,6 +125,13 @@ name|WI_RID_READ_CACHE
 value|0x0400
 end_define
 
+begin_define
+define|#
+directive|define
+name|WI_RID_FWDOWNLOAD
+value|0x0500
+end_define
+
 begin_struct
 struct|struct
 name|wi_80211_hdr
@@ -493,6 +500,46 @@ name|int
 name|quality
 decl_stmt|;
 comment|/* quality of the packet */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Firmware downloading API.  We support downloading into RAM and into  * flash.  We copy the entire .hex file for both the primary and secondary  * firmware into the kernel, which is minorly gross, but matches the  * format of the compiled in firmware.  */
+end_comment
+
+begin_struct
+struct|struct
+name|wi_fwdownload
+block|{
+name|int
+name|type
+decl_stmt|;
+comment|/* What type of download. */
+define|#
+directive|define
+name|WI_FW_RAM
+value|1
+define|#
+directive|define
+name|WI_FW_FLASH
+value|2
+name|size_t
+name|pri_len
+decl_stmt|;
+comment|/* Primary firmware length */
+name|size_t
+name|sec_len
+decl_stmt|;
+comment|/* Secondary firmware length */
+name|caddr_t
+name|pri_data
+decl_stmt|;
+comment|/* Pointer (user) to primary data */
+name|caddr_t
+name|sec_data
+decl_stmt|;
+comment|/* Pointer (user) to secondary data */
 block|}
 struct|;
 end_struct

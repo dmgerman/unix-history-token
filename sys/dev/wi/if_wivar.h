@@ -779,5 +779,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|wi_symbol_load_firm
+parameter_list|(
+name|struct
+name|wi_softc
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
