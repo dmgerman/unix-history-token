@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.7.2.2 1999/03/26 14:19:40 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.7.2.3 1999/03/26 16:48:55 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -632,20 +632,30 @@ operator|->
 name|bandwidth
 condition|)
 block|{
+name|int
+name|len_scaled
+init|=
+name|len
+operator|*
+literal|8
+operator|*
+name|hz
+decl_stmt|;
+comment|/* numbytes is in bit/sec, scaled 8*hz ... */
 if|if
 condition|(
 name|pipe
 operator|->
 name|numbytes
 operator|<
-name|len
+name|len_scaled
 condition|)
 break|break;
 name|pipe
 operator|->
 name|numbytes
 operator|-=
-name|len
+name|len_scaled
 expr_stmt|;
 block|}
 name|pipe
@@ -929,7 +939,7 @@ operator|)
 argument_list|,
 name|pkt
 operator|->
-name|dn_hlen
+name|dn_dst
 argument_list|,
 name|NULL
 argument_list|)
@@ -961,22 +971,39 @@ name|BRIDGE
 case|case
 name|DN_TO_BDG_FWD
 case|:
-name|bdg_forward
-argument_list|(
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
 operator|(
 expr|struct
 name|mbuf
 operator|*
-operator|*
 operator|)
-operator|&
 name|pkt
+decl_stmt|;
+name|bdg_forward
+argument_list|(
+operator|&
+name|m
 argument_list|,
 name|pkt
 operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 break|break ;
 endif|#
 directive|endif
@@ -1140,8 +1167,10 @@ name|route
 modifier|*
 name|ro
 parameter_list|,
-name|int
-name|hlen
+name|struct
+name|sockaddr_in
+modifier|*
+name|dst
 parameter_list|,
 name|struct
 name|ip_fw_chain
@@ -1437,6 +1466,7 @@ operator|==
 name|DN_TO_IP_OUT
 condition|)
 block|{
+comment|/* 	 * we need to copy *ro because for icmp pkts (and maybe others) 	 * the caller passed a pointer into the stack. 	 */
 name|pkt
 operator|->
 name|ro
@@ -1444,7 +1474,6 @@ operator|=
 operator|*
 name|ro
 expr_stmt|;
-comment|/* XXX copied! */
 if|if
 condition|(
 name|ro
@@ -1459,13 +1488,35 @@ name|rt_refcnt
 operator|++
 expr_stmt|;
 comment|/* XXX */
-block|}
+comment|/* 	 * and again, dst might be a pointer into *ro... 	 */
+if|if
+condition|(
+name|dst
+operator|==
+operator|&
+name|ro
+operator|->
+name|ro_dst
+condition|)
+comment|/* dst points into ro */
+name|dst
+operator|=
+operator|&
+operator|(
 name|pkt
 operator|->
-name|dn_hlen
-operator|=
-name|hlen
+name|ro
+operator|.
+name|ro_dst
+operator|)
 expr_stmt|;
+name|pkt
+operator|->
+name|dn_dst
+operator|=
+name|dst
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|pipe
@@ -2127,17 +2178,7 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * return bw and delay in bits/s and ms, respectively 		 */
-name|q
-operator|->
-name|bandwidth
-operator|*=
-operator|(
-literal|8
-operator|*
-name|hz
-operator|)
-expr_stmt|;
+comment|/* 	     * return bw and delay in bits/s and ms, respectively 	     */
 name|q
 operator|->
 name|delay
@@ -2217,44 +2258,7 @@ condition|(
 name|error
 condition|)
 break|break ;
-comment|/* 	     * The config program passes parameters as follows: 	     * bandwidth = bits/second (0 = no limits); 	     *    must be translated in bytes/tick. 	     * delay = ms 	     *    must be translated in ticks. 	     * queue_size = slots (0 = no limit) 	     * queue_size_bytes = bytes (0 = no limit) 	     *	  only one can be set, must be bound-checked 	     */
-if|if
-condition|(
-name|p
-operator|->
-name|bandwidth
-operator|>
-literal|0
-condition|)
-block|{
-name|p
-operator|->
-name|bandwidth
-operator|=
-name|p
-operator|->
-name|bandwidth
-operator|/
-literal|8
-operator|/
-name|hz
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|bandwidth
-operator|==
-literal|0
-condition|)
-comment|/* too little does not make sense! */
-name|p
-operator|->
-name|bandwidth
-operator|=
-literal|10
-expr_stmt|;
-block|}
+comment|/* 	     * The config program passes parameters as follows: 	     * bandwidth = bits/second (0 = no limits); 	     * delay = ms 	     *    must be translated in ticks. 	     * queue_size = slots (0 = no limit) 	     * queue_size_bytes = bytes (0 = no limit) 	     *	  only one can be set, must be bound-checked 	     */
 name|p
 operator|->
 name|delay
@@ -2287,7 +2291,7 @@ name|p
 operator|->
 name|queue_size
 operator|=
-literal|100
+literal|50
 expr_stmt|;
 if|if
 condition|(
@@ -2316,7 +2320,7 @@ name|p
 operator|->
 name|queue_size
 operator|=
-literal|100
+literal|50
 expr_stmt|;
 if|if
 condition|(
@@ -2764,13 +2768,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"DUMMYNET initialized (990326) -- size dn_pkt %d\n"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dn_pkt
-argument_list|)
+literal|"DUMMYNET initialized (990504)\n"
 argument_list|)
 expr_stmt|;
 name|all_pipes
