@@ -475,40 +475,60 @@ name|ng_type
 name|typestruct
 init|=
 block|{
+operator|.
+name|version
+operator|=
 name|NG_ABI_VERSION
 block|,
+operator|.
+name|name
+operator|=
 name|NG_H4_NODE_TYPE
 block|,
-comment|/* typename */
+operator|.
+name|mod_event
+operator|=
 name|ng_h4_mod_event
 block|,
-comment|/* modevent */
+operator|.
+name|constructor
+operator|=
 name|ng_h4_constructor
 block|,
-comment|/* constructor */
+operator|.
+name|rcvmsg
+operator|=
 name|ng_h4_rcvmsg
 block|,
-comment|/* control message */
+operator|.
+name|shutdown
+operator|=
 name|ng_h4_shutdown
 block|,
-comment|/* destructor */
+operator|.
+name|newhook
+operator|=
 name|ng_h4_newhook
 block|,
-comment|/* new hook */
-name|NULL
-block|,
-comment|/* find hook */
+operator|.
+name|connect
+operator|=
 name|ng_h4_connect
 block|,
-comment|/* connect hook */
+operator|.
+name|rcvdata
+operator|=
 name|ng_h4_rcvdata
 block|,
-comment|/* data */
+operator|.
+name|disconnect
+operator|=
 name|ng_h4_disconnect
 block|,
-comment|/* disconnect hook */
+operator|.
+name|cmdlist
+operator|=
 name|ng_h4_cmdlist
-comment|/* node command list */
 block|}
 decl_stmt|;
 end_decl_stmt
