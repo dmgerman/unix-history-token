@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,28 +32,14 @@ begin_function
 name|main
 parameter_list|()
 block|{
-extern|extern yyparse(
-block|)
-function|;
-end_function
-
-begin_expr_stmt
-operator|(
-name|void
-operator|)
+name|exit
+argument_list|(
 name|yyparse
 argument_list|()
+argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-begin_return
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-end_return
-
-unit|}
 end_unit
 
