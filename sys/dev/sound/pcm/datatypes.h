@@ -538,6 +538,12 @@ decl_stmt|;
 name|u_int32_t
 name|blocksize
 decl_stmt|;
+name|u_int32_t
+name|blocksize2nd
+decl_stmt|;
+name|u_int32_t
+name|fragments
+decl_stmt|;
 name|int
 name|direction
 decl_stmt|;

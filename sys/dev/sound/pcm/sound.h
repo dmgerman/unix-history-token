@@ -426,16 +426,16 @@ parameter_list|)
 value|(var) = \ 	(((var)<(low))? (low) : ((var)>(high))? (high) : (var))
 end_define
 
+begin_comment
+comment|/* #define DSP_BUFFSIZE (65536 - 256) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DSP_BUFFSIZE
-value|(65536 - 256)
+value|(8192)
 end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_comment
 comment|/* the last 256 bytes are room for buggy soundcard to overflow. */

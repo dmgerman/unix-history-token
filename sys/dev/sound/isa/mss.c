@@ -8711,6 +8711,15 @@ name|ch
 init|=
 name|data
 decl_stmt|;
+if|if
+condition|(
+name|go
+operator|==
+name|PCMTRIG_EMLDMAWR
+condition|)
+return|return
+literal|0
+return|;
 name|buf_isadma
 argument_list|(
 name|ch

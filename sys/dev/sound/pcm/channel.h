@@ -267,7 +267,29 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|chn_dmaupdate
+name|chn_checkunderflow
+parameter_list|(
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|chn_wrfeed
+parameter_list|(
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|chn_rdfeed
 parameter_list|(
 name|pcm_channel
 modifier|*
@@ -349,6 +371,13 @@ define|#
 directive|define
 name|PCMTRIG_START
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMTRIG_EMLDMAWR
+value|2
 end_define
 
 begin_define
@@ -504,7 +533,7 @@ begin_define
 define|#
 directive|define
 name|CHN_2NDBUFBLKSIZE
-value|(12 * 1024)
+value|(2 * 1024)
 end_define
 
 begin_comment
@@ -515,7 +544,18 @@ begin_define
 define|#
 directive|define
 name|CHN_2NDBUFBLKNUM
-value|(3)
+value|(8)
+end_define
+
+begin_comment
+comment|/* The size of a whole secondary buffer. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHN_2NDBUFWHOLESIZE
+value|(CHN_2NDBUFBLKSIZE * CHN_2NDBUFBLKNUM)
 end_define
 
 end_unit

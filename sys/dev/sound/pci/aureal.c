@@ -2081,6 +2081,15 @@ name|parent
 decl_stmt|;
 if|if
 condition|(
+name|go
+operator|==
+name|PCMTRIG_EMLDMAWR
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|ch
 operator|->
 name|dir

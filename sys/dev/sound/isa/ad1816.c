@@ -1923,6 +1923,15 @@ name|wr
 decl_stmt|,
 name|reg
 decl_stmt|;
+if|if
+condition|(
+name|go
+operator|==
+name|PCMTRIG_EMLDMAWR
+condition|)
+return|return
+literal|0
+return|;
 name|buf_isadma
 argument_list|(
 name|ch
