@@ -1096,6 +1096,13 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
+if|if
+condition|(
+name|platform
+operator|==
+name|p_i386
+condition|)
+block|{
 name|Rule_000
 argument_list|(
 name|d
@@ -1175,6 +1182,7 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
