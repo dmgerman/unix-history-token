@@ -5107,12 +5107,17 @@ operator|->
 name|af_status
 operator|!=
 name|ether_status
+ifdef|#
+directive|ifdef
+name|USE_VLANS
 operator|&&
 name|afp
 operator|->
 name|af_status
 operator|!=
 name|vlan_status
+endif|#
+directive|endif
 condition|)
 name|warnx
 argument_list|(
