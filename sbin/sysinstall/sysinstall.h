@@ -41,6 +41,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAX_NO_MOUNTS
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_NO_FS
 value|30
 end_define

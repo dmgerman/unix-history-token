@@ -53,6 +53,13 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
+name|int
+name|spare
+decl_stmt|;
+name|char
+modifier|*
+name|misc
+decl_stmt|;
 block|}
 struct|;
 end_struct
