@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)types.h	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)types.h	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -238,51 +238,20 @@ name|gid_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|NBBY
+value|8
+end_define
+
 begin_comment
-comment|/*  * Select uses bit masks of file descriptors in longs.  * These macros manipulate such bit fields (the filesystem macros use chars).  */
+comment|/* number of bits in a byte */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NBBY
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"param.h"
-end_include
-
-begin_else
-else|#
-directive|else
-else|KERNEL
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|KERNEL
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|NBBY
-end_endif
+begin_comment
+comment|/*  * Select uses bit masks of file descriptors in longs.  * These macros manipulate such bit fields (the filesystem macros use chars).  * FD_SETSIZE may be defined by the user, but the default here  * should be>= NOFILE (param.h).  */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -294,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|FD_SETSIZE
-value|NOFILE
+value|256
 end_define
 
 begin_endif
@@ -319,6 +288,29 @@ end_define
 begin_comment
 comment|/* bits per mask */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|howmany
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|howmany
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x)+((y)-1))/(y))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
