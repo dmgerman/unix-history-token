@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioctl.h	7.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioctl.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -503,47 +503,6 @@ end_define
 
 begin_comment
 comment|/* drn out, fls in, set */
-end_comment
-
-begin_comment
-comment|/*** THESE GO AWAY ***/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JUNK_TIOCSETAS
-value|_IOW('t', 23, struct termios)
-end_define
-
-begin_comment
-comment|/* SETA ign hdw state */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JUNK_TIOCSETAWS
-value|_IOW('t', 24, struct termios)
-end_define
-
-begin_comment
-comment|/* SETAW ign hdw state */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JUNK_TIOCSETAFS
-value|_IOW('t', 25, struct termios)
-end_define
-
-begin_comment
-comment|/* SETAF ign hdw state */
-end_comment
-
-begin_comment
-comment|/******************/
 end_comment
 
 begin_define
