@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.60	82/08/13	*/
+comment|/*	machdep.c	4.61	82/09/04	*/
 end_comment
 
 begin_include
@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../h/map.h"
 end_include
 
@@ -48,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/clock.h"
+file|"../vax/clock.h"
 end_include
 
 begin_include
@@ -1021,12 +1027,38 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|clockstart
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|clkstart
+argument_list|()
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|clockset
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|clkset
+argument_list|()
+expr_stmt|;
+block|}
+end_block
+
 begin_comment
 comment|/*  * Initialze the clock, based on the time base which is, e.g.  * from a filesystem.  Base provides the time to within six months,  * and the time of year clock provides the rest.  */
 end_comment
 
 begin_macro
-name|clkinit
+name|clockinit
 argument_list|(
 argument|base
 argument_list|)
@@ -1072,6 +1104,8 @@ literal|"WARNING: preposterous time in file system"
 argument_list|)
 expr_stmt|;
 name|time
+operator|.
+name|tv_sec
 operator|=
 literal|6
 operator|*
@@ -1106,6 +1140,8 @@ literal|"WARNING: todr too small"
 argument_list|)
 expr_stmt|;
 name|time
+operator|.
+name|tv_sec
 operator|=
 name|base
 expr_stmt|;
@@ -1119,6 +1155,8 @@ goto|;
 block|}
 comment|/* 	 * Sneak to within 6 month of the time in the filesystem, 	 * by starting with the time of the year suggested by the TODR, 	 * and advancing through succesive years.  Adding the number of 	 * seconds in the current year takes us to the end of the current year 	 * and then around into the next year to the same position. 	 */
 name|time
+operator|.
+name|tv_sec
 operator|=
 operator|(
 name|todr
@@ -1135,6 +1173,8 @@ expr_stmt|;
 while|while
 condition|(
 name|time
+operator|.
+name|tv_sec
 operator|<
 name|base
 operator|-
@@ -1151,6 +1191,8 @@ name|year
 argument_list|)
 condition|)
 name|time
+operator|.
+name|tv_sec
 operator|+=
 name|SECDAY
 expr_stmt|;
@@ -1158,6 +1200,8 @@ name|year
 operator|++
 expr_stmt|;
 name|time
+operator|.
+name|tv_sec
 operator|+=
 name|SECYR
 expr_stmt|;
@@ -1166,6 +1210,8 @@ comment|/* 	 * See if we gained/lost two or more days; 	 * if so, assume somethi
 name|deltat
 operator|=
 name|time
+operator|.
+name|tv_sec
 operator|-
 name|base
 expr_stmt|;
@@ -1194,6 +1240,8 @@ argument_list|(
 literal|"WARNING: clock %s %d days"
 argument_list|,
 name|time
+operator|.
+name|tv_sec
 operator|<
 name|base
 condition|?
@@ -1239,6 +1287,8 @@ name|unsigned
 name|yrtime
 init|=
 name|time
+operator|.
+name|tv_sec
 operator|-
 name|timezone
 operator|*
@@ -1347,6 +1397,8 @@ operator|(
 operator|(
 operator|(
 name|time
+operator|.
+name|tv_sec
 operator|-
 name|otime
 operator|)
@@ -3946,6 +3998,83 @@ expr_stmt|;
 name|panic
 argument_list|(
 literal|"mchk"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|microtime
+argument_list|(
+argument|tvp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|timeval
+modifier|*
+name|tvp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|s
+init|=
+name|spl7
+argument_list|()
+decl_stmt|;
+name|tvp
+operator|->
+name|tv_sec
+operator|=
+name|time
+operator|.
+name|tv_sec
+expr_stmt|;
+name|tvp
+operator|->
+name|tv_usec
+operator|=
+operator|(
+name|lbolt
+operator|+
+literal|1
+operator|)
+operator|*
+literal|16667
+operator|+
+name|mfpr
+argument_list|(
+name|ICR
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|tvp
+operator|->
+name|tv_usec
+operator|>
+literal|1000000
+condition|)
+block|{
+name|tvp
+operator|->
+name|tv_sec
+operator|++
+expr_stmt|;
+name|tvp
+operator|->
+name|tv_usec
+operator|-=
+literal|1000000
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
