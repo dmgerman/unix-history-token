@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.5 1996/01/30 22:34:53 asami Exp $ */
+comment|/* $Id: ccd.c,v 1.6 1996/01/31 03:28:21 asami Exp $ */
 end_comment
 
 begin_comment
@@ -1616,6 +1616,9 @@ operator|)
 return|;
 block|}
 comment|/* 		 * Calculate the size, truncating to an interleave 		 * boundary if necessary. 		 */
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 if|if
 condition|(
 name|size
@@ -1626,6 +1629,8 @@ name|size
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cs
@@ -5113,6 +5118,52 @@ name|ccio
 operator|->
 name|ccio_ileave
 expr_stmt|;
+if|if
+condition|(
+name|ccd
+operator|.
+name|ccd_interleave
+operator|==
+literal|0
+operator|&&
+operator|(
+operator|(
+name|ccio
+operator|->
+name|ccio_flags
+operator|&
+name|CCDF_MIRROR
+operator|)
+operator|||
+operator|(
+name|ccio
+operator|->
+name|ccio_flags
+operator|&
+name|CCDF_PARITY
+operator|)
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ccd%d: disabling mirror/parity, interleave is 0\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|ccio
+operator|->
+name|ccio_flags
+operator|&=
+operator|~
+operator|(
+name|CCDF_MIRROR
+operator||
+name|CCDF_PARITY
+operator|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
