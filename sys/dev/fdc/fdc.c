@@ -1914,6 +1914,11 @@ name|flags
 operator||=
 name|FDC_NEEDS_RESET
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 return|return
 name|fdc_err
 argument_list|(
@@ -2003,6 +2008,11 @@ name|flags
 operator||=
 name|FDC_NEEDS_RESET
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 return|return
 name|fdc_err
 argument_list|(
@@ -2013,6 +2023,11 @@ argument_list|)
 return|;
 block|}
 block|}
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -8906,9 +8921,9 @@ name|fdc_sense_int
 argument_list|(
 name|fdc
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -8969,7 +8984,7 @@ argument_list|,
 operator|&
 name|st0
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 operator|==
 literal|0
