@@ -850,6 +850,10 @@ operator|=
 name|new_thread
 expr_stmt|;
 comment|/* Return a pointer to the thread structure: */
+if|if
+condition|(
+name|thread
+condition|)
 operator|(
 operator|*
 name|thread
