@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,23 +11,19 @@ begin_struct
 struct|struct
 name|dirent
 block|{
-name|unsigned
-name|long
+name|u_int32_t
 name|d_fileno
 decl_stmt|;
 comment|/* file number of entry */
-name|unsigned
-name|short
+name|u_int16_t
 name|d_reclen
 decl_stmt|;
 comment|/* length of this record */
-name|unsigned
-name|char
+name|u_int8_t
 name|d_type
 decl_stmt|;
 comment|/* file type, see below */
-name|unsigned
-name|char
+name|u_int8_t
 name|d_namlen
 decl_stmt|;
 comment|/* length of string in d_name */
