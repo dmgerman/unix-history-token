@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -67,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_include
@@ -134,13 +134,15 @@ name|vm86pcb
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|MUTEX_DECLARE
+argument_list|(
 specifier|static
-name|struct
-name|mtx
+argument_list|,
 name|vm86pcb_lock
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|extern
@@ -1798,6 +1800,8 @@ argument_list|,
 literal|"vm86pcb lock"
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_COLD
 argument_list|)
 expr_stmt|;
 name|bzero
