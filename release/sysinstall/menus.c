@@ -11980,7 +11980,7 @@ block|{
 block|{
 literal|"1 None"
 block|,
-literal|"Use default font"
+literal|"Use hardware default font"
 block|,
 name|dmenuVarCheck
 block|,
@@ -11994,7 +11994,7 @@ block|,
 block|{
 literal|"2 IBM 437"
 block|,
-literal|"English"
+literal|"English and others, VGA default"
 block|,
 name|dmenuVarCheck
 block|,
@@ -12062,7 +12062,21 @@ literal|"font8x8=cp866u-8x8,font8x14=cp866u-8x14,font8x16=cp866u-8x16,mousechar_
 block|}
 block|,
 block|{
-literal|"7 ISO 8859-1"
+literal|"7 IBM 1251"
+block|,
+literal|"Cyrillic, MS Windows encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=cp1251-8x8,font8x14=cp1251-8x14,font8x16=cp1251-8x16,mousechar_start=3"
+block|}
+block|,
+block|{
+literal|"8 ISO 8859-1"
 block|,
 literal|"Western Europe, ISO encoding"
 block|,
@@ -12076,7 +12090,7 @@ literal|"font8x8=iso-8x8,font8x14=iso-8x14,font8x16=iso-8x16"
 block|}
 block|,
 block|{
-literal|"8 ISO 8859-2"
+literal|"9 ISO 8859-2"
 block|,
 literal|"Eastern Europe, ISO encoding"
 block|,
@@ -12090,7 +12104,63 @@ literal|"font8x8=iso02-8x8,font8x14=iso02-8x14,font8x16=iso02-8x16"
 block|}
 block|,
 block|{
-literal|"9 SWISS"
+literal|"a ISO 8859-4"
+block|,
+literal|"Baltic, ISO encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=iso04-8x8,font8x14=iso04-8x14,font8x16=iso04-8x16"
+block|}
+block|,
+block|{
+literal|"b ISO 8859-7"
+block|,
+literal|"Greek, ISO encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=iso07-8x8,font8x14=iso07-8x14,font8x16=iso07-8x16"
+block|}
+block|,
+block|{
+literal|"c ISO 8859-8"
+block|,
+literal|"Hebrew, ISO encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=iso08-8x8,font8x14=iso08-8x14,font8x16=iso08-8x16"
+block|}
+block|,
+block|{
+literal|"d ISO 8859-15"
+block|,
+literal|"Europe, ISO encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=iso15-8x8,font8x14=iso15-8x14,font8x16=iso15-8x16"
+block|}
+block|,
+block|{
+literal|"e SWISS"
 block|,
 literal|"English, better resolution"
 block|,
