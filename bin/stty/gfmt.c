@@ -715,7 +715,7 @@ if|if
 condition|(
 name|CHK
 argument_list|(
-literal|"vmin"
+literal|"min"
 argument_list|)
 condition|)
 block|{
@@ -747,7 +747,7 @@ if|if
 condition|(
 name|CHK
 argument_list|(
-literal|"vtime"
+literal|"time"
 argument_list|)
 condition|)
 block|{
