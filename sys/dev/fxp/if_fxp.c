@@ -906,14 +906,14 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * Issue a software reset. 	 */
+comment|/* 	 * Reset to a stable state. 	 */
 name|sc
 operator|->
 name|csr
 operator|->
 name|port
 operator|=
-literal|0
+name|FXP_PORT_SELECTIVE_RESET
 expr_stmt|;
 name|DELAY
 argument_list|(
@@ -2763,7 +2763,7 @@ name|csr
 operator|->
 name|port
 operator|=
-literal|0
+name|FXP_PORT_SELECTIVE_RESET
 expr_stmt|;
 name|DELAY
 argument_list|(
