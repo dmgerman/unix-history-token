@@ -46,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|SOUND_CONFIG_HOST
-value|"freefall.cdrom.com"
+value|"freefall"
 end_define
 
 begin_define
