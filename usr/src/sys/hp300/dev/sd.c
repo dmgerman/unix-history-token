@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2195,25 +2195,6 @@ condition|)
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-if|if
-condition|(
-name|bcmp
-argument_list|(
-name|msg
-argument_list|,
-literal|"I/O"
-argument_list|,
-literal|3
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* XXX */
-return|return
-operator|(
-name|EIO
 operator|)
 return|;
 name|pi
