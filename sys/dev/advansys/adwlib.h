@@ -1600,6 +1600,31 @@ init|=
 literal|0x25
 block|,
 comment|/* SXFR_STATUS Unknown Error */
+name|QHSTA_M_SCSI_BUS_RESET
+init|=
+literal|0x30
+block|,
+comment|/* Request aborted from SBR */
+name|QHSTA_M_SCSI_BUS_RESET_UNSOL
+init|=
+literal|0x31
+block|,
+comment|/* Request aborted from unsol. SBR*/
+name|QHSTA_M_BUS_DEVICE_RESET
+init|=
+literal|0x32
+block|,
+comment|/* Request aborted from BDR */
+name|QHSTA_M_DIRECTION_ERR
+init|=
+literal|0x35
+block|,
+comment|/* Data Phase mismatch */
+name|QHSTA_M_DIRECTION_ERR_HUNG
+init|=
+literal|0x36
+block|,
+comment|/* Data Phase mismatch - bus hang */
 name|QHSTA_M_WTM_TIMEOUT
 init|=
 literal|0x41
@@ -1619,7 +1644,17 @@ block|,
 name|QHSTA_M_INVALID_DEVICE
 init|=
 literal|0x45
+block|,
 comment|/* Bad target ID */
+name|QHSTA_M_FROZEN_TIDQ
+init|=
+literal|0x46
+block|,
+comment|/* TID Queue frozen. */
+name|QHSTA_M_SGBACKUP_ERROR
+init|=
+literal|0x47
+comment|/* Scatter-Gather backup error */
 block|}
 name|host_status_t
 typedef|;
@@ -1728,6 +1763,10 @@ value|0x10
 comment|/* Renegotiate WDTR/SDTR */
 define|#
 directive|define
+name|ADW_QSC_SIMPLE_Q_TAG
+value|0x00
+define|#
+directive|define
 name|ADW_QSC_HEAD_OF_Q_TAG
 value|0x40
 define|#
@@ -1797,6 +1836,10 @@ block|,
 name|ACB_RELEASE_SIMQ
 init|=
 literal|0x02
+block|,
+name|ACB_RECOVERY_ACB
+init|=
+literal|0x04
 block|}
 name|acb_state
 typedef|;
@@ -2154,6 +2197,13 @@ name|ADW_EEP_MAX_WORD_ADDR
 value|(sizeof(struct adw_eeprom)/2)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ADW_BUS_RESET_HOLD_DELAY_US
+value|100
+end_define
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -2499,16 +2549,6 @@ decl_stmt|;
 comment|/* Last reset type */
 name|u_int16_t
 name|bios_ctrl
-decl_stmt|;
-name|adw_idle_cmd_t
-name|idle_cmd
-decl_stmt|;
-name|u_int
-name|idle_cmd_param
-decl_stmt|;
-specifier|volatile
-name|int
-name|idle_command_cmp
 decl_stmt|;
 name|u_int16_t
 name|user_wdtr
@@ -3533,6 +3573,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|adw_reset_bus
+parameter_list|(
+name|struct
+name|adw_softc
+modifier|*
+name|adw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int16_t
 name|adw_eeprom_read
 parameter_list|(
@@ -3692,7 +3744,7 @@ comment|/* Idle Commands */
 end_comment
 
 begin_function_decl
-name|void
+name|adw_idle_cmd_status_t
 name|adw_idle_cmd_send
 parameter_list|(
 name|struct
@@ -3705,18 +3757,6 @@ name|cmd
 parameter_list|,
 name|u_int
 name|parameter
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|adw_idle_cmd_status_t
-name|adw_idle_cmd_wait
-parameter_list|(
-name|struct
-name|adw_softc
-modifier|*
-name|adw
 parameter_list|)
 function_decl|;
 end_function_decl
