@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getwd.c	5.2 (Berkeley) %G%"
+literal|"@(#)getwd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ file|"uucp.h"
 end_include
 
 begin_comment
-comment|/*******  *	gwd(wkdir)	get working directory  *  *	return codes  0 | FAIL  */
+comment|/*  *	get working directory  *  *	return codes  SUCCESS | FAIL  */
 end_comment
 
 begin_expr_stmt
@@ -65,12 +65,41 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BSD4_2
+if|if
+condition|(
+name|getwd
+argument_list|(
+name|wkdir
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|FAIL
+return|;
+else|#
+directive|else
+else|!BSD4_2
+ifdef|#
+directive|ifdef
+name|VMS
+name|getwd
+argument_list|(
+name|wkdir
+argument_list|)
+expr_stmt|;
+comment|/* Call Eunice C library version instead */
+else|#
+directive|else
+else|!VMS
 operator|*
 name|wkdir
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* PATH added to rpopen.  Suggested by Henry Spencer (utzoo!henry) */
 if|if
 condition|(
 operator|(
@@ -78,7 +107,7 @@ name|fp
 operator|=
 name|rpopen
 argument_list|(
-literal|"PATH=/bin:/usr/bin;pwd 2>&-"
+literal|"PATH=/bin:/usr/bin:/usr/ucb;pwd 2>&-"
 argument_list|,
 literal|"r"
 argument_list|)
@@ -87,9 +116,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 if|if
 condition|(
@@ -97,7 +124,7 @@ name|fgets
 argument_list|(
 name|wkdir
 argument_list|,
-name|MAXFULLNAME
+literal|100
 argument_list|,
 name|fp
 argument_list|)
@@ -105,15 +132,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pclose
+name|rpclose
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 if|if
@@ -144,20 +169,20 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|!VMS
+endif|#
+directive|endif
+endif|!BSD4_2
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * rti!trt: gwd uses 'reverting' version of popen  * which runs process with permissions of real gid/uid  * rather than the effective gid/uid.  * Bug noted by we13!rjk  (Randy King).  */
-end_comment
-
-begin_comment
-comment|/* @(#)popen.c	4.1 (Berkeley) 12/21/80 */
+comment|/*  * gwd uses 'reverting' version of popen  * which runs process with permissions of real gid/uid  * rather than the effective gid/uid.  */
 end_comment
 
 begin_include
@@ -519,9 +544,7 @@ name|hstat
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|status
-operator|)
 return|;
 block|}
 end_block

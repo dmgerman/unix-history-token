@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gnxseq.c	5.2 (Berkeley) %G%"
+literal|"@(#)gnxseq.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,11 +32,41 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD4_2
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
 end_include
+
+begin_else
+else|#
+directive|else
+else|sane
+end_else
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+endif|sane
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNXSEQ
+end_ifdef
 
 begin_function_decl
 specifier|extern
@@ -347,11 +377,14 @@ operator|&
 name|clock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USG
 name|fprintf
 argument_list|(
 name|fp1
 argument_list|,
-literal|"%s %d %d/%d-%d:%02d\n"
+literal|"%s %d %d/%d-%2.2d:%2.2d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -376,6 +409,42 @@ operator|->
 name|tm_min
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|USG
+name|fprintf
+argument_list|(
+name|fp1
+argument_list|,
+literal|"%s %d %d/%d-%02d:%02d\n"
+argument_list|,
+name|name
+argument_list|,
+name|ct
+argument_list|,
+name|tp
+operator|->
+name|tm_mon
+operator|+
+literal|1
+argument_list|,
+name|tp
+operator|->
+name|tm_mday
+argument_list|,
+name|tp
+operator|->
+name|tm_hour
+argument_list|,
+name|tp
+operator|->
+name|tm_min
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|fgets
@@ -457,7 +526,7 @@ name|access
 argument_list|(
 name|SQTMP
 argument_list|,
-literal|0400
+literal|04
 argument_list|)
 operator|)
 operator|!=
@@ -530,6 +599,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|GNXSEQ
+end_endif
 
 end_unit
 

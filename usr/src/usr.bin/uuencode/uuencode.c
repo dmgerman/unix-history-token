@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuencode.c	5.2 (Berkeley) %G%"
+literal|"@(#)uuencode.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ name|ENC
 parameter_list|(
 name|c
 parameter_list|)
-value|(((c)& 077) + ' ')
+value|((c) ? ((c)& 077) + ' ': '`')
 end_define
 
 begin_function
@@ -171,21 +171,6 @@ name|st_mode
 operator|&
 literal|0777
 expr_stmt|;
-if|if
-condition|(
-name|in
-operator|==
-name|stdin
-operator|&&
-name|mode
-operator|==
-literal|0
-condition|)
-name|mode
-operator|=
-literal|0600
-expr_stmt|;
-comment|/* use a reasonable mode in case of pipes */
 name|printf
 argument_list|(
 literal|"begin %o %s\n"

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shio.c	5.1 (Berkeley) %G%"
+literal|"@(#)shio.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +85,10 @@ index|[
 name|MAXFULLNAME
 index|]
 decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 if|if
 condition|(
 name|fi
@@ -93,7 +97,7 @@ name|NULL
 condition|)
 name|fi
 operator|=
-literal|"/dev/null"
+name|DEVNULL
 expr_stmt|;
 if|if
 condition|(
@@ -103,7 +107,7 @@ name|NULL
 condition|)
 name|fo
 operator|=
-literal|"/dev/null"
+name|DEVNULL
 expr_stmt|;
 name|DEBUG
 argument_list|(
@@ -114,6 +118,19 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGCHLD
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|SIGCHLD
 if|if
 condition|(
 operator|(
@@ -218,11 +235,21 @@ name|f
 operator|!=
 literal|0
 condition|)
-name|exit
+block|{
+name|logent
 argument_list|(
-name|f
+name|fi
+argument_list|,
+literal|"CAN'T READ"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
 name|close
 argument_list|(
 literal|1
@@ -246,11 +273,21 @@ name|f
 operator|!=
 literal|1
 condition|)
-name|exit
+block|{
+name|logent
 argument_list|(
-name|f
+name|fo
+argument_list|,
+literal|"CAN'T WRITE"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
 name|execl
 argument_list|(
 name|SHELL
@@ -271,6 +308,8 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|100
+operator|+
+name|errno
 argument_list|)
 expr_stmt|;
 block|}
@@ -304,9 +343,7 @@ name|status
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|status
-operator|)
 return|;
 block|}
 end_block

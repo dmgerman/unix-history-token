@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pk.h	5.1	83/07/02	*/
+comment|/*	pk.h	5.2	85/01/22	*/
 end_comment
 
 begin_struct

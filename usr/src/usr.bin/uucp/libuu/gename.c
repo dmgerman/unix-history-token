@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gename.c	5.3 (Berkeley) %G%"
+literal|"@(#)gename.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,9 +76,7 @@ specifier|static
 name|char
 name|sqnum
 index|[
-name|SEQLEN
-operator|+
-literal|1
+literal|5
 index|]
 decl_stmt|;
 name|getseq
@@ -112,7 +110,6 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_block
 
@@ -233,7 +230,7 @@ name|SLOCKTRIES
 argument_list|,
 literal|"CAN NOT GET"
 argument_list|,
-literal|"SEQLOCK"
+name|SEQLOCK
 argument_list|,
 literal|0
 argument_list|)
@@ -283,6 +280,22 @@ argument_list|,
 name|SEQLEN
 argument_list|)
 expr_stmt|;
+comment|/* initialize rand() for possible use */
+name|srand
+argument_list|(
+operator|(
+name|int
+operator|)
+name|time
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* increment the penultimate character */
 for|for
 control|(
@@ -319,17 +332,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* drastic but effective */
-name|snum
-index|[
-name|i
-index|]
+name|p
 operator|=
+operator|&
 name|alphabet
 index|[
+name|rand
+argument_list|()
+operator|%
 name|alphalen
-operator|-
-literal|1
 index|]
 expr_stmt|;
 name|DEBUG

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuname.c	5.1 (Berkeley) %G%"
+literal|"@(#)uuname.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,9 @@ name|argc
 decl_stmt|;
 block|{
 name|int
+name|ret
+decl_stmt|;
+name|int
 name|i
 decl_stmt|;
 name|int
@@ -76,9 +79,24 @@ index|[
 literal|1000
 index|]
 decl_stmt|;
+name|ret
+operator|=
 name|chdir
 argument_list|(
 name|Spool
+argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|ret
+operator|>=
+literal|0
+argument_list|,
+literal|"CHDIR FAILED"
+argument_list|,
+name|Spool
+argument_list|,
+name|ret
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -174,6 +192,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
 name|argv
 index|[
 literal|1
@@ -379,6 +401,29 @@ block|{
 name|exit
 argument_list|(
 name|inter
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|cleanup
+argument_list|(
+argument|code
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|code
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|exit
+argument_list|(
+name|code
 argument_list|)
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gnsys.c	5.2 (Berkeley) %G%"
+literal|"@(#)gnsys.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,10 +19,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Mods:  * The "retry" code below prevents uucico from calling  * a site which it has called earlier.  * Also, uucico does callok() only once for each system.  * Done by unc!smb  */
-end_comment
 
 begin_include
 include|#
@@ -87,7 +83,7 @@ comment|/* work file name suffix size */
 end_comment
 
 begin_comment
-comment|/*******  *	gnsys(sname, dir, pre)  *	char *sname, *dir, pre;  *  *	gnsys  -  this routine will return the next  *	system name which has work to be done.  *	"pre" is the prefix for work files.  *	"dir" is the directory to search.  *	"sname" is a string of size DIRSIZ - WSUFSIZE.  *  *	return codes:  *		0  -  no more names  *		1  -  name returned in sname  *		FAIL  -  bad directory  */
+comment|/*  *	this routine will return the next system name which has work to be done.  *	"sname" is a string of size DIRSIZ - WSUFSIZE.  *	"pre" is the prefix for work files.  *	"dir" is the directory to search.  *  *	return codes:  *		0  -  no more names  *		1  -  name returned in sname  *		FAIL  -  bad directory  */
 end_comment
 
 begin_macro
@@ -213,8 +209,6 @@ name|dir
 argument_list|,
 name|pre
 argument_list|)
-argument_list|,
-literal|"r"
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -391,9 +385,7 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 while|while
@@ -424,9 +416,7 @@ operator|==
 literal|0
 condition|)
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 name|base
@@ -442,7 +432,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	srchst(name, list, n)  *	char *name, **list;  *	int n;  *  *	srchst  -  this routine will do a linear search  *	of list (list) to find name (name).  *	If the name is not found, it is added to the  *	list.  *	The number of items in the list (n) is  *	returned (incremented if a name is added).  *  *	return codes:  *		n - the number of items in the list  */
+comment|/*  *	this routine will do a linear search of list (list) to find name (name).  *	If the name is not found, it is added to the list.  *	The number of items in the list (n) is returned (incremented if a  *	name is added).  *  *	return codes:  *		n - the number of items in the list  */
 end_comment
 
 begin_macro
@@ -551,9 +541,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 name|n
-operator|)
 return|;
 name|strcpy
 argument_list|(
@@ -572,9 +560,7 @@ name|p
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|n
-operator|)
 return|;
 block|}
 end_block

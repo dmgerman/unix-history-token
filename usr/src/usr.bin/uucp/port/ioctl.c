@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ioctl.c	5.1 (Berkeley) %G%"
+literal|"@(#)ioctl.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,9 @@ operator|)
 return|;
 case|case
 name|TIOCEXCL
+case|:
+case|case
+name|TIOCNXCL
 case|:
 default|default:
 return|return

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysacct.c	5.1 (Berkeley) %G%"
+literal|"@(#)sysacct.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ file|<sys/types.h>
 end_include
 
 begin_comment
-comment|/*******  *	sysacct(bytes, time)	output accounting info  *	time_t time;  *	long bytes;  */
+comment|/*  *	output accounting info  */
 end_comment
 
 begin_macro

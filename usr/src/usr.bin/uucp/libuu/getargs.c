@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getargs.c	5.1 (Berkeley) %G%"
+literal|"@(#)getargs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,11 +23,11 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"uucp.h"
 end_include
 
 begin_comment
-comment|/*******  *	getargs(s, arps)  *	char *s, *arps[];  *  *	getargs  -  this routine will generate a vector of  *	pointers (arps) to the substrings in string "s".  *	Each substring is separated by blanks and/or tabs.  *  *	If FANCYARGS is defined, you get the following:  *	Strings containing blanks may be specified by quoting,  *	in a manner similar to using the shell.  *	Control characters are entered by ^X where X is any  *	character; ^? gets you a rubout and ^^ is a real ^.  *	Warning (rti!trt): I doubt FANCYARGS is wise, since getargs  *	is used all over the place.  Its features may be useful  *	but a separate fancy_getargs() should be called instead.  *  *	return - the number of subfields.  */
+comment|/*  *	getargs  -  this routine will generate a vector of  *	pointers (arps) to the substrings in string "s".  *	Each substring is separated by blanks and/or tabs.  *  *	If FANCYARGS is defined, you get the following:  *	Strings containing blanks may be specified by quoting,  *	in a manner similar to using the shell.  *	Control characters are entered by ^X where X is any  *	character; ^? gets you a rubout and ^^ is a real ^.  *	Warning (rti!trt): I doubt FANCYARGS is wise, since getargs  *	is used all over the place.  Its features may be useful  *	but a separate fancy_getargs() should be called instead.  *  *	return - the number of subfields, or -1 if>= maxargs.  */
 end_comment
 
 begin_expr_stmt
@@ -36,6 +36,8 @@ argument_list|(
 name|s
 argument_list|,
 name|arps
+argument_list|,
+name|maxargs
 argument_list|)
 specifier|register
 name|char
@@ -49,6 +51,12 @@ name|char
 modifier|*
 name|arps
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|maxargs
 decl_stmt|;
 end_decl_stmt
 
@@ -79,19 +87,13 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|FANCYARGS
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|arps
-index|[
+while|while
+condition|(
 name|i
-index|]
-operator|=
-name|NULL
-expr_stmt|;
+operator|<
+name|maxargs
+condition|)
+block|{
 while|while
 condition|(
 operator|*
@@ -167,11 +169,12 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-for|for
-control|(
-init|;
-condition|;
-control|)
+while|while
+condition|(
+name|i
+operator|<
+name|maxargs
+condition|)
 block|{
 while|while
 condition|(
@@ -365,6 +368,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|i
+operator|>=
+name|maxargs
+condition|)
+return|return
+name|FAIL
+return|;
 name|arps
 index|[
 name|i
@@ -372,12 +386,8 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 return|return
-operator|(
 name|i
-operator|)
 return|;
 block|}
 end_block

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucpname.c	5.1 (Berkeley) %G%"
+literal|"@(#)uucpname.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +98,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******  *	uucpname(name)		get the uucp name  *  *	return code - none  */
+comment|/*  *	uucpname(name)		get the uucp name  *  *	return code - none  */
 end_comment
 
 begin_expr_stmt
@@ -123,7 +123,7 @@ decl_stmt|,
 modifier|*
 name|d
 decl_stmt|;
-comment|/* HUGE KLUDGE HERE!  rti!trt 	 * Since some UNIX systems do not honor the set-user-id bit 	 * when the invoking user is root, we must change the uid here. 	 * So uucp files are created with the correct owner. 	 */
+comment|/* 	 * Since some UNIX systems do not honor the set-user-id bit 	 * when the invoking user is root, we must change the uid here. 	 * So uucp files are created with the correct owner. 	 */
 if|if
 condition|(
 name|geteuid
@@ -186,7 +186,6 @@ comment|/* system name unknown, so far */
 ifdef|#
 directive|ifdef
 name|GETHOSTNAME
-comment|/* Use 4.1a library routine */
 if|if
 condition|(
 name|s
@@ -205,10 +204,44 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+name|int
+name|i
+init|=
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
+endif|VMS
 name|s
 operator|=
 name|hostname
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+if|if
+condition|(
+name|gethostname
+argument_list|(
+name|hostname
+argument_list|,
+operator|&
+name|i
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+else|#
+directive|else
+else|!VMS
 if|if
 condition|(
 name|gethostname
@@ -225,13 +258,16 @@ operator|-
 literal|1
 condition|)
 block|{
+endif|#
+directive|endif
+endif|!VMS
 name|DEBUG
 argument_list|(
 literal|1
 argument_list|,
 literal|"gethostname"
 argument_list|,
-literal|"FAILED"
+name|_FAILED
 argument_list|)
 expr_stmt|;
 name|s
@@ -242,6 +278,7 @@ block|}
 block|}
 endif|#
 directive|endif
+endif|GETHOSTNAME
 ifdef|#
 directive|ifdef
 name|UNAME
@@ -286,7 +323,7 @@ literal|1
 argument_list|,
 literal|"uname"
 argument_list|,
-literal|"FAILED"
+name|_FAILED
 argument_list|)
 expr_stmt|;
 name|s
@@ -345,7 +382,7 @@ literal|1
 argument_list|,
 literal|"whoami search"
 argument_list|,
-literal|"FAILED"
+name|_FAILED
 argument_list|)
 expr_stmt|;
 name|s
@@ -457,7 +494,7 @@ literal|1
 argument_list|,
 literal|"uuname search"
 argument_list|,
-literal|"FAILED"
+name|_FAILED
 argument_list|)
 expr_stmt|;
 name|s
@@ -544,7 +581,7 @@ literal|1
 argument_list|,
 literal|"getmyhname"
 argument_list|,
-literal|"FAILED"
+name|_FAILED
 argument_list|)
 expr_stmt|;
 block|}
@@ -597,6 +634,14 @@ operator|=
 literal|"unknown"
 expr_stmt|;
 block|}
+comment|/* 	 * save entire name for TCP/IP verification 	 */
+name|strcpy
+argument_list|(
+name|Myfullname
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
 comment|/* 	 * copy uucpname back to caller-supplied buffer, 	 * truncating to 7 characters. 	 * Also set up subdirectory names, if subdirs are being used. 	 */
 name|d
 operator|=
@@ -640,9 +685,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UUDIR
 name|sprintf
 argument_list|(
 name|DLocal
@@ -661,51 +703,28 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
-end_block
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|WHOAMI
-end_ifdef
-
-begin_comment
-comment|/*  * simulate the 4.1a bsd system call by reading /usr/include/whoami.h  * and looking for the #define sysname  * CHANGE NOTICE (rti!trt): returns -1 on failure, 0 on success.  */
-end_comment
-
-begin_define
+comment|/*  * simulate the 4.2 bsd system call by reading /usr/include/whoami.h  * and looking for the #define sysname  */
 define|#
 directive|define
 name|HDRFILE
 value|"/usr/include/whoami.h"
-end_define
-
-begin_macro
 name|fakegethostname
 argument_list|(
 argument|name
 argument_list|,
 argument|len
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|buf
@@ -911,12 +930,8 @@ operator|==
 literal|0
 condition|)
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+name|FAIL
 return|;
-comment|/* added by rti!trt */
 name|strncpy
 argument_list|(
 name|name
@@ -987,9 +1002,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 end_block

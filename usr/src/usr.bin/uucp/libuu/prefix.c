@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prefix.c	5.1 (Berkeley) %G%"
+literal|"@(#)prefix.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******  *	prefix(s1, s2)	check s2 for prefix s1  *	char *s1, *s2;  *  *	return 0 - !=  *	return 1 - ==   */
+comment|/*  *	check s2 for prefix s1  *  *	return 0 - !=  *	return 1 - ==   */
 end_comment
 
 begin_expr_stmt
@@ -68,22 +68,18 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 return|return
-operator|(
 name|c
 operator|==
 literal|'\0'
-operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/*******  *	wprefix(s1, s2)	check s2 for prefix s1 with a wildcard character ?  *	char *s1, *s2;  *  *	return 0 - !=  *	return 1 - ==   */
+comment|/*  *	check s2 for prefix s1 with a wildcard character ?  *  *	return 0 - !=  *	return 1 - ==   */
 end_comment
 
 begin_expr_stmt
@@ -141,14 +137,10 @@ literal|'?'
 operator|)
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_block

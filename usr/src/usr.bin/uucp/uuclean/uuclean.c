@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuclean.c	5.2 (Berkeley) %G%"
+literal|"@(#)uuclean.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,13 +93,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DPREFIX
-value|"U"
-end_define
-
-begin_define
-define|#
-directive|define
 name|NOMTIME
 value|72
 end_define
@@ -107,6 +100,14 @@ end_define
 begin_comment
 comment|/* hours to age files before deletion */
 end_comment
+
+begin_decl_stmt
+name|int
+name|checkprefix
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -144,12 +145,6 @@ name|int
 name|mflg
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|orig_uid
-init|=
-name|getuid
-argument_list|()
 decl_stmt|;
 name|strcpy
 argument_list|(
@@ -249,6 +244,10 @@ break|break;
 case|case
 literal|'p'
 case|:
+name|checkprefix
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|&
@@ -279,9 +278,7 @@ case|case
 literal|'x'
 case|:
 name|chkdebug
-argument_list|(
-name|orig_uid
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|Debug
 operator|=
@@ -337,12 +334,30 @@ argument_list|,
 literal|"START"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|chdir
 argument_list|(
 name|Spool
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+block|{
 comment|/* NO subdirs in uuclean!  rti!trt */
+name|printf
+argument_list|(
+literal|"%s directory inaccessible\n"
+argument_list|,
+name|Spool
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -388,6 +403,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|checkprefix
+operator|&&
 operator|!
 name|chkpre
 argument_list|(
@@ -409,7 +426,6 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* NO subdirs in uuclean! */
 name|DEBUG
 argument_list|(
 literal|4
@@ -434,7 +450,6 @@ operator|==
 name|S_IFDIR
 condition|)
 continue|continue;
-comment|/*  * teklabs.1518, Terry Laskodi, +2s/ctime/mtime/  * so mv-ing files about does not defeat uuclean  */
 if|if
 condition|(
 operator|(
@@ -816,6 +831,8 @@ argument_list|(
 name|frqst
 argument_list|,
 name|args
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 name|mailst
@@ -827,10 +844,9 @@ index|]
 argument_list|,
 name|msg
 argument_list|,
-literal|""
+name|CNULL
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_block
 
@@ -886,6 +902,10 @@ expr_stmt|;
 if|if
 condition|(
 name|pwd
+operator|!=
+name|NULL
+operator|&&
+name|pwd
 operator|->
 name|pw_uid
 operator|==
@@ -900,14 +920,10 @@ name|pw_name
 argument_list|,
 name|mstr
 argument_list|,
-literal|""
+name|CNULL
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 name|setpwent
 argument_list|()
@@ -925,7 +941,6 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-block|{
 name|mailst
 argument_list|(
 name|pwd
@@ -934,15 +949,9 @@ name|pw_name
 argument_list|,
 name|mstr
 argument_list|,
-literal|""
+name|CNULL
 argument_list|)
 expr_stmt|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 

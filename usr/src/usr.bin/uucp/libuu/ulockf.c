@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ulockf.c	5.1 (Berkeley) %G%"
+literal|"@(#)ulockf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,7 +58,7 @@ value|0444
 end_define
 
 begin_comment
-comment|/*******  *	ulockf(file, atime)  *	char *file;  *	time_t atime;  *  *	ulockf  -  this routine will create a lock file (file).  *	If one already exists, the create time is checked for  *	older than the age time (atime).  *	If it is older, an attempt will be made to unlink it  *	and create a new one.  *  *	return codes:  0  |  FAIL  */
+comment|/*  *	ulockf  -  this routine will create a lock file (file).  *	If one already exists, the create time is checked for  *	older than the age time (atime).  *	If it is older, an attempt will be made to unlink it  *	and create a new one.  *  *	return codes:  0  |  FAIL  */
 end_comment
 
 begin_expr_stmt
@@ -124,7 +124,9 @@ name|sprintf
 argument_list|(
 name|tempfile
 argument_list|,
-literal|"LTMP.%d"
+literal|"%s/LTMP.%d"
+argument_list|,
+name|LOCKDIR
 argument_list|,
 name|pid
 argument_list|)
@@ -186,11 +188,8 @@ condition|)
 block|{
 comment|/* file not old enough to delete */
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
-block|}
 block|}
 name|ret
 operator|=
@@ -199,6 +198,19 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
+name|logent
+argument_list|(
+name|file
+argument_list|,
+literal|"DEAD LOCK"
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+comment|/* rti!trt: avoid a race */
 name|ret
 operator|=
 name|onelock
@@ -210,6 +222,7 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ret
@@ -217,9 +230,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 name|stlock
@@ -228,9 +239,7 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 end_block
@@ -324,7 +333,7 @@ name|MAXLOCKS
 argument_list|,
 literal|"TOO MANY LOCKS"
 argument_list|,
-literal|""
+name|CNULL
 argument_list|,
 name|i
 argument_list|)
@@ -394,7 +403,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	rmlock(name)	remove all lock files in list  *	char *name;	or name  *  *	return codes: none  */
+comment|/*  *	remove all lock files in list *	or name  *  *	return codes: none  */
 end_comment
 
 begin_expr_stmt
@@ -483,12 +492,11 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_block
 
 begin_comment
-comment|/*  *  this stuff from pjw   *  /usr/pjw/bin/recover - Check pids to remove unnecessary locks.  *	isalock(name) returns 0 if the name is a lock.  *	unlock(name)  unlocks name if it is a lock.  *	onelock(pid,tempfile,name) makes lock a name  *	on behalf of pid.  Tempfile must be in the same  *	file system as name.  *	lock(pid,tempfile,names) either locks all the  *	names or none of them.  */
+comment|/*  *	isalock(name) returns 0 if the name is a lock.  *	unlock(name)  unlocks name if it is a lock.  *	onelock(pid,tempfile,name) makes lock a name  *	on behalf of pid.  Tempfile must be in the same  *	file system as name.  *	lock(pid,tempfile,names) either locks all the  *	names or none of them.  */
 end_comment
 
 begin_macro
@@ -524,9 +532,7 @@ operator|<
 literal|0
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 if|if
 condition|(
@@ -540,14 +546,10 @@ name|int
 argument_list|)
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_block
@@ -576,19 +578,15 @@ name|name
 argument_list|)
 condition|)
 return|return
-operator|(
 name|unlink
 argument_list|(
 name|name
 argument_list|)
-operator|)
 return|;
 else|else
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_block
@@ -620,6 +618,23 @@ specifier|register
 name|int
 name|fd
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+name|fd
+operator|=
+name|creat
+argument_list|(
+name|name
+argument_list|,
+name|LCKMODE
+argument_list|,
+literal|"1version"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|!VMS
 name|fd
 operator|=
 name|creat
@@ -629,6 +644,9 @@ argument_list|,
 name|LCKMODE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|!VMS
 if|if
 condition|(
 name|fd
@@ -636,10 +654,7 @@ operator|<
 literal|0
 condition|)
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+name|FAIL
 return|;
 name|write
 argument_list|(
@@ -663,6 +678,9 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|VMS
 if|if
 condition|(
 name|link
@@ -681,10 +699,7 @@ name|tempfile
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+name|FAIL
 return|;
 block|}
 name|unlink
@@ -692,10 +707,10 @@ argument_list|(
 name|tempfile
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 end_block
@@ -791,16 +806,11 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+name|FAIL
 return|;
 block|}
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 end_block
@@ -813,7 +823,7 @@ value|"LCK."
 end_define
 
 begin_comment
-comment|/***  *	delock(s)	remove a lock file  *	char *s;  *  *	return codes:  0  |  FAIL  */
+comment|/*  *	remove a lock file  */
 end_comment
 
 begin_macro
@@ -835,14 +845,16 @@ block|{
 name|char
 name|ln
 index|[
-literal|30
+name|NAMESIZE
 index|]
 decl_stmt|;
 name|sprintf
 argument_list|(
 name|ln
 argument_list|,
-literal|"%s.%s"
+literal|"%s/%s.%s"
+argument_list|,
+name|LOCKDIR
 argument_list|,
 name|LOCKPRE
 argument_list|,
@@ -858,7 +870,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	mlock(sys)	create system lock  *	char *sys;  *  *	return codes:  0  |  FAIL  */
+comment|/*  *	create system lock  *  *	return codes:  SUCCESS  |  FAIL  */
 end_comment
 
 begin_macro
@@ -880,14 +892,16 @@ block|{
 name|char
 name|lname
 index|[
-literal|30
+name|NAMESIZE
 index|]
 decl_stmt|;
 name|sprintf
 argument_list|(
 name|lname
 argument_list|,
-literal|"%s.%s"
+literal|"%s/%s.%s"
+argument_list|,
+name|LOCKDIR
 argument_list|,
 name|LOCKPRE
 argument_list|,
@@ -895,7 +909,6 @@ name|sys
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ulockf
 argument_list|(
 name|lname
@@ -910,14 +923,13 @@ literal|0
 condition|?
 name|FAIL
 else|:
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/***  *	ultouch()	update 'change' time for lock files  *  *	-- mod by rti!trt --  *	Only update ctime, not mtime or atime.  *	The 'chmod' method permits cu(I)-like programs  *	to determine how long uucp has been on the line.  *	The old "change access, mod, and change time" method  *	can be had by defining OLDTOUCH  *  *	return code - none  */
+comment|/***  *	update 'change' time for lock files  *  *	Only update ctime, not mtime or atime.  *	The 'chmod' method permits cu(I)-like programs  *	to determine how long uucp has been on the line.  *	The old "change access, mod, and change time" method  *	can be had by defining OLDTOUCH  *  *	return code - none  */
 end_comment
 
 begin_macro
@@ -1039,6 +1051,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+else|!OLDTOUCH
 name|chmod
 argument_list|(
 name|Lockfile
@@ -1051,6 +1064,27 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|!OLDTOUCH
+comment|/* 	 * set 'nologinflag' if the file /etc/nologin exists. 	 * This permits graceful shutdown of uucp. 	 */
+if|if
+condition|(
+name|nologinflag
+operator|==
+literal|0
+operator|&&
+name|access
+argument_list|(
+name|NOLOGIN
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|nologinflag
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 end_block

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gnamef.c	5.2 (Berkeley) %G%"
+literal|"@(#)gnamef.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*******  *	gnamef(dirp, filename)	get next file name from directory  *	DIR *dirp;  *	char *filename;  *  *	return codes:  *		0  -  end of directory read  *		1  -  returned name  */
+comment|/*  *	get next file name from directory  *  *	return codes:  *		0  -  end of directory read  *		1  -  returned name  */
 end_comment
 
 begin_expr_stmt
@@ -94,10 +94,11 @@ name|direct
 modifier|*
 name|dentp
 decl_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -112,11 +113,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 return|return
-operator|(
 literal|0
-operator|)
 return|;
+block|}
 if|if
 condition|(
 name|dentp
@@ -127,7 +128,7 @@ literal|0
 condition|)
 break|break;
 block|}
-comment|/* Truncate filename.  This may become a problem someday. rti!trt */
+comment|/* Truncate filename.  This may become a problem someday. */
 name|strncpy
 argument_list|(
 name|filename
@@ -150,10 +151,17 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|99
+argument_list|,
+literal|"gnamef returns %s\n"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_block

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getprm.c	5.1 (Berkeley) %G%"
+literal|"@(#)getprm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*******  *	char *  *	getprm(s, prm)	get next parameter from s  *	char *s, *prm;  *  *	return - pointer to next character in s  */
+comment|/*  *	get next parameter from s  *  *	return - pointer to next character in s  */
 end_comment
 
 begin_function
@@ -122,9 +122,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 if|if
 condition|(
@@ -168,9 +166,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|s
-operator|)
 return|;
 block|}
 comment|/* look for quoted argument */
@@ -223,9 +219,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|s
-operator|)
 return|;
 block|}
 block|}
@@ -279,9 +273,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|s
-operator|)
 return|;
 block|}
 block|}
@@ -346,15 +338,13 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|s
-operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/***  *	split(name, sys, rest)	split into system and file part  *	char *name, *sys, *rest;  *  *	return codes:  *		NOSYSPART  *		HASSYSPART  */
+comment|/*  *	split into system and file part  *  *	return codes:  *		NOSYSPART  *		HASSYSPART  */
 end_comment
 
 begin_expr_stmt
@@ -457,9 +447,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|NOSYSPART
-operator|)
 return|;
 block|}
 block|}
@@ -492,9 +480,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|NOSYSPART
-operator|)
 return|;
 block|}
 operator|*
@@ -539,9 +525,7 @@ name|c
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|HASSYSPART
-operator|)
 return|;
 block|}
 end_block

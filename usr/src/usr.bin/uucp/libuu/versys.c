@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)versys.c	5.1 (Berkeley) %G%"
+literal|"@(#)versys.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,9 +108,7 @@ operator|==
 literal|0
 condition|)
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 name|fp
 operator|=
@@ -127,7 +125,7 @@ name|fp
 operator|!=
 name|NULL
 argument_list|,
-literal|"CAN'T OPEN"
+name|CANTOPEN
 argument_list|,
 name|SYSFILE
 argument_list|,
@@ -163,6 +161,8 @@ argument_list|(
 name|line
 argument_list|,
 name|targs
+argument_list|,
+literal|100
 argument_list|)
 expr_stmt|;
 name|targs
@@ -196,9 +196,7 @@ name|fp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 block|}
@@ -208,9 +206,7 @@ name|fp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 end_block

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)index.c	5.1 (Berkeley) %G%"
+literal|"@(#)index.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/*******  *	char *  *	index(str, c)	return pointer to character c  *	char c, *str;  *  *	return codes:  *		NULL  -  character not found  *		pointer  -  pointer to character  */
+comment|/*  *	return pointer to character c  *  *	return codes:  *		NULL  -  character not found  *		pointer  -  pointer to character  */
 end_comment
 
 begin_function
@@ -70,15 +70,11 @@ operator|==
 name|c
 condition|)
 return|return
-operator|(
 name|str
-operator|)
 return|;
 block|}
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 end_block

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)systat.c	5.1 (Berkeley) %G%"
+literal|"@(#)systat.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ name|f
 parameter_list|,
 name|n
 parameter_list|)
-value|sprintf(f, "%s/%s.%.7s", Spool, "STST", n)
+value|sprintf(f, "%s/%s/%.7s", Spool, "STST", n)
 end_define
 
 begin_define
@@ -105,6 +105,8 @@ index|]
 decl_stmt|;
 name|int
 name|count
+decl_stmt|,
+name|oldtype
 decl_stmt|;
 specifier|register
 name|FILE
@@ -113,6 +115,8 @@ name|fp
 decl_stmt|;
 name|time_t
 name|prestime
+decl_stmt|,
+name|rtry
 decl_stmt|;
 if|if
 condition|(
@@ -172,13 +176,12 @@ argument_list|)
 expr_stmt|;
 name|sscanf
 argument_list|(
-operator|&
 name|line
-index|[
-literal|2
-index|]
 argument_list|,
-literal|"%d"
+literal|"%d %d"
+argument_list|,
+operator|&
+name|oldtype
 argument_list|,
 operator|&
 name|count
@@ -199,16 +202,78 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* If merely 'wrong time', don't change existing STST */
+if|if
+condition|(
+name|type
+operator|==
+name|SS_WRONGTIME
+operator|&&
+name|oldtype
+operator|!=
+name|SS_INPROGRESS
+condition|)
+return|return;
 block|}
+name|rtry
+operator|=
+name|Retrytime
+expr_stmt|;
+comment|/* if failures repeat, don't try so often, 	 * to forstall a 'MAX RECALLS' situation. 	 */
 if|if
 condition|(
 name|type
 operator|==
 name|SS_FAIL
 condition|)
+block|{
 name|count
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|count
+operator|>
+literal|5
+condition|)
+block|{
+name|rtry
+operator|=
+name|rtry
+operator|*
+operator|(
+name|count
+operator|-
+literal|5
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rtry
+operator|>
+name|ONEDAY
+operator|/
+literal|2
+condition|)
+name|rtry
+operator|=
+name|ONEDAY
+operator|/
+literal|2
+expr_stmt|;
+block|}
+block|}
+ifdef|#
+directive|ifdef
+name|VMS
+name|unlink
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|VMS
 name|fp
 operator|=
 name|fopen
@@ -226,12 +291,11 @@ name|NULL
 argument_list|,
 literal|"SYSTAT OPEN FAIL"
 argument_list|,
-literal|""
+name|filename
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*	chmod(filename, 0666); rm-ed by rti!trt */
 name|fprintf
 argument_list|(
 name|fp
@@ -244,7 +308,7 @@ name|count
 argument_list|,
 name|prestime
 argument_list|,
-name|Retrytime
+name|rtry
 argument_list|,
 name|text
 argument_list|,
@@ -341,9 +405,13 @@ name|time_t
 name|lasttime
 decl_stmt|,
 name|prestime
+decl_stmt|,
+name|retrytime
 decl_stmt|;
 name|long
-name|retrytime
+name|t1
+decl_stmt|,
+name|t2
 decl_stmt|;
 name|int
 name|count
@@ -432,11 +500,19 @@ operator|&
 name|count
 argument_list|,
 operator|&
-name|lasttime
+name|t1
 argument_list|,
 operator|&
-name|retrytime
+name|t2
 argument_list|)
+expr_stmt|;
+name|lasttime
+operator|=
+name|t1
+expr_stmt|;
+name|retrytime
+operator|=
+name|t2
 expr_stmt|;
 switch|switch
 condition|(
@@ -487,10 +563,24 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Debug
+condition|)
+block|{
+name|logent
+argument_list|(
+literal|"debugging"
+argument_list|,
+literal|"continuing anyway"
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
+name|SS_OK
+return|;
+block|}
+return|return
 name|type
-operator|)
 return|;
 block|}
 if|if
@@ -513,30 +603,37 @@ name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
-literal|"RETRY TIME (%d) NOT REACHED\n"
+literal|"RETRY TIME (%ld) NOT REACHED\n"
 argument_list|,
-operator|(
-name|long
-operator|)
-name|RETRYTIME
+name|retrytime
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Debug
+condition|)
+block|{
+name|logent
+argument_list|(
+literal|"debugging"
+argument_list|,
+literal|"continuing anyway"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|type
-operator|)
+name|SS_OK
 return|;
 block|}
 return|return
-operator|(
+name|type
+return|;
+block|}
+return|return
 name|SS_OK
-operator|)
 return|;
 default|default:
 return|return
-operator|(
 name|SS_OK
-operator|)
 return|;
 block|}
 block|}

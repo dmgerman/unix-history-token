@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucp.c	5.1 (Berkeley) %G%"
+literal|"@(#)uucp.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"uust.h"
 end_include
 
 begin_comment
@@ -84,6 +90,26 @@ literal|'n'
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DONTCOPY
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|Copy
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+else|!DONTCOPY
+end_else
+
 begin_decl_stmt
 name|int
 name|Copy
@@ -91,6 +117,12 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|!DONTCOPY
+end_endif
 
 begin_decl_stmt
 name|char
@@ -125,15 +157,34 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|long
+name|Nbytes
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAXBYTES
+value|50000
+end_define
+
+begin_comment
+comment|/* maximun number of bytes of data per C. file */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MAXCOUNT
-value|20
+value|15
 end_define
 
 begin_comment
-comment|/* maximun number of commands per C. file */
+comment|/* maximun number of files per C. file */
 end_comment
 
 begin_function
@@ -175,10 +226,9 @@ name|MAXFULLNAME
 index|]
 decl_stmt|;
 name|int
-name|orig_uid
+name|avoidgwd
 init|=
-name|getuid
-argument_list|()
+literal|0
 decl_stmt|;
 name|strcpy
 argument_list|(
@@ -211,6 +261,19 @@ index|]
 operator|=
 literal|'d'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DONTCOPY
+name|Optns
+index|[
+literal|2
+index|]
+operator|=
+literal|'c'
+expr_stmt|;
+else|#
+directive|else
+else|!DONTCOPY
 name|Optns
 index|[
 literal|2
@@ -218,6 +281,9 @@ index|]
 operator|=
 literal|'C'
 expr_stmt|;
+endif|#
+directive|endif
+endif|!DONTCOPY
 name|Ename
 index|[
 literal|0
@@ -263,6 +329,15 @@ literal|1
 index|]
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+comment|/* efficiency hack; avoid gwd call */
+name|avoidgwd
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'C'
 case|:
@@ -403,9 +478,7 @@ case|case
 literal|'x'
 case|:
 name|chkdebug
-argument_list|(
-name|orig_uid
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|Debug
 operator|=
@@ -461,14 +534,34 @@ argument_list|,
 literal|"START"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|avoidgwd
+condition|)
 name|gwd
 argument_list|(
 name|Wrkdir
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|subchdir
 argument_list|(
 name|Spool
+argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|ret
+operator|>=
+literal|0
+argument_list|,
+literal|"CHDIR FAILED"
+argument_list|,
+name|Spool
+argument_list|,
+name|ret
 argument_list|)
 expr_stmt|;
 name|Uid
@@ -495,7 +588,7 @@ literal|0
 argument_list|,
 literal|"CAN NOT FIND UID"
 argument_list|,
-literal|""
+name|CNULL
 argument_list|,
 name|Uid
 argument_list|)
@@ -552,7 +645,7 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -634,7 +727,42 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 argument_list|(
-literal|0
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* block multi-hop requests immediately */
+if|if
+condition|(
+name|index
+argument_list|(
+name|cp
+operator|+
+literal|1
+argument_list|,
+literal|'!'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"uucp handles only adjacent sites.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Try uusend for multi-hop delivery.\n"
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -914,7 +1042,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	copy(s1, f1, s2, f2)	generate copy files  *	char *s1, *f1, *s2, *f2;  *  *	return codes 0  |  FAIL  */
+comment|/*  *	generate copy files  *  *	return codes 0  |  FAIL  */
 end_comment
 
 begin_expr_stmt
@@ -1110,9 +1238,7 @@ name|file1
 argument_list|)
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 if|if
 condition|(
@@ -1122,9 +1248,7 @@ name|file2
 argument_list|)
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 if|if
 condition|(
@@ -1152,9 +1276,7 @@ name|file1
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 name|statret
@@ -1205,9 +1327,7 @@ name|file2
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 if|if
@@ -1287,9 +1407,7 @@ name|st_mode
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 if|if
@@ -1323,9 +1441,7 @@ name|st_mode
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 name|xcp
@@ -1343,9 +1459,7 @@ literal|"DONE"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 case|case
 literal|1
@@ -1382,9 +1496,7 @@ name|file1
 argument_list|)
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 if|if
 condition|(
@@ -1394,9 +1506,7 @@ name|file2
 argument_list|)
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 if|if
 condition|(
@@ -1420,9 +1530,7 @@ literal|"permission denied\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 if|if
@@ -1452,9 +1560,7 @@ name|opts
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 name|cfp
@@ -1492,9 +1598,7 @@ name|file1
 argument_list|)
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 if|if
 condition|(
@@ -1513,9 +1617,7 @@ name|file2
 argument_list|)
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 name|DEBUG
 argument_list|(
@@ -1555,9 +1657,7 @@ name|file1
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 if|if
@@ -1586,9 +1686,7 @@ name|file1
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 if|if
@@ -1614,9 +1712,7 @@ name|file1
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 if|if
@@ -1646,9 +1742,7 @@ name|st_mode
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 if|if
@@ -1725,11 +1819,15 @@ name|opts
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
+name|Nbytes
+operator|+=
+name|stbuf
+operator|.
+name|st_size
+expr_stmt|;
 if|if
 condition|(
 name|Copy
@@ -1739,7 +1837,7 @@ name|gename
 argument_list|(
 name|DATAPRE
 argument_list|,
-name|s2
+name|Myname
 argument_list|,
 name|Grade
 argument_list|,
@@ -1768,9 +1866,7 @@ name|file1
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 block|}
@@ -1860,9 +1956,7 @@ name|file2
 argument_list|)
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 if|if
 condition|(
@@ -1886,9 +1980,7 @@ literal|"permission denied\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 block|}
@@ -1919,9 +2011,7 @@ name|opts
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 name|cfp
@@ -1951,15 +2041,13 @@ expr_stmt|;
 break|break;
 block|}
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/***  *	xuux(ename, s1, s2, f1, f2, opts)	execute uux for remote uucp  *  *	return code - none  */
+comment|/*  *	execute uux for remote uucp  *  *	return code - none  */
 end_comment
 
 begin_macro
@@ -2121,7 +2209,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/***  *	gtcfile(sys)	- get a Cfile descriptor  *  *	return an open file descriptor  */
+comment|/*  *	get a Cfile descriptor  *  *	return an open file descriptor  */
 end_comment
 
 begin_function
@@ -2168,6 +2256,10 @@ operator|!=
 name|SAME
 comment|/* this is !SAME on first call */
 operator|||
+name|Nbytes
+operator|>
+name|MAXBYTES
+operator|||
 operator|++
 name|cmdcount
 operator|>
@@ -2177,6 +2269,10 @@ block|{
 name|cmdcount
 operator|=
 literal|1
+expr_stmt|;
+name|Nbytes
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2203,6 +2299,21 @@ argument_list|,
 name|Cfile
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+name|savemask
+operator|=
+name|umask
+argument_list|(
+operator|~
+literal|0600
+argument_list|)
+expr_stmt|;
+comment|/* vms must have read permission */
+else|#
+directive|else
+else|!VMS
 name|savemask
 operator|=
 name|umask
@@ -2211,6 +2322,9 @@ operator|~
 literal|0200
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|!VMS
 name|Cfp
 operator|=
 name|fopen
@@ -2234,7 +2348,7 @@ name|Cfp
 operator|!=
 name|NULL
 argument_list|,
-literal|"CAN'T OPEN"
+name|CANTOPEN
 argument_list|,
 name|Cfile
 argument_list|,
@@ -2250,15 +2364,13 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|Cfp
-operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/***  *	clscfile()	- close cfile  *  *	return code - none  */
+comment|/*  *	close cfile  *  *	return code - none  */
 end_comment
 
 begin_macro
@@ -2300,16 +2412,20 @@ argument_list|,
 literal|"QUE'D"
 argument_list|)
 expr_stmt|;
+name|US_CRS
+argument_list|(
+name|Cfile
+argument_list|)
+expr_stmt|;
 name|Cfp
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 end_block
 
 begin_comment
-comment|/****  *  * chsys(s1)	compile a list of all systems we are referencing  *	char *s1  *  * no return code -- sets up the xsys array.  * Author: mcnc!swd, Stephen Daniel  */
+comment|/*  * compile a list of all systems we are referencing  */
 end_comment
 
 begin_expr_stmt
@@ -2367,11 +2483,13 @@ return|return;
 block|}
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|xsys
 argument_list|,
 name|s1
+argument_list|,
+literal|7
 argument_list|)
 operator|==
 name|SAME

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucp.h	5.3	84/09/04	*/
+comment|/*	uucp.h	5.4	85/01/22	*/
 end_comment
 
 begin_include
@@ -10,7 +10,7 @@ file|"stdio.h"
 end_include
 
 begin_comment
-comment|/*  * Determine local uucp name of this machine.  * Define one of the following:  *  * For UCB 4.1A and later systems, you will have the gethostname(2) call.  * If this call exists, define GETHOSTNAME.  *  * For USG 3.0 and later systems, you will have the uname(2) call.  * If this call exists, define UNAME.  *  * Some systems have a line of the form '#define sysname "myuucpname",'  * in the file /usr/include/whoami.h, to identify their machine.  * If your site does that, define WHOAMI.  *  * If your site has<whoami.h>, but you do not want to read  * that file every time uucp runs, you can compile sysname into uucp.  * This is faster and more reliable, but binaries do not port.  * If you want to do that, define CCWHOAMI.  *  * Some systems put the local uucp name in a single-line file  * named /etc/uucpname or /local/uucpname.  * If your site does that, define UUNAME.  *  * Systems running 3Com's UNET will have the getmyhname() call.  * If you want to, define GETMYHNAME.  *  * You should also define MYNANE to be your uucp name.  *  * For each of the above that are defined, uucp checks them in order.  * It stops on the first method that returns a non null name.  * If everything fails, it uses "unknown" for the system name.  */
+comment|/*  * Determine local uucp name of this machine.  * Define one of the following:  *  * For UCB 4.1A and later systems, you will have the gethostname(2) call.  * If this call exists, define GETHOSTNAME.  *  * For USG 3.0 and later systems, you will have the uname(2) call.  * If this call exists, define UNAME.  *  * Some systems have a line of the form '#define sysname "myuucpname",'  * in the file /usr/include/whoami.h, to identify their machine.  * If your site does that, define WHOAMI.  *  * If your site has<whoami.h>, but you do not want to read  * that file every time uucp runs, you can compile sysname into uucp.  * This is faster and more reliable, but binaries do not port.  * If you want to do that, define CCWHOAMI.  *  * Some systems put the local uucp name in a single-line file  * named /etc/uucpname or /local/uucpname.  * If your site does that, define UUNAME.  *  * Systems running 3Com's UNET will have the getmyhname() call.  * If you want to, define GETMYHNAME.  *  * You should also define MYNAME to be your uucp name.  *  * For each of the above that are defined, uucp checks them in order.  * It stops on the first method that returns a non null name.  * If everything fails, it uses "unknown" for the system name.  */
 end_comment
 
 begin_define
@@ -18,6 +18,10 @@ define|#
 directive|define
 name|GETHOSTNAME
 end_define
+
+begin_comment
+comment|/*#define CCWHOAMI	*/
+end_comment
 
 begin_comment
 comment|/* If the above fails ... */
@@ -41,43 +45,27 @@ file|<sysexits.h>
 end_include
 
 begin_comment
-comment|/*#define EX_NOHOST	101*/
+comment|/*#define EX_NOINPUT	66*/
 end_comment
 
 begin_comment
-comment|/*#define EX_CANTCREAT	1*/
+comment|/*#define EX_NOHOST	68*/
 end_comment
 
 begin_comment
-comment|/*#define EX_NOINPUT	2*/
+comment|/*#define EX_CANTCREAT	73*/
 end_comment
-
-begin_comment
-comment|/* define UUDIR for uucp subdirectory kludge (recommended) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UUDIR
-end_define
 
 begin_comment
 comment|/*  * Define the various kinds of connections to include.  * The complete list is in the condevs array in condevs.c  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DN11
-end_define
-
 begin_comment
-comment|/* standard dialer */
+comment|/*#define DN11		/* standard dialer */
 end_comment
 
 begin_comment
-comment|/*#define DATAKIT		/* ATT's datakit */
+comment|/*#define DATAKIT	/* ATT's datakit */
 end_comment
 
 begin_comment
@@ -88,57 +76,100 @@ begin_comment
 comment|/*#define DF02		/* Dec's DF02/DF03 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAYES
-end_define
+begin_comment
+comment|/*#define HAYES		/* Hayes' Smartmodem */
+end_comment
 
 begin_comment
-comment|/* Hayes' Smartmodem */
+comment|/*#define VENTEL	/* ventel dialer */
+end_comment
+
+begin_comment
+comment|/*#define VADIC		/* Racal-Vadic 345x */
+end_comment
+
+begin_comment
+comment|/*#define VA212		/* Racal-Vadic 212 */
+end_comment
+
+begin_comment
+comment|/*#define VA811S	/* Racal-Vadic 811S dialer, 831 adaptor */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VENTEL
+name|VA820
 end_define
 
 begin_comment
-comment|/* ventel dialer */
+comment|/* Racal-Vadic 820 dialer, 831 adaptor */
+end_comment
+
+begin_comment
+comment|/*#define RVMACS	/* Racal-Vadic MACS  820 dialer, 831 adaptor */
+end_comment
+
+begin_comment
+comment|/*#define VMACS		/* Racal-Vadic MACS  811 dialer, 831 adaptor */
+end_comment
+
+begin_comment
+comment|/*#define UNETTCP	/* 3Com's UNET */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VADIC
+name|BSDTCP
 end_define
 
 begin_comment
-comment|/* Racal-Vadic 3450 */
-end_comment
-
-begin_comment
-comment|/*#define RVMACS		/* Racal-Vadic MACS 831 */
+comment|/* 4.2bsd TCP/IP */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TCPNET
+name|PAD
 end_define
 
 begin_comment
-comment|/* 4.2 TCP Network */
-end_comment
-
-begin_comment
-comment|/*#define UNET		/* 3Com's UNET */
+comment|/* X.25 PAD */
 end_comment
 
 begin_comment
 comment|/*#define MICOM		/* micom mux port */
 end_comment
+
+begin_comment
+comment|/*#define NOVATION	/* Novation modem */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|UNETTCP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BSDTCP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TCPIP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -166,27 +197,43 @@ comment|/*  * If your site is using "ndir.h" to retrofit the Berkeley  * directo
 end_comment
 
 begin_comment
-comment|/*#define	NDIR*/
+comment|/*#define	NDIR	*/
 end_comment
 
 begin_comment
-comment|/*  * If yours is a BTL system III, IV, or so-on site, define SYSIII.  * Conditional compilations should produce the right code,  * but if it doesn't (the compiler will probably complain loudly),  * make the needed adjustments and guard the code with  * #ifdef SYSIII, (code for system III), #else, (code for V7), #endif  */
+comment|/*  * If yours is a BTL system III, IV, or so-on site, define USG.  */
 end_comment
 
 begin_comment
-comment|/*#define	SYSIII*/
+comment|/*#define	USG	*/
+end_comment
+
+begin_comment
+comment|/*  * If you are running 4.2bsd, define BSD4_2  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSD4_2
+end_define
+
+begin_comment
+comment|/*  * If you are using /etc/inetd with 4.2bsd, define BSDINETD  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSDINETD
+end_define
+
+begin_comment
+comment|/*#define VMSDTR	/* Turn on modem control on vms(works DTR) for 			   develcon and gandalf ports to gain access */
 end_comment
 
 begin_comment
 comment|/* define the last characters for ACU */
-end_comment
-
-begin_comment
-comment|/* burl!lda, rti!trt, isn't "<" more widely used than "-"? */
-end_comment
-
-begin_comment
-comment|/* rti!trt: use -< as is done in 4.1c uucp */
 end_comment
 
 begin_define
@@ -206,6 +253,22 @@ directive|define
 name|WFMASK
 value|0137
 end_define
+
+begin_comment
+comment|/* define UUSTAT if you need "uustat" command */
+end_comment
+
+begin_comment
+comment|/* #define UUSTAT	*/
+end_comment
+
+begin_comment
+comment|/*	define UUSUB if you need "uusub" command */
+end_comment
+
+begin_comment
+comment|/* #define UUSUB /**/
+end_comment
 
 begin_comment
 comment|/* define the value of LOGMASK - for LOGFILE, SYSLOG, ERRLOG */
@@ -238,19 +301,47 @@ value|0666
 end_define
 
 begin_comment
-comment|/* All users with getuid()<= PRIV_UIDS are 'privileged'. */
-end_comment
-
-begin_comment
-comment|/* Was 10, reduced to 3 as suggested by duke!dbl (David Leonard) */
+comment|/*  * Define NOSTRANGERS if you don't want to accept transactions from  * sites that are not in your L.sys file (see cico.c)  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PRIV_UIDS
-value|3
+name|NOSTRANGERS
 end_define
+
+begin_comment
+comment|/*  * Traditionally LCK (lock) files have been kept in /usr/spool/uucp.  * If you want that define LOCKDIR to be ".".  * If you want the locks kept in a subdirectory, define LOCKDIR as "LCK.".  * Good news about LCK. subdirectory: the directory can be mode 777 so  * unprivileged programs can share the uucp locking system,  * and the subdirectory keeps down clutter in the main directory.  * The BAD news: you have to change 'tip' and another programs that  * know where the LCK files are kept, and you have to change your /etc/rc  * if your rc cleans out the lock files (as it should).  */
+end_comment
+
+begin_comment
+comment|/*#define	LOCKDIR	"LCK." */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCKDIR
+value|"."
+end_define
+
+begin_comment
+comment|/*   * If you want uucp and uux to copy the data files by default,  * don't define DONTCOPY (This is the way older 4bsd uucps worked)  * If you want uucp and uux to use the original files instead of  * copies, define DONTCOPY (This is the way System III and V work)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DONTCOPY
+end_define
+
+begin_comment
+comment|/*  * Very few (none I know of) systems use the sequence checking feature.  * If you are not going to use it (hint: you are not),  * do not define GNXSEQ.  This saves precious room on PDP11s.  */
+end_comment
+
+begin_comment
+comment|/*#define	GNXSEQ/* comment this out to save space */
+end_comment
 
 begin_define
 define|#
@@ -337,7 +428,7 @@ begin_define
 define|#
 directive|define
 name|SQLOCK
-value|"/usr/spool/uucp/LCK.SQ"
+value|"LCK.SQ"
 end_define
 
 begin_define
@@ -399,8 +490,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|CMDSDIR
+value|"/usr/spool/uucp/C."
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATADIR
+value|"/usr/spool/uucp/D."
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEQTDIR
+value|"/usr/spool/uucp/X."
+end_define
+
+begin_define
+define|#
+directive|define
 name|RMTDEBUG
 value|"AUDIT"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CORRUPT
+value|"CORRUPT"
 end_define
 
 begin_define
@@ -421,9 +540,19 @@ begin_comment
 comment|/* number of tries to dial call */
 end_comment
 
-begin_comment
-comment|/*define PROTODEBUG = 1 if testing protocol - introduce errors */
-end_comment
+begin_define
+define|#
+directive|define
+name|LLEN
+value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXRQST
+value|250
+end_define
 
 begin_define
 define|#
@@ -452,7 +581,7 @@ name|s2
 parameter_list|,
 name|i1
 parameter_list|)
-value|if (!(e)) {\ assert(s1, s2, i1);\ cleanup(FAIL);} else
+value|if (!(e)) {assert(s1, s2, i1);cleanup(FAIL);}else
 end_define
 
 begin_define
@@ -466,7 +595,7 @@ begin_define
 define|#
 directive|define
 name|ANYREAD
-value|04
+value|0004
 end_define
 
 begin_define
@@ -522,7 +651,7 @@ begin_define
 define|#
 directive|define
 name|MAXFULLNAME
-value|250
+value|255
 end_define
 
 begin_define
@@ -536,7 +665,7 @@ begin_define
 define|#
 directive|define
 name|NAMESIZE
-value|15
+value|255
 end_define
 
 begin_define
@@ -551,6 +680,13 @@ define|#
 directive|define
 name|CALLBACK
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ONEDAY
+value|86400L
 end_define
 
 begin_comment
@@ -568,7 +704,7 @@ begin_define
 define|#
 directive|define
 name|MAIL
-value|"mail"
+value|"/usr/lib/sendmail"
 end_define
 
 begin_define
@@ -749,40 +885,49 @@ begin_struct
 struct|struct
 name|Devices
 block|{
-name|char
+define|#
+directive|define
 name|D_type
-index|[
-literal|20
-index|]
-decl_stmt|;
-name|char
+value|D_arg[0]
+define|#
+directive|define
 name|D_line
-index|[
-literal|20
-index|]
-decl_stmt|;
-name|char
+value|D_arg[1]
+define|#
+directive|define
 name|D_calldev
-index|[
-literal|20
-index|]
-decl_stmt|;
-name|char
+value|D_arg[2]
+define|#
+directive|define
 name|D_class
-index|[
-literal|20
-index|]
+value|D_arg[3]
+define|#
+directive|define
+name|D_brand
+value|D_arg[4]
+define|#
+directive|define
+name|D_CHAT
+value|5
+name|int
+name|D_numargs
 decl_stmt|;
 name|int
 name|D_speed
 decl_stmt|;
 name|char
-name|D_brand
+modifier|*
+name|D_arg
 index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* brand name, as 'Hayes' or 'Vadic' */
+name|char
+name|D_argbfr
+index|[
+literal|100
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -833,6 +978,13 @@ name|SS_BADSEQ
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|SS_WRONGTIME
+value|6
+end_define
+
 begin_comment
 comment|/*  fail/retry parameters  */
 end_comment
@@ -841,7 +993,7 @@ begin_define
 define|#
 directive|define
 name|RETRYTIME
-value|3300
+value|600
 end_define
 
 begin_define
@@ -902,6 +1054,13 @@ define|#
 directive|define
 name|X_NONOTI
 value|'N'
+end_define
+
+begin_define
+define|#
+directive|define
+name|X_RETURNTO
+value|'R'
 end_define
 
 begin_define
@@ -987,22 +1146,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+name|Myfullname
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|Debug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|Pkdebug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|Pkdrvon
 decl_stmt|;
 end_decl_stmt
 
@@ -1030,8 +1183,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|short
+name|Usrf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
-name|Unet
+name|IsTcpIp
 decl_stmt|;
 end_decl_stmt
 
@@ -1063,43 +1223,20 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UUDIR
-end_ifdef
+begin_decl_stmt
+specifier|extern
+name|int
+name|nologinflag
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|subfile
-parameter_list|(
-name|s
-parameter_list|)
-value|SubFile(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|subdir
-parameter_list|(
-name|d
-parameter_list|,
-name|p
-parameter_list|)
-value|SubDir(d, p)
-end_define
-
-begin_define
-define|#
-directive|define
-name|subchdir
-parameter_list|(
-name|d
-parameter_list|)
-value|SubChDir(d)
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+name|NOLOGIN
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1111,56 +1248,14 @@ name|DLocalX
 index|[]
 decl_stmt|,
 modifier|*
-name|SubFile
+name|subfile
 argument_list|()
 decl_stmt|,
 modifier|*
-name|SubDir
+name|subdir
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|subfile
-parameter_list|(
-name|s
-parameter_list|)
-value|s
-end_define
-
-begin_define
-define|#
-directive|define
-name|subdir
-parameter_list|(
-name|d
-parameter_list|,
-name|p
-parameter_list|)
-value|d
-end_define
-
-begin_define
-define|#
-directive|define
-name|subchdir
-parameter_list|(
-name|d
-parameter_list|)
-value|chdir(d)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Commonly called routines which return non-int value */
@@ -1202,6 +1297,14 @@ name|malloc
 argument_list|()
 decl_stmt|,
 modifier|*
+name|fdig
+argument_list|()
+decl_stmt|,
+modifier|*
+name|ttyname
+argument_list|()
+decl_stmt|,
+modifier|*
 name|cfgets
 argument_list|()
 decl_stmt|;
@@ -1223,6 +1326,20 @@ name|rpopen
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|_FAILED
+index|[]
+decl_stmt|,
+name|CANTOPEN
+index|[]
+decl_stmt|,
+name|DEVNULL
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

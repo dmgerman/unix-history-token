@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setline.c	5.1 (Berkeley) %G%"
+literal|"@(#)setline.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,10 +19,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/***  *	setline - optimize line setting for sending or receiving files  *  *	return code - none  */
-end_comment
 
 begin_include
 include|#
@@ -33,7 +29,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYSIII
+name|USG
 end_ifdef
 
 begin_include
@@ -75,6 +71,10 @@ name|RESET
 value|'X'
 end_define
 
+begin_comment
+comment|/*  *	optimize line setting for sending or receiving files  *  *	return code - none  */
+end_comment
+
 begin_macro
 name|setline
 argument_list|(
@@ -92,7 +92,7 @@ begin_block
 block|{
 ifdef|#
 directive|ifdef
-name|SYSIII
+name|USG
 specifier|static
 name|struct
 name|termio
@@ -117,7 +117,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Unet
+name|IsTcpIp
 condition|)
 return|return;
 switch|switch
@@ -179,7 +179,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* Anticipatory bug fixes: set, sbuf now static, 'set' is now reset.  rti!trt */
 name|set
 operator|=
 literal|0

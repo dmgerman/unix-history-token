@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwinfo.c	5.1 (Berkeley) %G%"
+literal|"@(#)getpwinfo.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,11 @@ operator|->
 name|pw_uid
 operator|==
 name|uid
+operator|||
+operator|*
+name|l
+operator|==
+literal|'U'
 condition|)
 goto|goto
 name|setup
@@ -142,9 +147,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 name|setup
@@ -168,15 +171,13 @@ name|pw_name
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/***  *	gninfo(name, uid, path)	get passwd file info for name  *	char *path, *name;  *	int *uid;  *  *	return codes:  0  |  FAIL  */
+comment|/*  *	get passwd file info for name  *  *	return codes:  SUCCESS  |  FAIL  */
 end_comment
 
 begin_macro
@@ -242,9 +243,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 name|strcpy
@@ -264,9 +263,7 @@ operator|->
 name|pw_uid
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 end_block

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subdir.c	5.1 (Berkeley) %G%"
+literal|"@(#)subdir.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,14 +26,8 @@ directive|include
 file|"uucp.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UUDIR
-end_ifdef
-
 begin_comment
-comment|/*  * By Tom Truscott, March 1983  * THIS VERSION OF SYSKLUDGE IS FOR USE ONLY  * WITH THE 'UUDIR' VERSION OF UUCP.  *  * There once was a separate 'uudir' package to retrofit  * versions of uucp, but that is no longer recommended.  *  * Prefix table.  * If a prefix is "abc", for example,  * then any file Spool/abc... is mapped to Spool/abc/abc... .  * The first prefix found is used, so D.foo should preceed D. in table.  *  * Each prefix must be a subdirectory of Spool, owned by uucp!  * Remember: use cron to uuclean these directories daily,  * and check them manual every now and then.  Beware complacency!  */
+comment|/*  * By Tom Truscott, March 1983  *  * Prefix table.  * If a prefix is "abc", for example,  * then any file Spool/abc... is mapped to Spool/abc/abc... .  * The first prefix found is used, so D.foo should preceed D. in table.  *  * Each prefix must be a subdirectory of Spool, owned by uucp!  * Remember: use cron to uuclean these directories daily,  * and check them manual every now and then.  Beware complacency!  */
 end_comment
 
 begin_decl_stmt
@@ -78,10 +72,6 @@ name|BUFLEN
 value|50
 end_define
 
-begin_comment
-comment|/* assert(strlen(Spool)+1+14+1+14<= BUFLEN) */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -119,7 +109,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|SubFile
+name|subfile
 parameter_list|(
 name|as
 parameter_list|)
@@ -334,7 +324,7 @@ comment|/*  * save away filename  */
 end_comment
 
 begin_expr_stmt
-name|SubChDir
+name|subchdir
 argument_list|(
 name|s
 argument_list|)
@@ -378,7 +368,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|SubDir
+name|subdir
 parameter_list|(
 name|d
 parameter_list|,
@@ -411,7 +401,7 @@ name|CMDPRE
 condition|)
 return|return
 operator|(
-literal|"/usr/spool/uucp/C."
+name|CMDSDIR
 operator|)
 return|;
 elseif|else
@@ -423,7 +413,7 @@ name|XQTPRE
 condition|)
 return|return
 operator|(
-literal|"/usr/spool/uucp/X."
+name|XEQTDIR
 operator|)
 return|;
 return|return
@@ -433,27 +423,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|int
-name|subdir_here
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* quiet 'ranlib' command */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

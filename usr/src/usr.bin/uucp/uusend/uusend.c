@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uusend.c	5.1 (Berkeley) %G%"
+literal|"@(#)uusend.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,11 +48,19 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_comment
+comment|/*  * define RECOVER to permit requests like 'uusend file sys1!sys2!~uucp'  * (abbreviation for 'uusend file sys1!sys2!~uucp/file').  * define DEBUG to keep log of uusend uusage.  * define RUUSEND if neighboring sites permit 'ruusend',  * which they certainly should to avoid security holes  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RECOVER
 end_define
+
+begin_comment
+comment|/*#define	DEBUG	"/usr/spool/uucp/uusend.log"/**/
+end_comment
 
 begin_decl_stmt
 name|FILE
@@ -72,6 +80,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|extern
 name|FILE
 modifier|*
 name|popen
@@ -80,6 +89,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|index
@@ -87,6 +97,14 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|strcpy
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcat
+argument_list|()
+decl_stmt|,
+modifier|*
+name|ctime
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -106,6 +124,7 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
+endif|RUUSEND
 end_endif
 
 begin_decl_stmt
@@ -320,6 +339,7 @@ end_comment
 begin_else
 else|#
 directive|else
+else|!RECOVER
 end_else
 
 begin_decl_stmt
@@ -338,6 +358,7 @@ end_comment
 begin_endif
 endif|#
 directive|endif
+endif|!RECOVER
 end_endif
 
 begin_function
@@ -362,8 +383,12 @@ name|c
 decl_stmt|;
 name|long
 name|count
-init|=
-literal|0
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -371,6 +396,11 @@ name|DEBUG
 name|long
 name|t
 decl_stmt|;
+name|umask
+argument_list|(
+literal|022
+argument_list|)
+expr_stmt|;
 name|dout
 operator|=
 name|fopen
@@ -407,14 +437,6 @@ argument_list|,
 literal|"a"
 argument_list|,
 name|stdout
-argument_list|)
-expr_stmt|;
-comment|/*xxx 	freopen(DEBUG, "a", stderr);   xxx*/
-name|chmod
-argument_list|(
-name|DEBUG
-argument_list|,
-literal|0666
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -470,6 +492,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|DEBUG
 ifdef|#
 directive|ifdef
 name|RUUSEND
@@ -490,6 +513,7 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
+endif|RUUSEND
 while|while
 condition|(
 name|argc
@@ -585,6 +609,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+endif|RECOVER
 default|default:
 name|fprintf
 argument_list|(
@@ -679,6 +704,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+endif|RUUSEND
 name|in
 operator|=
 name|fopen
@@ -807,15 +833,17 @@ name|sprintf
 argument_list|(
 argument|cmdbuf
 argument_list|,
-literal|"uux %s- \"%s!ruusend %s -m %o - (%s)\""
+literal|"uux -gn -z %s- \"%s!ruusend %s -m %o - (%s)\""
 argument_list|,
 else|#
 directive|else
+else|!RUUSEND
 argument|sprintf(cmdbuf,
-literal|"uux %s- \"%s!uusend %s -m %o - (%s)\""
+literal|"uux -gn -z %s- \"%s!uusend %s -m %o - (%s)\""
 argument|,
 endif|#
 directive|endif
+endif|!RUUSEND
 argument|rflg, nextsys, f, mode, destname);
 ifdef|#
 directive|ifdef
@@ -825,6 +853,7 @@ literal|"remote: nextsys='%s', destname='%s', cmd='%s'\n"
 argument|, nextsys, destname, cmdbuf);
 endif|#
 directive|endif
+endif|DEBUG
 argument|out = popen(cmdbuf,
 literal|"w"
 argument|); 	} else {
@@ -842,6 +871,7 @@ literal|"before ~: '%s'\n"
 argument|, destname); fflush(dout);
 endif|#
 directive|endif
+endif|DEBUG
 argument|sl = index(destname,
 literal|'/'
 argument|);
@@ -858,6 +888,7 @@ argument|; sl++) 				;
 comment|/* boy, is this a hack! */
 else|#
 directive|else
+else|!RECOVER
 argument|if (sl == NULL) { 				fprintf(stderr,
 literal|"Illegal ~user\n"
 argument|); 				exit(
@@ -867,6 +898,7 @@ literal|0
 argument|;
 endif|#
 directive|endif
+endif|!RECOVER
 argument|user = getpwnam(destname+
 literal|1
 argument|); 			if (user == NULL) { 				fprintf(stderr,
@@ -884,6 +916,7 @@ literal|"/"
 argument|); 				strcat(dnbuf, sl); 			}
 else|#
 directive|else
+else|!RECOVER
 argument|exit(
 literal|4
 argument|); 			} 			strcpy(dnbuf, user->pw_dir); 			strcat(dnbuf,
@@ -891,6 +924,7 @@ literal|"/"
 argument|); 			strcat(dnbuf, sl);
 endif|#
 directive|endif
+endif|!RECOVER
 argument|destname = dnbuf; 		}
 ifdef|#
 directive|ifdef
@@ -898,6 +932,7 @@ name|RECOVER
 argument|else 			destname = strcpy(dnbuf, destname);
 endif|#
 directive|endif
+endif|!RECOVER
 argument|if(strncmp(UULIB, destname, strlen(UULIB)) ==
 literal|0
 argument|) { 			fprintf(stderr,
@@ -910,13 +945,14 @@ directive|ifdef
 name|RECOVER
 argument|if (stat(destname,&stbuf) ==
 literal|0
-argument|&& 		    (stbuf.st_mode& S_IFMT) == S_IFDIR&& 		     fflg) { 			strcat(dnbuf,
+argument|&& 		    (stbuf.st_mode& S_IFMT) == S_IFDIR&& 		     fflg) { 			strcat(destname,
 literal|"/"
-argument|); 			strcat(dnbuf,&f[
+argument|); 			strcat(destname,&f[
 literal|2
 argument|]); 		}
 endif|#
 directive|endif
+endif|RECOVER
 argument|out = fopen(destname,
 literal|"w"
 argument|);
@@ -928,6 +964,7 @@ literal|"local, file='%s'\n"
 argument|, destname);
 endif|#
 directive|endif
+endif|DEBUG
 argument|if (out == NULL) { 			perror(destname);
 ifdef|#
 directive|ifdef
@@ -942,20 +979,13 @@ argument|filename = getfname(destname); 			if (destname == dnbuf)
 comment|/* cmdbuf is scratch */
 argument|filename = strcpy(cmdbuf, filename); 			destname = strcpy(dnbuf, UUPUB); 			if (user != NULL) { 				strcat(destname, user->pw_name); 				if (stat(destname,&stbuf) == -
 literal|1
-argument|) { 					mkdir(destname); 					chmod(destname,
+argument|) { 					mkdir(destname,
 literal|0777
 argument|); 				} 				strcat(destname,
 literal|"/"
-argument|); 			}
-ifdef|#
-directive|ifdef
-name|RECOVER
-argument|if (fflg) 				strcat(destname,&f[
+argument|); 			} 			if (fflg) 				strcat(destname,&f[
 literal|2
-argument|]); 			else 				strcat(destname, filename);
-endif|#
-directive|endif
-argument|if ((out = fopen(destname,
+argument|]); 			else 				strcat(destname, filename); 			if ((out = fopen(destname,
 literal|"w"
 argument|)) == NULL) 				exit(
 literal|5
@@ -963,18 +993,22 @@ argument|);
 comment|/* all for naught! */
 else|#
 directive|else
+else|!RECOVER
 argument|exit(
 literal|5
 argument|);
 endif|#
 directive|endif
+endif|!RECOVER
 argument|} 		if (mode>
 literal|0
 argument|) 			chmod(destname, mode);
 comment|/* don't bother to check it */
 argument|}
 comment|/* 	 * Now, in any case, copy from in to out. 	 */
-argument|while ((c=getc(in)) != EOF) { 		putc(c, out); 		count++; 	}
+argument|count =
+literal|0
+argument|; 	while ((c=getc(in)) != EOF) { 		putc(c, out); 		count++; 	}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -983,6 +1017,7 @@ literal|"count %ld bytes\n"
 argument|, count); 	fclose(dout);
 endif|#
 directive|endif
+endif|DEBUG
 argument|fclose(in); 	fclose(out);
 comment|/* really should pclose in that case */
 argument|exit(
@@ -1003,7 +1038,11 @@ argument|char * getfname(p) register char *p; { 	register char *s; 	s = p; 	whil
 literal|'\0'
 argument|) 		p++; 	if (p == s) 		return (NULL); 	for (;p != s; p--) 		if (*p ==
 literal|'/'
-argument|) { 			p++; 			break; 		} 	return (p); }  mkdir(dirname) char *dirname; { 	register int pid; 	int retcode
+argument|) { 			p++; 			break; 		} 	return (p); }
+ifndef|#
+directive|ifndef
+name|BSD4_2
+argument|makedir(dirname, mode) char *dirname; int mode; { 	register int pid; 	int retcode
 argument_list|,
 argument|status; 	switch ((pid = fork())) { 	    case -
 literal|1
@@ -1011,7 +1050,7 @@ argument|:
 comment|/* error */
 argument|return (-
 literal|1
-argument|); 		break; 	    case
+argument|); 	    case
 literal|0
 argument|:
 comment|/* child */
@@ -1021,24 +1060,35 @@ argument|); 		execl(
 literal|"/bin/mkdir"
 argument|,
 literal|"mkdir"
-argument|, dirname,
+argument|, dirname, (char *)
 literal|0
 argument|); 		exit(
 literal|1
-argument|); 		break; 	    default:
+argument|);
+comment|/* NOTREACHED */
+argument|default:
 comment|/* parent */
 argument|while ((retcode=wait(&status)) != pid&& retcode != -
 literal|1
 argument|) 			; 		if (retcode == -
 literal|1
-argument|) 			return (-
+argument|) 			return  -
 literal|1
-argument|); 		else 			return (status); 		break; 	} }
+argument|; 		else { 			chmod(dirname, mode); 			return status; 		} 	}
+comment|/* NOTREACHED */
+argument|}
 end_function
 
 begin_endif
 endif|#
 directive|endif
+endif|!BSD4_2
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|RECOVER
 end_endif
 
 end_unit

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expfile.c	5.2 (Berkeley) %G%"
+literal|"@(#)expfile.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,7 +69,7 @@ decl_stmt|;
 name|char
 name|user
 index|[
-literal|20
+name|WKDSIZE
 index|]
 decl_stmt|,
 modifier|*
@@ -124,17 +124,6 @@ operator|*
 name|fpart
 operator|!=
 literal|'/'
-operator|&&
-name|up
-operator|<
-name|user
-operator|+
-sizeof|sizeof
-argument_list|(
-name|user
-argument_list|)
-operator|-
-literal|1
 condition|;
 name|fpart
 operator|++
@@ -151,7 +140,6 @@ name|up
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* ll1b.105, mn, Mark Nettleingham, defend against 		 * null login name in /etc/passwd 		 */
 if|if
 condition|(
 operator|!
@@ -194,9 +182,7 @@ name|full
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 default|default:
 name|p
@@ -208,13 +194,23 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|strcpy
 argument_list|(
 name|full
 argument_list|,
-literal|"%s/%s"
-argument_list|,
 name|Wrkdir
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|full
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|full
 argument_list|,
 name|file
 argument_list|)
@@ -236,9 +232,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 elseif|else
 if|if
@@ -248,14 +242,10 @@ operator|!=
 name|NULL
 condition|)
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 block|}
@@ -309,9 +299,7 @@ operator|<
 literal|0
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 if|if
 condition|(
@@ -326,14 +314,10 @@ operator|==
 name|S_IFDIR
 condition|)
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_block
@@ -366,12 +350,12 @@ decl_stmt|;
 name|char
 name|cmd
 index|[
-literal|100
+name|MAXFULLNAME
 index|]
 decl_stmt|,
 name|dir
 index|[
-literal|100
+name|MAXFULLNAME
 index|]
 decl_stmt|;
 specifier|register
@@ -415,9 +399,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 operator|*
 name|p
@@ -432,7 +414,6 @@ name|dir
 argument_list|)
 condition|)
 continue|continue;
-comment|/* rti!trt: add chmod ala 4.1c uucp */
 name|sprintf
 argument_list|(
 name|cmd
@@ -485,11 +466,10 @@ operator|!=
 literal|0
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
+comment|/* NOTREACHED */
 block|}
 end_block
 
@@ -521,17 +501,13 @@ operator|!=
 name|FAIL
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 comment|/*  could not expand file name */
 comment|/* the gwd routine failed */
-name|fprintf
+name|logent
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't expand filename (%s). Pwd failed.\n"
+literal|"CAN'T EXPAND FILENAME - PWD FAILED"
 argument_list|,
 name|file
 operator|+
@@ -539,9 +515,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 end_block

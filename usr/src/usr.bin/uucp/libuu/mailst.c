@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mailst.c	5.2 (Berkeley) %G%"
+literal|"@(#)mailst.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ file|"uucp.h"
 end_include
 
 begin_comment
-comment|/*******  *	mailst(user, str, file)  *  *	mailst  -  this routine will fork and execute  *	a mail command sending string (str) to user (user).  *	If file is non-null, the file is also sent.  *	(this is used for mail returned to sender.)  */
+comment|/*  *	mailst  -  this routine will fork and execute  *	a mail command sending string (str) to user (user).  *	If file is non-null, the file is also sent.  *	(this is used for mail returned to sender.)  */
 end_comment
 
 begin_macro
@@ -65,11 +65,6 @@ modifier|*
 name|fi
 decl_stmt|;
 name|char
-name|cmd
-index|[
-literal|100
-index|]
-decl_stmt|,
 name|buf
 index|[
 name|BUFSIZ
@@ -77,13 +72,15 @@ index|]
 decl_stmt|;
 specifier|register
 name|int
-name|nc
+name|c
 decl_stmt|;
 name|sprintf
 argument_list|(
-name|cmd
+name|buf
 argument_list|,
-literal|"mail %s"
+literal|"%s %s"
+argument_list|,
+name|MAIL
 argument_list|,
 name|user
 argument_list|)
@@ -95,26 +92,30 @@ name|fp
 operator|=
 name|rpopen
 argument_list|(
-name|cmd
+name|buf
 argument_list|,
 literal|"w"
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return;
+block|{
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s"
+literal|"From: uucp\nTo: %s\nSubject: %s\n\n"
+argument_list|,
+name|user
 argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|file
+operator|&&
 operator|*
 name|file
 operator|!=
@@ -140,35 +141,26 @@ block|{
 while|while
 condition|(
 operator|(
-name|nc
+name|c
 operator|=
-name|fread
+name|getc
 argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-argument_list|,
-name|BUFSIZ
-argument_list|,
 name|fi
 argument_list|)
 operator|)
-operator|>
-literal|0
+operator|!=
+name|EOF
 condition|)
-name|fwrite
+name|putc
 argument_list|(
-name|buf
+name|c
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
+name|fp
 argument_list|)
-argument_list|,
-name|nc
+expr_stmt|;
+name|putc
+argument_list|(
+literal|'\n'
 argument_list|,
 name|fp
 argument_list|)
@@ -179,12 +171,12 @@ name|fi
 argument_list|)
 expr_stmt|;
 block|}
-name|pclose
+name|rpclose
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-return|return;
+block|}
 block|}
 end_block
 
