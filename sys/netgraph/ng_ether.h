@@ -124,6 +124,9 @@ comment|/* add multicast membership */
 name|NGM_ETHER_DEL_MULTI
 block|,
 comment|/* delete multicast membership */
+name|NGM_ETHER_DETACH
+block|,
+comment|/* our way to be shut down */
 block|}
 enum|;
 end_enum
