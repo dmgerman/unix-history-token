@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.20 %G%"
+literal|"@(#)interp.c 1.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -842,6 +842,9 @@ case|case
 name|O_BPT
 case|:
 comment|/* breakpoint trap */
+name|PFLUSH
+argument_list|()
+expr_stmt|;
 asm|asm(".byte 0");
 name|pc
 operator|.
