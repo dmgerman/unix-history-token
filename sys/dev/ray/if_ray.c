@@ -2011,14 +2011,6 @@ name|ccs
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialise the network interface structure 	 */
-if|if
-condition|(
-operator|!
-name|ifp
-operator|->
-name|if_name
-condition|)
-block|{
 name|bcopy
 argument_list|(
 operator|(
@@ -2151,7 +2143,6 @@ argument_list|,
 name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Initialise the timers and driver 	 */
 name|callout_handle_init
 argument_list|(
@@ -2175,19 +2166,6 @@ operator|&
 name|sc
 operator|->
 name|sc_comq
-argument_list|)
-expr_stmt|;
-name|bpfattach
-argument_list|(
-name|ifp
-argument_list|,
-name|DLT_EN10MB
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Print out some useful information 	 */
@@ -2499,9 +2477,11 @@ operator||
 name|IFF_OACTIVE
 operator|)
 expr_stmt|;
-name|if_detach
+name|ether_ifdetach
 argument_list|(
 name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Stop the runq and wake up anyone sleeping for us. 	 */
