@@ -4304,7 +4304,7 @@ name|ARGS
 argument_list|(
 name|personality
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|)
 argument_list|,
 name|args
