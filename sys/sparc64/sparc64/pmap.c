@@ -5338,6 +5338,11 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|PMAP_LOCK
+argument_list|(
+name|pm
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5445,6 +5450,11 @@ expr_stmt|;
 name|TTE_ZERO
 argument_list|(
 name|tp
+argument_list|)
+expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|pm
 argument_list|)
 expr_stmt|;
 block|}
