@@ -1987,6 +1987,26 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|access
+argument_list|(
+name|CONFIG
+argument_list|,
+name|R_OK
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Accessing %s: %m, continuing anyway."
+argument_list|,
+name|CONFIG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|debug
 operator|==
 literal|0
