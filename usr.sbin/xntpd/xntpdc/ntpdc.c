@@ -4218,8 +4218,7 @@ condition|?
 name|MAX_CMDLINE
 else|:
 name|num
-block|)
-empty_stmt|;
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|line
@@ -4270,15 +4269,15 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_comment
-unit|}
 comment|/*  * abortcmd - catch interrupts and abort the current command  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|RETSIGTYPE
 name|abortcmd
 parameter_list|(

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpc.c,v 1.10 1999/08/19 04:10:32 mdodd Exp $"
+literal|"$Id: lpc.c,v 1.11 1999/08/20 01:24:35 mdodd Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -744,8 +744,7 @@ condition|?
 name|MAX_CMDLINE
 else|:
 name|num
-block|)
-empty_stmt|;
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|cmdline
@@ -938,10 +937,11 @@ name|margv
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|struct
 name|cmd
 modifier|*
