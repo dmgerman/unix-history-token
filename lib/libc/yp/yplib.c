@@ -392,7 +392,7 @@ specifier|static
 name|mutex_t
 name|_ypmutex
 init|=
-name|PTHREAD_MUTEX_INITIALIZER
+name|MUTEX_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
