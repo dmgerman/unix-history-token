@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rune.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -98,11 +92,8 @@ literal|'\0'
 condition|)
 if|if
 condition|(
-name|fputrune
+name|fputwc
 argument_list|(
-operator|(
-name|rune_t
-operator|)
 operator|*
 name|ws
 operator|++
@@ -110,7 +101,7 @@ argument_list|,
 name|fp
 argument_list|)
 operator|==
-name|EOF
+name|WEOF
 condition|)
 return|return
 operator|(
