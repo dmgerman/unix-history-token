@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	1.10 %G%"
+literal|"@(#)lex.c	1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -667,6 +667,8 @@ condition|(
 name|execute
 argument_list|(
 name|linebuf
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return;
@@ -678,13 +680,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Execute a single command.  If the command executed  * is "quit," then return non-zero so that the caller  * will know to return back to main, if he cares.  */
+comment|/*  * Execute a single command.  If the command executed  * is "quit," then return non-zero so that the caller  * will know to return back to main, if he cares.  * Contxt is non-zero if called while composing mail.  */
 end_comment
 
 begin_macro
 name|execute
 argument_list|(
 argument|linebuf
+argument_list|,
+argument|contxt
 argument_list|)
 end_macro
 
@@ -982,6 +986,10 @@ operator|->
 name|c_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sourcing
+condition|)
 name|unstack
 argument_list|()
 expr_stmt|;
@@ -1053,6 +1061,32 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|contxt
+operator|&&
+name|com
+operator|->
+name|c_argtype
+operator|&
+name|R
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Cannot recursively invoke \"%s\"\n"
+argument_list|,
+name|com
+operator|->
+name|c_name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|e
 operator|=
 literal|1
@@ -1076,6 +1110,8 @@ operator||
 name|T
 operator||
 name|W
+operator||
+name|R
 operator|)
 condition|)
 block|{
