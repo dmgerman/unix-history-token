@@ -499,7 +499,6 @@ operator|->
 name|mygateway
 argument_list|)
 expr_stmt|;
-comment|/* XXX set up swap? */
 comment|/* set up root mount */
 name|nd
 operator|->

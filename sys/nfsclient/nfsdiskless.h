@@ -16,7 +16,7 @@ name|_NFSCLIENT_NFSDISKLESS_H_
 end_define
 
 begin_comment
-comment|/*  * Structure that must be initialized for a diskless nfs client.  * This structure is used by nfs_mountroot() to set up the root vnode,  * and to do a partial ifconfig(8) and route(8) so that the critical net  * interface can communicate with the server.  * The primary bootstrap is expected to fill in the appropriate fields before  * starting the kernel. Whether or not the swap area is nfs mounted is  * determined by the value in swdevt[0]. (equal to NODEV --> swap over nfs)  * Currently only works for AF_INET protocols.  * NB: All fields are stored in net byte order to avoid hassles with  * client/server byte ordering differences.  */
+comment|/*  * Structure that must be initialized for a diskless nfs client.  * This structure is used by nfs_mountroot() to set up the root vnode,  * and to do a partial ifconfig(8) and route(8) so that the critical net  * interface can communicate with the server.  * The primary bootstrap is expected to fill in the appropriate fields before  * starting the kernel.  * Currently only works for AF_INET protocols.  * NB: All fields are stored in net byte order to avoid hassles with  * client/server byte ordering differences.  */
 end_comment
 
 begin_comment
@@ -37,43 +37,6 @@ name|sockaddr_in
 name|mygateway
 decl_stmt|;
 comment|/* Default gateway */
-name|struct
-name|nfs_args
-name|swap_args
-decl_stmt|;
-comment|/* Mount args for swap file */
-name|int
-name|swap_fhsize
-decl_stmt|;
-comment|/* Size of file handle */
-name|u_char
-name|swap_fh
-index|[
-name|NFSX_V3FHMAX
-index|]
-decl_stmt|;
-comment|/* Swap file's file handle */
-name|struct
-name|sockaddr_in
-name|swap_saddr
-decl_stmt|;
-comment|/* Address of swap server */
-name|char
-name|swap_hostnam
-index|[
-name|MNAMELEN
-index|]
-decl_stmt|;
-comment|/* Host name for mount pt */
-name|int
-name|swap_nblks
-decl_stmt|;
-comment|/* Size of server swap file */
-name|struct
-name|ucred
-name|swap_ucred
-decl_stmt|;
-comment|/* Swap credentials */
 name|struct
 name|nfs_args
 name|root_args
@@ -215,39 +178,6 @@ name|sockaddr_in
 name|mygateway
 decl_stmt|;
 comment|/* Default gateway */
-name|struct
-name|onfs_args
-name|swap_args
-decl_stmt|;
-comment|/* Mount args for swap file */
-name|u_char
-name|swap_fh
-index|[
-name|NFSX_V2FH
-index|]
-decl_stmt|;
-comment|/* Swap file's file handle */
-name|struct
-name|sockaddr_in
-name|swap_saddr
-decl_stmt|;
-comment|/* Address of swap server */
-name|char
-name|swap_hostnam
-index|[
-name|MNAMELEN
-index|]
-decl_stmt|;
-comment|/* Host name for mount pt */
-name|int
-name|swap_nblks
-decl_stmt|;
-comment|/* Size of server swap file */
-name|struct
-name|ucred
-name|swap_ucred
-decl_stmt|;
-comment|/* Swap credentials */
 name|struct
 name|onfs_args
 name|root_args
