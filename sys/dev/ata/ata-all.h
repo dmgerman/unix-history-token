@@ -32,12 +32,78 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_E_NM
+value|0x02
+end_define
+
+begin_comment
+comment|/* no media */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_E_ABORT
 value|0x04
 end_define
 
 begin_comment
 comment|/* command aborted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_E_MCR
+value|0x08
+end_define
+
+begin_comment
+comment|/* media change request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_E_IDNF
+value|0x10
+end_define
+
+begin_comment
+comment|/* ID not found */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_E_MC
+value|0x20
+end_define
+
+begin_comment
+comment|/* media changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_E_UNC
+value|0x40
+end_define
+
+begin_comment
+comment|/* uncorrectable data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_E_ICRC
+value|0x80
+end_define
+
+begin_comment
+comment|/* UDMA crc error */
 end_comment
 
 begin_define

@@ -3854,21 +3854,16 @@ operator|->
 name|controller
 argument_list|)
 expr_stmt|;
+comment|/* if retries still permit, reinject this request */
 if|if
 condition|(
 name|request
 operator|->
 name|retries
+operator|++
 operator|<
 name|ATAPI_MAX_RETRIES
 condition|)
-block|{
-comment|/* reinject this request */
-name|request
-operator|->
-name|retries
-operator|++
-expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -3883,7 +3878,6 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* retries all used up, return error */

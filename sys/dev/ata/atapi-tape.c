@@ -853,6 +853,8 @@ name|int32_t
 name|count
 decl_stmt|,
 name|error
+init|=
+literal|0
 decl_stmt|;
 comment|/* get drive capabilities, some drives needs this repeated */
 for|for

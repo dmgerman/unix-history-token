@@ -603,9 +603,11 @@ literal|0
 block|}
 decl_stmt|;
 name|int32_t
-name|error
-decl_stmt|,
 name|count
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 name|bzero
 argument_list|(

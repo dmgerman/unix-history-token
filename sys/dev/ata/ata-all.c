@@ -941,11 +941,14 @@ case|:
 return|return
 literal|"HighPoint HPT366 IDE controller"
 return|;
-comment|/* unsupported but known chipsets, generic DMA only */
 case|case
 literal|0x05711106
 case|:
-comment|/* 82c586 */
+comment|/* 82c586& 82c686 */
+return|return
+literal|"VIA Apollo IDE controller"
+return|;
+comment|/* unsupported but known chipsets, generic DMA only */
 case|case
 literal|0x05961106
 case|:
