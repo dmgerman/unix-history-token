@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)term.c	5.4 (Berkeley) %G%"
+literal|"@(#)term.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,6 +289,15 @@ index|]
 operator|==
 literal|'?'
 condition|)
+if|if
+condition|(
+name|ttype
+index|[
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
 name|ttype
 operator|=
 name|askuser
@@ -296,6 +305,14 @@ argument_list|(
 name|ttype
 operator|+
 literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|ttype
+operator|=
+name|askuser
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Find the termcap entry.  If it doesn't exist, ask the user. */
@@ -529,15 +546,26 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
 name|answer
 index|[
 literal|0
 index|]
-condition|?
+condition|)
+return|return
+operator|(
 name|answer
-else|:
+operator|)
+return|;
+if|if
+condition|(
+name|dflt
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
 name|dflt
 operator|)
 return|;
