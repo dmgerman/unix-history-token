@@ -5468,6 +5468,7 @@ comment|/*  * get page routine  *  * XXX By default, wimp out... note that a_off
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2_getpages
 parameter_list|(
@@ -5480,6 +5481,7 @@ name|ap
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|vnode_pager_generic_getpages
 argument_list|(
 name|ap
@@ -5498,6 +5500,7 @@ name|ap
 operator|->
 name|a_reqpage
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -5507,6 +5510,7 @@ comment|/*  * put page routine  *  * XXX By default, wimp out... note that a_off
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2_putpages
 parameter_list|(
@@ -5519,6 +5523,7 @@ name|ap
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|vnode_pager_generic_putpages
 argument_list|(
 name|ap
@@ -5541,6 +5546,7 @@ name|ap
 operator|->
 name|a_rtvals
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
