@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.51 (Berkeley) %G%"
+literal|"@(#)conf.c	8.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4442,9 +4442,15 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|nargv
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
 modifier|*
 name|ostr
 decl_stmt|;
