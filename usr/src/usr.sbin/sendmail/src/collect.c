@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.14 (Berkeley) %G%"
+literal|"@(#)collect.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,16 +87,16 @@ name|FALSE
 else|:
 name|IgnrDot
 decl_stmt|;
-name|char
-name|buf
-index|[
-name|MAXLINE
-index|]
-decl_stmt|,
-name|buf2
-index|[
-name|MAXLINE
-index|]
+name|time_t
+name|dbto
+init|=
+name|smtpmode
+condition|?
+name|TimeOuts
+operator|.
+name|to_datablock
+else|:
+literal|0
 decl_stmt|;
 specifier|register
 name|char
@@ -110,6 +110,17 @@ name|bool
 name|inputerr
 init|=
 name|FALSE
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|,
+name|buf2
+index|[
+name|MAXLINE
+index|]
 decl_stmt|;
 specifier|extern
 name|char
@@ -216,9 +227,7 @@ expr_stmt|;
 comment|/* set global timer to monitor progress */
 name|sfgetset
 argument_list|(
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Try to read a UNIX-style From line 	*/
@@ -232,9 +241,7 @@ name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|,
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|,
 literal|"initial message read"
 argument_list|)
@@ -279,6 +286,8 @@ argument_list|(
 name|buf
 argument_list|,
 name|InChannel
+argument_list|,
+name|dbto
 argument_list|)
 condition|)
 goto|goto
@@ -301,9 +310,7 @@ name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|,
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|,
 literal|"message header read"
 argument_list|)
@@ -384,6 +391,8 @@ argument_list|(
 name|workbuf
 argument_list|,
 name|InChannel
+argument_list|,
+name|dbto
 argument_list|)
 condition|)
 goto|goto
@@ -440,9 +449,7 @@ name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|,
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|,
 literal|"message header read"
 argument_list|)
@@ -481,6 +488,8 @@ argument_list|(
 name|freebuf
 argument_list|,
 name|InChannel
+argument_list|,
+name|dbto
 argument_list|)
 condition|)
 goto|goto
@@ -706,9 +715,7 @@ name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|,
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|,
 literal|"message separator read"
 argument_list|)
@@ -868,9 +875,7 @@ name|MAXLINE
 argument_list|,
 name|InChannel
 argument_list|,
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|,
 literal|"message body read"
 argument_list|)
@@ -1394,6 +1399,8 @@ parameter_list|(
 name|buf
 parameter_list|,
 name|fp
+parameter_list|,
+name|dbto
 parameter_list|)
 name|char
 modifier|*
@@ -1402,6 +1409,9 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+name|time_t
+name|dbto
 decl_stmt|;
 block|{
 specifier|register
@@ -1447,9 +1457,7 @@ name|MAXLINE
 argument_list|,
 name|fp
 argument_list|,
-name|TimeOuts
-operator|.
-name|to_datablock
+name|dbto
 argument_list|,
 literal|"long line flush"
 argument_list|)
