@@ -1186,9 +1186,116 @@ begin_comment
 comment|/*  * Filesystem configuration information. One of these exists for each  * type of filesystem supported by the kernel. These are searched at  * mount time to identify the requested filesystem.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|vfsconf
+block|{
+name|struct
+name|vfsops
+modifier|*
+name|vfc_vfsops
+decl_stmt|;
+comment|/* filesystem operations vector */
+name|char
+name|vfc_name
+index|[
+name|MFSNAMELEN
+index|]
+decl_stmt|;
+comment|/* filesystem type name */
+name|int
+name|vfc_typenum
+decl_stmt|;
+comment|/* historic filesystem type number */
+name|int
+name|vfc_refcount
+decl_stmt|;
+comment|/* number mounted of this type */
+name|int
+name|vfc_flags
+decl_stmt|;
+comment|/* permanent flags */
+name|struct
+name|vfsoptdecl
+modifier|*
+name|vfc_opts
+decl_stmt|;
+comment|/* mount options */
+name|struct
+name|vfsconf
+modifier|*
+name|vfc_next
+decl_stmt|;
+comment|/* next in list */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_comment
+comment|/* Userland version of the struct vfsconf. */
+end_comment
+
+begin_struct
+struct|struct
+name|xvfsconf
+block|{
+name|struct
+name|vfsops
+modifier|*
+name|vfc_vfsops
+decl_stmt|;
+comment|/* filesystem operations vector */
+name|char
+name|vfc_name
+index|[
+name|MFSNAMELEN
+index|]
+decl_stmt|;
+comment|/* filesystem type name */
+name|int
+name|vfc_typenum
+decl_stmt|;
+comment|/* historic filesystem type number */
+name|int
+name|vfc_refcount
+decl_stmt|;
+comment|/* number mounted of this type */
+name|int
+name|vfc_flags
+decl_stmt|;
+comment|/* permanent flags */
+name|struct
+name|vfsconf
+modifier|*
+name|vfc_next
+decl_stmt|;
+comment|/* next in list */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Userland version of the struct vfsconf. */
+end_comment
+
+begin_struct
+struct|struct
+name|xvfsconf
 block|{
 name|struct
 name|vfsops
@@ -2905,19 +3012,6 @@ begin_function_decl
 name|struct
 name|ovfsconf
 modifier|*
-name|getvfsbyname
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|ovfsconf
-modifier|*
 name|getvfsbytype
 parameter_list|(
 name|int
@@ -2936,23 +3030,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|getvfsbyname
-value|new_getvfsbyname
-end_define
-
 begin_function_decl
 name|int
-name|new_getvfsbyname
+name|getvfsbyname
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 parameter_list|,
 name|struct
-name|vfsconf
+name|xvfsconf
 modifier|*
 parameter_list|)
 function_decl|;

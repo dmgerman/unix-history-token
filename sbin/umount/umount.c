@@ -953,7 +953,7 @@ name|typelist
 parameter_list|)
 block|{
 name|struct
-name|vfsconf
+name|xvfsconf
 name|vfc
 decl_stmt|;
 name|struct

@@ -3697,7 +3697,7 @@ modifier|*
 name|new
 decl_stmt|;
 name|struct
-name|vfsconf
+name|xvfsconf
 name|vfc
 decl_stmt|;
 name|fsname

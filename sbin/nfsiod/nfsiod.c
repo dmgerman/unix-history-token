@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -169,7 +175,7 @@ name|int
 name|ch
 decl_stmt|;
 name|struct
-name|vfsconf
+name|xvfsconf
 name|vfc
 decl_stmt|;
 name|int
@@ -199,16 +205,11 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|&&
-name|vfsisloadable
-argument_list|(
-literal|"nfs"
-argument_list|)
 condition|)
 block|{
 if|if
 condition|(
-name|vfsload
+name|kldload
 argument_list|(
 literal|"nfs"
 argument_list|)
@@ -217,13 +218,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"vfsload(nfs)"
+literal|"kldload(nfs)"
 argument_list|)
 expr_stmt|;
-name|endvfsent
-argument_list|()
-expr_stmt|;
-comment|/* flush cache */
 name|error
 operator|=
 name|getvfsbyname
