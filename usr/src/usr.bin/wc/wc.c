@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wc.c	4.3 (Berkeley) %G%"
+literal|"@(#)wc.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -771,7 +771,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%7ld"
+literal|" %7ld"
 argument_list|,
 name|num
 argument_list|)
@@ -889,9 +889,23 @@ operator|=
 literal|"se"
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"%4.1f %2s\t"
+argument_list|,
+name|t
+argument_list|,
+name|units
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" %4.1f %2s"
 argument_list|,
 name|t
 argument_list|,
