@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.32 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.33 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.32 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.33 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,7 +262,17 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"getmxrr: res_search failed (errno=%d, h_errno=%d)\n"
+literal|"getmxrr: res_search(%s) failed (errno=%d, h_errno=%d)\n"
+argument_list|,
+operator|(
+name|host
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|"<NULL>"
+else|:
+name|host
 argument_list|,
 name|errno
 argument_list|,
