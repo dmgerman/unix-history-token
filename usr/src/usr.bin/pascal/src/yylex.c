@@ -15,33 +15,52 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yylex.c 1.4 %G%"
+literal|"@(#)yylex.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-operator|*
-operator|/
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_include
 include|#
 directive|include
 file|"whoami.h"
+end_include
+
+begin_include
 include|#
 directive|include
 file|"0.h"
+end_include
+
+begin_include
 include|#
 directive|include
 file|"tree_ty.h"
+end_include
+
+begin_comment
 comment|/* must be included for yy.h */
+end_comment
+
+begin_include
 include|#
 directive|include
 file|"yy.h"
+end_include
+
+begin_comment
 comment|/*  * Scanner  */
+end_comment
+
+begin_decl_stmt
 name|int
 name|yylacnt
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

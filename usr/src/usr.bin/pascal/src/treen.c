@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)treen.c 1.2 %G%"
+literal|"@(#)treen.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 

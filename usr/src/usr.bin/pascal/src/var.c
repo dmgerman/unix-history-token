@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.17 %G%"
+literal|"@(#)var.c 1.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -875,12 +875,6 @@ begin_comment
 comment|/*  * Evening  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC
-end_ifndef
-
 begin_function
 name|long
 name|leven
@@ -918,11 +912,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyrecover.c 1.4 %G%"
+literal|"@(#)yyrecover.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
