@@ -14978,18 +14978,6 @@ goto|goto
 name|command_known
 goto|;
 block|}
-name|PRINTF
-argument_list|(
-literal|"%s: isp_mboxcmd sees mailbox int with 0x%x in "
-literal|"mbox0\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|mbox
-argument_list|)
-expr_stmt|;
 block|}
 name|SYS_DELAY
 argument_list|(
