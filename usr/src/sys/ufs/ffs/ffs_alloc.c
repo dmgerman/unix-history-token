@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	2.7	82/06/14	*/
+comment|/*	ffs_alloc.c	2.8	82/07/15	*/
 end_comment
 
 begin_include
@@ -710,7 +710,7 @@ name|b_flags
 operator||=
 name|B_DONE
 expr_stmt|;
-name|blkclr
+name|bzero
 argument_list|(
 name|bp
 operator|->
@@ -844,7 +844,7 @@ argument_list|,
 name|osize
 argument_list|)
 expr_stmt|;
-name|blkclr
+name|bzero
 argument_list|(
 name|bp
 operator|->
