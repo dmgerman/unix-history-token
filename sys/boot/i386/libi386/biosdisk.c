@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: biosdisk.c,v 1.8 1998/09/28 20:08:34 peter Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: biosdisk.c,v 1.9 1998/10/02 16:32:45 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -210,7 +210,11 @@ decl_stmt|;
 name|struct
 name|dos_partition
 name|od_parttab
+index|[
+name|NDOSPART
+index|]
 decl_stmt|;
+comment|/* XXX needs to grow for extended partitions */
 define|#
 directive|define
 name|BD_LABELOK
@@ -447,6 +451,13 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|DEBUG
+argument_list|(
+literal|"looking for bios device 0x%x"
+argument_list|,
+name|biosdev
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -460,6 +471,21 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+name|DEBUG
+argument_list|(
+literal|"bd unit %d is BIOS device 0x%x"
+argument_list|,
+name|i
+argument_list|,
+name|bdinfo
+index|[
+name|i
+index|]
+operator|.
+name|bd_unit
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bdinfo
@@ -476,6 +502,7 @@ operator|(
 name|i
 operator|)
 return|;
+block|}
 return|return
 operator|(
 operator|-
@@ -1185,6 +1212,8 @@ argument_list|(
 expr|struct
 name|dos_partition
 argument_list|)
+operator|*
+name|NDOSPART
 argument_list|)
 expr_stmt|;
 name|dptr
@@ -1193,6 +1222,9 @@ operator|&
 name|od
 operator|->
 name|od_parttab
+index|[
+literal|0
+index|]
 expr_stmt|;
 name|od
 operator|->
@@ -1265,6 +1297,17 @@ goto|goto
 name|out
 goto|;
 block|}
+name|DEBUG
+argument_list|(
+literal|"found slice at %d, %d sectors"
+argument_list|,
+name|sector
+argument_list|,
+name|dptr
+operator|->
+name|dp_size
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1318,11 +1361,33 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+comment|/* we number 1-4, offsets are 0-3 */
 name|sector
 operator|=
 name|dptr
 operator|->
 name|dp_start
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|"slice entry %d at %d, %d sectors"
+argument_list|,
+name|dev
+operator|->
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|slice
+operator|-
+literal|1
+argument_list|,
+name|sector
+argument_list|,
+name|dptr
+operator|->
+name|dp_size
+argument_list|)
 expr_stmt|;
 block|}
 name|unsliced
@@ -1853,7 +1918,7 @@ directive|ifdef
 name|BD_SUPPORT_FRAGS
 name|DEBUG
 argument_list|(
-literal|"bd_strategy: frag read %d from %d+%d+d to %p\n"
+literal|"bd_strategy: frag read %d from %d+%d+d to %p"
 argument_list|,
 name|fragsize
 argument_list|,
@@ -2413,7 +2478,7 @@ argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
-literal|"ax = 0x%04x cx = 0x%04x dx = 0x%04x status 0x%x\n"
+literal|"ax = 0x%04x cx = 0x%04x dx = 0x%04x status 0x%x"
 argument_list|,
 literal|0x200
 operator||
