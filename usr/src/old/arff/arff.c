@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arff.c	4.6 (Berkeley) 81/05/18"
+literal|"@(#)arff.c	4.7 (Berkeley) 81/07/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -3732,9 +3732,6 @@ name|trans
 parameter_list|()
 function_decl|;
 extern|extern floppydes;
-name|int
-name|temp
-decl_stmt|;
 name|rt_init
 argument_list|()
 expr_stmt|;
@@ -3774,9 +3771,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|temp
-operator|=
 name|read
 argument_list|(
 name|floppydes
@@ -3785,7 +3779,6 @@ name|obuff
 argument_list|,
 literal|128
 argument_list|)
-operator|)
 operator|!=
 literal|128
 condition|)
@@ -3793,13 +3786,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"arff: read error block %d %d\n"
+literal|"arff: read error block %d\n"
 argument_list|,
 name|startad
 operator|/
 literal|128
-argument_list|,
-name|temp
 argument_list|)
 expr_stmt|;
 name|obuff
@@ -3839,9 +3830,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|temp
-operator|=
 name|read
 argument_list|(
 name|floppydes
@@ -3850,7 +3838,6 @@ name|obuff
 argument_list|,
 literal|512
 argument_list|)
-operator|)
 operator|!=
 literal|512
 condition|)
@@ -3858,13 +3845,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"arff: read error block %d %d\n"
+literal|"arff: read error block %d\n"
 argument_list|,
 name|startad
 operator|/
 literal|512
-argument_list|,
-name|temp
 argument_list|)
 expr_stmt|;
 name|obuff
