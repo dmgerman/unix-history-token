@@ -167,11 +167,6 @@ directive|define
 name|TWE_CMD_COMPLETE
 value|2
 comment|/* completed by controller (maybe with error) */
-define|#
-directive|define
-name|TWE_CMD_FAILED
-value|3
-comment|/* failed submission to controller */
 name|int
 name|tr_flags
 decl_stmt|;
@@ -324,9 +319,6 @@ comment|/* controller is suspended */
 name|int
 name|twe_host_id
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TWE_PERFORMANCE_MONITOR
 name|struct
 name|twe_qstat
 name|twe_qstat
@@ -335,8 +327,6 @@ name|TWEQ_COUNT
 index|]
 decl_stmt|;
 comment|/* queue statistics */
-endif|#
-directive|endif
 name|TWE_PLATFORM_SOFTC
 comment|/* platform-specific softc elements */
 block|}
@@ -417,24 +407,43 @@ end_comment
 
 begin_function_decl
 specifier|extern
+name|void
+name|twe_startio
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
-name|twe_submit_bio
+name|twe_dump_blocks
 parameter_list|(
 name|struct
 name|twe_softc
 modifier|*
 name|sc
 parameter_list|,
-name|twe_bio
+name|int
+name|unit
+parameter_list|,
+comment|/* crashdump block write */
+name|u_int32_t
+name|lba
+parameter_list|,
+name|void
 modifier|*
-name|bp
+name|data
+parameter_list|,
+name|int
+name|nblks
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* pass bio to core */
-end_comment
 
 begin_function_decl
 specifier|extern
@@ -636,12 +645,6 @@ begin_comment
 comment|/********************************************************************************  * Queue primitives  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TWE_PERFORMANCE_MONITOR
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -679,49 +682,6 @@ parameter_list|)
 define|\
 value|do {					\ 	    sc->twe_qstat[qname].q_length = 0;	\ 	    sc->twe_qstat[qname].q_max = 0;	\ 	} while(0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TWEQ_ADD
-parameter_list|(
-name|sc
-parameter_list|,
-name|qname
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWEQ_REMOVE
-parameter_list|(
-name|sc
-parameter_list|,
-name|qname
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWEQ_INIT
-parameter_list|(
-name|sc
-parameter_list|,
-name|qname
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
