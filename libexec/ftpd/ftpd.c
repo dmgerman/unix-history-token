@@ -5109,11 +5109,6 @@ argument_list|)
 expr_stmt|;
 name|pw
 operator|=
-operator|(
-expr|struct
-name|passwd
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 return|return;
@@ -9965,11 +9960,6 @@ name|offset
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-expr|struct
-name|sf_hdtr
-operator|*
-operator|)
 name|NULL
 argument_list|,
 operator|&
@@ -12275,10 +12265,6 @@ argument_list|(
 name|path
 argument_list|)
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 name|reply
