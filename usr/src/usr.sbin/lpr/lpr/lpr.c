@@ -27,7 +27,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1989 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	5.4 (Berkeley) %G%"
+literal|"@(#)lpr.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -793,6 +793,47 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'U'
+case|:
+comment|/* user name */
+name|hdr
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|arg
+index|[
+literal|2
+index|]
+condition|)
+name|person
+operator|=
+operator|&
+name|arg
+index|[
+literal|2
+index|]
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+name|argc
+operator|--
+expr_stmt|;
+name|person
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
+block|}
+break|break;
+case|case
 literal|'J'
 case|:
 comment|/* job name */
@@ -1141,6 +1182,17 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|userid
+operator|!=
+name|DU
+operator|||
+name|person
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|pw
 operator|=
@@ -1163,12 +1215,17 @@ name|pw
 operator|->
 name|pw_name
 expr_stmt|;
+block|}
 comment|/* 	 * Check for restricted group access. 	 */
 if|if
 condition|(
 name|RG
 operator|!=
 name|NULL
+operator|&&
+name|userid
+operator|!=
+name|DU
 condition|)
 block|{
 if|if
