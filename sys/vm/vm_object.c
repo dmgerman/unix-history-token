@@ -800,15 +800,24 @@ argument_list|,
 name|kernel_object
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The kmem object's mutex is given a unique name, instead of 	 * "vm object", to avoid false reports of lock-order reversal 	 * with a system map mutex. 	 */
 name|kmem_object
 operator|=
 operator|&
 name|kmem_object_store
 expr_stmt|;
-name|VM_OBJECT_LOCK_INIT
+name|mtx_init
 argument_list|(
-operator|&
-name|kmem_object_store
+name|VM_OBJECT_MTX
+argument_list|(
+name|kmem_object
+argument_list|)
+argument_list|,
+literal|"kmem object"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
