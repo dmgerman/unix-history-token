@@ -2875,7 +2875,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|eisa
 argument_list|,
-name|isab
+name|eisab
 argument_list|,
 name|eisa_driver
 argument_list|,
