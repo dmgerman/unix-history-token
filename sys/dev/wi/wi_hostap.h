@@ -360,7 +360,7 @@ begin_define
 define|#
 directive|define
 name|WIHAP_DFLT_INACTIVITY_TIME
-value|(120/WIHAP_INTERVAL)
+value|120
 end_define
 
 begin_comment
