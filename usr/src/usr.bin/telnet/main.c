@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.8 (Berkeley) %G%"
+literal|"@(#)main.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,7 +309,7 @@ name|transcom
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
