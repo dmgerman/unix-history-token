@@ -211,6 +211,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|int
@@ -8151,11 +8168,6 @@ name|AF_INET
 condition|)
 name|arp_ifinit
 argument_list|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
 name|ifp
 argument_list|,
 name|ifa
