@@ -15,11 +15,11 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|QUEUE
-end_ifdef
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.131 (Berkeley) 11/8/96 (with queueing)"
+literal|"@(#)queue.c	8.153 (Berkeley) 1/14/97 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.131 (Berkeley) 11/8/96 (without queueing)"
+literal|"@(#)queue.c	8.153 (Berkeley) 1/14/97 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,11 +72,11 @@ directive|include
 file|<dirent.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|QUEUE
-end_ifdef
+end_if
 
 begin_comment
 comment|/* **  Work queue. */
@@ -151,37 +151,6 @@ end_define
 begin_comment
 comment|/* version number of this queue format */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NGROUPS_MAX
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|NGROUPS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NGROUPS_MAX
-value|NGROUPS
-end_define
-
-begin_comment
-comment|/* POSIX naming convention */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -708,6 +677,8 @@ specifier|register
 name|FILE
 modifier|*
 name|dfp
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|dfname
@@ -1385,7 +1356,7 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s: q_flags = %x"
+literal|"dropenvelope: %s: q_flags = %x, paddr = %s"
 argument_list|,
 name|e
 operator|->
@@ -1394,6 +1365,10 @@ argument_list|,
 name|q
 operator|->
 name|q_flags
+argument_list|,
+name|q
+operator|->
+name|q_paddr
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2243,12 +2218,6 @@ modifier|*
 name|paddr
 decl_stmt|;
 specifier|register
-name|struct
-name|passwd
-modifier|*
-name|pw
-decl_stmt|;
-specifier|register
 name|ADDRESS
 modifier|*
 name|q
@@ -2479,7 +2448,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  RUNQUEUE -- run the jobs in the queue. ** **	Gets the stuff out of the queue in some presumably logical **	order and processes them. ** **	Parameters: **		forkflag -- TRUE if the queue scanning should be done in **			a child process.  We double-fork so it is not our **			child and we don't have to clean up after it. ** **	Returns: **		none. ** **	Side Effects: **		runs things in the mail queue. */
+comment|/* **  RUNQUEUE -- run the jobs in the queue. ** **	Gets the stuff out of the queue in some presumably logical **	order and processes them. ** **	Parameters: **		forkflag -- TRUE if the queue scanning should be done in **			a child process.  We double-fork so it is not our **			child and we don't have to clean up after it. **		verbose -- if TRUE, print out status information. ** **	Returns: **		TRUE if the queue run successfully began. ** **	Side Effects: **		runs things in the mail queue. */
 end_comment
 
 begin_decl_stmt
@@ -2493,13 +2462,18 @@ comment|/* the queue run envelope */
 end_comment
 
 begin_function
-name|void
+name|bool
 name|runqueue
 parameter_list|(
 name|forkflag
+parameter_list|,
+name|verbose
 parameter_list|)
 name|bool
 name|forkflag
+decl_stmt|;
+name|bool
+name|verbose
 decl_stmt|;
 block|{
 specifier|register
@@ -2529,6 +2503,26 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
+specifier|extern
+name|void
+name|runqueueevent
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|drop_privileges
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* 	**  If no work will ever be selected, don't even bother reading 	**  the queue. 	*/
 name|CurrentLA
 operator|=
@@ -2538,13 +2532,9 @@ expr_stmt|;
 comment|/* get load average */
 if|if
 condition|(
-name|shouldqueue
-argument_list|(
-literal|0L
-argument_list|,
-name|curtime
-argument_list|()
-argument_list|)
+name|CurrentLA
+operator|>=
+name|QueueLA
 condition|)
 block|{
 name|char
@@ -2555,11 +2545,11 @@ literal|"Skipping queue run -- load average too high"
 decl_stmt|;
 if|if
 condition|(
-name|Verbose
+name|verbose
 condition|)
-name|printf
+name|message
 argument_list|(
-literal|"%s\n"
+literal|"458 %s\n"
 argument_list|,
 name|msg
 argument_list|)
@@ -2599,12 +2589,14 @@ name|setevent
 argument_list|(
 name|QueueIntvl
 argument_list|,
-name|runqueue
+name|runqueueevent
 argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|FALSE
+return|;
 block|}
 comment|/* 	**  See if we want to go off and do other useful work. 	*/
 if|if
@@ -2616,18 +2608,33 @@ name|pid_t
 name|pid
 decl_stmt|;
 specifier|extern
-name|void
+name|SIGFUNC_DECL
 name|intsig
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGCHLD
 specifier|extern
-name|void
+name|SIGFUNC_DECL
 name|reapchild
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+name|blocksignal
+argument_list|(
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2645,6 +2652,96 @@ operator|=
 name|dofork
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|msg
+init|=
+literal|"Skipping queue run -- fork() failed"
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|err
+init|=
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+name|message
+argument_list|(
+literal|"458 %s: %s\n"
+argument_list|,
+name|msg
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|8
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"runqueue: %s: %s"
+argument_list|,
+name|msg
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|QueueIntvl
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|setevent
+argument_list|(
+name|QueueIntvl
+argument_list|,
+name|runqueueevent
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|releasesignal
+argument_list|(
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 if|if
 condition|(
 name|pid
@@ -2666,9 +2763,30 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+operator|(
+name|void
+operator|)
+name|blocksignal
+argument_list|(
+name|SIGALRM
+argument_list|)
+expr_stmt|;
 name|proc_list_add
 argument_list|(
 name|pid
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|releasesignal
+argument_list|(
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+name|releasesignal
+argument_list|(
+name|SIGCHLD
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2687,14 +2805,19 @@ name|setevent
 argument_list|(
 name|QueueIntvl
 argument_list|,
-name|runqueue
+name|runqueueevent
 argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|TRUE
+return|;
 block|}
 comment|/* child -- double fork and clean up signals */
+name|proc_list_clear
+argument_list|()
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|SIGCHLD
@@ -2713,6 +2836,11 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* SIGCHLD */
+name|releasesignal
+argument_list|(
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2735,10 +2863,6 @@ name|SIGHUP
 argument_list|,
 name|intsig
 argument_list|)
-expr_stmt|;
-name|Verbose
-operator|=
-name|FALSE
 expr_stmt|;
 block|}
 name|setproctitle
@@ -2775,8 +2899,8 @@ endif|#
 directive|endif
 comment|/* LOG */
 comment|/* 	**  Release any resources used by the daemon code. 	*/
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DAEMON
 name|clrdaemon
 argument_list|()
@@ -2800,42 +2924,9 @@ name|uid_t
 operator|)
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|RunAsGid
-operator|!=
-operator|(
-name|gid_t
-operator|)
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|setgid
-argument_list|(
-name|RunAsGid
-argument_list|)
+name|drop_privileges
+argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|RunAsUid
-operator|!=
-operator|(
-name|uid_t
-operator|)
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|setuid
-argument_list|(
-name|RunAsUid
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	**  Create ourselves an envelope 	*/
 name|CurEnv
 operator|=
@@ -2860,6 +2951,18 @@ name|BlankEnvelope
 operator|.
 name|e_flags
 expr_stmt|;
+comment|/* make sure we have disconnected from parent */
+if|if
+condition|(
+name|forkflag
+condition|)
+name|disconnect
+argument_list|(
+literal|1
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 comment|/* 	**  Make sure the alias database is open. 	*/
 name|initmaps
 argument_list|(
@@ -2883,10 +2986,16 @@ name|QueueLimitRecipient
 operator|!=
 name|NULL
 condition|)
-name|HostStatDir
+block|{
+name|IgnoreHostStatus
 operator|=
-name|NULL
+name|TRUE
 expr_stmt|;
+name|MinQueueAge
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	**  Start making passes through the queue. 	**	First, read and sort the entire queue. 	**	Then, process the work in that order. 	**		But if you take too long, start over. 	*/
 comment|/* order the existing work requests */
 name|njobs
@@ -3078,6 +3187,37 @@ name|NULL
 expr_stmt|;
 name|finis
 argument_list|()
+expr_stmt|;
+comment|/*NOTREACHED*/
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* **  RUNQUEUEEVENT -- stub for use in setevent */
+end_comment
+
+begin_function
+name|void
+name|runqueueevent
+parameter_list|(
+name|forkflag
+parameter_list|)
+name|bool
+name|forkflag
+decl_stmt|;
+block|{
+operator|(
+name|void
+operator|)
+name|runqueue
+argument_list|(
+name|forkflag
+argument_list|,
+name|FALSE
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -5230,6 +5370,7 @@ operator|->
 name|w_ctime
 condition|)
 return|return
+operator|-
 literal|1
 return|;
 else|else
@@ -5428,6 +5569,13 @@ operator|=
 name|MD_DELIVER
 expr_stmt|;
 block|}
+name|setproctitle
+argument_list|(
+literal|"%s: from queue"
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
@@ -6170,10 +6318,10 @@ expr_stmt|;
 if|if
 condition|(
 name|qfver
-operator|>
+operator|<=
 name|QF_VERSION
 condition|)
-block|{
+break|break;
 name|syserr
 argument_list|(
 literal|"Version number in qf (%d) greater than max (%d)"
@@ -6183,8 +6331,21 @@ argument_list|,
 name|QF_VERSION
 argument_list|)
 expr_stmt|;
-block|}
-break|break;
+name|fclose
+argument_list|(
+name|qfp
+argument_list|)
+expr_stmt|;
+name|loseqfile
+argument_list|(
+name|e
+argument_list|,
+literal|"unsupported qf file version"
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
 case|case
 literal|'C'
 case|:
@@ -6450,6 +6611,8 @@ argument_list|,
 name|e
 argument_list|,
 name|NULL
+argument_list|,
+literal|'\0'
 argument_list|,
 name|TRUE
 argument_list|)
@@ -8248,12 +8411,15 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"queuename: assigned id %s, env=%x\n"
+literal|"queuename: assigned id %s, env=%lx\n"
 argument_list|,
 name|e
 operator|->
 name|e_id
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|e
 argument_list|)
 expr_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.144 (Berkeley) 11/16/96"
+literal|"@(#)map.c	8.147 (Berkeley) 1/17/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -5862,6 +5862,10 @@ name|printf
 argument_list|(
 literal|"db_map_store append=%s\n"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|data
 operator|.
 name|data
@@ -5938,7 +5942,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"db_map_close(%s, %s, %x)\n"
+literal|"db_map_close(%s, %s, %lx)\n"
 argument_list|,
 name|map
 operator|->
@@ -7086,6 +7090,16 @@ end_undef
 
 begin_comment
 comment|/* symbol conflict in nis.h */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|T_UNSPEC
+end_undef
+
+begin_comment
+comment|/* symbol conflict in nis.h -> ... -> sys/tiuser.h */
 end_comment
 
 begin_include
@@ -14328,7 +14342,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"impl_map_close(%s, %s, %x)\n"
+literal|"impl_map_close(%s, %s, %lx)\n"
 argument_list|,
 name|map
 operator|->
@@ -15155,6 +15169,14 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|blocksignal
+argument_list|(
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
 name|pid
 operator|=
 name|prog_open
@@ -15421,6 +15443,14 @@ operator|=
 name|waitfor
 argument_list|(
 name|pid
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|releasesignal
+argument_list|(
+name|SIGCHLD
 argument_list|)
 expr_stmt|;
 if|if

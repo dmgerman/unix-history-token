@@ -15,11 +15,11 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|SMTP
-end_ifdef
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.125 (Berkeley) 11/8/96 (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.136 (Berkeley) 1/17/97 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.125 (Berkeley) 11/8/96 (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.136 (Berkeley) 1/17/97 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,11 +66,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|SMTP
-end_ifdef
+end_if
 
 begin_comment
 comment|/* **  SMTP -- run the SMTP protocol. ** **	Parameters: **		none. ** **	Returns: **		never. ** **	Side Effects: **		Reads commands from the input channel and processes **			them. */
@@ -487,6 +487,50 @@ begin_comment
 comment|/* maximum number of bad commands */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXNOOPCOMMANDS
+value|20
+end_define
+
+begin_comment
+comment|/* max "noise" commands before slowdown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXHELOCOMMANDS
+value|3
+end_define
+
+begin_comment
+comment|/* max HELO/EHLO commands before slowdown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXVRFYCOMMANDS
+value|6
+end_define
+
+begin_comment
+comment|/* max VRFY/EXPN commands before slowdown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXETRNCOMMANDS
+value|8
+end_define
+
+begin_comment
+comment|/* max ETRN commands before slowdown */
+end_comment
+
 begin_function
 name|void
 name|smtp
@@ -508,6 +552,7 @@ block|{
 specifier|register
 name|char
 modifier|*
+specifier|volatile
 name|p
 decl_stmt|;
 specifier|register
@@ -601,6 +646,23 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* count of ETRN commands */
+specifier|volatile
+name|int
+name|n_noop
+init|=
+literal|0
+decl_stmt|;
+comment|/* count of NOOP/VERB/ONEX etc cmds */
+specifier|volatile
+name|int
+name|n_helo
+init|=
+literal|0
+decl_stmt|;
+comment|/* count of HELO/EHLO commands */
+name|bool
+name|ok
+decl_stmt|;
 name|char
 name|inp
 index|[
@@ -659,6 +721,23 @@ name|char
 operator|*
 operator|,
 name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|checksmtpattack
+name|__P
+argument_list|(
+operator|(
+specifier|volatile
+name|int
+operator|*
+operator|,
+name|int
+operator|,
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -743,9 +822,14 @@ argument_list|,
 name|CurSmtpClient
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|LOG
+argument_list|)
+operator|&&
+name|DAEMON
 if|if
 condition|(
 name|LogLevel
@@ -1345,20 +1429,49 @@ comment|/* 		**  Process command. 		** 		**	If we are running as a null server, 
 if|if
 condition|(
 name|nullserver
-operator|&&
+condition|)
+block|{
+switch|switch
+condition|(
 name|c
 operator|->
 name|cmdcode
-operator|!=
-name|CMDQUIT
 condition|)
 block|{
+case|case
+name|CMDQUIT
+case|:
+case|case
+name|CMDHELO
+case|:
+case|case
+name|CMDEHLO
+case|:
+case|case
+name|CMDNOOP
+case|:
+comment|/* process normally */
+break|break;
+default|default:
+if|if
+condition|(
+operator|++
+name|badcommands
+operator|>
+name|MAXBADCOMMANDS
+condition|)
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|message
 argument_list|(
 literal|"550 Access denied"
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 comment|/* non-null server */
 switch|switch
@@ -1404,6 +1517,32 @@ name|SmtpPhase
 operator|=
 literal|"server HELO"
 expr_stmt|;
+block|}
+comment|/* avoid denial-of-service */
+name|checksmtpattack
+argument_list|(
+operator|&
+name|n_helo
+argument_list|,
+name|MAXHELOCOMMANDS
+argument_list|,
+literal|"HELO/EHLO"
+argument_list|)
+expr_stmt|;
+comment|/* check for duplicate HELO/EHLO per RFC 1651 4.2 */
+if|if
+condition|(
+name|gothello
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"503 %s Duplicate HELO/EHLO"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 comment|/* check for valid domain name (re 1123 5.2.5) */
 if|if
@@ -1516,6 +1655,7 @@ literal|"501 Invalid domain name"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|message
 argument_list|(
 literal|"250 %s Invalid domain name, accepting anyway"
@@ -1523,23 +1663,13 @@ argument_list|,
 name|MyHostName
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
-block|}
-comment|/* check for duplicate HELO/EHLO per RFC 1651 4.2 */
-if|if
-condition|(
 name|gothello
-condition|)
-block|{
-name|message
-argument_list|(
-literal|"503 %s Duplicate HELO/EHLO"
-argument_list|,
-name|MyHostName
-argument_list|)
+operator|=
+name|TRUE
 expr_stmt|;
+block|}
 break|break;
+block|}
 block|}
 name|sendinghost
 operator|=
@@ -1961,6 +2091,8 @@ name|e
 argument_list|,
 operator|&
 name|delimptr
+argument_list|,
+literal|' '
 argument_list|,
 name|FALSE
 argument_list|)
@@ -3118,46 +3250,24 @@ case|case
 name|CMDEXPN
 case|:
 comment|/* expn -- expand address */
-if|if
-condition|(
-operator|++
+name|checksmtpattack
+argument_list|(
+operator|&
 name|nverifies
-operator|>=
-name|MAXBADCOMMANDS
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|LOG
-if|if
-condition|(
-name|nverifies
+argument_list|,
+name|MAXVRFYCOMMANDS
+argument_list|,
+name|c
+operator|->
+name|cmdcode
 operator|==
-name|MAXBADCOMMANDS
-operator|&&
-name|LogLevel
-operator|>
-literal|5
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"%.100s: VRFY attack?"
-argument_list|,
-name|CurSmtpClient
+name|CMDVRFY
+condition|?
+literal|"VRFY"
+else|:
+literal|"EXPN"
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|vrfy
 operator|=
 name|c
@@ -3516,16 +3626,14 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* crude way to avoid denial-of-service attacks */
-if|if
-condition|(
-name|n_etrn
-operator|++
-operator|>=
-literal|3
-condition|)
-name|sleep
+name|checksmtpattack
 argument_list|(
-literal|3
+operator|&
+name|n_etrn
+argument_list|,
+name|MAXETRNCOMMANDS
+argument_list|,
+literal|"ETRN"
 argument_list|)
 expr_stmt|;
 name|id
@@ -3580,8 +3688,12 @@ name|QueueLimitRecipient
 operator|=
 name|id
 expr_stmt|;
+name|ok
+operator|=
 name|runqueue
 argument_list|(
+name|TRUE
+argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
@@ -3589,6 +3701,10 @@ name|QueueLimitRecipient
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|ok
+condition|)
 name|message
 argument_list|(
 literal|"250 Queuing for node %s started"
@@ -3611,6 +3727,16 @@ case|case
 name|CMDNOOP
 case|:
 comment|/* noop -- do nothing */
+name|checksmtpattack
+argument_list|(
+operator|&
+name|n_noop
+argument_list|,
+name|MAXNOOPCOMMANDS
+argument_list|,
+literal|"NOOP"
+argument_list|)
+expr_stmt|;
 name|message
 argument_list|(
 literal|"250 OK"
@@ -3678,6 +3804,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|checksmtpattack
+argument_list|(
+operator|&
+name|n_noop
+argument_list|,
+name|MAXNOOPCOMMANDS
+argument_list|,
+literal|"VERB"
+argument_list|)
+expr_stmt|;
 name|Verbose
 operator|=
 name|TRUE
@@ -3698,6 +3834,16 @@ case|case
 name|CMDONEX
 case|:
 comment|/* doing one transaction only */
+name|checksmtpattack
+argument_list|(
+operator|&
+name|n_noop
+argument_list|,
+name|MAXNOOPCOMMANDS
+argument_list|,
+literal|"ONEX"
+argument_list|)
+expr_stmt|;
 name|OneXact
 operator|=
 name|TRUE
@@ -3712,6 +3858,16 @@ case|case
 name|CMDXUSR
 case|:
 comment|/* initial (user) submission */
+name|checksmtpattack
+argument_list|(
+operator|&
+name|n_noop
+argument_list|,
+name|MAXNOOPCOMMANDS
+argument_list|,
+literal|"XUSR"
+argument_list|)
+expr_stmt|;
 name|UserSubmission
 operator|=
 name|TRUE
@@ -3722,8 +3878,8 @@ literal|"250 Initial submission"
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|SMTPDEBUG
 case|case
 name|CMDDBGQSHOW
@@ -3863,6 +4019,88 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+block|}
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  CHECKSMTPATTACK -- check for denial-of-service attack by repetition ** **	Parameters: **		pcounter -- pointer to a counter for this command. **		maxcount -- maximum value for this counter before we **			slow down. **		cname -- command name for logging. ** **	Returns: **		none. ** **	Side Effects: **		Slows down if we seem to be under attack. */
+end_comment
+
+begin_function
+name|void
+name|checksmtpattack
+parameter_list|(
+name|pcounter
+parameter_list|,
+name|maxcount
+parameter_list|,
+name|cname
+parameter_list|)
+specifier|volatile
+name|int
+modifier|*
+name|pcounter
+decl_stmt|;
+name|int
+name|maxcount
+decl_stmt|;
+name|char
+modifier|*
+name|cname
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|++
+operator|(
+operator|*
+name|pcounter
+operator|)
+operator|>=
+name|maxcount
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+operator|*
+name|pcounter
+operator|==
+name|maxcount
+operator|&&
+name|LogLevel
+operator|>
+literal|5
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%.100s: %.40s attack?"
+argument_list|,
+name|CurSmtpClient
+argument_list|,
+name|cname
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|sleep
+argument_list|(
+operator|*
+name|pcounter
+operator|/
+name|maxcount
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -4947,30 +5185,21 @@ block|{
 name|pid_t
 name|childpid
 decl_stmt|;
-name|sigfunc_t
-name|chldsig
-decl_stmt|;
 if|if
 condition|(
 operator|!
 name|OneXact
 condition|)
 block|{
-comment|/* 		**  Disable child process reaping, in case ETRN has preceeded 		**  MAIL command. 		*/
-ifdef|#
-directive|ifdef
-name|SIGCHLD
-name|chldsig
-operator|=
-name|setsignal
+comment|/* 		**  Disable child process reaping, in case ETRN has preceeded 		**  MAIL command, and then fork. 		*/
+operator|(
+name|void
+operator|)
+name|blocksignal
 argument_list|(
 name|SIGCHLD
-argument_list|,
-name|SIG_IGN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|childpid
 operator|=
 name|dofork
@@ -4988,6 +5217,14 @@ argument_list|(
 literal|"451 %s: cannot fork"
 argument_list|,
 name|label
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|releasesignal
+argument_list|(
+name|SIGCHLD
 argument_list|)
 expr_stmt|;
 return|return
@@ -5078,22 +5315,15 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SIGCHLD
 comment|/* restore the child signal */
 operator|(
 name|void
 operator|)
-name|setsignal
+name|releasesignal
 argument_list|(
 name|SIGCHLD
-argument_list|,
-name|chldsig
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -5116,6 +5346,24 @@ argument_list|(
 name|e
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|releasesignal
+argument_list|(
+name|SIGCHLD
 argument_list|)
 expr_stmt|;
 block|}

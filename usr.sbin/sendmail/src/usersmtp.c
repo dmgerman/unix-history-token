@@ -15,11 +15,11 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|SMTP
-end_ifdef
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.75 (Berkeley) 11/6/96 (with SMTP)"
+literal|"@(#)usersmtp.c	8.80 (Berkeley) 1/18/97 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.75 (Berkeley) 11/6/96 (without SMTP)"
+literal|"@(#)usersmtp.c	8.80 (Berkeley) 1/18/97 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,11 +72,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|SMTP
-end_ifdef
+end_if
 
 begin_comment
 comment|/* **  USERSMTP -- run SMTP protocol from the user end. ** **	This protocol is described in RFC821. */
@@ -476,7 +476,7 @@ goto|;
 comment|/* 	**  Send the HELO command. 	**	My mother taught me to always introduce myself. 	*/
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 if|if
 condition|(
 name|bitnset
@@ -522,7 +522,7 @@ name|tryhelo
 label|:
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 if|if
 condition|(
 name|bitnset
@@ -679,7 +679,7 @@ condition|)
 block|{
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 if|if
 condition|(
 name|bitset
@@ -785,7 +785,7 @@ argument_list|)
 operator|&&
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 operator|!
 name|bitnset
 argument_list|(
@@ -1647,7 +1647,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|EX_DATAERR
+name|EX_NOTSTICKY
 argument_list|,
 literal|"5.6.3"
 argument_list|,
@@ -2057,6 +2057,47 @@ block|}
 elseif|else
 if|if
 condition|(
+name|r
+operator|==
+literal|452
+operator|&&
+name|bitset
+argument_list|(
+name|MCIF_SIZE
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+operator|&&
+name|e
+operator|->
+name|e_msgsize
+operator|>
+literal|0
+condition|)
+block|{
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+name|EX_NOTSTICKY
+argument_list|,
+name|smtptodsn
+argument_list|(
+name|r
+argument_list|)
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_TEMPFAIL
+return|;
+block|}
+elseif|else
+if|if
+condition|(
 name|REPLYTYPE
 argument_list|(
 name|r
@@ -2111,7 +2152,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|EX_DATAERR
+name|EX_NOTSTICKY
 argument_list|,
 literal|"5.5.2"
 argument_list|,
@@ -2135,7 +2176,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|EX_DATAERR
+name|EX_NOTSTICKY
 argument_list|,
 literal|"5.1.3"
 argument_list|,
@@ -2159,7 +2200,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|EX_UNAVAILABLE
+name|EX_NOTSTICKY
 argument_list|,
 literal|"5.2.2"
 argument_list|,
@@ -2186,7 +2227,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|EX_UNAVAILABLE
+name|EX_NOTSTICKY
 argument_list|,
 literal|"5.0.0"
 argument_list|,
@@ -2754,6 +2795,17 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+name|EX_PROTOCOL
+argument_list|,
+literal|"5.5.1"
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
 return|return
 name|EX_PROTOCOL
 return|;
@@ -2818,6 +2870,9 @@ name|ev
 decl_stmt|;
 name|int
 name|rstat
+decl_stmt|;
+name|int
+name|xstat
 decl_stmt|;
 name|time_t
 name|timeout
@@ -2974,6 +3029,17 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
+argument_list|)
+expr_stmt|;
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+name|EX_PROTOCOL
+argument_list|,
+literal|"5.5.1"
+argument_list|,
+name|SmtpReplyBuffer
 argument_list|)
 expr_stmt|;
 return|return
@@ -3191,6 +3257,9 @@ name|TrafficLogFile
 argument_list|,
 literal|"%05d>>> .\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -3230,7 +3299,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 if|if
 condition|(
 name|bitnset
@@ -3290,6 +3359,32 @@ name|mci_state
 operator|=
 name|MCIS_OPEN
 expr_stmt|;
+name|xstat
+operator|=
+name|EX_NOTSTICKY
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+literal|452
+condition|)
+name|rstat
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|r
+operator|==
+literal|552
+condition|)
+name|rstat
+operator|=
+name|EX_UNAVAILABLE
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|REPLYTYPE
@@ -3300,6 +3395,8 @@ operator|==
 literal|4
 condition|)
 name|rstat
+operator|=
+name|xstat
 operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
@@ -3315,6 +3412,8 @@ literal|5
 condition|)
 name|rstat
 operator|=
+name|xstat
+operator|=
 name|EX_PROTOCOL
 expr_stmt|;
 elseif|else
@@ -3328,6 +3427,8 @@ operator|==
 literal|2
 condition|)
 name|rstat
+operator|=
+name|xstat
 operator|=
 name|EX_OK
 expr_stmt|;
@@ -3343,6 +3444,8 @@ literal|5
 condition|)
 name|rstat
 operator|=
+name|xstat
+operator|=
 name|EX_UNAVAILABLE
 expr_stmt|;
 else|else
@@ -3354,7 +3457,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|rstat
+name|xstat
 argument_list|,
 name|smtptodsn
 argument_list|(
@@ -3468,7 +3571,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 end_if
 
 begin_function
@@ -4807,6 +4910,9 @@ name|TrafficLogFile
 argument_list|,
 literal|"%05d>>> %s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|,

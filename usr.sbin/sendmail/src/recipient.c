@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.116 (Berkeley) 8/17/96"
+literal|"@(#)recipient.c	8.118 (Berkeley) 12/1/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -1833,10 +1833,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"recipient: testing local?  cl=%d, rr5=%x\n\t"
+literal|"recipient: testing local?  cl=%d, rr5=%lx\n\t"
 argument_list|,
 name|ConfigLevel
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|RewriteRules
 index|[
 literal|5
@@ -2472,6 +2475,8 @@ decl_stmt|;
 name|ADDRESS
 modifier|*
 name|only
+init|=
+name|NULL
 decl_stmt|;
 for|for
 control|(
@@ -3493,6 +3498,7 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
+specifier|volatile
 name|int
 name|sfflags
 init|=
@@ -3592,9 +3598,15 @@ name|printf
 argument_list|(
 literal|"   ruid=%d euid=%d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -3635,9 +3647,15 @@ name|printf
 argument_list|(
 literal|"include: old uid = %d/%d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -3832,9 +3850,15 @@ name|printf
 argument_list|(
 literal|"include: new uid = %d/%d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -3936,6 +3960,9 @@ name|printf
 argument_list|(
 literal|"include: not safe (uid=%d): %s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|uid
 argument_list|,
 name|errstring
@@ -4116,9 +4143,15 @@ name|printf
 argument_list|(
 literal|"include: reset uid = %d/%d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -4258,7 +4291,12 @@ operator|->
 name|q_ruser
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|forwarding
+condition|)
 block|{
 specifier|register
 name|struct

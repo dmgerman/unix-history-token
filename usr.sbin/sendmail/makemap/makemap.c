@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.18 (Berkeley) 11/13/96"
+literal|"@(#)makemap.c	8.19 (Berkeley) 11/18/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -733,6 +733,15 @@ break|break;
 case|case
 name|T_HASH
 case|:
+name|bzero
+argument_list|(
+operator|&
+name|hinfo
+argument_list|,
+sizeof|sizeof
+name|hinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|allowreplace
@@ -993,17 +1002,6 @@ case|case
 name|T_HASH
 case|:
 comment|/* tweak some parameters for performance */
-name|bzero
-argument_list|(
-operator|&
-name|hinfo
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hinfo
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|hinfo
 operator|.
 name|nelem

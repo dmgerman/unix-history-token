@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.114 (Berkeley) 9/20/96"
+literal|"@(#)parseaddr.c	8.115 (Berkeley) 11/24/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -4487,8 +4487,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" %x=\""
+literal|" %lx=\""
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|*
 name|pp
 argument_list|)
@@ -7836,8 +7839,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%x="
+literal|"%lx="
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|a
 argument_list|)
 expr_stmt|;
@@ -7942,20 +7948,32 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tnext=%x, alias %x, uid %d, gid %d\n"
+literal|"\tnext=%lx, alias %lx, uid %d, gid %d\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|a
 operator|->
 name|q_next
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|a
 operator|->
 name|q_alias
 argument_list|,
+operator|(
+name|int
+operator|)
 name|a
 operator|->
 name|q_uid
 argument_list|,
+operator|(
+name|int
+operator|)
 name|a
 operator|->
 name|q_gid

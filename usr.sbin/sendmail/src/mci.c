@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.46 (Berkeley) 11/3/96"
+literal|"@(#)mci.c	8.54 (Berkeley) 12/1/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,8 +191,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"mci_cache: caching %x (%s) in slot %d\n"
+literal|"mci_cache: caching %lx (%s) in slot %d\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|mci
 argument_list|,
 name|mci
@@ -551,8 +554,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"mci_uncache: uncaching %x (%s) from slot %d (%d)\n"
+literal|"mci_uncache: uncaching %lx (%s) from slot %d (%d)\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|mci
 argument_list|,
 name|mci
@@ -609,8 +615,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|SMTP
 if|if
 condition|(
@@ -852,8 +858,8 @@ name|STAB
 modifier|*
 name|s
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DAEMON
 specifier|extern
 name|SOCKADDR
@@ -974,8 +980,8 @@ name|mci_errno
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|SMTP
 if|if
 condition|(
@@ -1035,8 +1041,8 @@ operator|=
 name|MCIS_CLOSED
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DAEMON
 else|else
 block|{
@@ -1166,6 +1172,17 @@ modifier|*
 name|rstat
 decl_stmt|;
 block|{
+comment|/* protocol errors should never be interpreted as sticky */
+if|if
+condition|(
+name|xstat
+operator|!=
+name|EX_NOTSTICKY
+operator|&&
+name|xstat
+operator|!=
+name|EX_PROTOCOL
+condition|)
 name|mci
 operator|->
 name|mci_exitstat
@@ -2291,9 +2308,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 name|char
 name|fname
 index|[
@@ -2327,6 +2341,8 @@ return|return;
 block|}
 if|if
 condition|(
+name|IgnoreHostStatus
+operator|||
 name|HostStatDir
 operator|==
 name|NULL
@@ -2542,8 +2558,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mci_read_persistent: fp=%x, mci="
+literal|"mci_read_persistent: fp=%lx, mci="
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|fp
 argument_list|)
 expr_stmt|;
@@ -2586,6 +2605,11 @@ name|rewind
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+name|ver
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -2794,6 +2818,16 @@ literal|1
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|ver
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 return|return
 literal|0
 return|;
@@ -3066,8 +3100,6 @@ operator|->
 name|mci_statfile
 argument_list|)
 expr_stmt|;
-name|cleanup
-label|:
 name|errno
 operator|=
 name|saveErrno
@@ -3119,8 +3151,6 @@ name|d
 decl_stmt|;
 name|int
 name|ret
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -3397,7 +3427,7 @@ operator|<
 literal|0
 condition|)
 break|break;
-comment|/* 			**  The following appears to be 			**  necessary during purgest, since 			**  we modify the directory structure 			*/
+comment|/* 			**  The following appears to be 			**  necessary during purges, since 			**  we modify the directory structure 			*/
 if|if
 condition|(
 name|action
@@ -3410,6 +3440,25 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* purge (or whatever) the directory proper */
+operator|*
+operator|--
+name|newptr
+operator|=
+literal|'\0'
+expr_stmt|;
+name|ret
+operator|=
+call|(
+modifier|*
+name|action
+call|)
+argument_list|(
+name|newpath
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|closedir
 argument_list|(
 name|d
@@ -3602,9 +3651,6 @@ modifier|*
 name|fp
 decl_stmt|;
 name|int
-name|status
-decl_stmt|;
-name|int
 name|width
 init|=
 name|Verbose
@@ -3616,13 +3662,19 @@ decl_stmt|;
 name|bool
 name|locked
 decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
 name|MCI
 name|mcib
 decl_stmt|;
+comment|/* skip directories */
+if|if
+condition|(
+name|hostname
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|!
@@ -3948,7 +4000,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MCI_PURGE_PERSISTENT -- Remove a persistence status file. ** **	Parameters: **		pathname -- path to the status file. **		hostname -- name of host corresponding to that file. ** **	Returns: **		0 */
+comment|/* **  MCI_PURGE_PERSISTENT -- Remove a persistence status file. ** **	Parameters: **		pathname -- path to the status file. **		hostname -- name of host corresponding to that file. **			NULL if this is a directory (domain). ** **	Returns: **		0 */
 end_comment
 
 begin_function
@@ -3997,6 +4049,13 @@ argument_list|,
 name|pathname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hostname
+operator|!=
+name|NULL
+condition|)
+block|{
 comment|/* remove the file */
 if|if
 condition|(
@@ -4029,36 +4088,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
 block|}
-comment|/* 	** remove empty parent directories. 	*/
-for|for
-control|(
-init|;
-condition|;
-control|)
+block|}
+else|else
 block|{
-while|while
-condition|(
-operator|*
-name|end
-operator|!=
-literal|'/'
-condition|)
-name|end
-operator|--
-expr_stmt|;
-operator|*
-operator|(
-name|end
-operator|--
-operator|)
-operator|=
-literal|'\0'
-expr_stmt|;
+comment|/* remove the directory */
 if|if
 condition|(
 operator|*
@@ -4066,7 +4100,9 @@ name|end
 operator|!=
 literal|'.'
 condition|)
-break|break;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|tTd
@@ -4095,31 +4131,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|errno
-operator|==
-name|ENOENT
-operator|||
-name|errno
-operator|==
-name|EEXIST
-condition|)
-break|break;
-comment|/* directory is not empty */
-ifdef|#
-directive|ifdef
-name|ENOTEMTPY
-if|if
-condition|(
-name|errno
-operator|==
-name|ENOTEMPTY
-condition|)
-break|break;
-comment|/* BSDism */
-endif|#
-directive|endif
-if|if
-condition|(
 name|tTd
 argument_list|(
 literal|56
@@ -4139,7 +4150,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 return|return

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.215 (Berkeley) 11/16/96"
+literal|"@(#)main.c	8.230 (Berkeley) 1/17/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,17 +244,14 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|DAEMON
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+operator|&&
+operator|!
 name|SMTP
-end_ifndef
+end_if
 
 begin_expr_stmt
 name|ERROR
@@ -264,7 +261,7 @@ operator|%
 operator|%
 name|Cannot
 name|have
-name|daemon
+name|DAEMON
 name|mode
 name|without
 name|SMTP
@@ -275,10 +272,32 @@ operator|%
 name|ERROR
 endif|#
 directive|endif
-comment|/* SMTP */
+comment|/* DAEMON&& !SMTP */
+if|#
+directive|if
+name|SMTP
+operator|&&
+operator|!
+name|QUEUE
+name|ERROR
+operator|%
+operator|%
+operator|%
+operator|%
+name|Cannot
+name|have
+name|SMTP
+name|mode
+name|without
+name|QUEUE
+operator|%
+operator|%
+operator|%
+operator|%
+name|ERROR
 endif|#
 directive|endif
-comment|/* DAEMON */
+comment|/* DAEMON&& !SMTP */
 define|#
 directive|define
 name|MAXCONFIGLEVEL
@@ -406,6 +425,8 @@ name|hp
 decl_stmt|;
 name|bool
 name|nullserver
+init|=
+name|FALSE
 decl_stmt|;
 name|char
 name|jbuf
@@ -458,10 +479,15 @@ name|convtime
 parameter_list|()
 function_decl|;
 specifier|extern
-name|void
+name|SIGFUNC_DECL
 name|intsig
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 specifier|extern
 name|struct
 name|hostent
@@ -482,15 +508,25 @@ name|getcfname
 parameter_list|()
 function_decl|;
 specifier|extern
-name|void
+name|SIGFUNC_DECL
 name|sigusr1
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 specifier|extern
-name|void
+name|SIGFUNC_DECL
 name|sighup
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 specifier|extern
 name|void
 name|initmacros
@@ -658,6 +694,16 @@ decl_stmt|;
 specifier|extern
 name|void
 name|resetlimits
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|drop_privileges
 name|__P
 argument_list|(
 operator|(
@@ -921,6 +967,10 @@ argument_list|,
 literal|"0-99.1"
 argument_list|)
 expr_stmt|;
+comment|/* drop group id privileges (RunAsUser not yet set) */
+name|drop_privileges
+argument_list|()
+expr_stmt|;
 comment|/* Handle any non-getoptable constructions. */
 name|obsolete
 argument_list|(
@@ -985,7 +1035,8 @@ name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -2291,7 +2342,8 @@ name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -2317,8 +2369,9 @@ case|:
 case|case
 name|MD_FGDAEMON
 case|:
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|DAEMON
 name|usrerr
 argument_list|(
@@ -2336,8 +2389,9 @@ comment|/* DAEMON */
 case|case
 name|MD_SMTP
 case|:
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|SMTP
 name|usrerr
 argument_list|(
@@ -2847,8 +2901,8 @@ case|case
 literal|'q'
 case|:
 comment|/* run queue files at intervals */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|QUEUE
 name|FullName
 operator|=
@@ -3360,33 +3414,8 @@ name|MD_FGDAEMON
 condition|)
 block|{
 comment|/* drop privileges -- daemon mode done after socket/bind */
-if|if
-condition|(
-name|RunAsGid
-operator|!=
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|setgid
-argument_list|(
-name|RunAsGid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|RunAsUid
-operator|!=
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|setuid
-argument_list|(
-name|RunAsUid
-argument_list|)
+name|drop_privileges
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	**  Find our real host name for future logging. 	*/
@@ -3730,6 +3759,63 @@ literal|"Warning: HostStatusDirectory required for SingleThreadDelivery\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* check for permissions */
+if|if
+condition|(
+operator|(
+name|OpMode
+operator|==
+name|MD_DAEMON
+operator|||
+name|OpMode
+operator|==
+name|MD_PURGESTAT
+operator|)
+operator|&&
+name|RealUid
+operator|!=
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|1
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"user %d attempted to %s"
+argument_list|,
+name|RealUid
+argument_list|,
+name|OpMode
+operator|==
+name|MD_DAEMON
+condition|?
+literal|"run daemon"
+else|:
+literal|"purge host status"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|usrerr
+argument_list|(
+literal|"Permission denied"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|MeToo
@@ -3769,45 +3855,6 @@ comment|/* fall through ... */
 case|case
 name|MD_DAEMON
 case|:
-comment|/* check for permissions */
-if|if
-condition|(
-name|RealUid
-operator|!=
-literal|0
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|LOG
-if|if
-condition|(
-name|LogLevel
-operator|>
-literal|1
-condition|)
-name|syslog
-argument_list|(
-name|LOG_ALERT
-argument_list|,
-literal|"user %d attempted to run daemon"
-argument_list|,
-name|RealUid
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|usrerr
-argument_list|(
-literal|"Permission denied"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_USAGE
-argument_list|)
-expr_stmt|;
-block|}
 name|vendor_daemon_setup
 argument_list|(
 name|CurEnv
@@ -3876,8 +3923,31 @@ operator|=
 name|TRUE
 expr_stmt|;
 comment|/* fall through... */
+case|case
+name|MD_PRINT
+case|:
+comment|/* to handle sendmail -bp -qSfoobar properly */
+name|queuemode
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* fall through... */
 default|default:
 comment|/* arrange to exit cleanly on hangup signal */
+if|if
+condition|(
+name|setsignal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|==
+operator|(
+name|sigfunc_t
+operator|)
+name|SIG_DFL
+condition|)
 name|setsignal
 argument_list|(
 name|SIGHUP
@@ -4343,21 +4413,6 @@ operator|->
 name|m_flags
 argument_list|)
 expr_stmt|;
-comment|/* propogate some envariables into children */
-name|setuserenv
-argument_list|(
-literal|"ISP"
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|setuserenv
-argument_list|(
-literal|"SYSTYPE"
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4577,8 +4632,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|QUEUE
 if|if
 condition|(
@@ -4691,8 +4746,8 @@ case|case
 name|MD_PRINT
 case|:
 comment|/* print the queue */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|QUEUE
 name|dropenvelope
 argument_list|(
@@ -4934,10 +4989,15 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-name|void
+name|SIGFUNC_DECL
 name|intindebug
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|isatty
@@ -5087,8 +5147,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|QUEUE
 comment|/* 	**  If collecting stuff from the queue, go start doing that. 	*/
 if|if
@@ -5112,9 +5172,14 @@ argument_list|(
 literal|"HOSTALIASES"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|runqueue
 argument_list|(
 name|FALSE
+argument_list|,
+name|Verbose
 argument_list|)
 expr_stmt|;
 name|finis
@@ -5293,17 +5358,22 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|QUEUE
 if|if
 condition|(
 name|queuemode
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|runqueue
 argument_list|(
 name|TRUE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5331,8 +5401,8 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DAEMON
 name|nullserver
 operator|=
@@ -5342,33 +5412,8 @@ name|CurEnv
 argument_list|)
 expr_stmt|;
 comment|/* drop privileges */
-if|if
-condition|(
-name|RunAsGid
-operator|!=
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|setgid
-argument_list|(
-name|RunAsGid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|RunAsUid
-operator|!=
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|setuid
-argument_list|(
-name|RunAsUid
-argument_list|)
+name|drop_privileges
+argument_list|()
 expr_stmt|;
 comment|/* at this point we are in a child: reset state */
 operator|(
@@ -5406,8 +5451,8 @@ endif|#
 directive|endif
 comment|/* DAEMON */
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|SMTP
 comment|/* 	**  If running SMTP protocol, start collecting and executing 	**  commands.  This will never return. 	*/
 if|if
@@ -5632,6 +5677,8 @@ name|CurEnv
 argument_list|,
 name|NULL
 argument_list|,
+literal|'\0'
+argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
@@ -5845,9 +5892,14 @@ block|}
 end_block
 
 begin_function
-name|void
+name|SIGFUNC_DECL
 name|intindebug
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|longjmp
 argument_list|(
@@ -5856,6 +5908,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+name|SIGFUNC_RETURN
+return|;
 block|}
 end_function
 
@@ -6028,9 +6083,14 @@ comment|/* **  INTSIG -- clean up on interrupt ** **	This just arranges to exit.
 end_comment
 
 begin_function
-name|void
+name|SIGFUNC_DECL
 name|intsig
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
@@ -6428,7 +6488,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"disconnect: In %d Out %d, e=%x\n"
+literal|"disconnect: In %d Out %d, e=%lx\n"
 argument_list|,
 name|fileno
 argument_list|(
@@ -6440,6 +6500,9 @@ argument_list|(
 name|OutChannel
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|e
 argument_list|)
 expr_stmt|;
@@ -7731,23 +7794,73 @@ block|}
 end_function
 
 begin_function
-name|void
+name|SIGFUNC_DECL
 name|sigusr1
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|dumpstate
 argument_list|(
 literal|"user signal"
 argument_list|)
 expr_stmt|;
+return|return
+name|SIGFUNC_RETURN
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|SIGFUNC_DECL
 name|sighup
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
+if|if
+condition|(
+name|SaveArgv
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|3
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"could not restart: need full path"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|exit
+argument_list|(
+name|EX_OSFILE
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|LOG
@@ -7860,6 +7973,85 @@ directive|endif
 name|exit
 argument_list|(
 name|EX_OSFILE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  DROP_PRIVILEGES -- reduce privileges to those of the RunAsUser option ** **	Parameters: **		none. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|drop_privileges
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|NGROUPS_MAX
+comment|/* reset group permissions; these can be set later */
+name|GIDSET_T
+name|emptygidset
+index|[
+name|NGROUPS_MAX
+index|]
+decl_stmt|;
+name|emptygidset
+index|[
+literal|0
+index|]
+operator|=
+name|RunAsGid
+operator|==
+literal|0
+condition|?
+name|getegid
+argument_list|()
+else|:
+name|RunAsGid
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setgroups
+argument_list|(
+literal|1
+argument_list|,
+name|emptygidset
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|RunAsGid
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|setgid
+argument_list|(
+name|RunAsGid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|RunAsUid
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|setuid
+argument_list|(
+name|RunAsUid
 argument_list|)
 expr_stmt|;
 block|}
