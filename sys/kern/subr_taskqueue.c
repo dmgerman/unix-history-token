@@ -342,6 +342,19 @@ operator|->
 name|tq_mutex
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|queue
+operator|->
+name|tq_draining
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"free'ing a draining taskqueue"
+operator|)
+argument_list|)
+expr_stmt|;
 name|queue
 operator|->
 name|tq_draining

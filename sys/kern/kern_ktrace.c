@@ -1359,6 +1359,15 @@ operator|->
 name|ktr_cred
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|req
+operator|->
+name|ktr_vp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1378,6 +1387,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
