@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of Utility functions for all SCSI device types.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi_all.c,v 1.2 1998/09/18 22:33:59 ken Exp $  */
+comment|/*  * Implementation of Utility functions for all SCSI device types.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi_all.c,v 1.3 1998/09/19 01:23:04 ken Exp $  */
 end_comment
 
 begin_include
@@ -378,7 +378,7 @@ name|scsi_op_codes
 index|[]
 init|=
 block|{
-comment|/*  * From: ftp://ftp.symbios.com/pub/standards/io/t10/drafts/spc/op-num.txt  * Modifications by Kenneth Merry (ken@plutotech.com)  *  * Note:  order is important in this table, scsi_op_desc() currently  * depends on the opcodes in the table being in order to save search time.  */
+comment|/*  * From: ftp://ftp.symbios.com/pub/standards/io/t10/drafts/spc/op-num.txt  * Modifications by Kenneth Merry (ken@FreeBSD.ORG)  *  * Note:  order is important in this table, scsi_op_desc() currently  * depends on the opcodes in the table being in order to save search time.  */
 comment|/*    * File: OP-NUM.TXT  *  * SCSI Operation Codes  * Numeric Sorted Listing  * as of 11/13/96  *   *     D - DIRECT ACCESS DEVICE (SBC)                    device column key  *     .T - SEQUENTIAL ACCESS DEVICE (SSC)              -------------------  *     . L - PRINTER DEVICE (SSC)                       M = Mandatory  *     .  P - PROCESSOR DEVICE (SPC)                    O = Optional  *     .  .W - WRITE ONCE READ MULTIPLE DEVICE (SBC)    V = Vendor specific  *     .  . R - CD DEVICE (MMC)                         R = Reserved  *     .  .  S - SCANNER DEVICE (SGC)                   Z = Obsolete  *     .  .  .O - OPTICAL MEMORY DEVICE (SBC)  *     .  .  . M - MEDIA CHANGER DEVICE (SMC)  *     .  .  .  C - COMMUNICATION DEVICE (SSC)  *     .  .  .  .A - STORAGE ARRAY DEVICE (SCC)  *     .  .  .  . E - ENCLOSURE SERVICES DEVICE (SES)  * OP  DTLPWRSOMCAE  Description  * --  ------------  ---------------------------------------------------- */
 comment|/* 00  MMMMMMMMMMMM  TEST UNIT READY */
 block|{
@@ -10215,6 +10215,21 @@ directive|ifdef
 name|KERNEL
 if|if
 condition|(
+name|bootverbose
+condition|)
+block|{
+name|sense_flags
+operator||=
+name|SF_PRINT_ALWAYS
+expr_stmt|;
+name|print_sense
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 operator|(
 name|sense_flags
 operator|&
@@ -10222,8 +10237,6 @@ name|SF_NO_PRINT
 operator|)
 operator|==
 literal|0
-operator|||
-name|bootverbose
 condition|)
 else|#
 directive|else
@@ -10349,12 +10362,24 @@ case|:
 if|if
 condition|(
 operator|(
+operator|(
 name|sense_flags
 operator|&
 name|SF_QUIET_IR
 operator|)
 operator|!=
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|sense_flags
+operator|&
+name|SF_PRINT_ALWAYS
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 name|print_sense
 operator|=
@@ -10410,12 +10435,24 @@ block|{
 if|if
 condition|(
 operator|(
+operator|(
 name|error_action
 operator|&
 name|SSQ_PRINT_SENSE
 operator|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|sense_flags
+operator|&
+name|SF_PRINT_ALWAYS
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 name|print_sense
 operator|=
@@ -10493,12 +10530,24 @@ block|{
 if|if
 condition|(
 operator|(
+operator|(
 name|error_action
 operator|&
 name|SSQ_PRINT_SENSE
 operator|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|sense_flags
+operator|&
+name|SF_PRINT_ALWAYS
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 name|print_sense
 operator|=
@@ -10551,12 +10600,24 @@ block|{
 if|if
 condition|(
 operator|(
+operator|(
 name|error_action
 operator|&
 name|SSQ_PRINT_SENSE
 operator|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|sense_flags
+operator|&
+name|SF_PRINT_ALWAYS
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 name|print_sense
 operator|=
