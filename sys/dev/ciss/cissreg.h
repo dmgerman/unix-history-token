@@ -899,6 +899,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CISS_NOTIFY_HOTPLUG_NONDISK
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|CISS_NOTIFY_HARDWARE
 value|2
 end_define
