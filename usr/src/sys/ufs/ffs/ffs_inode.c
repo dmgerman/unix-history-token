@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.44 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.45 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -367,6 +367,16 @@ literal|0
 expr_stmt|;
 name|ip
 operator|->
+name|i_fs
+operator|=
+name|fs
+operator|=
+name|ump
+operator|->
+name|um_fs
+expr_stmt|;
+name|ip
+operator|->
 name|i_dev
 operator|=
 name|dev
@@ -411,12 +421,6 @@ name|ip
 argument_list|)
 expr_stmt|;
 comment|/* Read in the disk contents for the inode, copy into the inode. */
-name|fs
-operator|=
-name|ump
-operator|->
-name|um_fs
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -558,12 +562,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Finish inode initialization now that aliasing has been resolved. 	 */
-name|ip
-operator|->
-name|i_fs
-operator|=
-name|fs
-expr_stmt|;
 name|ip
 operator|->
 name|i_devvp
@@ -779,6 +777,7 @@ name|i_flag
 operator|&
 name|IUPD
 condition|)
+block|{
 name|ip
 operator|->
 name|i_mtime
@@ -787,6 +786,14 @@ name|tm
 operator|->
 name|tv_sec
 expr_stmt|;
+name|INCRQUAD
+argument_list|(
+name|ip
+operator|->
+name|i_modrev
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ip
