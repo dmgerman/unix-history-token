@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stkrval.c 1.1 %G%"
+literal|"@(#)stkrval.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1312,9 +1312,6 @@ argument_list|)
 expr_stmt|;
 block|}
 case|case
-name|T_CSET
-case|:
-case|case
 name|T_PLUS
 case|:
 case|case
@@ -1401,6 +1398,25 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|OBJ
+return|return
+operator|(
+name|p
+operator|)
+return|;
+case|case
+name|T_CSET
+case|:
+name|p
+operator|=
+name|rvalue
+argument_list|(
+name|r
+argument_list|,
+name|contype
+argument_list|,
+name|required
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|p
