@@ -2038,7 +2038,9 @@ name|dp
 operator|->
 name|i_ino
 argument_list|,
-name|LK_EXCLUSIVE
+name|cnp
+operator|->
+name|cn_lkflags
 argument_list|,
 operator|&
 name|tdp
@@ -2110,7 +2112,9 @@ name|dp
 operator|->
 name|i_ino
 argument_list|,
-name|LK_EXCLUSIVE
+name|cnp
+operator|->
+name|cn_lkflags
 argument_list|,
 operator|&
 name|tdp
