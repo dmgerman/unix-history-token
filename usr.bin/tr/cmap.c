@@ -424,7 +424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cmap_lookup_hard --  *	Look up the mapping for a character using the cache.  */
+comment|/*  * cmap_lookup_hard --  *	Look up the mapping for a character without using the cache.  */
 end_comment
 
 begin_function
