@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cfscores.c	5.4 (Berkeley) %G%"
+literal|"@(#)cfscores.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_struct
@@ -103,15 +109,6 @@ comment|/* net worth after costs */
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-name|char
-modifier|*
-name|scorefile
-init|=
-literal|"/usr/games/lib/cfscores"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -166,7 +163,7 @@ name|dbfd
 operator|=
 name|open
 argument_list|(
-name|scorefile
+name|_PATH_SCORE
 argument_list|,
 literal|0
 argument_list|)
@@ -180,7 +177,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|scorefile
+name|_PATH_SCORE
 argument_list|)
 expr_stmt|;
 name|exit
