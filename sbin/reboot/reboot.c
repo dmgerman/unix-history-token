@@ -352,11 +352,7 @@ literal|1
 expr_stmt|;
 name|howto
 operator||=
-operator|(
 name|RB_POWEROFF
-operator||
-name|RB_HALT
-operator|)
 expr_stmt|;
 break|break;
 case|case
