@@ -117,53 +117,33 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|master_string
-init|=
-literal|"YP_MASTER_NAME"
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|MASTER_STRING
+value|"YP_MASTER_NAME"
+end_define
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|order_string
-init|=
-literal|"YP_LAST_MODIFIED"
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|MASTER_SZ
+value|sizeof(MASTER_STRING) - 1
+end_define
 
-begin_decl_stmt
-specifier|static
-name|int
-name|master_sz
-init|=
-sizeof|sizeof
-argument_list|(
-literal|"YP_MASTER_NAME"
-argument_list|)
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|ORDER_STRING
+value|"YP_LAST_MODIFIED"
+end_define
 
-begin_decl_stmt
-specifier|static
-name|int
-name|order_sz
-init|=
-sizeof|sizeof
-argument_list|(
-literal|"YP_LAST_MODIFIED"
-argument_list|)
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|ORDER_SZ
+value|sizeof(ORDER_STRING) - 1
+end_define
 
 begin_comment
 comment|/*  * NIS v2 support. This is where most of the action happens.  */
@@ -2404,9 +2384,9 @@ name|keydat
 name|key
 init|=
 block|{
-name|master_sz
+name|MASTER_SZ
 block|,
-name|master_string
+name|MASTER_STRING
 block|}
 decl_stmt|;
 name|valdat
@@ -2634,9 +2614,9 @@ name|keydat
 name|key
 init|=
 block|{
-name|order_sz
+name|ORDER_SZ
 block|,
-name|order_string
+name|ORDER_STRING
 block|}
 decl_stmt|;
 name|valdat
