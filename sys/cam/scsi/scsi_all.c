@@ -2434,6 +2434,17 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* RBC is 'Simplified' Direct Access Device */
+if|if
+condition|(
+name|pd_type
+operator|==
+name|T_RBC
+condition|)
+name|pd_type
+operator|=
+name|T_DIRECT
+expr_stmt|;
 name|opmask
 operator|=
 literal|1
