@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose Even handling and dispatch  *              $Revision: 90 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose Even handling and dispatch  *              $Revision: 92 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -276,6 +276,10 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiGbl_EventsInitialized
+operator|=
+name|TRUE
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -404,10 +408,10 @@ init|=
 name|ACPI_INTERRUPT_NOT_HANDLED
 decl_stmt|;
 name|UINT32
-name|GpeStatus
+name|FixedStatus
 decl_stmt|;
 name|UINT32
-name|GpeEnable
+name|FixedEnable
 decl_stmt|;
 name|NATIVE_UINT_MAX32
 name|i
@@ -428,7 +432,7 @@ argument_list|,
 name|ACPI_REGISTER_PM1_STATUS
 argument_list|,
 operator|&
-name|GpeStatus
+name|FixedStatus
 argument_list|)
 expr_stmt|;
 operator|(
@@ -441,7 +445,7 @@ argument_list|,
 name|ACPI_REGISTER_PM1_ENABLE
 argument_list|,
 operator|&
-name|GpeEnable
+name|FixedEnable
 argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
@@ -451,9 +455,9 @@ name|ACPI_DB_INTERRUPTS
 operator|,
 literal|"Fixed AcpiEvent Block: Enable %08X Status %08X\n"
 operator|,
-name|GpeEnable
+name|FixedEnable
 operator|,
-name|GpeStatus
+name|FixedStatus
 operator|)
 argument_list|)
 expr_stmt|;
@@ -476,7 +480,7 @@ comment|/* Both the status and enable bits must be on for this event */
 if|if
 condition|(
 operator|(
-name|GpeStatus
+name|FixedStatus
 operator|&
 name|AcpiGbl_FixedEventInfo
 index|[
@@ -487,7 +491,7 @@ name|StatusBitMask
 operator|)
 operator|&&
 operator|(
-name|GpeEnable
+name|FixedEnable
 operator|&
 name|AcpiGbl_FixedEventInfo
 index|[

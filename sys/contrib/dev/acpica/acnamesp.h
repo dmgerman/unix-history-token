@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 126 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 127 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1101,6 +1101,30 @@ name|AcpiNsLocal
 parameter_list|(
 name|ACPI_OBJECT_TYPE
 name|Type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiNsReportError
+parameter_list|(
+name|NATIVE_CHAR
+modifier|*
+name|ModuleName
+parameter_list|,
+name|UINT32
+name|LineNumber
+parameter_list|,
+name|UINT32
+name|ComponentId
+parameter_list|,
+name|char
+modifier|*
+name|InternalName
+parameter_list|,
+name|ACPI_STATUS
+name|LookupStatus
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 78 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 79 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -668,6 +668,10 @@ literal|"Object (%p) Pathname:  %s\n"
 argument_list|,
 name|Node
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|RetBuf
 operator|.
 name|Pointer
@@ -817,7 +821,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" Uninitialized\n"
+literal|" Uninitialized"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1163,8 +1167,11 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" Type %hX [Invalid Type]"
+literal|" Type %X [Invalid Type]"
 argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|Type
 argument_list|)
 expr_stmt|;
@@ -1304,22 +1311,44 @@ argument_list|(
 literal|"[Index]          "
 argument_list|)
 expr_stmt|;
-name|AcpiDbDecodeInternalObject
-argument_list|(
+if|if
+condition|(
+operator|!
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|Object
+name|Where
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Uninitialized WHERE ptr"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiDbDecodeInternalObject
+argument_list|(
+operator|*
+operator|(
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Where
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|AML_REF_OF_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Reference]      "
+literal|"[RefOf]          "
 argument_list|)
 expr_stmt|;
 comment|/* Reference can be to a Node or an Operand object */

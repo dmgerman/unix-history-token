@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1103,7 +1103,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvTerminate  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: free memory allocated for table storage.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiEvTerminate  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: Disable events and free memory allocated for table storage.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1124,8 +1124,13 @@ argument_list|(
 literal|"EvTerminate"
 argument_list|)
 expr_stmt|;
-comment|/*      * Disable all event-related functionality.      * In all cases, on error, print a message but obviously we don't abort.      */
-comment|/*      * Disable all fixed events      */
+if|if
+condition|(
+name|AcpiGbl_EventsInitialized
+condition|)
+block|{
+comment|/*          * Disable all event-related functionality.          * In all cases, on error, print a message but obviously we don't abort.          */
+comment|/*          * Disable all fixed events          */
 for|for
 control|(
 name|i
@@ -1164,7 +1169,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Failed to disable fixed event %d.\n"
+literal|"Could not disable fixed event %d\n"
 operator|,
 name|i
 operator|)
@@ -1172,7 +1177,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Disable all GPEs      */
+comment|/*          * Disable all GPEs          */
 for|for
 control|(
 name|i
@@ -1217,7 +1222,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Failed to disable GPE %d.\n"
+literal|"Could not disable GPE %d\n"
 operator|,
 name|i
 operator|)
@@ -1226,7 +1231,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*      * Remove SCI handler      */
+comment|/*          * Remove SCI handler          */
 name|Status
 operator|=
 name|AcpiEvRemoveSciHandler
@@ -1245,10 +1250,11 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unable to remove SCI handler.\n"
+literal|"Could not remove SCI handler\n"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/*      * Return to original mode if necessary      */
 if|if
@@ -1276,7 +1282,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"AcpiDisable failed.\n"
+literal|"AcpiDisable failed\n"
 operator|)
 argument_list|)
 expr_stmt|;

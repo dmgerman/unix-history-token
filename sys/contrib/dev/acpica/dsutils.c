@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 94 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 95 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -670,9 +670,6 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|ACPI_STATUS
-name|Status2
-decl_stmt|;
 name|NATIVE_CHAR
 modifier|*
 name|NameString
@@ -698,10 +695,6 @@ specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
-decl_stmt|;
-name|char
-modifier|*
-name|Name
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
@@ -927,50 +920,23 @@ name|Status
 operator|=
 name|AE_AML_NAME_NOT_FOUND
 expr_stmt|;
-name|Name
-operator|=
-name|NULL
-expr_stmt|;
-name|Status2
-operator|=
-name|AcpiNsExternalizeName
-argument_list|(
-name|ACPI_UINT32_MAX
-argument_list|,
-name|NameString
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|Name
-argument_list|)
-expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
-name|Status2
+name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_REPORT_NSERROR
 argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Object name [%s] was not found in namespace\n"
-operator|,
-name|Name
-operator|)
+name|NameString
+argument_list|,
+name|Status
 argument_list|)
 expr_stmt|;
-name|ACPI_MEM_FREE
-argument_list|(
-name|Name
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 block|}
 comment|/* Free the namestring created above */
 name|ACPI_MEM_FREE

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 61 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 63 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -10,19 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<acpi.h>
+file|"acpi.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<acdebug.h>
+file|"acdebug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<acnamesp.h>
+file|"acnamesp.h"
 end_include
 
 begin_ifdef
@@ -725,7 +725,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%16.16s % 10.10s % 10.10s\n"
+literal|"%16.16s %10.10s %10.10s\n"
 argument_list|,
 literal|"ACPI_TYPE"
 argument_list|,

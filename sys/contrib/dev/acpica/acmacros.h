@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 128 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 130 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1616,6 +1616,18 @@ parameter_list|)
 value|{AcpiUtReportWarning(_THIS_MODULE,__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_REPORT_NSERROR
+parameter_list|(
+name|s
+parameter_list|,
+name|e
+parameter_list|)
+value|AcpiNsReportError(_THIS_MODULE,__LINE__,_COMPONENT, s, e);
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1649,6 +1661,18 @@ parameter_list|(
 name|fp
 parameter_list|)
 value|{AcpiUtReportWarning("ACPI",__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_REPORT_NSERROR
+parameter_list|(
+name|s
+parameter_list|,
+name|e
+parameter_list|)
+value|AcpiNsReportError("ACPI",__LINE__,_COMPONENT, s, e);
 end_define
 
 begin_endif

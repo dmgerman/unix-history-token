@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmnames - AML disassembler, names, namestrings, pathnames  *              $Revision: 3 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmnames - AML disassembler, names, namestrings, pathnames  *              $Revision: 4 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -77,7 +77,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|ACPI_PARSE_OBJECT       *TargetOp;       if ((!Name) ||         (!Op->Common.Parent))     {         return;     }      TargetOp = AcpiPsFind (Op, Name, 0, 0);     if (!TargetOp)     {
+block|if ((!Name) ||         (!Op->Common.Parent))     {         return;     }      if (!Op->Common.Node)     {         AcpiOsPrintf (" /**** Name not found or not accessible from this scope ****/ ");     }      ACPI_PARSE_OBJECT       *TargetOp;       if ((!Name) ||         (!Op->Common.Parent))     {         return;     }      TargetOp = AcpiPsFind (Op, Name, 0, 0);     if (!TargetOp)     {
 comment|/*          * Didn't find the name in the parse tree.  This may be          * a problem, or it may simply be one of the predefined names          * (such as _OS_).  Rather than worry about looking up all          * the predefined names, just display the name as given          */
 block|AcpiOsPrintf (" /**** Name not found or not accessible from this scope ****/ ");     }
 endif|#

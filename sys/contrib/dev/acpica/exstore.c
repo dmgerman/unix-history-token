@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 169 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 172 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -188,7 +188,7 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*lint: -fallthrough */
+comment|/*lint -fallthrough */
 default|default:
 comment|/* Destination is not an Reference */
 name|ACPI_DEBUG_PRINT
@@ -634,6 +634,20 @@ operator|)
 operator|=
 name|NewDesc
 expr_stmt|;
+comment|/* If same as the original source, add a reference */
+if|if
+condition|(
+name|NewDesc
+operator|==
+name|SourceDesc
+condition|)
+block|{
+name|AcpiUtAddReference
+argument_list|(
+name|NewDesc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 break|break;
 case|case
@@ -971,7 +985,7 @@ operator|!=
 name|TargetDesc
 condition|)
 block|{
-comment|/*              * Store the new NewDesc as the new value of the Name, and set              * the Name's type to that of the value being stored in it.              * SourceDesc reference count is incremented by AttachObject.              */
+comment|/*              * Store the new NewDesc as the new value of the Name, and set              * the Name's type to that of the value being stored in it.              * SourceDesc reference count is incremented by AttachObject.              *              * Note: This may change the type of the node if an explicit store              * has been performed such that the node/object type has been              * changed.              */
 name|Status
 operator|=
 name|AcpiNsAttachObject
@@ -980,7 +994,11 @@ name|Node
 argument_list|,
 name|NewDesc
 argument_list|,
-name|TargetType
+name|NewDesc
+operator|->
+name|Common
+operator|.
+name|Type
 argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT

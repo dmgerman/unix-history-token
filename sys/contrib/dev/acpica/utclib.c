@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmclib - Local implementation of C library functions  * $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmclib - Local implementation of C library functions  * $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|UINT32
+name|ACPI_SIZE
 name|AcpiUtStrlen
 parameter_list|(
 specifier|const
@@ -161,7 +161,7 @@ name|NATIVE_CHAR
 modifier|*
 name|SrcString
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_SIZE
 name|Count
 parameter_list|)
 block|{
@@ -229,7 +229,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|UINT32
+name|int
 name|AcpiUtStrcmp
 parameter_list|(
 specifier|const
@@ -311,7 +311,7 @@ name|NATIVE_CHAR
 modifier|*
 name|String2
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_SIZE
 name|Count
 parameter_list|)
 block|{
@@ -353,7 +353,7 @@ operator|(
 operator|(
 name|Count
 operator|==
-name|ACPI_INTEGER_MAX
+name|ACPI_SIZE_MAX
 operator|)
 condition|?
 literal|0
@@ -462,7 +462,7 @@ name|NATIVE_CHAR
 modifier|*
 name|SrcString
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_SIZE
 name|Count
 parameter_list|)
 block|{
@@ -553,7 +553,7 @@ name|void
 modifier|*
 name|Src
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_SIZE
 name|Count
 parameter_list|)
 block|{
@@ -622,7 +622,7 @@ parameter_list|,
 name|NATIVE_UINT
 name|Value
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_SIZE
 name|Count
 parameter_list|)
 block|{

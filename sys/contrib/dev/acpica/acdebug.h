@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 63 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -477,6 +477,17 @@ parameter_list|,
 name|NATIVE_CHAR
 modifier|*
 name|OutputType
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDbDecodeNode
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|)
 function_decl|;
 end_function_decl

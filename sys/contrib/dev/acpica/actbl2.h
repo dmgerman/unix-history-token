@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl2.h - ACPI Specification Revision 2.0 Tables  *       $Revision: 27 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl2.h - ACPI Specification Revision 2.0 Tables  *       $Revision: 28 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -387,11 +387,11 @@ comment|/* Processor's memory cache line width, in bytes */
 name|UINT8
 name|DutyOffset
 decl_stmt|;
-comment|/* Processors duty cycle index in processor's P_CNT reg*/
+comment|/* Processor's duty cycle index in processor's P_CNT reg*/
 name|UINT8
 name|DutyWidth
 decl_stmt|;
-comment|/* Processors duty cycle value bit width in P_CNT register.*/
+comment|/* Processor's duty cycle value bit width in P_CNT register.*/
 name|UINT8
 name|DayAlrm
 decl_stmt|;

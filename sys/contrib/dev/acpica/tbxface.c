@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 59 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -206,7 +206,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OK
 operator|,
-literal|"ACPI Tables successfully loaded\n"
+literal|"ACPI Tables successfully acquired\n"
 operator|)
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 50 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 51 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -339,6 +339,25 @@ block|{
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|SourceDesc
+operator|==
+name|ActualSrcDesc
+condition|)
+block|{
+comment|/*               * No conversion was performed.  Return the SourceDesc as the              * new object.              */
+operator|*
+name|NewDesc
+operator|=
+name|SourceDesc
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}

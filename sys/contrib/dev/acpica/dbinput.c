@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 87 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 88 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -784,7 +784,7 @@ return|return;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Unrecognized Command Class: %X\n"
+literal|"Unrecognized Command Class: %s\n"
 argument_list|,
 name|HelpType
 argument_list|)

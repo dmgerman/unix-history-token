@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 104 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 105 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -259,12 +259,6 @@ argument_list|(
 literal|"[%04lX] "
 argument_list|,
 name|ThreadId
-argument_list|,
-name|AcpiGbl_NestingLevel
-argument_list|,
-name|DbgInfo
-operator|->
-name|ProcName
 argument_list|)
 expr_stmt|;
 block|}
@@ -829,6 +823,9 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%05X    "
 argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|i
 argument_list|)
 expr_stmt|;
