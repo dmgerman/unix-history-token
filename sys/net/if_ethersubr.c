@@ -3355,7 +3355,8 @@ name|ifp
 argument_list|)
 operator|)
 condition|)
-comment|/* Discard packet if upper layers shouldn't see it because it was 	   unicast to a different Ethernet address. If the driver is working 	   properly, then this situation can only happen when the interface 	   is in promiscuous mode. */
+block|{
+comment|/* 		 * Discard packet if upper layers shouldn't see it because it 		 * was unicast to a different Ethernet address. If the driver 		 * is working properly, then this situation can only happen  		 * when the interface is in promiscuous mode. 		 */
 if|if
 condition|(
 operator|(
@@ -3416,6 +3417,7 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 comment|/* Discard packet if interface is not up */
 if|if
