@@ -2892,9 +2892,6 @@ decl_stmt|;
 name|struct
 name|proc
 modifier|*
-name|userp
-decl_stmt|,
-modifier|*
 name|mycp
 decl_stmt|;
 name|struct
@@ -2925,9 +2922,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|off_t
-name|offset
-decl_stmt|;
 name|int
 name|oublock_st
 decl_stmt|,
@@ -2938,12 +2932,6 @@ name|inblock_st
 decl_stmt|,
 name|inblock_end
 decl_stmt|;
-name|userp
-operator|=
-name|aiocbe
-operator|->
-name|userproc
-expr_stmt|;
 name|cb
 operator|=
 operator|&
@@ -3051,8 +3039,6 @@ expr_stmt|;
 name|auio
 operator|.
 name|uio_offset
-operator|=
-name|offset
 operator|=
 name|cb
 operator|->
@@ -3265,7 +3251,9 @@ operator|)
 condition|)
 name|psignal
 argument_list|(
-name|userp
+name|aiocbe
+operator|->
+name|userproc
 argument_list|,
 name|SIGPIPE
 argument_list|)
@@ -3747,12 +3735,6 @@ name|kaio_active_count
 operator|++
 expr_stmt|;
 comment|/* Do the I/O function. */
-name|aiocbe
-operator|->
-name|jobaioproc
-operator|=
-name|aiop
-expr_stmt|;
 name|aio_process
 argument_list|(
 name|aiocbe
@@ -7026,7 +7008,7 @@ directive|else
 name|int
 name|s
 decl_stmt|;
-name|int
+name|long
 name|jobref
 decl_stmt|;
 name|struct
@@ -7427,7 +7409,7 @@ name|s
 decl_stmt|,
 name|timo
 decl_stmt|;
-name|int
+name|long
 modifier|*
 name|ijoblist
 decl_stmt|;
@@ -8645,7 +8627,7 @@ name|kaioinfo
 modifier|*
 name|ki
 decl_stmt|;
-name|int
+name|long
 name|jobref
 decl_stmt|;
 name|ki
@@ -10385,12 +10367,6 @@ name|timespec
 name|ts
 decl_stmt|;
 name|struct
-name|aiocb
-modifier|*
-modifier|*
-name|cbptr
-decl_stmt|;
-name|struct
 name|kaioinfo
 modifier|*
 name|ki
@@ -10526,12 +10502,6 @@ condition|)
 return|return
 name|EAGAIN
 return|;
-name|cbptr
-operator|=
-name|uap
-operator|->
-name|aiocbp
-expr_stmt|;
 for|for
 control|(
 init|;

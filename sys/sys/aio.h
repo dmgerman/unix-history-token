@@ -424,12 +424,6 @@ name|fd_file
 decl_stmt|;
 comment|/* Pointer to file structure */
 name|struct
-name|aioproclist
-modifier|*
-name|jobaioproc
-decl_stmt|;
-comment|/* AIO process descriptor */
-name|struct
 name|aio_liojob
 modifier|*
 name|lio
