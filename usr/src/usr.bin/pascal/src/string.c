@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)string.c	5.2 (Berkeley) %G%"
+literal|"@(#)string.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"whoami.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"align.h"
 end_include
 
 begin_include
@@ -432,21 +438,12 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|(
-operator|(
-call|(
-name|int
-call|)
+name|roundup
 argument_list|(
 name|strngp
-operator|+
-literal|1
+argument_list|,
+name|A_LONG
 argument_list|)
-operator|)
-operator|&
-operator|~
-literal|1
-operator|)
 operator|)
 expr_stmt|;
 return|return
