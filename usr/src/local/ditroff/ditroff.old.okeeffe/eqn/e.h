@@ -40,7 +40,7 @@ name|VERT
 parameter_list|(
 name|n
 parameter_list|)
-value|((((n)+1)/3)*3)
+value|((((n)+(minvert>>1))/minvert)*minvert)
 end_define
 
 begin_define
@@ -193,6 +193,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* min size it can print */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|minvert
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* min size it can move vertically */
 end_comment
 
 begin_decl_stmt
