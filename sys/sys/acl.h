@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999 Robert N. M. Watson  * All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*   * Userland/kernel interface for Access Control Lists  *  * The POSIX.1e implementation page may be reached at:  *   http://www.watson.org/fbsd-hardening/posix1e/  */
+comment|/*   * Userland/kernel interface for Access Control Lists.  *  * The POSIX.1e implementation page may be reached at:  * http://www.watson.org/fbsd-hardening/posix1e/  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|_SYS_ACL_H
 end_define
 
 begin_comment
-comment|/*  * POSIX.1e ACL types  */
+comment|/*  * POSIX.1e ACL types and related constants  */
 end_comment
 
 begin_define
@@ -265,14 +265,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Dummy declarations so that we can expose acl_access all over the place  * without worrying about including ucred and friends.  vnode.h does the  * same thing.  */
+comment|/*  * POSIX.1e and generic kernel/vfs semantics functions--not currently in the  * base distribution, but will be soon.  */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|ucred
-struct_decl|;
-end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -280,9 +274,11 @@ name|proc
 struct_decl|;
 end_struct_decl
 
-begin_comment
-comment|/*  * POSIX.1e and generic kernel/vfs semantics functions--not currently in the  * base distribution, but will be soon.  */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|ucred
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
