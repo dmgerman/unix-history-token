@@ -8223,7 +8223,15 @@ condition|(
 name|object
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|object
 operator|->
 name|ref_count
@@ -8259,6 +8267,11 @@ name|OBJT_SWAP
 operator|)
 condition|)
 block|{
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_object_collapse
 argument_list|(
 name|object
@@ -8288,7 +8301,6 @@ name|type
 operator|==
 name|OBJT_SWAP
 condition|)
-block|{
 name|swap_pager_freespace
 argument_list|(
 name|object
@@ -8298,7 +8310,6 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|offidxend
@@ -8313,7 +8324,6 @@ name|object
 operator|->
 name|size
 condition|)
-block|{
 name|object
 operator|->
 name|size
