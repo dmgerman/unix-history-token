@@ -37,6 +37,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -59,6 +65,7 @@ modifier|*
 name|progname
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -72,14 +79,21 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
 name|__progname
 operator|=
 name|p
-condition|?
-name|p
 operator|+
 literal|1
-else|:
+expr_stmt|;
+else|else
+name|__progname
+operator|=
 name|progname
 expr_stmt|;
 block|}
