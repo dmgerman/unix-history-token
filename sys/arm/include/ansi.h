@@ -23,14 +23,14 @@ begin_define
 define|#
 directive|define
 name|_BSD_CLK_TCK_
-value|100
+value|128
 end_define
 
 begin_define
 define|#
 directive|define
 name|_BSD_CLOCKS_PER_SEC_
-value|100
+value|128
 end_define
 
 begin_endif
