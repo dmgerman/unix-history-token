@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: subr.c,v 1.10 1997/05/11 10:25:38 davidn Exp $"
+literal|"$Id: subr.c,v 1.11 1997/09/01 10:06:05 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,7 +444,7 @@ condition|(
 operator|(
 name|l
 operator|=
-name|cgetustr
+name|cgetstr
 argument_list|(
 name|buf
 argument_list|,
@@ -681,7 +681,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"cgetustr: %s=%s\r\n"
+literal|"cgetstr: %s=%s\r\n"
 argument_list|,
 name|sp
 operator|->
