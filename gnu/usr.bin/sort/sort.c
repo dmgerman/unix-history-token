@@ -3,6 +3,52 @@ begin_comment
 comment|/* sort - sort lines of text (with all kinds of options).    Copyright (C) 1988, 1991 Free Software Foundation     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     Written December 1988 by Mike Haertel.    The author may be reached (Email) at the address mike@gnu.ai.mit.edu,    or (US mail) as Mike Haertel c/o Free Software Foundation. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_BROKETS
+argument_list|)
+end_if
+
+begin_comment
+comment|/* We use<config.h> instead of "config.h" so that a compilation    using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h    (which it would do because it found this file in $srcdir).  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Get isblank from GNU libc.  */
 end_comment
@@ -35,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"long-options.h"
 end_include
 
 begin_ifdef
@@ -7614,6 +7666,15 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|parse_long_options
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|usage
+argument_list|)
+expr_stmt|;
 name|have_read_stdin
 operator|=
 literal|0
@@ -8210,7 +8271,9 @@ operator|!
 name|key
 condition|)
 name|usage
-argument_list|()
+argument_list|(
+literal|2
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -8940,6 +9003,13 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'y'
+case|:
+comment|/* Accept and ignore e.g. -y0 for compatibility with 		       Solaris 2.  */
+goto|goto
+name|outer
+goto|;
 default|default:
 name|fprintf
 argument_list|(
@@ -8957,7 +9027,9 @@ name|s
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|()
+argument_list|(
+literal|2
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -9470,20 +9542,46 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|status
+parameter_list|)
+name|int
+name|status
+decl_stmt|;
 block|{
+if|if
+condition|(
+name|status
+operator|!=
+literal|0
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Usage: %s [-cmus] [-t separator] [-o output-file] [-T tempdir] [-bdfiMnr]\n\        [+POS1 [-POS2]] [-k POS1[,POS2]] [file...]\n"
+literal|"Try `%s --help' for more information.\n"
 argument_list|,
 name|program_name
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\ Usage: %s [OPTION]... [FILE]...\n\ "
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\ \n\   +POS1 [-POS2]    start a key at POS1, end it before POS2\n\   -M               compare (unknown)< `JAN'< ...< `DEC', imply -b\n\   -T DIRECT        use DIRECTfor temporary files, not $TEMPDIR nor /tmp\n\   -b               ignore leading blanks in sort fields or keys\n\   -c               check if given files already sorted, do not sort\n\   -d               consider only [a-zA-Z0-9 ] characters in keys\n\   -f               fold lower case to upper case characters in keys\n\   -i               consider only [\\040-\\0176] characters in keys\n\   -k POS1[,POS2]   same as +POS1 [-POS2], but all positions counted from 1\n\   -m               merge already sorted files, do not sort\n\   -n               compare according to string numerical value, imply -b\n\   -o FILE          write result on FILE instead of standard output\n\   -r               reverse the result of comparisons\n\   -s               stabilize sort by disabling last resort comparison\n\   -t SEP           use SEParator instead of non- to whitespace transition\n\   -u               with -c, check for strict ordering\n\   -u               with -m, only output the first of an equal sequence\n\       --help       display this help and exit\n\       --version    output version information and exit\n\ \n\ POS is F[.C][OPTS], where F is the field number and C the character\n\ position in the field, both counted from zero.  OPTS is made up of one\n\ or more of Mbdfinr, this effectively disable global -Mbdfinr settings\n\ for that key.  If no key given, use the entire line as key.  With no\n\ FILE, or when FILE is -, read standard input.\n\ "
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
-literal|2
+name|status
 argument_list|)
 expr_stmt|;
 block|}
