@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.6 1994/12/06 00:51:40 jkh Exp $"
+literal|"$Id: perform.c,v 1.7 1995/04/19 14:01:58 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -571,7 +571,11 @@ if|if
 condition|(
 operator|!
 name|Fake
-operator|&&
+condition|)
+block|{
+comment|/* Some packages aren't packed right, so we need to just ignore delete_package()'s status.  Ugh! :-( */
+if|if
+condition|(
 name|delete_package
 argument_list|(
 name|FALSE
@@ -581,9 +585,17 @@ argument_list|,
 operator|&
 name|Plist
 argument_list|)
-operator|!=
+operator|==
 name|FAIL
-operator|&&
+condition|)
+name|warn
+argument_list|(
+literal|"Couldn't entirely delete package (perhaps the packing list is\n"
+literal|"incorrectly specified?)\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|vsystem
 argument_list|(
 literal|"%s -r %s"
@@ -604,6 +616,7 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 block|}
 for|for
 control|(

@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.26.2.6 1995/10/31 20:35:16 jkh Exp $"
+literal|"$Id: perform.c,v 1.26.2.7 1995/11/03 02:54:57 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1000,6 +1000,12 @@ name|isURL
 argument_list|(
 name|pkg
 argument_list|)
+operator|&&
+operator|!
+name|getenv
+argument_list|(
+literal|"PKG_ADD_BASE"
+argument_list|)
 condition|)
 block|{
 name|snprintf
@@ -1129,30 +1135,43 @@ if|if
 condition|(
 operator|!
 name|Fake
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|fexists
 argument_list|(
 literal|"+CONTENTS"
 argument_list|)
-operator|||
+condition|)
+name|whinge
+argument_list|(
+literal|"Autoloaded package %s has no +CONTENTS file?"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|vsystem
 argument_list|(
 literal|"(pwd; cat +CONTENTS) | pkg_add %s-S"
-argument_list|)
-operator|,
+argument_list|,
 name|Verbose
 condition|?
 literal|"-v "
 else|:
 literal|""
-operator|)
+argument_list|)
 condition|)
 block|{
 name|whinge
 argument_list|(
-literal|"Autoload of dependency `%s' failed%s"
+literal|"pkg_add of dependency `%s' failed%s"
 argument_list|,
 name|p
 operator|->
@@ -1188,6 +1207,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Nuke the temporary playpen */
 name|leave_playpen
 argument_list|(

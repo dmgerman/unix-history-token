@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.7.4.2 1995/10/14 19:11:01 jkh Exp $"
+literal|"$Id: main.c,v 1.7.4.3 1995/11/03 02:54:56 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|MAX_PKGS
-value|10
+value|20
 end_define
 
 begin_decl_stmt
@@ -232,6 +232,7 @@ operator|)
 operator|!=
 name|EOF
 condition|)
+block|{
 switch|switch
 condition|(
 name|ch
@@ -332,6 +333,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+block|}
 name|argc
 operator|-=
 name|optind
@@ -349,7 +351,9 @@ condition|)
 block|{
 name|whinge
 argument_list|(
-literal|"Too many packages (max 10)."
+literal|"Too many packages (max %d)."
+argument_list|,
+name|MAX_PKGS
 argument_list|)
 expr_stmt|;
 return|return
@@ -358,6 +362,13 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|AddMode
+operator|!=
+name|SLAVE
+condition|)
+block|{
 for|for
 control|(
 name|ch
@@ -403,7 +414,6 @@ name|argv
 argument_list|)
 condition|)
 comment|/* preserve URLs */
-block|{
 name|pkgs
 index|[
 name|ch
@@ -420,7 +430,6 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* expand all pathnames to fullnames */
@@ -433,7 +442,6 @@ name|argv
 argument_list|)
 condition|)
 comment|/* refers to a file directly */
-block|{
 name|pkgs
 index|[
 name|ch
@@ -450,7 +458,6 @@ name|ch
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* look for the file in the expected places */
@@ -469,7 +476,6 @@ name|argv
 argument_list|)
 operator|)
 condition|)
-block|{
 name|whinge
 argument_list|(
 literal|"Can't find package '%s'."
@@ -478,12 +484,7 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
+else|else
 name|pkgs
 index|[
 name|ch
@@ -502,15 +503,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+block|}
 comment|/* If no packages, yelp */
+elseif|else
 if|if
 condition|(
 operator|!
 name|ch
-operator|&&
-name|AddMode
-operator|!=
-name|SLAVE
 condition|)
 name|usage
 argument_list|(
@@ -522,11 +521,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|(
 name|ch
 operator|>
 literal|1
-operator|)
 operator|&&
 name|AddMode
 operator|==
@@ -537,20 +534,6 @@ argument_list|(
 name|prog_name
 argument_list|,
 literal|"Only one package name may be specified with master mode"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ch
-operator|&&
-name|AddMode
-operator|==
-name|SLAVE
-condition|)
-name|whinge
-argument_list|(
-literal|"Package names ignored in slave mode."
 argument_list|)
 expr_stmt|;
 if|if
