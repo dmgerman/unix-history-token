@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.21 1997/08/25 06:42:19 charnier Exp $"
+literal|"$Id: w.c,v 1.22 1997/09/12 02:22:21 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2752,7 +2752,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: w [-hin] [-M core] [-N system] [user]\n"
+literal|"usage: w [-dhin] [-M core] [-N system] [user]\n"
 argument_list|)
 expr_stmt|;
 else|else
