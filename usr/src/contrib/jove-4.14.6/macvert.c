@@ -148,6 +148,12 @@ begin_comment
 comment|/* Formatting int's the old way or the new "improved" way? */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_if
 if|#
 directive|if
@@ -256,6 +262,11 @@ name|x
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
