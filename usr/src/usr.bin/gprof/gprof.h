@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.14 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.15 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -338,7 +338,7 @@ comment|/* the number of function names */
 end_comment
 
 begin_comment
-comment|/*      *	flag which marks a nl entry as topologically ``busy''      */
+comment|/*      *	flag which marks a nl entry as topologically ``busy''      *	flag which marks a nl entry as topologically ``not_numbered''      */
 end_comment
 
 begin_define
@@ -346,6 +346,13 @@ define|#
 directive|define
 name|DFN_BUSY
 value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFN_NAN
+value|0
 end_define
 
 begin_comment

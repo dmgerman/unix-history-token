@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dfn.c	1.2 (Berkeley) %G%"
+literal|"@(#)dfn.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,7 +84,7 @@ begin_decl_stmt
 name|int
 name|dfn_counter
 init|=
-literal|0
+name|DFN_NAN
 decl_stmt|;
 end_decl_stmt
 
@@ -332,7 +332,7 @@ name|childp
 operator|->
 name|toporder
 operator|!=
-literal|0
+name|DFN_NAN
 operator|&&
 name|childp
 operator|->
@@ -365,7 +365,7 @@ name|childp
 operator|->
 name|toporder
 operator|==
-literal|0
+name|DFN_NAN
 condition|)
 block|{
 return|return

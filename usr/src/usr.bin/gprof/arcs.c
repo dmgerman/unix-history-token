@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arcs.c	1.12 (Berkeley) %G%"
+literal|"@(#)arcs.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,7 +384,7 @@ name|parentp
 operator|->
 name|toporder
 operator|=
-literal|0
+name|DFN_NAN
 expr_stmt|;
 name|parentp
 operator|->
@@ -428,7 +428,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 *	topologically order things 	 *	from each of the roots of the call graph 	 */
+comment|/* 	 *	topologically order things 	 *	if any node is unnumbered, 	 *	    number it and any of its descendents. 	 */
 for|for
 control|(
 name|parentp
@@ -447,9 +447,9 @@ if|if
 condition|(
 name|parentp
 operator|->
-name|parents
+name|toporder
 operator|==
-literal|0
+name|DFN_NAN
 condition|)
 block|{
 name|dfn
@@ -1179,17 +1179,20 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
+operator|(
 name|nlp
 operator|->
 name|cyclehead
-operator|!=
+operator|==
 name|nlp
-operator|||
+operator|&&
 name|nlp
 operator|->
 name|cnext
-operator|==
+operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 continue|continue;
@@ -1287,7 +1290,7 @@ name|cyclenlp
 operator|->
 name|toporder
 operator|=
-literal|0
+name|DFN_NAN
 expr_stmt|;
 comment|/* graph call chain top-sort order */
 name|cyclenlp
