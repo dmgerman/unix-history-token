@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	6.3	83/10/08	*/
+comment|/*	kern_clock.c	6.4	84/02/23	*/
 end_comment
 
 begin_include
@@ -108,6 +108,29 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ADJTIME
+end_define
+
+begin_comment
+comment|/* For now... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADJ_TICK
+value|1000
+end_define
+
+begin_decl_stmt
+name|int
+name|adjtimedelta
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Clock handling routines.  *  * This code is written to operate with two timers which run  * independently of each other. The main clock, running at hz  * times per second, is used to do scheduling and timeout calculations.  * The second timer does resource utilization estimation statistically  * based on the state of the machine phz times a second. Both functions  * can be performed by a single clock (ie hz == phz), however the   * statistics will be much more prone to errors. Ideally a machine  * would have separate clocks measuring time spent in user state, system  * state, interrupt state, and idle state. These clocks would allow a non-  * approximate measure of resource utilization.  */
@@ -613,6 +636,15 @@ name|ps
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Increment the time-of-day, and schedule 	 * processing of the callouts at a very low cpu priority, 	 * so we don't keep the relatively high clock interrupt 	 * priority any longer than necessary. 	 */
+ifdef|#
+directive|ifdef
+name|ADJTIME
+if|if
+condition|(
+name|adjtimedelta
+operator|==
+literal|0
+condition|)
 name|bumptime
 argument_list|(
 operator|&
@@ -621,6 +653,58 @@ argument_list|,
 name|tick
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|adjtimedelta
+operator|<
+literal|0
+condition|)
+block|{
+name|bumptime
+argument_list|(
+operator|&
+name|time
+argument_list|,
+name|tick
+operator|-
+name|ADJ_TICK
+argument_list|)
+expr_stmt|;
+name|adjtimedelta
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+name|bumptime
+argument_list|(
+operator|&
+name|time
+argument_list|,
+name|tick
+operator|+
+name|ADJ_TICK
+argument_list|)
+expr_stmt|;
+name|adjtimedelta
+operator|--
+expr_stmt|;
+block|}
+block|}
+else|#
+directive|else
+name|bumptime
+argument_list|(
+operator|&
+name|time
+argument_list|,
+name|tick
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|setsoftclock
 argument_list|()
 expr_stmt|;
