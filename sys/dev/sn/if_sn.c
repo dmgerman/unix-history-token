@@ -456,16 +456,6 @@ name|uint8_t
 modifier|*
 name|p
 decl_stmt|;
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-decl_stmt|;
-name|struct
-name|sockaddr_dl
-modifier|*
-name|sdl
-decl_stmt|;
 name|int
 name|rev
 decl_stmt|;
