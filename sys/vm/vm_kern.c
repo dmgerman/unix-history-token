@@ -1249,6 +1249,7 @@ name|wired_count
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * At this point, the kmem_object must be unlocked because 	 * vm_map_simplify_entry() calls vm_object_deallocate(), which 	 * locks the kmem_object. 	 */
 name|vm_map_simplify_entry
 argument_list|(
 name|map
@@ -1257,6 +1258,11 @@ name|entry
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Loop thru pages, entering them in the pmap. (We cannot add them to 	 * the wired count without wrapping the vm_page_queue_lock in 	 * splimp...) 	 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|kmem_object
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1272,11 +1278,6 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
-name|VM_OBJECT_LOCK
-argument_list|(
-name|kmem_object
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|vm_page_lookup
@@ -1289,11 +1290,6 @@ name|offset
 operator|+
 name|i
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|kmem_object
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Because this is kernel_pmap, this call will not block. 		 */
@@ -1333,6 +1329,11 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|kmem_object
+argument_list|)
+expr_stmt|;
 name|vm_map_unlock
 argument_list|(
 name|map
