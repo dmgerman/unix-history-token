@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.21 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3372,6 +3372,29 @@ case|:
 name|fmt
 operator|=
 name|wont
+expr_stmt|;
+break|break;
+case|case
+name|TELOPT_ECHO
+case|:
+operator|(
+name|void
+operator|)
+name|mode
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|fmt
+operator|=
+name|will
+expr_stmt|;
+name|hisopts
+index|[
+name|option
+index|]
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
