@@ -2220,7 +2220,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-literal|0
+name|UMA_ZONE_VM
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_allocf
@@ -2259,7 +2259,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-literal|0
+name|UMA_ZONE_VM
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_allocf
