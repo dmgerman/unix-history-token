@@ -2059,15 +2059,11 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: got out of seq. packet: %s\n"
+literal|"%s: got out of seq. packet: %s\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|s
 argument_list|)
@@ -2725,23 +2721,15 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s%d: link address 0 reserved for broadcasts.  Please change it and ifconfig %s%d down up\n"
+literal|"%s: link address 0 reserved for broadcasts.  Please change it and ifconfig %s down up\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
+name|if_xname
 argument_list|,
 name|ifp
 operator|->
-name|if_unit
-argument_list|,
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}

@@ -1541,6 +1541,10 @@ operator|&&
 name|__FreeBSD__
 operator|>=
 literal|3
+operator|&&
+name|__FreeBSD_version
+operator|<
+literal|501113
 end_if
 
 begin_define

@@ -473,6 +473,7 @@ modifier|*
 name|pif_next
 decl_stmt|;
 comment|/* Next registered atm interface */
+specifier|const
 name|char
 modifier|*
 name|pif_name

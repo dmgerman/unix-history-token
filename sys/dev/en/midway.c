@@ -8161,7 +8161,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"drqsync: %s%d: lost mbuf in slot %zu!"
+literal|"drqsync: %s: lost mbuf in slot %zu!"
 operator|,
 name|sc
 operator|->
@@ -8169,15 +8169,7 @@ name|ifatm
 operator|.
 name|ifnet
 operator|.
-name|if_name
-operator|,
-name|sc
-operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
-name|if_unit
+name|if_xname
 operator|,
 name|slot
 operator|-

@@ -410,8 +410,8 @@ name|struct
 name|in_addr
 name|ip
 decl_stmt|;
-name|int32_t
-name|unit
+name|int
+name|glob
 decl_stmt|;
 block|}
 name|p

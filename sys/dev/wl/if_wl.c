@@ -2041,17 +2041,20 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MULTICAST */
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-operator|=
-literal|"wl"
-expr_stmt|;
-name|ifp
-operator|->
-name|if_unit
-operator|=
-name|unit
+argument_list|,
+name|device_get_name
+argument_list|(
+name|device
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|device
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -2127,15 +2130,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: address %6D, NWID 0x%02x%02x"
+literal|"%s: address %6D, NWID 0x%02x%02x"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|sc
 operator|->
@@ -4147,13 +4146,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|ifp
-operator|->
-name|if_unit
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -4202,9 +4194,11 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"wl%d: entered wlstart()\n"
+literal|"%s: entered wlstart()\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4335,9 +4329,11 @@ directive|ifdef
 name|WLDEBUG
 name|printf
 argument_list|(
-literal|"wl%d: CU idle, scb %04x %04x cu %04x\n"
+literal|"%s: CU idle, scb %04x %04x cu %04x\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|,
 name|scb_status
 argument_list|,
@@ -4392,9 +4388,11 @@ directive|ifdef
 name|WLDEBUG
 name|printf
 argument_list|(
-literal|"wl%d: CU unexpectedly busy; scb %04x cu %04x\n"
+literal|"%s: CU unexpectedly busy; scb %04x cu %04x\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|,
 name|scb_status
 argument_list|,
@@ -4409,9 +4407,11 @@ name|xmt_watch
 condition|)
 name|printf
 argument_list|(
-literal|"wl%d: busy?!"
+literal|"%s: busy?!"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|WL_UNLOCK
@@ -4644,11 +4644,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"wl%d read(): board is not running.\n"
+literal|"%s read(): board is not running.\n"
 argument_list|,
-name|sc
+name|ifp
 operator|->
-name|unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5338,13 +5338,6 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-name|int
-name|unit
-init|=
-name|ifp
-operator|->
-name|if_unit
-decl_stmt|;
 name|struct
 name|wl_softc
 modifier|*
@@ -5425,9 +5418,11 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"wl%d: entered wlioctl()\n"
+literal|"%s: entered wlioctl()\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5548,9 +5543,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"wl%d ioctl(): board is not running\n"
+literal|"%s ioctl(): board is not running\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|sc
@@ -7768,7 +7765,7 @@ comment|/* WLDEBUG */
 end_comment
 
 begin_comment
-comment|/*  * wlxmt:  *  *	This routine fills in the appropriate registers and memory  *	locations on the WaveLAN board and starts the board off on  *	the transmit.  *  * input	: board number of interest, and a pointer to the mbuf  * output	: board memory and registers are set for xfer and attention  *  */
+comment|/*  * wlxmt:  *  *	This routine fills in the appropriate registers and memory  *	locations on the WaveLAN board and starts the board off on  *	the transmit.  *  * input	: pointers to board of interest's softc and the mbuf  * output	: board memory and registers are set for xfer and attention  *  */
 end_comment
 
 begin_function
@@ -7887,11 +7884,13 @@ name|IFF_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"wl%d: entered wlxmt()\n"
+literal|"%s: entered wlxmt()\n"
 argument_list|,
 name|sc
 operator|->
-name|unit
+name|wl_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8681,11 +8680,13 @@ block|{
 comment|/* not waking up, and we care */
 name|printf
 argument_list|(
-literal|"wl%d: slow accepting xmit\n"
+literal|"%s: slow accepting xmit\n"
 argument_list|,
 name|sc
 operator|->
-name|unit
+name|wl_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}

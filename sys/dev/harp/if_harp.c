@@ -646,7 +646,7 @@ name|strcmp
 argument_list|(
 name|ifp
 operator|->
-name|if_name
+name|if_dname
 argument_list|,
 literal|"en"
 argument_list|)
@@ -1695,7 +1695,7 @@ name|cu_unit
 operator|=
 name|parent
 operator|->
-name|if_unit
+name|if_dunit
 expr_stmt|;
 name|sc
 operator|->
@@ -2353,7 +2353,7 @@ name|cmn
 argument_list|,
 name|parent
 operator|->
-name|if_name
+name|if_dname
 argument_list|,
 name|harp_services
 argument_list|)
@@ -2371,7 +2371,7 @@ literal|"%s: pif registration failed %d\n"
 argument_list|,
 name|parent
 operator|->
-name|if_name
+name|if_dname
 argument_list|,
 name|error
 argument_list|)
@@ -2475,7 +2475,7 @@ literal|"%s: de-registration failed %d\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
+name|if_dname
 argument_list|,
 name|error
 argument_list|)

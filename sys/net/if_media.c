@@ -746,15 +746,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ifmedia_ioctl: switching %s%d to "
+literal|"ifmedia_ioctl: switching %s to "
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|ifmedia_printword

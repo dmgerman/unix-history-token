@@ -141,6 +141,13 @@ begin_comment
 comment|/* XXX */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IF_DUNIT_NONE
+value|-1
+end_define
+
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
@@ -241,11 +248,6 @@ modifier|*
 name|if_softc
 decl_stmt|;
 comment|/* pointer to driver state */
-name|char
-modifier|*
-name|if_name
-decl_stmt|;
-comment|/* name, e.g. ``en'' or ``lo'' */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ifnet
@@ -253,6 +255,23 @@ argument_list|)
 name|if_link
 expr_stmt|;
 comment|/* all struct ifnets are chained */
+name|char
+name|if_xname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* external name (name + unit) */
+specifier|const
+name|char
+modifier|*
+name|if_dname
+decl_stmt|;
+comment|/* driver name */
+name|int
+name|if_dunit
+decl_stmt|;
+comment|/* unit or IF_DUNIT_NONE */
 name|struct
 name|ifaddrhead
 name|if_addrhead
@@ -277,10 +296,6 @@ name|u_short
 name|if_index
 decl_stmt|;
 comment|/* numeric abbreviation for this if  */
-name|short
-name|if_unit
-decl_stmt|;
-comment|/* sub-unit for lower level driver */
 name|short
 name|if_timer
 decl_stmt|;
@@ -1677,6 +1692,23 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|if_initname
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -3536,27 +3536,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|char
-name|buf
-index|[
-literal|32
-index|]
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%s%d"
-argument_list|,
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|p
@@ -3580,7 +3559,9 @@ name|p
 operator|->
 name|if_name
 argument_list|,
-name|buf
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 condition|)
 block|{
@@ -3595,7 +3576,9 @@ argument_list|(
 operator|(
 literal|"dummynet: ++ tx rdy from %s (now found)\n"
 operator|,
-name|buf
+name|ifp
+operator|->
+name|if_xname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3612,15 +3595,11 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"dummynet: ++ tx rdy from %s%d - qlen %d\n"
+literal|"dummynet: ++ tx rdy from %s - qlen %d\n"
 operator|,
 name|ifp
 operator|->
-name|if_name
-operator|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 operator|,
 name|ifp
 operator|->

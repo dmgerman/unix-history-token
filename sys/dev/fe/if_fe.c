@@ -1519,11 +1519,11 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"fe%d: EEPROM(JLI):%3x: %16D\n"
+literal|"%s: EEPROM(JLI):%3x: %16D\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|,
 name|i
 argument_list|,
@@ -2091,11 +2091,11 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"fe%d: EEPROM(SSI):%3x: %16D\n"
+literal|"%s: EEPROM(SSI):%3x: %16D\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|,
 name|i
 argument_list|,
@@ -2534,11 +2534,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fe%d: no ACK received from EEPROM(LNX)\n"
+literal|"%s: no ACK received from EEPROM(LNX)\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -2681,11 +2681,11 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"fe%d: EEPROM(LNX):%3x: %16D\n"
+literal|"%s: EEPROM(LNX):%3x: %16D\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|,
 name|i
 argument_list|,
@@ -2896,23 +2896,23 @@ name|if_softc
 operator|=
 name|sc
 expr_stmt|;
+name|if_initname
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
-operator|=
-name|sc
-operator|->
-name|sc_unit
-expr_stmt|;
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_name
-operator|=
-literal|"fe"
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -3108,11 +3108,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fe%d: strange TXBSIZ config; fixing\n"
+literal|"%s: strange TXBSIZ config; fixing\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -4190,11 +4190,11 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"fe%d: init() without any address\n"
+literal|"%s: init() without any address\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4527,11 +4527,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fe%d: receive buffer has some data after reset\n"
+literal|"%s: receive buffer has some data after reset\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|)
 expr_stmt|;
 name|fe_emptybuffer
@@ -5180,11 +5180,11 @@ directive|ifdef
 name|FE_DEBUG
 name|printf
 argument_list|(
-literal|"fe%d: emptying receive buffer\n"
+literal|"%s: emptying receive buffer\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5323,11 +5323,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fe%d: could not empty receive buffer\n"
+literal|"%s: could not empty receive buffer\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|)
 expr_stmt|;
 comment|/* Hmm.  What should I do if this happens?  FIXME.  */
@@ -5394,11 +5394,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"fe%d: excessive collision (%d/%d)\n"
+literal|"%s: excessive collision (%d/%d)\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|,
 name|left
 argument_list|,
@@ -5892,11 +5892,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fe%d: RX buffer out-of-sync\n"
+literal|"%s: RX buffer out-of-sync\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5969,11 +5969,11 @@ block|}
 comment|/* Maximum number of frames has been received.  Something            strange is happening here... */
 name|printf
 argument_list|(
-literal|"fe%d: unusual receive flood\n"
+literal|"%s: unusual receive flood\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|)
 expr_stmt|;
 name|sc
@@ -6169,11 +6169,11 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"fe%d: too many loops\n"
+literal|"%s: too many loops\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -6704,11 +6704,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fe%d: packet length mismatch? (%d/%d)\n"
+literal|"%s: packet length mismatch? (%d/%d)\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|,
 name|length
 argument_list|,
@@ -6752,11 +6752,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fe%d: got an out-of-spec packet (%u bytes) to send\n"
+literal|"%s: got an out-of-spec packet (%u bytes) to send\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|,
 name|length
 argument_list|)
@@ -7356,11 +7356,11 @@ directive|ifdef
 name|FE_DEBUG
 name|printf
 argument_list|(
-literal|"fe%d: hash(%6D) == %d\n"
+literal|"%s: hash(%6D) == %d\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|,
 name|enm
 operator|->
@@ -7759,11 +7759,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fe%d: got an unsupported media request (0x%x)\n"
+literal|"%s: got an unsupported media request (0x%x)\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_unit
+name|sc_xname
 argument_list|,
 name|sc
 operator|->

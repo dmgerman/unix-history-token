@@ -317,7 +317,7 @@ name|ic
 argument_list|,
 name|ifp
 operator|->
-name|if_name
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT

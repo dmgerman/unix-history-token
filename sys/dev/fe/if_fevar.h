@@ -228,6 +228,9 @@ name|arpcom
 name|arpcom
 decl_stmt|;
 comment|/* Ethernet common */
+name|int
+name|sc_unit
+decl_stmt|;
 comment|/* Used by config codes.  */
 name|int
 name|type
@@ -392,8 +395,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|sc_unit
-value|arpcom.ac_if.if_unit
+name|sc_xname
+value|arpcom.ac_if.if_xname
 end_define
 
 begin_define

@@ -184,6 +184,13 @@ name|ipxipif
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ipxipif_units
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* list of all hosts and gateways or broadcast addrs */
 end_comment
@@ -329,11 +336,14 @@ operator|=
 operator|&
 name|ipxipif
 expr_stmt|;
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-operator|=
+argument_list|,
 literal|"ipxip"
+argument_list|,
+name|ipxipif_units
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -417,11 +427,15 @@ name|m
 operator|->
 name|ifen_ifnet
 expr_stmt|;
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-operator|=
+argument_list|,
 literal|"ipxip"
+argument_list|,
+name|ipxipif_units
+operator|++
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -452,15 +466,6 @@ operator|->
 name|if_flags
 operator|=
 name|IFF_POINTOPOINT
-expr_stmt|;
-name|ifp
-operator|->
-name|if_unit
-operator|=
-name|ipxipif
-operator|.
-name|if_unit
-operator|++
 expr_stmt|;
 name|if_attach
 argument_list|(
@@ -1710,9 +1715,7 @@ index|]
 operator|=
 literal|'0'
 operator|+
-name|ipxipif
-operator|.
-name|if_unit
+name|ipxipif_units
 operator|-
 literal|1
 expr_stmt|;

@@ -5268,13 +5268,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ppp%d input: %*D"
+literal|"%s input: %*D"
 argument_list|,
 name|sc
 operator|->
 name|sc_if
 operator|.
-name|if_unit
+name|if_xname
 argument_list|,
 name|sc
 operator|->

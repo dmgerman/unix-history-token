@@ -921,19 +921,22 @@ begin_function
 name|int
 name|cm_attach
 parameter_list|(
-name|sc
-parameter_list|,
-name|unit
+name|dev
 parameter_list|)
+name|device_t
+name|dev
+decl_stmt|;
+block|{
 name|struct
 name|cm_softc
 modifier|*
 name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
-block|{
 name|struct
 name|ifnet
 modifier|*
@@ -1055,17 +1058,20 @@ name|if_softc
 operator|=
 name|sc
 expr_stmt|;
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_unit
-operator|=
-name|unit
-expr_stmt|;
-name|ifp
-operator|->
-name|if_name
-operator|=
-literal|"cm"
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -3004,15 +3010,11 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s%d: intr: got spurious power on reset int\n"
+literal|"%s: intr: got spurious power on reset int\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -3082,16 +3084,12 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s%d: excessive token losses, "
+literal|"%s: excessive token losses, "
 literal|"cable problem?\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -3178,16 +3176,12 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s%d: spurious RX interupt or sender 0 "
+literal|"%s: spurious RX interupt or sender 0 "
 literal|" (ignored)\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 comment|/* 				 * restart receiver on same buffer. 				 * XXX maybe better reset interface? 				 */
@@ -3416,15 +3410,11 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s%d: token valid again.\n"
+literal|"%s: token valid again.\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}

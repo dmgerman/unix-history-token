@@ -947,7 +947,7 @@ name|tunhead
 operator|->
 name|tun_if
 operator|.
-name|if_unit
+name|if_dunit
 operator|)
 argument_list|)
 expr_stmt|;
@@ -969,7 +969,7 @@ name|tp
 operator|->
 name|tun_if
 operator|.
-name|if_unit
+name|if_dunit
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1260,20 +1260,17 @@ name|sc
 operator|->
 name|tun_if
 expr_stmt|;
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_unit
-operator|=
+argument_list|,
+name|TUNNAME
+argument_list|,
 name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_name
-operator|=
-name|TUNNAME
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -1593,9 +1590,11 @@ argument_list|,
 operator|(
 literal|"Unit %d not marked open"
 operator|,
-name|ifp
+name|tp
 operator|->
-name|if_unit
+name|tun_if
+operator|.
+name|if_dunit
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1758,9 +1757,11 @@ argument_list|,
 operator|(
 literal|"Unit %d failed to release"
 operator|,
-name|ifp
+name|tp
 operator|->
-name|if_unit
+name|tun_if
+operator|.
+name|if_dunit
 operator|)
 argument_list|)
 expr_stmt|;

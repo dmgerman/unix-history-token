@@ -684,21 +684,19 @@ name|if_softc
 operator|=
 name|sc
 expr_stmt|;
+name|if_initname
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_name
-operator|=
-name|PPPNAME
-expr_stmt|;
-name|sc
+argument_list|,
+name|ifc
 operator|->
-name|sc_if
-operator|.
-name|if_unit
-operator|=
+name|ifc_name
+argument_list|,
 name|unit
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -1781,7 +1779,7 @@ name|sc
 operator|->
 name|sc_if
 operator|.
-name|if_unit
+name|if_dunit
 expr_stmt|;
 break|break;
 case|case
@@ -3854,11 +3852,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ppp%d output: "
+literal|"%s output: "
 argument_list|,
 name|ifp
 operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|pppdumpm
@@ -5456,7 +5454,7 @@ name|sc
 operator|->
 name|sc_if
 operator|.
-name|if_unit
+name|if_dunit
 argument_list|,
 literal|0
 argument_list|,
@@ -5522,7 +5520,7 @@ name|sc
 operator|->
 name|sc_if
 operator|.
-name|if_unit
+name|if_dunit
 argument_list|,
 literal|0
 argument_list|,

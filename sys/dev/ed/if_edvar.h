@@ -704,13 +704,7 @@ begin_function_decl
 name|int
 name|ed_attach
 parameter_list|(
-name|struct
-name|ed_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl

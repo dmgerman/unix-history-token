@@ -1099,7 +1099,7 @@ name|strcmp
 argument_list|(
 name|ifp2
 operator|->
-name|if_name
+name|if_dname
 argument_list|,
 name|asp
 operator|->

@@ -532,7 +532,7 @@ expr_stmt|;
 comment|/* Now the registers are availible through the lower ioport */
 name|vxattach
 argument_list|(
-name|sc
+name|dev
 argument_list|)
 expr_stmt|;
 if|if

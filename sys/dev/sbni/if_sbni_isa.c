@@ -646,7 +646,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|" shared irq with sbni%d\n"
+literal|" shared irq with %s\n"
 argument_list|,
 name|master
 operator|->
@@ -654,7 +654,7 @@ name|arpcom
 operator|.
 name|ac_if
 operator|.
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}

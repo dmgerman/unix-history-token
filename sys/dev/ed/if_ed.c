@@ -6664,24 +6664,22 @@ begin_function
 name|int
 name|ed_attach
 parameter_list|(
-name|sc
-parameter_list|,
-name|unit
-parameter_list|,
-name|flags
+name|dev
 parameter_list|)
+name|device_t
+name|dev
+decl_stmt|;
+block|{
 name|struct
 name|ed_softc
 modifier|*
 name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-block|{
 name|struct
 name|ifnet
 modifier|*
@@ -6715,17 +6713,20 @@ name|if_softc
 operator|=
 name|sc
 expr_stmt|;
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_unit
-operator|=
-name|unit
-expr_stmt|;
-name|ifp
-operator|->
-name|if_name
-operator|=
-literal|"ed"
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -6830,7 +6831,10 @@ expr_stmt|;
 comment|/* 	 * Set default state for ALTPHYS flag (used to disable the  	 * tranceiver for AUI operation), based on compile-time  	 * config option. 	 */
 if|if
 condition|(
-name|flags
+name|device_get_flags
+argument_list|(
+name|dev
+argument_list|)
 operator|&
 name|ED_FLAGS_DISABLE_TRANCEIVER
 condition|)
@@ -7215,11 +7219,11 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ed%d: device timeout\n"
+literal|"%s: device timeout\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -8815,11 +8819,11 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ed%d: NIC memory corrupt - invalid packet length %d\n"
+literal|"%s: NIC memory corrupt - invalid packet length %d\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|len
 argument_list|)
@@ -9365,11 +9369,11 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"ed%d: warning - receiver ring buffer overrun\n"
+literal|"%s: warning - receiver ring buffer overrun\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11202,11 +11206,11 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"ed%d: remote transmit DMA failed to complete\n"
+literal|"%s: remote transmit DMA failed to complete\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|ed_reset

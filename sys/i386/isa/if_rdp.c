@@ -2095,17 +2095,14 @@ name|if_softc
 operator|=
 name|sc
 expr_stmt|;
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_unit
-operator|=
-name|unit
-expr_stmt|;
-name|ifp
-operator|->
-name|if_name
-operator|=
+argument_list|,
 literal|"rdp"
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -2359,11 +2356,11 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"rdp%d: device timeout\n"
+literal|"%s: device timeout\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|ifp

@@ -620,6 +620,7 @@ parameter_list|(
 name|Cmn_unit
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,

@@ -1999,15 +1999,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: enabling %s port\n"
+literal|"%s: enabling %s port\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|tulip_mediums
 index|[
@@ -2041,15 +2037,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: link up\n"
+literal|"%s: link up\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2204,15 +2196,11 @@ name|TULIP_DEBUG
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s%d: gpr_media_sense: %s: 0x%02x& 0x%02x == 0x%02x\n"
+literal|"%s: gpr_media_sense: %s: 0x%02x& 0x%02x == 0x%02x\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|tulip_mediums
 index|[
@@ -2484,15 +2472,11 @@ name|TULIP_DEBUG
 argument_list|)
 name|loudprintf
 argument_list|(
-literal|"%s%d(phy%d): autonegotiation changed: 0x%04x -> 0x%04x\n"
+literal|"%s(phy%d): autonegotiation changed: 0x%04x -> 0x%04x\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|sc
 operator|->
@@ -2676,15 +2660,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%s%d: sia status = 0x%08x\n"
+literal|"%s: sia status = 0x%08x\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|TULIP_CSR_READ
 argument_list|(
@@ -2753,15 +2733,11 @@ name|TULIP_LINKUP
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: link down: cable problem?\n"
+literal|"%s: link down: cable problem?\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -3251,15 +3227,11 @@ name|TULIP_DEBUG
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s%d: media_poll: gpr sensing = %s\n"
+literal|"%s: media_poll: gpr sensing = %s\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|tulip_mediums
 index|[
@@ -3613,15 +3585,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: poll media unknown!\n"
+literal|"%s: poll media unknown!\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3663,15 +3631,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: autosense failed: cable problem?\n"
+literal|"%s: autosense failed: cable problem?\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 if|if
@@ -3772,15 +3736,11 @@ name|TULIP_DEBUG
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s%d: %s: probing %s\n"
+literal|"%s: %s: probing %s\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|event
 operator|==
@@ -5198,15 +5158,11 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: autosense failed: cable problem?\n"
+literal|"%s: autosense failed: cable problem?\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 if|if
@@ -6271,15 +6227,11 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"%s%d(phy%d): error: reset of PHY never completed!\n"
+literal|"%s(phy%d): error: reset of PHY never completed!\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|phyaddr
 argument_list|)
@@ -6342,15 +6294,11 @@ name|TULIP_DEBUG
 argument_list|)
 name|loudprintf
 argument_list|(
-literal|"%s%d(phy%d): autonegotiation disabled\n"
+literal|"%s(phy%d): autonegotiation disabled\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|phyaddr
 argument_list|)
@@ -6454,15 +6402,11 @@ literal|0
 condition|)
 name|loudprintf
 argument_list|(
-literal|"%s%d(phy%d): oops: enable autonegotiation failed: 0x%04x\n"
+literal|"%s(phy%d): oops: enable autonegotiation failed: 0x%04x\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|phyaddr
 argument_list|,
@@ -6472,15 +6416,11 @@ expr_stmt|;
 else|else
 name|loudprintf
 argument_list|(
-literal|"%s%d(phy%d): autonegotiation restarted: 0x%04x\n"
+literal|"%s(phy%d): autonegotiation restarted: 0x%04x\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|phyaddr
 argument_list|,
@@ -6564,15 +6504,11 @@ name|TULIP_DEBUG
 argument_list|)
 name|loudprintf
 argument_list|(
-literal|"%s%d(phy%d): autonegotiation timeout: sts=0x%04x, ctl=0x%04x\n"
+literal|"%s(phy%d): autonegotiation timeout: sts=0x%04x, ctl=0x%04x\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|phyaddr
 argument_list|,
@@ -6624,15 +6560,11 @@ name|TULIP_DEBUG
 argument_list|)
 name|loudprintf
 argument_list|(
-literal|"%s%d(phy%d): autonegotiation complete: 0x%04x\n"
+literal|"%s(phy%d): autonegotiation complete: 0x%04x\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|phyaddr
 argument_list|,
@@ -6698,15 +6630,11 @@ name|TULIP_DEBUG
 argument_list|)
 name|loudprintf
 argument_list|(
-literal|"%s%d(phy%d): autonegotiation failure: state = %d\n"
+literal|"%s(phy%d): autonegotiation failure: state = %d\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|phyaddr
 argument_list|,
@@ -6913,15 +6841,11 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: preset: bad media %d!\n"
+literal|"%s: preset: bad media %d!\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|media
 argument_list|)
@@ -7134,15 +7058,11 @@ name|DIAGNOSTIC
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s%d: botch(media_poll) at line %d\n"
+literal|"%s: botch(media_poll) at line %d\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|__LINE__
 argument_list|)
@@ -11442,15 +11362,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: can't find phy 0\n"
+literal|"%s: can't find phy 0\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 return|return;
@@ -11746,11 +11662,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nCannot find master device for de%d interrupts"
+literal|"\nCannot find master device for %s interrupts"
 argument_list|,
 name|sc
 operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -12917,15 +12833,11 @@ name|TULIP_DEBUG
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s%d: can't find phy %d\n"
+literal|"%s: can't find phy %d\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|phyno
 argument_list|)
@@ -13683,15 +13595,11 @@ name|TULIP_DEBUG
 argument_list|)
 name|printf
 argument_list|(
-literal|"%s%d: can't find phy %d\n"
+literal|"%s: can't find phy %d\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|phyno
 argument_list|)
@@ -17498,15 +17406,11 @@ name|TULIP_NEEDRESET
 condition|)
 name|printf
 argument_list|(
-literal|"%s%d: tulip_reset: additional reset needed?!?\n"
+literal|"%s: tulip_reset: additional reset needed?!?\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -18714,15 +18618,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: receive: %6D: %s\n"
+literal|"%s: receive: %6D: %s\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|mtod
 argument_list|(
@@ -19227,16 +19127,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: unable to load rx map, "
+literal|"%s: unable to load rx map, "
 literal|"error = %d\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|error
 argument_list|)
@@ -19808,15 +19704,11 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: tx_intr: failed to dequeue mbuf?!?\n"
+literal|"%s: tx_intr: failed to dequeue mbuf?!?\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -20260,15 +20152,11 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: abnormal interrupt:"
+literal|"%s: abnormal interrupt:"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 for|for
@@ -20488,15 +20376,11 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: system error: %s\n"
+literal|"%s: system error: %s\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|tulip_system_errors
 index|[
@@ -21841,15 +21725,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: txput%s: tx not running\n"
+literal|"%s: txput%s: tx not running\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 operator|(
 name|sc
@@ -22118,16 +21998,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: unable to load tx map, "
+literal|"%s: unable to load tx map, "
 literal|"error = %d\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|error
 argument_list|)
@@ -23246,15 +23122,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: txput_setup: tx not running\n"
+literal|"%s: txput_setup: tx not running\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 name|sc
@@ -24367,15 +24239,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: %d system errors: last was %s\n"
+literal|"%s: %d system errors: last was %s\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|sc
 operator|->
@@ -24452,15 +24320,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: transmission timeout\n"
+literal|"%s: transmission timeout\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 if|if
@@ -24700,6 +24564,21 @@ name|sc
 operator|->
 name|tulip_if
 decl_stmt|;
+comment|/* XXX: driver name/unit should be set some other way */
+name|ifp
+operator|->
+name|if_dname
+operator|=
+literal|"de"
+expr_stmt|;
+name|ifp
+operator|->
+name|if_dunit
+operator|=
+name|sc
+operator|->
+name|tulip_unit
+expr_stmt|;
 name|ifp
 operator|->
 name|if_flags
@@ -24748,15 +24627,11 @@ name|tulip_ifinit
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: %s%s pass %d.%d%s\n"
+literal|"%s: %s%s pass %d.%d%s\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|sc
 operator|->
@@ -24806,15 +24681,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: address %6D\n"
+literal|"%s: address %6D\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|sc
 operator|->
@@ -26779,11 +26650,20 @@ name|tulip_unit
 operator|=
 name|unit
 expr_stmt|;
+name|snprintf
+argument_list|(
 name|sc
 operator|->
-name|tulip_name
-operator|=
-literal|"de"
+name|tulip_xname
+argument_list|,
+name|IFNAMSIZ
+argument_list|,
+literal|"de%d"
+argument_list|,
+name|sc
+operator|->
+name|tulip_unit
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -27110,15 +26990,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d"
+literal|"%s"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 name|printf
@@ -27160,15 +27036,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: %s%s pass %d.%d\n"
+literal|"%s: %s%s pass %d.%d\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|,
 name|sc
 operator|->
@@ -27200,15 +27072,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: address unknown\n"
+literal|"%s: address unknown\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -27310,15 +27178,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: couldn't map interrupt\n"
+literal|"%s: couldn't map interrupt\n"
 argument_list|,
 name|sc
 operator|->
-name|tulip_name
-argument_list|,
-name|sc
-operator|->
-name|tulip_unit
+name|tulip_xname
 argument_list|)
 expr_stmt|;
 name|free

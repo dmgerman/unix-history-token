@@ -3538,6 +3538,20 @@ operator|>=
 literal|199603
 operator|)
 operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|501113
+operator|)
+operator|)
 end_if
 
 begin_define

@@ -936,17 +936,20 @@ name|fwe
 operator|->
 name|eth_softc
 expr_stmt|;
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_unit
-operator|=
-name|unit
-expr_stmt|;
-name|ifp
-operator|->
-name|if_name
-operator|=
-literal|"fwe"
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -1059,15 +1062,11 @@ endif|#
 directive|endif
 name|FWEDEBUG
 argument_list|(
-literal|"interface %s%d created.\n"
+literal|"interface %s created.\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1443,15 +1442,11 @@ name|i
 decl_stmt|;
 name|FWEDEBUG
 argument_list|(
-literal|"initializing %s%d\n"
+literal|"initializing %s\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 comment|/* XXX keep promiscoud mode */
@@ -2386,15 +2381,11 @@ name|s
 decl_stmt|;
 name|FWEDEBUG
 argument_list|(
-literal|"%s%d starting\n"
+literal|"%s starting\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 if|if
@@ -2415,15 +2406,11 @@ name|NULL
 decl_stmt|;
 name|FWEDEBUG
 argument_list|(
-literal|"%s%d not ready.\n"
+literal|"%s not ready.\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|s

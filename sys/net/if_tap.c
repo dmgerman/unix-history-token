@@ -872,15 +872,11 @@ name|tap_if
 expr_stmt|;
 name|TAPDEBUG
 argument_list|(
-literal|"detaching %s%d\n"
+literal|"detaching %s\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -895,15 +891,11 @@ name|TAP_OPEN
 operator|)
 argument_list|,
 operator|(
-literal|"%s%d flags is out of sync"
+literal|"%s flags is out of sync"
 operator|,
 name|ifp
 operator|->
-name|if_name
-operator|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1590,17 +1582,14 @@ name|if_softc
 operator|=
 name|tp
 expr_stmt|;
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_unit
-operator|=
-name|unit
-expr_stmt|;
-name|ifp
-operator|->
-name|if_name
-operator|=
+argument_list|,
 name|name
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -1681,15 +1670,11 @@ name|TAP_INITED
 expr_stmt|;
 name|TAPDEBUG
 argument_list|(
-literal|"interface %s%d is created. minor = %#x\n"
+literal|"interface %s is created. minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|minor
 argument_list|(
@@ -1885,15 +1870,13 @@ name|TAP_OPEN
 operator|)
 argument_list|,
 operator|(
-literal|"%s%d flags is out of sync"
+literal|"%s flags is out of sync"
 operator|,
 name|tp
 operator|->
 name|tap_if
 operator|.
-name|if_name
-operator|,
-name|unit
+name|if_xname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1941,15 +1924,13 @@ name|TAP_OPEN
 expr_stmt|;
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d is open. minor = %#x\n"
+literal|"%s is open. minor = %#x\n"
 argument_list|,
 name|tp
 operator|->
 name|tap_if
 operator|.
-name|if_name
-argument_list|,
-name|unit
+name|if_xname
 argument_list|,
 name|minor
 argument_list|(
@@ -2036,15 +2017,11 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"%s%d is not open"
+literal|"%s is not open"
 operator|,
 name|ifp
 operator|->
-name|if_name
-operator|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2255,15 +2232,11 @@ literal|0
 operator|)
 argument_list|,
 operator|(
-literal|"%s%d could not release unit"
+literal|"%s could not release unit"
 operator|,
 name|ifp
 operator|->
-name|if_name
-operator|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2275,15 +2248,11 @@ name|NULL
 expr_stmt|;
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d is closed. minor = %#x\n"
+literal|"%s is closed. minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|minor
 argument_list|(
@@ -2343,15 +2312,11 @@ name|tap_if
 decl_stmt|;
 name|TAPDEBUG
 argument_list|(
-literal|"initializing %s%d\n"
+literal|"initializing %s\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2595,15 +2560,11 @@ name|s
 decl_stmt|;
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d starting\n"
+literal|"%s starting\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 comment|/* 	 * do not junk pending output if we are in VMnet mode. 	 * XXX: can this do any harm because of queue overflow? 	 */
@@ -2643,15 +2604,11 @@ name|NULL
 decl_stmt|;
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d not ready, tap_flags = 0x%x\n"
+literal|"%s not ready, tap_flags = 0x%x\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|tp
 operator|->
@@ -3412,15 +3369,11 @@ name|s
 decl_stmt|;
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d reading, minor = %#x\n"
+literal|"%s reading, minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|minor
 argument_list|(
@@ -3443,15 +3396,11 @@ condition|)
 block|{
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d not ready. minor = %#x, tap_flags = 0x%x\n"
+literal|"%s not ready. minor = %#x, tap_flags = 0x%x\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|minor
 argument_list|(
@@ -3646,15 +3595,11 @@ condition|)
 block|{
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d dropping mbuf, minor = %#x\n"
+literal|"%s dropping mbuf, minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|minor
 argument_list|(
@@ -3755,15 +3700,11 @@ name|mlen
 decl_stmt|;
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d writting, minor = %#x\n"
+literal|"%s writting, minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|minor
 argument_list|(
@@ -3805,15 +3746,11 @@ condition|)
 block|{
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d invalid packet len = %d, minor = %#x\n"
+literal|"%s invalid packet len = %d, minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|uio
 operator|->
@@ -4096,15 +4033,11 @@ literal|0
 decl_stmt|;
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d polling, minor = %#x\n"
+literal|"%s polling, minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|minor
 argument_list|(
@@ -4141,17 +4074,13 @@ condition|)
 block|{
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d have data in queue. len = %d, "
+literal|"%s have data in queue. len = %d, "
 expr|\
 literal|"minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|ifp
 operator|->
@@ -4182,15 +4111,11 @@ else|else
 block|{
 name|TAPDEBUG
 argument_list|(
-literal|"%s%d waiting for data, minor = %#x\n"
+literal|"%s waiting for data, minor = %#x\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|minor
 argument_list|(

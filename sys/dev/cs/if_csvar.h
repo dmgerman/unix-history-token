@@ -187,13 +187,8 @@ begin_function_decl
 name|int
 name|cs_attach
 parameter_list|(
-name|struct
-name|cs_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1564,18 +1564,14 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: %s%d promisc OFF if_flags 0x%x "
+literal|"%s: %s promisc OFF if_flags 0x%x "
 literal|"bdg_flags 0x%x\n"
 operator|,
 name|__func__
 operator|,
 name|ifp
 operator|->
-name|if_name
-operator|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 operator|,
 name|ifp
 operator|->
@@ -1793,17 +1789,13 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: %s%d promisc ON if_flags 0x%x bdg_flags 0x%x\n"
+literal|"%s: %s promisc ON if_flags 0x%x bdg_flags 0x%x\n"
 operator|,
 name|__func__
 operator|,
 name|ifp
 operator|->
-name|if_name
-operator|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 operator|,
 name|ifp
 operator|->
@@ -1828,17 +1820,13 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: unmuting %s%d\n"
+literal|"%s: unmuting %s\n"
 operator|,
 name|__func__
 operator|,
 name|ifp
 operator|->
-name|if_name
-operator|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2110,32 +2098,6 @@ argument_list|,
 argument|if_link
 argument_list|)
 block|{
-name|char
-name|buf
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
-name|snprintf
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-literal|"%s%d"
-argument_list|,
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2143,7 +2105,9 @@ name|strncmp
 argument_list|(
 name|beg
 argument_list|,
-name|buf
+name|ifp
+operator|->
+name|if_xname
 argument_list|,
 name|max
 argument_list|(
@@ -2151,7 +2115,9 @@ name|l
 argument_list|,
 name|strlen
 argument_list|(
-name|buf
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 argument_list|)
 argument_list|)
@@ -2189,7 +2155,9 @@ name|printf
 argument_list|(
 literal|"%s is not an ethernet, continue\n"
 argument_list|,
-name|buf
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2207,7 +2175,9 @@ name|printf
 argument_list|(
 literal|"%s already used, skipping\n"
 argument_list|,
-name|buf
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2237,7 +2207,7 @@ name|flags
 operator||=
 name|IFF_USED
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|bdg_stats
 operator|.
@@ -2250,15 +2220,25 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|"%s%d:%d"
+sizeof|sizeof
+argument_list|(
+name|bdg_stats
+operator|.
+name|s
+index|[
+name|ifp
+operator|->
+name|if_index
+index|]
+operator|.
+name|name
+argument_list|)
+argument_list|,
+literal|"%s:%d"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|cluster
 argument_list|)
@@ -3404,7 +3384,7 @@ expr_stmt|;
 comment|/* relocate address */
 name|printf
 argument_list|(
-literal|"-- loop (%d) %6D to %s%d from %s%d (%s)\n"
+literal|"-- loop (%d) %6D to %s from %s (%s)\n"
 argument_list|,
 name|bdg_loops
 argument_list|,
@@ -3416,19 +3396,11 @@ literal|"."
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|old
 operator|->
-name|if_name
-argument_list|,
-name|old
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|BDG_MUTED
 argument_list|(
@@ -3481,7 +3453,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: new addr %6D at %d for %s%d\n"
+literal|"%s: new addr %6D at %d for %s\n"
 operator|,
 name|__func__
 operator|,
@@ -3495,11 +3467,7 @@ name|index
 operator|,
 name|ifp
 operator|->
-name|if_name
-operator|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3661,7 +3629,7 @@ block|}
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: %6D ->%6D ty 0x%04x dst %s%d\n"
+literal|"%s: %6D ->%6D ty 0x%04x dst %s\n"
 operator|,
 name|__func__
 operator|,
@@ -3700,19 +3668,7 @@ index|]
 else|:
 name|dst
 operator|->
-name|if_name
-operator|,
-operator|(
-name|dst
-operator|<=
-name|BDG_FORWARD
-operator|)
-condition|?
-literal|0
-else|:
-name|dst
-operator|->
-name|if_unit
+name|if_xname
 operator|)
 argument_list|)
 expr_stmt|;

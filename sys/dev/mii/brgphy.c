@@ -889,7 +889,7 @@ name|mii
 operator|->
 name|mii_ifp
 operator|->
-name|if_name
+name|if_dname
 argument_list|,
 literal|"bge"
 argument_list|)
@@ -2546,7 +2546,7 @@ name|strcmp
 argument_list|(
 name|ifp
 operator|->
-name|if_name
+name|if_dname
 argument_list|,
 literal|"bge"
 argument_list|)

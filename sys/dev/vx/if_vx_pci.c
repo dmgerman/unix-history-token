@@ -570,7 +570,7 @@ if|if
 condition|(
 name|vxattach
 argument_list|(
-name|sc
+name|dev
 argument_list|)
 operator|==
 literal|0

@@ -3495,7 +3495,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: %s is on %s%d but got reply from %*D on %s%d\n"
+literal|"arp: %s is on %s but got reply from %*D on %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3506,13 +3506,7 @@ name|rt
 operator|->
 name|rt_ifp
 operator|->
-name|if_name
-argument_list|,
-name|rt
-operator|->
-name|rt_ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|ifp
 operator|->
@@ -3531,11 +3525,7 @@ literal|":"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3581,7 +3571,7 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"arp: %s moved from %*D to %*D on %s%d\n"
+literal|"arp: %s moved from %*D to %*D on %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3620,11 +3610,7 @@ literal|":"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -3634,7 +3620,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: %*D attempts to modify permanent entry for %s on %s%d\n"
+literal|"arp: %*D attempts to modify permanent entry for %s on %s\n"
 argument_list|,
 name|ifp
 operator|->
@@ -3658,11 +3644,7 @@ argument_list|)
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4320,7 +4302,7 @@ argument_list|(
 name|LOG_INFO
 argument_list|,
 literal|"arp_proxy: ignoring request"
-literal|" from %s via %s%d, expecting %s%d\n"
+literal|" from %s via %s, expecting %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -4329,23 +4311,13 @@ argument_list|)
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|rt
 operator|->
 name|rt_ifp
 operator|->
-name|if_name
-argument_list|,
-name|rt
-operator|->
-name|rt_ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|rtfree

@@ -764,15 +764,11 @@ directive|ifdef
 name|NETATALK_DEBUG
 name|printf
 argument_list|(
-literal|"ddp_route: no atalk address found for %s%d\n"
+literal|"ddp_route: no atalk address found for %s\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -993,7 +989,7 @@ directive|ifdef
 name|NETATALK_DEBUG
 name|printf
 argument_list|(
-literal|"ddp_route: from %d.%d to %d.%d, via %d.%d (%s%d)\n"
+literal|"ddp_route: from %d.%d to %d.%d, via %d.%d (%s)\n"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -1066,11 +1062,7 @@ name|s_node
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 endif|#

@@ -60,9 +60,9 @@ name|IP6FW_IFNLEN
 index|]
 decl_stmt|;
 name|short
-name|unit
+name|glob
 decl_stmt|;
-comment|/* -1 means match any unit */
+comment|/* Is name a pattern or a name? */
 block|}
 name|fu_via_if
 struct|;

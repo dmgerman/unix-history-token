@@ -2166,11 +2166,16 @@ operator|-
 literal|1
 condition|)
 block|{
+name|strlcpy
+argument_list|(
 name|multicast_register_if
 operator|.
-name|if_name
-operator|=
+name|if_xname
+argument_list|,
 literal|"register_mif"
+argument_list|,
+name|IFNAMSIZ
+argument_list|)
 expr_stmt|;
 name|multicast_register_if
 operator|.
@@ -2344,7 +2349,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_mif #%d, phyint %s%d\n"
+literal|"add_mif #%d, phyint %s\n"
 argument_list|,
 name|mifcp
 operator|->
@@ -2352,11 +2357,7 @@ name|mif6c_mifi
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 endif|#

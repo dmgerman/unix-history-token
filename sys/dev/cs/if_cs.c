@@ -2683,16 +2683,8 @@ begin_function
 name|int
 name|cs_attach
 parameter_list|(
-name|struct
-name|cs_softc
-modifier|*
-name|sc
-parameter_list|,
-name|int
-name|unit
-parameter_list|,
-name|int
-name|flags
+name|device_t
+name|dev
 parameter_list|)
 block|{
 name|int
@@ -2700,6 +2692,17 @@ name|media
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|cs_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+empty_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -2725,17 +2728,20 @@ name|if_softc
 operator|=
 name|sc
 expr_stmt|;
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_unit
-operator|=
-name|unit
-expr_stmt|;
-name|ifp
-operator|->
-name|if_name
-operator|=
-literal|"cs"
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -2789,7 +2795,7 @@ operator||
 name|IFF_MULTICAST
 operator|)
 expr_stmt|;
-comment|/* 	 * this code still in progress (DMA support) 	 *  	sc->recv_ring=malloc(CS_DMA_BUFFER_SIZE<<1, M_DEVBUF, M_NOWAIT); 	if (sc->recv_ring == NULL) { 		log(LOG_ERR,CS_NAME 		"%d: Couldn't allocate memory for NIC\n", unit); 		return(0); 	} 	if ((sc->recv_ring-(sc->recv_ring& 0x1FFFF))< (128*1024-CS_DMA_BUFFER_SIZE)) 	    sc->recv_ring+=16*1024;  	*/
+comment|/* 	 * this code still in progress (DMA support) 	 *  	sc->recv_ring=malloc(CS_DMA_BUFFER_SIZE<<1, M_DEVBUF, M_NOWAIT); 	if (sc->recv_ring == NULL) { 		log(LOG_ERR, 		"%s: Couldn't allocate memory for NIC\n", ifp->if_xname); 		return(0); 	} 	if ((sc->recv_ring-(sc->recv_ring& 0x1FFFF))< (128*1024-CS_DMA_BUFFER_SIZE)) 	    sc->recv_ring+=16*1024;  	*/
 name|sc
 operator|->
 name|buffer
@@ -4856,12 +4862,11 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|CS_NAME
-literal|"%d: device timeout\n"
+literal|"%s: device timeout\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 comment|/* Reset the interface */

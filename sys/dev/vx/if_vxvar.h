@@ -192,9 +192,7 @@ specifier|extern
 name|int
 name|vxattach
 parameter_list|(
-name|struct
-name|vx_softc
-modifier|*
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl

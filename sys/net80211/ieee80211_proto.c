@@ -350,7 +350,7 @@ name|ifq_mtx
 argument_list|,
 name|ifp
 operator|->
-name|if_name
+name|if_xname
 argument_list|,
 literal|"mgmt send q"
 argument_list|,

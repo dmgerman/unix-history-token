@@ -469,7 +469,7 @@ return|return;
 comment|/* no matching interface */
 name|match_done
 label|:
-name|sprintf
+name|strlcpy
 argument_list|(
 name|nd
 operator|->
@@ -477,15 +477,18 @@ name|myif
 operator|.
 name|ifra_name
 argument_list|,
-literal|"%s%d"
-argument_list|,
 name|ifp
 operator|->
-name|if_name
+name|if_xname
 argument_list|,
-name|ifp
+sizeof|sizeof
+argument_list|(
+name|nd
 operator|->
-name|if_unit
+name|myif
+operator|.
+name|ifra_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* set up gateway */

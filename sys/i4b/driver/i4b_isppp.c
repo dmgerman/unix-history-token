@@ -145,7 +145,7 @@ name|ISPPP_ARG
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->sc_if.if_unit)
+value|((sc)->sc_if.if_dunit)
 end_define
 
 begin_define
@@ -162,7 +162,7 @@ name|IFP2UNIT
 parameter_list|(
 name|ifp
 parameter_list|)
-value|(ifp)->if_unit
+value|(ifp)->if_dunit
 end_define
 
 begin_define
@@ -619,21 +619,17 @@ name|if_softc
 operator|=
 name|sc
 expr_stmt|;
+name|if_initname
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_name
-operator|=
+argument_list|,
 literal|"isp"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_unit
-operator|=
+argument_list|,
 name|i
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->

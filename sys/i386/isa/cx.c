@@ -1631,7 +1631,7 @@ name|cxchan
 index|[
 name|master
 operator|->
-name|if_unit
+name|if_dunit
 index|]
 expr_stmt|;
 comment|/* Leave the previous master queue. */
@@ -1656,7 +1656,7 @@ name|c
 operator|->
 name|master
 operator|->
-name|if_unit
+name|if_dunit
 index|]
 decl_stmt|;
 for|for
@@ -2112,11 +2112,17 @@ name|c
 operator|->
 name|ifp
 condition|)
-name|snprintf
+name|strlcpy
 argument_list|(
 name|o
 operator|->
 name|master
+argument_list|,
+name|c
+operator|->
+name|master
+operator|->
+name|if_xname
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2124,20 +2130,6 @@ name|o
 operator|->
 name|master
 argument_list|)
-argument_list|,
-literal|"%s%d"
-argument_list|,
-name|c
-operator|->
-name|master
-operator|->
-name|if_name
-argument_list|,
-name|c
-operator|->
-name|master
-operator|->
-name|if_unit
 argument_list|)
 expr_stmt|;
 else|else

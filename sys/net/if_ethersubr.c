@@ -2447,7 +2447,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"Warning, frame marked as received on %s%u\n"
+literal|"Warning, frame marked as received on %s\n"
 argument_list|,
 name|m
 operator|->
@@ -2455,15 +2455,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|->
-name|if_name
-argument_list|,
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}

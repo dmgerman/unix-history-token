@@ -6053,15 +6053,11 @@ operator|.
 name|net_intf
 argument_list|)
 argument_list|,
-literal|"%s%d"
+literal|"%s"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 return|return

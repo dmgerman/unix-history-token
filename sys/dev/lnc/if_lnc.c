@@ -2060,20 +2060,15 @@ operator|&
 name|OWN
 condition|)
 block|{
-name|int
-name|unit
-init|=
-name|ifp
-operator|->
-name|if_unit
-decl_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Receive interrupt with buffer still owned by controller -- Resetting\n"
+literal|"%s: Receive interrupt with buffer still owned by controller -- Resetting\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|lnc_reset
@@ -2105,20 +2100,15 @@ name|STP
 operator|)
 condition|)
 block|{
-name|int
-name|unit
-init|=
-name|ifp
-operator|->
-name|if_unit
-decl_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Receive interrupt but not start of packet -- Resetting\n"
+literal|"%s: Receive interrupt but not start of packet -- Resetting\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|lnc_reset
@@ -2233,20 +2223,15 @@ operator|&
 name|STP
 condition|)
 block|{
-name|int
-name|unit
-init|=
-name|ifp
-operator|->
-name|if_unit
-decl_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Start of packet found before end of previous in receive ring -- Resetting\n"
+literal|"%s: Start of packet found before end of previous in receive ring -- Resetting\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|lnc_reset
@@ -2279,20 +2264,15 @@ break|break;
 block|}
 else|else
 block|{
-name|int
-name|unit
-init|=
-name|ifp
-operator|->
-name|if_unit
-decl_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: End of received packet not found-- Resetting\n"
+literal|"%s: End of received packet not found-- Resetting\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|lnc_reset
@@ -2342,12 +2322,14 @@ operator|&
 name|MDERR
 condition|)
 block|{
-name|int
-name|unit
+specifier|const
+name|char
+modifier|*
+name|if_xname
 init|=
 name|ifp
 operator|->
-name|if_unit
+name|if_xname
 decl_stmt|;
 if|if
 condition|(
@@ -2364,9 +2346,9 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Receive buffer error\n"
+literal|"%s: Receive buffer error\n"
 argument_list|,
-name|unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -2396,9 +2378,9 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Receive overflow error \n"
+literal|"%s: Receive overflow error \n"
 argument_list|,
-name|unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -2440,9 +2422,9 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Framing error\n"
+literal|"%s: Framing error\n"
 argument_list|,
-name|unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 comment|/* 					 * FRAM is only set if there's a CRC 					 * error so avoid multiple messages 					 */
@@ -2463,9 +2445,9 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Receive CRC error\n"
+literal|"%s: Receive CRC error\n"
 argument_list|,
-name|unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -2651,20 +2633,15 @@ block|}
 block|}
 else|else
 block|{
-name|int
-name|unit
-init|=
-name|ifp
-operator|->
-name|if_unit
-decl_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Packet dropped, no mbufs\n"
+literal|"%s: Packet dropped, no mbufs\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|LNCSTATS
@@ -2740,24 +2717,19 @@ operator|&
 name|OWN
 condition|)
 block|{
-name|int
-name|unit
-init|=
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: Transmit interrupt with buffer still owned by controller -- Resetting\n"
+argument_list|,
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_if
 operator|.
-name|if_unit
-decl_stmt|;
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"lnc%d: Transmit interrupt with buffer still owned by controller -- Resetting\n"
-argument_list|,
-name|unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|lnc_reset
@@ -2809,24 +2781,19 @@ name|STP
 operator|)
 condition|)
 block|{
-name|int
-name|unit
-init|=
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: Transmit interrupt but not start of packet -- Resetting\n"
+argument_list|,
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_if
 operator|.
-name|if_unit
-decl_stmt|;
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"lnc%d: Transmit interrupt but not start of packet -- Resetting\n"
-argument_list|,
-name|unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|lnc_reset
@@ -2909,24 +2876,19 @@ operator|&
 name|STP
 condition|)
 block|{
-name|int
-name|unit
-init|=
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: Start of packet found before end of previous in transmit ring -- Resetting\n"
+argument_list|,
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_if
 operator|.
-name|if_unit
-decl_stmt|;
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"lnc%d: Start of packet found before end of previous in transmit ring -- Resetting\n"
-argument_list|,
-name|unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|lnc_reset
@@ -2963,24 +2925,19 @@ break|break;
 block|}
 else|else
 block|{
-name|int
-name|unit
-init|=
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: End of transmitted packet not found -- Resetting\n"
+argument_list|,
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_if
 operator|.
-name|if_unit
-decl_stmt|;
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"lnc%d: End of transmitted packet not found -- Resetting\n"
-argument_list|,
-name|unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|lnc_reset
@@ -3004,17 +2961,6 @@ operator|&
 name|MDERR
 condition|)
 block|{
-name|int
-name|unit
-init|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_unit
-decl_stmt|;
 name|LNCSTATS
 argument_list|(
 argument|terr
@@ -3047,9 +2993,15 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Transmit late collision  -- Net error?\n"
+literal|"%s: Transmit late collision  -- Net error?\n"
 argument_list|,
-name|unit
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3091,9 +3043,15 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Loss of carrier during transmit -- Net error?\n"
+literal|"%s: Loss of carrier during transmit -- Net error?\n"
 argument_list|,
-name|unit
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -3116,9 +3074,15 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Transmit of packet failed after 16 attempts -- TDR = %d\n"
+literal|"%s: Transmit of packet failed after 16 attempts -- TDR = %d\n"
 argument_list|,
-name|unit
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_xname
 argument_list|,
 operator|(
 operator|(
@@ -3196,9 +3160,15 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Transmit buffer error -- Resetting\n"
+literal|"%s: Transmit buffer error -- Resetting\n"
 argument_list|,
-name|unit
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -3207,9 +3177,15 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Transmit underflow error -- Resetting\n"
+literal|"%s: Transmit underflow error -- Resetting\n"
 argument_list|,
-name|unit
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|lnc_reset
@@ -3553,14 +3529,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|lnc_softc_t
 modifier|*
 name|sc
@@ -3623,25 +3591,25 @@ name|if_softc
 operator|=
 name|sc
 expr_stmt|;
+name|if_initname
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_if
-operator|.
-name|if_name
-operator|=
-literal|"lnc"
-expr_stmt|;
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_unit
-operator|=
-name|unit
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -3778,9 +3746,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"lnc%d: "
+literal|"%s: "
 argument_list|,
-name|unit
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 if|if
@@ -4917,7 +4891,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Initialisation failed\n"
+literal|"%s: Initialisation failed\n"
 argument_list|,
 name|sc
 operator|->
@@ -4925,7 +4899,7 @@ name|arpcom
 operator|.
 name|ac_if
 operator|.
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4954,17 +4928,6 @@ modifier|*
 name|sc
 init|=
 name|arg
-decl_stmt|;
-name|int
-name|unit
-init|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_unit
 decl_stmt|;
 name|u_short
 name|csr0
@@ -5086,9 +5049,15 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Heartbeat error -- SQE test failed\n"
+literal|"%s: Heartbeat error -- SQE test failed\n"
 argument_list|,
-name|unit
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|LNCSTATS
@@ -5107,9 +5076,15 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Babble error - more than 1519 bytes transmitted\n"
+literal|"%s: Babble error - more than 1519 bytes transmitted\n"
 argument_list|,
-name|unit
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|LNCSTATS
@@ -5137,9 +5112,15 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Missed packet -- no receive buffer\n"
+literal|"%s: Missed packet -- no receive buffer\n"
 argument_list|,
-name|unit
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|LNCSTATS
@@ -5167,9 +5148,15 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Memory error  -- Resetting\n"
+literal|"%s: Memory error  -- Resetting\n"
 argument_list|,
-name|unit
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|LNCSTATS
@@ -5561,11 +5548,11 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Couldn't get mbuf for transmit packet -- Resetting \n "
+literal|"%s: Couldn't get mbuf for transmit packet -- Resetting \n "
 argument_list|,
 name|ifp
 operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|lnc_reset
@@ -6458,11 +6445,11 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lnc%d: Device timeout -- Resetting\n"
+literal|"%s: Device timeout -- Resetting\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -6501,7 +6488,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\nDriver/NIC [%d] state dump\n"
+literal|"\nDriver/NIC [%s] state dump\n"
 argument_list|,
 name|sc
 operator|->
@@ -6509,7 +6496,7 @@ name|arpcom
 operator|.
 name|ac_if
 operator|.
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|printf

@@ -282,12 +282,7 @@ block|}
 return|return
 name|cm_attach
 argument_list|(
-name|sc
-argument_list|,
-name|device_get_unit
-argument_list|(
 name|dev
-argument_list|)
 argument_list|)
 return|;
 block|}

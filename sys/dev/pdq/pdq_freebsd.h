@@ -662,14 +662,14 @@ begin_define
 define|#
 directive|define
 name|PDQ_OS_PREFIX
-value|"%s%d: "
+value|"%s: "
 end_define
 
 begin_define
 define|#
 directive|define
 name|PDQ_OS_PREFIX_ARGS
-value|pdq->pdq_os_name, pdq->pdq_unit
+value|pdq->pdq_os_name
 end_define
 
 begin_define

@@ -2973,11 +2973,15 @@ operator|*
 operator|)
 name|addr
 decl_stmt|;
-name|snprintf
+name|strlcpy
 argument_list|(
 name|ifr
 operator|->
 name|ifr_name
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2985,16 +2989,6 @@ name|ifr
 operator|->
 name|ifr_name
 argument_list|)
-argument_list|,
-literal|"%s%d"
-argument_list|,
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -5552,15 +5546,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bpfdetach: %s%d was not attached\n"
+literal|"bpfdetach: %s was not attached\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 return|return;

@@ -2336,7 +2336,7 @@ block|{
 name|printf
 argument_list|(
 literal|"fec%d: failed to check status "
-literal|"of link %s%d\n"
+literal|"of link %s\n"
 argument_list|,
 name|priv
 operator|->
@@ -2344,11 +2344,7 @@ name|unit
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2404,7 +2400,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"fec%d: port %s%d in bundle "
+literal|"fec%d: port %s in bundle "
 literal|"is up\n"
 argument_list|,
 name|priv
@@ -2413,11 +2409,7 @@ name|unit
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -2448,7 +2440,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"fec%d: port %s%d in bundle "
+literal|"fec%d: port %s in bundle "
 literal|"is down\n"
 argument_list|,
 name|priv
@@ -2457,11 +2449,7 @@ name|unit
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -3271,14 +3259,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"fec%d: can't do inet aggregation of non "
-literal|"inet packet\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"can't do inet aggregation of non "
+literal|"inet packet\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3294,13 +3280,11 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"fec%d: bogus hash type: %d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"bogus hash type: %d\n"
 argument_list|,
 name|b
 operator|->
@@ -4013,15 +3997,11 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s('%c', %d, char[%d])\n"
+literal|"%s: %s('%c', %d, char[%d])\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|str
 argument_list|,
@@ -4219,19 +4199,16 @@ operator|=
 name|node
 expr_stmt|;
 comment|/* Initialize interface structure */
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-operator|=
+argument_list|,
 name|NG_FEC_FEC_NAME
-expr_stmt|;
-name|ifp
-operator|->
-name|if_unit
-operator|=
+argument_list|,
 name|priv
 operator|->
 name|unit
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -4330,24 +4307,18 @@ name|ifname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|snprintf
+name|strlcpy
 argument_list|(
 name|ifname
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ifname
 argument_list|)
-argument_list|,
-literal|"%s%d"
-argument_list|,
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -4700,12 +4671,6 @@ name|ng_fec_portlist
 modifier|*
 name|p
 decl_stmt|;
-name|char
-name|ifname
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
 name|b
 operator|=
 operator|&
@@ -4745,30 +4710,15 @@ operator|->
 name|ng_fec_ports
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|ifname
-argument_list|,
-literal|"%s%d"
-argument_list|,
-name|p
-operator|->
-name|fec_if
-operator|->
-name|if_name
-argument_list|,
-name|p
-operator|->
-name|fec_if
-operator|->
-name|if_unit
-argument_list|)
-expr_stmt|;
 name|ng_fec_delport
 argument_list|(
 name|priv
 argument_list|,
-name|ifname
+name|p
+operator|->
+name|fec_if
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}

@@ -1592,19 +1592,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %s%d\n"
+literal|" %s\n"
 argument_list|,
 name|rt
 operator|->
 name|rt_ifp
 operator|->
-name|if_name
-argument_list|,
-name|rt
-operator|->
-name|rt_ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1750,15 +1744,11 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d flags %x, addr "
+literal|"%s flags %x, addr "
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|ifp
 operator|->
@@ -8368,13 +8358,17 @@ name|if_link
 argument_list|)
 control|)
 block|{
-name|snprintf
+name|strlcpy
 argument_list|(
 name|ifctx
 operator|->
 name|ireq
 operator|.
 name|ifr_name
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -8384,16 +8378,6 @@ name|ireq
 operator|.
 name|ifr_name
 argument_list|)
-argument_list|,
-literal|"%s%d"
-argument_list|,
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
 argument_list|)
 expr_stmt|;
 ifdef|#

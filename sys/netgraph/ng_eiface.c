@@ -423,16 +423,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-name|ng_eiface_ifname
-index|[]
-init|=
-name|NG_EIFACE_EIFACE_NAME
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* We keep a bitmap indicating which unit numbers are free.    One means the unit number is free, zero means it's taken. */
 end_comment
@@ -1407,15 +1397,11 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s('%c', %d, char[%d])\n"
+literal|"%s: %s('%c', %d, char[%d])\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|,
 name|str
 argument_list|,
@@ -1588,19 +1574,16 @@ operator|=
 name|node
 expr_stmt|;
 comment|/* Initialize interface structure */
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-operator|=
-name|ng_eiface_ifname
-expr_stmt|;
-name|ifp
-operator|->
-name|if_unit
-operator|=
+argument_list|,
+name|NG_EIFACE_EIFACE_NAME
+argument_list|,
 name|priv
 operator|->
 name|unit
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -1652,7 +1635,7 @@ operator||
 name|IFF_MULTICAST
 operator|)
 expr_stmt|;
-comment|/* 	 * Give this node name * bzero(ifname, sizeof(ifname)); 	 * sprintf(ifname, "if%s%d", ifp->if_name, ifp->if_unit); (void) 	 * ng_name_node(node, ifname); 	 */
+comment|/* 	 * Give this node name * bzero(ifname, sizeof(ifname)); 	 * sprintf(ifname, "if%s", ifp->if_xname); (void) 	 * ng_name_node(node, ifname); 	 */
 comment|/* Attach the interface */
 name|ether_ifattach
 argument_list|(
@@ -2078,21 +2061,22 @@ name|resp
 operator|->
 name|data
 expr_stmt|;
-name|sprintf
+name|strlcpy
 argument_list|(
 name|arg
 operator|->
 name|ngif_name
 argument_list|,
-literal|"%s%d"
-argument_list|,
 name|ifp
 operator|->
-name|if_name
+name|if_xname
 argument_list|,
-name|ifp
+sizeof|sizeof
+argument_list|(
+name|arg
 operator|->
-name|if_unit
+name|ngif_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2203,15 +2187,11 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s%d: len changed?\n"
+literal|"%s: len changed?\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 break|break;

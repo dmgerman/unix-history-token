@@ -108,7 +108,7 @@ value|0x7fff
 end_define
 
 begin_comment
-comment|/* ifp->if_unit is only 15 bits */
+comment|/* historical value */
 end_comment
 
 begin_endif

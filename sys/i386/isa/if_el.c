@@ -1295,21 +1295,20 @@ name|if_softc
 operator|=
 name|sc
 expr_stmt|;
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_unit
-operator|=
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
 name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-empty_stmt|;
-name|ifp
-operator|->
-name|if_name
-operator|=
-literal|"el"
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -3692,11 +3691,11 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"el%d: device timeout\n"
+literal|"%s: device timeout\n"
 argument_list|,
 name|ifp
 operator|->
-name|if_unit
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|ifp

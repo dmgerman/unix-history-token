@@ -1059,14 +1059,6 @@ name|ifmedia
 modifier|*
 name|ifm
 decl_stmt|;
-name|int
-name|unit
-init|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|u_int16_t
 name|temp
 decl_stmt|;
@@ -1127,17 +1119,20 @@ name|if_softc
 operator|=
 name|sc
 expr_stmt|;
+name|if_initname
+argument_list|(
 name|ifp
-operator|->
-name|if_unit
-operator|=
-name|unit
-expr_stmt|;
-name|ifp
-operator|->
-name|if_name
-operator|=
-literal|"ex"
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -1511,8 +1506,8 @@ argument_list|(
 argument|Start_End
 argument_list|,
 argument|printf(
-literal|"ex_init%d: start\n"
-argument|, ifp->if_unit);
+literal|"%s: ex_init: start\n"
+argument|, ifp->if_xname);
 argument_list|)
 empty_stmt|;
 if|if
@@ -1989,8 +1984,8 @@ argument_list|(
 argument|Start_End
 argument_list|,
 argument|printf(
-literal|"ex_init%d: finish\n"
-argument|, ifp->if_unit);
+literal|"%s: ex_init: finish\n"
+argument|, ifp->if_xname);
 argument_list|)
 empty_stmt|;
 block|}
@@ -3832,8 +3827,8 @@ argument_list|(
 argument|Start_End
 argument_list|,
 argument|printf(
-literal|"ex_ioctl%d: start "
-argument|, ifp->if_unit);
+literal|"%s: ex_ioctl: start "
+argument|, ifp->if_xname);
 argument_list|)
 empty_stmt|;
 name|s
@@ -4029,8 +4024,8 @@ argument_list|(
 argument|Start_End
 argument_list|,
 argument|printf(
-literal|"\nex_ioctl%d: finish\n"
-argument|, ifp->if_unit);
+literal|"\n%s: ex_ioctl: finish\n"
+argument|, ifp->if_xname);
 argument_list|)
 empty_stmt|;
 return|return
@@ -4688,8 +4683,8 @@ argument_list|(
 argument|Start_End
 argument_list|,
 argument|printf(
-literal|"ex_watchdog%d: start\n"
-argument|, ifp->if_unit);
+literal|"%s: ex_watchdog: start\n"
+argument|, ifp->if_xname);
 argument_list|)
 empty_stmt|;
 name|ifp
@@ -4728,8 +4723,8 @@ argument_list|(
 argument|Start_End
 argument_list|,
 argument|printf(
-literal|"ex_watchdog%d: finish\n"
-argument|, ifp->if_unit);
+literal|"%s: ex_watchdog: finish\n"
+argument|, ifp->if_xname);
 argument_list|)
 empty_stmt|;
 return|return;

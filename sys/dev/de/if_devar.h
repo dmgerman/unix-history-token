@@ -1298,6 +1298,9 @@ name|struct
 name|ifmedia
 name|tulip_ifmedia
 decl_stmt|;
+name|int
+name|tulip_unit
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -3139,29 +3142,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|tulip_unit
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|tulip_unit
-value|tulip_if.if_unit
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|tulip_name
-value|tulip_if.if_name
+name|tulip_xname
+value|tulip_if.if_xname
 end_define
 
 begin_ifndef
