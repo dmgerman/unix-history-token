@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arch.c	5.4 (Berkeley) %G%"
+literal|"@(#)arch.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -533,11 +533,7 @@ name|buf
 operator|=
 name|sacrifice
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
+name|emalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1347,7 +1343,7 @@ operator|(
 name|Arch
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1540,7 +1536,7 @@ argument_list|,
 operator|(
 name|ClientData
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2649,7 +2645,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 name|strlen
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.2 (Berkeley) %G%"
+literal|"@(#)hash.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,7 +218,7 @@ operator|(
 name|List_Links
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -630,7 +630,7 @@ operator|(
 name|Hash_Entry
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -674,7 +674,7 @@ operator|(
 name|Hash_Entry
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -703,7 +703,7 @@ operator|(
 name|Hash_Entry
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -756,7 +756,7 @@ operator|(
 name|Hash_Entry
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(

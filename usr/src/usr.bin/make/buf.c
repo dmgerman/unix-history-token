@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)buf.c	5.2 (Berkeley) %G%"
+literal|"@(#)buf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -392,7 +392,7 @@ operator|(
 name|Byte
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 name|bp
 operator|->
@@ -604,7 +604,7 @@ operator|(
 name|Byte
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 name|bp
 operator|->
@@ -1131,7 +1131,7 @@ operator|(
 name|Buf
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1165,7 +1165,7 @@ operator|(
 name|Byte
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 name|size
 argument_list|)
