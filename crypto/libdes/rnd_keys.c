@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rnd_keys.c,v 1.55 1999/03/19 23:17:13 assar Exp $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -27,6 +27,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_include
 include|#
@@ -40,42 +52,28 @@ directive|include
 file|<des_locl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KRB5
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<krb5-types.h>
+file|<signal.h>
 end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|<ktypes.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_ifdef
