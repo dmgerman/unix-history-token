@@ -216,7 +216,7 @@ name|proc
 operator|*
 name|p
 operator|,
-name|u_long
+name|uintptr_t
 name|pc
 operator|,
 name|u_int
@@ -237,7 +237,7 @@ name|proc
 operator|*
 name|p
 operator|,
-name|u_long
+name|uintptr_t
 name|pc
 operator|,
 name|u_int

@@ -1790,7 +1790,7 @@ modifier|*
 name|p
 decl_stmt|;
 specifier|register
-name|u_long
+name|uintptr_t
 name|pc
 decl_stmt|;
 name|u_int
@@ -1933,7 +1933,7 @@ modifier|*
 name|p
 decl_stmt|;
 specifier|register
-name|u_long
+name|uintptr_t
 name|pc
 decl_stmt|;
 name|u_int
