@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Marko Kiiskila carnil@cs.tut.fi   *   * Tampere University of Technology - Telecommunications Laboratory  *  * Permission to use, copy, modify and distribute this  * software and its documentation is hereby granted,  * provided that both the copyright notice and this  * permission notice appear in all copies of the software,  * derivative works or modified versions, and any portions  * thereof, that both notices appear in supporting  * documentation, and that the use of this software is  * acknowledged in any publications resulting from using  * the software.  *   * TUT ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION AND DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS  * SOFTWARE.  *   */
+comment|/*  * Marko Kiiskila carnil@cs.tut.fi  *  * Tampere University of Technology - Telecommunications Laboratory  *  * Permission to use, copy, modify and distribute this  * software and its documentation is hereby granted,  * provided that both the copyright notice and this  * permission notice appear in all copies of the software,  * derivative works or modified versions, and any portions  * thereof, that both notices appear in supporting  * documentation, and that the use of this software is  * acknowledged in any publications resulting from using  * the software.  *  * TUT ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION AND DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS  * SOFTWARE.  *  */
 end_comment
 
 begin_ifndef
@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lane.c,v 1.12 2001/07/05 18:54:15 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lane.c,v 1.20.2.2 2003/11/16 08:51:31 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,31 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -99,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ether.h"
 end_include
 
@@ -108,11 +91,125 @@ directive|include
 file|"lane.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|tok
+name|lecop2str
+index|[]
+init|=
+block|{
+block|{
+literal|0x0001
+block|,
+literal|"configure request"
+block|}
+block|,
+block|{
+literal|0x0101
+block|,
+literal|"configure response"
+block|}
+block|,
+block|{
+literal|0x0002
+block|,
+literal|"join request"
+block|}
+block|,
+block|{
+literal|0x0102
+block|,
+literal|"join response"
+block|}
+block|,
+block|{
+literal|0x0003
+block|,
+literal|"ready query"
+block|}
+block|,
+block|{
+literal|0x0103
+block|,
+literal|"ready indication"
+block|}
+block|,
+block|{
+literal|0x0004
+block|,
+literal|"register request"
+block|}
+block|,
+block|{
+literal|0x0104
+block|,
+literal|"register response"
+block|}
+block|,
+block|{
+literal|0x0005
+block|,
+literal|"unregister request"
+block|}
+block|,
+block|{
+literal|0x0105
+block|,
+literal|"unregister response"
+block|}
+block|,
+block|{
+literal|0x0006
+block|,
+literal|"ARP request"
+block|}
+block|,
+block|{
+literal|0x0106
+block|,
+literal|"ARP response"
+block|}
+block|,
+block|{
+literal|0x0007
+block|,
+literal|"flush request"
+block|}
+block|,
+block|{
+literal|0x0107
+block|,
+literal|"flush response"
+block|}
+block|,
+block|{
+literal|0x0008
+block|,
+literal|"NARP request"
+block|}
+block|,
+block|{
+literal|0x0009
+block|,
+literal|"topology request"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 specifier|inline
 name|void
-name|lane_print
+name|lane_hdr_print
 parameter_list|(
 specifier|register
 specifier|const
@@ -150,10 +247,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"lecid:%d %s %s %d: "
+literal|"lecid:%x %s %s %d: "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ep
 operator|->
 name|le_header
@@ -182,10 +280,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"lecid:%d %s %s %s %d: "
+literal|"lecid:%x %s %s %s %d: "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ep
 operator|->
 name|le_header
@@ -219,42 +318,29 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the top level routine of the printer.  'p' is the points  * to the ether header of the packet, 'h->tv' is the timestamp,  * 'h->length' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  */
+comment|/*  * This is the top level routine of the printer.  'p' points  * to the LANE header of the packet, 'h->ts' is the timestamp,  * 'h->length' is the length of the packet off the wire, and 'h->caplen'  * is the number of bytes actually captured.  *  * This assumes 802.3, not 802.5, LAN emulation.  */
 end_comment
 
 begin_function
 name|void
-name|lane_if_print
+name|lane_print
 parameter_list|(
-name|u_char
-modifier|*
-name|user
-parameter_list|,
-specifier|const
-name|struct
-name|pcap_pkthdr
-modifier|*
-name|h
-parameter_list|,
 specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
+parameter_list|,
+name|u_int
+name|caplen
 parameter_list|)
 block|{
-name|int
-name|caplen
-init|=
-name|h
-operator|->
-name|caplen
-decl_stmt|;
-name|int
-name|length
-init|=
-name|h
-operator|->
-name|len
+name|struct
+name|lane_controlhdr
+modifier|*
+name|lec
 decl_stmt|;
 name|struct
 name|lecdatahdr_8023
@@ -267,17 +353,77 @@ decl_stmt|;
 name|u_short
 name|extracted_ethertype
 decl_stmt|;
-operator|++
-name|infodelay
-expr_stmt|;
-name|ts_print
+if|if
+condition|(
+name|caplen
+operator|<
+sizeof|sizeof
 argument_list|(
-operator|&
-name|h
-operator|->
-name|ts
+expr|struct
+name|lane_controlhdr
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"[|lane]"
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+name|lec
+operator|=
+operator|(
+expr|struct
+name|lane_controlhdr
+operator|*
+operator|)
+name|p
+expr_stmt|;
+if|if
+condition|(
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
+name|lec
+operator|->
+name|lec_header
+argument_list|)
+operator|==
+literal|0xff00
+condition|)
+block|{
+comment|/* 		 * LE Control. 		 */
+name|printf
+argument_list|(
+literal|"lec: proto %x vers %x %s"
+argument_list|,
+name|lec
+operator|->
+name|lec_proto
+argument_list|,
+name|lec
+operator|->
+name|lec_vers
+argument_list|,
+name|tok2str
+argument_list|(
+name|lecop2str
+argument_list|,
+literal|"opcode-#%u"
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
+name|lec
+operator|->
+name|lec_opcode
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|caplen
@@ -294,32 +440,20 @@ argument_list|(
 literal|"[|lane]"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
 name|eflag
 condition|)
-name|lane_print
+name|lane_hdr_print
 argument_list|(
 name|p
 argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some printers want to get back at the ethernet addresses, 	 * and/or check that they're not walking off the end of the packet. 	 * Rather than pass them all the way down, we set these globals. 	 */
-name|packetp
-operator|=
-name|p
-expr_stmt|;
-name|snapend
-operator|=
-name|p
-operator|+
-name|caplen
-expr_stmt|;
+comment|/* 	 * Go past the LANE header. 	 */
 name|length
 operator|-=
 sizeof|sizeof
@@ -355,8 +489,9 @@ argument_list|)
 expr_stmt|;
 name|ether_type
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ep
 operator|->
 name|h_type
@@ -370,7 +505,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ether_type
-operator|<
+operator|<=
 name|ETHERMTU
 condition|)
 block|{
@@ -406,7 +541,7 @@ condition|(
 operator|!
 name|eflag
 condition|)
-name|lane_print
+name|lane_hdr_print
 argument_list|(
 operator|(
 name|u_char
@@ -485,7 +620,7 @@ condition|(
 operator|!
 name|eflag
 condition|)
-name|lane_print
+name|lane_hdr_print
 argument_list|(
 operator|(
 name|u_char
@@ -518,36 +653,47 @@ name|caplen
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|xflag
-condition|)
-name|default_print
+block|}
+end_function
+
+begin_function
+name|u_int
+name|lane_if_print
+parameter_list|(
+specifier|const
+name|struct
+name|pcap_pkthdr
+modifier|*
+name|h
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|lane_print
 argument_list|(
 name|p
 argument_list|,
+name|h
+operator|->
+name|len
+argument_list|,
+name|h
+operator|->
 name|caplen
 argument_list|)
 expr_stmt|;
-name|out
-label|:
-name|putchar
+return|return
+operator|(
+sizeof|sizeof
 argument_list|(
-literal|'\n'
+expr|struct
+name|lecdatahdr_8023
 argument_list|)
-expr_stmt|;
-operator|--
-name|infodelay
-expr_stmt|;
-if|if
-condition|(
-name|infoprint
-condition|)
-name|info
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

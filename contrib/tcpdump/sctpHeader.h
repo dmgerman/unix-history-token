@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/sctpHeader.h,v 1.3 2001/08/01 03:34:00 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/sctpHeader.h,v 1.6 2002/12/11 07:14:11 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
-comment|/* SCTP reference Implementation Copyright (C) 1999 Cisco And Motorola  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 4. Neither the name of Cisco nor of Motorola may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This file is part of the SCTP reference Implementation  *  *   * Please send any bug reports or fixes you make to one of the following email  * addresses:  *   * rstewar1@email.mot.com  * kmorneau@cisco.com  * qxie1@email.mot.com  *   * Any bugs reported given to us we will try to fix... any fixes shared will  * be incorperated into the next SCTP release.  */
+comment|/* SCTP reference Implementation Copyright (C) 1999 Cisco And Motorola  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 4. Neither the name of Cisco nor of Motorola may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This file is part of the SCTP reference Implementation  *  *  * Please send any bug reports or fixes you make to one of the following email  * addresses:  *  * rstewar1@email.mot.com  * kmorneau@cisco.com  * qxie1@email.mot.com  *  * Any bugs reported given to us we will try to fix... any fixes shared will  * be incorperated into the next SCTP release.  */
 end_comment
 
 begin_ifndef
@@ -50,16 +50,16 @@ directive|endif
 struct|struct
 name|sctpHeader
 block|{
-name|u_short
+name|u_int16_t
 name|source
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|destination
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|verificationTag
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|adler32
 decl_stmt|;
 block|}
@@ -68,13 +68,13 @@ comment|/* various descriptor parsers */
 struct|struct
 name|sctpChunkDesc
 block|{
-name|u_char
+name|u_int8_t
 name|chunkID
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|chunkFlg
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|chunkLength
 decl_stmt|;
 block|}
@@ -82,10 +82,10 @@ struct|;
 struct|struct
 name|sctpParamDesc
 block|{
-name|u_short
+name|u_int16_t
 name|paramType
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|paramLength
 decl_stmt|;
 block|}
@@ -97,7 +97,7 @@ name|struct
 name|sctpChunkDesc
 name|chk
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|serialNumber
 decl_stmt|;
 block|}
@@ -110,14 +110,14 @@ name|sctpParamDesc
 name|p
 decl_stmt|;
 comment|/* type must be 0xfffe */
-name|u_int
+name|u_int32_t
 name|vendorId
 decl_stmt|;
 comment|/* vendor ID from RFC 1700 */
-name|u_short
+name|u_int16_t
 name|vendorSpecificType
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|vendorSpecificLen
 decl_stmt|;
 block|}
@@ -128,23 +128,23 @@ comment|/* this is used for init ack, too */
 struct|struct
 name|sctpInitiation
 block|{
-name|u_int
+name|u_int32_t
 name|initTag
 decl_stmt|;
 comment|/* tag of mine */
-name|u_int
+name|u_int32_t
 name|rcvWindowCredit
 decl_stmt|;
 comment|/* rwnd */
-name|u_short
+name|u_int16_t
 name|NumPreopenStreams
 decl_stmt|;
 comment|/* OS */
-name|u_short
+name|u_int16_t
 name|MaxInboundStreams
 decl_stmt|;
 comment|/* MIS */
-name|u_int
+name|u_int32_t
 name|initialTSN
 decl_stmt|;
 comment|/* optional param's follow in sctpParamDesc form */
@@ -158,7 +158,7 @@ name|sctpParamDesc
 name|p
 decl_stmt|;
 comment|/* type is set to SCTP_IPV4_PARAM_TYPE, len=10 */
-name|u_int
+name|u_int32_t
 name|ipAddress
 decl_stmt|;
 block|}
@@ -171,7 +171,7 @@ name|sctpParamDesc
 name|p
 decl_stmt|;
 comment|/* type is set to SCTP_IPV6_PARAM_TYPE, len=22 */
-name|u_char
+name|u_int8_t
 name|ipAddress
 index|[
 literal|16
@@ -186,7 +186,7 @@ name|struct
 name|sctpParamDesc
 name|param
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|name
 index|[
 literal|1
@@ -202,7 +202,7 @@ name|sctpParamDesc
 name|p
 decl_stmt|;
 comment|/* type is set to SCTP_COOKIE_PRESERVE, len=8 */
-name|u_int
+name|u_int32_t
 name|extraTime
 decl_stmt|;
 block|}
@@ -210,10 +210,10 @@ struct|;
 struct|struct
 name|sctpTimeStamp
 block|{
-name|u_int
+name|u_int32_t
 name|ts_sec
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|ts_usec
 decl_stmt|;
 block|}
@@ -222,15 +222,15 @@ comment|/* wire structure of my cookie */
 struct|struct
 name|cookieMessage
 block|{
-name|u_int
+name|u_int32_t
 name|TieTag_curTag
 decl_stmt|;
 comment|/* copied from assoc if present */
-name|u_int
+name|u_int32_t
 name|TieTag_hisTag
 decl_stmt|;
 comment|/* copied from assoc if present */
-name|int
+name|int32_t
 name|cookieLife
 decl_stmt|;
 comment|/* life I will award this cookie */
@@ -244,26 +244,26 @@ name|sctpInitiation
 name|initAckISent
 decl_stmt|;
 comment|/* the INIT-ACK that I sent to my peer */
-name|u_int
+name|u_int32_t
 name|addressWhereISent
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* I make this 4 ints so I get 128bits for future */
-name|int
+name|int32_t
 name|addrtype
 decl_stmt|;
 comment|/* address type */
-name|u_short
+name|u_int16_t
 name|locScope
 decl_stmt|;
 comment|/* V6 local scope flag */
-name|u_short
+name|u_int16_t
 name|siteScope
 decl_stmt|;
 comment|/* V6 site scope flag */
-comment|/* at the end is tacked on the INIT chunk sent in    * its entirety and of course our     * signature.    */
+comment|/* at the end is tacked on the INIT chunk sent in    * its entirety and of course our    * signature.    */
 block|}
 struct|;
 comment|/* this guy is for use when  * I have a initiate message gloming the  * things together.   */
@@ -293,20 +293,20 @@ name|msg
 decl_stmt|;
 block|}
 struct|;
-comment|/* Selective Acknowledgement   * has the following structure with  * a optional ammount of trailing int's  * on the last part (based on the numberOfDesc   * field).  */
+comment|/* Selective Acknowledgement  * has the following structure with  * a optional ammount of trailing int's  * on the last part (based on the numberOfDesc  * field).  */
 struct|struct
 name|sctpSelectiveAck
 block|{
-name|u_int
+name|u_int32_t
 name|highestConseqTSN
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|updatedRwnd
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|numberOfdesc
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|numDupTsns
 decl_stmt|;
 block|}
@@ -314,10 +314,10 @@ struct|;
 struct|struct
 name|sctpSelectiveFrag
 block|{
-name|u_short
+name|u_int16_t
 name|fragmentStart
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|fragmentEnd
 decl_stmt|;
 block|}
@@ -335,14 +335,14 @@ name|sack
 decl_stmt|;
 block|}
 struct|;
-comment|/* for both RTT request/response the  * following is sent   */
+comment|/* for both RTT request/response the  * following is sent  */
 struct|struct
 name|sctpHBrequest
 block|{
-name|u_int
+name|u_int32_t
 name|time_value_1
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|time_value_2
 decl_stmt|;
 block|}
@@ -377,19 +377,18 @@ name|struct
 name|sctpHBrequest
 name|rtt
 decl_stmt|;
-name|char
+name|int8_t
 name|addrFmt
 index|[
 name|SCTP_ADDRMAX
 index|]
 decl_stmt|;
-name|unsigned
-name|short
+name|u_int16_t
 name|userreq
 decl_stmt|;
 block|}
 struct|;
-comment|/* for the abort and shutdown ACK   * we must carry the init tag in the common header. Just the  * common header is all that is needed with a chunk descriptor.  */
+comment|/* for the abort and shutdown ACK  * we must carry the init tag in the common header. Just the  * common header is all that is needed with a chunk descriptor.  */
 struct|struct
 name|sctpUnifiedAbort
 block|{
@@ -423,12 +422,10 @@ name|struct
 name|sctpChunkDesc
 name|uh
 decl_stmt|;
-name|unsigned
-name|short
+name|u_int16_t
 name|causeCode
 decl_stmt|;
-name|unsigned
-name|short
+name|u_int16_t
 name|causeLen
 decl_stmt|;
 block|}
@@ -437,7 +434,7 @@ comment|/* For the graceful shutdown we must carry  * the tag (in common header)
 struct|struct
 name|sctpShutdown
 block|{
-name|u_int
+name|u_int32_t
 name|TSN_Seen
 decl_stmt|;
 block|}
@@ -459,10 +456,10 @@ comment|/* in the unified message we add the trailing  * stream id since it is t
 struct|struct
 name|sctpOpErrorCause
 block|{
-name|u_short
+name|u_int16_t
 name|cause
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|causeLen
 decl_stmt|;
 block|}
@@ -495,10 +492,10 @@ name|struct
 name|sctpOpErrorCause
 name|c
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|strmNum
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|reserved
 decl_stmt|;
 block|}
@@ -518,7 +515,7 @@ name|struct
 name|sctpOpErrorCause
 name|c
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|moretime
 decl_stmt|;
 block|}
@@ -540,16 +537,16 @@ struct|;
 struct|struct
 name|sctpDataPart
 block|{
-name|u_int
+name|u_int32_t
 name|TSN
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|streamId
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|sequence
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|payloadtype
 decl_stmt|;
 block|}
@@ -574,7 +571,7 @@ name|struct
 name|sctpChunkDesc
 name|uh
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|Lowest_TSN
 decl_stmt|;
 block|}
@@ -586,7 +583,7 @@ name|struct
 name|sctpChunkDesc
 name|uh
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|TSN_reduced_at
 decl_stmt|;
 block|}

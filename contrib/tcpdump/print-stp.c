@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-stp.c,v 1.6.6.1 2002/05/29 10:00:00 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-stp.c,v 1.11.2.2 2003/11/16 08:51:46 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,25 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -170,9 +153,6 @@ specifier|const
 name|u_char
 modifier|*
 name|p
-parameter_list|,
-name|u_int
-name|length
 parameter_list|)
 block|{
 name|printf
@@ -327,13 +307,7 @@ specifier|static
 name|void
 name|stp_print_tcn_bpdu
 parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-name|p
-parameter_list|,
-name|u_int
-name|length
+name|void
 parameter_list|)
 block|{
 name|printf
@@ -416,7 +390,7 @@ index|]
 condition|)
 block|{
 case|case
-literal|0
+literal|0x00
 case|:
 if|if
 condition|(
@@ -430,20 +404,14 @@ goto|;
 name|stp_print_config_bpdu
 argument_list|(
 name|p
-argument_list|,
-name|length
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|1
+literal|0x80
 case|:
 name|stp_print_tcn_bpdu
-argument_list|(
-name|p
-argument_list|,
-name|length
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 default|default:

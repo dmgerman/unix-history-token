@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ieee802_11.h,v 1.3 2001/06/14 09:50:01 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ieee802_11.h,v 1.9 2003/07/22 17:36:57 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 2001  *	Fortress Technologies  *      Charlie Lenahan ( clenahan@fortresstech.com )  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+end_comment
+
+begin_comment
+comment|/* Lengths of 802.11 header components. */
 end_comment
 
 begin_define
@@ -12,6 +16,144 @@ define|#
 directive|define
 name|IEEE802_11_FC_LEN
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_DUR_LEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_DA_LEN
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_SA_LEN
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_BSSID_LEN
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_RA_LEN
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_TA_LEN
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_SEQ_LEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_IV_LEN
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_KID_LEN
+value|1
+end_define
+
+begin_comment
+comment|/* Frame check sequence length. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_FCS_LEN
+value|4
+end_define
+
+begin_comment
+comment|/* Lengths of beacon components. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_TSTAMP_LEN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_BCNINT_LEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_CAPINFO_LEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_LISTENINT_LEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_AID_LEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_STATUS_LEN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_REASON_LEN
+value|2
+end_define
+
+begin_comment
+comment|/* Length of previous AP in reassocation frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE802_11_AP_LEN
+value|6
 end_define
 
 begin_define
@@ -197,6 +339,62 @@ name|CTRL_END_ACK
 value|0xF
 end_define
 
+begin_define
+define|#
+directive|define
+name|DATA_DATA
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_DATA_CF_ACK
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_DATA_CF_POLL
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_DATA_CF_ACK_POLL
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_NODATA
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_NODATA_CF_ACK
+value|0x5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_NODATA_CF_POLL
+value|0x6
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_NODATA_CF_ACK_POLL
+value|0x7
+end_define
+
 begin_comment
 comment|/*  * Bits in the frame control field.  */
 end_comment
@@ -349,8 +547,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|MGMT_HEADER_LEN
-value|(2+2+6+6+6+2)
+name|MGMT_HDRLEN
+value|(IEEE802_11_FC_LEN+IEEE802_11_DUR_LEN+\ 			 IEEE802_11_DA_LEN+IEEE802_11_SA_LEN+\ 			 IEEE802_11_BSSID_LEN+IEEE802_11_SEQ_LEN)
 end_define
 
 begin_define
@@ -786,8 +984,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CTRL_RTS_LEN
-value|(2+2+6+6+4)
+name|CTRL_RTS_HDRLEN
+value|(IEEE802_11_FC_LEN+IEEE802_11_DUR_LEN+\ 			 IEEE802_11_RA_LEN+IEEE802_11_TA_LEN)
 end_define
 
 begin_struct
@@ -819,8 +1017,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CTRL_CTS_LEN
-value|(2+2+6+4)
+name|CTRL_CTS_HDRLEN
+value|(IEEE802_11_FC_LEN+IEEE802_11_DUR_LEN+IEEE802_11_RA_LEN)
 end_define
 
 begin_struct
@@ -852,8 +1050,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CTRL_ACK_LEN
-value|(2+2+6+4)
+name|CTRL_ACK_HDRLEN
+value|(IEEE802_11_FC_LEN+IEEE802_11_DUR_LEN+IEEE802_11_RA_LEN)
 end_define
 
 begin_struct
@@ -891,8 +1089,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CTRL_PS_POLL_LEN
-value|(2+2+6+6+4)
+name|CTRL_PS_POLL_HDRLEN
+value|(IEEE802_11_FC_LEN+IEEE802_11_AID_LEN+\ 				 IEEE802_11_BSSID_LEN+IEEE802_11_TA_LEN)
 end_define
 
 begin_struct
@@ -930,8 +1128,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CTRL_END_LEN
-value|(2+2+6+6+4)
+name|CTRL_END_HDRLEN
+value|(IEEE802_11_FC_LEN+IEEE802_11_DUR_LEN+\ 			 IEEE802_11_RA_LEN+IEEE802_11_BSSID_LEN)
 end_define
 
 begin_struct
@@ -969,8 +1167,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CTRL_END_ACK_LEN
-value|(2+2+6+6+4)
+name|CTRL_END_ACK_HDRLEN
+value|(IEEE802_11_FC_LEN+IEEE802_11_DUR_LEN+\ 				 IEEE802_11_RA_LEN+IEEE802_11_BSSID_LEN)
 end_define
 
 begin_define

@@ -32,8 +32,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-vjc.c,v 1.9 2000/10/09 01:53:21 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-vjc.c,v 1.11.2.3 2003/11/19 01:09:12 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,31 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -108,6 +85,10 @@ directive|include
 file|"ppp.h"
 end_include
 
+begin_comment
+comment|/*  * XXX - for BSD/OS PPP, what packets get supplied with a PPP header type  * of PPP_VJC and what packets get supplied with a PPP header type of  * PPP_VJNC?  PPP_VJNC is for "UNCOMPRESSED_TCP" packets, and PPP_VJC  * is for COMPRESSED_TCP packets (PPP_IP is used for TYPE_IP packets).  *  * RFC 1144 implies that, on the wire, the packet type is *not* needed  * for PPP, as different PPP protocol types can be used; it only needs  * to be put on the wire for SLIP.  *  * It also indicates that, for compressed SLIP:  *  *	If the COMPRESSED_TCP bit is set in the first byte, it's  *	a COMPRESSED_TCP packet; that byte is the change byte, and  *	the COMPRESSED_TCP bit, 0x80, isn't used in the change byte.  *  *	If the upper 4 bits of the first byte are 7, it's an  *	UNCOMPRESSED_TCP packet; that byte is the first byte of  *	the UNCOMPRESSED_TCP modified IP header, with a connection  *	number in the protocol field, and with the version field  *	being 7, not 4.  *  *	Otherwise, the packet is an IPv4 packet (where the upper 4 bits  *	of the packet are 4).  *  * So this routine looks as if it's sort-of intended to handle  * compressed SLIP, although it doesn't handle UNCOMPRESSED_TCP  * correctly for that (it doesn't fix the version number and doesn't  * do anything to the protocol field), and doesn't check for COMPRESSED_TCP  * packets correctly for that (you only check the first bit - see  * B.1 in RFC 1144).  *  * But it's called for BSD/OS PPP, not SLIP - perhaps BSD/OS does weird  * things with the headers?  *  * Without a BSD/OS VJC-compressed PPP trace, or knowledge of what the  * BSD/OS VJC code does, we can't say what's the case.  *  * We therefore leave "proto" - which is the PPP protocol type - in place,  * *not* marked as unused, for now, so that GCC warnings about the  * unused argument remind us that we should fix this some day.  */
+end_comment
+
 begin_function
 name|int
 name|vjc_print
@@ -117,10 +98,6 @@ specifier|const
 name|char
 modifier|*
 name|bp
-parameter_list|,
-specifier|register
-name|u_int
-name|length
 parameter_list|,
 name|u_short
 name|proto

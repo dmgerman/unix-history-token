@@ -36,8 +36,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mobile.c,v 1.7.4.1 2002/06/01 23:51:14 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mobile.c,v 1.12.2.2 2003/11/16 08:51:33 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,31 +50,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include

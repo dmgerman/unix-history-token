@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-frag6.c,v 1.13 2001/09/17 21:58:02 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-frag6.c,v 1.16.2.3 2003/11/19 00:35:43 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,31 +52,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -100,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"addrtoname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extract.h"
 end_include
 
 begin_function
@@ -180,24 +163,23 @@ name|printf
 argument_list|(
 literal|"frag (0x%08x:%d|%ld)"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dp
 operator|->
 name|ip6f_ident
 argument_list|)
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|dp
 operator|->
 name|ip6f_offlg
+argument_list|)
 operator|&
 name|IP6F_OFF_MASK
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -205,8 +187,9 @@ expr|struct
 name|ip6_hdr
 argument_list|)
 operator|+
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ip6
 operator|->
 name|ip6_plen
@@ -235,14 +218,15 @@ name|printf
 argument_list|(
 literal|"frag (%d|%ld)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|dp
 operator|->
 name|ip6f_offlg
+argument_list|)
 operator|&
 name|IP6F_OFF_MASK
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -250,8 +234,9 @@ expr|struct
 name|ip6_hdr
 argument_list|)
 operator|+
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ip6
 operator|->
 name|ip6_plen
@@ -280,19 +265,23 @@ literal|1
 comment|/* it is meaningless to decode non-first fragment */
 if|if
 condition|(
-name|ntohs
+operator|(
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|dp
 operator|->
 name|ip6f_offlg
+argument_list|)
 operator|&
 name|IP6F_OFF_MASK
-argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
 return|return
-literal|65535
+operator|-
+literal|1
 return|;
 else|else
 endif|#
@@ -323,7 +312,8 @@ name|stdout
 argument_list|)
 expr_stmt|;
 return|return
-literal|65535
+operator|-
+literal|1
 return|;
 undef|#
 directive|undef

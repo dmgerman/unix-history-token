@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/bpf_dump.c,v 1.13 2000/12/09 02:58:45 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/bpf_dump.c,v 1.14.2.2 2003/11/16 08:51:04 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,13 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include

@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipcomp.c,v 1.13 2000/12/12 09:58:41 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipcomp.c,v 1.17.2.3 2003/11/19 00:35:45 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,31 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -141,6 +118,12 @@ directive|include
 file|"addrtoname.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extract.h"
+end_include
+
 begin_function
 name|int
 name|ipcomp_print
@@ -151,15 +134,10 @@ name|u_char
 modifier|*
 name|bp
 parameter_list|,
-specifier|register
-specifier|const
-name|u_char
-modifier|*
-name|bp2
-parameter_list|,
 name|int
 modifier|*
 name|nhdr
+name|_U_
 parameter_list|)
 block|{
 specifier|register
@@ -205,11 +183,9 @@ name|bp
 expr_stmt|;
 name|cpi
 operator|=
-operator|(
-name|u_int16_t
-operator|)
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ipcomp
 operator|->
 name|comp_cpi
@@ -309,18 +285,9 @@ endif|#
 directive|endif
 name|fail
 label|:
-if|if
-condition|(
-name|nhdr
-condition|)
-operator|*
-name|nhdr
-operator|=
+return|return
 operator|-
 literal|1
-expr_stmt|;
-return|return
-literal|65536
 return|;
 block|}
 end_function

@@ -32,8 +32,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-smb.c,v 1.20.2.4 2002/07/11 07:47:01 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-smb.c,v 1.27.2.2 2003/11/16 08:51:45 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +46,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<tcpdump-stdinc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -52,18 +59,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
 end_include
 
 begin_include
@@ -823,6 +818,7 @@ specifier|const
 name|u_char
 modifier|*
 name|dat
+name|_U_
 parameter_list|,
 specifier|const
 name|u_char
@@ -1956,6 +1952,7 @@ specifier|const
 name|u_char
 modifier|*
 name|buf
+name|_U_
 parameter_list|,
 specifier|const
 name|u_char
@@ -1963,6 +1960,9 @@ modifier|*
 name|maxbuf
 parameter_list|)
 block|{
+name|u_int
+name|wcnt
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -1983,6 +1983,13 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|wcnt
+operator|=
+name|words
+index|[
+literal|0
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|request
@@ -1995,10 +2002,7 @@ else|else
 block|{
 if|if
 condition|(
-name|words
-index|[
-literal|0
-index|]
+name|wcnt
 operator|==
 literal|1
 condition|)
@@ -2009,10 +2013,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|words
-index|[
-literal|0
-index|]
+name|wcnt
 operator|==
 literal|17
 condition|)
@@ -2023,10 +2024,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|words
-index|[
-literal|0
-index|]
+name|wcnt
 operator|==
 literal|13
 condition|)
@@ -2053,10 +2051,7 @@ name|words
 operator|+
 literal|1
 operator|+
-name|words
-index|[
-literal|0
-index|]
+name|wcnt
 operator|*
 literal|2
 argument_list|,
@@ -2073,10 +2068,7 @@ literal|1
 argument_list|,
 name|SMBMIN
 argument_list|(
-name|words
-index|[
-literal|0
-index|]
+name|wcnt
 operator|*
 literal|2
 argument_list|,
@@ -2182,6 +2174,7 @@ specifier|const
 name|u_char
 modifier|*
 name|buf
+name|_U_
 parameter_list|,
 specifier|const
 name|u_char
@@ -2189,7 +2182,7 @@ modifier|*
 name|maxbuf
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|wcnt
 decl_stmt|;
 specifier|const
@@ -2244,10 +2237,7 @@ else|else
 block|{
 if|if
 condition|(
-name|words
-index|[
-literal|0
-index|]
+name|wcnt
 operator|==
 literal|3
 condition|)
@@ -2260,10 +2250,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|words
-index|[
-literal|0
-index|]
+name|wcnt
 operator|==
 literal|13
 condition|)
@@ -2296,10 +2283,7 @@ name|words
 operator|+
 literal|1
 operator|+
-name|words
-index|[
-literal|0
-index|]
+name|wcnt
 operator|*
 literal|2
 argument_list|,
@@ -2316,10 +2300,7 @@ literal|1
 argument_list|,
 name|SMBMIN
 argument_list|(
-name|words
-index|[
-literal|0
-index|]
+name|wcnt
 operator|*
 literal|2
 argument_list|,
@@ -2837,6 +2818,8 @@ block|{
 literal|"Handle=[d]\nMode=[w]\nOffset=[D]\n"
 block|,
 literal|"Offset=[D]\n"
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -3740,6 +3723,8 @@ block|,
 literal|"Com2=[w]\nOff2=[d]\nOplockLevel=[b]\nFid=[d]\nCreateAction=[W]\nCreateTime=[T3]LastAccessTime=[T3]LastWriteTime=[T3]ChangeTime=[T3]ExtFileAttributes=[W]\nAllocationSize=[L]\nEndOfFile=[L]\nFileType=[w]\nDeviceState=[w]\nDirectory=[b]\n"
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 block|}
 block|,
@@ -3803,6 +3788,7 @@ name|smbfns
 modifier|*
 name|fn
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt_smbheader
@@ -3953,7 +3939,7 @@ decl_stmt|;
 name|int
 name|wct
 decl_stmt|;
-name|int
+name|u_int
 name|bcc
 decl_stmt|;
 name|TCHECK
@@ -4197,7 +4183,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"smb_bcc=%d\n"
+literal|"smb_bcc=%u\n"
 argument_list|,
 name|bcc
 argument_list|)
@@ -4374,7 +4360,7 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|int
+name|u_int
 name|nbt_len
 decl_stmt|;
 name|TCHECK2
@@ -4765,6 +4751,7 @@ name|nscount
 decl_stmt|,
 name|arcount
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|opcodestr

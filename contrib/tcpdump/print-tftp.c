@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-tftp.c,v 1.31 1999/11/21 09:37:03 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-tftp.c,v 1.35.2.2 2003/11/16 08:51:50 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,19 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_ifdef
@@ -90,12 +79,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -115,6 +98,12 @@ begin_include
 include|#
 directive|include
 file|"addrtoname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extract.h"
 end_include
 
 begin_comment
@@ -328,8 +317,9 @@ argument_list|)
 expr_stmt|;
 name|opcode
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|th_opcode
@@ -423,6 +413,80 @@ argument_list|(
 literal|'"'
 argument_list|)
 expr_stmt|;
+comment|/* Print the mode and any options */
+while|while
+condition|(
+operator|(
+name|p
+operator|=
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+name|strchr
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|p
+argument_list|,
+literal|'\0'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|length
+operator|<=
+call|(
+name|u_int
+call|)
+argument_list|(
+name|p
+operator|-
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+operator|&
+name|tp
+operator|->
+name|th_block
+argument_list|)
+condition|)
+break|break;
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+name|fn_print
+argument_list|(
+name|p
+argument_list|,
+name|snapend
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|i
@@ -448,8 +512,9 @@ name|printf
 argument_list|(
 literal|" block %d"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|th_block
@@ -478,8 +543,9 @@ name|err2str
 argument_list|,
 literal|"tftp-err-#%d \""
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|th_code

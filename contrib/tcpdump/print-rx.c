@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright: (c) 2000 United States Government as represented by the  *	Secretary of the Navy. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *    *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in  *      the documentation and/or other materials provided with the  *      distribution.  *   3. The names of the authors may not be used to endorse or promote  *      products derived from this software without specific prior  *      written permission.  *    * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright: (c) 2000 United States Government as represented by the  *	Secretary of the Navy. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in  *      the documentation and/or other materials provided with the  *      distribution.  *   3. The names of the authors may not be used to endorse or promote  *      products derived from this software without specific prior  *      written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_comment
@@ -19,8 +19,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.27.2.2 2002/07/10 07:17:57 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.35.2.2 2003/11/16 08:51:43 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,57 +65,10 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TIME_WITH_SYS_TIME
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -237,6 +191,7 @@ name|int
 name|packetType
 decl_stmt|;
 comment|/* Packet type */
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1802,6 +1757,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|voltype
@@ -1974,6 +1930,12 @@ literal|"delay"
 block|}
 block|,
 block|{
+literal|9
+block|,
+literal|"idle"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -2071,8 +2033,6 @@ name|ip
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2096,20 +2056,6 @@ name|int
 parameter_list|,
 name|int32_t
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ack_print
-parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2348,8 +2294,6 @@ parameter_list|(
 specifier|const
 name|u_char
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2440,6 +2384,9 @@ name|snapend
 operator|-
 name|bp
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2678,22 +2625,6 @@ name|rxh
 operator|->
 name|type
 operator|==
-name|RX_PACKET_TYPE_ACK
-condition|)
-name|ack_print
-argument_list|(
-name|bp
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|rxh
-operator|->
-name|type
-operator|==
 name|RX_PACKET_TYPE_DATA
 operator|&&
 name|EXTRACT_32BITS
@@ -2727,8 +2658,6 @@ operator|)
 name|bp2
 argument_list|,
 name|dport
-argument_list|,
-name|length
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3039,9 +2968,6 @@ name|ip
 parameter_list|,
 name|int
 name|dport
-parameter_list|,
-name|int
-name|length
 parameter_list|)
 block|{
 name|struct
@@ -3071,6 +2997,10 @@ name|bp
 operator|+
 literal|1
 operator|<=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3080,6 +3010,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|int32_t
+argument_list|)
 argument_list|)
 condition|)
 return|return;
@@ -3366,9 +3297,9 @@ define|#
 directive|define
 name|STOREATTROUT
 parameter_list|()
-value|{ unsigned long mask, i; \ 			TCHECK2(bp[0], (sizeof(int32_t)*6)); \ 			mask = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 			if (mask) printf (" StoreStatus"); \   		        if (mask& 1) { printf(" date"); DATEOUT(); } \ 			else bp += sizeof(int32_t); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \   		        if (mask& 2) printf(" owner %lu", i);  \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \   		        if (mask& 4) printf(" group %lu", i); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \   		        if (mask& 8) printf(" mode %lo", i& 07777); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \   		        if (mask& 16) printf(" segsize %lu", i); \
+value|{ unsigned long mask, i; \ 			TCHECK2(bp[0], (sizeof(int32_t)*6)); \ 			mask = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 			if (mask) printf (" StoreStatus"); \ 		        if (mask& 1) { printf(" date"); DATEOUT(); } \ 			else bp += sizeof(int32_t); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 2) printf(" owner %lu", i);  \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 4) printf(" group %lu", i); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 8) printf(" mode %lo", i& 07777); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 16) printf(" segsize %lu", i); \
 comment|/* undocumented in 3.3 docu */
-value|\   		        if (mask& 1024) printf(" fsync");  \ 		}
+value|\ 		        if (mask& 1024) printf(" fsync");  \ 		}
 end_define
 
 begin_define
@@ -3401,249 +3332,6 @@ parameter_list|)
 value|{ u_char *sp; \ 			u_char s[AFSNAMEMAX]; \ 			int k; \ 			if ((MAX) + 1> sizeof(s)) \ 				goto trunc; \ 			TCHECK2(bp[0], (MAX) * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< (MAX); k++) { \ 				*sp++ = (u_char) EXTRACT_32BITS(bp); \ 				bp += sizeof(int32_t); \ 			} \ 			s[(MAX)] = '\0'; \ 			printf(" \""); \ 			fn_print(s, NULL); \ 			printf("\""); \ 		}
 end_define
 
-begin_function
-specifier|static
-name|void
-name|ack_print
-parameter_list|(
-specifier|register
-specifier|const
-name|u_char
-modifier|*
-name|bp
-parameter_list|,
-name|int
-name|length
-parameter_list|)
-block|{
-name|u_char
-name|nAcks
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-if|if
-condition|(
-name|vflag
-operator|<=
-literal|1
-condition|)
-return|return;
-if|if
-condition|(
-name|length
-operator|<=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rx_header
-argument_list|)
-condition|)
-return|return;
-name|bp
-operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|rx_header
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Packets< firstPacket are implicitly acknowledged and may 	 * be discarded by the sender. 	 * 	 * Packets>= firstPacket+nAcks are implicitly NOT acknowledged. 	 * 	 * No packets with sequence numbers>= firstPacket should be 	 * discarded by the sender (they may thrown out at any time by 	 * the receiver) 	 */
-define|#
-directive|define
-name|RX_ACK_REASONS
-value|"RDOXSprn"
-comment|/* Requested, Duplicate, Out_of_sequence, eXceeds_window, no_Space, 	 * Ping, ping_Response, No_{progress, particular_reason}. 	 */
-if|#
-directive|if
-literal|0
-block|struct rx_ackPacket { 	  u_short bufferSpace;
-comment|/* Skip! */
-block|u_short maxSkew;
-comment|/* Skip! */
-block|u_long  firstPacket; 	  u_long  previousPacket;
-comment|/* Obsolete! */
-block|u_long  serial;
-comment|/* Serial that prompted the ack, */
-block|u_char  reason;
-comment|/* and the reason why. */
-block|u_char  nAcks; 	  u_char  acks[RX_MAXACKS];
-comment|/* Selective acks (not a bitmap). */
-block|};
-endif|#
-directive|endif
-define|#
-directive|define
-name|RX_ACK_TYPE_NACK
-value|0
-name|TCHECK2
-argument_list|(
-name|bp
-index|[
-literal|0
-index|]
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-comment|/* bufferSpace and maxSkew */
-name|bp
-operator|+=
-literal|4
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" fir %u"
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|EXTRACT_32BITS
-argument_list|(
-name|bp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bp
-operator|+=
-literal|4
-expr_stmt|;
-name|TCHECK2
-argument_list|(
-name|bp
-index|[
-literal|0
-index|]
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-comment|/* previousPacket and serial */
-name|bp
-operator|+=
-literal|4
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %u"
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|EXTRACT_32BITS
-argument_list|(
-name|bp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bp
-operator|+=
-literal|4
-expr_stmt|;
-name|TCHECK2
-argument_list|(
-name|bp
-index|[
-literal|0
-index|]
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%c"
-argument_list|,
-name|RX_ACK_REASONS
-index|[
-operator|(
-operator|*
-name|bp
-operator|-
-literal|1
-operator|)
-operator|&
-literal|07u
-index|]
-argument_list|)
-expr_stmt|;
-name|bp
-operator|+=
-literal|1
-expr_stmt|;
-comment|/* reason */
-name|TCHECK2
-argument_list|(
-name|bp
-index|[
-literal|0
-index|]
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|nAcks
-operator|=
-operator|*
-name|bp
-expr_stmt|;
-name|bp
-operator|+=
-literal|1
-expr_stmt|;
-comment|/* nAcks */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nAcks
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|TCHECK2
-argument_list|(
-name|bp
-index|[
-literal|0
-index|]
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putchar
-argument_list|(
-operator|*
-name|bp
-operator|==
-name|RX_ACK_TYPE_NACK
-condition|?
-literal|'-'
-else|:
-literal|'*'
-argument_list|)
-expr_stmt|;
-name|bp
-operator|+=
-literal|1
-expr_stmt|;
-block|}
-return|return;
-name|trunc
-label|:
-name|printf
-argument_list|(
-literal|" [|ack]"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Handle calls to the AFS file service (fs)  */
 end_comment
@@ -3674,6 +3362,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3689,6 +3380,10 @@ name|bp
 operator|+
 literal|1
 operator|<=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3698,6 +3393,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|int32_t
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -4238,6 +3934,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4449,7 +4148,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/*  		 * Otherwise, just print out the return code  		 */
+comment|/* 		 * Otherwise, just print out the return code 		 */
 name|TCHECK2
 argument_list|(
 name|bp
@@ -4519,7 +4218,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print out an AFS ACL string.  An AFS ACL is a string that has the  * following format:  *  *<positive><negative>  *<uid1><aclbits1>  * ....  *   * "positive" and "negative" are integers which contain the number of  * positive and negative ACL's in the string.  The uid/aclbits pair are  * ASCII strings containing the UID/PTS record and and a ascii number  * representing a logical OR of all the ACL permission bits  */
+comment|/*  * Print out an AFS ACL string.  An AFS ACL is a string that has the  * following format:  *  *<positive><negative>  *<uid1><aclbits1>  * ....  *  * "positive" and "negative" are integers which contain the number of  * positive and negative ACL's in the string.  The uid/aclbits pair are  * ASCII strings containing the UID/PTS record and and a ascii number  * representing a logical OR of all the ACL permission bits  */
 end_comment
 
 begin_function
@@ -4839,6 +4538,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4854,6 +4556,10 @@ name|bp
 operator|+
 literal|1
 operator|<=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4863,6 +4569,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|int32_t
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -5140,6 +4847,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -5257,6 +4967,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -5272,6 +4985,10 @@ name|bp
 operator|+
 literal|1
 operator|<=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -5281,6 +4998,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|int32_t
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -5318,8 +5036,6 @@ block|{
 name|ubik_print
 argument_list|(
 name|bp
-argument_list|,
-name|length
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5745,6 +5461,9 @@ if|if
 condition|(
 name|length
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6113,6 +5832,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6128,6 +5850,10 @@ name|bp
 operator|+
 literal|1
 operator|<=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6137,6 +5863,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|int32_t
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -6174,8 +5901,6 @@ block|{
 name|ubik_print
 argument_list|(
 name|bp
-argument_list|,
-name|length
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6466,6 +6191,9 @@ if|if
 condition|(
 name|length
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6684,9 +6412,8 @@ name|printf
 argument_list|(
 literal|" %s"
 argument_list|,
-name|inet_ntoa
+name|intoa
 argument_list|(
-operator|*
 operator|(
 operator|(
 expr|struct
@@ -6695,6 +6422,8 @@ operator|*
 operator|)
 name|bp
 operator|)
+operator|->
+name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6977,9 +6706,8 @@ name|printf
 argument_list|(
 literal|" %s"
 argument_list|,
-name|inet_ntoa
+name|intoa
 argument_list|(
-operator|*
 operator|(
 operator|(
 expr|struct
@@ -6988,6 +6716,8 @@ operator|*
 operator|)
 name|bp
 operator|)
+operator|->
+name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7446,6 +7176,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -7461,6 +7194,10 @@ name|bp
 operator|+
 literal|1
 operator|<=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -7470,6 +7207,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|int32_t
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -7507,8 +7245,6 @@ block|{
 name|ubik_print
 argument_list|(
 name|bp
-argument_list|,
-name|length
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7779,6 +7515,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -7902,6 +7641,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -7917,6 +7659,10 @@ name|bp
 operator|+
 literal|1
 operator|<=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -7926,6 +7672,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|int32_t
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -8004,6 +7751,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -8103,6 +7853,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -8118,6 +7871,10 @@ name|bp
 operator|+
 literal|1
 operator|<=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -8127,6 +7884,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|int32_t
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -8408,6 +8166,9 @@ if|if
 condition|(
 name|length
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -8544,9 +8305,6 @@ specifier|const
 name|u_char
 modifier|*
 name|bp
-parameter_list|,
-name|int
-name|length
 parameter_list|)
 block|{
 name|int
@@ -8939,6 +8697,9 @@ if|if
 condition|(
 name|length
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -9094,6 +8855,9 @@ if|if
 condition|(
 name|length
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -9216,7 +8980,7 @@ name|reason
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Okay, now we print out the ack array.  The way _this_ works 	 * is that we start at "first", and step through the ack array. 	 * If we have a contiguous range of acks/nacks, try to 	 * collapse them into a range. 	 * 	 * If you're really clever, you might have noticed that this 	 * doesn't seem quite correct.  Specifically, due to structure 	 * padding, sizeof(struct rx_ackPacket) - RX_MAXACKS won't actually 	 * yield the start of the ack array (because RX_MAXACKS is 255 	 * and the structure will likely get padded to a 2 or 4 byte 	 * boundary).  However, this is the way it's implemented inside 	 * of AFS - the start of the extra fields are at  	 * sizeof(struct rx_ackPacket) - RX_MAXACKS + nAcks, which _isn't_ 	 * the exact start of the ack array.  Sigh.  That's why we aren't 	 * using bp, but instead use rxa->acks[].  But nAcks gets added 	 * to bp after this, so bp ends up at the right spot.  Go figure. 	 */
+comment|/* 	 * Okay, now we print out the ack array.  The way _this_ works 	 * is that we start at "first", and step through the ack array. 	 * If we have a contiguous range of acks/nacks, try to 	 * collapse them into a range. 	 * 	 * If you're really clever, you might have noticed that this 	 * doesn't seem quite correct.  Specifically, due to structure 	 * padding, sizeof(struct rx_ackPacket) - RX_MAXACKS won't actually 	 * yield the start of the ack array (because RX_MAXACKS is 255 	 * and the structure will likely get padded to a 2 or 4 byte 	 * boundary).  However, this is the way it's implemented inside 	 * of AFS - the start of the extra fields are at 	 * sizeof(struct rx_ackPacket) - RX_MAXACKS + nAcks, which _isn't_ 	 * the exact start of the ack array.  Sigh.  That's why we aren't 	 * using bp, but instead use rxa->acks[].  But nAcks gets added 	 * to bp after this, so bp ends up at the right spot.  Go figure. 	 */
 if|if
 condition|(
 name|rxa

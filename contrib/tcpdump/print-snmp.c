@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-snmp.c,v 1.50.4.2 2002/07/20 23:33:08 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-snmp.c,v 1.56.2.3 2004/03/23 06:59:59 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,19 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -106,6 +95,7 @@ comment|/*  * Universal ASN.1 types  * (we only care about the tag values for th
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|Universal
@@ -178,6 +168,7 @@ comment|/*  * Application-wide ASN.1 types from the Internet SMI and their tags 
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|Application
@@ -230,6 +221,7 @@ comment|/*  * Context-specific ASN.1 types for the SNMP PDUs and their tags  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|Context
@@ -348,6 +340,7 @@ comment|/*  * Context-specific ASN.1 types for the SNMP Exceptions and their tag
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|Exceptions
@@ -381,6 +374,7 @@ comment|/*  * Private ASN.1 types  * The Internet SMI does not specify any  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|Private
@@ -397,6 +391,7 @@ comment|/*  * error-status values for any SNMP PDU  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|ErrorStatus
@@ -452,7 +447,7 @@ parameter_list|(
 name|e
 parameter_list|)
 define|\
-value|( e>= 0&& e< sizeof(ErrorStatus)/sizeof(ErrorStatus[0]) \ 		? ErrorStatus[e] \ 		: (snprintf(errbuf, sizeof(errbuf), "err=%u", e), errbuf))
+value|( e>= 0&& (size_t)e< sizeof(ErrorStatus)/sizeof(ErrorStatus[0]) \ 		? ErrorStatus[e] \ 		: (snprintf(errbuf, sizeof(errbuf), "err=%u", e), errbuf))
 end_define
 
 begin_comment
@@ -460,6 +455,7 @@ comment|/*  * generic-trap values in the SNMP Trap-PDU  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|GenericTrap
@@ -482,7 +478,7 @@ literal|"enterpriseSpecific"
 define|#
 directive|define
 name|GT_ENTERPRISE
-value|7
+value|6
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -495,7 +491,7 @@ parameter_list|(
 name|t
 parameter_list|)
 define|\
-value|( t>= 0&& t< sizeof(GenericTrap)/sizeof(GenericTrap[0]) \ 		? GenericTrap[t] \ 		: (snprintf(buf, sizeof(buf), "gt=%d", t), buf))
+value|( t>= 0&& (size_t)t< sizeof(GenericTrap)/sizeof(GenericTrap[0]) \ 		? GenericTrap[t] \ 		: (snprintf(buf, sizeof(buf), "gt=%d", t), buf))
 end_define
 
 begin_comment
@@ -519,10 +515,12 @@ end_comment
 begin_struct
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -590,6 +588,7 @@ comment|/*  * defined forms for ASN.1 types  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|Form
@@ -620,6 +619,7 @@ begin_struct
 struct|struct
 name|obj
 block|{
+specifier|const
 name|char
 modifier|*
 name|desc
@@ -668,6 +668,7 @@ begin_struct
 struct|struct
 name|obj_abrev
 block|{
+specifier|const
 name|char
 modifier|*
 name|prefix
@@ -679,6 +680,7 @@ modifier|*
 name|node
 decl_stmt|;
 comment|/* pointer into object table */
+specifier|const
 name|char
 modifier|*
 name|oid
@@ -899,6 +901,7 @@ comment|/*  * SNMP versions recognized by this module  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|SnmpVersion
@@ -1360,7 +1363,7 @@ operator|&
 name|ASN_BIT8
 condition|)
 block|{
-name|int
+name|u_int32_t
 name|noct
 init|=
 name|elem
@@ -2280,7 +2283,7 @@ name|elem
 operator|->
 name|asnlen
 decl_stmt|;
-name|int
+name|u_int32_t
 name|i
 decl_stmt|;
 switch|switch
@@ -3014,7 +3017,7 @@ name|asnlen
 init|;
 name|i
 operator|--
-operator|>
+operator|!=
 literal|0
 condition|;
 name|p
@@ -4665,6 +4668,9 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|count
 operator|<
 name|length
@@ -5948,6 +5954,9 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|count
 operator|<
 name|length
@@ -6128,7 +6137,7 @@ condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"} "
+literal|" } "
 argument_list|,
 name|stdout
 argument_list|)
@@ -7018,6 +7027,9 @@ name|count
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|count
 operator|<
 name|length
@@ -7492,6 +7504,9 @@ name|count
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|count
 operator|<
 name|length
@@ -7801,6 +7816,9 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|count
 operator|<
 name|length

@@ -210,6 +210,76 @@ name|USE_ETHER_NTOHOST
 end_undef
 
 begin_comment
+comment|/* define if libpcap has pcap_version */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PCAP_VERSION
+end_undef
+
+begin_comment
+comment|/* define if libpcap has pcap_debug */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PCAP_DEBUG
+end_undef
+
+begin_comment
+comment|/* define if libpcap has yydebug */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_YYDEBUG
+end_undef
+
+begin_comment
+comment|/* define if libpcap has pcap_list_datalinks() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PCAP_LIST_DATALINKS
+end_undef
+
+begin_comment
+comment|/* define if libpcap has pcap_set_datalink() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PCAP_SET_DATALINK
+end_undef
+
+begin_comment
+comment|/* define if libpcap has pcap_datalink_name_to_val() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PCAP_DATALINK_NAME_TO_VAL
+end_undef
+
+begin_comment
+comment|/* define if libpcap has pcap_datalink_val_to_description() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PCAP_DATALINK_VAL_TO_DESCRIPTION
+end_undef
+
+begin_comment
 comment|/* define if unaligned memory accesses fail */
 end_comment
 
@@ -270,6 +340,12 @@ end_comment
 begin_undef
 undef|#
 directive|undef
+name|int8_t
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|int16_t
 end_undef
 
@@ -315,6 +391,26 @@ begin_undef
 undef|#
 directive|undef
 name|const
+end_undef
+
+begin_comment
+comment|/* Define if you have the dnet_htoa function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_DNET_HTOA
+end_undef
+
+begin_comment
+comment|/* Define if you have a dnet_htoa declaration in<netdnet/dnetdb.h>.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_NETDNET_DNETDB_H_DNET_HTOA
 end_undef
 
 end_unit

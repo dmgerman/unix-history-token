@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000, Richard Sharpe  *  * This software may be distributed either under the terms of the   * BSD-style licence that accompanies tcpdump or under the GNU GPL   * version 2 or later.  *  * print-beep.c  *  */
+comment|/*  * Copyright (C) 2000, Richard Sharpe  *  * This software may be distributed either under the terms of the  * BSD-style licence that accompanies tcpdump or under the GNU GPL  * version 2 or later.  *  * print-beep.c  *  */
 end_comment
 
 begin_ifndef
@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-beep.c,v 1.1.2.1 2002/07/11 07:47:01 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-beep.c,v 1.4.2.2 2003/11/16 08:51:12 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,13 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_ifdef
@@ -92,12 +87,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -108,7 +97,7 @@ file|"extract.h"
 end_include
 
 begin_comment
-comment|/* Check for a string but not go beyond length  * Return TRUE on match, FALSE otherwise  *   * Looks at the first few chars up to tl1 ...  */
+comment|/* Check for a string but not go beyond length  * Return TRUE on match, FALSE otherwise  *  * Looks at the first few chars up to tl1 ...  */
 end_comment
 
 begin_function_decl

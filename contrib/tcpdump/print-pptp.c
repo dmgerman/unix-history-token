@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pptp.c,v 1.3 2001/10/31 08:54:31 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pptp.c,v 1.9.2.2 2003/11/16 08:51:39 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,37 +46,25 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<tcpdump-stdinc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extract.h"
 end_include
 
 begin_decl_stmt
@@ -308,6 +297,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|pptp_message_type_string
@@ -822,7 +812,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* attributes that appear more than once in above messages:     Number of             occurence    attributes   --------------------------------------       2         u_int32_t bearer_cap;       2         u_int32_t bearer_type;       6         u_int16_t call_id;       2         u_int16_t call_ser;       2         u_int16_t cause_code;       2         u_int32_t conn_speed;       6         u_int8_t err_code;       2         u_int16_t firm_rev;       2         u_int32_t framing_cap;       2         u_int32_t framing_type;       2         u_char hostname[64];       2         u_int32_t id;       2         u_int16_t max_channel;       5         u_int16_t peer_call_id;       2         u_int32_t phy_chan_id;       4         u_int16_t pkt_proc_delay;       2         u_int16_t proto_ver;       4         u_int16_t recv_winsiz;       2         u_int8_t reserved1;       9         u_int16_t reserved1;       6         u_int8_t result_code;       2         u_char subaddr[64];       2         u_char vendor[64];    so I will prepare print out functions for these attributes (except for    reserved*). */
+comment|/* attributes that appear more than once in above messages:     Number of    occurence    attributes   --------------------------------------       2         u_int32_t bearer_cap;       2         u_int32_t bearer_type;       6         u_int16_t call_id;       2         u_int16_t call_ser;       2         u_int16_t cause_code;       2         u_int32_t conn_speed;       6         u_int8_t err_code;       2         u_int16_t firm_rev;       2         u_int32_t framing_cap;       2         u_int32_t framing_type;       2         u_char hostname[64];       2         u_int32_t id;       2         u_int16_t max_channel;       5         u_int16_t peer_call_id;       2         u_int32_t phy_chan_id;       4         u_int16_t pkt_proc_delay;       2         u_int16_t proto_ver;       4         u_int16_t recv_winsiz;       2         u_int8_t reserved1;       9         u_int16_t reserved1;       6         u_int8_t result_code;       2         u_char subaddr[64];       2         u_char vendor[64];    so I will prepare print out functions for these attributes (except for   reserved*). */
 end_comment
 
 begin_comment
@@ -859,9 +849,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
 name|bearer_cap
 argument_list|)
 operator|&
@@ -876,9 +865,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
 name|bearer_cap
 argument_list|)
 operator|&
@@ -917,9 +905,8 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
 name|bearer_type
 argument_list|)
 condition|)
@@ -984,9 +971,8 @@ name|printf
 argument_list|(
 literal|" CALL_ID(%u)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
 name|call_id
 argument_list|)
 argument_list|)
@@ -1009,9 +995,8 @@ name|printf
 argument_list|(
 literal|" CALL_SER_NUM(%u)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
 name|call_ser
 argument_list|)
 argument_list|)
@@ -1034,9 +1019,8 @@ name|printf
 argument_list|(
 literal|" CAUSE_CODE(%u)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
 name|cause_code
 argument_list|)
 argument_list|)
@@ -1057,15 +1041,10 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|" CONN_SPEED(%lu)"
+literal|" CONN_SPEED(%u)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
 name|conn_speed
 argument_list|)
 argument_list|)
@@ -1198,9 +1177,8 @@ name|printf
 argument_list|(
 literal|" FIRM_REV(%u)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
 name|firm_rev
 argument_list|)
 argument_list|)
@@ -1226,9 +1204,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
 name|framing_cap
 argument_list|)
 operator|&
@@ -1244,9 +1221,8 @@ comment|/* Async */
 block|}
 if|if
 condition|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
 name|framing_cap
 argument_list|)
 operator|&
@@ -1286,9 +1262,8 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
 name|framing_type
 argument_list|)
 condition|)
@@ -1373,15 +1348,10 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|" ID(%lu)"
+literal|" ID(%u)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
 name|id
 argument_list|)
 argument_list|)
@@ -1404,9 +1374,8 @@ name|printf
 argument_list|(
 literal|" MAX_CHAN(%u)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
 name|max_channel
 argument_list|)
 argument_list|)
@@ -1429,9 +1398,8 @@ name|printf
 argument_list|(
 literal|" PEER_CALL_ID(%u)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
 name|peer_call_id
 argument_list|)
 argument_list|)
@@ -1452,15 +1420,10 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|" PHY_CHAN_ID(%lu)"
+literal|" PHY_CHAN_ID(%u)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
 name|phy_chan_id
 argument_list|)
 argument_list|)
@@ -1483,9 +1446,8 @@ name|printf
 argument_list|(
 literal|" PROC_DELAY(%u)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
 name|pkt_proc_delay
 argument_list|)
 argument_list|)
@@ -1509,17 +1471,15 @@ argument_list|(
 literal|" PROTO_VER(%u.%u)"
 argument_list|,
 comment|/* Version.Revision */
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
 name|proto_ver
 argument_list|)
 operator|>>
 literal|8
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
 name|proto_ver
 argument_list|)
 operator|&
@@ -1544,9 +1504,8 @@ name|printf
 argument_list|(
 literal|" RECV_WIN(%u)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
 name|recv_winsiz
 argument_list|)
 argument_list|)
@@ -2664,14 +2623,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" MIN_BPS(%lu)"
+literal|" MIN_BPS(%u)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|min_bps
@@ -2687,14 +2643,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" MAX_BPS(%lu)"
+literal|" MAX_BPS(%u)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|max_bps
@@ -2772,8 +2725,9 @@ name|printf
 argument_list|(
 literal|" PHONE_NO_LEN(%u)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|phone_no_len
@@ -3101,8 +3055,9 @@ name|printf
 argument_list|(
 literal|" DIALED_NO_LEN(%u)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|dialed_no_len
@@ -3120,8 +3075,9 @@ name|printf
 argument_list|(
 literal|" DIALING_NO_LEN(%u)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|dialing_no_len
@@ -3677,14 +3633,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" CRC_ERR(%lu)"
+literal|" CRC_ERR(%u)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|crc_err
@@ -3700,14 +3653,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" FRAMING_ERR(%lu)"
+literal|" FRAMING_ERR(%u)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|framing_err
@@ -3723,14 +3673,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" HARDWARE_OVERRUN(%lu)"
+literal|" HARDWARE_OVERRUN(%u)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|hardware_overrun
@@ -3746,14 +3693,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" BUFFER_OVERRUN(%lu)"
+literal|" BUFFER_OVERRUN(%u)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|buffer_overrun
@@ -3769,14 +3713,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" TIMEOUT_ERR(%lu)"
+literal|" TIMEOUT_ERR(%u)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|timeout_err
@@ -3792,14 +3733,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" ALIGN_ERR(%lu)"
+literal|" ALIGN_ERR(%u)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|align_err
@@ -3873,14 +3811,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" SEND_ACCM(0x%08lx)"
+literal|" SEND_ACCM(0x%08x)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|send_accm
@@ -3896,14 +3831,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" RECV_ACCM(0x%08lx)"
+literal|" RECV_ACCM(0x%08x)"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ptr
 operator|->
 name|recv_accm
@@ -3931,9 +3863,6 @@ specifier|const
 name|u_char
 modifier|*
 name|dat
-parameter_list|,
-name|u_int
-name|length
 parameter_list|)
 block|{
 specifier|const
@@ -3978,8 +3907,9 @@ name|printf
 argument_list|(
 literal|" Length=%u"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|hdr
 operator|->
 name|length
@@ -4001,8 +3931,9 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|hdr
 operator|->
 name|msg_type
@@ -4045,8 +3976,9 @@ argument_list|)
 expr_stmt|;
 name|mc
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|hdr
 operator|->
 name|magic_cookie
@@ -4093,8 +4025,9 @@ argument_list|)
 expr_stmt|;
 name|ctrl_msg_type
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|hdr
 operator|->
 name|ctrl_msg_type

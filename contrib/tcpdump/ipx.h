@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IPX protocol formats   *  * @(#) $Header: /tcpdump/master/tcpdump/ipx.h,v 1.4 2001/01/15 03:23:59 guy Exp $  */
+comment|/*  * IPX protocol formats  *  * @(#) $Header: /tcpdump/master/tcpdump/ipx.h,v 1.8 2002/12/11 07:13:54 guy Exp $  */
 end_comment
 
 begin_comment
@@ -125,7 +125,6 @@ name|srcSkt
 decl_stmt|;
 comment|/* source socket */
 block|}
-name|ipx_hdr_t
 struct|;
 end_struct
 

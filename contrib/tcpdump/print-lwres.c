@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lwres.c,v 1.5 2001/06/26 06:19:05 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lwres.c,v 1.10.2.3 2004/03/24 01:54:58 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,19 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -605,7 +594,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|p
@@ -885,8 +874,9 @@ argument_list|)
 expr_stmt|;
 name|l
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|ap
 operator|->
 name|length
@@ -912,26 +902,19 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|+
-name|l
-operator|>
-operator|(
-specifier|const
-name|char
+name|TCHECK2
+argument_list|(
 operator|*
-operator|)
-name|snapend
-condition|)
-goto|goto
-name|trunc
-goto|;
+name|p
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ap
 operator|->
 name|family
@@ -942,6 +925,16 @@ case|case
 literal|1
 case|:
 comment|/* IPv4 */
+if|if
+condition|(
+name|l
+operator|<
+literal|4
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
 literal|" %s"
@@ -968,6 +961,16 @@ case|case
 literal|2
 case|:
 comment|/* IPv6 */
+if|if
+condition|(
+name|l
+operator|<
+literal|16
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
 literal|" %s"
@@ -992,14 +995,11 @@ directive|endif
 default|default:
 name|printf
 argument_list|(
-literal|" %lu/"
+literal|" %u/"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|ap
 operator|->
 name|family
@@ -1111,8 +1111,9 @@ argument_list|)
 expr_stmt|;
 name|v
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|version
@@ -1149,8 +1150,9 @@ operator|*
 operator|)
 name|np
 operator|+
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|length
@@ -1162,8 +1164,9 @@ goto|;
 block|}
 name|response
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|pktflags
@@ -1174,11 +1177,9 @@ expr_stmt|;
 comment|/* opcode and pktflags */
 name|v
 operator|=
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|opcode
@@ -1211,8 +1212,9 @@ expr_stmt|;
 comment|/* pktflags */
 name|v
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|pktflags
@@ -1247,14 +1249,11 @@ expr_stmt|;
 comment|/*)*/
 name|printf
 argument_list|(
-literal|"serial:0x%lx"
+literal|"serial:0x%x"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|serial
@@ -1263,14 +1262,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" result:0x%lx"
+literal|" result:0x%x"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|result
@@ -1279,14 +1275,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" recvlen:%lu"
+literal|" recvlen:%u"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|recvlength
@@ -1305,8 +1298,9 @@ name|printf
 argument_list|(
 literal|" authtype:0x%x"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|authtype
@@ -1317,8 +1311,9 @@ name|printf
 argument_list|(
 literal|" authlen:%u"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|authlength
@@ -1370,8 +1365,9 @@ name|NULL
 expr_stmt|;
 switch|switch
 condition|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|opcode
@@ -1426,8 +1422,9 @@ argument_list|)
 expr_stmt|;
 name|l
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|gabn
 operator|->
 name|namelen
@@ -1443,14 +1440,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" flags:0x%lx"
+literal|" flags:0x%x"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|gabn
 operator|->
 name|flags
@@ -1460,11 +1454,9 @@ expr_stmt|;
 block|}
 name|v
 operator|=
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|gabn
 operator|->
 name|addrtypes
@@ -1584,14 +1576,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" flags:0x%lx"
+literal|" flags:0x%x"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|gnba
 operator|->
 name|flags
@@ -1668,14 +1657,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" flags:0x%lx"
+literal|" flags:0x%x"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|flags
@@ -1693,8 +1679,9 @@ name|ns_type2str
 argument_list|,
 literal|"Type%d"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|rdtype
@@ -1704,8 +1691,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|rdclass
@@ -1713,7 +1701,7 @@ argument_list|)
 operator|!=
 name|C_IN
 condition|)
-empty_stmt|;
+block|{
 name|printf
 argument_list|(
 literal|" %s"
@@ -1724,8 +1712,9 @@ name|ns_class2str
 argument_list|,
 literal|"Class%d"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|rdclass
@@ -1733,6 +1722,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* XXX grbn points to packed struct */
 name|s
 operator|=
@@ -1755,9 +1745,10 @@ argument_list|)
 expr_stmt|;
 name|l
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-name|gabn
+operator|&
+name|grbn
 operator|->
 name|namelen
 argument_list|)
@@ -1812,7 +1803,7 @@ name|l
 decl_stmt|,
 name|na
 decl_stmt|;
-name|int
+name|u_int32_t
 name|i
 decl_stmt|;
 name|gabn
@@ -1829,8 +1820,9 @@ name|NULL
 expr_stmt|;
 switch|switch
 condition|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|opcode
@@ -1885,8 +1877,9 @@ argument_list|)
 expr_stmt|;
 name|l
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|gabn
 operator|->
 name|realnamelen
@@ -1902,14 +1895,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" flags:0x%lx"
+literal|" flags:0x%x"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|gabn
 operator|->
 name|flags
@@ -1921,15 +1911,17 @@ name|printf
 argument_list|(
 literal|" %u/%u"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|gabn
 operator|->
 name|naliases
 argument_list|)
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|gabn
 operator|->
 name|naddrs
@@ -1961,8 +1953,9 @@ expr_stmt|;
 comment|/* aliases */
 name|na
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|gabn
 operator|->
 name|naliases
@@ -2006,8 +1999,9 @@ block|}
 comment|/* addrs */
 name|na
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|gabn
 operator|->
 name|naddrs
@@ -2097,8 +2091,9 @@ argument_list|)
 expr_stmt|;
 name|l
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|gnba
 operator|->
 name|realnamelen
@@ -2114,14 +2109,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" flags:0x%lx"
+literal|" flags:0x%x"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|gnba
 operator|->
 name|flags
@@ -2133,8 +2125,9 @@ name|printf
 argument_list|(
 literal|" %u"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|gnba
 operator|->
 name|naliases
@@ -2166,8 +2159,9 @@ expr_stmt|;
 comment|/* aliases */
 name|na
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|gnba
 operator|->
 name|naliases
@@ -2242,14 +2236,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" flags:0x%lx"
+literal|" flags:0x%x"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|flags
@@ -2267,8 +2258,9 @@ name|ns_type2str
 argument_list|,
 literal|"Type%d"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|rdtype
@@ -2278,8 +2270,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|rdclass
@@ -2287,7 +2280,7 @@ argument_list|)
 operator|!=
 name|C_IN
 condition|)
-empty_stmt|;
+block|{
 name|printf
 argument_list|(
 literal|" %s"
@@ -2298,8 +2291,9 @@ name|ns_class2str
 argument_list|,
 literal|"Class%d"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|rdclass
@@ -2307,6 +2301,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|" TTL "
@@ -2314,8 +2309,9 @@ argument_list|)
 expr_stmt|;
 name|relts_print
 argument_list|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|ttl
@@ -2326,15 +2322,17 @@ name|printf
 argument_list|(
 literal|" %u/%u"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|nrdatas
 argument_list|)
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|nsigs
@@ -2384,8 +2382,9 @@ expr_stmt|;
 comment|/* rdatas */
 name|na
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|nrdatas
@@ -2430,8 +2429,9 @@ block|}
 comment|/* sigs */
 name|na
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|grbn
 operator|->
 name|nsigs
@@ -2486,8 +2486,9 @@ label|:
 comment|/* length mismatch */
 if|if
 condition|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|length
@@ -2498,14 +2499,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" [len: %lu != %u]"
+literal|" [len: %u != %u]"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|length
@@ -2529,8 +2527,9 @@ operator|*
 operator|)
 name|np
 operator|+
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|np
 operator|->
 name|length

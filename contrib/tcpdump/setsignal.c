@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/setsignal.c,v 1.7 2000/07/11 00:49:03 assar Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/setsignal.c,v 1.9.2.2 2003/11/16 08:51:56 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,7 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -95,7 +96,7 @@ file|"setsignal.h"
 end_include
 
 begin_comment
-comment|/*  * An os independent signal() with BSD semantics, e.g. the signal  * catcher is restored following service of the signal.  *  * When sigset() is available, signal() has SYSV semantics and sigset()  * has BSD semantics and call interface. Unfortunately, Linux does not  * have sigset() so we use the more complicated sigaction() interface  * there.  *  * Did I mention that signals suck?  */
+comment|/*  * An OS-independent signal() with, whenever possible, partial BSD  * semantics, i.e. the signal handler is restored following service  * of the signal, but system calls are *not* restarted, so that if  * "pcap_breakloop()" is called in a signal handler in a live capture,  * the read/recvfrom/whatever in the live capture doesn't get restarted,  * it returns -1 and sets "errno" to EINTR, so we can break out of the  * live capture loop.  *  * We use "sigaction()" if available.  We don't specify that the signal  * should restart system calls, so that should always do what we want.  *  * Otherwise, if "sigset()" is available, it probably has BSD semantics  * while "signal()" has traditional semantics, so we use "sigset()"; it  * might cause system calls to be restarted for the signal, however.  * I don't know whether, in any systems where it did cause system calls to  * be restarted, there was a way to ask it not to do so; there may no  * longer be any interesting systems without "sigaction()", however,  * and, if there are, they might have "sigvec()" with SV_INTERRUPT  * (which I think first appeared in 4.3BSD).  *  * Otherwise, we use "signal()" - which means we might get traditional  * semantics, wherein system calls don't get restarted *but* the  * signal handler is reset to SIG_DFL and the signal is not blocked,  * so that a subsequent signal would kill the process immediately.  *  * Did I mention that signals suck?  At least in POSIX-compliant systems  * they suck far less, as those systems have "sigaction()".  */
 end_comment
 
 begin_macro
@@ -138,17 +139,6 @@ name|sa_handler
 operator|=
 name|func
 block|;
-ifdef|#
-directive|ifdef
-name|SA_RESTART
-name|new
-operator|.
-name|sa_flags
-operator||=
-name|SA_RESTART
-block|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sigaction

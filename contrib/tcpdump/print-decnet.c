@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-decnet.c,v 1.33 2001/09/17 21:57:59 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-decnet.c,v 1.36.2.2 2003/11/16 08:51:16 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,19 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_struct_decl
@@ -75,7 +64,7 @@ end_struct_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_LIBDNET
+name|HAVE_NETDNET_DNETDB_H
 end_ifdef
 
 begin_include
@@ -88,12 +77,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -111,12 +94,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -272,11 +249,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_LIBDNET
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_NETDNET_DNETDB_H_DNET_HTOA
+end_ifndef
 
 begin_function_decl
 specifier|extern
@@ -2205,9 +2182,11 @@ specifier|const
 name|char
 modifier|*
 name|elp
+name|_U_
 parameter_list|,
 name|u_int
 name|len
+name|_U_
 parameter_list|)
 block|{
 comment|/* Not enough examples available for me to debug this */
@@ -2226,6 +2205,7 @@ name|nspp
 parameter_list|,
 name|u_int
 name|nsplen
+name|_U_
 parameter_list|)
 block|{
 specifier|const
@@ -4400,7 +4380,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_LIBDNET
+name|HAVE_DNET_HTOA
 name|struct
 name|dn_naddr
 name|dna

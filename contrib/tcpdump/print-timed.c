@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-timed.c,v 1.3 2001/05/17 18:33:23 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-timed.c,v 1.7.2.2 2003/11/16 08:51:51 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,19 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -84,8 +73,15 @@ directive|include
 file|"interface.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extract.h"
+end_include
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|tsptype
@@ -156,9 +152,6 @@ specifier|const
 name|u_char
 modifier|*
 name|bp
-parameter_list|,
-name|u_int
-name|length
 parameter_list|)
 block|{
 define|#
@@ -392,11 +385,9 @@ return|return;
 block|}
 name|sec
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|(
-name|long
-operator|)
+operator|&
 name|tsp
 operator|->
 name|tsp_time
@@ -406,11 +397,9 @@ argument_list|)
 expr_stmt|;
 name|usec
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|(
-name|long
-operator|)
+operator|&
 name|tsp
 operator|->
 name|tsp_time

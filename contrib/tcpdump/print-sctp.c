@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sctp.c,v 1.7.2.1 2002/07/10 07:20:57 guy Exp $ (NETLAB/PEL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sctp.c,v 1.13.2.2 2003/11/16 08:51:44 guy Exp $ (NETLAB/PEL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,25 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -82,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
 end_include
 
 begin_include
@@ -364,8 +341,9 @@ comment|/*    sctpPacketLength -= sizeof(struct sctpHeader);  packet length  */
 comment|/*  			      is now only as long as the payload  */
 name|sourcePort
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|sctpPktHdr
 operator|->
 name|source
@@ -373,8 +351,9 @@ argument_list|)
 expr_stmt|;
 name|destPort
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|sctpPktHdr
 operator|->
 name|destination
@@ -386,15 +365,6 @@ name|INET6
 if|if
 condition|(
 name|ip6
-condition|)
-block|{
-if|if
-condition|(
-name|ip6
-operator|->
-name|ip6_nxt
-operator|==
-name|IPPROTO_SCTP
 condition|)
 block|{
 operator|(
@@ -427,34 +397,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%d> %d: sctp"
-argument_list|,
-name|sourcePort
-argument_list|,
-name|destPort
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
 endif|#
 directive|endif
 comment|/*INET6*/
-block|{
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_p
-operator|==
-name|IPPROTO_SCTP
-condition|)
 block|{
 operator|(
 name|void
@@ -484,22 +429,6 @@ argument_list|,
 name|destPort
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%d> %d: sctp"
-argument_list|,
-name|sourcePort
-argument_list|,
-name|destPort
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|fflush
 argument_list|(
@@ -603,8 +532,9 @@ operator|*
 operator|)
 name|chunkDescPtr
 operator|+
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|chunkDescPtr
 operator|->
 name|chunkLength
@@ -613,8 +543,9 @@ operator|)
 expr_stmt|;
 name|align
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|chunkDescPtr
 operator|->
 name|chunkLength
@@ -790,11 +721,9 @@ name|printf
 argument_list|(
 literal|"[TSN: %u] "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dataHdrPtr
 operator|->
 name|TSN
@@ -805,8 +734,9 @@ name|printf
 argument_list|(
 literal|"[SID: %u] "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|dataHdrPtr
 operator|->
 name|streamId
@@ -817,8 +747,9 @@ name|printf
 argument_list|(
 literal|"[SSEQ %u] "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|dataHdrPtr
 operator|->
 name|sequence
@@ -829,11 +760,9 @@ name|printf
 argument_list|(
 literal|"[PPID 0x%x] "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|dataHdrPtr
 operator|->
 name|payloadtype
@@ -888,6 +817,44 @@ argument_list|(
 literal|":"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|htons
+argument_list|(
+name|chunkDescPtr
+operator|->
+name|chunkLength
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctpDataPart
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctpChunkDesc
+argument_list|)
+operator|+
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bogus chunk length %u]"
+argument_list|,
+name|htons
+argument_list|(
+name|chunkDescPtr
+operator|->
+name|chunkLength
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|default_print
 argument_list|(
 name|payloadPtr
@@ -899,19 +866,21 @@ operator|->
 name|chunkLength
 argument_list|)
 operator|-
-literal|1
-operator|-
+operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|sctpDataPart
 argument_list|)
-operator|-
+operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|sctpChunkDesc
 argument_list|)
+operator|+
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -957,11 +926,9 @@ name|printf
 argument_list|(
 literal|"[init tag: %u] "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|init
 operator|->
 name|initTag
@@ -972,11 +939,9 @@ name|printf
 argument_list|(
 literal|"[rwnd: %u] "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|init
 operator|->
 name|rcvWindowCredit
@@ -987,8 +952,9 @@ name|printf
 argument_list|(
 literal|"[OS: %u] "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|init
 operator|->
 name|NumPreopenStreams
@@ -999,8 +965,9 @@ name|printf
 argument_list|(
 literal|"[MIS: %u] "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|init
 operator|->
 name|MaxInboundStreams
@@ -1011,11 +978,9 @@ name|printf
 argument_list|(
 literal|"[init TSN: %u] "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|init
 operator|->
 name|initialTSN
@@ -1082,11 +1047,9 @@ name|printf
 argument_list|(
 literal|"[init tag: %u] "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|init
 operator|->
 name|initTag
@@ -1097,11 +1060,9 @@ name|printf
 argument_list|(
 literal|"[rwnd: %u] "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|init
 operator|->
 name|rcvWindowCredit
@@ -1112,8 +1073,9 @@ name|printf
 argument_list|(
 literal|"[OS: %u] "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|init
 operator|->
 name|NumPreopenStreams
@@ -1124,8 +1086,9 @@ name|printf
 argument_list|(
 literal|"[MIS: %u] "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|init
 operator|->
 name|MaxInboundStreams
@@ -1136,11 +1099,9 @@ name|printf
 argument_list|(
 literal|"[init TSN: %u] "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|init
 operator|->
 name|initialTSN
@@ -1223,11 +1184,9 @@ name|printf
 argument_list|(
 literal|"[cum ack %u] "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|sack
 operator|->
 name|highestConseqTSN
@@ -1238,11 +1197,9 @@ name|printf
 argument_list|(
 literal|"[a_rwnd %u] "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|sack
 operator|->
 name|updatedRwnd
@@ -1253,8 +1210,9 @@ name|printf
 argument_list|(
 literal|"[#gap acks %u] "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|sack
 operator|->
 name|numberOfdesc
@@ -1265,8 +1223,9 @@ name|printf
 argument_list|(
 literal|"[#dup tsns %u] "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|sack
 operator|->
 name|numDupTsns
@@ -1313,8 +1272,9 @@ name|nextChunk
 operator|&&
 name|fragNo
 operator|<
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|sack
 operator|->
 name|numberOfdesc
@@ -1334,42 +1294,36 @@ name|fragNo
 operator|+
 literal|1
 argument_list|,
-call|(
-name|u_int32_t
-call|)
+name|EXTRACT_32BITS
 argument_list|(
-name|ntohl
-argument_list|(
+operator|&
 name|sack
 operator|->
 name|highestConseqTSN
 argument_list|)
 operator|+
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|frag
 operator|->
 name|fragmentStart
 argument_list|)
-argument_list|)
 argument_list|,
-call|(
-name|u_int32_t
-call|)
+name|EXTRACT_32BITS
 argument_list|(
-name|ntohl
-argument_list|(
+operator|&
 name|sack
 operator|->
 name|highestConseqTSN
 argument_list|)
 operator|+
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|frag
 operator|->
 name|fragmentEnd
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1400,8 +1354,9 @@ name|nextChunk
 operator|&&
 name|tsnNo
 operator|<
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|sack
 operator|->
 name|numDupTsns
@@ -1421,12 +1376,8 @@ name|tsnNo
 operator|+
 literal|1
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
 name|dupTSN
 argument_list|)
 argument_list|)

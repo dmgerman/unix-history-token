@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/machdep.c,v 1.7 2001/06/27 05:42:04 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/machdep.c,v 1.10.2.3 2003/12/15 03:53:42 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,11 +43,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * XXX - all we need, on platforms other than DEC OSF/1 (a/k/a Digital UNIX,  * a/k/a Tru64 UNIX), is "size_t", which is a standard C type; what do we  * need to do to get it defined?  This is clearly wrong, as we shouldn't  * have to include UNIX or Windows system header files to get it.  */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<tcpdump-stdinc.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE___ATTRIBUTE__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__attribute__
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE___ATTRIBUTE__ */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -75,30 +104,6 @@ argument_list|(
 name|HAVE_SNPRINTF
 argument_list|)
 end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE___ATTRIBUTE__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__attribute__
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE___ATTRIBUTE__ */
-end_comment
 
 begin_function_decl
 name|int
@@ -162,9 +167,11 @@ parameter_list|(
 name|char
 modifier|*
 name|ebuf
+name|_U_
 parameter_list|,
 name|size_t
 name|ebufsiz
+name|_U_
 parameter_list|)
 block|{
 ifdef|#

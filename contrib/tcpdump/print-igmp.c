@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igmp.c,v 1.5.4.1 2002/06/02 18:25:05 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igmp.c,v 1.11.2.3 2003/11/19 09:41:29 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,19 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -127,19 +116,19 @@ begin_struct
 struct|struct
 name|tr_query
 block|{
-name|u_int
+name|u_int32_t
 name|tr_src
 decl_stmt|;
 comment|/* traceroute source */
-name|u_int
+name|u_int32_t
 name|tr_dst
 decl_stmt|;
 comment|/* traceroute destination */
-name|u_int
+name|u_int32_t
 name|tr_raddr
 decl_stmt|;
 comment|/* traceroute response address */
-name|u_int
+name|u_int32_t
 name|tr_rttlqid
 decl_stmt|;
 comment|/* response ttl and qid */
@@ -175,47 +164,47 @@ begin_struct
 struct|struct
 name|tr_resp
 block|{
-name|u_int
+name|u_int32_t
 name|tr_qarr
 decl_stmt|;
 comment|/* query arrival time */
-name|u_int
+name|u_int32_t
 name|tr_inaddr
 decl_stmt|;
 comment|/* incoming interface address */
-name|u_int
+name|u_int32_t
 name|tr_outaddr
 decl_stmt|;
 comment|/* outgoing interface address */
-name|u_int
+name|u_int32_t
 name|tr_rmtaddr
 decl_stmt|;
 comment|/* parent address in source tree */
-name|u_int
+name|u_int32_t
 name|tr_vifin
 decl_stmt|;
 comment|/* input packet count on interface */
-name|u_int
+name|u_int32_t
 name|tr_vifout
 decl_stmt|;
 comment|/* output packet count on interface */
-name|u_int
+name|u_int32_t
 name|tr_pktcnt
 decl_stmt|;
 comment|/* total incoming packets for src-grp */
-name|u_char
+name|u_int8_t
 name|tr_rproto
 decl_stmt|;
 comment|/* routing proto deployed on router */
-name|u_char
+name|u_int8_t
 name|tr_fttl
 decl_stmt|;
 comment|/* ttl required to forward on outvif */
-name|u_char
+name|u_int8_t
 name|tr_smask
 decl_stmt|;
 comment|/* subnet mask for src addr */
-name|u_char
+name|u_int8_t
 name|tr_rflags
 decl_stmt|;
 comment|/* forwarding error codes */
@@ -432,17 +421,46 @@ operator|+
 literal|8
 operator|)
 decl_stmt|;
+name|TCHECK
+argument_list|(
+operator|*
+name|tr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|8
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tr_query
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"mtrace %lu: %s to %s reply-to %s"
+literal|" [invalid len %d]"
 argument_list|,
-operator|(
-name|u_long
-operator|)
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|printf
+argument_list|(
+literal|"mtrace %u: %s to %s reply-to %s"
+argument_list|,
 name|TR_GETQID
 argument_list|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|tr
 operator|->
 name|tr_rttlqid
@@ -478,8 +496,9 @@ if|if
 condition|(
 name|IN_CLASSD
 argument_list|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|tr
 operator|->
 name|tr_raddr
@@ -492,8 +511,9 @@ literal|" with-ttl %d"
 argument_list|,
 name|TR_GETTTL
 argument_list|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|tr
 operator|->
 name|tr_rttlqid
@@ -501,6 +521,18 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
+name|trunc
+label|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"[|igmp]"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -539,6 +571,37 @@ operator|+
 literal|8
 operator|)
 decl_stmt|;
+name|TCHECK
+argument_list|(
+operator|*
+name|tr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|8
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tr_query
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" [invalid len %d]"
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|printf
 argument_list|(
 literal|"mresp %lu: %s to %s reply-to %s"
@@ -548,8 +611,9 @@ name|u_long
 operator|)
 name|TR_GETQID
 argument_list|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|tr
 operator|->
 name|tr_rttlqid
@@ -585,8 +649,9 @@ if|if
 condition|(
 name|IN_CLASSD
 argument_list|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|tr
 operator|->
 name|tr_raddr
@@ -599,8 +664,9 @@ literal|" with-ttl %d"
 argument_list|,
 name|TR_GETTTL
 argument_list|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|tr
 operator|->
 name|tr_rttlqid
@@ -608,6 +674,18 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
+name|trunc
+label|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"[|igmp]"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -1023,6 +1101,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|TCHECK
+argument_list|(
+name|bp
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 name|mrc
 operator|=
 name|bp
@@ -1333,14 +1419,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|TCHECK2
+name|TCHECK
 argument_list|(
 name|bp
 index|[
 literal|0
 index|]
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1377,6 +1461,14 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|TCHECK
+argument_list|(
+name|bp
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1423,6 +1515,16 @@ operator|)
 name|printf
 argument_list|(
 literal|" v1"
+argument_list|)
+expr_stmt|;
+name|TCHECK2
+argument_list|(
+name|bp
+index|[
+literal|4
+index|]
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
 if|if
@@ -1474,6 +1576,16 @@ break|break;
 case|case
 literal|0x12
 case|:
+name|TCHECK2
+argument_list|(
+name|bp
+index|[
+literal|4
+index|]
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1511,6 +1623,16 @@ break|break;
 case|case
 literal|0x16
 case|:
+name|TCHECK2
+argument_list|(
+name|bp
+index|[
+literal|4
+index|]
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
