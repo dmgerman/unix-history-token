@@ -1474,6 +1474,14 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|cp
+operator|->
+name|provider
+operator|!=
+name|NULL
+condition|)
 name|g_detach
 argument_list|(
 name|cp
