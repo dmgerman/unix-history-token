@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.33 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1245,6 +1245,24 @@ name|trylocaluser
 label|:
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|7
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"at trylocaluser %s\n"
+argument_list|,
+name|a
+operator|->
+name|q_user
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|m
 operator|==
 name|LocalMailer
@@ -1683,6 +1701,10 @@ name|q_flags
 argument_list|)
 condition|)
 block|{
+specifier|auto
+name|bool
+name|fuzzy
+decl_stmt|;
 specifier|register
 name|struct
 name|passwd
@@ -1702,6 +1724,9 @@ operator|=
 name|finduser
 argument_list|(
 name|buf
+argument_list|,
+operator|&
+name|fuzzy
 argument_list|)
 expr_stmt|;
 if|if
@@ -1737,18 +1762,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|a
-operator|->
-name|q_user
-argument_list|,
-name|pw
-operator|->
-name|pw_name
-argument_list|)
-operator|!=
-literal|0
+name|fuzzy
 condition|)
 block|{
 comment|/* name was a fuzzy match */
@@ -1900,7 +1914,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FINDUSER -- find the password entry for a user. ** **	This looks a lot like getpwnam, except that it may want to **	do some fancier pattern matching in /etc/passwd. ** **	This routine contains most of the time of many sendmail runs. **	It deserves to be optimized. ** **	Parameters: **		name -- the name to match against. ** **	Returns: **		A pointer to a pw struct. **		NULL if name is unknown or ambiguous. ** **	Side Effects: **		may modify name. */
+comment|/* **  FINDUSER -- find the password entry for a user. ** **	This looks a lot like getpwnam, except that it may want to **	do some fancier pattern matching in /etc/passwd. ** **	This routine contains most of the time of many sendmail runs. **	It deserves to be optimized. ** **	Parameters: **		name -- the name to match against. **		fuzzyp -- an outarg that is set to TRUE if this entry **			was found using the fuzzy matching algorithm; **			set to FALSE otherwise. ** **	Returns: **		A pointer to a pw struct. **		NULL if name is unknown or ambiguous. ** **	Side Effects: **		may modify name. */
 end_comment
 
 begin_function
@@ -1910,10 +1924,16 @@ modifier|*
 name|finduser
 parameter_list|(
 name|name
+parameter_list|,
+name|fuzzyp
 parameter_list|)
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|bool
+modifier|*
+name|fuzzyp
 decl_stmt|;
 block|{
 specifier|register
@@ -1941,6 +1961,22 @@ modifier|*
 name|getpwnam
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"finduser(%s): "
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 comment|/* map upper => lower case */
 for|for
 control|(
@@ -1981,6 +2017,11 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|fuzzyp
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* look up this login name using fast path */
 if|if
 condition|(
@@ -1995,11 +2036,27 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"found (non-fuzzy)\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|pw
 operator|)
 return|;
+block|}
 ifdef|#
 directive|ifdef
 name|MATCHGECOS
@@ -2009,9 +2066,25 @@ condition|(
 operator|!
 name|MatchGecos
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"not found (fuzzy disabled)\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 comment|/* search for a matching full name instead */
 for|for
 control|(
@@ -2101,6 +2174,24 @@ name|name
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"fuzzy matches %s\n"
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
 name|message
 argument_list|(
 name|Arpa_Info
@@ -2123,6 +2214,20 @@ block|}
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"no fuzzy match found\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
