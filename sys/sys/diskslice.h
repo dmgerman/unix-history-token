@@ -18,25 +18,39 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_KERNEL
+name|raidframe_has_been_fixed
 end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
 directive|include
 file|<sys/ioccom.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|DIOCGSLICEINFO
+value|_IOR('d', 111, struct diskslices)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCSYNCSLICEINFO
+value|_IOW('d', 112, int)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|sys_boot_code_has_been_fixed
+end_ifndef
 
 begin_define
 define|#
@@ -55,20 +69,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIOCGSLICEINFO
-value|_IOR('d', 111, struct diskslices)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCSYNCSLICEINFO
-value|_IOW('d', 112, int)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAX_SLICES
 value|32
 end_define
@@ -79,6 +79,17 @@ directive|define
 name|WHOLE_DISK_SLICE
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_GEOM
+end_ifdef
 
 begin_struct
 struct|struct
@@ -403,6 +414,15 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NO_GEOM */
 end_comment
 
 begin_endif
