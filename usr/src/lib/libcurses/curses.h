@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)curses.h	1.14 (Berkeley) %G% */
+comment|/* %G% (Berkeley) @(#)curses.h	1.15 */
 end_comment
 
 begin_ifndef
@@ -94,6 +94,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|_FULLLINE
+value|020
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IDLINE
+value|040
+end_define
+
+begin_define
+define|#
+directive|define
 name|_STANDOUT
 value|0200
 end_define
@@ -112,7 +126,7 @@ name|_puts
 parameter_list|(
 name|s
 parameter_list|)
-value|tputs(s, 0, _putchar);
+value|tputs(s, 0, _putchar)
 end_define
 
 begin_typedef
@@ -142,7 +156,7 @@ name|DB
 decl_stmt|,
 name|EO
 decl_stmt|,
-name|GT
+name|HC
 decl_stmt|,
 name|HZ
 decl_stmt|,
@@ -154,11 +168,19 @@ name|MS
 decl_stmt|,
 name|NC
 decl_stmt|,
+name|NS
+decl_stmt|,
 name|OS
 decl_stmt|,
 name|UL
 decl_stmt|,
+name|XB
+decl_stmt|,
 name|XN
+decl_stmt|,
+name|XT
+decl_stmt|,
+name|XX
 decl_stmt|;
 end_decl_stmt
 
@@ -190,6 +212,9 @@ modifier|*
 name|CR
 decl_stmt|,
 modifier|*
+name|CS
+decl_stmt|,
+modifier|*
 name|DC
 decl_stmt|,
 modifier|*
@@ -208,6 +233,36 @@ modifier|*
 name|EI
 decl_stmt|,
 modifier|*
+name|K0
+decl_stmt|,
+modifier|*
+name|K1
+decl_stmt|,
+modifier|*
+name|K2
+decl_stmt|,
+modifier|*
+name|K3
+decl_stmt|,
+modifier|*
+name|K4
+decl_stmt|,
+modifier|*
+name|K5
+decl_stmt|,
+modifier|*
+name|K6
+decl_stmt|,
+modifier|*
+name|K7
+decl_stmt|,
+modifier|*
+name|K8
+decl_stmt|,
+modifier|*
+name|K9
+decl_stmt|,
+modifier|*
 name|HO
 decl_stmt|,
 modifier|*
@@ -220,6 +275,27 @@ modifier|*
 name|IP
 decl_stmt|,
 modifier|*
+name|KD
+decl_stmt|,
+modifier|*
+name|KE
+decl_stmt|,
+modifier|*
+name|KH
+decl_stmt|,
+modifier|*
+name|KL
+decl_stmt|,
+modifier|*
+name|KR
+decl_stmt|,
+modifier|*
+name|KS
+decl_stmt|,
+modifier|*
+name|KU
+decl_stmt|,
+modifier|*
 name|LL
 decl_stmt|,
 modifier|*
@@ -230,6 +306,12 @@ name|ND
 decl_stmt|,
 modifier|*
 name|NL
+decl_stmt|,
+modifier|*
+name|RC
+decl_stmt|,
+modifier|*
+name|SC
 decl_stmt|,
 modifier|*
 name|SE
@@ -268,11 +350,34 @@ modifier|*
 name|VB
 decl_stmt|,
 modifier|*
+name|VS
+decl_stmt|,
+modifier|*
 name|VE
 decl_stmt|,
 modifier|*
-name|VS
+name|AL_PARM
 decl_stmt|,
+modifier|*
+name|DL_PARM
+decl_stmt|,
+modifier|*
+name|UP_PARM
+decl_stmt|,
+modifier|*
+name|DOWN_PARM
+decl_stmt|,
+modifier|*
+name|LEFT_PARM
+decl_stmt|,
+modifier|*
+name|RIGHT_PARM
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
 name|PC
 decl_stmt|;
 end_decl_stmt
@@ -284,6 +389,8 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|bool
+name|GT
+decl_stmt|,
 name|NONL
 decl_stmt|,
 name|UPPERCASE
@@ -315,6 +422,9 @@ name|_begx
 decl_stmt|;
 name|short
 name|_flags
+decl_stmt|;
+name|short
+name|_ch_off
 decl_stmt|;
 name|bool
 name|_clear
@@ -907,7 +1017,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|crmode
+name|cbreak
 parameter_list|()
 value|(_tty.sg_flags |= CBREAK, _rawmode = TRUE, stty(_tty_ch,&_tty))
 end_define
@@ -915,10 +1025,34 @@ end_define
 begin_define
 define|#
 directive|define
-name|nocrmode
+name|nocbreak
 parameter_list|()
 value|(_tty.sg_flags&= ~CBREAK,_rawmode=FALSE,stty(_tty_ch,&_tty))
 end_define
+
+begin_define
+define|#
+directive|define
+name|crmode
+parameter_list|()
+value|cbreak()
+end_define
+
+begin_comment
+comment|/* backwards compatability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|nocrmode
+parameter_list|()
+value|nocbreak()
+end_define
+
+begin_comment
+comment|/* backwards compatability */
+end_comment
 
 begin_define
 define|#
@@ -957,7 +1091,7 @@ define|#
 directive|define
 name|savetty
 parameter_list|()
-value|(gtty(_tty_ch,&_tty), _res_flg = _tty.sg_flags)
+value|((void) gtty(_tty_ch,&_tty), _res_flg = _tty.sg_flags)
 end_define
 
 begin_define
@@ -965,7 +1099,31 @@ define|#
 directive|define
 name|resetty
 parameter_list|()
-value|(_tty.sg_flags = _res_flg, stty(_tty_ch,&_tty))
+value|(_tty.sg_flags = _res_flg, (void) stty(_tty_ch,&_tty))
+end_define
+
+begin_define
+define|#
+directive|define
+name|erasechar
+parameter_list|()
+value|(_tty.sg_erase)
+end_define
+
+begin_define
+define|#
+directive|define
+name|killchar
+parameter_list|()
+value|(_tty.sg_kill)
+end_define
+
+begin_define
+define|#
+directive|define
+name|baudrate
+parameter_list|()
+value|(_tty.sg_ospeed)
 end_define
 
 begin_decl_stmt
