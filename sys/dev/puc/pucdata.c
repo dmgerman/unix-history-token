@@ -4366,8 +4366,6 @@ comment|/* Moxa Technologies Co., Ltd. PCI I/O Card 8S RS232 */
 block|{
 literal|"Moxa Technologies, C168U/PCI"
 block|,
-name|NULL
-block|,
 block|{
 literal|0x1393
 block|,
