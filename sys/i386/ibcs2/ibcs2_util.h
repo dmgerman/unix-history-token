@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 

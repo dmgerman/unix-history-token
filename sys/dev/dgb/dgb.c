@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  dgb.c $Id: dgb.c,v 1.7 1995/11/29 14:39:06 julian Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  */
+comment|/*-  *  dgb.c $Id: dgb.c,v 1.8 1995/12/06 23:52:08 bde Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -133,6 +133,18 @@ begin_include
 include|#
 directive|include
 file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.13 1995/08/02 12:59:48 dfr Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.14 1995/12/03 16:41:53 bde Exp $ */
 end_comment
 
 begin_comment
@@ -77,6 +77,18 @@ begin_include
 include|#
 directive|include
 file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_extern.h>
 end_include
 
 begin_include

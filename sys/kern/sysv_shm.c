@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.11 1995/11/30 07:58:50 julian Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.12 1995/12/04 02:26:53 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -80,6 +80,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_prot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_map.h>
 end_include
 
@@ -87,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_extern.h>
 end_include
 
 begin_struct_decl

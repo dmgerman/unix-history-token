@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.13 1995/06/14 05:06:51 bde Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.14 1995/10/29 15:29:56 phk Exp $  */
 end_comment
 
 begin_comment
@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/acct.h>
 end_include
 
@@ -69,6 +63,48 @@ begin_include
 include|#
 directive|include
 file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_prot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_map.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
 end_include
 
 begin_define
