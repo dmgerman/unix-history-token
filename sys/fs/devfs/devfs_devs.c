@@ -25,12 +25,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/dirent.h>
 end_include
 
@@ -43,19 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
 end_include
 
 begin_include
