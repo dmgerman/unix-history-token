@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c	5.1 (Berkeley) %G%"
+literal|"@(#)stab.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1319,8 +1319,8 @@ literal|1
 expr_stmt|;
 block|}
 operator|*
-name|starthere
 operator|--
+name|starthere
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -2677,13 +2677,6 @@ name|nl
 modifier|*
 name|p
 decl_stmt|;
-name|putprintf
-argument_list|(
-literal|"a"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|p
@@ -2703,6 +2696,13 @@ operator|->
 name|chain
 control|)
 block|{
+name|putprintf
+argument_list|(
+literal|"a"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|gentype
 argument_list|(
 name|p
