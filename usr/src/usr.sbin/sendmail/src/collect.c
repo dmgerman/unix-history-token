@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.1 (Berkeley) %G%"
+literal|"@(#)collect.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,6 +197,8 @@ argument_list|,
 name|MAXLINE
 argument_list|,
 name|InChannel
+argument_list|,
+name|ReadTimeout
 argument_list|)
 operator|==
 name|NULL
@@ -260,6 +262,8 @@ argument_list|,
 name|MAXLINE
 argument_list|,
 name|InChannel
+argument_list|,
+name|ReadTimeout
 argument_list|)
 operator|==
 name|NULL
@@ -393,6 +397,8 @@ argument_list|,
 name|MAXLINE
 argument_list|,
 name|InChannel
+argument_list|,
+name|ReadTimeout
 argument_list|)
 operator|==
 name|NULL
@@ -646,6 +652,8 @@ argument_list|,
 name|MAXLINE
 argument_list|,
 name|InChannel
+argument_list|,
+name|ReadTimeout
 argument_list|)
 operator|==
 name|NULL
@@ -793,6 +801,8 @@ argument_list|,
 name|MAXLINE
 argument_list|,
 name|InChannel
+argument_list|,
+name|ReadTimeout
 argument_list|)
 operator|!=
 name|NULL
@@ -1145,6 +1155,8 @@ argument_list|,
 name|MAXLINE
 argument_list|,
 name|fp
+argument_list|,
+name|ReadTimeout
 argument_list|)
 operator|==
 name|NULL

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.1 (Berkeley) %G%"
+literal|"@(#)util.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1889,7 +1889,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SFGETS -- "safe" fgets -- times out and ignores random interrupts. ** **	Parameters: **		buf -- place to put the input line. **		siz -- size of buf. **		fp -- file to read from. ** **	Returns: **		NULL on error (including timeout).  This will also leave **			buf containing a null string. **		buf otherwise. ** **	Side Effects: **		none. */
+comment|/* **  SFGETS -- "safe" fgets -- times out and ignores random interrupts. ** **	Parameters: **		buf -- place to put the input line. **		siz -- size of buf. **		fp -- file to read from. **		timeout -- the timeout before error occurs. ** **	Returns: **		NULL on error (including timeout).  This will also leave **			buf containing a null string. **		buf otherwise. ** **	Side Effects: **		none. */
 end_comment
 
 begin_decl_stmt
@@ -1909,6 +1909,8 @@ parameter_list|,
 name|siz
 parameter_list|,
 name|fp
+parameter_list|,
+name|timeout
 parameter_list|)
 name|char
 modifier|*
@@ -1920,6 +1922,9 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+name|time_t
+name|timeout
 decl_stmt|;
 block|{
 specifier|register
@@ -1942,7 +1947,7 @@ function_decl|;
 comment|/* set the timeout */
 if|if
 condition|(
-name|ReadTimeout
+name|timeout
 operator|!=
 literal|0
 condition|)
@@ -2001,10 +2006,7 @@ name|ev
 operator|=
 name|setevent
 argument_list|(
-operator|(
-name|time_t
-operator|)
-name|ReadTimeout
+name|timeout
 argument_list|,
 name|readtimeout
 argument_list|,
