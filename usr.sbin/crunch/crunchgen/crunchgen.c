@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 University of Maryland  * All Rights Reserved.  *  * Permission to use, copy, modify, distribute, and sell this software and its  * documentation for any purpose is hereby granted without fee, provided that  * the above copyright notice appear in all copies and that both that  * copyright notice and this permission notice appear in supporting  * documentation, and that the name of U.M. not be used in advertising or  * publicity pertaining to distribution of the software without specific,  * written prior permission.  U.M. makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * U.M. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL U.M.  * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Author: James da Silva, Systems Design and Analysis Group  *			   Computer Science Department  *			   University of Maryland at College Park  */
+comment|/*  * Copyright (c) 1994 University of Maryland  * All Rights Reserved.  *  * Permission to use, copy, modify, distribute, and sell this software and its  * documentation for any purpose is hereby granted without fee, provided that  * the above copyright notice appear in all copies and that both that  * copyright notice and this permission notice appear in supporting  * documentation, and that the name of U.M. not be used in advertising or  * publicity pertaining to distribution of the software without specific,  * written prior permission.  U.M. makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * U.M. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL U.M.  * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Author: James da Silva, Systems Design and Analysis Group  *			   Computer Science Department  *			   University of Maryland at College Park  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -123,20 +123,30 @@ name|prog
 modifier|*
 name|next
 decl_stmt|;
+comment|/* link field */
 name|char
 modifier|*
 name|name
-decl_stmt|,
+decl_stmt|;
+comment|/* program name */
+name|char
 modifier|*
 name|ident
 decl_stmt|;
+comment|/* C identifier for the program name */
 name|char
 modifier|*
 name|srcdir
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|objdir
 decl_stmt|;
+name|char
+modifier|*
+name|objvar
+decl_stmt|;
+comment|/* Makefile variable to replace OBJS */
 name|strlst_t
 modifier|*
 name|objs
@@ -251,6 +261,19 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|outhdrname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user-supplied header for *.mk */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -436,7 +459,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lm:c:e:fq"
+literal|"lh:m:c:e:fq"
 argument_list|)
 operator|)
 operator|!=
@@ -471,6 +494,17 @@ case|:
 name|strcpy
 argument_list|(
 name|outmkname
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|strcpy
+argument_list|(
+name|outhdrname
 argument_list|,
 name|optarg
 argument_list|)
@@ -2144,6 +2178,52 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"objvar"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|argc
+operator|!=
+literal|4
+condition|)
+goto|goto
+name|argcount
+goto|;
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|objvar
+operator|=
+name|strdup
+argument_list|(
+name|argv
+index|[
+literal|3
+index|]
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|out_of_memory
+argument_list|()
+expr_stmt|;
+block|}
 else|else
 block|{
 name|warnx
@@ -2449,6 +2529,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * run the makefile for the program to find which objects are necessary  */
+end_comment
+
 begin_function
 name|void
 name|fillin_program
@@ -2644,6 +2728,46 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/*  * XXX look for a Makefile.{name} in local directory first.  * This lets us override the original Makefile.  */
+name|sprintf
+argument_list|(
+name|path
+argument_list|,
+literal|"Makefile.%s"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is_nonempty_file
+argument_list|(
+name|path
+argument_list|)
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"Using %s for %s"
+argument_list|,
+name|path
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|status
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|p
@@ -2842,6 +2966,12 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+name|char
+modifier|*
+name|objvar
+init|=
+literal|"OBJS"
+decl_stmt|;
 comment|/* discover the objs from the srcdir Makefile */
 if|if
 condition|(
@@ -2872,6 +3002,37 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|p
+operator|->
+name|objvar
+condition|)
+name|objvar
+operator|=
+name|p
+operator|->
+name|objvar
+expr_stmt|;
+comment|/*      * XXX include outhdrname (e.g. to contain Make variables)      */
+if|if
+condition|(
+name|outhdrname
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|".include \"%s\"\n"
+argument_list|,
+name|outhdrname
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
@@ -2885,14 +3046,18 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|".if defined(PROG)&& !defined(OBJS)\n"
+literal|".if defined(PROG)&& !defined(%s)\n"
+argument_list|,
+name|objvar
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"OBJS=${PROG}.o\n"
+literal|"%s=${PROG}.o\n"
+argument_list|,
+name|objvar
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2906,7 +3071,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"crunchgen_objs:\n\t@echo 'OBJS= '${OBJS}\n"
+literal|"crunchgen_objs:\n\t@echo 'OBJS= '${%s}\n"
+argument_list|,
+name|objvar
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -3450,6 +3617,24 @@ argument_list|,
 name|infilename
 argument_list|,
 name|CRUNCH_VERSION
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|outhdrname
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|".include \"%s\"\n"
+argument_list|,
+name|outhdrname
 argument_list|)
 expr_stmt|;
 name|top_makefile_rules
