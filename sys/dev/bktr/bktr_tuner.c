@@ -3103,7 +3103,14 @@ literal|1
 operator|)
 return|;
 comment|/* supported modes.	*/
-comment|/*		band |= bktr->tuner.radio_mode;*/
+name|band
+operator||=
+name|bktr
+operator|->
+name|tuner
+operator|.
+name|radio_mode
+expr_stmt|;
 comment|/* tuner.radio_mode is set in 						 * the ioctls RADIO_SETMODE 						 * and RADIO_GETMODE */
 name|i2cWrite
 argument_list|(
