@@ -6103,7 +6103,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-break|break;
+comment|/* fall through */
 default|default:
 name|datalink_ComeDown
 argument_list|(
