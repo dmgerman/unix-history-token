@@ -45,7 +45,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.5 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)usersmtp.c	5.6 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.5 (Berkeley) %G%"
+literal|"@(#)usersmtp.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -630,7 +630,7 @@ literal|"HELO %s"
 argument_list|,
 name|m
 argument_list|,
-name|HostName
+name|MyHostName
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -827,7 +827,7 @@ literal|"MAIL From:<@%s%c%s>"
 argument_list|,
 name|m
 argument_list|,
-name|HostName
+name|MyHostName
 argument_list|,
 name|buf
 index|[

@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,7 +326,7 @@ index|[
 literal|30
 index|]
 decl_stmt|;
-comment|/* holds HostName */
+comment|/* holds MyHostName */
 specifier|extern
 name|bool
 name|safefile
@@ -1794,7 +1794,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|HostName
+name|MyHostName
 operator|=
 name|jbuf
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)sendmail.h	5.5 (Berkeley) %G% */
+comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)sendmail.h	5.6 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.5		%G%"
+literal|"@(#)sendmail.h	5.6		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2566,18 +2566,6 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|HostName
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of this host for SMTP messages */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
 name|AliasFile
 decl_stmt|;
 end_decl_stmt
@@ -2650,12 +2638,36 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
+name|MyHostName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of this host for SMTP messages */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
 name|RealHostName
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* name of host we are talking to */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|CurHostName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current host we are dealing with */
 end_comment
 
 begin_decl_stmt

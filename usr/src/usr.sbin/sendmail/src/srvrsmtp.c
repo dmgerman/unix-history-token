@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.15 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.16 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.15 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -546,13 +546,27 @@ name|RealHostName
 operator|!=
 name|NULL
 condition|)
+block|{
+name|CurHostName
+operator|=
+name|RealHostName
+expr_stmt|;
 name|setproctitle
 argument_list|(
 literal|"srvrsmtp %s"
 argument_list|,
-name|RealHostName
+name|CurHostName
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* this must be us!! */
+name|CurHostName
+operator|=
+name|MyHostName
+expr_stmt|;
+block|}
 name|expand
 argument_list|(
 literal|"\001e"
@@ -654,9 +668,11 @@ name|message
 argument_list|(
 literal|"421"
 argument_list|,
-literal|"%s Lost input channel"
+literal|"%s Lost input channel to %s"
 argument_list|,
-name|HostName
+name|MyHostName
+argument_list|,
+name|CurHostName
 argument_list|)
 expr_stmt|;
 name|finis
@@ -794,7 +810,7 @@ name|setproctitle
 argument_list|(
 literal|"%s: %s"
 argument_list|,
-name|RealHostName
+name|CurHostName
 argument_list|,
 name|inp
 argument_list|)
@@ -805,7 +821,7 @@ name|sameword
 argument_list|(
 name|p
 argument_list|,
-name|HostName
+name|MyHostName
 argument_list|)
 condition|)
 block|{
@@ -816,7 +832,7 @@ literal|"553"
 argument_list|,
 literal|"%s I refuse to talk to myself"
 argument_list|,
-name|HostName
+name|MyHostName
 argument_list|)
 expr_stmt|;
 break|break;
@@ -980,7 +996,7 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-name|RealHostName
+name|CurHostName
 argument_list|,
 name|inp
 argument_list|)
@@ -1051,7 +1067,7 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-name|RealHostName
+name|CurHostName
 argument_list|,
 name|inp
 argument_list|)
@@ -1237,7 +1253,7 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-name|RealHostName
+name|CurHostName
 argument_list|,
 name|inp
 argument_list|)
@@ -1425,7 +1441,7 @@ name|setproctitle
 argument_list|(
 literal|"%s: %s"
 argument_list|,
-name|RealHostName
+name|CurHostName
 argument_list|,
 name|inp
 argument_list|)
@@ -1479,7 +1495,7 @@ literal|"221"
 argument_list|,
 literal|"%s closing connection"
 argument_list|,
-name|HostName
+name|MyHostName
 argument_list|)
 expr_stmt|;
 if|if
@@ -2254,6 +2270,10 @@ comment|/* child */
 name|InChild
 operator|=
 name|TRUE
+expr_stmt|;
+name|QuickAbort
+operator|=
+name|FALSE
 expr_stmt|;
 name|clearenvelope
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	5.6 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2236,6 +2236,12 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+name|CurHostName
+operator|=
+name|m
+operator|->
+name|m_mailer
+expr_stmt|;
 comment|/* 	**  Deal with the special case of mail handled through an IPC 	**  connection. 	**	In this case we don't actually fork.  We must be 	**	running SMTP for this to work.  We will return a 	**	zero pid to indicate that we are running IPC. 	**  We also handle a debug version that just talks to stdin/out. 	*/
 ifdef|#
 directive|ifdef
@@ -2316,6 +2322,13 @@ specifier|register
 name|u_short
 name|port
 decl_stmt|;
+name|CurHostName
+operator|=
+name|pvp
+index|[
+literal|1
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2399,6 +2412,7 @@ name|prfile
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|i
 operator|=
 name|st
@@ -2407,6 +2421,15 @@ name|s_host
 operator|.
 name|ho_exitstat
 expr_stmt|;
+name|errno
+operator|=
+name|st
+operator|->
+name|s_host
+operator|.
+name|ho_errno
+expr_stmt|;
+block|}
 else|#
 directive|else
 else|HOSTINFO

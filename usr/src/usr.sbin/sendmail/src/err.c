@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	5.4 (Berkeley) %G%"
+literal|"@(#)err.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1057,11 +1057,6 @@ name|char
 modifier|*
 name|SmtpPhase
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|RealHostName
-decl_stmt|;
 endif|#
 directive|endif
 endif|SMTP
@@ -1126,7 +1121,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|RealHostName
+name|CurHostName
 operator|!=
 name|NULL
 condition|)
@@ -1148,7 +1143,7 @@ name|strcat
 argument_list|(
 name|buf
 argument_list|,
-name|RealHostName
+name|CurHostName
 argument_list|)
 expr_stmt|;
 block|}
@@ -1162,7 +1157,7 @@ name|EHOSTDOWN
 case|:
 if|if
 condition|(
-name|RealHostName
+name|CurHostName
 operator|==
 name|NULL
 condition|)
@@ -1176,7 +1171,7 @@ name|buf
 argument_list|,
 literal|"Host %s is down"
 argument_list|,
-name|RealHostName
+name|CurHostName
 argument_list|)
 expr_stmt|;
 return|return
@@ -1189,7 +1184,7 @@ name|ECONNREFUSED
 case|:
 if|if
 condition|(
-name|RealHostName
+name|CurHostName
 operator|==
 name|NULL
 condition|)
@@ -1203,7 +1198,7 @@ name|buf
 argument_list|,
 literal|"Connection refused by %s"
 argument_list|,
-name|RealHostName
+name|CurHostName
 argument_list|)
 expr_stmt|;
 return|return

@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	5.6 (Berkeley) %G%"
+literal|"@(#)util.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1901,28 +1901,10 @@ name|errno
 operator|=
 name|ETIMEDOUT
 expr_stmt|;
-if|if
-condition|(
-name|RealHostName
-operator|==
-name|NULL
-condition|)
 name|syserr
 argument_list|(
-literal|"timeout on read"
+literal|"net timeout"
 argument_list|)
-expr_stmt|;
-else|else
-name|syserr
-argument_list|(
-literal|"net timeout reading from %s"
-argument_list|,
-name|RealHostName
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|ETIMEDOUT
 expr_stmt|;
 name|buf
 index|[
