@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,14 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)from: lpr.c	8.4 (Berkeley) 4/28/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"From: @(#)lpr.c	8.4 (Berkeley) 4/28/95"
-literal|"\n$Id: lpr.c,v 1.19 1997/07/29 04:17:19 imp Exp $\n"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -3608,8 +3621,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lpr [-Pprinter] [-#num] [-C class] [-J job] [-T title] [-U user]\n"
-literal|"[-i[numcols]] [-1234 font] [-wnum] [-cdfghlnmprstv] [name ...]\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: lpr [-Pprinter] [-#num] [-C class] [-J job] [-T title] [-U user]"
+argument_list|,
+literal|"[-i[numcols]] [-1234 font] [-wnum] [-cdfghlnmprstv] [name ...]"
 argument_list|)
 expr_stmt|;
 name|exit

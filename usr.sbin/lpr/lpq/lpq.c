@@ -187,6 +187,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -272,18 +273,13 @@ name|host
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"lpq: gethostname"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"gethostname"
 argument_list|)
 expr_stmt|;
-block|}
 name|openlog
 argument_list|(
 literal|"lpd"
@@ -696,13 +692,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
 block|{
-name|puts
+name|fprintf
 argument_list|(
-literal|"usage: lpq [-a] [-l] [-Pprinter] [user ...] [job ...]"
+name|stderr
+argument_list|,
+literal|"usage: lpq [-a] [-l] [-Pprinter] [user ...] [job ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

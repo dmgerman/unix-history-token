@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)startdaemon.c	8.2 (Berkeley) 4/17/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)startdaemon.c	8.2 (Berkeley) 4/17/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -67,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -94,20 +107,6 @@ name|uid_t
 name|uid
 decl_stmt|,
 name|euid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|perr
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -160,7 +159,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perr
+name|warn
 argument_list|(
 literal|"socket"
 argument_list|)
@@ -245,7 +244,7 @@ argument_list|(
 name|uid
 argument_list|)
 expr_stmt|;
-name|perr
+name|warn
 argument_list|(
 literal|"connect"
 argument_list|)
@@ -325,7 +324,7 @@ operator|!=
 name|n
 condition|)
 block|{
-name|perr
+name|warn
 argument_list|(
 literal|"write"
 argument_list|)
@@ -436,38 +435,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|perr
-parameter_list|(
-name|msg
-parameter_list|)
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-block|{
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%s: %s: %s\n"
-argument_list|,
-name|name
-argument_list|,
-name|msg
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)recvjob.c	8.2 (Berkeley) 4/27/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	8.2 (Berkeley) 4/27/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -648,7 +662,7 @@ literal|0
 condition|)
 name|frecverr
 argument_list|(
-literal|"%s: Lost connection"
+literal|"%s: lost connection"
 argument_list|,
 name|printer
 argument_list|)
@@ -1202,7 +1216,7 @@ literal|0
 condition|)
 name|frecverr
 argument_list|(
-literal|"Lost connection"
+literal|"lost connection"
 argument_list|)
 expr_stmt|;
 name|amt
@@ -1335,7 +1349,7 @@ literal|1
 condition|)
 name|frecverr
 argument_list|(
-literal|"Lost connection"
+literal|"lost connection"
 argument_list|)
 expr_stmt|;
 if|if

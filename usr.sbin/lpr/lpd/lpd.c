@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)lpd.c	8.7 (Berkeley) 5/10/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)lpd.c	8.7 (Berkeley) 5/10/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -2896,15 +2910,21 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
 block|{
-name|errx
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: lpd [-dl] [port#]\n"
+argument_list|)
+expr_stmt|;
+name|exit
 argument_list|(
 name|EX_USAGE
-argument_list|,
-literal|"usage: lpd [-dl] [port#]"
 argument_list|)
 expr_stmt|;
 block|}
