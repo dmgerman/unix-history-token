@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /freefall/a/cvs/386BSD/src/sys/i386/isa/com.c,v 1.2 1993/06/30 23:33:41 nate Exp $"
+literal|"$Header: /freefall/a/cvs/386BSD/src/sys/i386/isa/com.c,v 1.3 1993/08/11 13:16:52 root Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"i386/isa/isa.h"
 end_include
 
 begin_include
@@ -509,7 +515,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|1
+name|IO_COMSIZE
 operator|)
 return|;
 return|return
