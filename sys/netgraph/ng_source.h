@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|NGM_SOURCE_COOKIE
-value|1034346805
+value|1110646684
 end_define
 
 begin_comment
@@ -138,9 +138,9 @@ comment|/* stop sending queued data */
 name|NGM_SOURCE_CLR_DATA
 block|,
 comment|/* clear the queued data */
-name|NGM_SOURCE_START_NOW
+name|NGM_SOURCE_SETIFACE
 block|,
-comment|/* start on non-ether output */
+comment|/* configure downstream iface */
 block|}
 enum|;
 end_enum
