@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -8994,13 +9000,12 @@ name|rv
 decl_stmt|;
 if|if
 condition|(
-name|VM_MIN_ADDRESS
-operator|>
-literal|0
-operator|&&
 name|addrbos
 operator|<
-name|VM_MIN_ADDRESS
+name|vm_map_min
+argument_list|(
+name|map
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -9698,7 +9703,11 @@ name|stack_entry
 operator|->
 name|start
 argument_list|,
-name|VM_PROT_ALL
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_stackprot
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,

@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -2595,7 +2601,11 @@ condition|)
 block|{
 name|prot
 operator|=
-name|VM_PROT_ALL
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_stackprot
 expr_stmt|;
 name|size
 operator|=
@@ -2609,7 +2619,11 @@ name|rlim_cur
 expr_stmt|;
 name|addr
 operator|=
-name|USRSTACK
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_usrstack
 operator|-
 name|limp
 operator|->
@@ -2634,7 +2648,11 @@ name|rlim_cur
 expr_stmt|;
 name|addr
 operator|=
-name|USRSTACK
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_usrstack
 operator|-
 name|alimp
 operator|->

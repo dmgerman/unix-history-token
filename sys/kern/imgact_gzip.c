@@ -990,11 +990,8 @@ name|gz
 operator|->
 name|ip
 argument_list|,
-name|VM_MIN_ADDRESS
-argument_list|,
-name|VM_MAXUSER_ADDRESS
-argument_list|,
-name|USRSTACK
+operator|&
+name|aout_sysvec
 argument_list|)
 expr_stmt|;
 name|vmspace

@@ -3258,16 +3258,6 @@ argument_list|(
 name|imgp
 argument_list|,
 name|sv
-operator|->
-name|sv_minuser
-argument_list|,
-name|sv
-operator|->
-name|sv_maxuser
-argument_list|,
-name|sv
-operator|->
-name|sv_usrstack
 argument_list|)
 expr_stmt|;
 name|vmspace

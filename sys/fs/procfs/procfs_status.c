@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -819,7 +825,11 @@ operator|(
 name|void
 operator|*
 operator|)
-name|PS_STRINGS
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_psstrings
 argument_list|,
 operator|&
 name|pstr

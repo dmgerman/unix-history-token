@@ -2346,9 +2346,15 @@ argument_list|(
 name|map
 argument_list|)
 argument_list|,
-name|VM_MIN_ADDRESS
+name|vm_map_min
+argument_list|(
+name|map
+argument_list|)
 argument_list|,
-name|VM_MAXUSER_ADDRESS
+name|vm_map_max
+argument_list|(
+name|map
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_map_unlock

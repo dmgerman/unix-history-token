@@ -3113,7 +3113,11 @@ operator|(
 name|void
 operator|*
 operator|)
-name|PS_STRINGS
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_psstrings
 argument_list|,
 operator|&
 name|pstr

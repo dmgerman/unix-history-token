@@ -234,7 +234,13 @@ if|if
 condition|(
 name|new
 operator|>
-name|VM_MAXUSER_ADDRESS
+name|vm_map_max
+argument_list|(
+operator|&
+name|vm
+operator|->
+name|vm_map
+argument_list|)
 condition|)
 block|{
 name|error

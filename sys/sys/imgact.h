@@ -24,6 +24,12 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|sysentvec
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
@@ -200,11 +206,9 @@ name|struct
 name|image_params
 modifier|*
 parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|vm_offset_t
+name|struct
+name|sysentvec
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

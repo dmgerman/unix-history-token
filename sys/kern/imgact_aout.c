@@ -464,7 +464,9 @@ name|imgp
 operator|->
 name|ps_strings
 operator|=
-name|PS_STRINGS
+name|aout_sysvec
+operator|.
+name|sv_psstrings
 expr_stmt|;
 break|break;
 default|default:
@@ -645,11 +647,8 @@ name|exec_new_vmspace
 argument_list|(
 name|imgp
 argument_list|,
-name|VM_MIN_ADDRESS
-argument_list|,
-name|VM_MAXUSER_ADDRESS
-argument_list|,
-name|USRSTACK
+operator|&
+name|aout_sysvec
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The vm space can be changed by exec_new_vmspace 	 */
@@ -1259,7 +1258,11 @@ name|caddr_t
 operator|)
 name|trunc_page
 argument_list|(
-name|USRSTACK
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_usrstack
 operator|-
 name|ctob
 argument_list|(
