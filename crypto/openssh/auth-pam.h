@@ -30,6 +30,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -62,10 +68,9 @@ begin_function_decl
 name|int
 name|auth_pam_password
 parameter_list|(
-name|struct
-name|passwd
+name|Authctxt
 modifier|*
-name|pw
+name|authctxt
 parameter_list|,
 specifier|const
 name|char

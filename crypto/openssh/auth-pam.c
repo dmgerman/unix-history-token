@@ -36,7 +36,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"readpass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"canohost.h"
 end_include
 
 begin_expr_stmt
@@ -175,6 +193,13 @@ modifier|*
 name|pam_msg
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ServerOptions
+name|options
 decl_stmt|;
 end_decl_stmt
 
@@ -696,10 +721,9 @@ begin_function
 name|int
 name|auth_pam_password
 parameter_list|(
-name|struct
-name|passwd
+name|Authctxt
 modifier|*
-name|pw
+name|authctxt
 parameter_list|,
 specifier|const
 name|char
@@ -707,9 +731,14 @@ modifier|*
 name|password
 parameter_list|)
 block|{
-specifier|extern
-name|ServerOptions
-name|options
+name|struct
+name|passwd
+modifier|*
+name|pw
+init|=
+name|authctxt
+operator|->
+name|pw
 decl_stmt|;
 name|int
 name|pam_retval
@@ -846,7 +875,11 @@ argument_list|(
 literal|"PAM setting rhost to \"%.200s\""
 argument_list|,
 name|get_canonical_hostname
-argument_list|()
+argument_list|(
+name|options
+operator|.
+name|reverse_mapping_check
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pam_retval
@@ -858,7 +891,11 @@ argument_list|,
 name|PAM_RHOST
 argument_list|,
 name|get_canonical_hostname
-argument_list|()
+argument_list|(
+name|options
+operator|.
+name|reverse_mapping_check
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
