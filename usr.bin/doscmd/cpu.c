@@ -1344,6 +1344,10 @@ operator|-
 literal|1
 return|;
 block|}
+name|R_CX
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 default|default:
 comment|/* Unknown instruction, get out of here and let trap.c:sigbus() 	       catch it. */
