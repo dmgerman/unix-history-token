@@ -120,16 +120,12 @@ block|)
 function|;
 end_function
 
-begin_expr_stmt
-name|egid
-operator|=
-name|getegid
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* revoke */
+end_comment
 
 begin_expr_stmt
-name|setegid
+name|setgid
 argument_list|(
 name|getgid
 argument_list|()
