@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.h	8.1 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.h	8.2 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -23,22 +23,41 @@ begin_comment
 comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O) or by the lock on the page  *	queues (P).  */
 end_comment
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|pglist
+argument_list|,
+name|vm_page
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|vm_page
 block|{
-name|queue_chain_t
+name|TAILQ_ENTRY
+argument_list|(
+argument|vm_page
+argument_list|)
 name|pageq
-decl_stmt|;
-comment|/* queue info for FIFO 					 * queue or free list (P) */
-name|queue_chain_t
+expr_stmt|;
+comment|/* queue info for FIFO 						 * queue or free list (P) */
+name|TAILQ_ENTRY
+argument_list|(
+argument|vm_page
+argument_list|)
 name|hashq
-decl_stmt|;
+expr_stmt|;
 comment|/* hash table links (O)*/
-name|queue_chain_t
+name|TAILQ_ENTRY
+argument_list|(
+argument|vm_page
+argument_list|)
 name|listq
-decl_stmt|;
-comment|/* all pages in same object (O)*/
+expr_stmt|;
+comment|/* pages in same object (O)*/
 name|vm_object_t
 name|object
 decl_stmt|;
@@ -46,11 +65,11 @@ comment|/* which object am I in (O,P)*/
 name|vm_offset_t
 name|offset
 decl_stmt|;
-comment|/* offset into that object (O,P) */
+comment|/* offset into object (O,P) */
 name|u_short
 name|wire_count
 decl_stmt|;
-comment|/* number wired down maps use me? (P) */
+comment|/* wired down maps refs (P) */
 name|u_short
 name|flags
 decl_stmt|;
@@ -276,7 +295,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|queue_head_t
+name|struct
+name|pglist
 name|vm_page_queue_free
 decl_stmt|;
 end_decl_stmt
@@ -287,7 +307,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|queue_head_t
+name|struct
+name|pglist
 name|vm_page_queue_active
 decl_stmt|;
 end_decl_stmt
@@ -298,7 +319,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|queue_head_t
+name|struct
+name|pglist
 name|vm_page_queue_inactive
 decl_stmt|;
 end_decl_stmt
