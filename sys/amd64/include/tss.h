@@ -48,9 +48,6 @@ decl_stmt|;
 name|u_int32_t
 name|tss_rsvd2
 decl_stmt|;
-name|u_int32_t
-name|tss_rsvd3
-decl_stmt|;
 name|u_int64_t
 name|tss_ist1
 name|__packed
