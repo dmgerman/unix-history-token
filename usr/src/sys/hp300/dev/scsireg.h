@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsireg.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsireg.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -663,8 +663,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|CMD_REWIND
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
 name|CMD_FORMAT_UNIT
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_READ_BLOCK_LIMITS
+value|0x05
 end_define
 
 begin_define
@@ -691,6 +705,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|CMD_WRITE_FILEMARK
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_SPACE
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
 name|CMD_MODE_SELECT
 value|0x15
 end_define
@@ -705,6 +733,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CMD_ERASE
+value|0x19
+end_define
+
+begin_define
+define|#
+directive|define
 name|CMD_MODE_SENSE
 value|0x1A
 end_define
@@ -712,8 +747,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|CMD_LOADUNLOAD
+value|0x1B
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_RECEIVE_DIAG
+value|0x1C
+end_define
+
+begin_define
+define|#
+directive|define
 name|CMD_SEND_DIAG
 value|0x1D
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_P_A_MEDIA_REMOVAL
+value|0x1E
 end_define
 
 begin_define
@@ -1720,7 +1776,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_endif
