@@ -3562,9 +3562,9 @@ operator|)
 operator|-
 literal|1
 condition|)
-name|chmod
+name|fchmod
 argument_list|(
-name|devnam
+name|ttyfd
 argument_list|,
 name|tty_mode
 argument_list|)
