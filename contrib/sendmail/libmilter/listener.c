@@ -1,38 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: listener.c,v 8.38.2.1.2.22 2001/05/16 17:15:58 ca Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER
-end_if
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: listener.c,v 8.81 2002/01/08 23:14:23 ca Exp $"
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* **  listener.c -- threaded network listener */
@@ -42,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"libmilter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/errstring.h>
 end_include
 
 begin_if
@@ -67,11 +55,40 @@ begin_comment
 comment|/* NETINET || NETINET6 */
 end_comment
 
-begin_escape
-end_escape
+begin_decl_stmt
+specifier|static
+name|smutex_t
+name|L_Mutex
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* **  MI_MILTEROPEN -- setup socket to listen on ** **	Parameters: **		conn -- connection description **		backlog -- listen backlog **		socksize -- socksize of created socket **		family -- family of created socket **		name -- name for logging ** **	Returns: **		socket upon success, error code otherwise. */
+comment|/* **  MI_MILTEROPEN -- setup socket to listen on ** **	Parameters: **		conn -- connection description **		backlog -- listen backlog **		socksize -- socksize of created socket **		family -- family of created socket **		name -- name for logging ** **	Returns: **		socket upon success, error code otherwise. ** **	Side effect: **		sets sockpath if UNIX socket. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NETUNIX
+end_if
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sockpath
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETUNIX */
 end_comment
 
 begin_function
@@ -116,6 +133,11 @@ name|int
 name|sockopt
 init|=
 literal|1
+decl_stmt|;
+name|size_t
+name|len
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -567,25 +589,18 @@ name|at
 operator|=
 name|colon
 expr_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|colon
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
 if|if
 condition|(
-name|strlcpy
-argument_list|(
-name|addr
-operator|.
-name|sunix
-operator|.
-name|sun_path
-argument_list|,
-name|colon
-argument_list|,
-sizeof|sizeof
-name|addr
-operator|.
-name|sunix
-operator|.
-name|sun_path
-argument_list|)
+name|len
 operator|>=
 sizeof|sizeof
 name|addr
@@ -614,6 +629,27 @@ return|return
 name|INVALID_SOCKET
 return|;
 block|}
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
+argument_list|(
+name|addr
+operator|.
+name|sunix
+operator|.
+name|sun_path
+argument_list|,
+name|colon
+argument_list|,
+sizeof|sizeof
+name|addr
+operator|.
+name|sunix
+operator|.
+name|sun_path
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -671,7 +707,8 @@ directive|endif
 comment|/* NETINET6 */
 condition|)
 block|{
-name|u_short
+name|unsigned
+name|short
 name|port
 decl_stmt|;
 comment|/* Parse port@host */
@@ -765,7 +802,8 @@ operator|=
 name|htons
 argument_list|(
 operator|(
-name|u_short
+name|unsigned
+name|short
 operator|)
 name|atoi
 argument_list|(
@@ -886,7 +924,7 @@ block|{
 name|bool
 name|found
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 if|#
 directive|if
@@ -964,7 +1002,7 @@ name|port
 expr_stmt|;
 name|found
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 endif|#
@@ -997,7 +1035,7 @@ name|sa_family
 operator|==
 name|AF_INET6
 operator|&&
-name|inet_pton
+name|mi_inet_pton
 argument_list|(
 name|AF_INET6
 argument_list|,
@@ -1036,7 +1074,7 @@ name|port
 expr_stmt|;
 name|found
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 endif|#
@@ -1238,8 +1276,6 @@ return|;
 block|}
 if|#
 directive|if
-name|_FFR_FREEHOSTENT
-operator|&&
 name|NETINET6
 name|freehostent
 argument_list|(
@@ -1248,7 +1284,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_FREEHOSTENT&& NETINET6 */
+comment|/* NETINET6 */
 block|}
 block|}
 else|else
@@ -1336,7 +1372,7 @@ literal|"%s: Unable to create new socket: %s"
 argument_list|,
 name|name
 argument_list|,
-name|strerror
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -1381,7 +1417,7 @@ literal|"%s: Unable to setsockopt: %s"
 argument_list|,
 name|name
 argument_list|,
-name|strerror
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -1390,7 +1426,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|close
+name|closesocket
 argument_list|(
 name|sock
 argument_list|)
@@ -1427,7 +1463,7 @@ name|name
 argument_list|,
 name|conn
 argument_list|,
-name|strerror
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -1436,7 +1472,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|close
+name|closesocket
 argument_list|(
 name|sock
 argument_list|)
@@ -1465,7 +1501,7 @@ literal|"%s: listen call failed: %s"
 argument_list|,
 name|name
 argument_list|,
-name|strerror
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -1474,7 +1510,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|close
+name|closesocket
 argument_list|(
 name|sock
 argument_list|)
@@ -1483,6 +1519,88 @@ return|return
 name|INVALID_SOCKET
 return|;
 block|}
+if|#
+directive|if
+name|NETUNIX
+if|if
+condition|(
+name|addr
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|==
+name|AF_UNIX
+operator|&&
+name|len
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* 		**  Set global variable sockpath so the UNIX socket can be 		**  unlink()ed at exit. 		*/
+name|sockpath
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sockpath
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
+argument_list|(
+name|sockpath
+argument_list|,
+name|colon
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|smi_log
+argument_list|(
+name|SMI_LOG_ERR
+argument_list|,
+literal|"%s: can't malloc(%d) for sockpath: %s"
+argument_list|,
+name|name
+argument_list|,
+name|len
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|closesocket
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+return|return
+name|INVALID_SOCKET
+return|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* NETUNIX */
 operator|*
 name|family
 operator|=
@@ -1497,9 +1615,6 @@ name|sock
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MI_THREAD_HANDLE_WRAPPER -- small wrapper to handle session ** **	Parameters: **		arg -- argument to pass to mi_handle_session() ** **	Returns: **		results from mi_handle_session() */
@@ -1539,18 +1654,8 @@ name|INVALID_SOCKET
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|smutex_t
-name|L_Mutex
-decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MI_CLOSENER -- close listen socket ** **	Parameters: **		none. ** **	Returns: **		none. */
+comment|/* **  MI_CLOSENER -- close listen socket ** **	NOTE: It is assumed that this function is called from a **	      function that has a mutex lock (currently mi_stop_milters()). ** **	Parameters: **		none. ** **	Returns: **		none. */
 end_comment
 
 begin_function
@@ -1575,10 +1680,76 @@ name|listenfd
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+name|NETUNIX
+name|bool
+name|removable
+decl_stmt|;
+name|struct
+name|stat
+name|sockinfo
+decl_stmt|;
+name|struct
+name|stat
+name|fileinfo
+decl_stmt|;
+name|removable
+operator|=
+name|sockpath
+operator|!=
+name|NULL
+operator|&&
+if|#
+directive|if
+name|_FFR_MILTER_ROOT_UNSAFE
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+operator|&&
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_ROOT_UNSAFE */
+name|fstat
+argument_list|(
+name|listenfd
+argument_list|,
+operator|&
+name|sockinfo
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|S_ISFIFO
+argument_list|(
+name|sockinfo
+operator|.
+name|st_mode
+argument_list|)
+ifdef|#
+directive|ifdef
+name|S_ISSOCK
+operator|||
+name|S_ISSOCK
+argument_list|(
+name|sockinfo
+operator|.
+name|st_mode
+argument_list|)
+endif|#
+directive|endif
+comment|/* S_ISSOCK */
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETUNIX */
 operator|(
 name|void
 operator|)
-name|close
+name|closesocket
 argument_list|(
 name|listenfd
 argument_list|)
@@ -1587,6 +1758,107 @@ name|listenfd
 operator|=
 name|INVALID_SOCKET
 expr_stmt|;
+if|#
+directive|if
+name|NETUNIX
+comment|/* XXX sleep() some time before doing this? */
+if|if
+condition|(
+name|sockpath
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|removable
+operator|&&
+name|stat
+argument_list|(
+name|sockpath
+argument_list|,
+operator|&
+name|fileinfo
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|(
+operator|(
+name|fileinfo
+operator|.
+name|st_dev
+operator|==
+name|sockinfo
+operator|.
+name|st_dev
+operator|&&
+name|fileinfo
+operator|.
+name|st_ino
+operator|==
+name|sockinfo
+operator|.
+name|st_ino
+operator|)
+ifdef|#
+directive|ifdef
+name|S_ISSOCK
+operator|||
+name|S_ISSOCK
+argument_list|(
+name|fileinfo
+operator|.
+name|st_mode
+argument_list|)
+endif|#
+directive|endif
+comment|/* S_ISSOCK */
+operator|)
+operator|&&
+operator|(
+name|S_ISFIFO
+argument_list|(
+name|fileinfo
+operator|.
+name|st_mode
+argument_list|)
+ifdef|#
+directive|ifdef
+name|S_ISSOCK
+operator|||
+name|S_ISSOCK
+argument_list|(
+name|fileinfo
+operator|.
+name|st_mode
+argument_list|)
+endif|#
+directive|endif
+comment|/* S_ISSOCK */
+operator|)
+condition|)
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|sockpath
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sockpath
+argument_list|)
+expr_stmt|;
+name|sockpath
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* NETUNIX */
 block|}
 operator|(
 name|void
@@ -1599,9 +1871,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MI_LISTENER -- Generic listener harness ** **	Open up listen port **	Wait for connections ** **	Parameters: **		conn -- connection description **		dbg -- debug level **		smfi -- filter structure to use **		timeout -- timeout for reads/writes ** **	Returns: **		MI_SUCCESS -- Exited normally **			   (session finished or we were told to exit) **		MI_FAILURE -- Network initialization failed. */
@@ -1715,16 +1984,25 @@ name|mcnt
 init|=
 literal|0
 decl_stmt|;
+comment|/* error count for malloc() failures */
 name|int
 name|tcnt
 init|=
 literal|0
 decl_stmt|;
+comment|/* error count for thread_create() failures */
 name|int
 name|acnt
 init|=
 literal|0
 decl_stmt|;
+comment|/* error count for accept() failures */
+name|int
+name|scnt
+init|=
+literal|0
+decl_stmt|;
+comment|/* error count for select() failures */
 name|int
 name|save_errno
 init|=
@@ -1946,7 +2224,8 @@ expr_stmt|;
 name|FD_SET
 argument_list|(
 operator|(
-name|u_int
+name|unsigned
+name|int
 operator|)
 name|listenfd
 argument_list|,
@@ -1957,7 +2236,8 @@ expr_stmt|;
 name|FD_SET
 argument_list|(
 operator|(
-name|u_int
+name|unsigned
+name|int
 operator|)
 name|listenfd
 argument_list|,
@@ -2044,11 +2324,52 @@ operator|==
 name|EINTR
 condition|)
 continue|continue;
+name|scnt
+operator|++
+expr_stmt|;
+name|smi_log
+argument_list|(
+name|SMI_LOG_ERR
+argument_list|,
+literal|"%s: select() failed (%s), %s"
+argument_list|,
+name|smfi
+operator|->
+name|xxfi_name
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|save_errno
+argument_list|)
+argument_list|,
+name|scnt
+operator|>=
+name|MAX_FAILS_S
+condition|?
+literal|"abort"
+else|:
+literal|"try again"
+argument_list|)
+expr_stmt|;
+name|MI_SLEEP
+argument_list|(
+name|scnt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|scnt
+operator|>=
+name|MAX_FAILS_S
+condition|)
+block|{
 name|ret
 operator|=
 name|MI_FAILURE
 expr_stmt|;
 break|break;
+block|}
+continue|continue;
 block|}
 if|if
 condition|(
@@ -2076,8 +2397,24 @@ operator|&
 name|L_Mutex
 argument_list|)
 expr_stmt|;
+name|smi_log
+argument_list|(
+name|SMI_LOG_ERR
+argument_list|,
+literal|"%s: select() returned exception for socket, abort"
+argument_list|,
+name|smfi
+operator|->
+name|xxfi_name
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
+name|scnt
+operator|=
+literal|0
+expr_stmt|;
+comment|/* reset error counter for select() */
 name|memset
 argument_list|(
 operator|&
@@ -2160,7 +2497,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|close
+name|closesocket
 argument_list|(
 name|connfd
 argument_list|)
@@ -2183,22 +2520,6 @@ name|connfd
 argument_list|)
 condition|)
 block|{
-name|smi_log
-argument_list|(
-name|SMI_LOG_ERR
-argument_list|,
-literal|"%s: accept() returned invalid socket (%s)"
-argument_list|,
-name|smfi
-operator|->
-name|xxfi_name
-argument_list|,
-name|strerror
-argument_list|(
-name|save_errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|save_errno
@@ -2208,6 +2529,30 @@ condition|)
 continue|continue;
 name|acnt
 operator|++
+expr_stmt|;
+name|smi_log
+argument_list|(
+name|SMI_LOG_ERR
+argument_list|,
+literal|"%s: accept() returned invalid socket (%s), %s"
+argument_list|,
+name|smfi
+operator|->
+name|xxfi_name
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|save_errno
+argument_list|)
+argument_list|,
+name|acnt
+operator|>=
+name|MAX_FAILS_A
+condition|?
+literal|"abort"
+else|:
+literal|"try again"
+argument_list|)
 expr_stmt|;
 name|MI_SLEEP
 argument_list|(
@@ -2229,6 +2574,11 @@ break|break;
 block|}
 continue|continue;
 block|}
+name|acnt
+operator|=
+literal|0
+expr_stmt|;
+comment|/* reset error counter for accept() */
 if|if
 condition|(
 name|setsockopt
@@ -2257,11 +2607,16 @@ name|smi_log
 argument_list|(
 name|SMI_LOG_WARN
 argument_list|,
-literal|"%s: setsockopt() failed"
+literal|"%s: setsockopt() failed (%s)"
 argument_list|,
 name|smfi
 operator|->
 name|xxfi_name
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX: continue? */
@@ -2288,24 +2643,37 @@ block|{
 operator|(
 name|void
 operator|)
-name|close
+name|closesocket
 argument_list|(
 name|connfd
 argument_list|)
+expr_stmt|;
+name|mcnt
+operator|++
 expr_stmt|;
 name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: malloc(ctx) failed"
+literal|"%s: malloc(ctx) failed (%s), %s"
 argument_list|,
 name|smfi
 operator|->
 name|xxfi_name
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|save_errno
 argument_list|)
-expr_stmt|;
+argument_list|,
 name|mcnt
-operator|++
+operator|>=
+name|MAX_FAILS_M
+condition|?
+literal|"abort"
+else|:
+literal|"try again"
+argument_list|)
 expr_stmt|;
 name|MI_SLEEP
 argument_list|(
@@ -2331,10 +2699,7 @@ name|mcnt
 operator|=
 literal|0
 expr_stmt|;
-name|acnt
-operator|=
-literal|0
-expr_stmt|;
+comment|/* reset error counter for malloc() */
 name|memset
 argument_list|(
 name|ctx
@@ -2498,21 +2863,29 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|tcnt
+operator|++
+expr_stmt|;
 name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: thread_create() failed: %d"
+literal|"%s: thread_create() failed: %d, %s"
 argument_list|,
 name|smfi
 operator|->
 name|xxfi_name
 argument_list|,
 name|r
-argument_list|)
-expr_stmt|;
+argument_list|,
 name|tcnt
-operator|++
+operator|>=
+name|MAX_FAILS_T
+condition|?
+literal|"abort"
+else|:
+literal|"try again"
+argument_list|)
 expr_stmt|;
 name|MI_SLEEP
 argument_list|(
@@ -2522,7 +2895,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|close
+name|closesocket
 argument_list|(
 name|connfd
 argument_list|)
@@ -2581,15 +2954,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MILTER */
-end_comment
 
 end_unit
 

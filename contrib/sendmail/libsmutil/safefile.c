@@ -3,39 +3,30 @@ begin_comment
 comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: safefile.c,v 8.81.4.10 2001/07/20 04:19:36 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sendmail.h>
 end_include
 
-begin_escape
-end_escape
+begin_include
+include|#
+directive|include
+file|<sm/io.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/errstring.h>
+end_include
+
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: safefile.c,v 8.121 2001/10/11 21:46:13 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* **  SAFEFILE -- return 0 if a file exists and is safe for a user. ** **	Parameters: **		fn -- filename to check. **		uid -- user id to compare against. **		gid -- group id to compare against. **		user -- user name to compare against (used for group **			sets). **		flags -- modifiers: **			SFF_MUSTOWN -- "uid" must own this file. **			SFF_NOSLINK -- file cannot be a symbolic link. **		mode -- mode bits that must match. **		st -- if set, points to a stat structure that will **			get the stat info for the file. ** **	Returns: **		0 if fn exists, is owned by uid, and matches mode. **		An errno otherwise.  The actual errno is cleared. ** **	Side Effects: **		none. */
@@ -131,7 +122,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"safefile(%s, uid=%d, gid=%d, flags=%lx, mode=%o):\n"
 argument_list|,
@@ -158,18 +149,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|st
-operator|==
-name|NULL
-condition|)
-name|st
-operator|=
-operator|&
-name|fstbuf
-expr_stmt|;
-if|if
-condition|(
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|fbuf
 argument_list|,
@@ -192,7 +172,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\tpathname too long\n"
 argument_list|)
@@ -204,6 +184,17 @@ block|}
 name|fn
 operator|=
 name|fbuf
+expr_stmt|;
+if|if
+condition|(
+name|st
+operator|==
+name|NULL
+condition|)
+name|st
+operator|=
+operator|&
+name|fstbuf
 expr_stmt|;
 comment|/* ignore SFF_SAFEDIRPATH if we are debugging */
 if|if
@@ -307,7 +298,7 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-comment|/* 		**  If final file is setuid, run as the owner of that 		**  file.  Gotta be careful not to reveal anything too 		**  soon here! 		*/
+comment|/* 		**  If final file is set-user-ID, run as the owner of that 		**  file.  Gotta be careful not to reveal anything too 		**  soon here! 		*/
 ifdef|#
 directive|ifdef
 name|SUID_ROOT_FILES_OK
@@ -537,7 +528,7 @@ block|{
 comment|/* directory is safe */
 name|checkpath
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 else|else
@@ -579,11 +570,11 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t%s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|ret
 argument_list|)
@@ -717,11 +708,11 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t%s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|ret
 argument_list|)
@@ -805,6 +796,10 @@ name|S_IWRITE
 operator||
 name|S_IEXEC
 decl_stmt|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|stbuf
@@ -957,11 +952,14 @@ operator|)
 operator|!=
 name|md
 condition|)
+name|ret
+operator|=
 name|errno
 operator|=
 name|EACCES
 expr_stmt|;
 block|}
+else|else
 name|ret
 operator|=
 name|errno
@@ -975,7 +973,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[final dir %s uid %d mode %lo] %s\n"
 argument_list|,
@@ -989,13 +987,14 @@ operator|.
 name|st_uid
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|stbuf
 operator|.
 name|st_mode
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|ret
 argument_list|)
@@ -1051,12 +1050,13 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[slink mode %lo]\tE_SM_NOSLINK\n"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|st
 operator|->
@@ -1097,12 +1097,13 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[non-reg mode %lo]\tE_SM_REGONLY\n"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|st
 operator|->
@@ -1141,12 +1142,13 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[write bits %lo]\tE_SM_GWFILE\n"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|st
 operator|->
@@ -1185,12 +1187,13 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[write bits %lo]\tE_SM_WWFILE\n"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|st
 operator|->
@@ -1229,12 +1232,13 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[read bits %lo]\tE_SM_GRFILE\n"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|st
 operator|->
@@ -1273,12 +1277,13 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[read bits %lo]\tE_SM_WRFILE\n"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|st
 operator|->
@@ -1333,12 +1338,13 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[exec bits %lo]\tE_SM_ISEXEC]\n"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|st
 operator|->
@@ -1374,7 +1380,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[link count %d]\tE_SM_NOHLINK\n"
 argument_list|,
@@ -1574,7 +1580,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[uid %d, nlink %d, stat %lo, mode %lo] "
 argument_list|,
@@ -1593,14 +1599,16 @@ operator|->
 name|st_nlink
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|st
 operator|->
 name|st_mode
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|mode
 argument_list|)
@@ -1655,7 +1663,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\tOK\n"
 argument_list|)
@@ -1673,7 +1681,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\tEACCES\n"
 argument_list|)
@@ -1683,9 +1691,6 @@ name|EACCES
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SAFEDIRPATH -- check to make sure a path to a directory is safe ** **	Safe means not writable and owned by the right folks. ** **	Parameters: **		fn -- filename to check. **		uid -- user id to compare against. **		gid -- group id to compare against. **		user -- user name to compare against (used for group **			sets). **		flags -- modifiers: **			SFF_ROOTOK -- ok to use root permissions to open. **			SFF_SAFEDIRPATH -- writable directories are considered **				to be fatal errors. **		level -- symlink recursive level. **		offset -- offset into fn to start checking from. ** **	Returns: **		0 -- if the directory path is "safe". **		else -- an error number associated with the path. */
@@ -1791,6 +1796,26 @@ condition|)
 return|return
 name|ELOOP
 return|;
+if|if
+condition|(
+name|level
+operator|<
+literal|0
+operator|||
+name|offset
+operator|<
+literal|0
+operator|||
+name|offset
+operator|>
+name|strlen
+argument_list|(
+name|fn
+argument_list|)
+condition|)
+return|return
+name|EINVAL
+return|;
 comment|/* special case root directory */
 if|if
 condition|(
@@ -1812,7 +1837,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"safedirpath(%s, uid=%ld, gid=%ld, flags=%lx, level=%d, offset=%d):\n"
 argument_list|,
@@ -1852,7 +1877,7 @@ expr_stmt|;
 comment|/* Make a modifiable copy of the filename */
 if|if
 condition|(
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|s
 argument_list|,
@@ -2021,7 +2046,7 @@ argument_list|,
 literal|20
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[dir %s]\n"
 argument_list|,
@@ -2309,22 +2334,33 @@ name|s
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|strlen
+name|sm_strlcpyn
 argument_list|(
+name|fullbuf
+argument_list|,
+sizeof|sizeof
+name|fullbuf
+argument_list|,
+literal|2
+argument_list|,
 name|s
+argument_list|,
+literal|"/"
 argument_list|)
-operator|+
-literal|1
-operator|+
-name|strlen
+operator|>=
+sizeof|sizeof
+name|fullbuf
+operator|||
+name|sm_strlcat
 argument_list|(
+name|fullbuf
+argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+name|fullbuf
 argument_list|)
-operator|+
-literal|1
-operator|)
-operator|>
+operator|>=
 sizeof|sizeof
 name|fullbuf
 condition|)
@@ -2335,20 +2371,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|snprintf
-argument_list|(
-name|fullbuf
-argument_list|,
-sizeof|sizeof
-name|fullbuf
-argument_list|,
-literal|"%s/%s"
-argument_list|,
-name|s
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 operator|*
 name|sptr
 operator|=
@@ -2359,13 +2381,16 @@ else|else
 block|{
 if|if
 condition|(
-name|strlen
+name|sm_strlcpy
 argument_list|(
+name|fullbuf
+argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+name|fullbuf
 argument_list|)
-operator|+
-literal|1
-operator|>
+operator|>=
 sizeof|sizeof
 name|fullbuf
 condition|)
@@ -2376,19 +2401,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|strlcpy
-argument_list|(
-name|fullbuf
-argument_list|,
-name|buf
-argument_list|,
-sizeof|sizeof
-name|fullbuf
-argument_list|)
-expr_stmt|;
 block|}
 name|target
 operator|=
@@ -2488,14 +2500,15 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[dir %s] mode %lo "
 argument_list|,
 name|s
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|stbuf
 operator|.
@@ -2541,7 +2554,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"FATAL\n"
 argument_list|)
@@ -2557,7 +2570,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"WARNING\n"
 argument_list|)
@@ -2811,7 +2824,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\t[dir %s] %s\n"
 argument_list|,
@@ -2823,7 +2836,7 @@ literal|0
 condition|?
 literal|"OK"
 else|:
-name|errstring
+name|sm_errstring
 argument_list|(
 name|ret
 argument_list|)
@@ -2834,9 +2847,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SAFEOPEN -- do a file open with extra checking ** **	Parameters: **		fn -- the file name to open. **		omode -- the open-style mode flags. **		cmode -- the create-style mode flags. **		sff -- safefile flags. ** **	Returns: **		Same as open. */
@@ -2890,7 +2900,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|printf
+name|sm_dprintf
 argument_list|(
 literal|"safeopen: fn=%s, omode=%x, cmode=%x, sff=%lx\n"
 argument_list|,
@@ -3156,11 +3166,269 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
+begin_comment
+comment|/* **  SAFEFOPEN -- do a file open with extra checking ** **	Parameters: **		fn -- the file name to open. **		omode -- the open-style mode flags. **		cmode -- the create-style mode flags. **		sff -- safefile flags. ** **	Returns: **		Same as fopen. */
+end_comment
+
+begin_function
+name|SM_FILE_T
+modifier|*
+name|safefopen
+parameter_list|(
+name|fn
+parameter_list|,
+name|omode
+parameter_list|,
+name|cmode
+parameter_list|,
+name|sff
+parameter_list|)
+name|char
+modifier|*
+name|fn
+decl_stmt|;
+name|int
+name|omode
+decl_stmt|;
+name|int
+name|cmode
+decl_stmt|;
+name|long
+name|sff
+decl_stmt|;
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|int
+name|save_errno
+decl_stmt|;
+name|SM_FILE_T
+modifier|*
+name|fp
+decl_stmt|;
+name|int
+name|fmode
+decl_stmt|;
+switch|switch
+condition|(
+name|omode
+operator|&
+name|O_ACCMODE
+condition|)
+block|{
+case|case
+name|O_RDONLY
+case|:
+name|fmode
+operator|=
+name|SM_IO_RDONLY
+expr_stmt|;
+break|break;
+case|case
+name|O_WRONLY
+case|:
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|O_APPEND
+argument_list|,
+name|omode
+argument_list|)
+condition|)
+name|fmode
+operator|=
+name|SM_IO_APPEND
+expr_stmt|;
+else|else
+name|fmode
+operator|=
+name|SM_IO_WRONLY
+expr_stmt|;
+break|break;
+case|case
+name|O_RDWR
+case|:
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|O_TRUNC
+argument_list|,
+name|omode
+argument_list|)
+condition|)
+name|fmode
+operator|=
+name|SM_IO_RDWRTR
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|O_APPEND
+argument_list|,
+name|omode
+argument_list|)
+condition|)
+name|fmode
+operator|=
+name|SM_IO_APPENDRW
+expr_stmt|;
+else|else
+name|fmode
+operator|=
+name|SM_IO_RDWR
+expr_stmt|;
+break|break;
+default|default:
+name|syserr
+argument_list|(
+literal|"554 5.3.5 safefopen: unknown omode %o"
+argument_list|,
+name|omode
+argument_list|)
+expr_stmt|;
+name|fmode
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|fd
+operator|=
+name|safeopen
+argument_list|(
+name|fn
+argument_list|,
+name|omode
+argument_list|,
+name|cmode
+argument_list|,
+name|sff
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+block|{
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|44
+argument_list|,
+literal|10
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"safefopen: safeopen failed: %s\n"
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+name|fp
+operator|=
+name|sm_io_open
+argument_list|(
+name|SmFtStdiofd
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|fd
+argument_list|,
+name|fmode
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|!=
+name|NULL
+condition|)
+return|return
+name|fp
+return|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|44
+argument_list|,
+literal|10
+argument_list|)
+condition|)
+block|{
+name|sm_dprintf
+argument_list|(
+literal|"safefopen: fdopen(%s, %d) failed: omode=%x, sff=%lx, err=%s\n"
+argument_list|,
+name|fn
+argument_list|,
+name|fmode
+argument_list|,
+name|omode
+argument_list|,
+name|sff
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
 
 begin_comment
-comment|/* **  FILECHANGED -- check to see if file changed after being opened ** **	Parameters: **		fn -- pathname of file to check. **		fd -- file descriptor to check. **		stb -- stat structure from before open. ** **	Returns: **		TRUE -- if a problem was detected. **		FALSE -- if this file is still the same. */
+comment|/* **  FILECHANGED -- check to see if file changed after being opened ** **	Parameters: **		fn -- pathname of file to check. **		fd -- file descriptor to check. **		stb -- stat structure from before open. ** **	Returns: **		true -- if a problem was detected. **		false -- if this file is still the same. */
 end_comment
 
 begin_function
@@ -3223,13 +3491,13 @@ operator|!=
 literal|1
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 else|#
 directive|else
 comment|/* HASLSTAT&& BOGUS_O_EXCL */
 return|return
-name|FALSE
+name|false
 return|;
 endif|#
 directive|endif
@@ -3248,7 +3516,7 @@ operator|<
 literal|0
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 if|if
 condition|(
@@ -3320,12 +3588,12 @@ literal|8
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"File changed after opening:\n"
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" nlink	= %ld/%ld\n"
 argument_list|,
@@ -3344,7 +3612,7 @@ operator|.
 name|st_nlink
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" dev	= %ld/%ld\n"
 argument_list|,
@@ -3363,60 +3631,19 @@ operator|.
 name|st_dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-sizeof|sizeof
-name|sta
-operator|.
-name|st_ino
-operator|>
-sizeof|sizeof
+name|sm_dprintf
 argument_list|(
-name|long
-argument_list|)
-condition|)
-block|{
-name|dprintf
-argument_list|(
-literal|" ino	= %s/"
-argument_list|,
-name|quad_to_string
-argument_list|(
-name|stb
-operator|->
-name|st_ino
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|dprintf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|quad_to_string
-argument_list|(
-name|sta
-operator|.
-name|st_ino
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|dprintf
-argument_list|(
-literal|" ino	= %lu/%lu\n"
+literal|" ino	= %llu/%llu\n"
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|ULONGLONG_T
 operator|)
 name|stb
 operator|->
 name|st_ino
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|ULONGLONG_T
 operator|)
 name|sta
 operator|.
@@ -3426,7 +3653,7 @@ expr_stmt|;
 if|#
 directive|if
 name|HAS_ST_GEN
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" gen	= %ld/%ld\n"
 argument_list|,
@@ -3448,7 +3675,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAS_ST_GEN */
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" uid	= %ld/%ld\n"
 argument_list|,
@@ -3467,7 +3694,7 @@ operator|.
 name|st_uid
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" gid	= %ld/%ld\n"
 argument_list|,
@@ -3488,17 +3715,14 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|TRUE
+name|true
 return|;
 block|}
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  DFOPEN -- determined file open ** **	This routine has the semantics of open, except that it will **	keep trying a few times to make this happen.  The idea is that **	on very loaded systems, we may run out of resources (inodes, **	whatever), so this tries to get around it. */

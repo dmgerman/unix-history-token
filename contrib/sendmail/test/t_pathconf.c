@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (c) 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+end_comment
+
+begin_comment
 comment|/* **  The following test program tries the pathconf(2) routine.  It should **  be run in a non-NFS-mounted directory (e.g., /tmp) and on remote (NFS) **  mounted directories running both NFS-v2 and NFS-v3 from systems that **  both do and do not permit file giveaway. */
 end_comment
 
@@ -76,7 +80,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: t_pathconf.c,v 8.5 1999/08/28 00:25:28 gshapiro Exp $"
+literal|"@(#)$Id: t_pathconf.c,v 8.6 2001/09/23 03:35:41 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 

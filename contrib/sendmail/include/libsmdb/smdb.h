@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. ** ** $Id: smdb.h,v 8.29.2.1.2.2 2000/10/05 22:23:55 gshapiro Exp $ */
+comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: smdb.h,v 8.38 2001/11/19 19:30:03 gshapiro Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -27,16 +27,28 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__P
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|"sendmail/cdefs.h"
+file|<sm/errstring.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NDBM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ndbm.h>
 end_include
 
 begin_endif
@@ -45,79 +57,81 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __P */
+comment|/* NDBM */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDBM
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEWDB
-end_ifndef
-
-begin_expr_stmt
-name|ERROR
-name|NDBM
-name|or
-name|NEWDB
-name|must
-name|be
-name|defined
-operator|.
-endif|#
-directive|endif
-comment|/* ! NEWDB */
-endif|#
-directive|endif
-comment|/* ! NDBM */
-ifdef|#
-directive|ifdef
-name|NDBM
-include|#
-directive|include
-file|<ndbm.h>
-endif|#
-directive|endif
-comment|/* NDBM */
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|NEWDB
+end_ifdef
+
+begin_include
 include|#
 directive|include
 file|<db.h>
+end_include
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|DB_VERSION_MAJOR
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|DB_VERSION_MAJOR
 value|1
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* ! DB_VERSION_MAJOR */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* NEWDB */
-comment|/* ** Some size constants */
+end_comment
+
+begin_comment
+comment|/* **  Some size constants */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|SMDB_MAX_USER_NAME_LEN
 value|1024
+end_define
+
+begin_define
 define|#
 directive|define
 name|SMDB_MAX_NAME_LEN
 value|1024
-comment|/* ** This file defines the abstraction for database lookups. It is pretty ** much a copy of the db2 interface with the exception that every function ** returns 0 on success and non-zero on failure. The non-zero return code ** is meaningful. ** ** I'm going to put the function comments in this file since the interface ** MUST be the same for all inheritors of this interface. */
-expr|typedef struct
+end_define
+
+begin_comment
+comment|/* **  This file defines the abstraction for database lookups. It is pretty **  much a copy of the db2 interface with the exception that every function **  returns 0 on success and non-zero on failure. The non-zero return code **  is meaningful. ** **  I'm going to put the function comments in this file since the interface **  MUST be the same for all inheritors of this interface. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
 name|database_struct
 name|SMDB_DATABASE
-expr_stmt|;
-end_expr_stmt
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -135,11 +149,8 @@ name|SMDB_DBENT
 typedef|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_CLOSE_FUNC -- close the database ** **	Parameters: **		db -- The database to close. ** **	Returns: **		0 - Success, otherwise errno. ** */
+comment|/* **  DB_CLOSE_FUNC -- close the database ** **	Parameters: **		db -- The database to close. ** **	Returns: **		0 - Success, otherwise errno. ** */
 end_comment
 
 begin_typedef
@@ -159,11 +170,8 @@ argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_DEL_FUNC -- removes a key and data pair from the database ** **	Parameters: **		db -- The database to close. **		key -- The key to remove. **		flags -- delete options. There are currently no defined **			 flags for delete. ** **	Returns: **		0 - Success, otherwise errno. ** */
+comment|/* **  DB_DEL_FUNC -- removes a key and data pair from the database ** **	Parameters: **		db -- The database to close. **		key -- The key to remove. **		flags -- delete options. There are currently no defined **			 flags for delete. ** **	Returns: **		0 - Success, otherwise errno. ** */
 end_comment
 
 begin_typedef
@@ -183,18 +191,16 @@ name|SMDB_DBENT
 operator|*
 name|key
 operator|,
-name|u_int
+name|unsigned
+name|int
 name|flags
 operator|)
 argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_FD_FUNC -- Returns a pointer to a file used for the database. ** **	Parameters: **		db -- The database to close. **		fd -- A pointer to store the returned fd in. ** **	Returns: **		0 - Success, otherwise errno. ** */
+comment|/* **  DB_FD_FUNC -- Returns a pointer to a file used for the database. ** **	Parameters: **		db -- The database to close. **		fd -- A pointer to store the returned fd in. ** **	Returns: **		0 - Success, otherwise errno. ** */
 end_comment
 
 begin_typedef
@@ -218,11 +224,8 @@ argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_GET_FUNC -- Gets the data associated with a key. ** **	Parameters: **		db -- The database to close. **		key -- The key to access. **		data -- A place to store the returned data. **		flags -- get options. There are currently no defined **			 flags for get. ** **	Returns: **		0 - Success, otherwise errno. ** */
+comment|/* **  DB_GET_FUNC -- Gets the data associated with a key. ** **	Parameters: **		db -- The database to close. **		key -- The key to access. **		data -- A place to store the returned data. **		flags -- get options. There are currently no defined **			 flags for get. ** **	Returns: **		0 - Success, otherwise errno. ** */
 end_comment
 
 begin_typedef
@@ -246,18 +249,16 @@ name|SMDB_DBENT
 operator|*
 name|data
 operator|,
-name|u_int
+name|unsigned
+name|int
 name|flags
 operator|)
 argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_PUT_FUNC -- Sets some data according to the key. ** **	Parameters: **		db -- The database to close. **		key -- The key to use. **		data -- The data to store. **		flags -- put options: **			SMDBF_NO_OVERWRITE - Return an error if key alread **					     exists. **			SMDBF_ALLOW_DUP - Allow duplicates in btree maps. ** **	Returns: **		0 - Success, otherwise errno. ** */
+comment|/* **  DB_PUT_FUNC -- Sets some data according to the key. ** **	Parameters: **		db -- The database to close. **		key -- The key to use. **		data -- The data to store. **		flags -- put options: **			SMDBF_NO_OVERWRITE - Return an error if key alread **					     exists. **			SMDBF_ALLOW_DUP - Allow duplicates in btree maps. ** **	Returns: **		0 - Success, otherwise errno. ** */
 end_comment
 
 begin_typedef
@@ -281,18 +282,16 @@ name|SMDB_DBENT
 operator|*
 name|data
 operator|,
-name|u_int
+name|unsigned
+name|int
 name|flags
 operator|)
 argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_SYNC_FUNC -- Flush any cached information to disk. ** **	Parameters: **		db -- The database to sync. **		flags -- sync options: ** **	Returns: **		0 - Success, otherwise errno. ** */
+comment|/* **  DB_SYNC_FUNC -- Flush any cached information to disk. ** **	Parameters: **		db -- The database to sync. **		flags -- sync options: ** **	Returns: **		0 - Success, otherwise errno. ** */
 end_comment
 
 begin_typedef
@@ -308,18 +307,16 @@ name|SMDB_DATABASE
 operator|*
 name|db
 operator|,
-name|u_int
+name|unsigned
+name|int
 name|flags
 operator|)
 argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_SET_OWNER_FUNC -- Set the owner and group of the database files. ** **	Parameters: **		db -- The database to set. **		uid -- The UID for the new owner (-1 for no change) **		gid -- The GID for the new owner (-1 for no change) ** **	Returns: **		0 - Success, otherwise errno. ** */
+comment|/* **  DB_SET_OWNER_FUNC -- Set the owner and group of the database files. ** **	Parameters: **		db -- The database to set. **		uid -- The UID for the new owner (-1 for no change) **		gid -- The GID for the new owner (-1 for no change) ** **	Returns: **		0 - Success, otherwise errno. ** */
 end_comment
 
 begin_typedef
@@ -345,11 +342,8 @@ argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_CURSOR -- Obtain a cursor for sequential access ** **	Parameters: **		db -- The database to use. **		cursor -- The address of a cursor pointer. **		flags -- sync options: ** **	Returns: **		0 - Success, otherwise errno. ** */
+comment|/* **  DB_CURSOR -- Obtain a cursor for sequential access ** **	Parameters: **		db -- The database to use. **		cursor -- The address of a cursor pointer. **		flags -- sync options: ** **	Returns: **		0 - Success, otherwise errno. ** */
 end_comment
 
 begin_typedef
@@ -370,7 +364,8 @@ operator|*
 operator|*
 name|cursor
 operator|,
-name|u_int
+name|unsigned
+name|int
 name|flags
 operator|)
 argument_list|)
@@ -433,11 +428,8 @@ block|}
 struct|;
 end_struct
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_CURSOR_CLOSE -- Close a cursor ** **	Parameters: **		cursor -- The cursor to close. ** **	Returns: **		0 - Success, otherwise errno. ** */
+comment|/* **  DB_CURSOR_CLOSE -- Close a cursor ** **	Parameters: **		cursor -- The cursor to close. ** **	Returns: **		0 - Success, otherwise errno. ** */
 end_comment
 
 begin_typedef
@@ -457,11 +449,8 @@ argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_CURSOR_DEL -- Delete the key/value pair of this cursor ** **	Parameters: **		cursor -- The cursor. **		flags -- flags ** **	Returns: **		0 - Success, otherwise errno. ** */
+comment|/* **  DB_CURSOR_DEL -- Delete the key/value pair of this cursor ** **	Parameters: **		cursor -- The cursor. **		flags -- flags ** **	Returns: **		0 - Success, otherwise errno. ** */
 end_comment
 
 begin_typedef
@@ -477,18 +466,16 @@ name|SMDB_CURSOR
 operator|*
 name|cursor
 operator|,
-name|u_int
+name|unsigned
+name|int
 name|flags
 operator|)
 argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_CURSOR_GET -- Get the key/value of this cursor. ** **	Parameters: **		cursor -- The cursor. **		key -- The current key. **		value -- The current value **		flags -- flags ** **	Returns: **		0 - Success, otherwise errno. **		SMDBE_LAST_ENTRY - This is a success condition that **				   gets returned when the end of the **				   database is hit. ** */
+comment|/* **  DB_CURSOR_GET -- Get the key/value of this cursor. ** **	Parameters: **		cursor -- The cursor. **		key -- The current key. **		value -- The current value **		flags -- flags ** **	Returns: **		0 - Success, otherwise errno. **		SMDBE_LAST_ENTRY - This is a success condition that **				   gets returned when the end of the **				   database is hit. ** */
 end_comment
 
 begin_typedef
@@ -512,7 +499,8 @@ name|SMDB_DBENT
 operator|*
 name|data
 operator|,
-name|u_int
+name|unsigned
+name|int
 name|flags
 operator|)
 argument_list|)
@@ -520,7 +508,7 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|/* ** Flags for DB_CURSOR_GET */
+comment|/* **  Flags for DB_CURSOR_GET */
 end_comment
 
 begin_define
@@ -551,11 +539,8 @@ name|SMDB_CURSOR_GET_RANGE
 value|3
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* ** DB_CURSOR_PUT -- Put the key/value at this cursor. ** **	Parameters: **		cursor -- The cursor. **		key -- The current key. **		value -- The current value **		flags -- flags ** **	Returns: **		0 - Success, otherwise errno. ** */
+comment|/* **  DB_CURSOR_PUT -- Put the key/value at this cursor. ** **	Parameters: **		cursor -- The cursor. **		key -- The current key. **		value -- The current value **		flags -- flags ** **	Returns: **		0 - Success, otherwise errno. ** */
 end_comment
 
 begin_typedef
@@ -579,7 +564,8 @@ name|SMDB_DBENT
 operator|*
 name|data
 operator|,
-name|u_int
+name|unsigned
+name|int
 name|flags
 operator|)
 argument_list|)
@@ -614,10 +600,12 @@ begin_struct
 struct|struct
 name|database_params_struct
 block|{
-name|u_int
+name|unsigned
+name|int
 name|smdbp_num_elements
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|smdbp_cache_size
 decl_stmt|;
 name|bool
@@ -688,13 +676,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int
+name|unsigned
+name|int
 name|SMDB_FLAG
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* ** These are types of databases. */
+comment|/* **  These are types of databases. */
 end_comment
 
 begin_define
@@ -754,7 +743,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* ** These are flags */
+comment|/* **  These are flags */
 end_comment
 
 begin_comment

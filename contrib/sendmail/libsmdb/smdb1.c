@@ -1,32 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
+comment|/* ** Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: smdb1.c,v 8.43.4.3 2000/10/05 23:06:30 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: smdb1.c,v 8.55 2001/09/12 21:19:12 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_include
 include|#
@@ -121,9 +109,6 @@ name|SMDB_DB1_CURSOR
 typedef|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  SMDB_TYPE_TO_DB1_TYPE -- Translates smdb database type to db1 type. ** **	Parameters: **		type -- The type to translate. ** **	Returns: **		The DB1 type that corresponsds to the passed in SMDB type. **		Returns -1 if there is no equivalent type. ** */
 end_comment
@@ -186,15 +171,13 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  SMDB_PUT_FLAGS_TO_DB1_FLAGS -- Translates smdb put flags to db1 put flags. ** **	Parameters: **		flags -- The flags to translate. ** **	Returns: **		The db1 flags that are equivalent to the smdb flags. ** **	Notes: **		Any invalid flags are ignored. ** */
 end_comment
 
 begin_function
-name|u_int
+name|unsigned
+name|int
 name|smdb_put_flags_to_db1_flags
 parameter_list|(
 name|flags
@@ -228,9 +211,6 @@ name|return_flags
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SMDB_CURSOR_GET_FLAGS_TO_SMDB1 ** **	Parameters: **		flags -- The flags to translate. ** **	Returns: **		The db1 flags that are equivalent to the smdb flags. ** **	Notes: **		Returns -1 if we don't support the flag. ** */
@@ -284,6 +264,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* **  The rest of these functions correspond to the interface laid out in smdb.h. */
+end_comment
+
 begin_function
 name|SMDB_DB1_DATABASE
 modifier|*
@@ -326,7 +310,7 @@ name|db1
 operator|->
 name|smdb1_cursor_in_use
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 return|return
@@ -334,10 +318,6 @@ name|db1
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ** The rest of these function correspond to the interface laid out ** in smdb.h. */
-end_comment
 
 begin_function
 name|int
@@ -350,6 +330,9 @@ modifier|*
 name|database
 decl_stmt|;
 block|{
+name|int
+name|result
+decl_stmt|;
 name|SMDB_DB1_DATABASE
 modifier|*
 name|db1
@@ -378,6 +361,15 @@ operator|)
 operator|->
 name|smdb1_db
 decl_stmt|;
+name|result
+operator|=
+name|db
+operator|->
+name|close
+argument_list|(
+name|db
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|db1
@@ -409,12 +401,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|db
-operator|->
-name|close
-argument_list|(
-name|db
-argument_list|)
+name|result
 return|;
 block|}
 end_function
@@ -437,7 +424,8 @@ name|SMDB_DBENT
 modifier|*
 name|key
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -460,6 +448,9 @@ decl_stmt|;
 name|DBT
 name|dbkey
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -618,7 +609,8 @@ name|SMDB_DBENT
 modifier|*
 name|data
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -646,6 +638,9 @@ name|dbkey
 decl_stmt|,
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -657,6 +652,9 @@ sizeof|sizeof
 name|dbdata
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -767,7 +765,8 @@ name|SMDB_DBENT
 modifier|*
 name|data
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -792,6 +791,9 @@ name|dbkey
 decl_stmt|,
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -803,6 +805,9 @@ sizeof|sizeof
 name|dbdata
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -974,7 +979,8 @@ name|SMDB_DATABASE
 modifier|*
 name|database
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -1052,7 +1058,7 @@ name|db1
 operator|->
 name|smdb1_cursor_in_use
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|free
 argument_list|(
@@ -1077,7 +1083,8 @@ name|SMDB_CURSOR
 modifier|*
 name|cursor
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -1191,6 +1198,9 @@ name|dbkey
 decl_stmt|,
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1202,6 +1212,9 @@ sizeof|sizeof
 name|dbdata
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1355,6 +1368,9 @@ name|dbkey
 decl_stmt|,
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1366,6 +1382,9 @@ sizeof|sizeof
 name|dbdata
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1447,7 +1466,8 @@ modifier|*
 modifier|*
 name|cursor
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -1484,7 +1504,7 @@ name|db1
 operator|->
 name|smdb1_cursor_in_use
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|db1_cursor
 operator|=
@@ -1569,9 +1589,6 @@ name|SMDBE_OK
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SMDB_DB_OPEN -- Opens a db1 database. ** **	Parameters: **		database -- An unallocated database pointer to a pointer. **		db_name -- The name of the database without extension. **		mode -- File permisions on the database if created. **		mode_mask -- Mode bits that must match on an existing database. **		sff -- Flags for safefile. **		type -- The type of database to open **			See smdb_type_to_db1_type for valid types. **		user_info -- Information on the user to use for file **			    permissions. **		db_params -- **			An SMDB_DBPARAMS struct including params. These **			are processed according to the type of the **			database. Currently supported params (only for **			HASH type) are: **			   num_elements **			   cache_size ** **	Returns: **		SMDBE_OK -- Success, otherwise errno. */
@@ -1854,6 +1871,9 @@ literal|0
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1907,6 +1927,9 @@ literal|0
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&

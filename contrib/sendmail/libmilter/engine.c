@@ -3,47 +3,23 @@ begin_comment
 comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: engine.c,v 8.67.4.17 2001/01/22 19:00:16 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER
-end_if
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: engine.c,v 8.102 2001/12/13 17:10:00 ca Exp $"
+argument_list|)
+end_macro
 
 begin_include
 include|#
 directive|include
 file|"libmilter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sendmail/useful.h"
 end_include
 
 begin_if
@@ -837,7 +813,7 @@ begin_define
 define|#
 directive|define
 name|NX_RCPT
-value|(MASK(ST_HDRS) | MASK(ST_EOHS) | MASK(ST_RCPT) | MASK(ST_ABRT))
+value|(MASK(ST_HDRS) | MASK(ST_EOHS) | \ 		 MASK(ST_BODY) | MASK(ST_ENDM) | \ 		 MASK(ST_RCPT) | MASK(ST_ABRT))
 end_define
 
 begin_define
@@ -1144,8 +1120,12 @@ name|_SMFIS_FAIL
 value|(-1)
 end_define
 
-begin_escape
-end_escape
+begin_define
+define|#
+directive|define
+name|_SMFIS_NONE
+value|(-2)
+end_define
 
 begin_comment
 comment|/* **  MI_ENGINE -- receive commands and process them ** **	Parameters: **		ctx -- context structure ** **	Returns: **		MI_FAILURE/MI_SUCCESS */
@@ -1286,6 +1266,10 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
+name|r
+operator|=
+name|_SMFIS_NONE
+expr_stmt|;
 do|do
 block|{
 comment|/* call abort only if in a mail transaction */
@@ -1326,7 +1310,7 @@ name|ctx_dbg
 operator|>
 literal|3
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"[%d] milter_abort\n"
 argument_list|,
@@ -1344,6 +1328,11 @@ name|MI_FAILURE
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		**  Notice: buf is allocated by mi_rd_cmd() and it will 		**  usually be free()d after it has been used in f(). 		**  However, if the function returns _SMFIS_KEEP then buf 		**  contains macros and will not be free()d. 		**  Hence r must be set to _SMFIS_NONE if a new buf is 		**  allocated to avoid problem with housekeeping, esp. 		**  if the code "break"s out of the loop. 		*/
+name|r
+operator|=
+name|_SMFIS_NONE
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1385,7 +1374,7 @@ name|ctx_dbg
 operator|>
 literal|5
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"[%d] mi_engine: mi_rd_cmd error (%x)\n"
 argument_list|,
@@ -1417,7 +1406,7 @@ name|ctx_dbg
 operator|>
 literal|4
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"[%d] got cmd '%c' len %d\n"
 argument_list|,
@@ -1476,7 +1465,7 @@ name|ctx_dbg
 operator|>
 literal|1
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"[%d] cmd '%c' unknown\n"
 argument_list|,
@@ -1521,7 +1510,7 @@ name|ctx_dbg
 operator|>
 literal|1
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"[%d] cmd '%c' not impl\n"
 argument_list|,
@@ -1559,7 +1548,7 @@ name|ctx_dbg
 operator|>
 literal|5
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"[%d] cur %x new %x nextmask %x\n"
 argument_list|,
@@ -1603,7 +1592,7 @@ name|ctx_dbg
 operator|>
 literal|1
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"[%d] abort: cur %d (%x) new %d (%x) next %x\n"
 argument_list|,
@@ -1669,7 +1658,18 @@ argument_list|,
 name|newstate
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
 continue|continue;
+block|}
 block|}
 name|arg
 operator|.
@@ -1841,7 +1841,7 @@ name|ctx_dbg
 operator|>
 literal|5
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"[%d] function returned abort\n"
 argument_list|,
@@ -1932,6 +1932,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|r
+operator|!=
+name|_SMFIS_KEEP
+operator|&&
 name|buf
 operator|!=
 name|NULL
@@ -1953,9 +1957,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SENDREPLY -- send a reply to the MTA ** **	Parameters: **		r -- reply code **		sd -- socket descriptor **		timeout_ptr -- (ptr to) timeout to use for sending **		ctx -- context structure ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
@@ -2380,9 +2381,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  ST_OPTIONNEG -- negotiate options ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		abort/send options/continue */
 end_comment
@@ -2775,9 +2773,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  ST_CONNECTINFO -- receive connection information ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue or filter-specified value */
 end_comment
@@ -2806,7 +2801,8 @@ name|s
 decl_stmt|,
 name|family
 decl_stmt|;
-name|u_short
+name|unsigned
+name|short
 name|port
 init|=
 literal|0
@@ -3130,7 +3126,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|inet_pton
+name|mi_inet_pton
 argument_list|(
 name|AF_INET6
 argument_list|,
@@ -3153,7 +3149,7 @@ name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: connect[%d]: inet_pton failed"
+literal|"%s: connect[%d]: mi_inet_pton failed"
 argument_list|,
 name|g
 operator|->
@@ -3216,7 +3212,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|sockaddr
 operator|.
@@ -3344,9 +3340,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  ST_EOH -- end of headers ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue or filter-specified value */
 end_comment
@@ -3424,9 +3417,6 @@ name|SMFIS_CONTINUE
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  ST_HELO -- helo/ehlo command ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue or filter-specified value */
@@ -3525,9 +3515,6 @@ name|SMFIS_CONTINUE
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  ST_HEADER -- header line ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue or filter-specified value */
@@ -3661,11 +3648,8 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|char **argv;	\ 	sfsistat (*lf) __P((SMFICTX *, char **));	\ 	int r;	\ 	\ 	if (g == NULL)	\ 		return _SMFIS_ABORT;	\ 	mi_clr_macros(g->a_ctx, g->a_idx + 1);	\ 	if (g->a_ctx->ctx_smfi == NULL ||	\ 	    (lf = g->a_ctx->ctx_smfi->rf) == NULL)	\ 		return SMFIS_CONTINUE;	\ 	if ((argv = dec_argv(g->a_buf, g->a_len)) == NULL)	\ 		return _SMFIS_ABORT;	\ 	r = (*lf)(g->a_ctx, argv);	\ 	free(argv);	\ 	return r;
+value|char **argv;						\ 	sfsistat (*lf) __P((SMFICTX *, char **));		\ 	int r;							\ 								\ 	if (g == NULL)						\ 		return _SMFIS_ABORT;				\ 	mi_clr_macros(g->a_ctx, g->a_idx + 1);			\ 	if (g->a_ctx->ctx_smfi == NULL ||			\ 	    (lf = g->a_ctx->ctx_smfi->rf) == NULL)		\ 		return SMFIS_CONTINUE;				\ 	if ((argv = dec_argv(g->a_buf, g->a_len)) == NULL)	\ 		return _SMFIS_ABORT;				\ 	r = (*lf)(g->a_ctx, argv);				\ 	free(argv);						\ 	return r;
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  ST_SENDER -- MAIL FROM command ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue or filter-specified value */
@@ -3694,9 +3678,6 @@ argument_list|)
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  ST_RCPT -- RCPT TO command ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue or filter-specified value */
 end_comment
@@ -3723,9 +3704,6 @@ argument|CI_RCPT
 argument_list|)
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  ST_MACROS -- deal with macros received from the MTA ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue/keep ** **	Side effects: **		set pointer in macro array to current values. */
@@ -3924,9 +3902,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  ST_QUIT -- quit command ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		noreply */
 end_comment
@@ -3948,9 +3923,6 @@ name|_SMFIS_NOREPLY
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  ST_BODYCHUNK -- deal with a piece of the mail body ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue or filter-specified value */
@@ -3978,7 +3950,8 @@ operator|(
 name|SMFICTX
 operator|*
 operator|,
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|,
 name|size_t
@@ -4029,7 +4002,8 @@ operator|->
 name|a_ctx
 argument_list|,
 operator|(
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|)
 name|g
@@ -4046,9 +4020,6 @@ name|SMFIS_CONTINUE
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  ST_BODYEND -- deal with the last piece of the mail body ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		continue or filter-specified value ** **	Side effects: **		sends a reply for the body part (if non-empty). */
@@ -4079,7 +4050,8 @@ operator|(
 name|SMFICTX
 operator|*
 operator|,
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|,
 name|size_t
@@ -4188,7 +4160,8 @@ operator|->
 name|a_ctx
 argument_list|,
 operator|(
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|)
 name|g
@@ -4263,9 +4236,6 @@ name|r
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  ST_ABORTFCT -- deal with aborts ** **	Parameters: **		g -- generic argument structure ** **	Returns: **		abort or filter-specified value */
@@ -4351,9 +4321,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  TRANS_OK -- is the state transition ok? ** **	Parameters: **		old -- old state **		new -- new state ** **	Returns: **		state transition ok */
 end_comment
@@ -4402,7 +4369,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 comment|/* 		**  no: try next state; 		**  this works since the relevant states are ordered 		**  strict sequentially 		*/
 name|n
@@ -4430,7 +4397,7 @@ name|n
 expr_stmt|;
 else|else
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 do|while
@@ -4441,13 +4408,10 @@ name|ST_LAST
 condition|)
 do|;
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  FIX_STM -- add "skip" bits to the state transition table ** **	Parameters: **		ctx -- context structure ** **	Returns: **		None. ** **	Side effects: **		may change state transition table. */
@@ -4464,7 +4428,8 @@ name|SMFICTX_PTR
 name|ctx
 decl_stmt|;
 block|{
-name|u_long
+name|unsigned
+name|long
 name|fl
 decl_stmt|;
 if|if
@@ -4600,9 +4565,6 @@ name|NX_SKIP
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  DEC_ARGV -- split a buffer into a list of strings, NULL terminated ** **	Parameters: **		buf -- buffer with several strings **		len -- length of buffer ** **	Returns: **		array of pointers to the individual strings */
@@ -4781,9 +4743,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  DEC_ARG2 -- split a buffer into two strings ** **	Parameters: **		buf -- buffer with two strings **		len -- length of buffer **		s1,s2 -- pointer to result strings ** **	Returns: **		MI_FAILURE/MI_SUCCESS */
 end_comment
@@ -4874,9 +4833,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  SENDOK -- is it ok for the filter to send stuff to the MTA? ** **	Parameters: **		ctx -- context structure **		flag -- flag to check ** **	Returns: **		sending allowed (in current state) */
 end_comment
@@ -4909,8 +4865,9 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|FALSE
+name|false
 return|;
+comment|/* did the milter request this operation? */
 if|if
 condition|(
 name|flag
@@ -4930,8 +4887,9 @@ name|xxfi_flags
 argument_list|)
 condition|)
 return|return
-name|FALSE
+name|false
 return|;
+comment|/* are we in the correct state? It must be "End of Message". */
 return|return
 name|ctx
 operator|->
@@ -4941,15 +4899,6 @@ name|ST_ENDM
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MILTER */
-end_comment
 
 end_unit
 

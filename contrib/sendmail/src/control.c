@@ -3,36 +3,18 @@ begin_comment
 comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: control.c,v 8.44.14.20 2001/05/03 17:24:03 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sendmail.h>
 end_include
+
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: control.c,v 8.116 2001/12/13 21:51:38 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* values for cmd_code */
@@ -93,6 +75,43 @@ begin_comment
 comment|/* daemon status */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CMDMEMDUMP
+value|5
+end_define
+
+begin_comment
+comment|/* dump memory, to find memory leaks */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_CONTROL_MSTAT
+end_if
+
+begin_define
+define|#
+directive|define
+name|CMDMSTAT
+value|6
+end_define
+
+begin_comment
+comment|/* daemon status, more info, tagged data */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_CONTROL_MSTAT */
+end_comment
+
 begin_struct
 struct|struct
 name|cmd
@@ -143,6 +162,24 @@ name|CMDSTATUS
 block|}
 block|,
 block|{
+literal|"memdump"
+block|,
+name|CMDMEMDUMP
+block|}
+block|,
+if|#
+directive|if
+name|_FFR_CONTROL_MSTAT
+block|{
+literal|"mstat"
+block|,
+name|CMDMSTAT
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_CONTROL_MSTAT */
+block|{
 name|NULL
 block|,
 name|CMDERROR
@@ -159,9 +196,6 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  OPENCONTROLSOCKET -- create/open the daemon control named socket ** **	Creates and opens a named socket for external control over **	the sendmail daemon. ** **	Parameters: **		none. ** **	Returns: **		0 if successful, -1 otherwise */
@@ -203,6 +237,11 @@ condition|(
 name|ControlSocketName
 operator|==
 name|NULL
+operator|||
+operator|*
+name|ControlSocketName
+operator|==
+literal|'\0'
 condition|)
 return|return
 literal|0
@@ -316,7 +355,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|controladdr
 operator|.
@@ -439,7 +478,7 @@ name|int
 operator|)
 name|u
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -456,7 +495,7 @@ name|int
 operator|)
 name|u
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -464,7 +503,7 @@ argument_list|)
 expr_stmt|;
 name|closecontrolsocket
 argument_list|(
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|errno
@@ -497,7 +536,7 @@ name|errno
 expr_stmt|;
 name|closecontrolsocket
 argument_list|(
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|errno
@@ -527,7 +566,7 @@ name|errno
 expr_stmt|;
 name|closecontrolsocket
 argument_list|(
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|errno
@@ -547,9 +586,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  CLOSECONTROLSOCKET -- close the daemon control named socket ** **	Close a named socket. ** **	Parameters: **		fullclose -- if set, close the socket and remove it; **			     otherwise, just remove it ** **	Returns: **		none. */
@@ -657,7 +693,7 @@ name|NOQID
 argument_list|,
 literal|"Could not remove control socket: %s"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -672,9 +708,6 @@ comment|/* NETUNIX */
 return|return;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  CLRCONTROL -- reset the control connection ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		releases any resources used by the control interface. */
@@ -713,15 +746,6 @@ comment|/* NETUNIX */
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOT_SENDMAIL
-end_ifndef
-
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  CONTROL_COMMAND -- read and process command from named socket ** **	Read and process the command from the opened socket. **	Exits when done since it is running in a forked child. ** **	Parameters: **		sock -- the opened socket from getrequests() **		e -- the current envelope ** **	Returns: **		none. */
 end_comment
@@ -732,6 +756,10 @@ name|jmp_buf
 name|CtxControlTimeout
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* ARGSUSED0 */
+end_comment
 
 begin_function
 specifier|static
@@ -781,23 +809,23 @@ name|exitstat
 init|=
 name|EX_OK
 decl_stmt|;
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|s
 init|=
 name|NULL
 decl_stmt|;
-name|EVENT
+name|SM_EVENT
 modifier|*
 name|ev
 init|=
 name|NULL
 decl_stmt|;
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|traffic
 decl_stmt|;
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|oldout
 decl_stmt|;
@@ -828,7 +856,7 @@ index|]
 decl_stmt|;
 name|sm_setproctitle
 argument_list|(
-name|FALSE
+name|false
 argument_list|,
 name|e
 argument_list|,
@@ -880,7 +908,7 @@ expr_stmt|;
 block|}
 name|ev
 operator|=
-name|setevent
+name|sm_setevent
 argument_list|(
 name|TimeOuts
 operator|.
@@ -896,11 +924,22 @@ expr_stmt|;
 block|}
 name|s
 operator|=
-name|fdopen
+name|sm_io_open
 argument_list|(
+name|SmFtStdiofd
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
 name|sock
 argument_list|,
-literal|"r+"
+name|SM_IO_RDWR
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -933,23 +972,34 @@ name|EX_IOERR
 argument_list|)
 expr_stmt|;
 block|}
-name|setbuf
+operator|(
+name|void
+operator|)
+name|sm_io_setvbuf
 argument_list|(
 name|s
 argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|NULL
+argument_list|,
+name|SM_IO_NBF
+argument_list|,
+name|SM_IO_BUFSIZ
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|s
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|inp
 argument_list|,
 sizeof|sizeof
 name|inp
-argument_list|,
-name|s
 argument_list|)
 operator|==
 name|NULL
@@ -958,9 +1008,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|s
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 name|exit
@@ -972,9 +1024,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|fflush
+name|sm_io_flush
 argument_list|(
 name|s
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 comment|/* clean up end of line */
@@ -982,12 +1036,12 @@ name|fixcrlf
 argument_list|(
 name|inp
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|sm_setproctitle
 argument_list|(
-name|FALSE
+name|false
 argument_list|,
 name|e
 argument_list|,
@@ -1106,7 +1160,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|c
 operator|->
@@ -1166,9 +1220,14 @@ case|case
 name|CMDRESTART
 case|:
 comment|/* restart the daemon */
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
 name|s
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"OK\r\n"
 argument_list|)
@@ -1182,9 +1241,14 @@ case|case
 name|CMDSHUTDOWN
 case|:
 comment|/* kill the daemon */
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
 name|s
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"OK\r\n"
 argument_list|)
@@ -1202,23 +1266,56 @@ name|proc_list_probe
 argument_list|()
 expr_stmt|;
 block|{
+name|int
+name|qgrp
+decl_stmt|;
 name|long
 name|bsize
 decl_stmt|;
 name|long
 name|free
 decl_stmt|;
+comment|/* XXX need to deal with different partitions */
+name|qgrp
+operator|=
+name|e
+operator|->
+name|e_qgrp
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ISVALIDQGRP
+argument_list|(
+name|qgrp
+argument_list|)
+condition|)
+name|qgrp
+operator|=
+literal|0
+expr_stmt|;
 name|free
 operator|=
 name|freediskspace
 argument_list|(
-name|QueueDir
+name|Queue
+index|[
+name|qgrp
+index|]
+operator|->
+name|qg_qdir
 argument_list|,
 operator|&
 name|bsize
 argument_list|)
 expr_stmt|;
 comment|/* 			**  Prevent overflow and don't lose 			**  precision (if bsize == 512) 			*/
+if|if
+condition|(
+name|free
+operator|>
+literal|0
+condition|)
 name|free
 operator|=
 call|(
@@ -1240,9 +1337,14 @@ literal|1024
 operator|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
 name|s
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%d/%d/%ld/%d\r\n"
 argument_list|,
@@ -1252,26 +1354,176 @@ name|MaxChildren
 argument_list|,
 name|free
 argument_list|,
-name|sm_getla
-argument_list|(
-name|NULL
-argument_list|)
+name|getla
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
 name|proc_list_display
 argument_list|(
 name|s
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
+break|break;
+if|#
+directive|if
+name|_FFR_CONTROL_MSTAT
+case|case
+name|CMDMSTAT
+case|:
+comment|/* daemon status, extended, tagged format */
+name|proc_list_probe
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|s
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"C:%d\r\nM:%d\r\nL:%d\r\n"
+argument_list|,
+name|CurChildren
+argument_list|,
+name|MaxChildren
+argument_list|,
+name|getla
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|printnqe
+argument_list|(
+name|s
+argument_list|,
+literal|"Q:"
+argument_list|)
+expr_stmt|;
+name|disk_status
+argument_list|(
+name|s
+argument_list|,
+literal|"D:"
+argument_list|)
+expr_stmt|;
+name|proc_list_display
+argument_list|(
+name|s
+argument_list|,
+literal|"P:"
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_CONTROL_MSTAT */
+case|case
+name|CMDMEMDUMP
+case|:
+comment|/* daemon memory dump, to find memory leaks */
+if|#
+directive|if
+name|SM_HEAP_CHECK
+comment|/* dump the heap, if we are checking for memory leaks */
+if|if
+condition|(
+name|sm_debug_active
+argument_list|(
+operator|&
+name|SmHeapCheck
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+name|sm_heap_report
+argument_list|(
+name|s
+argument_list|,
+name|sm_debug_level
+argument_list|(
+operator|&
+name|SmHeapCheck
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|s
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"Memory dump unavailable.\r\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|s
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"To fix, run sendmail with -dsm_check_heap.4\r\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* SM_HEAP_CHECK */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|s
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"Memory dump unavailable.\r\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|s
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"To fix, rebuild with -DSM_HEAP_CHECK\r\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SM_HEAP_CHECK */
 break|break;
 case|case
 name|CMDERROR
 case|:
 comment|/* unknown command */
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
 name|s
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"Bad command (%s)\r\n"
 argument_list|,
@@ -1283,9 +1535,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|s
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1294,7 +1548,7 @@ name|ev
 operator|!=
 name|NULL
 condition|)
-name|clrevent
+name|sm_clrevent
 argument_list|(
 name|ev
 argument_list|)
@@ -1306,15 +1560,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! NOT_SENDMAIL */
-end_comment
 
 end_unit
 

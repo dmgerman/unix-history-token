@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  This program checks to see if your version of seteuid works. **  Compile it, make it setuid root, and run it as yourself (NOT as **  root).  If it won't compile or outputs any MAYDAY messages, don't **  define USESETEUID in conf.h. ** **	NOTE:  It is not sufficient to have seteuid in your library. **	You must also have saved uids that function properly. ** **  Compilation is trivial -- just "cc t_seteuid.c".  Make it setuid, **  root and then execute it as a non-root user. */
+comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+end_comment
+
+begin_comment
+comment|/* **  This program checks to see if your version of seteuid works. **  Compile it, make it set-user-ID root, and run it as yourself (NOT as **  root).  If it won't compile or outputs any MAYDAY messages, don't **  define USESETEUID in conf.h. ** **	NOTE:  It is not sufficient to have seteuid in your library. **	You must also have saved uids that function properly. ** **  Compilation is trivial -- just "cc t_seteuid.c".  Make it set-user-ID **  root and then execute it as a non-root user. */
 end_comment
 
 begin_include
@@ -33,7 +37,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: t_seteuid.c,v 8.4 1999/08/28 00:25:28 gshapiro Exp $"
+literal|"@(#)$Id: t_seteuid.c,v 8.8 2001/09/23 03:35:41 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +90,7 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|int
+name|uid_t
 name|r
 decl_stmt|,
 name|e
@@ -98,13 +102,25 @@ literal|"%s (should be %d/%d): r/euid=%d/%d\n"
 argument_list|,
 name|str
 argument_list|,
+operator|(
+name|int
+operator|)
 name|r
 argument_list|,
+operator|(
+name|int
+operator|)
 name|e
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|,
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 argument_list|)
@@ -159,7 +175,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SETUP ERROR: re-run setuid root\n"
+literal|"SETUP ERROR: re-run set-user-ID root\n"
 argument_list|)
 expr_stmt|;
 name|exit

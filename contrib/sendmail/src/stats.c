@@ -3,36 +3,18 @@ begin_comment
 comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: stats.c,v 8.36.14.5 2001/02/14 04:07:30 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sendmail.h>
 end_include
+
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: stats.c,v 8.52 2001/11/21 13:39:14 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_include
 include|#
@@ -53,7 +35,7 @@ specifier|static
 name|bool
 name|GotStats
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -86,11 +68,8 @@ parameter_list|)
 value|(((x) + (ONE_K - 1)) / ONE_K)
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MARKSTATS -- mark statistics ** **	Parameters: **		e -- the envelope. **		to -- to address. **		reject -- whether this is a rejection. ** **	Returns: **		none. ** **	Side Effects: **		changes static Stat structure */
+comment|/* **  MARKSTATS -- mark statistics ** **	Parameters: **		e -- the envelope. **		to -- to address. **		type -- type of stats this represents. ** **	Returns: **		none. ** **	Side Effects: **		changes static Stat structure */
 end_comment
 
 begin_function
@@ -101,7 +80,7 @@ name|e
 parameter_list|,
 name|to
 parameter_list|,
-name|reject
+name|type
 parameter_list|)
 specifier|register
 name|ENVELOPE
@@ -113,15 +92,52 @@ name|ADDRESS
 modifier|*
 name|to
 decl_stmt|;
-name|bool
-name|reject
+name|int
+name|type
 decl_stmt|;
 block|{
-if|if
+switch|switch
 condition|(
-name|reject
+name|type
 condition|)
 block|{
+if|#
+directive|if
+name|_FFR_QUARANTINE
+case|case
+name|STATS_QUARANTINE
+case|:
+if|if
+condition|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|!=
+name|NULL
+condition|)
+name|Stat
+operator|.
+name|stat_nq
+index|[
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|->
+name|m_mno
+index|]
+operator|++
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
+case|case
+name|STATS_REJECT
+case|:
 if|if
 condition|(
 name|e
@@ -179,8 +195,10 @@ operator|.
 name|stat_cr
 operator|++
 expr_stmt|;
-block|}
-elseif|else
+break|break;
+case|case
+name|STATS_NORMAL
+case|:
 if|if
 condition|(
 name|to
@@ -278,15 +296,17 @@ name|e_msgsize
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+default|default:
+comment|/* Silently ignore bogus call */
+return|return;
+block|}
 name|GotStats
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  CLEARSTATS -- clear statistics structure ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		clears the Stat structure. */
@@ -311,13 +331,10 @@ argument_list|)
 expr_stmt|;
 name|GotStats
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  POSTSTATS -- post statistics in the statistics file ** **	Parameters: **		sfile -- the name of the statistics file. ** **	Returns: **		none. ** **	Side Effects: **		merges the Stat structure with the sfile file. */
@@ -334,9 +351,14 @@ modifier|*
 name|sfile
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|fd
+decl_stmt|;
+specifier|static
+name|bool
+name|entered
+init|=
+name|false
 decl_stmt|;
 name|long
 name|sff
@@ -360,10 +382,21 @@ name|sfile
 operator|==
 name|NULL
 operator|||
+operator|*
+name|sfile
+operator|==
+literal|'\0'
+operator|||
 operator|!
 name|GotStats
+operator|||
+name|entered
 condition|)
 return|return;
+name|entered
+operator|=
+name|true
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -458,7 +491,7 @@ literal|"poststats: %s: %s"
 argument_list|,
 name|sfile
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -467,6 +500,10 @@ expr_stmt|;
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+name|entered
+operator|=
+name|false
 expr_stmt|;
 return|return;
 block|}
@@ -617,6 +654,26 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_QUARANTINE
+name|stats
+operator|.
+name|stat_nq
+index|[
+name|i
+index|]
+operator|+=
+name|Stat
+operator|.
+name|stat_nq
+index|[
+name|i
+index|]
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
 block|}
 name|stats
 operator|.
@@ -709,6 +766,10 @@ expr_stmt|;
 comment|/* clear the structure to avoid future disappointment */
 name|clearstats
 argument_list|()
+expr_stmt|;
+name|entered
+operator|=
+name|false
 expr_stmt|;
 block|}
 end_function

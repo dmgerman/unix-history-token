@@ -1,38 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: signal.c,v 8.10.4.8 2000/11/20 21:15:37 ca Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER
-end_if
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: signal.c,v 8.35 2002/01/10 01:34:55 ca Exp $"
+argument_list|)
+end_macro
 
 begin_include
 include|#
@@ -60,9 +42,6 @@ name|MILTER_CONT
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  MI_STOP -- return value of MilterStop ** **	Parameters: **		none. ** **	Returns: **		value of MilterStop */
 end_comment
@@ -77,9 +56,6 @@ name|MilterStop
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MI_STOP_MILTERS -- set value of MilterStop ** **	Parameters: **		v -- new value for MilterStop. ** **	Returns: **		none. */
@@ -130,9 +106,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  MI_CLEAN_SIGNALS -- clean up signal handler thread ** **	Parameters: **		none. ** **	Returns: **		none. */
 end_comment
@@ -153,9 +126,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MI_SIGNAL_THREAD -- thread to deal with signals ** **	Parameters: **		name -- name of milter ** **	Returns: **		NULL */
@@ -219,16 +189,24 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|TRUE
+name|true
 condition|)
 block|{
 name|sig
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SOLARIS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__svr5__
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -245,7 +223,7 @@ literal|0
 condition|)
 else|#
 directive|else
-comment|/* SOLARIS */
+comment|/* defined(SOLARIS) || defined(__svr5__) */
 if|if
 condition|(
 name|sigwait
@@ -261,13 +239,13 @@ literal|0
 condition|)
 endif|#
 directive|endif
-comment|/* SOLARIS */
+comment|/* defined(SOLARIS) || defined(__svr5__) */
 block|{
 name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: sigwait returned error: %s"
+literal|"%s: sigwait returned error: %d"
 argument_list|,
 operator|(
 name|char
@@ -275,10 +253,7 @@ operator|*
 operator|)
 name|name
 argument_list|,
-name|strerror
-argument_list|(
 name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -356,9 +331,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  MI_SPAWN_SIGNAL_THREAD -- spawn thread to handle signals ** **	Parameters: **		name -- name of milter ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
 end_comment
@@ -377,6 +349,9 @@ decl_stmt|;
 block|{
 name|sthread_t
 name|tid
+decl_stmt|;
+name|int
+name|r
 decl_stmt|;
 name|sigset_t
 name|set
@@ -440,8 +415,8 @@ return|return
 name|MI_FAILURE
 return|;
 block|}
-if|if
-condition|(
+name|r
+operator|=
 name|thread_create
 argument_list|(
 operator|&
@@ -455,17 +430,23 @@ operator|*
 operator|)
 name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
 operator|!=
-name|MI_SUCCESS
+literal|0
 condition|)
 block|{
 name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: Couldn't start signal thread"
+literal|"%s: Couldn't start signal thread: %d"
 argument_list|,
 name|name
+argument_list|,
+name|r
 argument_list|)
 expr_stmt|;
 return|return
@@ -477,9 +458,6 @@ name|MI_SUCCESS
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MI_CONTROL_STARTUP -- startup for thread to handle signals ** **	Parameters: **		name -- name of milter ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
@@ -557,15 +535,6 @@ name|MI_SUCCESS
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MILTER */
-end_comment
 
 end_unit
 

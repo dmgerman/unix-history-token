@@ -3,55 +3,29 @@ begin_comment
 comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1993 Eric P. Allman.  All rights reserved.  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|copyright
-index|[]
-init|=
+begin_macro
+name|SM_IDSTR
+argument_list|(
+argument|copyright
+argument_list|,
 literal|"@(#) Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1993 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+end_macro
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: smrsh.c,v 8.31.4.9 2001/04/24 04:11:51 ca Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
+begin_macro
+name|SM_IDSTR
+argument_list|(
+argument|id
+argument_list|,
+literal|"@(#)$Id: smrsh.c,v 8.55 2001/09/11 04:05:22 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* $FreeBSD$ */
@@ -70,7 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sm/io.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/string.h>
 end_include
 
 begin_include
@@ -136,34 +116,17 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TRUE
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/conf.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! TRUE */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sm/errstring.h>
+end_include
 
 begin_comment
 comment|/* directory in which all commands must reside */
@@ -175,29 +138,17 @@ directive|ifndef
 name|CMDDIR
 end_ifndef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HPUX10
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|HPUX11
-argument_list|)
-operator|||
-name|SOLARIS
-operator|>=
-literal|20800
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMRSH_CMDDIR
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|CMDDIR
-value|"/var/adm/sm.bin"
+value|SMRSH_CMDDIR
 end_define
 
 begin_else
@@ -206,14 +157,14 @@ directive|else
 end_else
 
 begin_comment
-comment|/* HPUX10 || HPUX11 || SOLARIS>= 20800 */
+comment|/* SMRSH_CMDDIR */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CMDDIR
-value|"/usr/libexec/sm.bin"
+value|"/usr/adm/sm.bin"
 end_define
 
 begin_endif
@@ -222,7 +173,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HPUX10 || HPUX11 || SOLARIS>= 20800 */
+comment|/* SMRSH_CMDDIR */
 end_comment
 
 begin_endif
@@ -255,12 +206,43 @@ directive|ifndef
 name|PATH
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMRSH_PATH
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|PATH
-value|"/bin:/usr/bin"
+value|SMRSH_PATH
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SMRSH_PATH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PATH
+value|"/bin:/usr/bin:/usr/ucb"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMRSH_PATH */
+end_comment
 
 begin_endif
 endif|#
@@ -270,67 +252,6 @@ end_endif
 begin_comment
 comment|/* ! PATH */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__P
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"sendmail/cdefs.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! __P */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|size_t
-name|strlcpy
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|size_t
-name|strlcat
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -369,10 +290,10 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|int
+name|bool
 name|cmd
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 block|{
@@ -416,9 +337,14 @@ literal|0
 operator|)
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s: command too long: %s\n"
 argument_list|,
@@ -456,7 +382,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcat
+name|sm_strlcat
 argument_list|(
 name|newcmdbuf
 argument_list|,
@@ -469,7 +395,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcat
+name|sm_strlcat
 argument_list|(
 name|newcmdbuf
 argument_list|,
@@ -483,7 +409,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|strlcat
+name|sm_strlcat
 argument_list|(
 name|newcmdbuf
 argument_list|,
@@ -532,9 +458,6 @@ specifier|register
 name|char
 modifier|*
 name|cmd
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|int
 name|isexec
@@ -603,7 +526,7 @@ comment|/* ! DEBUG */
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|pathbuf
 argument_list|,
@@ -616,7 +539,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcat
+name|sm_strlcat
 argument_list|(
 name|pathbuf
 argument_list|,
@@ -667,9 +590,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"Usage: %s -c command\n"
 argument_list|,
@@ -740,7 +668,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|specialbuf
 argument_list|,
@@ -772,7 +700,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcat
+name|sm_strlcat
 argument_list|(
 name|specialbuf
 argument_list|,
@@ -783,16 +711,12 @@ name|specialbuf
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Do a quick sanity check on command line length. 	*/
-name|i
-operator|=
+if|if
+condition|(
 name|strlen
 argument_list|(
 name|par
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
 operator|>
 operator|(
 sizeof|sizeof
@@ -805,9 +729,14 @@ literal|2
 operator|)
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s: command too long: %s\n"
 argument_list|,
@@ -850,7 +779,7 @@ literal|'\0'
 expr_stmt|;
 name|isexec
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 while|while
 condition|(
@@ -895,9 +824,14 @@ condition|(
 name|isexec
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s: missing command to exec\n"
 argument_list|,
@@ -913,6 +847,9 @@ name|LOG_CRIT
 argument_list|,
 literal|"uid %d: missing command to exec"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|)
@@ -1016,7 +953,7 @@ name|addcmd
 argument_list|(
 literal|"exec "
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
 name|strlen
 argument_list|(
@@ -1032,7 +969,7 @@ name|p
 expr_stmt|;
 name|isexec
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 continue|continue;
 block|}
@@ -1062,7 +999,7 @@ name|addcmd
 argument_list|(
 name|cmd
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
 name|strlen
 argument_list|(
@@ -1078,7 +1015,7 @@ comment|/* 			**  Check to see if the command name is legal. 			*/
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|cmdbuf
 argument_list|,
@@ -1091,7 +1028,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcat
+name|sm_strlcat
 argument_list|(
 name|cmdbuf
 argument_list|,
@@ -1104,7 +1041,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcat
+name|sm_strlcat
 argument_list|(
 name|cmdbuf
 argument_list|,
@@ -1117,8 +1054,15 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|printf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 literal|"Trying %s\n"
 argument_list|,
 name|cmdbuf
@@ -1140,9 +1084,14 @@ literal|0
 condition|)
 block|{
 comment|/* oops....  crack attack possiblity */
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s: %s not available for sendmail programs\n"
 argument_list|,
@@ -1171,6 +1120,9 @@ name|LOG_CRIT
 argument_list|,
 literal|"uid %d: attempt to use %s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|,
@@ -1191,7 +1143,7 @@ name|addcmd
 argument_list|(
 name|cmd
 argument_list|,
-name|TRUE
+name|true
 argument_list|,
 name|strlen
 argument_list|(
@@ -1202,7 +1154,7 @@ expr_stmt|;
 block|}
 name|isexec
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 if|if
 condition|(
@@ -1237,7 +1189,7 @@ name|addcmd
 argument_list|(
 name|p
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
 name|strlen
 argument_list|(
@@ -1262,7 +1214,7 @@ name|addcmd
 argument_list|(
 name|p
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
 name|r
 operator|-
@@ -1321,7 +1273,7 @@ name|addcmd
 argument_list|(
 name|p
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
 name|r
 operator|-
@@ -1338,9 +1290,14 @@ literal|2
 expr_stmt|;
 continue|continue;
 block|}
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s: cannot use %c in command\n"
 argument_list|,
@@ -1359,6 +1316,9 @@ name|LOG_CRIT
 argument_list|,
 literal|"uid %d: attempt to use %c in command: %s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|,
@@ -1383,9 +1343,14 @@ condition|(
 name|isexec
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s: missing command to exec\n"
 argument_list|,
@@ -1401,6 +1366,9 @@ name|LOG_CRIT
 argument_list|,
 literal|"uid %d: missing command to exec"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getuid
 argument_list|()
 argument_list|)
@@ -1425,9 +1393,14 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"Usage: %s -c command\n"
 argument_list|,
@@ -1457,8 +1430,15 @@ comment|/* 	**  Now invoke the shell 	*/
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|printf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 literal|"%s\n"
 argument_list|,
 name|newcmdbuf
@@ -1496,7 +1476,12 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"Cannot exec /bin/sh: %m"
+literal|"Cannot exec /bin/sh: %s"
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1506,7 +1491,7 @@ name|errno
 operator|=
 name|save_errno
 expr_stmt|;
-name|perror
+name|sm_perror
 argument_list|(
 literal|"/bin/sh"
 argument_list|)

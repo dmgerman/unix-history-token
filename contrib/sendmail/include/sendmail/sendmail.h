@@ -1,31 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: sendmail.h,v 8.34.4.8 2001/06/01 05:06:51 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: sendmail.h,v 8.67 2001/09/08 01:20:57 gshapiro Exp $  */
 end_comment
 
 begin_comment
 comment|/* **  SENDMAIL.H -- Global definitions for sendmail. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|SFIO
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sfio/stdio.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SFIO */
 end_comment
 
 begin_include
@@ -34,37 +13,28 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SFIO */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sm/bitops.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<sm/io.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/string.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"conf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sendmail/errstring.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sendmail/useful.h"
 end_include
 
 begin_comment
@@ -96,179 +66,6 @@ end_endif
 begin_comment
 comment|/* ! MAXMAILERS */
 end_comment
-
-begin_comment
-comment|/* **  Data structure for bit maps. ** **	Each bit in this map can be referenced by an ascii character. **	This is 256 possible bits, or 32 8-bit bytes. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITMAPBITS
-value|256
-end_define
-
-begin_comment
-comment|/* number of bits in a bit map */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BYTEBITS
-value|8
-end_define
-
-begin_comment
-comment|/* number of bits in a byte */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITMAPBYTES
-value|(BITMAPBITS / BYTEBITS)
-end_define
-
-begin_comment
-comment|/* number of bytes in bit map */
-end_comment
-
-begin_comment
-comment|/* internal macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BITWORD
-parameter_list|(
-name|bit
-parameter_list|)
-value|((bit) / (BYTEBITS * sizeof (int)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_BITBIT
-parameter_list|(
-name|bit
-parameter_list|)
-value|((unsigned int)1<< ((bit) % (BYTEBITS * sizeof (int))))
-end_define
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|BITMAP256
-index|[
-name|BITMAPBYTES
-operator|/
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-index|]
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* properly case and truncate bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bitidx
-parameter_list|(
-name|bit
-parameter_list|)
-value|((unsigned int) (bit)& 0xff)
-end_define
-
-begin_comment
-comment|/* test bit number N */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bitnset
-parameter_list|(
-name|bit
-parameter_list|,
-name|map
-parameter_list|)
-value|((map)[_BITWORD(bit)]& _BITBIT(bit))
-end_define
-
-begin_comment
-comment|/* set bit number N */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|setbitn
-parameter_list|(
-name|bit
-parameter_list|,
-name|map
-parameter_list|)
-value|(map)[_BITWORD(bit)] |= _BITBIT(bit)
-end_define
-
-begin_comment
-comment|/* clear bit number N */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|clrbitn
-parameter_list|(
-name|bit
-parameter_list|,
-name|map
-parameter_list|)
-value|(map)[_BITWORD(bit)]&= ~_BITBIT(bit)
-end_define
-
-begin_comment
-comment|/* clear an entire bit map */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|clrbitmap
-parameter_list|(
-name|map
-parameter_list|)
-value|memset((char *) map, '\0', BITMAPBYTES)
-end_define
-
-begin_comment
-comment|/* **  Utility macros */
-end_comment
-
-begin_comment
-comment|/* return number of bytes left in a buffer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPACELEFT
-parameter_list|(
-name|buf
-parameter_list|,
-name|ptr
-parameter_list|)
-value|(sizeof buf - ((ptr) - buf))
-end_define
 
 begin_comment
 comment|/* **  Flags passed to safefile/safedirpath. */
@@ -348,7 +145,7 @@ value|0x00000020L
 end_define
 
 begin_comment
-comment|/* setuid files are ok */
+comment|/* set-user-ID files are ok */
 end_comment
 
 begin_define
@@ -576,6 +373,27 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|safeopen
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|SM_FILE_T
+modifier|*
+name|safefopen
 name|__P
 argument_list|(
 operator|(
@@ -839,10 +657,6 @@ name|DBS_RUNPROGRAMINUNSAFEDIRPATH
 value|28
 end_define
 
-begin_comment
-comment|/* Not used yet */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -885,60 +699,66 @@ name|DBS_INSUFFICIENTENTROPY
 value|34
 end_define
 
-begin_if
-if|#
-directive|if
-name|_FFR_UNSAFE_SASL
-end_if
-
 begin_define
 define|#
 directive|define
-name|DBS_GROUPREADABLESASLFILE
+name|DBS_GROUPREADABLESASLDBFILE
 value|35
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_UNSAFE_SASL */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_UNSAFE_WRITABLE_INCLUDE
-end_if
-
 begin_define
 define|#
 directive|define
-name|DBS_GROUPWRITABLEFORWARDFILE
+name|DBS_GROUPWRITABLESASLDBFILE
 value|36
 end_define
 
 begin_define
 define|#
 directive|define
-name|DBS_GROUPWRITABLEINCLUDEFILE
+name|DBS_GROUPWRITABLEFORWARDFILE
 value|37
 end_define
 
 begin_define
 define|#
 directive|define
-name|DBS_WORLDWRITABLEFORWARDFILE
+name|DBS_GROUPWRITABLEINCLUDEFILE
 value|38
 end_define
 
 begin_define
 define|#
 directive|define
-name|DBS_WORLDWRITABLEINCLUDEFILE
+name|DBS_WORLDWRITABLEFORWARDFILE
 value|39
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBS_WORLDWRITABLEINCLUDEFILE
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBS_GROUPREADABLEKEYFILE
+value|41
+end_define
+
+begin_if
+if|#
+directive|if
+name|_FFR_GROUPREADABLEAUTHINFOFILE
+end_if
+
+begin_define
+define|#
+directive|define
+name|DBS_GROUPREADABLEAUTHINFOFILE
+value|42
 end_define
 
 begin_endif
@@ -947,7 +767,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FFR_UNSAFE_WRITABLE_INCLUDE */
+comment|/* _FFR_GROUPREADABLEAUTHINFOFILE */
 end_comment
 
 begin_comment
@@ -963,7 +783,8 @@ modifier|*
 name|dbs_name
 decl_stmt|;
 comment|/* name of DontBlameSendmail flag */
-name|u_char
+name|unsigned
+name|char
 name|dbs_flag
 decl_stmt|;
 comment|/* numeric level */
@@ -971,172 +792,42 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|_FFR_DPRINTF
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|dprintf
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|dflush
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
-comment|/* _FFR_DPRINTF */
+comment|/* Flags for submitmode */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|dprintf
-value|printf
+name|SUBMIT_UNKNOWN
+value|0x0000
 end_define
+
+begin_comment
+comment|/* unknown agent type */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|dflush
-parameter_list|()
-value|fflush(stdout)
+name|SUBMIT_MTA
+value|0x0001
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* _FFR_DPRINTF */
+comment|/* act like a message transfer agent */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|sm_snprintf
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|size_t
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|SUBMIT_MSA
+value|0x0002
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|sm_vsnprintf
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|size_t
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|quad_to_string
-name|__P
-argument_list|(
-operator|(
-name|QUAD_T
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|size_t
-name|strlcpy
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|size_t
-name|strlcat
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* act like a message submission agent */
+end_comment
 
 end_unit
 

@@ -3,36 +3,18 @@ begin_comment
 comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: main.c,v 8.34.4.11 2001/05/07 22:06:37 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER
-end_if
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: main.c,v 8.53 2001/11/29 02:21:02 ca Exp $"
+argument_list|)
+end_macro
 
 begin_define
 define|#
@@ -181,7 +163,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|smfi
 operator|->
@@ -225,6 +207,14 @@ operator|)
 name|SMFI_VERSION
 argument_list|)
 expr_stmt|;
+comment|/* XXX how about smfi? */
+name|free
+argument_list|(
+name|smfi
+operator|->
+name|xxfi_name
+argument_list|)
+expr_stmt|;
 return|return
 name|MI_FAILURE
 return|;
@@ -234,9 +224,6 @@ name|MI_SUCCESS
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SMFI_STOP -- stop milter ** **	Parameters: **		none. ** **	Returns: **		success. */
@@ -257,6 +244,10 @@ name|MI_SUCCESS
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* **  default values for some variables. **	Most of these can be changed with the functions below. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -295,6 +286,10 @@ name|MI_SOMAXCONN
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* **  SMFI_SETDBG -- set debug level. ** **	Parameters: **		odbg -- new debug level. ** **	Returns: **		MI_SUCCESS */
+end_comment
+
 begin_function
 name|int
 name|smfi_setdbg
@@ -315,6 +310,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* **  SMFI_SETTIMEOUT -- set timeout (for read/write). ** **	Parameters: **		otimeout -- new timeout. ** **	Returns: **		MI_SUCCESS */
+end_comment
+
 begin_function
 name|int
 name|smfi_settimeout
@@ -334,6 +333,10 @@ name|MI_SUCCESS
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* **  SMFI_SETCONN -- set connection information (socket description) ** **	Parameters: **		oconn -- new connection information. ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
+end_comment
 
 begin_function
 name|int
@@ -394,7 +397,7 @@ name|MI_FAILURE
 return|;
 if|if
 condition|(
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|conn
 argument_list|,
@@ -413,6 +416,10 @@ name|MI_SUCCESS
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* **  SMFI_SETBACKLOG -- set backlog ** **	Parameters: **		odbg -- new backlog. ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
+end_comment
 
 begin_function
 name|int
@@ -443,11 +450,21 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* **  SMFI_MAIN -- setup milter connnection and start listener. ** **	Parameters: **		none. ** **	Returns: **		MI_SUCCESS/MI_FAILURE */
+end_comment
+
 begin_function
 name|int
 name|smfi_main
 parameter_list|()
 block|{
+name|int
+name|r
+decl_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -512,6 +529,10 @@ return|return
 name|MI_FAILURE
 return|;
 block|}
+name|r
+operator|=
+name|MI_SUCCESS
+expr_stmt|;
 comment|/* Startup the listener */
 if|if
 condition|(
@@ -530,23 +551,15 @@ argument_list|)
 operator|!=
 name|MI_SUCCESS
 condition|)
-return|return
+name|r
+operator|=
 name|MI_FAILURE
-return|;
+expr_stmt|;
 return|return
-name|MI_SUCCESS
+name|r
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MILTER */
-end_comment
 
 end_unit
 

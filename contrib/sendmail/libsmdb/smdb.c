@@ -1,32 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
+comment|/* ** Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: smdb.c,v 8.37.4.2 2000/08/24 17:08:00 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: smdb.c,v 8.53 2001/11/19 19:31:14 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_include
 include|#
@@ -57,9 +45,6 @@ include|#
 directive|include
 file|<libsmdb/smdb.h>
 end_include
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* ** SMDB_MALLOC_DATABASE -- Allocates a database structure. ** **	Parameters: **		None ** **	Returns: **		An pointer to an allocated SMDB_DATABASE structure or **		NULL if it couldn't allocate the memory. */
@@ -95,6 +80,9 @@ name|db
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 name|db
@@ -112,9 +100,6 @@ name|db
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* ** SMDB_FREE_DATABASE -- Unallocates a database structure. ** **	Parameters: **		database -- a SMDB_DATABASE pointer to deallocate. ** **	Returns: **		None */
@@ -145,11 +130,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  SMDB_LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. ** **	Returns: **		TRUE if the lock was acquired. **		FALSE otherwise. */
+comment|/* **  SMDB_LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. ** **	Returns: **		true if the lock was acquired. **		false otherwise. */
 end_comment
 
 begin_function
@@ -185,6 +167,9 @@ name|struct
 name|flock
 name|lfd
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -281,11 +266,9 @@ name|i
 operator|>=
 literal|0
 condition|)
-block|{
 return|return
-name|TRUE
+name|true
 return|;
-block|}
 name|save_errno
 operator|=
 name|errno
@@ -297,11 +280,9 @@ name|save_errno
 operator|==
 name|EINVAL
 condition|)
-block|{
 return|return
-name|TRUE
+name|true
 return|;
-block|}
 if|if
 condition|(
 operator|!
@@ -355,12 +336,12 @@ comment|/* F_GETFL */
 if|#
 directive|if
 literal|0
-block|syslog(LOG_ERR, "cannot lockf(%s%s, fd=%d, type=%o, omode=%o, euid=%d)", 			filename, ext, fd, type, omode, geteuid());
+block|syslog(LOG_ERR, "cannot lockf(%s%s, fd=%d, type=%o, omode=%o, euid=%d)", 		       filename, ext, fd, type, omode, (int) geteuid());
 endif|#
 directive|endif
 comment|/* 0 */
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 else|#
@@ -392,11 +373,9 @@ name|i
 operator|>=
 literal|0
 condition|)
-block|{
 return|return
-name|TRUE
+name|true
 return|;
-block|}
 name|save_errno
 operator|=
 name|errno
@@ -448,12 +427,12 @@ comment|/* F_GETFL */
 if|#
 directive|if
 literal|0
-block|syslog(LOG_ERR, "cannot flock(%s%s, fd=%d, type=%o, omode=%o, euid=%d)", 			filename, ext, fd, type, omode, geteuid());
+block|syslog(LOG_ERR, "cannot flock(%s%s, fd=%d, type=%o, omode=%o, euid=%d)", 		       filename, ext, fd, type, omode, (int) geteuid());
 endif|#
 directive|endif
 comment|/* 0 */
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 endif|#
@@ -464,13 +443,10 @@ operator|=
 name|save_errno
 expr_stmt|;
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* ** SMDB_OPEN_DATABASE -- Opens a database. ** **	This opens a database. If type is SMDB_DEFAULT it tries to **	use a DB1 or DB2 hash. If that isn't available, it will try **	to use NDBM. If a specific type is given it will try to open **	a database of that type. ** **	Parameters: **		database -- An pointer to a SMDB_DATABASE pointer where the **			   opened database will be stored. This should **			   be unallocated. **		db_name -- The name of the database to open. Do not include **			  the file name extension. **		mode -- The mode to set on the database file or files. **		mode_mask -- Mode bits that must match on an opened database. **		sff -- Flags to safefile. **		type -- The type of database to open. Supported types **		       vary depending on what was compiled in. **		user_info -- Information on the user to use for file **			    permissions. **		params -- Params specific to the database being opened. **			 Only supports some DB hash options right now **			 (see smdb_db_open() for details). ** **	Returns: **		SMDBE_OK -- Success. **		Anything else is an error. Look up more info about the **		error in the comments for the specific open() used. */
@@ -526,13 +502,10 @@ modifier|*
 name|params
 decl_stmt|;
 block|{
-name|int
-name|result
-decl_stmt|;
 name|bool
 name|type_was_default
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 if|if
 condition|(
@@ -543,7 +516,7 @@ condition|)
 block|{
 name|type_was_default
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -610,6 +583,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|NEWDB
+name|int
+name|result
+decl_stmt|;
 name|result
 operator|=
 name|smdb_db_open
@@ -680,6 +656,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|NDBM
+name|int
+name|result
+decl_stmt|;
 name|result
 operator|=
 name|smdb_ndbm_open
@@ -719,9 +698,6 @@ name|SMDBE_UNKNOWN_DB_TYPE
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* ** SMDB_ADD_EXTENSION -- Adds an extension to a file name. ** **	Just adds a . followed by a string to a db_name if there **	is room and the db_name does not already have that extension. ** **	Parameters: **		full_name -- The final file name. **		max_full_name_len -- The max length for full_name. **		db_name -- The name of the db. **		extension -- The extension to add. ** **	Returns: **		SMDBE_OK -- Success. **		Anything else is an error. Look up more info about the **		error in the comments for the specific open() used. */
@@ -839,7 +815,10 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|full_name
 argument_list|,
@@ -856,7 +835,7 @@ else|else
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|full_name
 argument_list|,
@@ -870,9 +849,6 @@ name|SMDBE_OK
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SMDB_LOCK_FILE -- Locks the database file. ** **	Locks the actual database file. ** **	Parameters: **		lock_fd -- The resulting descriptor for the locked file. **		db_name -- The name of the database without extension. **		mode -- The open mode. **		sff -- Flags to safefile. **		extension -- The extension for the file. ** **	Returns: **		SMDBE_OK -- Success, otherwise errno. */
@@ -975,9 +951,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  SMDB_UNLOCK_FILE -- Unlocks a file ** **	Unlocks a file. ** **	Parameters: **		lock_fd -- The descriptor for the locked file. ** **	Returns: **		SMDBE_OK -- Success, otherwise errno. */
 end_comment
@@ -1016,9 +989,6 @@ name|SMDBE_OK
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SMDB_LOCK_MAP -- Locks a database. ** **	Parameters: **		database -- database description. **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. ** **	Returns: **		SMDBE_OK -- Success, otherwise errno. */
@@ -1080,9 +1050,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  SMDB_UNLOCK_MAP -- Unlocks a database ** **	Parameters: **		database -- database description. ** **	Returns: **		SMDBE_OK -- Success, otherwise errno. */
 end_comment
@@ -1137,9 +1104,6 @@ name|SMDBE_OK
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SMDB_SETUP_FILE -- Gets db file ready for use. ** **	Makes sure permissions on file are safe and creates it if it **	doesn't exist. ** **	Parameters: **		db_name -- The name of the database without extension. **		extension -- The extension. **		sff -- Flags to safefile. **		mode_mask -- Mode bits that must match. **		user_info -- Information on the user to use for file **			    permissions. **		stat_info -- A place to put the stat info for the file. **	Returns: **		SMDBE_OK -- Success, otherwise errno. */
@@ -1259,9 +1223,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  SMDB_FILECHANGED -- Checks to see if a file changed. ** **	Compares the passed in stat_info with a current stat on **	the passed in file descriptor. Check filechanged for **	return values. ** **	Parameters: **		db_name -- The name of the database without extension. **		extension -- The extension. **		db_fd -- A file descriptor for the database file. **		stat_info -- An old stat_info. **	Returns: **		SMDBE_OK -- Success, otherwise errno. */
 end_comment
@@ -1326,8 +1287,7 @@ condition|)
 return|return
 name|result
 return|;
-name|result
-operator|=
+return|return
 name|filechanged
 argument_list|(
 name|db_file_name
@@ -1336,15 +1296,9 @@ name|db_fd
 argument_list|,
 name|stat_info
 argument_list|)
-expr_stmt|;
-return|return
-name|result
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* ** SMDB_PRINT_AVAILABLE_TYPES -- Prints the names of the available types. ** **	Parameters: **		None ** **	Returns: **		None */
@@ -1384,9 +1338,6 @@ directive|endif
 comment|/* NEWDB */
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* ** SMDB_DB_DEFINITION -- Given a database type, return database definition ** **	Reads though a structure making an association with the database **	type and the required cpp define from sendmail/README. **	List size is dynamic and must be NULL terminated. ** **	Parameters: **		type -- The name of the database type. ** **	Returns: **		definition for type, otherwise NULL. */

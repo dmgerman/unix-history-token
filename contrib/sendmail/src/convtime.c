@@ -1,31 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: convtime.c,v 8.25 1999/06/16 21:11:26 ca Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -33,6 +8,13 @@ include|#
 directive|include
 file|<sendmail.h>
 end_include
+
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: convtime.c,v 8.39 2001/09/11 04:05:13 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* **  CONVTIME -- convert time ** **	Takes a time as an ascii string with a trailing character **	giving units: **	  s -- seconds **	  m -- minutes **	  h -- hours **	  d -- days (default) **	  w -- weeks **	For example, "3d12h" is three and a half days. ** **	Parameters: **		p -- pointer to ascii time. **		units -- default units if none specified. ** **	Returns: **		time in seconds. ** **	Side Effects: **		none. */
@@ -64,13 +46,18 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
+name|bool
+name|pos
+init|=
+name|true
+decl_stmt|;
 name|r
 operator|=
 literal|0
 expr_stmt|;
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -82,6 +69,22 @@ condition|)
 return|return
 name|NOW
 return|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'-'
+condition|)
+block|{
+name|pos
+operator|=
+name|false
+expr_stmt|;
+operator|++
+name|p
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|*
@@ -223,16 +226,18 @@ name|t
 expr_stmt|;
 block|}
 return|return
+name|pos
+condition|?
+name|r
+else|:
+operator|-
 name|r
 return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  PINTVL -- produce printable version of a time interval ** **	Parameters: **		intvl -- the interval to be converted **		brief -- if TRUE, print this in an extremely compact form **			(basically used for logging). ** **	Returns: **		A pointer to a string version of intvl suitable for **			printing or framing. ** **	Side Effects: **		none. ** **	Warning: **		The string returned is in a static buffer. */
+comment|/* **  PINTVL -- produce printable version of a time interval ** **	Parameters: **		intvl -- the interval to be converted **		brief -- if true, print this in an extremely compact form **			(basically used for logging). ** **	Returns: **		A pointer to a string version of intvl suitable for **			printing or framing. ** **	Side Effects: **		none. ** **	Warning: **		The string returned is in a static buffer. */
 end_comment
 
 begin_define
@@ -387,7 +392,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|p
 argument_list|,
@@ -414,7 +419,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|p
 argument_list|,
@@ -449,7 +454,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|p
 argument_list|,
@@ -488,7 +493,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|p
 argument_list|,
@@ -527,7 +532,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|p
 argument_list|,
@@ -566,7 +571,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|p
 argument_list|,
@@ -605,7 +610,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|p
 argument_list|,

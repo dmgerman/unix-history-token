@@ -3,36 +3,18 @@ begin_comment
 comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: sm_gethost.c,v 8.7.8.11 2001/07/21 00:10:23 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER
-end_if
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: sm_gethost.c,v 8.26 2001/09/11 04:04:45 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_include
 include|#
@@ -62,9 +44,6 @@ end_endif
 begin_comment
 comment|/* NETINET || NETINET6 */
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MI_GETHOSTBY{NAME,ADDR} -- compatibility routines for gethostbyXXX ** **	Some operating systems have wierd problems with the gethostbyXXX **	routines.  For example, Solaris versions at least through 2.3 **	don't properly deliver a canonical h_name field.  This tries to **	work around these problems. ** **	Support IPv6 as well as IPv4. */
@@ -189,7 +168,7 @@ block|{
 name|bool
 name|resv6
 init|=
-name|TRUE
+name|true
 decl_stmt|;
 name|struct
 name|hostent
@@ -234,11 +213,6 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-operator|*
-name|err
-operator|=
-name|h_errno
-expr_stmt|;
 if|if
 condition|(
 name|family
@@ -255,17 +229,16 @@ operator|&=
 operator|~
 name|RES_USE_INET6
 expr_stmt|;
+operator|*
+name|err
+operator|=
+name|h_errno
+expr_stmt|;
 return|return
 name|h
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|_FFR_FREEHOSTENT
-end_if
 
 begin_function
 name|void
@@ -283,15 +256,6 @@ comment|/* 	**  Stub routine -- if they don't have getipnodeby*(), 	**  they pro
 return|return;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_FREEHOSTENT */
-end_comment
 
 begin_endif
 endif|#
@@ -503,13 +467,80 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|NETINET6
+end_if
+
+begin_comment
+comment|/* **  MI_INET_PTON -- convert printed form to network address. ** **	Wrapper for inet_pton() which handles IPv6: labels. ** **	Parameters: **		family -- address family **		src -- string **		dst -- destination address structure ** **	Returns: **		1 if the address was valid **		0 if the address wasn't parseable **		-1 if error */
+end_comment
+
+begin_function
+name|int
+name|mi_inet_pton
+parameter_list|(
+name|family
+parameter_list|,
+name|src
+parameter_list|,
+name|dst
+parameter_list|)
+name|int
+name|family
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|src
+decl_stmt|;
+name|void
+modifier|*
+name|dst
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|family
+operator|==
+name|AF_INET6
+operator|&&
+name|strncasecmp
+argument_list|(
+name|src
+argument_list|,
+literal|"IPv6:"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|src
+operator|+=
+literal|5
+expr_stmt|;
+return|return
+name|inet_pton
+argument_list|(
+name|family
+argument_list|,
+name|src
+argument_list|,
+name|dst
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _FFR_MILTER */
+comment|/* NETINET6 */
 end_comment
 
 end_unit
