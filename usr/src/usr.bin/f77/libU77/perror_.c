@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_perror[] = "@(#)perror_.c	1.1";  *  * write a standard error message to the standard error output  *  * calling sequence:  *	call perror(string)  * where:  *	string will be written preceeding the standard error message  */
+comment|/* char id_perror[] = "@(#)perror_.c	1.2";  *  * write a standard error message to the standard error output  *  * calling sequence:  *	call perror(string)  * where:  *	string will be written preceeding the standard error message  */
 end_comment
 
 begin_include
@@ -85,6 +85,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|unit
+modifier|*
+name|lu
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -171,6 +175,26 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
+name|lu
+operator|=
+operator|&
+name|units
+index|[
+name|STDERR
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|lu
+operator|->
+name|uwrt
+condition|)
+name|nowwriting
+argument_list|(
+name|lu
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|len
@@ -184,21 +208,15 @@ operator|*
 name|s
 operator|++
 argument_list|,
-name|units
-index|[
-name|STDERR
-index|]
-operator|.
+name|lu
+operator|->
 name|ufd
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|units
-index|[
-name|STDERR
-index|]
-operator|.
+name|lu
+operator|->
 name|ufd
 argument_list|,
 literal|": %s\n"
