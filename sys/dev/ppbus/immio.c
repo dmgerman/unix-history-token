@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  *  */
+comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: immio.c,v 1.1 1998/09/13 18:28:15 nsouch Exp $  *  */
 end_comment
 
 begin_comment
@@ -721,7 +721,10 @@ name|vpo
 parameter_list|,
 name|int
 modifier|*
-name|disconnected
+name|connected
+parameter_list|,
+name|int
+name|release_bus
 parameter_list|)
 block|{
 name|DECLARE_CPP_MICROSEQ
@@ -739,10 +742,10 @@ decl_stmt|;
 comment|/* all should be ok */
 if|if
 condition|(
-name|disconnected
+name|connected
 condition|)
 operator|*
-name|disconnected
+name|connected
 operator|=
 literal|0
 expr_stmt|;
@@ -822,13 +825,17 @@ operator|)
 literal|0x38
 operator|)
 operator|&&
-name|disconnected
+name|connected
 condition|)
 operator|*
-name|disconnected
+name|connected
 operator|=
 name|VP0_ECONNECT
 expr_stmt|;
+if|if
+condition|(
+name|release_bus
+condition|)
 return|return
 operator|(
 name|ppb_release_bus
@@ -838,6 +845,12 @@ name|vpo
 operator|->
 name|vpo_dev
 argument_list|)
+operator|)
+return|;
+else|else
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -862,7 +875,10 @@ name|how
 parameter_list|,
 name|int
 modifier|*
-name|not_connected
+name|disconnected
+parameter_list|,
+name|int
+name|request_bus
 parameter_list|)
 block|{
 name|DECLARE_CPP_MICROSEQ
@@ -883,13 +899,17 @@ decl_stmt|;
 comment|/* all should be ok */
 if|if
 condition|(
-name|not_connected
+name|disconnected
 condition|)
 operator|*
-name|not_connected
+name|disconnected
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|request_bus
+condition|)
 if|if
 condition|(
 operator|(
@@ -1066,10 +1086,10 @@ operator|)
 literal|0x30
 operator|)
 operator|&&
-name|not_connected
+name|disconnected
 condition|)
 operator|*
-name|not_connected
+name|disconnected
 operator|=
 name|VP0_ECONNECT
 expr_stmt|;
@@ -1099,13 +1119,38 @@ block|{
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|ppb_request_bus
+argument_list|(
+operator|&
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|,
+name|PPB_DONTWAIT
+argument_list|)
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* disconnect the drive, keep the bus */
 name|imm_disconnect
 argument_list|(
 name|vpo
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* we already have the bus, just connect */
 name|imm_connect
 argument_list|(
 name|vpo
@@ -1114,17 +1159,32 @@ name|PPB_DONTWAIT
 argument_list|,
 operator|&
 name|error
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|VP0_EINITFAILED
-operator|)
-return|;
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"imm%d: can't connect to the drive\n"
+argument_list|,
+name|vpo
+operator|->
+name|vpo_unit
+argument_list|)
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 comment|/* send SCSI reset signal */
 name|ppb_MS_microseq
 argument_list|(
@@ -1138,12 +1198,15 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* release the bus now */
 name|imm_disconnect
 argument_list|(
 name|vpo
 argument_list|,
 operator|&
 name|error
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* ensure we are disconnected or daisy chained peripheral  	 * may cause serious problem to the disk */
@@ -1151,14 +1214,39 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|VP0_EINITFAILED
-operator|)
-return|;
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"imm%d: can't disconnect from the drive\n"
+argument_list|,
+name|vpo
+operator|->
+name|vpo_unit
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+name|error
+label|:
+name|ppb_release_bus
+argument_list|(
+operator|&
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|VP0_EINITFAILED
 operator|)
 return|;
 block|}
@@ -2076,9 +2164,9 @@ name|vpo
 parameter_list|)
 block|{
 name|int
-name|not_connected
+name|disconnected
 decl_stmt|;
-comment|/* first, connect to the drive */
+comment|/* first, connect to the drive and request the bus */
 name|imm_connect
 argument_list|(
 name|vpo
@@ -2088,13 +2176,15 @@ operator||
 name|PPB_INTR
 argument_list|,
 operator|&
-name|not_connected
+name|disconnected
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|not_connected
+name|disconnected
 condition|)
 block|{
 comment|/* reset the SCSI bus */
@@ -2116,6 +2206,8 @@ argument_list|(
 name|vpo
 argument_list|,
 name|NULL
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2220,6 +2312,8 @@ name|PPB_INTR
 argument_list|,
 operator|&
 name|not_connected
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 condition|)
@@ -2752,6 +2846,8 @@ argument_list|(
 name|vpo
 argument_list|,
 name|NULL
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
