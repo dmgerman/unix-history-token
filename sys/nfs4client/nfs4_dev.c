@@ -136,17 +136,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CDEV_MAJOR
-value|29
-end_define
-
-begin_comment
-comment|/* XXX where are these numbers assigned!?!?  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CDEV_MINOR
 value|1
 end_define
@@ -380,11 +369,6 @@ operator|.
 name|d_name
 operator|=
 name|NFS4DEV_NAME
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|}
 decl_stmt|;
 end_decl_stmt
