@@ -1445,7 +1445,6 @@ comment|/*  * Experimental implementation: My laptop machine can't handle this f
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|apm_display
 parameter_list|(
@@ -6051,13 +6050,14 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|apm_devsw_installed
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
