@@ -18,20 +18,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"@(#) $FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
