@@ -3257,7 +3257,7 @@ condition|)
 block|{
 name|skip
 operator|=
-literal|0
+name|MAX_PAGE_OFFSET
 expr_stmt|;
 name|rval
 operator|=
@@ -3302,7 +3302,7 @@ name|off
 expr_stmt|;
 name|skip
 operator|=
-literal|0
+name|MAX_PAGE_OFFSET
 expr_stmt|;
 block|}
 switch|switch
