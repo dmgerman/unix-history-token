@@ -1780,6 +1780,8 @@ name|size_t
 name|clen
 decl_stmt|,
 name|lbuflen
+decl_stmt|,
+name|reallen
 decl_stmt|;
 name|mlbuf
 operator|=
@@ -1807,6 +1809,10 @@ name|NULL
 condition|;
 control|)
 block|{
+name|reallen
+operator|=
+name|lbuflen
+expr_stmt|;
 comment|/* Assert EOL has a newline. */
 if|if
 condition|(
@@ -1867,6 +1873,9 @@ name|lbuf
 operator|=
 name|mlbuf
 expr_stmt|;
+name|reallen
+operator|++
+expr_stmt|;
 block|}
 name|output
 operator|=
@@ -1899,7 +1908,7 @@ name|p
 argument_list|,
 name|lbuf
 operator|+
-name|lbuflen
+name|reallen
 operator|-
 name|p
 argument_list|,
@@ -2078,7 +2087,7 @@ name|p
 argument_list|,
 name|lbuf
 operator|+
-name|lbuflen
+name|reallen
 operator|-
 name|p
 argument_list|,
