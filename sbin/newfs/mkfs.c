@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkfs.c,v 1.26 1998/08/27 07:38:33 dfr Exp $"
+literal|"$Id: mkfs.c,v 1.27 1999/02/09 17:19:18 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4393,7 +4393,7 @@ name|sprintf
 argument_list|(
 name|tmpbuf
 argument_list|,
-literal|" %ld,"
+literal|" %ld%s"
 argument_list|,
 name|fsbtodb
 argument_list|(
@@ -4408,6 +4408,20 @@ argument_list|,
 name|cylno
 argument_list|)
 argument_list|)
+argument_list|,
+name|cylno
+operator|<
+operator|(
+name|sblock
+operator|.
+name|fs_ncg
+operator|-
+literal|1
+operator|)
+condition|?
+literal|","
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
