@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.13 1993/11/25 01:37:34 wollman Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.14 1993/12/19 00:54:57 wollman Exp $  */
 end_comment
 
 begin_define
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<scsi/scsiconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
 end_include
 
 begin_decl_stmt
@@ -274,6 +286,17 @@ directive|define
 name|SD_RETRIES
 value|4
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAXTRANSFER
+value|8
+end_define
+
+begin_comment
+comment|/* 1 page at a time */
+end_comment
 
 begin_define
 define|#
@@ -557,6 +580,14 @@ name|u_int32
 name|next_sd_unit
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|scsi_xfer
+name|sx
 decl_stmt|;
 end_decl_stmt
 
@@ -3721,57 +3752,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|SCSIDUMP
-value|1
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SCSIDUMP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|NOT_TRUSTED
-value|1
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCSIDUMP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|scsi_xfer
-name|sx
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|MAXTRANSFER
-value|8
-end_define
-
-begin_comment
-comment|/* 1 page at a time */
-end_comment
-
 begin_comment
 comment|/*  * dump all of physical memory into the partition specified, starting  * at offset 'dumplo' into the partition.  */
 end_comment
@@ -3831,15 +3811,17 @@ name|sddoingadump
 init|=
 literal|0
 decl_stmt|;
-define|#
-directive|define
-name|MAPTO
-value|CADDR1
 specifier|extern
 name|caddr_t
-name|MAPTO
+name|CADDR1
 decl_stmt|;
 comment|/* map the page we are about to write, here */
+specifier|extern
+name|struct
+name|pte
+modifier|*
+name|CMAP1
+decl_stmt|;
 name|struct
 name|scsi_xfer
 modifier|*
@@ -3916,7 +3898,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 31 Jul 92 */
 name|sd
 operator|=
 name|sd_data
@@ -4075,25 +4056,30 @@ operator|>
 literal|0
 condition|)
 block|{
-name|pmap_enter
-argument_list|(
-name|kernel_pmap
-argument_list|,
-name|MAPTO
-argument_list|,
-name|trunc_page
-argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|CMAP1
+operator|=
+name|PG_V
+operator||
+name|PG_KW
+operator||
+operator|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|addr
-argument_list|)
-argument_list|,
-name|VM_PROT_READ
-argument_list|,
-name|TRUE
-argument_list|)
+operator|>>
+name|PG_SHIFT
+operator|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NOT_TRUSTED
+name|tlbflush
+argument_list|()
+expr_stmt|;
 comment|/* 		 *  Fill out the scsi command 		 */
 name|bzero
 argument_list|(
@@ -4269,7 +4255,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|MAPTO
+name|CADDR1
 expr_stmt|;
 name|xs
 operator|->
@@ -4327,24 +4313,6 @@ operator|)
 return|;
 comment|/* we said not to sleep! */
 block|}
-else|#
-directive|else
-comment|/* NOT_TRUSTED */
-comment|/* lets just talk about this first... */
-name|printf
-argument_list|(
-literal|"sd%d: dump addr 0x%x, blk %d\n"
-argument_list|,
-name|unit
-argument_list|,
-name|addr
-argument_list|,
-name|blknum
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* NOT_TRUSTED */
 if|if
 condition|(
 operator|(
@@ -4418,47 +4386,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SCSIDUMP */
-end_comment
-
-begin_function
-name|errval
-name|sddump
-parameter_list|()
-block|{
-name|printf
-argument_list|(
-literal|"\nsddump()        -- not implemented\n"
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|60000000
-argument_list|)
-expr_stmt|;
-comment|/* 60 seconds */
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SCSIDUMP */
-end_comment
 
 end_unit
 
