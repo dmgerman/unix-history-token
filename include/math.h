@@ -832,6 +832,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|double
+name|gamma
+name|__P
+argument_list|(
+operator|(
+name|double
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|double
 name|log1p
 name|__P
 argument_list|(
