@@ -227,7 +227,7 @@ name|dev
 operator|=
 name|make_dev
 argument_list|(
-name|cdevsw
+name|proto
 argument_list|,
 name|dkmakeminor
 argument_list|(
