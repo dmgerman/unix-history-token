@@ -308,7 +308,7 @@ begin_define
 define|#
 directive|define
 name|SSC_NSECT
-value|196608
+value|409600
 end_define
 
 begin_endif
