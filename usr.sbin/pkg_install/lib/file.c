@@ -922,7 +922,7 @@ name|Verbose
 condition|?
 literal|"-xjvf"
 else|:
-literal|"-xzf"
+literal|"-xjf"
 argument_list|,
 literal|"-"
 argument_list|,
