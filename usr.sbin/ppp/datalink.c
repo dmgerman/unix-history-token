@@ -378,11 +378,6 @@ expr_stmt|;
 if|if
 condition|(
 name|Timeout
-condition|)
-block|{
-if|if
-condition|(
-name|Timeout
 operator|<
 literal|0
 condition|)
@@ -406,8 +401,12 @@ operator|.
 name|load
 operator|=
 name|result
+condition|?
+name|result
 operator|*
 name|SECTICKS
+else|:
+literal|1
 expr_stmt|;
 name|dl
 operator|->
@@ -470,7 +469,6 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|result
 return|;
