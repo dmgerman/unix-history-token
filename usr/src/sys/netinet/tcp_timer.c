@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -865,6 +865,10 @@ operator|.
 name|tcps_keepprobe
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_COMPAT_42
+comment|/* 			 * The keepalive packet must have nonzero length 			 * to get a 4.2 host to respond. 			 */
 name|tcp_respond
 argument_list|(
 name|tp
@@ -877,7 +881,7 @@ name|tp
 operator|->
 name|rcv_nxt
 operator|-
-name|tcp_keeplen
+literal|1
 argument_list|,
 name|tp
 operator|->
@@ -888,6 +892,31 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|tcp_respond
+argument_list|(
+name|tp
+argument_list|,
+name|tp
+operator|->
+name|t_template
+argument_list|,
+name|tp
+operator|->
+name|rcv_nxt
+argument_list|,
+name|tp
+operator|->
+name|snd_una
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|tp
 operator|->
