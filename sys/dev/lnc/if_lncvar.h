@@ -658,7 +658,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|lnc_softc
 block|{
@@ -738,8 +739,9 @@ endif|#
 directive|endif
 name|LNCSTATS_STRUCT
 block|}
-struct|;
-end_struct
+name|lnc_softc_t
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -797,8 +799,7 @@ name|__inline
 name|void
 name|write_csr
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -836,8 +837,7 @@ name|__inline
 name|u_short
 name|read_csr
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|,

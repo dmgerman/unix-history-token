@@ -131,8 +131,7 @@ name|pcnet_probe
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|)
@@ -147,8 +146,7 @@ name|lnc_attach_sc
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|,
@@ -309,8 +307,7 @@ name|int
 name|unit
 decl_stmt|;
 block|{
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 decl_stmt|;

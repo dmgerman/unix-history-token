@@ -152,8 +152,7 @@ file|<dev/lnc/if_lncreg.h>
 end_include
 
 begin_decl_stmt
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 name|lnc_softc
 index|[
 name|NLNC
@@ -230,8 +229,7 @@ name|lnc_setladrf
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|)
@@ -246,8 +244,7 @@ name|lnc_stop
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|)
@@ -262,8 +259,7 @@ name|lnc_reset
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|)
@@ -278,8 +274,7 @@ name|lnc_free_mbufs
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|)
@@ -295,8 +290,7 @@ name|alloc_mbuf_cluster
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|,
@@ -319,8 +313,7 @@ name|chain_mbufs
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|,
@@ -344,8 +337,7 @@ name|mbuf_packet
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|,
@@ -367,8 +359,7 @@ name|lnc_rint
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|)
@@ -384,8 +375,7 @@ name|lnc_tint
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|)
@@ -415,8 +405,7 @@ name|lnc_attach_sc
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|,
@@ -563,8 +552,7 @@ name|lnc_dump_state
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|)
@@ -598,8 +586,7 @@ name|lncintr_sc
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|)
@@ -628,8 +615,7 @@ name|__inline
 name|void
 name|write_bcr
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -667,8 +653,7 @@ name|__inline
 name|u_short
 name|read_bcr
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -809,8 +794,7 @@ name|__inline
 name|void
 name|lnc_setladrf
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -964,8 +948,7 @@ specifier|static
 name|void
 name|lnc_stop
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -987,8 +970,7 @@ specifier|static
 name|void
 name|lnc_reset
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -1006,8 +988,7 @@ specifier|static
 name|void
 name|lnc_free_mbufs
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -1132,8 +1113,7 @@ name|__inline
 name|int
 name|alloc_mbuf_cluster
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -1321,7 +1301,7 @@ name|mbuf
 operator|*
 name|chain_mbufs
 argument_list|(
-argument|struct lnc_softc *sc
+argument|lnc_softc_t *sc
 argument_list|,
 argument|int start_of_packet
 argument_list|,
@@ -1484,8 +1464,7 @@ name|mbuf
 modifier|*
 name|mbuf_packet
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -1812,8 +1791,7 @@ name|__inline
 name|void
 name|lnc_rint
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -2549,8 +2527,7 @@ name|__inline
 name|void
 name|lnc_tint
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -3433,8 +3410,7 @@ begin_function
 name|int
 name|lnc_attach_sc
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -3971,8 +3947,7 @@ modifier|*
 name|xsc
 decl_stmt|;
 block|{
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 init|=
@@ -5035,8 +5010,7 @@ begin_function
 name|void
 name|lncintr_sc
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -5448,8 +5422,7 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 init|=
@@ -6172,8 +6145,7 @@ name|caddr_t
 name|data
 parameter_list|)
 block|{
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 init|=
@@ -6531,8 +6503,7 @@ begin_function
 name|void
 name|lnc_dump_state
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|)

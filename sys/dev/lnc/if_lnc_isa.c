@@ -81,8 +81,7 @@ name|ne2100_probe
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 operator|,
 name|unsigned
@@ -97,8 +96,7 @@ name|bicc_probe
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 operator|,
 name|unsigned
@@ -113,8 +111,7 @@ name|depca_probe
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 operator|,
 name|unsigned
@@ -129,8 +126,7 @@ name|lance_probe
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 operator|)
 argument_list|)
@@ -143,8 +139,7 @@ name|pcnet_probe
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 operator|)
 argument_list|)
@@ -189,8 +184,7 @@ operator|(
 name|u_char
 index|[]
 operator|,
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 operator|)
 argument_list|)
@@ -206,8 +200,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 name|lnc_softc
 index|[]
 decl_stmt|;
@@ -220,8 +213,7 @@ name|lnc_attach_sc
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 operator|,
 name|int
@@ -237,8 +229,7 @@ name|lncintr_sc
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 operator|)
 argument_list|)
@@ -249,8 +240,7 @@ begin_function
 name|int
 name|ne2100_probe
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -391,8 +381,7 @@ begin_function
 name|int
 name|bicc_probe
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -530,8 +519,7 @@ name|u_char
 name|ring
 index|[]
 parameter_list|,
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -699,8 +687,7 @@ begin_function
 name|int
 name|depca_probe
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|,
@@ -821,8 +808,7 @@ begin_function
 name|int
 name|lance_probe
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -906,8 +892,7 @@ begin_function
 name|int
 name|pcnet_probe
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|)
@@ -1076,8 +1061,7 @@ name|isa_dev
 operator|->
 name|id_unit
 decl_stmt|;
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 init|=
@@ -1204,8 +1188,7 @@ name|isa_dev
 operator|->
 name|id_unit
 decl_stmt|;
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 init|=
@@ -1294,8 +1277,7 @@ name|int
 name|unit
 parameter_list|)
 block|{
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 init|=

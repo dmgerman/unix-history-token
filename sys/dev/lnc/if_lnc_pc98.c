@@ -99,8 +99,7 @@ name|pcnet_probe
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|)
@@ -115,8 +114,7 @@ name|cnet98s_probe
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|lnc_softc
+name|lnc_softc_t
 operator|*
 name|sc
 operator|,
@@ -334,8 +332,7 @@ specifier|static
 name|int
 name|cnet98s_probe
 parameter_list|(
-name|struct
-name|lnc_softc
+name|lnc_softc_t
 modifier|*
 name|sc
 parameter_list|,
