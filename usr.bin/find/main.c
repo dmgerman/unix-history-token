@@ -115,6 +115,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -241,6 +247,18 @@ comment|/* minimum and maximum depth */
 end_comment
 
 begin_decl_stmt
+name|int
+name|regexp_flags
+init|=
+name|REG_BASIC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use the "basic" regexp by default*/
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
@@ -336,7 +354,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPXdf:sx"
+literal|"EHLPXdf:sx"
 argument_list|)
 operator|)
 operator|!=
@@ -348,6 +366,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'E'
+case|:
+name|regexp_flags
+operator||=
+name|REG_EXTENDED
+expr_stmt|;
+break|break;
 case|case
 literal|'H'
 case|:
@@ -595,7 +621,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: find [-H | -L | -P] [-Xdsx] [-f file] [file ...] [expression]\n"
+literal|"usage: find [-H | -L | -P] [-EXdsx] [-f file] [file ...] [expression]\n"
 argument_list|)
 expr_stmt|;
 name|exit
