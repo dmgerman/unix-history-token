@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getcwd.c	8.2 (Berkeley) %G%"
+literal|"@(#)getcwd.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,6 +190,13 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|&&
+name|pwd
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
 operator|&&
 operator|!
 name|stat
