@@ -316,14 +316,14 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Setting the mode to zero needs to wait for the inode 		 * to be written just as does a change to the link count. 		 * So, rather than creating a new entry point to do the 		 * same thing, we just use softdep_change_linkcnt(). 		 */
-name|DIP
+name|DIP_SET
 argument_list|(
 name|ip
 argument_list|,
 name|i_rdev
-argument_list|)
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 name|mode
 operator|=
@@ -337,14 +337,14 @@ name|i_mode
 operator|=
 literal|0
 expr_stmt|;
-name|DIP
+name|DIP_SET
 argument_list|(
 name|ip
 argument_list|,
 name|i_mode
-argument_list|)
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->

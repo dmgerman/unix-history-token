@@ -380,6 +380,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIP_SET
+parameter_list|(
+name|ip
+parameter_list|,
+name|field
+parameter_list|,
+name|val
+parameter_list|)
+value|do { \ 	if ((ip)->i_ump->um_fstype == UFS1) \ 		(ip)->i_din1->d##field = (val); \ 	else \ 		(ip)->i_din2->d##field = (val); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAXSYMLINKLEN
 parameter_list|(
 name|ip
