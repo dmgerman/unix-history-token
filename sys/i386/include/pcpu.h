@@ -44,7 +44,7 @@ name|PCPU_MD_FIELDS
 define|\
 value|struct	pcpu *pc_prvspace;
 comment|/* Self-reference */
-value|\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	int	pc_currentldt;						\ 	u_int32_t pc_int_pending;
+value|\ 	struct	pmap *pc_curpmap;					\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	int	pc_currentldt;						\ 	u_int32_t pc_int_pending;
 comment|/* master int pending flag */
 value|\ 	u_int32_t pc_ipending;
 comment|/* pending slow interrupts */

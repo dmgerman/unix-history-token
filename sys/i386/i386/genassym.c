@@ -1838,6 +1838,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|PC_CURPMAP
+argument_list|,
+name|offsetof
+argument_list|(
+expr|struct
+name|pcpu
+argument_list|,
+name|pc_curpmap
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
