@@ -845,7 +845,7 @@ begin_define
 define|#
 directive|define
 name|MIDI_DEV_STATUS
-value|11
+value|15
 end_define
 
 begin_comment
