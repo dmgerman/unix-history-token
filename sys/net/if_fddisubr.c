@@ -1797,16 +1797,10 @@ if|if
 condition|(
 name|bcmp
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ifp
 operator|->
 name|if_broadcastaddr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|fh
 operator|->
 name|fddi_dhost
