@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)np.c	7.2 (Berkeley) %G%  *  * From:  *	np.c version 1.5  *  *	This version retrieved: 8/18/86 @ 18:58:54  *	    This delta created: 8/18/86 @ 18:19:24  *  *	static		char	*SCCSID = "@(#)np.c	1.5";  *  */
+comment|/*  * Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)np.c	7.3 (Berkeley) %G%  *  * From:  *	np.c version 1.5  *  *	This version retrieved: 8/18/86 @ 18:58:54  *	    This delta created: 8/18/86 @ 18:19:24  *  *	static		char	*SCCSID = "@(#)np.c	1.5";  *  */
 end_comment
 
 begin_comment
@@ -5197,6 +5197,9 @@ specifier|register
 name|int
 name|base
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|NpDebug
@@ -5218,16 +5221,38 @@ operator|->
 name|hostcq
 expr_stmt|;
 comment|/* Command Queue pointer */
+name|s
+operator|=
+name|spl5
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|cqp
+name|mp
 operator|->
-name|scanflag
+name|flags
 operator|&
-name|ON
+name|SCANNING
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
-else|else
+block|}
+name|mp
+operator|->
+name|flags
+operator||=
+name|SCANNING
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|cqp
 operator|->
 name|scanflag
@@ -5247,13 +5272,22 @@ expr_stmt|;
 comment|/* Shared memory base address */
 while|while
 condition|(
+literal|1
+condition|)
+block|{
 name|cqp
 operator|->
 name|scanflag
-operator|&
+operator||=
 name|ON
-condition|)
-block|{
+expr_stmt|;
+name|cqp
+operator|->
+name|chngflag
+operator|&=
+operator|~
+name|ON
+expr_stmt|;
 while|while
 condition|(
 name|ep
@@ -5464,6 +5498,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|cqp
+operator|->
+name|scanflag
+operator|&=
+operator|~
+name|ON
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -5475,14 +5516,15 @@ operator|&
 name|ON
 operator|)
 condition|)
-name|cqp
+break|break;
+block|}
+name|mp
 operator|->
-name|scanflag
+name|flags
 operator|&=
 operator|~
-name|ON
+name|SCANNING
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|NpDebug
@@ -6136,13 +6178,6 @@ operator|=
 name|cqe_offset
 expr_stmt|;
 comment|/* Enter this request's offset */
-name|cqp
-operator|->
-name|chngflag
-operator||=
-name|ON
-expr_stmt|;
-comment|/* Set change flag unconditionally */
 comment|/* Update cqe_add where next request is to be added */
 name|cqp
 operator|->
@@ -6182,6 +6217,13 @@ operator|-
 name|base
 argument_list|)
 expr_stmt|;
+name|cqp
+operator|->
+name|chngflag
+operator||=
+name|ON
+expr_stmt|;
+comment|/* Set change flag unconditionally */
 comment|/* Interrupt the Board if his scan flag isn't on */
 if|if
 condition|(
@@ -7663,7 +7705,7 @@ expr_stmt|;
 comment|/* Init request count */
 name|s
 operator|=
-name|spl4
+name|spl5
 argument_list|()
 expr_stmt|;
 comment|/* Disable interrupts */
@@ -8361,7 +8403,7 @@ expr_stmt|;
 comment|/* Queue onto active list */
 name|pri
 operator|=
-name|spl4
+name|spl5
 argument_list|()
 expr_stmt|;
 comment|/* Mask our interrupts */
