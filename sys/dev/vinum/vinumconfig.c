@@ -8586,6 +8586,15 @@ name|plex_faulty
 expr_stmt|;
 block|}
 comment|/* 	 * Now see if the plex size is a multiple of 	 * the stripe size.  If not, trim off the end 	 * of each subdisk and return it to the drive. 	 */
+if|if
+condition|(
+name|plex
+operator|->
+name|length
+operator|>
+literal|0
+condition|)
+block|{
 name|remainder
 operator|=
 call|(
@@ -8697,6 +8706,7 @@ operator|-=
 name|remainder
 expr_stmt|;
 comment|/* and shorten it */
+block|}
 block|}
 block|}
 block|}
