@@ -925,6 +925,11 @@ name|argv
 operator|++
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ino
@@ -986,6 +991,11 @@ name|argv
 operator|++
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ino
