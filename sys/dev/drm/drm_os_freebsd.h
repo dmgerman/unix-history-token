@@ -536,11 +536,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRM_OS_RETURN
+name|DRM_OS_ERR
 parameter_list|(
 name|v
 parameter_list|)
-value|return v;
+value|v
 end_define
 
 begin_define

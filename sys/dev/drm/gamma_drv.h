@@ -53,7 +53,7 @@ parameter_list|(
 name|dev
 parameter_list|)
 define|\
-value|do {									\ 	if ( !_DRM_LOCK_IS_HELD( dev->lock.hw_lock->lock ) ||		\ 	     dev->lock.pid != DRM_OS_CURRENTPID ) {				\ 		DRM_ERROR( "%s called without lock held\n",		\ 			   __FUNCTION__ );				\ 		DRM_OS_RETURN( EINVAL );						\ 	}								\ } while (0)
+value|do {									\ 	if ( !_DRM_LOCK_IS_HELD( dev->lock.hw_lock->lock ) ||		\ 	     dev->lock.pid != DRM_OS_CURRENTPID ) {				\ 		DRM_ERROR( "%s called without lock held\n",		\ 			   __FUNCTION__ );				\ 		return DRM_OS_ERR(EINVAL);						\ 	}								\ } while (0)
 end_define
 
 begin_function_decl

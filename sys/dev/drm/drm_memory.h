@@ -2572,11 +2572,12 @@ argument_list|,
 literal|"Attempt to free NULL AGP handle\n"
 argument_list|)
 expr_stmt|;
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 if|if
 condition|(
@@ -2669,11 +2670,12 @@ return|return
 literal|0
 return|;
 block|}
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|int
 name|DRM
@@ -2712,7 +2714,10 @@ operator|!
 name|dev
 condition|)
 return|return
+name|DRM_OS_ERR
+argument_list|(
 name|EINVAL
+argument_list|)
 return|;
 endif|#
 directive|endif
@@ -2730,11 +2735,12 @@ argument_list|,
 literal|"Attempt to bind NULL AGP handle\n"
 argument_list|)
 expr_stmt|;
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 if|if
 condition|(
@@ -2835,11 +2841,9 @@ name|mem_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DRM_OS_RETURN
-argument_list|(
+return|return
 literal|0
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|DRM_OS_SPINLOCK
 argument_list|(
@@ -2870,11 +2874,9 @@ name|mem_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DRM_OS_RETURN
-argument_list|(
+return|return
 name|retcode
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|int
 name|DRM
@@ -2896,7 +2898,10 @@ decl_stmt|;
 name|int
 name|retcode
 init|=
+name|DRM_OS_ERR
+argument_list|(
 name|EINVAL
+argument_list|)
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2917,7 +2922,10 @@ operator|!
 name|dev
 condition|)
 return|return
+name|DRM_OS_ERR
+argument_list|(
 name|EINVAL
+argument_list|)
 return|;
 endif|#
 directive|endif
@@ -2935,11 +2943,9 @@ argument_list|,
 literal|"Attempt to unbind NULL AGP handle\n"
 argument_list|)
 expr_stmt|;
-name|DRM_OS_RETURN
-argument_list|(
+return|return
 name|retcode
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 ifdef|#
 directive|ifdef
@@ -2971,11 +2977,9 @@ name|handle
 argument_list|)
 operator|)
 condition|)
-name|DRM_OS_RETURN
-argument_list|(
+return|return
 name|retcode
-argument_list|)
-expr_stmt|;
+return|;
 name|DRM_OS_SPINLOCK
 argument_list|(
 operator|&
@@ -3080,11 +3084,9 @@ name|alloc_count
 argument_list|)
 expr_stmt|;
 block|}
-name|DRM_OS_RETURN
-argument_list|(
+return|return
 name|retcode
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 

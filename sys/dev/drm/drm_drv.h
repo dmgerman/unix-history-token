@@ -2369,11 +2369,12 @@ name|maplist
 operator|==
 name|NULL
 condition|)
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|ENOMEM
 argument_list|)
-expr_stmt|;
+return|;
 name|memset
 argument_list|(
 name|dev
@@ -4027,11 +4028,12 @@ name|device
 argument_list|)
 condition|)
 block|{
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|ENOMEM
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|DRM
 argument_list|(
@@ -4074,11 +4076,12 @@ name|device
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|ENOMEM
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|DRIVER_PREINIT
 argument_list|()
@@ -4428,11 +4431,12 @@ parameter_list|(
 name|dev
 parameter_list|)
 function_decl|;
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|ENOMEM
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 endif|#
 directive|endif
@@ -4967,7 +4971,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|len = strlen( value );						\ 	if ( len> name##_len ) len = name##_len;			\ 	name##_len = strlen( value );					\ 	if ( len&& name ) {						\ 		if ( DRM_OS_COPYTOUSR( name, value, len ) )		\ 			DRM_OS_RETURN(EFAULT);				\ 	}
+value|len = strlen( value );						\ 	if ( len> name##_len ) len = name##_len;			\ 	name##_len = strlen( value );					\ 	if ( len&& name ) {						\ 		if ( DRM_OS_COPYTOUSR( name, value, len ) )		\ 			return DRM_OS_ERR(EFAULT);				\ 	}
 name|version
 operator|.
 name|version_major
@@ -5175,11 +5179,12 @@ operator|!
 name|dev
 condition|)
 block|{
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|ENODEV
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|DRM_DEBUG
 argument_list|(
@@ -5631,7 +5636,10 @@ block|{
 comment|/* Device has been unregistered */
 name|retcode
 operator|=
+name|DRM_OS_ERR
+argument_list|(
 name|EINTR
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -5732,7 +5740,10 @@ condition|)
 block|{
 name|retcode
 operator|=
+name|DRM_OS_ERR
+argument_list|(
 name|ERESTARTSYS
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -6127,11 +6138,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* __linux__ */
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|EBUSY
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|DRM_OS_SPINUNLOCK
 argument_list|(
@@ -6190,11 +6202,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* __linux__ */
-name|DRM_OS_RETURN
-argument_list|(
+return|return
 name|retcode
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 comment|/* DRM(ioctl) is called whenever a process performs an ioctl on /dev/drm.  */
 name|int
@@ -6403,7 +6413,10 @@ condition|)
 block|{
 name|retcode
 operator|=
+name|DRM_OS_ERR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -6438,7 +6451,10 @@ argument_list|)
 expr_stmt|;
 name|retcode
 operator|=
+name|DRM_OS_ERR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -6466,7 +6482,10 @@ condition|)
 block|{
 name|retcode
 operator|=
+name|DRM_OS_ERR
+argument_list|(
 name|EACCES
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -6521,11 +6540,9 @@ operator|->
 name|ioctl_count
 argument_list|)
 expr_stmt|;
-name|DRM_OS_RETURN
-argument_list|(
+return|return
 name|retcode
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|int
 name|DRM
@@ -6621,11 +6638,12 @@ operator|.
 name|context
 argument_list|)
 expr_stmt|;
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|DRM_DEBUG
 argument_list|(
@@ -6661,11 +6679,12 @@ name|context
 operator|<
 literal|0
 condition|)
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
-expr_stmt|;
+return|;
 elif|#
 directive|elif
 name|__HAVE_MULTIPLE_DMA_QUEUES
@@ -6685,11 +6704,12 @@ name|dev
 operator|->
 name|queue_count
 condition|)
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
-expr_stmt|;
+return|;
 name|q
 operator|=
 name|dev
@@ -7154,11 +7174,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|ret
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|int
 name|DRM
@@ -7210,11 +7231,12 @@ operator|.
 name|context
 argument_list|)
 expr_stmt|;
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|atomic_inc
 argument_list|(

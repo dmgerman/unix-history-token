@@ -2143,7 +2143,7 @@ parameter_list|(
 name|dev
 parameter_list|)
 define|\
-value|do {									\ 	if ( !_DRM_LOCK_IS_HELD( dev->lock.hw_lock->lock ) ||		\ 	     dev->lock.pid != DRM_OS_CURRENTPID ) {				\ 		DRM_ERROR( "%s called without lock held\n",		\ 			   __FUNCTION__ );				\ 		DRM_OS_RETURN( EINVAL );						\ 	}								\ } while (0)
+value|do {									\ 	if ( !_DRM_LOCK_IS_HELD( dev->lock.hw_lock->lock ) ||		\ 	     dev->lock.pid != DRM_OS_CURRENTPID ) {				\ 		DRM_ERROR( "%s called without lock held\n",		\ 			   __FUNCTION__ );				\ 		return DRM_OS_ERR(EINVAL);						\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -2154,7 +2154,7 @@ parameter_list|(
 name|dev_priv
 parameter_list|)
 define|\
-value|do {									\ 	drm_r128_ring_buffer_t *ring =&dev_priv->ring; int i;		\ 	if ( ring->space< ring->high_mark ) {				\ 		for ( i = 0 ; i< dev_priv->usec_timeout ; i++ ) {	\ 			r128_update_ring_snapshot( ring );		\ 			if ( ring->space>= ring->high_mark )		\ 				goto __ring_space_done;			\ 			DRM_OS_DELAY( 1 );					\ 		}							\ 		DRM_ERROR( "ring space check failed!\n" );		\ 		DRM_OS_RETURN( EBUSY );				\ 	}								\  __ring_space_done:							\ } while (0)
+value|do {									\ 	drm_r128_ring_buffer_t *ring =&dev_priv->ring; int i;		\ 	if ( ring->space< ring->high_mark ) {				\ 		for ( i = 0 ; i< dev_priv->usec_timeout ; i++ ) {	\ 			r128_update_ring_snapshot( ring );		\ 			if ( ring->space>= ring->high_mark )		\ 				goto __ring_space_done;			\ 			DRM_OS_DELAY( 1 );					\ 		}							\ 		DRM_ERROR( "ring space check failed!\n" );		\ 		return DRM_OS_ERR(EBUSY);				\ 	}								\  __ring_space_done:							\ } while (0)
 end_define
 
 begin_define

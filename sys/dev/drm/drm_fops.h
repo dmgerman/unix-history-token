@@ -297,11 +297,12 @@ name|cpu_valid
 argument_list|)
 argument_list|()
 condition|)
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
-expr_stmt|;
+return|;
 name|DRM_DEBUG
 argument_list|(
 literal|"pid = %d, minor = %d\n"
@@ -339,11 +340,12 @@ condition|(
 operator|!
 name|priv
 condition|)
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|ENOMEM
 argument_list|)
-expr_stmt|;
+return|;
 name|memset
 argument_list|(
 name|priv

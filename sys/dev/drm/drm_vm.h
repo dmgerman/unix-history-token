@@ -154,7 +154,7 @@ decl_stmt|;
 comment|/*drm_file_t *priv;*/
 comment|/*	DRM_DEBUG("offset = 0x%x\n", offset);*/
 comment|/*XXX Fixme */
-comment|/*priv = DRM(find_file_by_proc)(dev, p); 	if (!priv) { 		DRM_DEBUG("can't find authenticator\n"); 		return EINVAL; 	}  	if (!priv->authenticated) DRM_OS_RETURN(EACCES);*/
+comment|/*priv = DRM(find_file_by_proc)(dev, p); 	if (!priv) { 		DRM_DEBUG("can't find authenticator\n"); 		return EINVAL; 	}  	if (!priv->authenticated) return DRM_OS_ERR(EACCES);*/
 if|if
 condition|(
 name|dev

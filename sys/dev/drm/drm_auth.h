@@ -195,11 +195,12 @@ condition|(
 operator|!
 name|entry
 condition|)
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|ENOMEM
 argument_list|)
-expr_stmt|;
+return|;
 name|entry
 operator|->
 name|magic
@@ -487,11 +488,12 @@ argument_list|,
 name|DRM_MEM_MAGIC
 argument_list|)
 expr_stmt|;
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -773,11 +775,12 @@ return|return
 literal|0
 return|;
 block|}
-name|DRM_OS_RETURN
+return|return
+name|DRM_OS_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
