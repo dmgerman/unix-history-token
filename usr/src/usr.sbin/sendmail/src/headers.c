@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.37 (Berkeley) %G%"
+literal|"@(#)headers.c	8.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4179,6 +4179,67 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* 	**  If we are converting this to a MIME message, add the 	**  MIME-Version: header. 	*/
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MM_MIME8BIT
+argument_list|,
+name|MimeMode
+argument_list|)
+operator|&&
+name|bitset
+argument_list|(
+name|EF_HAS8BIT
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitnset
+argument_list|(
+name|M_8BITS
+argument_list|,
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|MCIF_CVT8TO7
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+operator|&&
+name|hvalue
+argument_list|(
+literal|"MIME-Version"
+argument_list|,
+name|e
+operator|->
+name|e_header
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|putline
+argument_list|(
+literal|"MIME-Version: 1.0"
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_block
