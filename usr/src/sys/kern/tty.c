@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	6.7	83/10/01	*/
+comment|/*	tty.c	6.8	83/12/16	*/
 end_comment
 
 begin_include
@@ -2690,9 +2690,14 @@ operator|*
 operator|)
 name|data
 operator|=
+operator|(
+operator|(
+name|unsigned
+operator|)
 name|tp
 operator|->
 name|t_flags
+operator|)
 operator|>>
 literal|16
 expr_stmt|;
