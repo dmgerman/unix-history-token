@@ -779,7 +779,7 @@ name|p
 argument_list|(
 name|mrt6s_upq_ovflw
 argument_list|,
-literal|"\t%llu upcall llueue overflow%s\n"
+literal|"\t%llu upcall queue overflow%s\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -835,7 +835,7 @@ name|p
 argument_list|(
 name|mrt6s_q_overflow
 argument_list|,
-literal|"\t%llu datagram%s dropped due to llueue overflow\n"
+literal|"\t%llu datagram%s dropped due to queue overflow\n"
 argument_list|)
 expr_stmt|;
 name|p
