@@ -4502,6 +4502,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -4562,9 +4565,12 @@ operator||
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
-name|tsleep
+name|msleep
 argument_list|(
 name|m
+argument_list|,
+operator|&
+name|vm_page_queue_mtx
 argument_list|,
 name|PVM
 argument_list|,
@@ -4584,6 +4590,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -4594,6 +4603,9 @@ name|NULL
 return|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -4605,9 +4617,6 @@ goto|;
 block|}
 else|else
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|allocflags
