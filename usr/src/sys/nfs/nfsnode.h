@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -143,10 +143,19 @@ name|sillyrename
 name|n_silly
 decl_stmt|;
 comment|/* Silly rename struct */
+name|struct
+name|timeval
+name|n_atim
+decl_stmt|;
+comment|/* Special file times */
+name|struct
+name|timeval
+name|n_mtim
+decl_stmt|;
 name|long
 name|n_spare
 index|[
-literal|9
+literal|5
 index|]
 decl_stmt|;
 comment|/* Up to a power of 2 */
@@ -311,6 +320,39 @@ begin_comment
 comment|/* Has been evicted */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NACC
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Special file accessed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUPD
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Special file updated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCHG
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Special file times changed */
+end_comment
+
 begin_comment
 comment|/*  * Prototypes for NFS vnode operations  */
 end_comment
@@ -387,6 +429,45 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|nfsspec_close
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_close_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FIFO
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|nfsfifo_close
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_close_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|int
 name|nfs_access
 name|__P
 argument_list|(
@@ -454,6 +535,73 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfsspec_read
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_read_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfsspec_write
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_write_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FIFO
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|nfsfifo_read
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_read_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfsfifo_write
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_write_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
