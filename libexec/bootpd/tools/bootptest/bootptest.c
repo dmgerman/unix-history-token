@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * bootptest.c - Test out a bootp server.  *  * This simple program was put together from pieces taken from  * various places, including the CMU BOOTP client and server.  * The packet printing routine is from the Berkeley "tcpdump"  * program with some enhancements I added.  The print-bootp.c  * file was shared with my copy of "tcpdump" and therefore uses  * some unusual utility routines that would normally be provided  * by various parts of the tcpdump program.  Gordon W. Ross  *  * Boilerplate:  *  * This program includes software developed by the University of  * California, Lawrence Berkeley Laboratory and its contributors.  * (See the copyright notice in print-bootp.c)  *  * The remainder of this program is public domain.  You may do  * whatever you like with it except claim that you wrote it.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * HISTORY:  *  * 12/02/93 Released version 1.4 (with bootp-2.3.2)  * 11/05/93 Released version 1.3  * 10/14/93 Released version 1.2  * 10/11/93 Released version 1.1  * 09/28/93 Released version 1.0  * 09/93 Original developed by Gordon W. Ross<gwr@mc.com>  *  * $FreeBSD$  */
+comment|/*  * bootptest.c - Test out a bootp server.  *  * This simple program was put together from pieces taken from  * various places, including the CMU BOOTP client and server.  * The packet printing routine is from the Berkeley "tcpdump"  * program with some enhancements I added.  The print-bootp.c  * file was shared with my copy of "tcpdump" and therefore uses  * some unusual utility routines that would normally be provided  * by various parts of the tcpdump program.  Gordon W. Ross  *  * Boilerplate:  *  * This program includes software developed by the University of  * California, Lawrence Berkeley Laboratory and its contributors.  * (See the copyright notice in print-bootp.c)  *  * The remainder of this program is public domain.  You may do  * whatever you like with it except claim that you wrote it.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * HISTORY:  *  * 12/02/93 Released version 1.4 (with bootp-2.3.2)  * 11/05/93 Released version 1.3  * 10/14/93 Released version 1.2  * 10/11/93 Released version 1.1  * 09/28/93 Released version 1.0  * 09/93 Original developed by Gordon W. Ross<gwr@mc.com>  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|char
@@ -92,6 +106,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -576,25 +596,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: can't get hostname\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't get hostname"
 argument_list|)
 expr_stmt|;
-block|}
 name|hostname
 operator|=
 name|my_uname
@@ -887,11 +895,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"udp/bootps: unknown service -- using port %d\n"
+literal|"bootps/udp: unknown service -- using port %d"
 argument_list|,
 name|IPPORT_BOOTPS
 argument_list|)
@@ -941,22 +947,15 @@ condition|(
 operator|!
 name|hep
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: unknown host\n"
+literal|"%s: unknown host"
 argument_list|,
 name|servername
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 name|hep
@@ -1033,11 +1032,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"udp/bootpc: unknown service -- using port %d\n"
+literal|"bootpc/udp: unknown service -- using port %d"
 argument_list|,
 name|IPPORT_BOOTPC
 argument_list|)
@@ -1098,27 +1095,32 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"bind BOOTPC port"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|errno
 operator|==
 name|EACCES
 condition|)
-name|fprintf
+block|{
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"You need to run this as root\n"
+literal|"bind BOOTPC port"
 argument_list|)
 expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"you need to run this as root"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"bind BOOTPC port"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1744,18 +1746,13 @@ argument_list|)
 expr_stmt|;
 comment|/* 		 * This no longer exits immediately after receiving 		 * one response because it is useful to know if the 		 * client might get multiple responses.  This code 		 * will now listen for one second after a response. 		 */
 block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"no response from %s\n"
-argument_list|,
-name|servername
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"no response from %s"
+argument_list|,
+name|servername
 argument_list|)
 expr_stmt|;
 block|}

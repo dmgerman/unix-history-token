@@ -8,12 +8,22 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  * BOOTPGW is typically used to forward BOOTP client requests from  * one subnet to a BOOTP server on a different subnet.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -101,6 +111,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -796,20 +812,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bootpgw: can't get hostname\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't get hostname"
 argument_list|)
 expr_stmt|;
-block|}
 name|hostname
 operator|=
 name|my_uname
@@ -999,13 +1008,9 @@ literal|0
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: invalid debug level\n"
-argument_list|,
-name|progname
+literal|"invalid debug level"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1092,11 +1097,9 @@ literal|16
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bootpgw: invalid hop count limit\n"
+literal|"invalid hop count limit"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1198,13 +1201,9 @@ literal|0
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: invalid timeout specification\n"
-argument_list|,
-name|progname
+literal|"invalid timeout specification"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1314,11 +1313,9 @@ literal|60
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bootpgw: invalid wait time\n"
+literal|"invalid wait time"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1332,13 +1329,9 @@ name|n
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: unknown switch: -%c\n"
-argument_list|,
-name|progname
+literal|"unknown switch: -%c"
 argument_list|,
 name|argv
 index|[
@@ -1371,11 +1364,9 @@ operator|!
 name|servername
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bootpgw: missing server name\n"
+literal|"missing server name"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -1414,22 +1405,15 @@ condition|(
 operator|!
 name|hep
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"bootpgw: can't get addr for %s\n"
+literal|"can't get addr for %s"
 argument_list|,
 name|servername
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 name|hep
@@ -1629,7 +1613,7 @@ name|report
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"udp/bootps: unknown service -- assuming port %d"
+literal|"bootps/udp: unknown service -- using port %d"
 argument_list|,
 name|bootps_port
 argument_list|)
@@ -1731,7 +1715,7 @@ name|report
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"udp/bootpc: unknown service -- assuming port %d"
+literal|"bootpc/udp: unknown service -- using port %d"
 argument_list|,
 name|IPPORT_BOOTPC
 argument_list|)
