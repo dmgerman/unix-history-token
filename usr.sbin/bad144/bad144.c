@@ -505,7 +505,6 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
-operator|-
 literal|1
 expr_stmt|;
 name|n
@@ -514,7 +513,7 @@ name|ioctl
 argument_list|(
 name|f
 argument_list|,
-name|DIOCSRETRIES
+name|DIOCSBADSCAN
 argument_list|,
 operator|&
 name|i
@@ -760,7 +759,7 @@ name|ioctl
 argument_list|(
 name|f
 argument_list|,
-name|DIOCSRETRIES
+name|DIOCSBADSCAN
 argument_list|,
 operator|&
 name|i
