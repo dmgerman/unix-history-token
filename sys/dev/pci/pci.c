@@ -5381,11 +5381,20 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|free
+argument_list|(
+name|devlist
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* 	 * Always set the device to D3.  If ACPI suggests a different 	 * power state, use it instead.  If ACPI is not present, the 	 * firmware is responsible for managing device power.  Skip 	 * children who aren't attached since they are powered down 	 * separately.  Only manage type 0 devices for now. 	 */
 for|for
 control|(
