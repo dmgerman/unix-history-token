@@ -1509,6 +1509,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|rt_check
+parameter_list|(
+name|struct
+name|rtentry
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
