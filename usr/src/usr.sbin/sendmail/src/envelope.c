@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.15 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1611,7 +1611,7 @@ name|e_from
 argument_list|,
 literal|1
 argument_list|,
-literal|'\0'
+literal|' '
 argument_list|,
 name|e
 argument_list|)
@@ -1699,7 +1699,7 @@ name|e_from
 argument_list|,
 literal|1
 argument_list|,
-literal|'\0'
+literal|' '
 argument_list|,
 name|e
 argument_list|)
@@ -1724,7 +1724,7 @@ name|e_from
 argument_list|,
 literal|1
 argument_list|,
-literal|'\0'
+literal|' '
 argument_list|,
 name|e
 argument_list|)

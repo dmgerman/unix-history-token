@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.18 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.19 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.18 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.19 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,6 +235,17 @@ begin_comment
 comment|/* help -- give usage info */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CMDEHLO
+value|11
+end_define
+
+begin_comment
+comment|/* ehlo -- extended helo (RFC 1425) */
+end_comment
+
 begin_comment
 comment|/* non-standard commands */
 end_comment
@@ -338,6 +349,10 @@ block|,
 literal|"helo"
 block|,
 name|CMDHELO
+block|,
+literal|"ehlo"
+block|,
+name|CMDEHLO
 block|,
 literal|"verb"
 block|,
@@ -823,10 +838,39 @@ case|case
 name|CMDHELO
 case|:
 comment|/* hello -- introduce yourself */
+case|case
+name|CMDEHLO
+case|:
+comment|/* extended hello */
+if|if
+condition|(
+name|c
+operator|->
+name|cmdcode
+operator|==
+name|CMDEHLO
+condition|)
+block|{
+name|protocol
+operator|=
+literal|"ESMTP"
+expr_stmt|;
+name|SmtpPhase
+operator|=
+literal|"EHLO"
+expr_stmt|;
+block|}
+else|else
+block|{
+name|protocol
+operator|=
+literal|"SMTP"
+expr_stmt|;
 name|SmtpPhase
 operator|=
 literal|"HELO"
 expr_stmt|;
+block|}
 name|setproctitle
 argument_list|(
 literal|"%s: %s"
@@ -1041,11 +1085,21 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|protocol
+operator|==
+name|NULL
+condition|)
+name|protocol
+operator|=
+literal|"SMTP"
+expr_stmt|;
 name|define
 argument_list|(
 literal|'r'
 argument_list|,
-literal|"SMTP"
+name|protocol
 argument_list|,
 name|e
 argument_list|)
