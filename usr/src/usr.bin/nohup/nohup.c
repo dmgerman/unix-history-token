@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nohup.c	5.1 (Berkeley) %G%"
+literal|"@(#)nohup.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,6 +247,10 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|off_t
+name|lseek
+parameter_list|()
+function_decl|;
 name|char
 modifier|*
 name|getenv
@@ -284,8 +288,6 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
-operator||
-name|O_TRUNC
 argument_list|,
 literal|0600
 argument_list|)
@@ -350,8 +352,6 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
-operator||
-name|O_TRUNC
 argument_list|,
 literal|0600
 argument_list|)
@@ -380,6 +380,18 @@ argument_list|)
 expr_stmt|;
 name|dupit
 label|:
+operator|(
+name|void
+operator|)
+name|lseek
+argument_list|(
+name|fd
+argument_list|,
+literal|0L
+argument_list|,
+name|SEEK_END
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dup2
