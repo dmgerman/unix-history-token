@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.23 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.24 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.23 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.24 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2030,6 +2030,14 @@ literal|0
 operator|||
 name|falen
 operator|<=
+literal|0
+operator|||
+name|fa
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|==
 literal|0
 condition|)
 block|{
