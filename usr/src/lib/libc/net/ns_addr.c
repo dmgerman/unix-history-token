@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns_addr.c	6.2 (Berkeley) %G%"
+literal|"@(#)ns_addr.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,12 +68,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|u_long
-name|net
-decl_stmt|;
-name|u_short
-name|socket
-decl_stmt|;
 name|char
 name|separator
 init|=
@@ -105,6 +99,9 @@ name|addr
 operator|=
 name|zero_addr
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|buf
@@ -240,6 +237,10 @@ name|Field
 argument_list|(
 name|socketname
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
 name|addr
 operator|.
@@ -396,7 +397,7 @@ condition|)
 block|{
 name|cvtbase
 argument_list|(
-literal|1000
+literal|1000L
 argument_list|,
 literal|256
 argument_list|,
@@ -466,7 +467,7 @@ condition|)
 block|{
 name|cvtbase
 argument_list|(
-literal|256
+literal|256L
 argument_list|,
 literal|256
 argument_list|,
@@ -536,7 +537,7 @@ condition|)
 block|{
 name|cvtbase
 argument_list|(
-literal|256
+literal|256L
 argument_list|,
 literal|256
 argument_list|,
@@ -627,7 +628,7 @@ argument_list|)
 expr_stmt|;
 name|cvtbase
 argument_list|(
-literal|65536
+literal|65536L
 argument_list|,
 literal|256
 argument_list|,
@@ -889,6 +890,9 @@ operator|>
 name|hb
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sscanf
 argument_list|(
 name|bp
@@ -913,6 +917,9 @@ operator|-=
 literal|3
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|sscanf
 argument_list|(
 name|buf
@@ -924,6 +931,9 @@ argument_list|)
 expr_stmt|;
 name|cvtbase
 argument_list|(
+operator|(
+name|long
+operator|)
 name|ibase
 argument_list|,
 literal|256
@@ -956,12 +966,16 @@ argument|result
 argument_list|,
 argument|reslen
 argument_list|)
-name|int
+name|long
 name|oldbase
-operator|,
-name|newbase
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|newbase
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
