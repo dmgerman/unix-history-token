@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)objfmt.h 1.3 %G%"; */
+comment|/* static	char sccsid[] = "@(#)objfmt.h 1.4 %G%"; */
 end_comment
 
 begin_ifdef
@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|INDX
-value|0
+value|1
 end_define
 
 begin_comment
