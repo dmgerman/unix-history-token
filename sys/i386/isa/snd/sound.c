@@ -802,15 +802,6 @@ decl_stmt|;
 name|dev_t
 name|isadev
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|cookie
-decl_stmt|;
-endif|#
-directive|endif
 name|dev
 operator|->
 name|id_ointr
@@ -1154,10 +1145,15 @@ name|int
 name|unit
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEVFS
 name|void
 modifier|*
 name|cookie
 decl_stmt|;
+endif|#
+directive|endif
 comment|/*      * initialize standard parameters for the device. This can be      * overridden by device-specific configurations but better do      * here the generic things.      */
 name|d
 operator|->
@@ -1235,9 +1231,7 @@ operator|&
 name|snd_cdevsw
 argument_list|,
 operator|(
-name|dev
-operator|->
-name|id_unit
+name|unit
 operator|<<
 literal|4
 operator|)
@@ -1254,9 +1248,7 @@ name|PERM_SND
 argument_list|,
 literal|"dsp%r"
 argument_list|,
-name|dev
-operator|->
-name|id_unit
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -1278,9 +1270,7 @@ operator|&
 name|snd_cdevsw
 argument_list|,
 operator|(
-name|dev
-operator|->
-name|id_unit
+name|unit
 operator|<<
 literal|4
 operator|)
@@ -1297,9 +1287,7 @@ name|PERM_SND
 argument_list|,
 literal|"dspW%r"
 argument_list|,
-name|dev
-operator|->
-name|id_unit
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -1321,9 +1309,7 @@ operator|&
 name|snd_cdevsw
 argument_list|,
 operator|(
-name|dev
-operator|->
-name|id_unit
+name|unit
 operator|<<
 literal|4
 operator|)
@@ -1340,9 +1326,7 @@ name|PERM_SND
 argument_list|,
 literal|"audio%r"
 argument_list|,
-name|dev
-operator|->
-name|id_unit
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -1364,9 +1348,7 @@ operator|&
 name|snd_cdevsw
 argument_list|,
 operator|(
-name|dev
-operator|->
-name|id_unit
+name|unit
 operator|<<
 literal|4
 operator|)
@@ -1383,9 +1365,7 @@ name|PERM_SND
 argument_list|,
 literal|"mixer%r"
 argument_list|,
-name|dev
-operator|->
-name|id_unit
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -1407,9 +1387,7 @@ operator|&
 name|snd_cdevsw
 argument_list|,
 operator|(
-name|dev
-operator|->
-name|id_unit
+name|unit
 operator|<<
 literal|4
 operator|)
@@ -1426,9 +1404,7 @@ name|PERM_SND
 argument_list|,
 literal|"sndstat%r"
 argument_list|,
-name|dev
-operator|->
-name|id_unit
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -1446,7 +1422,7 @@ if|#
 directive|if
 literal|0
 comment|/* these two are still unsupported... */
-block|cookie = devfs_add_devswf(&snd_cdevsw, (dev->id_unit<< 4) | SND_DEV_MIDIN, 	DV_CHR, UID_SND, GID_SND, PERM_SND, "midi%r", dev->id_unit);     if (cookie) devfs_makelink(cookie, "midi");      cookie = devfs_add_devswf(&snd_cdevsw, (dev->id_unit<< 4) | SND_DEV_SYNTH, 	DV_CHR, UID_SND, GID_SND, PERM_SND, "sequencer%r", dev->id_unit);     if (cookie) devfs_makelink(cookie, "sequencer");
+block|cookie = devfs_add_devswf(&snd_cdevsw, (unit<< 4) | SND_DEV_MIDIN, 	DV_CHR, UID_SND, GID_SND, PERM_SND, "midi%r", unit);     if (cookie) devfs_makelink(cookie, "midi");      cookie = devfs_add_devswf(&snd_cdevsw, (unit<< 4) | SND_DEV_SYNTH, 	DV_CHR, UID_SND, GID_SND, PERM_SND, "sequencer%r", unit);     if (cookie) devfs_makelink(cookie, "sequencer");
 endif|#
 directive|endif
 endif|#
