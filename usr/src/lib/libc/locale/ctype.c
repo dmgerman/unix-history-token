@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctype.c	5.1 (Berkeley) %G%"
+literal|"@(#)ctype.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,8 @@ block|,
 name|_C
 block|,
 name|_S
+operator||
+name|_B
 block|,
 name|_P
 block|,
