@@ -606,15 +606,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ip_forward_cacheinval
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|ip_freemoptions
 parameter_list|(
 name|struct
@@ -697,10 +688,6 @@ name|ip_rtaddr
 parameter_list|(
 name|struct
 name|in_addr
-parameter_list|,
-name|struct
-name|route
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

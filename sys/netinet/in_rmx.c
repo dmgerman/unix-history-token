@@ -430,18 +430,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If the new route created successfully, and we are forwarding, 	 * flush any cached routes to avoid using a stale value. 	 */
-if|if
-condition|(
-name|ret
-operator|!=
-name|NULL
-operator|&&
-name|ipforwarding
-condition|)
-name|ip_forward_cacheinval
-argument_list|()
-expr_stmt|;
 return|return
 name|ret
 return|;
