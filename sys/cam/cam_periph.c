@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Common functions for CAM "type" (peripheral) drivers.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_periph.c,v 1.5 1998/10/15 17:46:18 ken Exp $  */
+comment|/*  * Common functions for CAM "type" (peripheral) drivers.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_periph.c,v 1.6 1998/10/22 22:16:48 ken Exp $  */
 end_comment
 
 begin_include
@@ -1999,11 +1999,15 @@ name|mapinfo
 parameter_list|)
 block|{
 name|int
-name|flags
-decl_stmt|,
 name|numbufs
 decl_stmt|,
 name|i
+decl_stmt|;
+name|int
+name|flags
+index|[
+name|CAM_PERIPH_MAXMAPS
+index|]
 decl_stmt|;
 name|u_int8_t
 modifier|*
@@ -2037,69 +2041,6 @@ block|{
 case|case
 name|XPT_DEV_MATCH
 case|:
-if|if
-condition|(
-name|ccb
-operator|->
-name|cdm
-operator|.
-name|pattern_buf_len
-operator|>
-name|MAXPHYS
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"cam_periph_mapmem: attempt to map %u bytes, "
-literal|"which is greater than MAXPHYS(%d)\n"
-argument_list|,
-name|ccb
-operator|->
-name|cdm
-operator|.
-name|pattern_buf_len
-argument_list|,
-name|MAXPHYS
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|E2BIG
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ccb
-operator|->
-name|cdm
-operator|.
-name|match_buf_len
-operator|>
-name|MAXPHYS
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"cam_periph_mapmem: attempt to map %u bytes, "
-literal|"which is greater than MAXPHYS(%d)\n"
-argument_list|,
-name|ccb
-operator|->
-name|cdm
-operator|.
-name|match_buf_len
-argument_list|,
-name|MAXPHYS
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|E2BIG
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|ccb
@@ -2257,37 +2198,6 @@ name|XPT_SCSI_IO
 case|:
 if|if
 condition|(
-name|ccb
-operator|->
-name|csio
-operator|.
-name|dxfer_len
-operator|>
-name|MAXPHYS
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"cam_periph_mapmem: attempt to map %u bytes, "
-literal|"which is greater than MAXPHYS(%d)\n"
-argument_list|,
-name|ccb
-operator|->
-name|csio
-operator|.
-name|dxfer_len
-argument_list|,
-name|MAXPHYS
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|E2BIG
-operator|)
-return|;
-block|}
-if|if
-condition|(
 operator|(
 name|ccb
 operator|->
@@ -2328,7 +2238,6 @@ name|csio
 operator|.
 name|dxfer_len
 expr_stmt|;
-empty_stmt|;
 name|dirs
 index|[
 literal|0
@@ -2356,14 +2265,7 @@ return|;
 break|break;
 comment|/* NOTREACHED */
 block|}
-comment|/* this keeps the current process from getting swapped */
-comment|/* 	 * XXX KDM should I use P_NOSWAP instead? 	 */
-name|curproc
-operator|->
-name|p_flag
-operator||=
-name|P_PHYSIO
-expr_stmt|;
+comment|/* 	 * Check the transfer length and permissions first, so we don't 	 * have to unmap any previously mapped buffers. 	 */
 for|for
 control|(
 name|i
@@ -2379,9 +2281,78 @@ operator|++
 control|)
 block|{
 name|flags
+index|[
+name|i
+index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * The userland data pointer passed in may not be page 		 * aligned.  vmapbuf() truncates the address to a page 		 * boundary, so if the address isn't page aligned, we'll 		 * need enough space for the given transfer length, plus 		 * whatever extra space is necessary to make it to the page 		 * boundary. 		 */
+if|if
+condition|(
+operator|(
+name|lengths
+index|[
+name|i
+index|]
+operator|+
+operator|(
+operator|(
+call|(
+name|vm_offset_t
+call|)
+argument_list|(
+operator|*
+name|data_ptrs
+index|[
+name|i
+index|]
+argument_list|)
+operator|)
+operator|&
+name|PAGE_MASK
+operator|)
+operator|)
+operator|>
+name|MAXPHYS
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cam_periph_mapmem: attempt to map %u bytes, "
+literal|"which is greater than MAXPHYS(%d)\n"
+argument_list|,
+name|lengths
+index|[
+name|i
+index|]
+operator|+
+operator|(
+operator|(
+call|(
+name|vm_offset_t
+call|)
+argument_list|(
+operator|*
+name|data_ptrs
+index|[
+name|i
+index|]
+argument_list|)
+operator|)
+operator|&
+name|PAGE_MASK
+operator|)
+argument_list|,
+name|MAXPHYS
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|E2BIG
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|dirs
@@ -2393,6 +2364,9 @@ name|CAM_DIR_IN
 condition|)
 block|{
 name|flags
+index|[
+name|i
+index|]
 operator|=
 name|B_READ
 expr_stmt|;
@@ -2442,28 +2416,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If we've already mapped one or more 				 * buffers for this CCB, unmap it (them). 				 */
-if|if
-condition|(
-name|i
-operator|>
-literal|0
-condition|)
-name|cam_periph_unmapmem
-argument_list|(
-name|ccb
-argument_list|,
-name|mapinfo
-argument_list|)
-expr_stmt|;
-else|else
-name|curproc
-operator|->
-name|p_flag
-operator|&=
-operator|~
-name|P_PHYSIO
-expr_stmt|;
 return|return
 operator|(
 name|EACCES
@@ -2483,6 +2435,9 @@ name|CAM_DIR_OUT
 condition|)
 block|{
 name|flags
+index|[
+name|i
+index|]
 operator||=
 name|B_WRITE
 expr_stmt|;
@@ -2532,28 +2487,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If we've already mapped one or more 				 * buffers for this CCB, unmap it (them). 				 */
-if|if
-condition|(
-name|i
-operator|>
-literal|0
-condition|)
-name|cam_periph_unmapmem
-argument_list|(
-name|ccb
-argument_list|,
-name|mapinfo
-argument_list|)
-expr_stmt|;
-else|else
-name|curproc
-operator|->
-name|p_flag
-operator|&=
-operator|~
-name|P_PHYSIO
-expr_stmt|;
 return|return
 operator|(
 name|EACCES
@@ -2561,6 +2494,29 @@ operator|)
 return|;
 block|}
 block|}
+block|}
+comment|/* this keeps the current process from getting swapped */
+comment|/* 	 * XXX KDM should I use P_NOSWAP instead? 	 */
+name|curproc
+operator|->
+name|p_flag
+operator||=
+name|P_PHYSIO
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|numbufs
+condition|;
+name|i
+operator|++
+control|)
+block|{
 comment|/* 		 * Get the buffer. 		 */
 name|mapinfo
 operator|->
@@ -2607,7 +2563,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* set the transfer length, we know it's< 64K */
+comment|/* set the transfer length, we know it's< MAXPHYS */
 name|mapinfo
 operator|->
 name|bp
@@ -2633,6 +2589,9 @@ operator|->
 name|b_flags
 operator|=
 name|flags
+index|[
+name|i
+index|]
 operator||
 name|B_PHYS
 operator||
