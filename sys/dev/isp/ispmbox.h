@@ -1733,7 +1733,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*   * For Qlogic 2100, the high order byte of SCSI status has  * additional meaning.  */
+comment|/*   * For Qlogic 2X00, the high order byte of SCSI status has  * additional meaning.  */
 end_comment
 
 begin_define
@@ -2102,6 +2102,45 @@ define|#
 directive|define
 name|RQSF_XFER_COMPLETE
 value|0x4000
+end_define
+
+begin_comment
+comment|/*  * 2X00 specific State Flags  * (same as 1X00 except RQSF_GOT_BUS/RQSF_GOT_TARGET are not available)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RQSF_DATA_IN
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|RQSF_DATA_OUT
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|RQSF_STAG
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|RQSF_OTAG
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|RQSF_HTAG
+value|0x0002
 end_define
 
 begin_comment
@@ -3001,6 +3040,13 @@ name|SNS_GP3
 value|0x171
 end_define
 
+begin_define
+define|#
+directive|define
+name|SNS_RFT
+value|0x217
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -3054,6 +3100,13 @@ define|#
 directive|define
 name|SNS_GP3_REQ_SIZE
 value|(sizeof (sns_screq_t)+(5*(sizeof (u_int16_t))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNS_RFT_REQ_SIZE
+value|(sizeof (sns_screq_t)+(21*(sizeof (u_int16_t))))
 end_define
 
 begin_typedef
@@ -3118,6 +3171,13 @@ end_define
 begin_comment
 comment|/* XXX: For 128 ports */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SNS_RFT_RESP_SIZE
+value|16
+end_define
 
 begin_typedef
 typedef|typedef
