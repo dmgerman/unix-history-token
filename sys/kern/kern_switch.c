@@ -1113,6 +1113,21 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
+name|td
+operator|->
+name|td_inhibitors
+operator|==
+literal|0
+operator|)
+argument_list|,
+operator|(
+literal|"setrunqueue: trying to run inhibitted thread"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
 name|TD_CAN_RUN
 argument_list|(
 name|td
@@ -1689,6 +1704,21 @@ operator|)
 argument_list|,
 operator|(
 literal|"thread has no (or wrong) sched-private part."
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|td
+operator|->
+name|td_inhibitors
+operator|==
+literal|0
+operator|)
+argument_list|,
+operator|(
+literal|"maybe_preempt: trying to run inhibitted thread"
 operator|)
 argument_list|)
 expr_stmt|;

@@ -2903,6 +2903,21 @@ condition|(
 name|newtd
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|newtd
+operator|->
+name|td_inhibitors
+operator|==
+literal|0
+operator|)
+argument_list|,
+operator|(
+literal|"trying to run inhibitted thread"
+operator|)
+argument_list|)
+expr_stmt|;
 name|newtd
 operator|->
 name|td_ksegrp
