@@ -54,19 +54,17 @@ modifier|*
 name|param
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|int old_prio = 0; 	int in_readyq = 0;
+endif|#
+directive|endif
 name|int
-name|old_prio
-decl_stmt|,
 name|ret
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int in_readyq = 0;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -115,47 +113,14 @@ operator|(
 name|ENOTSUP
 operator|)
 return|;
-comment|/* Find the thread in the list of active threads: */
-if|if
-condition|(
-operator|(
-name|ret
-operator|=
-name|_find_thread
-argument_list|(
-name|pthread
-argument_list|)
-operator|)
-operator|==
+if|#
+directive|if
 literal|0
-condition|)
-block|{
-name|GIANT_LOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|param
-operator|->
-name|sched_priority
-operator|!=
-name|PTHREAD_BASE_PRIORITY
-argument_list|(
-name|pthread
-operator|->
-name|base_priority
-argument_list|)
-condition|)
-block|{
+comment|/* XXX pthread priorities don't work anyways */
+comment|/* Find the thread in the list of active threads: */
+block|if ((ret = _find_thread(pthread)) == 0) { 		GIANT_LOCK(curthread);  		if (param->sched_priority != 		    PTHREAD_BASE_PRIORITY(pthread->base_priority)) {
 comment|/* 			 * Remove the thread from its current priority 			 * queue before any adjustments are made to its 			 * active priority: 			 */
-name|old_prio
-operator|=
-name|pthread
-operator|->
-name|active_priority
-expr_stmt|;
+block|old_prio = pthread->active_priority;
 if|#
 directive|if
 literal|0
@@ -164,40 +129,9 @@ block|if ((pthread->flags& PTHREAD_FLAGS_IN_PRIOQ) != 0) { 				in_readyq = 1; 		
 endif|#
 directive|endif
 comment|/* Set the thread base priority: */
-name|pthread
-operator|->
-name|base_priority
-operator|&=
-operator|(
-name|PTHREAD_SIGNAL_PRIORITY
-operator||
-name|PTHREAD_RT_PRIORITY
-operator|)
-expr_stmt|;
-name|pthread
-operator|->
-name|base_priority
-operator|=
-name|param
-operator|->
-name|sched_priority
-expr_stmt|;
+block|pthread->base_priority&= 			    (PTHREAD_SIGNAL_PRIORITY | PTHREAD_RT_PRIORITY); 			pthread->base_priority = param->sched_priority;
 comment|/* Recalculate the active priority: */
-name|pthread
-operator|->
-name|active_priority
-operator|=
-name|MAX
-argument_list|(
-name|pthread
-operator|->
-name|base_priority
-argument_list|,
-name|pthread
-operator|->
-name|inherited_priority
-argument_list|)
-expr_stmt|;
+block|pthread->active_priority = MAX(pthread->base_priority, 			    pthread->inherited_priority);
 if|#
 directive|if
 literal|0
@@ -207,27 +141,12 @@ block|PTHREAD_PRIOQ_INSERT_HEAD(pthread); 				} 				else 					PTHREAD_PRIOQ_INSE
 endif|#
 directive|endif
 comment|/* 			 * Check for any mutex priority adjustments.  This 			 * includes checking for a priority mutex on which 			 * this thread is waiting. 			 */
-name|_mutex_notify_priochange
-argument_list|(
-name|pthread
-argument_list|)
-expr_stmt|;
-block|}
+block|_mutex_notify_priochange(pthread); 		}
 comment|/* Set the scheduling policy: */
-name|pthread
-operator|->
-name|attr
-operator|.
-name|sched_policy
-operator|=
-name|policy
-expr_stmt|;
-name|GIANT_UNLOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-block|}
+block|pthread->attr.sched_policy = policy;  		GIANT_UNLOCK(curthread); 	}
+endif|#
+directive|endif
+comment|/* XXX pthread priorities don't work anyways */
 return|return
 operator|(
 name|ret
