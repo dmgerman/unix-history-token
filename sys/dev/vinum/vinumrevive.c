@@ -1350,7 +1350,9 @@ expr_stmt|;
 comment|/* moved this much further down */
 if|if
 condition|(
-name|pstripe
+name|plex
+operator|->
+name|checkblock
 operator|>=
 name|SD
 index|[
