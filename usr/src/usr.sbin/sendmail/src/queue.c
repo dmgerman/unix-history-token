@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.33 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.34 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.33 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.34 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2096,6 +2096,26 @@ block|{
 name|int
 name|pid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGCHLD
+specifier|extern
+name|void
+name|reapchild
+parameter_list|()
+function_decl|;
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|reapchild
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|pid
 operator|=
 name|dofork
@@ -2108,11 +2128,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-specifier|extern
-name|void
-name|reapchild
-parameter_list|()
-function_decl|;
 comment|/* parent -- pick up intermediate zombie */
 ifndef|#
 directive|ifndef
@@ -2123,19 +2138,6 @@ operator|)
 name|waitfor
 argument_list|(
 name|pid
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* SIGCHLD */
-operator|(
-name|void
-operator|)
-name|setsignal
-argument_list|(
-name|SIGCHLD
-argument_list|,
-name|reapchild
 argument_list|)
 expr_stmt|;
 endif|#
