@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.5 1994/11/01 09:03:16 pst Exp $ */
+comment|/* $Id: if_ppp.c,v 1.6 1994/11/01 22:18:34 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -2048,6 +2048,12 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+name|m
+operator|->
+name|m_len
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|uio
