@@ -7868,7 +7868,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-name|spec_vnodeop_p
+name|devfs_specop_p
 argument_list|,
 operator|&
 name|nvp
@@ -10724,7 +10724,7 @@ name|vp
 operator|->
 name|v_op
 operator|=
-name|spec_vnodeop_p
+name|devfs_specop_p
 expr_stmt|;
 name|delmntque
 argument_list|(
@@ -10761,7 +10761,7 @@ name|vp
 operator|->
 name|v_op
 operator|=
-name|spec_vnodeop_p
+name|devfs_specop_p
 expr_stmt|;
 name|vx_unlock
 argument_list|(

@@ -2960,17 +2960,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|spec_vnoperate
-parameter_list|(
-name|struct
-name|vop_generic_args
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|speedup_syncer
 parameter_list|(
 name|void
@@ -4314,7 +4303,7 @@ specifier|extern
 name|vop_t
 modifier|*
 modifier|*
-name|spec_vnodeop_p
+name|dead_vnodeop_p
 decl_stmt|;
 end_decl_stmt
 
@@ -4323,7 +4312,7 @@ specifier|extern
 name|vop_t
 modifier|*
 modifier|*
-name|dead_vnodeop_p
+name|devfs_specop_p
 decl_stmt|;
 end_decl_stmt
 
