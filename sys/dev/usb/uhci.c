@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.149 2001/11/21 15:48:37 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.150 2002/01/14 13:23:37 tsutsui Exp $	*/
 end_comment
 
 begin_comment
@@ -3086,21 +3086,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|stds
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|uhci_soft_td_t
-operator|*
-argument_list|)
-operator|*
-name|n
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 for|for
