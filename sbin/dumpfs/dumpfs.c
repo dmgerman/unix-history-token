@@ -469,6 +469,12 @@ name|afs
 operator|.
 name|fs_old_size
 expr_stmt|;
+name|time
+operator|=
+name|afs
+operator|.
+name|fs_old_time
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"magic\t%x (UFS1)\ttime\t%s"
@@ -480,9 +486,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|afs
-operator|.
-name|fs_old_time
+name|time
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1464,6 +1468,12 @@ break|break;
 case|case
 literal|1
 case|:
+name|time
+operator|=
+name|acg
+operator|.
+name|cg_old_time
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"magic\t%x\ttell\t%qx\ttime\t%s"
@@ -1477,9 +1487,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|acg
-operator|.
-name|cg_old_time
+name|time
 argument_list|)
 argument_list|)
 expr_stmt|;
