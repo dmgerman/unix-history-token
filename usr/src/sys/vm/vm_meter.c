@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.16	82/10/17	*/
+comment|/*	vm_meter.c	4.17	82/10/31	*/
 end_comment
 
 begin_include
@@ -563,6 +563,15 @@ expr_stmt|;
 comment|/* 	 * See if paging system is overloaded; if so swap someone out. 	 * Conditions for hard outswap are: 	 *	if need kernel map (mix it up). 	 * or 	 *	1. if there are at least 2 runnable processes (on the average) 	 * and	2. the paging rate is excessive or memory is now VERY low. 	 * and	3. the short (5-second) and longer (30-second) average 	 *	   memory is less than desirable. 	 */
 if|if
 condition|(
+ifdef|#
+directive|ifdef
+name|NOPAGING
+name|freemem
+operator|==
+literal|0
+operator|||
+endif|#
+directive|endif
 name|kmapwnt
 operator|||
 operator|(
@@ -922,10 +931,21 @@ name|deservin
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOPAGING
+name|divisor
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
 name|divisor
 operator|=
 literal|2
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|needs
 operator|=
