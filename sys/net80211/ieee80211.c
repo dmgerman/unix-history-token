@@ -693,6 +693,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|flags
+operator|&
 name|IEEE80211_CHAN_5GHZ
 condition|)
 block|{
