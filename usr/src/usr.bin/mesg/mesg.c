@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mesg.c	5.2 (Berkeley) %G%"
+literal|"@(#)mesg.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,12 +73,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -92,6 +86,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -142,7 +142,7 @@ decl_stmt|;
 block|{
 name|struct
 name|stat
-name|sbuf
+name|sb
 decl_stmt|;
 name|char
 modifier|*
@@ -191,15 +191,16 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|tty
 operator|=
 name|ttyname
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -218,7 +219,7 @@ argument_list|(
 name|tty
 argument_list|,
 operator|&
-name|sbuf
+name|sb
 argument_list|)
 operator|<
 literal|0
@@ -243,11 +244,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|sbuf
+name|sb
 operator|.
 name|st_mode
 operator|&
-literal|020
+name|S_IWGRP
 condition|)
 block|{
 operator|(
@@ -282,10 +283,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|OTHER_WRITE
-value|020
 switch|switch
 condition|(
 operator|*
@@ -304,11 +301,11 @@ name|chmod
 argument_list|(
 name|tty
 argument_list|,
-name|sbuf
+name|sb
 operator|.
 name|st_mode
 operator||
-name|OTHER_WRITE
+name|S_IWGRP
 argument_list|)
 operator|<
 literal|0
@@ -337,12 +334,12 @@ name|chmod
 argument_list|(
 name|tty
 argument_list|,
-name|sbuf
+name|sb
 operator|.
 name|st_mode
 operator|&
 operator|~
-name|OTHER_WRITE
+name|S_IWGRP
 argument_list|)
 operator|<
 literal|0
