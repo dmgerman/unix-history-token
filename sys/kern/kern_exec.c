@@ -3047,7 +3047,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check permissions of file to execute.  *	Return 0 for success or error code on failure.  */
+comment|/*  * Check permissions of file to execute.  *	Called with imgp->vp locked.  *	Return 0 for success or error code on failure.  */
 end_comment
 
 begin_function
