@@ -10173,7 +10173,7 @@ block|{
 name|KASSERT
 argument_list|(
 name|p
-operator|==
+operator|!=
 name|NULL
 argument_list|,
 operator|(
@@ -10186,7 +10186,7 @@ argument_list|(
 name|p
 operator|->
 name|p_vmspace
-operator|==
+operator|!=
 name|NULL
 argument_list|,
 operator|(
@@ -10252,7 +10252,7 @@ name|pte
 operator|&
 name|PG_MANAGED
 operator|)
-operator|==
+operator|!=
 literal|0
 argument_list|,
 operator|(
