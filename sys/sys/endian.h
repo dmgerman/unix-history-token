@@ -24,8 +24,86 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/endian.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UINT16_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__uint16_t
+name|uint16_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UINT16_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UINT32_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__uint32_t
+name|uint32_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UINT32_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UINT64_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__uint64_t
+name|uint64_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UINT64_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * General byte order swapping functions.  */
@@ -110,7 +188,7 @@ name|htole16
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint16_t)(x))
+value|((uint16_t)(x))
 end_define
 
 begin_define
@@ -120,7 +198,7 @@ name|htole32
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint32_t)(x))
+value|((uint32_t)(x))
 end_define
 
 begin_define
@@ -130,7 +208,7 @@ name|htole64
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint64_t)(x))
+value|((uint64_t)(x))
 end_define
 
 begin_define
@@ -170,7 +248,7 @@ name|le16toh
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint16_t)(x))
+value|((uint16_t)(x))
 end_define
 
 begin_define
@@ -180,7 +258,7 @@ name|le32toh
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint32_t)(x))
+value|((uint32_t)(x))
 end_define
 
 begin_define
@@ -190,7 +268,7 @@ name|le64toh
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint64_t)(x))
+value|((uint64_t)(x))
 end_define
 
 begin_else
@@ -209,7 +287,7 @@ name|htobe16
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint16_t)(x))
+value|((uint16_t)(x))
 end_define
 
 begin_define
@@ -219,7 +297,7 @@ name|htobe32
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint32_t)(x))
+value|((uint32_t)(x))
 end_define
 
 begin_define
@@ -229,7 +307,7 @@ name|htobe64
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint64_t)(x))
+value|((uint64_t)(x))
 end_define
 
 begin_define
@@ -269,7 +347,7 @@ name|be16toh
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint16_t)(x))
+value|((uint16_t)(x))
 end_define
 
 begin_define
@@ -279,7 +357,7 @@ name|be32toh
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint32_t)(x))
+value|((uint32_t)(x))
 end_define
 
 begin_define
@@ -289,7 +367,7 @@ name|be64toh
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint64_t)(x))
+value|((uint64_t)(x))
 end_define
 
 begin_define
