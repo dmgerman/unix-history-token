@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	3.10 84/04/08"
+literal|"@(#)startup.c	3.11 84/04/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,13 @@ name|char
 modifier|*
 name|home
 decl_stmt|;
+specifier|static
+name|char
+name|runcom
+index|[]
+init|=
+literal|".windrc"
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -76,24 +83,36 @@ literal|0
 condition|)
 name|home
 operator|=
-literal|""
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%s/.windrc"
-argument_list|,
-name|home
-argument_list|)
+literal|"."
 expr_stmt|;
 return|return
 name|dosource
 argument_list|(
+name|sprintf
+argument_list|(
 name|buf
+argument_list|,
+literal|"%.*s/.windrc"
+argument_list|,
+operator|(
+sizeof|sizeof
+name|buf
+operator|-
+sizeof|sizeof
+name|runcom
+operator|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+name|home
+argument_list|,
+name|runcom
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -149,6 +168,14 @@ name|char
 operator|*
 operator|)
 literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+name|shellfile
+argument_list|,
+name|shell
 argument_list|)
 operator|)
 operator|==
@@ -185,6 +212,14 @@ name|char
 operator|*
 operator|)
 literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+name|shellfile
+argument_list|,
+name|shell
 argument_list|)
 operator|==
 literal|0
@@ -212,11 +247,9 @@ expr_stmt|;
 return|return;
 name|bad
 label|:
-name|wwputs
+name|error
 argument_list|(
-literal|"Can't open default windows.  "
-argument_list|,
-name|cmdwin
+literal|"Can't open default windows."
 argument_list|)
 expr_stmt|;
 block|}
