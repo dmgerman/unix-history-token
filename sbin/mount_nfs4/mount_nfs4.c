@@ -1147,7 +1147,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"23a:bcdD:g:I:iLl:No:PR:r:sTt:w:x:U"
+literal|"a:bcdD:I:iNo:PR:sTt:x:U"
 argument_list|)
 operator|)
 operator|!=
@@ -1159,22 +1159,6 @@ condition|(
 name|c
 condition|)
 block|{
-case|case
-literal|'2'
-case|:
-name|mountmode
-operator|=
-name|V2
-expr_stmt|;
-break|break;
-case|case
-literal|'3'
-case|:
-name|mountmode
-operator|=
-name|V3
-expr_stmt|;
-break|break;
 case|case
 literal|'a'
 case|:
@@ -1230,16 +1214,6 @@ name|BGRND
 expr_stmt|;
 break|break;
 case|case
-literal|'c'
-case|:
-name|nfsargsp
-operator|->
-name|flags
-operator||=
-name|NFSMNT_NOCONN
-expr_stmt|;
-break|break;
-case|case
 literal|'D'
 case|:
 name|num
@@ -1285,23 +1259,6 @@ operator||=
 name|NFSMNT_DEADTHRESH
 expr_stmt|;
 break|break;
-case|case
-literal|'d'
-case|:
-name|nfsargsp
-operator|->
-name|flags
-operator||=
-name|NFSMNT_DUMBTIMR
-expr_stmt|;
-break|break;
-if|#
-directive|if
-literal|0
-comment|/* XXXX */
-block|case 'g': 			num = strtol(optarg,&p, 10); 			if (*p || num<= 0) 				errx(1, "illegal -g value -- %s", optarg); 			set_rpc_maxgrouplist(num); 			nfsargsp->maxgrouplist = num; 			nfsargsp->flags |= NFSMNT_MAXGRPS; 			break;
-endif|#
-directive|endif
 case|case
 literal|'I'
 case|:
@@ -1356,26 +1313,6 @@ operator|->
 name|flags
 operator||=
 name|NFSMNT_INT
-expr_stmt|;
-break|break;
-case|case
-literal|'L'
-case|:
-name|nfsargsp
-operator|->
-name|flags
-operator||=
-name|NFSMNT_NOLOCKD
-expr_stmt|;
-break|break;
-case|case
-literal|'l'
-case|:
-name|nfsargsp
-operator|->
-name|flags
-operator||=
-name|NFSMNT_RDIRPLUS
 expr_stmt|;
 break|break;
 case|case
@@ -1754,52 +1691,6 @@ name|num
 expr_stmt|;
 break|break;
 case|case
-literal|'r'
-case|:
-name|num
-operator|=
-name|strtol
-argument_list|(
-name|optarg
-argument_list|,
-operator|&
-name|p
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|||
-name|num
-operator|<=
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"illegal -r value -- %s"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|nfsargsp
-operator|->
-name|rsize
-operator|=
-name|num
-expr_stmt|;
-name|nfsargsp
-operator|->
-name|flags
-operator||=
-name|NFSMNT_RSIZE
-expr_stmt|;
-break|break;
-case|case
 literal|'s'
 case|:
 name|nfsargsp
@@ -1867,52 +1758,6 @@ operator|->
 name|flags
 operator||=
 name|NFSMNT_TIMEO
-expr_stmt|;
-break|break;
-case|case
-literal|'w'
-case|:
-name|num
-operator|=
-name|strtol
-argument_list|(
-name|optarg
-argument_list|,
-operator|&
-name|p
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|||
-name|num
-operator|<=
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"illegal -w value -- %s"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|nfsargsp
-operator|->
-name|wsize
-operator|=
-name|num
-expr_stmt|;
-name|nfsargsp
-operator|->
-name|flags
-operator||=
-name|NFSMNT_WSIZE
 expr_stmt|;
 break|break;
 case|case
@@ -2976,15 +2821,6 @@ operator|)
 return|;
 block|}
 block|}
-if|#
-directive|if
-literal|0
-comment|/* Check that the server (nfsd) responds on the port we have chosen. */
-block|clp = clnt_tli_create(RPC_ANYFD, nconf,&nfs_nb, RPCPROG_NFS, nfsvers, 	    0, 0); 	if (clp == NULL) { 		snprintf(errbuf, sizeof errbuf, "[%s] %s:%s: %s", netid, 		    hostp, spec, clnt_spcreateerror("nfsd: RPCPROG_NFS")); 		return (returncode(rpc_createerr.cf_stat,&rpc_createerr.cf_error)); 	} 	if (nfsargsp->sotype == SOCK_DGRAM&& 	    !(nfsargsp->flags& NFSMNT_NOCONN)) {
-comment|/* 		 * Use connect(), to match what the kernel does. This 		 * catches cases where the server responds from the 		 * wrong source address. 		 */
-block|doconnect = 1; 		if (!clnt_control(clp, CLSET_CONNECT, (char *)&doconnect)) { 			clnt_destroy(clp); 			snprintf(errbuf, sizeof errbuf, 			    "[%s] %s:%s: CLSET_CONNECT failed", netid, hostp, 			    spec); 			return (TRYRET_LOCALERR); 		} 	}  	try.tv_sec = 10; 	try.tv_usec = 0; 	stat = clnt_call(clp, NFSPROC_NULL, (xdrproc_t)xdr_void, NULL, 	    (xdrproc_t)xdr_void, NULL, try); 	if (stat != RPC_SUCCESS) { 		clnt_geterr(clp,&rpcerr); 		snprintf(errbuf, sizeof errbuf, "[%s] %s:%s: %s", netid, 		    hostp, spec, clnt_sperror(clp, "NFSPROC_NULL")); 		clnt_destroy(clp); 		return (returncode(stat,&rpcerr)); 	} 	clnt_destroy(clp);
-endif|#
-directive|endif
 comment|/* 	 * Store the filehandle and server address in nfsargsp, making 	 * sure to copy any locally allocated structures. 	 */
 name|nfsargsp
 operator|->
@@ -3670,13 +3506,13 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: mount_nfs [-23KNPTUbcdilqs] [-D deadthresh] [-I readdirsize]"
+literal|"usage: mount_nfs [-KNPTUbiqs] [-D deadthresh] [-I readdirsize]"
 argument_list|,
 literal|"                 [-R retrycnt] [-a maxreadahead]"
 argument_list|,
-literal|"                 [-g maxgroups] [-m realm] [-o options] [-r readsize]"
+literal|"                 [-m realm] [-o options]"
 argument_list|,
-literal|"                 [-t timeout] [-w writesize] [-x retrans] rhost:path node"
+literal|"                 [-t timeout] [-x retrans] rhost:path node"
 argument_list|)
 expr_stmt|;
 name|exit
