@@ -235,7 +235,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|timecounter_get_t
-name|powerpc_get_timecount
+name|decr_get_timecount
 decl_stmt|;
 end_decl_stmt
 
@@ -243,10 +243,10 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|timecounter
-name|powerpc_timecounter
+name|decr_timecounter
 init|=
 block|{
-name|powerpc_get_timecount
+name|decr_get_timecount
 block|,
 comment|/* get_timecount */
 literal|0
@@ -259,7 +259,7 @@ comment|/* counter_mask */
 literal|0
 block|,
 comment|/* frequency */
-literal|"powerpc"
+literal|"decrementer"
 comment|/* name */
 block|}
 decl_stmt|;
@@ -648,6 +648,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+return|return;
+block|}
+end_function
+
+begin_function
+name|void
+name|decr_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|int
 name|qhandle
 decl_stmt|,
@@ -742,7 +753,7 @@ name|PSL_RI
 operator|)
 argument_list|)
 expr_stmt|;
-name|powerpc_timecounter
+name|decr_timecounter
 operator|.
 name|tc_frequency
 operator|=
@@ -751,7 +762,7 @@ expr_stmt|;
 name|tc_init
 argument_list|(
 operator|&
-name|powerpc_timecounter
+name|decr_timecounter
 argument_list|)
 expr_stmt|;
 name|ns_per_tick
@@ -869,7 +880,7 @@ end_return
 begin_function
 unit|}  static
 name|unsigned
-name|powerpc_get_timecount
+name|decr_get_timecount
 parameter_list|(
 name|struct
 name|timecounter

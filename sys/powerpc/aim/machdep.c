@@ -706,6 +706,10 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+comment|/* 	 * Initialise the decrementer-based clock. 	 */
+name|decr_init
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
 name|identifycpu
 argument_list|()
