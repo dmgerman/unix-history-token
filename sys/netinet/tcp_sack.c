@@ -2233,7 +2233,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Checks for partial ack.  If partial ack arrives, turn off retransmission  * timer, deflate the window, do not clear tp->t_dupacks, and return 1.  * If the ack advances at least to tp->snd_recover, return 0.  */
+comment|/*  * Partial ack handling within a sack recovery episode.   * Keeping this very simple for now. When a partial ack  * is received, force snd_cwnd to a value that will allow  * the sender to transmit no more than 2 segments.  * If necessary, a better scheme can be adopted at a   * later point, but for now, the goal is to prevent the  * sender from bursting a large amount of data in the midst  * of sack recovery.  */
 end_comment
 
 begin_function
@@ -2262,15 +2262,13 @@ operator|->
 name|t_inpcb
 argument_list|)
 expr_stmt|;
-name|u_long
-name|ocwnd
+name|int
+name|num_segs
 init|=
-name|tp
-operator|->
-name|snd_cwnd
+literal|1
 decl_stmt|;
 name|int
-name|sack_bytes_rexmt
+name|sack_bytes_rxmt
 init|=
 literal|0
 decl_stmt|;
@@ -2287,7 +2285,31 @@ name|t_rtttime
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Set cwnd so we can send one more segment (either rexmit based on 	 * scoreboard or new segment). Set cwnd to the amount of data 	 * rexmitted from scoreboard plus the amount of new data transmitted 	 * in this sack recovery episode plus one segment. 	 */
+comment|/* send one or 2 segments based on how much new data was acked */
+if|if
+condition|(
+operator|(
+operator|(
+name|th
+operator|->
+name|th_ack
+operator|-
+name|tp
+operator|->
+name|snd_una
+operator|)
+operator|/
+name|tp
+operator|->
+name|t_maxseg
+operator|)
+operator|>
+literal|2
+condition|)
+name|num_segs
+operator|=
+literal|2
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2296,14 +2318,14 @@ argument_list|(
 name|tp
 argument_list|,
 operator|&
-name|sack_bytes_rexmt
+name|sack_bytes_rxmt
 argument_list|)
 expr_stmt|;
 name|tp
 operator|->
 name|snd_cwnd
 operator|=
-name|sack_bytes_rexmt
+name|sack_bytes_rxmt
 operator|+
 operator|(
 name|tp
@@ -2315,6 +2337,8 @@ operator|->
 name|sack_newdata
 operator|)
 operator|+
+name|num_segs
+operator|*
 name|tp
 operator|->
 name|t_maxseg
@@ -2332,31 +2356,6 @@ name|tcp_output
 argument_list|(
 name|tp
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|snd_cwnd
-operator|=
-name|ocwnd
-expr_stmt|;
-comment|/* 	 * Partial window deflation.  Relies on fact that tp->snd_una 	 * not updated yet. 	 */
-name|tp
-operator|->
-name|snd_cwnd
-operator|-=
-operator|(
-name|th
-operator|->
-name|th_ack
-operator|-
-name|tp
-operator|->
-name|snd_una
-operator|-
-name|tp
-operator|->
-name|t_maxseg
-operator|)
 expr_stmt|;
 block|}
 end_function
