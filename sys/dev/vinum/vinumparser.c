@@ -17,17 +17,17 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/vinum/vinumkw.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
 
 begin_include
 include|#
@@ -38,24 +38,30 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/setjmp.h>
+file|<sys/conf.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<machine/setjmp.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* All this mess for a single struct definition */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/namei.h>
+end_include
 
 begin_include
 include|#
@@ -66,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/vinum/vinumvar.h>
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/vinum/vinumkw.h>
+file|<dev/vinum/vinumvar.h>
 end_include
 
 begin_include
@@ -86,12 +92,6 @@ include|#
 directive|include
 file|<dev/vinum/vinumext.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_define
 define|#
@@ -113,8 +113,26 @@ directive|else
 end_else
 
 begin_comment
-comment|/* get it from the headers */
+comment|/* userland */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
 
 begin_define
 define|#
