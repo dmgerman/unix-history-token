@@ -69,17 +69,13 @@ name|devstat_current_devnumber
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|STAILQ_HEAD
-argument_list|(
-argument|devstatlist
-argument_list|,
-argument|devstat
-argument_list|)
+name|struct
+name|devstatlist
 name|device_statq
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Take a malloced and zeroed devstat structure given to us, fill it in   * and add it to the queue of devices.    */

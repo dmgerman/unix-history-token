@@ -367,6 +367,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|STAILQ_HEAD
+argument_list|(
+name|devstatlist
+argument_list|,
+name|devstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
