@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcfunc.c 1.8 %G%"
+literal|"@(#)pcfunc.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1581,13 +1581,6 @@ name|p1
 argument_list|,
 literal|"bcis"
 argument_list|)
-operator|||
-name|classify
-argument_list|(
-name|p1
-argument_list|)
-operator|==
-name|TPTR
 condition|)
 block|{
 return|return
@@ -1598,9 +1591,40 @@ name|T4INT
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|classify
+argument_list|(
+name|p1
+argument_list|)
+operator|==
+name|TPTR
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|opt
+argument_list|(
+literal|'s'
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|nl
+operator|+
+name|T4INT
+operator|)
+return|;
+block|}
+name|standard
+argument_list|()
+expr_stmt|;
+block|}
 name|error
 argument_list|(
-literal|"ord's argument must be of scalar type or a pointer, not %s"
+literal|"ord's argument must be of scalar type, not %s"
 argument_list|,
 name|nameof
 argument_list|(
