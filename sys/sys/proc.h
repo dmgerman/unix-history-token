@@ -289,7 +289,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *      	(exception aiods switch vmspaces, but they are also  *      	marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - either by curproc or a lock which prevents the lock from  *          going away, such as (d,e)  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *      	(exception aiods switch vmspaces, but they are also  *      	marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -429,11 +429,11 @@ value|td_flags
 name|int
 name|td_flags
 decl_stmt|;
-comment|/* (c) P_* flags. */
+comment|/* (j) TDF_* flags. */
 name|int
 name|td_dupfd
 decl_stmt|;
-comment|/* (c) ret value from fdopen. XXX */
+comment|/* (k) ret value from fdopen. XXX */
 name|void
 modifier|*
 name|td_wchan
@@ -452,7 +452,7 @@ comment|/* (j) Last cpu we were on. */
 name|short
 name|td_locks
 decl_stmt|;
-comment|/* (*) DEBUG: lockmgr count of locks */
+comment|/* (k) DEBUG: lockmgr count of locks */
 name|struct
 name|mtx
 modifier|*
@@ -607,7 +607,7 @@ value|ke_flags
 name|int
 name|ke_flags
 decl_stmt|;
-comment|/* (c) P_* flags. */
+comment|/* (j) KEF_* flags. */
 comment|/*u_int		ke_estcpu; */
 comment|/* (j) Time averaged val of cpticks. */
 name|int
@@ -841,7 +841,7 @@ name|ucred
 modifier|*
 name|p_ucred
 decl_stmt|;
-comment|/* (c + k) Process owner's identity. */
+comment|/* (c) Process owner's identity. */
 name|struct
 name|filedesc
 modifier|*
@@ -1095,7 +1095,7 @@ name|pargs
 modifier|*
 name|p_args
 decl_stmt|;
-comment|/* (c + k) Process arguments. */
+comment|/* (c) Process arguments. */
 comment|/* End area that is copied on creation. */
 define|#
 directive|define
@@ -1109,7 +1109,7 @@ name|struct
 name|mdproc
 name|p_md
 decl_stmt|;
-comment|/* (k) Any machine-dependent fields. */
+comment|/* (c) Any machine-dependent fields. */
 name|struct
 name|callout
 name|p_itcallout
