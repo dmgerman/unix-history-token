@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_4.c	2.1 83/10/31"
+literal|"@(#)pl_4.c	2.2 83/11/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,6 +245,11 @@ literal|1
 index|]
 operator|=
 literal|'"'
+expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|0
 expr_stmt|;
 name|Write
 argument_list|(
