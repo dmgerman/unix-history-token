@@ -401,7 +401,6 @@ begin_function
 name|int
 name|TerminalAutoFlush
 parameter_list|()
-comment|/* unix */
 block|{
 if|#
 directive|if
@@ -457,13 +456,18 @@ name|TerminalSpecialChars
 parameter_list|(
 name|c
 parameter_list|)
-comment|/* unix */
 name|int
 name|c
 decl_stmt|;
 block|{
 name|void
-name|doflush
+name|xmitAO
+argument_list|()
+decl_stmt|,
+name|xmitEL
+argument_list|()
+decl_stmt|,
+name|xmitEC
 argument_list|()
 decl_stmt|,
 name|intp
@@ -582,7 +586,6 @@ begin_function
 name|void
 name|TerminalFlushOutput
 parameter_list|()
-comment|/* unix */
 block|{
 operator|(
 name|void
@@ -610,7 +613,6 @@ begin_function
 name|void
 name|TerminalSaveState
 parameter_list|()
-comment|/* unix */
 block|{
 name|ioctl
 argument_list|(
@@ -709,7 +711,6 @@ begin_function
 name|void
 name|TerminalRestoreState
 parameter_list|()
-comment|/* unix */
 block|{ }
 end_function
 
@@ -727,7 +728,6 @@ name|fd_out
 parameter_list|,
 name|f
 parameter_list|)
-comment|/* unix */
 name|int
 name|fd_in
 decl_stmt|,
@@ -1382,7 +1382,6 @@ name|fd
 parameter_list|,
 name|onoff
 parameter_list|)
-comment|/* unix */
 name|int
 name|fd
 decl_stmt|,
@@ -1414,7 +1413,6 @@ name|fd
 parameter_list|,
 name|onoff
 parameter_list|)
-comment|/* unix */
 name|int
 name|fd
 decl_stmt|,
@@ -1445,7 +1443,6 @@ name|NetSetPgrp
 parameter_list|(
 name|fd
 parameter_list|)
-comment|/* unix */
 name|int
 name|fd
 decl_stmt|;
@@ -1490,6 +1487,95 @@ comment|/* set my pid */
 block|}
 end_function
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/*  * Various signal handling routines.  */
+end_comment
+
+begin_function
+name|void
+name|deadpeer
+parameter_list|()
+block|{
+name|setcommandmode
+argument_list|()
+expr_stmt|;
+name|longjmp
+argument_list|(
+name|peerdied
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|intr
+parameter_list|()
+block|{
+if|if
+condition|(
+name|localchars
+condition|)
+block|{
+name|intp
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+name|setcommandmode
+argument_list|()
+expr_stmt|;
+name|longjmp
+argument_list|(
+name|toplevel
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|intr2
+parameter_list|()
+block|{
+if|if
+condition|(
+name|localchars
+condition|)
+block|{
+name|sendbrk
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|doescape
+parameter_list|()
+block|{
+name|command
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
 begin_function
 name|void
 name|sys_telnet_init
@@ -1501,17 +1587,33 @@ name|defined
 argument_list|(
 name|TN3270
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|unix
-argument_list|)
 name|int
 name|myPid
 decl_stmt|;
 endif|#
 directive|endif
 comment|/* defined(TN3270) */
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|intr
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|intr2
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|deadpeer
+argument_list|)
+expr_stmt|;
 name|setconnmode
 argument_list|()
 expr_stmt|;
@@ -1846,20 +1948,11 @@ argument_list|(
 literal|"sleep(5) from telnet, after select\r\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|unix
-argument_list|)
 name|sleep
 argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(unix) */
 block|}
 return|return
 literal|0
@@ -2206,12 +2299,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|unix
-argument_list|)
 comment|/* EOF detection for line mode!!!! */
 if|if
 condition|(
@@ -2238,9 +2325,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* defined(unix) */
 if|if
 condition|(
 name|c
