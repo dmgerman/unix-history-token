@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)errno.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)errno.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -398,6 +398,17 @@ end_define
 
 begin_comment
 comment|/* Operation would block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EDEADLK
+value|EWOULDBLOCK
+end_define
+
+begin_comment
+comment|/* ditto */
 end_comment
 
 begin_define
