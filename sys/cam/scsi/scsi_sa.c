@@ -6069,7 +6069,7 @@ name|GID_OPERATOR
 argument_list|,
 literal|0660
 argument_list|,
-literal|"r%s%d.ctl"
+literal|"%s%d.ctl"
 argument_list|,
 name|periph
 operator|->
@@ -6129,7 +6129,7 @@ name|GID_OPERATOR
 argument_list|,
 literal|0660
 argument_list|,
-literal|"r%s%d.%d"
+literal|"%s%d.%d"
 argument_list|,
 name|periph
 operator|->
@@ -6177,7 +6177,7 @@ name|GID_OPERATOR
 argument_list|,
 literal|0660
 argument_list|,
-literal|"nr%s%d.%d"
+literal|"n%s%d.%d"
 argument_list|,
 name|periph
 operator|->
@@ -6225,7 +6225,7 @@ name|GID_OPERATOR
 argument_list|,
 literal|0660
 argument_list|,
-literal|"er%s%d.%d"
+literal|"e%s%d.%d"
 argument_list|,
 name|periph
 operator|->
@@ -6259,7 +6259,7 @@ index|]
 operator|.
 name|r_dev
 argument_list|,
-literal|"r%s%d"
+literal|"%s%d"
 argument_list|,
 name|periph
 operator|->
@@ -6283,7 +6283,7 @@ index|]
 operator|.
 name|nr_dev
 argument_list|,
-literal|"nr%s%d"
+literal|"n%s%d"
 argument_list|,
 name|periph
 operator|->
@@ -6307,7 +6307,7 @@ index|]
 operator|.
 name|er_dev
 argument_list|,
-literal|"er%s%d"
+literal|"e%s%d"
 argument_list|,
 name|periph
 operator|->
