@@ -438,6 +438,9 @@ modifier|*
 name|mc_private
 decl_stmt|;
 comment|/* caller-private data */
+name|int
+name|mc_timestamp
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -753,6 +756,10 @@ decl_stmt|;
 comment|/* deferred-completion task */
 endif|#
 directive|endif
+name|int
+name|mly_qfrzn_cnt
+decl_stmt|;
+comment|/* Track simq freezes */
 block|}
 struct|;
 end_struct
