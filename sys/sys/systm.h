@@ -39,6 +39,16 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_comment
+comment|/* for people using printf mainly */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int

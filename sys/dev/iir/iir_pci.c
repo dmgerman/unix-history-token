@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus_memio.h>
 end_include
 
