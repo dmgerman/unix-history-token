@@ -1,23 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.5 (Berkeley) 4.5"
+literal|"@(#)file.c	4.6 (Berkeley) 4.6"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * file - determine type of file  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<pagsiz.h>
-end_include
 
 begin_include
 include|#
