@@ -4,89 +4,8 @@ comment|/*-  * Copyright (c) 1998,1999,2000 Søren Schmidt  * All rights reserve
 end_comment
 
 begin_comment
-comment|/* structure describing an ATA disk */
+comment|/* structure describing an ATA disk request */
 end_comment
-
-begin_struct
-struct|struct
-name|ad_softc
-block|{
-name|struct
-name|ata_softc
-modifier|*
-name|controller
-decl_stmt|;
-comment|/* ptr to parent ctrl */
-name|int32_t
-name|unit
-decl_stmt|;
-comment|/* ATA_MASTER or ATA_SLAVE */
-name|int32_t
-name|lun
-decl_stmt|;
-comment|/* logical unit number */
-name|u_int32_t
-name|total_secs
-decl_stmt|;
-comment|/* total # of sectors (LBA) */
-name|u_int8_t
-name|heads
-decl_stmt|;
-name|u_int8_t
-name|sectors
-decl_stmt|;
-name|u_int32_t
-name|transfersize
-decl_stmt|;
-comment|/* size of each transfer */
-name|u_int32_t
-name|num_tags
-decl_stmt|;
-comment|/* number of tags supported */
-name|u_int32_t
-name|flags
-decl_stmt|;
-comment|/* drive flags */
-define|#
-directive|define
-name|AD_F_LABELLING
-value|0x0001
-define|#
-directive|define
-name|AD_F_LBA_ENABLED
-value|0x0002
-define|#
-directive|define
-name|AD_F_32B_ENABLED
-value|0x0004
-define|#
-directive|define
-name|AD_F_TAG_ENABLED
-value|0x0008
-name|struct
-name|bio_queue_head
-name|queue
-decl_stmt|;
-comment|/* head of request queue */
-name|struct
-name|devstat
-name|stats
-decl_stmt|;
-comment|/* devstat entry */
-name|struct
-name|disk
-name|disk
-decl_stmt|;
-comment|/* disklabel/slice stuff */
-name|dev_t
-name|dev1
-decl_stmt|,
-name|dev2
-decl_stmt|;
-comment|/* device place holder */
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -119,11 +38,11 @@ name|callout_handle
 name|timeout_handle
 decl_stmt|;
 comment|/* handle for untimeout */
-name|int32_t
+name|int
 name|retries
 decl_stmt|;
 comment|/* retry count */
-name|int32_t
+name|int
 name|flags
 decl_stmt|;
 define|#
@@ -140,10 +59,13 @@ name|ADR_F_DMA_USED
 value|0x0004
 define|#
 directive|define
-name|ADR_F_FORCE_PIO
+name|ADR_F_QUEUED
 value|0x0008
-name|int8_t
-modifier|*
+define|#
+directive|define
+name|ADR_F_FORCE_PIO
+value|0x0010
+name|caddr_t
 name|data
 decl_stmt|;
 comment|/* pointer to data buf */
@@ -157,6 +79,16 @@ name|u_int8_t
 name|tag
 decl_stmt|;
 comment|/* tag ID of this request */
+name|int
+name|serv
+decl_stmt|;
+comment|/* request had service */
+name|struct
+name|ata_dmaentry
+modifier|*
+name|dmatab
+decl_stmt|;
+comment|/* DMA transfer table */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ad_request
@@ -164,6 +96,104 @@ argument_list|)
 name|chain
 expr_stmt|;
 comment|/* list management */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* structure describing an ATA disk */
+end_comment
+
+begin_struct
+struct|struct
+name|ad_softc
+block|{
+name|struct
+name|ata_softc
+modifier|*
+name|controller
+decl_stmt|;
+comment|/* ptr to parent ctrl */
+name|int
+name|unit
+decl_stmt|;
+comment|/* ATA_MASTER or ATA_SLAVE */
+name|int
+name|lun
+decl_stmt|;
+comment|/* logical unit number */
+name|u_int32_t
+name|total_secs
+decl_stmt|;
+comment|/* total # of sectors (LBA) */
+name|u_int8_t
+name|heads
+decl_stmt|;
+name|u_int8_t
+name|sectors
+decl_stmt|;
+name|u_int32_t
+name|transfersize
+decl_stmt|;
+comment|/* size of each transfer */
+name|int
+name|num_tags
+decl_stmt|;
+comment|/* number of tags supported */
+name|int
+name|flags
+decl_stmt|;
+comment|/* drive flags */
+define|#
+directive|define
+name|AD_F_LABELLING
+value|0x0001
+define|#
+directive|define
+name|AD_F_LBA_ENABLED
+value|0x0002
+define|#
+directive|define
+name|AD_F_32B_ENABLED
+value|0x0004
+define|#
+directive|define
+name|AD_F_TAG_ENABLED
+value|0x0008
+name|struct
+name|ad_request
+modifier|*
+name|tags
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* tag array of requests */
+name|int
+name|outstanding
+decl_stmt|;
+comment|/* tags not serviced yet */
+name|struct
+name|bio_queue_head
+name|queue
+decl_stmt|;
+comment|/* head of request queue */
+name|struct
+name|devstat
+name|stats
+decl_stmt|;
+comment|/* devstat entry */
+name|struct
+name|disk
+name|disk
+decl_stmt|;
+comment|/* disklabel/slice stuff */
+name|dev_t
+name|dev1
+decl_stmt|,
+name|dev2
+decl_stmt|;
+comment|/* device place holder */
 block|}
 struct|;
 end_struct
@@ -176,7 +206,7 @@ name|struct
 name|ata_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -204,7 +234,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ad_transfer
 parameter_list|(
 name|struct
@@ -215,12 +245,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|ad_interrupt
 parameter_list|(
 name|struct
 name|ad_request
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ad_service
+parameter_list|(
+name|struct
+name|ad_softc
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

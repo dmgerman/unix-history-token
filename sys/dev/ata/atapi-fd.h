@@ -174,11 +174,11 @@ modifier|*
 name|atp
 decl_stmt|;
 comment|/* controller structure */
-name|int32_t
+name|int
 name|lun
 decl_stmt|;
 comment|/* logical device unit */
-name|int32_t
+name|int
 name|transfersize
 decl_stmt|;
 comment|/* max size of each transfer */

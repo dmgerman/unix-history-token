@@ -174,7 +174,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|ast_sense
 parameter_list|(
 name|struct
@@ -198,7 +198,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|ast_done
 parameter_list|(
 name|struct
@@ -210,26 +210,26 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|ast_mode_sense
 parameter_list|(
 name|struct
 name|ast_softc
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|int
 parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|ast_mode_select
 parameter_list|(
 name|struct
@@ -239,14 +239,14 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|ast_write_filemark
 parameter_list|(
 name|struct
@@ -260,14 +260,14 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|ast_read_position
 parameter_list|(
 name|struct
 name|ast_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|,
 name|struct
 name|ast_readposition
@@ -278,7 +278,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|ast_space
 parameter_list|(
 name|struct
@@ -287,6 +287,22 @@ modifier|*
 parameter_list|,
 name|u_int8_t
 parameter_list|,
+name|int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ast_locate
+parameter_list|(
+name|struct
+name|ast_softc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
 name|u_int32_t
 parameter_list|)
 function_decl|;
@@ -294,23 +310,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
-name|ast_locate
-parameter_list|(
-name|struct
-name|ast_softc
-modifier|*
-parameter_list|,
-name|int32_t
-parameter_list|,
-name|int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int32_t
+name|int
 name|ast_prevent_allow
 parameter_list|(
 name|struct
@@ -318,15 +318,14 @@ name|ast_softc
 modifier|*
 name|stp
 parameter_list|,
-name|int32_t
-name|lock
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|ast_load_unload
 parameter_list|(
 name|struct
@@ -340,7 +339,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|ast_rewind
 parameter_list|(
 name|struct
@@ -352,7 +351,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|ast_erase
 parameter_list|(
 name|struct
@@ -397,7 +396,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-name|int32_t
+name|int
 name|astattach
 parameter_list|(
 name|struct
@@ -419,7 +418,7 @@ name|dev_t
 name|dev
 decl_stmt|;
 specifier|static
-name|int32_t
+name|int
 name|ast_cdev_done
 init|=
 literal|0
@@ -917,7 +916,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_sense
 parameter_list|(
 name|struct
@@ -926,7 +925,7 @@ modifier|*
 name|stp
 parameter_list|)
 block|{
-name|int32_t
+name|int
 name|count
 decl_stmt|,
 name|error
@@ -1624,10 +1623,10 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int32_t
+name|int
 name|flags
 parameter_list|,
-name|int32_t
+name|int
 name|fmt
 parameter_list|,
 name|struct
@@ -1741,10 +1740,10 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int32_t
+name|int
 name|flags
 parameter_list|,
-name|int32_t
+name|int
 name|fmt
 parameter_list|,
 name|struct
@@ -1901,7 +1900,7 @@ parameter_list|,
 name|caddr_t
 name|addr
 parameter_list|,
-name|int32_t
+name|int
 name|flag
 parameter_list|,
 name|struct
@@ -1919,7 +1918,7 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 init|=
 literal|0
@@ -2064,7 +2063,7 @@ case|case
 name|MTIOCTOP
 case|:
 block|{
-name|int32_t
+name|int
 name|i
 decl_stmt|;
 name|struct
@@ -2428,7 +2427,7 @@ name|bio_dev
 operator|->
 name|si_drv1
 decl_stmt|;
-name|int32_t
+name|int
 name|s
 decl_stmt|;
 comment|/* if it's a null transfer, return immediatly. */
@@ -2811,7 +2810,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_done
 parameter_list|(
 name|struct
@@ -2929,7 +2928,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_mode_sense
 parameter_list|(
 name|struct
@@ -2937,14 +2936,14 @@ name|ast_softc
 modifier|*
 name|stp
 parameter_list|,
-name|u_int8_t
+name|int
 name|page
 parameter_list|,
 name|void
 modifier|*
 name|pagebuf
 parameter_list|,
-name|int32_t
+name|int
 name|pagesize
 parameter_list|)
 block|{
@@ -2990,7 +2989,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 name|error
@@ -3038,7 +3037,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_mode_select
 parameter_list|(
 name|struct
@@ -3050,7 +3049,7 @@ name|void
 modifier|*
 name|pagebuf
 parameter_list|,
-name|int32_t
+name|int
 name|pagesize
 parameter_list|)
 block|{
@@ -3144,7 +3143,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_write_filemark
 parameter_list|(
 name|struct
@@ -3196,7 +3195,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 if|if
@@ -3293,7 +3292,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_read_position
 parameter_list|(
 name|struct
@@ -3301,7 +3300,7 @@ name|ast_softc
 modifier|*
 name|stp
 parameter_list|,
-name|int32_t
+name|int
 name|hard
 parameter_list|,
 name|struct
@@ -3356,7 +3355,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 name|error
@@ -3369,6 +3368,9 @@ name|atp
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|position
 argument_list|,
 sizeof|sizeof
@@ -3416,7 +3418,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_space
 parameter_list|(
 name|struct
@@ -3427,7 +3429,7 @@ parameter_list|,
 name|u_int8_t
 name|function
 parameter_list|,
-name|u_int32_t
+name|int32_t
 name|count
 parameter_list|)
 block|{
@@ -3504,7 +3506,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_locate
 parameter_list|(
 name|struct
@@ -3512,10 +3514,10 @@ name|ast_softc
 modifier|*
 name|stp
 parameter_list|,
-name|int32_t
+name|int
 name|hard
 parameter_list|,
-name|int32_t
+name|u_int32_t
 name|pos
 parameter_list|)
 block|{
@@ -3573,7 +3575,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 name|error
@@ -3623,7 +3625,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_prevent_allow
 parameter_list|(
 name|struct
@@ -3631,7 +3633,7 @@ name|ast_softc
 modifier|*
 name|stp
 parameter_list|,
-name|int32_t
+name|int
 name|lock
 parameter_list|)
 block|{
@@ -3702,7 +3704,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_load_unload
 parameter_list|(
 name|struct
@@ -3754,7 +3756,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 if|if
@@ -3848,7 +3850,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_rewind
 parameter_list|(
 name|struct
@@ -3897,7 +3899,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 name|error
@@ -3947,7 +3949,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|ast_erase
 parameter_list|(
 name|struct
@@ -3996,7 +3998,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 if|if

@@ -992,7 +992,7 @@ modifier|*
 name|controller
 decl_stmt|;
 comment|/* ptr to controller softc */
-name|int32_t
+name|int
 name|unit
 decl_stmt|;
 comment|/* ATA_MASTER or ATA_SLAVE */
@@ -1001,16 +1001,16 @@ modifier|*
 name|driver
 decl_stmt|;
 comment|/* ptr to subdriver softc */
-name|int8_t
+name|char
 modifier|*
 name|devname
 decl_stmt|;
 comment|/* this devices name */
-name|int8_t
+name|u_int8_t
 name|cmd
 decl_stmt|;
 comment|/* last cmd executed */
-name|u_int32_t
+name|int
 name|flags
 decl_stmt|;
 comment|/* drive flags */
@@ -1024,7 +1024,7 @@ end_struct
 
 begin_typedef
 typedef|typedef
-name|int32_t
+name|int
 name|atapi_callback_t
 parameter_list|(
 name|struct
@@ -1051,7 +1051,7 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* command control block */
-name|int32_t
+name|int
 name|ccbsize
 decl_stmt|;
 comment|/* size of ccb (12 | 16) */
@@ -1063,7 +1063,7 @@ name|u_int32_t
 name|donecount
 decl_stmt|;
 comment|/* bytes transferred */
-name|int32_t
+name|int
 name|timeout
 decl_stmt|;
 comment|/* timeout for this cmd */
@@ -1072,15 +1072,15 @@ name|callout_handle
 name|timeout_handle
 decl_stmt|;
 comment|/* handle for untimeout */
-name|int32_t
+name|int
 name|retries
 decl_stmt|;
 comment|/* retry count */
-name|int32_t
+name|int
 name|result
 decl_stmt|;
 comment|/* result of this cmd */
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 comment|/* result translated to errno */
@@ -1089,7 +1089,7 @@ name|atapi_reqsense
 name|sense
 decl_stmt|;
 comment|/* sense data if error */
-name|int32_t
+name|int
 name|flags
 decl_stmt|;
 define|#
@@ -1104,8 +1104,7 @@ define|#
 directive|define
 name|ATPR_F_AT_HEAD
 value|0x0004
-name|int8_t
-modifier|*
+name|caddr_t
 name|data
 decl_stmt|;
 comment|/* pointer to data buf */
@@ -1114,6 +1113,12 @@ modifier|*
 name|callback
 decl_stmt|;
 comment|/* ptr to callback func */
+name|struct
+name|ata_dmaentry
+modifier|*
+name|dmatab
+decl_stmt|;
+comment|/* DMA transfer table */
 name|void
 modifier|*
 name|driver
@@ -1138,7 +1143,7 @@ name|struct
 name|ata_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1177,7 +1182,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|atapi_interrupt
 parameter_list|(
 name|struct
@@ -1188,7 +1193,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|atapi_queue_cmd
 parameter_list|(
 name|struct
@@ -1198,14 +1203,13 @@ parameter_list|,
 name|int8_t
 index|[]
 parameter_list|,
-name|void
-modifier|*
+name|caddr_t
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|,
 name|atapi_callback_t
 parameter_list|,
@@ -1227,7 +1231,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|atapi_test_ready
 parameter_list|(
 name|struct
@@ -1238,14 +1242,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|atapi_wait_ready
 parameter_list|(
 name|struct
 name|atapi_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1269,19 +1273,19 @@ begin_function_decl
 name|void
 name|atapi_dump
 parameter_list|(
-name|int8_t
+name|char
 modifier|*
 parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|acdattach
 parameter_list|(
 name|struct
@@ -1314,7 +1318,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|afdattach
 parameter_list|(
 name|struct
@@ -1347,7 +1351,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|astattach
 parameter_list|(
 name|struct

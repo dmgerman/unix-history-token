@@ -100,7 +100,7 @@ name|struct
 name|atapi_request
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -114,7 +114,7 @@ name|struct
 name|atapi_request
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -134,18 +134,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int8_t
+name|char
 modifier|*
 name|atapi_type
 parameter_list|(
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int8_t
+name|char
 modifier|*
 name|atapi_cmd2str
 parameter_list|(
@@ -156,7 +156,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int8_t
+name|char
 modifier|*
 name|atapi_skey2str
 parameter_list|(
@@ -208,7 +208,7 @@ name|ata_softc
 modifier|*
 name|scp
 parameter_list|,
-name|int32_t
+name|int
 name|device
 parameter_list|)
 block|{
@@ -623,7 +623,7 @@ block|}
 end_function
 
 begin_function
-name|int32_t
+name|int
 name|atapi_queue_cmd
 parameter_list|(
 name|struct
@@ -635,17 +635,16 @@ name|int8_t
 modifier|*
 name|ccb
 parameter_list|,
-name|void
-modifier|*
+name|caddr_t
 name|data
 parameter_list|,
-name|int32_t
+name|int
 name|count
 parameter_list|,
-name|int32_t
+name|int
 name|flags
 parameter_list|,
-name|int32_t
+name|int
 name|timeout
 parameter_list|,
 name|atapi_callback_t
@@ -661,7 +660,7 @@ name|atapi_request
 modifier|*
 name|request
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|,
 name|s
@@ -775,6 +774,62 @@ operator|->
 name|driver
 operator|=
 name|driver
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|atp
+operator|->
+name|controller
+operator|->
+name|mode
+index|[
+name|ATA_DEV
+argument_list|(
+name|atp
+operator|->
+name|unit
+argument_list|)
+index|]
+operator|>=
+name|ATA_DMA
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|request
+operator|->
+name|dmatab
+operator|=
+name|ata_dmaalloc
+argument_list|(
+name|atp
+operator|->
+name|controller
+argument_list|,
+name|atp
+operator|->
+name|unit
+argument_list|)
+operator|)
+condition|)
+name|atp
+operator|->
+name|controller
+operator|->
+name|mode
+index|[
+name|ATA_DEV
+argument_list|(
+name|atp
+operator|->
+name|unit
+argument_list|)
+index|]
+operator|=
+name|ATA_PIO
 expr_stmt|;
 block|}
 name|s
@@ -951,6 +1006,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|request
+operator|->
+name|dmatab
+condition|)
+name|free
+argument_list|(
+name|request
+operator|->
+name|dmatab
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|request
@@ -1054,10 +1124,10 @@ name|request
 operator|->
 name|device
 decl_stmt|;
-name|int32_t
+name|int
 name|timout
 decl_stmt|;
-name|int8_t
+name|u_int8_t
 name|reason
 decl_stmt|;
 ifdef|#
@@ -1240,6 +1310,10 @@ name|atp
 operator|->
 name|unit
 argument_list|,
+name|request
+operator|->
+name|dmatab
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -1251,12 +1325,6 @@ argument_list|,
 name|request
 operator|->
 name|bytecount
-argument_list|,
-name|request
-operator|->
-name|flags
-operator|&
-name|ATPR_F_READ
 argument_list|)
 condition|)
 block|{
@@ -1329,6 +1397,20 @@ argument_list|(
 name|atp
 operator|->
 name|controller
+argument_list|,
+name|atp
+operator|->
+name|unit
+argument_list|,
+name|request
+operator|->
+name|dmatab
+argument_list|,
+name|request
+operator|->
+name|flags
+operator|&
+name|ATPR_F_READ
 argument_list|)
 expr_stmt|;
 comment|/* command interrupt device ? just return */
@@ -1488,7 +1570,7 @@ block|}
 end_function
 
 begin_function
-name|int32_t
+name|int
 name|atapi_interrupt
 parameter_list|(
 name|struct
@@ -1521,7 +1603,7 @@ name|request
 operator|->
 name|data
 decl_stmt|;
-name|int32_t
+name|int
 name|reason
 decl_stmt|,
 name|dma_stat
@@ -1740,7 +1822,7 @@ block|}
 block|}
 else|else
 block|{
-name|int32_t
+name|int
 name|length
 init|=
 name|inb
@@ -2317,6 +2399,22 @@ name|request
 argument_list|)
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|request
+operator|->
+name|dmatab
+condition|)
+name|free
+argument_list|(
+name|request
+operator|->
+name|dmatab
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|request
@@ -2324,6 +2422,7 @@ argument_list|,
 name|M_ATAPI
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|wakeup
@@ -2470,7 +2569,7 @@ block|}
 end_function
 
 begin_function
-name|int32_t
+name|int
 name|atapi_test_ready
 parameter_list|(
 name|struct
@@ -2543,7 +2642,7 @@ block|}
 end_function
 
 begin_function
-name|int32_t
+name|int
 name|atapi_wait_ready
 parameter_list|(
 name|struct
@@ -2551,11 +2650,11 @@ name|atapi_softc
 modifier|*
 name|atp
 parameter_list|,
-name|int32_t
+name|int
 name|timeout
 parameter_list|)
 block|{
-name|int32_t
+name|int
 name|error
 init|=
 literal|0
@@ -2617,7 +2716,7 @@ begin_function
 name|void
 name|atapi_dump
 parameter_list|(
-name|int8_t
+name|char
 modifier|*
 name|label
 parameter_list|,
@@ -2625,7 +2724,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int32_t
+name|int
 name|len
 parameter_list|)
 block|{
@@ -2680,7 +2779,7 @@ name|atapi_request
 modifier|*
 name|request
 parameter_list|,
-name|int32_t
+name|int
 name|length
 parameter_list|)
 block|{
@@ -2699,7 +2798,7 @@ name|request
 operator|->
 name|data
 decl_stmt|;
-name|int32_t
+name|int
 name|size
 init|=
 name|min
@@ -2711,7 +2810,7 @@ argument_list|,
 name|length
 argument_list|)
 decl_stmt|;
-name|int32_t
+name|int
 name|resid
 decl_stmt|;
 if|if
@@ -2912,7 +3011,7 @@ name|atapi_request
 modifier|*
 name|request
 parameter_list|,
-name|int32_t
+name|int
 name|length
 parameter_list|)
 block|{
@@ -2931,7 +3030,7 @@ name|request
 operator|->
 name|data
 decl_stmt|;
-name|int32_t
+name|int
 name|size
 init|=
 name|min
@@ -2943,7 +3042,7 @@ argument_list|,
 name|length
 argument_list|)
 decl_stmt|;
-name|int32_t
+name|int
 name|resid
 decl_stmt|;
 if|if
@@ -3156,7 +3255,7 @@ name|request
 operator|->
 name|device
 decl_stmt|;
-name|int32_t
+name|int
 name|s
 init|=
 name|splbio
@@ -3325,11 +3424,11 @@ end_function
 
 begin_function
 specifier|static
-name|int8_t
+name|char
 modifier|*
 name|atapi_type
 parameter_list|(
-name|int32_t
+name|int
 name|type
 parameter_list|)
 block|{
@@ -3372,7 +3471,7 @@ end_function
 
 begin_function
 specifier|static
-name|int8_t
+name|char
 modifier|*
 name|atapi_cmd2str
 parameter_list|(
@@ -3764,7 +3863,7 @@ return|;
 default|default:
 block|{
 specifier|static
-name|int8_t
+name|char
 name|buffer
 index|[
 literal|16
@@ -3789,7 +3888,7 @@ end_function
 
 begin_function
 specifier|static
-name|int8_t
+name|char
 modifier|*
 name|atapi_skey2str
 parameter_list|(

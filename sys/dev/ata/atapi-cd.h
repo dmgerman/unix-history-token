@@ -1112,11 +1112,11 @@ modifier|*
 name|atp
 decl_stmt|;
 comment|/* controller structure */
-name|int32_t
+name|int
 name|lun
 decl_stmt|;
 comment|/* logical device unit */
-name|int32_t
+name|int
 name|flags
 decl_stmt|;
 comment|/* device state flags */
@@ -1209,7 +1209,7 @@ modifier|*
 name|driver
 decl_stmt|;
 comment|/* softc's of changer slots */
-name|int32_t
+name|int
 name|slot
 decl_stmt|;
 comment|/* this instance slot number */
@@ -1217,7 +1217,7 @@ name|time_t
 name|timestamp
 decl_stmt|;
 comment|/* this instance timestamp */
-name|u_int32_t
+name|int
 name|block_size
 decl_stmt|;
 comment|/* blocksize currently used */

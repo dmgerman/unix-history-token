@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ata/ata-all.h>
 end_include
 
@@ -234,6 +240,25 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|acd_clone
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|dev_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|acd_describe
 parameter_list|(
 name|struct
@@ -248,7 +273,7 @@ specifier|static
 name|void
 name|lba2msf
 parameter_list|(
-name|int32_t
+name|u_int32_t
 parameter_list|,
 name|u_int8_t
 modifier|*
@@ -264,7 +289,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|u_int32_t
 name|msf2lba
 parameter_list|(
 name|u_int8_t
@@ -278,7 +303,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_done
 parameter_list|(
 name|struct
@@ -314,7 +339,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_setchan
 parameter_list|(
 name|struct
@@ -346,7 +371,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_open_track
 parameter_list|(
 name|struct
@@ -362,7 +387,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_close_track
 parameter_list|(
 name|struct
@@ -374,7 +399,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_close_disk
 parameter_list|(
 name|struct
@@ -386,7 +411,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_read_track_info
 parameter_list|(
 name|struct
@@ -452,21 +477,21 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_eject
 parameter_list|(
 name|struct
 name|acd_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_blank
 parameter_list|(
 name|struct
@@ -478,85 +503,83 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_prevent_allow
 parameter_list|(
 name|struct
 name|acd_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_start_stop
 parameter_list|(
 name|struct
 name|acd_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_pause_resume
 parameter_list|(
 name|struct
 name|acd_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_mode_sense
 parameter_list|(
 name|struct
 name|acd_softc
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|int
 parameter_list|,
-name|void
-modifier|*
+name|caddr_t
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_mode_select
 parameter_list|(
 name|struct
 name|acd_softc
 modifier|*
 parameter_list|,
-name|void
-modifier|*
+name|caddr_t
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|acd_set_speed
 parameter_list|(
 name|struct
@@ -564,7 +587,7 @@ name|acd_softc
 modifier|*
 name|cdp
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -614,7 +637,7 @@ name|changer
 modifier|*
 name|chp
 decl_stmt|;
-name|int32_t
+name|int
 name|count
 decl_stmt|,
 name|error
@@ -622,7 +645,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|static
-name|int32_t
+name|int
 name|acd_cdev_done
 init|=
 literal|0
@@ -637,6 +660,17 @@ name|cdevsw_add
 argument_list|(
 operator|&
 name|acd_cdevsw
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|dev_clone
+argument_list|,
+name|acd_clone
+argument_list|,
+literal|0
+argument_list|,
+literal|1000
 argument_list|)
 expr_stmt|;
 name|acd_cdev_done
@@ -696,6 +730,9 @@ name|cdp
 argument_list|,
 name|ATAPI_CDROM_CAP_PAGE
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cdp
 operator|->
@@ -941,6 +978,9 @@ name|atp
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|chp
 argument_list|,
 sizeof|sizeof
@@ -977,10 +1017,10 @@ modifier|*
 modifier|*
 name|cdparr
 decl_stmt|;
-name|int32_t
+name|int
 name|count
 decl_stmt|;
-name|int8_t
+name|char
 name|string
 index|[
 literal|16
@@ -1743,6 +1783,124 @@ end_function
 begin_function
 specifier|static
 name|void
+name|acd_clone
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|namelen
+parameter_list|,
+name|dev_t
+modifier|*
+name|dev
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|namep
+decl_stmt|;
+name|int
+name|unit
+decl_stmt|,
+name|track
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|*
+name|dev
+operator|!=
+name|NODEV
+operator|||
+operator|!
+name|dev_stdclone
+argument_list|(
+name|name
+argument_list|,
+operator|&
+name|namep
+argument_list|,
+literal|"acd"
+argument_list|,
+operator|&
+name|unit
+argument_list|)
+operator|||
+operator|*
+name|namep
+operator|++
+operator|!=
+literal|'t'
+condition|)
+return|return;
+while|while
+condition|(
+name|isdigit
+argument_list|(
+operator|*
+name|namep
+argument_list|)
+condition|)
+block|{
+name|track
+operator|*=
+literal|10
+expr_stmt|;
+name|track
+operator|+=
+operator|*
+name|namep
+operator|++
+operator|-
+literal|'0'
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|namep
+condition|)
+return|return;
+operator|*
+name|dev
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|acd_cdevsw
+argument_list|,
+name|unit
+operator||
+operator|(
+name|track
+operator|<<
+literal|16
+operator|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0644
+argument_list|,
+name|name
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|acd_describe
 parameter_list|(
 name|struct
@@ -1751,12 +1909,12 @@ modifier|*
 name|cdp
 parameter_list|)
 block|{
-name|int32_t
+name|int
 name|comma
 init|=
 literal|0
 decl_stmt|;
-name|int8_t
+name|char
 modifier|*
 name|mechanism
 decl_stmt|;
@@ -3077,7 +3235,7 @@ name|__inline
 name|void
 name|lba2msf
 parameter_list|(
-name|int32_t
+name|u_int32_t
 name|lba
 parameter_list|,
 name|u_int8_t
@@ -3140,7 +3298,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|int32_t
+name|u_int32_t
 name|msf2lba
 parameter_list|(
 name|u_int8_t
@@ -3179,10 +3337,10 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int32_t
+name|int
 name|flags
 parameter_list|,
-name|int32_t
+name|int
 name|fmt
 parameter_list|,
 name|struct
@@ -3408,10 +3566,10 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int32_t
+name|int
 name|flags
 parameter_list|,
-name|int32_t
+name|int
 name|fmt
 parameter_list|,
 name|struct
@@ -3519,7 +3677,7 @@ parameter_list|,
 name|caddr_t
 name|addr
 parameter_list|,
-name|int32_t
+name|int
 name|flags
 parameter_list|,
 name|struct
@@ -3537,7 +3695,7 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 init|=
 literal|0
@@ -3880,15 +4038,15 @@ name|struct
 name|toc
 name|buf
 decl_stmt|;
-name|u_int32_t
-name|len
-decl_stmt|;
-name|u_int8_t
+name|int
 name|starting_track
 init|=
 name|te
 operator|->
 name|starting_track
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 if|if
 condition|(
@@ -4234,7 +4392,7 @@ name|struct
 name|toc
 name|buf
 decl_stmt|;
-name|u_int8_t
+name|u_char
 name|track
 init|=
 name|te
@@ -4467,7 +4625,7 @@ name|struct
 name|cd_sub_channel_info
 name|data
 decl_stmt|;
-name|u_int32_t
+name|int
 name|len
 init|=
 name|args
@@ -4568,6 +4726,9 @@ name|atp
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cdp
 operator|->
@@ -5046,12 +5207,12 @@ operator|*
 operator|)
 name|addr
 decl_stmt|;
-name|u_int32_t
+name|u_int
 name|start
 decl_stmt|,
 name|len
 decl_stmt|;
-name|int32_t
+name|int
 name|t1
 decl_stmt|,
 name|t2
@@ -5342,18 +5503,10 @@ name|addr
 decl_stmt|;
 name|int32_t
 name|lba
-decl_stmt|,
-name|frames
-decl_stmt|,
-name|error
-init|=
-literal|0
 decl_stmt|;
-name|u_int8_t
-modifier|*
+name|caddr_t
 name|buffer
 decl_stmt|,
-modifier|*
 name|ubuf
 init|=
 name|args
@@ -5365,6 +5518,13 @@ name|ccb
 index|[
 literal|16
 index|]
+decl_stmt|;
+name|int
+name|frames
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -5516,11 +5676,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|int32_t
-name|size
-decl_stmt|;
-name|u_int8_t
+name|int8_t
 name|blocks
+decl_stmt|;
+name|int
+name|size
 decl_stmt|;
 name|blocks
 operator|=
@@ -5752,6 +5912,9 @@ name|cdp
 argument_list|,
 name|ATAPI_CDROM_AUDIO_PAGE
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cdp
 operator|->
@@ -5885,6 +6048,9 @@ name|cdp
 argument_list|,
 name|ATAPI_CDROM_AUDIO_PAGE
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cdp
 operator|->
@@ -5928,6 +6094,9 @@ name|cdp
 argument_list|,
 name|ATAPI_CDROM_AUDIO_PAGE_MASK
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cdp
 operator|->
@@ -6099,6 +6268,9 @@ name|acd_mode_select
 argument_list|(
 name|cdp
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cdp
 operator|->
@@ -6385,7 +6557,7 @@ argument_list|,
 operator|(
 operator|*
 operator|(
-name|int32_t
+name|int
 operator|*
 operator|)
 name|addr
@@ -6400,7 +6572,7 @@ name|CDRIOCGETBLOCKSIZE
 case|:
 operator|*
 operator|(
-name|int32_t
+name|int
 operator|*
 operator|)
 name|addr
@@ -6419,7 +6591,7 @@ name|block_size
 operator|=
 operator|*
 operator|(
-name|int32_t
+name|int
 operator|*
 operator|)
 name|addr
@@ -6661,7 +6833,7 @@ name|bio_dev
 operator|->
 name|si_drv1
 decl_stmt|;
-name|int32_t
+name|int
 name|s
 decl_stmt|;
 comment|/* if it's a null transfer, return immediatly. */
@@ -7277,7 +7449,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_done
 parameter_list|(
 name|struct
@@ -7372,7 +7544,7 @@ modifier|*
 name|cdp
 parameter_list|)
 block|{
-name|int32_t
+name|int
 name|ntracks
 decl_stmt|,
 name|len
@@ -7486,6 +7658,9 @@ name|atp
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cdp
 operator|->
@@ -7631,6 +7806,9 @@ name|atp
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cdp
 operator|->
@@ -7711,6 +7889,9 @@ name|atp
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cdp
 operator|->
@@ -8204,7 +8385,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_setchan
 parameter_list|(
 name|struct
@@ -8225,7 +8406,7 @@ name|u_int8_t
 name|c3
 parameter_list|)
 block|{
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 if|if
@@ -8239,6 +8420,9 @@ name|cdp
 argument_list|,
 name|ATAPI_CDROM_AUDIO_PAGE
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cdp
 operator|->
@@ -8334,6 +8518,9 @@ name|acd_mode_select
 argument_list|(
 name|cdp
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cdp
 operator|->
@@ -8352,7 +8539,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_select_done1
 parameter_list|(
 name|struct
@@ -8411,7 +8598,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_select_done
 parameter_list|(
 name|struct
@@ -8581,7 +8768,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_close_disk
 parameter_list|(
 name|struct
@@ -8659,7 +8846,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_open_track
 parameter_list|(
 name|struct
@@ -8677,7 +8864,7 @@ name|struct
 name|write_param
 name|param
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 if|if
@@ -8691,6 +8878,9 @@ name|cdp
 argument_list|,
 name|ATAPI_CDROM_WRITE_PARAMETERS_PAGE
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|param
 argument_list|,
@@ -8987,6 +9177,9 @@ name|acd_mode_select
 argument_list|(
 name|cdp
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|param
 argument_list|,
@@ -9001,7 +9194,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_close_track
 parameter_list|(
 name|struct
@@ -9077,7 +9270,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_read_track_info
 parameter_list|(
 name|struct
@@ -9150,7 +9343,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 if|if
@@ -9166,6 +9359,9 @@ name|atp
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|info
 argument_list|,
 sizeof|sizeof
@@ -9289,9 +9485,6 @@ name|lba
 init|=
 literal|0
 decl_stmt|;
-name|int32_t
-name|error
-decl_stmt|;
 name|int16_t
 name|length
 decl_stmt|;
@@ -9300,6 +9493,9 @@ name|ccb
 index|[
 literal|16
 index|]
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 switch|switch
 condition|(
@@ -9501,6 +9697,9 @@ name|atp
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|d
 argument_list|,
@@ -9965,6 +10164,9 @@ name|atp
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|d
 argument_list|,
@@ -10021,7 +10223,7 @@ struct|;
 name|u_int16_t
 name|length
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 init|=
 literal|0
@@ -10211,6 +10413,9 @@ name|atp
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|d
 argument_list|,
@@ -10628,7 +10833,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_eject
 parameter_list|(
 name|struct
@@ -10636,11 +10841,11 @@ name|acd_softc
 modifier|*
 name|cdp
 parameter_list|,
-name|int32_t
+name|int
 name|close
 parameter_list|)
 block|{
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 if|if
@@ -10754,7 +10959,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_blank
 parameter_list|(
 name|struct
@@ -10803,7 +11008,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 name|error
@@ -10847,7 +11052,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_prevent_allow
 parameter_list|(
 name|struct
@@ -10855,7 +11060,7 @@ name|acd_softc
 modifier|*
 name|cdp
 parameter_list|,
-name|int32_t
+name|int
 name|lock
 parameter_list|)
 block|{
@@ -10926,7 +11131,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_start_stop
 parameter_list|(
 name|struct
@@ -10934,7 +11139,7 @@ name|acd_softc
 modifier|*
 name|cdp
 parameter_list|,
-name|int32_t
+name|int
 name|start
 parameter_list|)
 block|{
@@ -11005,7 +11210,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_pause_resume
 parameter_list|(
 name|struct
@@ -11013,7 +11218,7 @@ name|acd_softc
 modifier|*
 name|cdp
 parameter_list|,
-name|int32_t
+name|int
 name|pause
 parameter_list|)
 block|{
@@ -11084,7 +11289,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_mode_sense
 parameter_list|(
 name|struct
@@ -11092,14 +11297,13 @@ name|acd_softc
 modifier|*
 name|cdp
 parameter_list|,
-name|u_int8_t
+name|int
 name|page
 parameter_list|,
-name|void
-modifier|*
+name|caddr_t
 name|pagebuf
 parameter_list|,
-name|int32_t
+name|int
 name|pagesize
 parameter_list|)
 block|{
@@ -11145,7 +11349,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 name|error
@@ -11193,7 +11397,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_mode_select
 parameter_list|(
 name|struct
@@ -11201,11 +11405,10 @@ name|acd_softc
 modifier|*
 name|cdp
 parameter_list|,
-name|void
-modifier|*
+name|caddr_t
 name|pagebuf
 parameter_list|,
-name|int32_t
+name|int
 name|pagesize
 parameter_list|)
 block|{
@@ -11299,7 +11502,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|acd_set_speed
 parameter_list|(
 name|struct
@@ -11307,7 +11510,7 @@ name|acd_softc
 modifier|*
 name|cdp
 parameter_list|,
-name|int32_t
+name|int
 name|speed
 parameter_list|)
 block|{

@@ -187,7 +187,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|afd_sense
 parameter_list|(
 name|struct
@@ -211,7 +211,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|afd_partial_done
 parameter_list|(
 name|struct
@@ -223,7 +223,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|afd_done
 parameter_list|(
 name|struct
@@ -235,42 +235,42 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|afd_eject
 parameter_list|(
 name|struct
 name|afd_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|afd_start_stop
 parameter_list|(
 name|struct
 name|afd_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|afd_prevent_allow
 parameter_list|(
 name|struct
 name|afd_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -301,7 +301,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-name|int32_t
+name|int
 name|afdattach
 parameter_list|(
 name|struct
@@ -639,7 +639,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|afd_sense
 parameter_list|(
 name|struct
@@ -704,7 +704,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|count
 decl_stmt|,
 name|error
@@ -1329,10 +1329,10 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int32_t
+name|int
 name|flags
 parameter_list|,
-name|int32_t
+name|int
 name|fmt
 parameter_list|,
 name|struct
@@ -1503,10 +1503,10 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int32_t
+name|int
 name|flags
 parameter_list|,
-name|int32_t
+name|int
 name|fmt
 parameter_list|,
 name|struct
@@ -1560,7 +1560,7 @@ parameter_list|,
 name|caddr_t
 name|addr
 parameter_list|,
-name|int32_t
+name|int
 name|flag
 parameter_list|,
 name|struct
@@ -1659,7 +1659,7 @@ name|bio_dev
 operator|->
 name|si_drv1
 decl_stmt|;
-name|int32_t
+name|int
 name|s
 decl_stmt|;
 comment|/* if it's a null transfer, return immediatly. */
@@ -1751,7 +1751,8 @@ argument_list|)
 decl_stmt|;
 name|u_int32_t
 name|lba
-decl_stmt|,
+decl_stmt|;
+name|u_int16_t
 name|count
 decl_stmt|;
 name|int8_t
@@ -1760,8 +1761,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|int8_t
-modifier|*
+name|caddr_t
 name|data_ptr
 decl_stmt|;
 if|if
@@ -2107,7 +2107,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|afd_partial_done
 parameter_list|(
 name|struct
@@ -2163,7 +2163,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|afd_done
 parameter_list|(
 name|struct
@@ -2260,7 +2260,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|afd_eject
 parameter_list|(
 name|struct
@@ -2268,11 +2268,11 @@ name|afd_softc
 modifier|*
 name|fdp
 parameter_list|,
-name|int32_t
+name|int
 name|close
 parameter_list|)
 block|{
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 if|if
@@ -2375,7 +2375,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|afd_start_stop
 parameter_list|(
 name|struct
@@ -2383,7 +2383,7 @@ name|afd_softc
 modifier|*
 name|fdp
 parameter_list|,
-name|int32_t
+name|int
 name|start
 parameter_list|)
 block|{
@@ -2427,7 +2427,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|int32_t
+name|int
 name|error
 decl_stmt|;
 name|error
@@ -2475,7 +2475,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|afd_prevent_allow
 parameter_list|(
 name|struct
@@ -2483,7 +2483,7 @@ name|afd_softc
 modifier|*
 name|fdp
 parameter_list|,
-name|int32_t
+name|int
 name|lock
 parameter_list|)
 block|{
