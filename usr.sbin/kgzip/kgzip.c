@@ -169,6 +169,16 @@ comment|/* Default loader */
 end_comment
 
 begin_decl_stmt
+name|int
+name|format
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Output format */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|tname
@@ -322,7 +332,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cvl:o:"
+literal|"cvf:l:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -348,6 +358,49 @@ case|:
 name|vflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"aout"
+argument_list|)
+condition|)
+name|format
+operator|=
+name|F_AOUT
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"elf"
+argument_list|)
+condition|)
+name|format
+operator|=
+name|F_ELF
+expr_stmt|;
+else|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: Unknown format"
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -425,6 +478,16 @@ index|[
 name|FN_SRC
 index|]
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|format
+condition|)
+name|format
+operator|=
+name|F_ELF
+expr_stmt|;
 name|kgzcmp
 argument_list|(
 operator|&
@@ -441,6 +504,7 @@ name|FN_OBJ
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -803,7 +867,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kgzip [-cv] [-l file] [-o filename] file\n"
+literal|"usage: kgzip [-cv] [-f format] [-l file] [-o filename] file\n"
 argument_list|)
 expr_stmt|;
 name|exit
