@@ -771,8 +771,7 @@ argument|ke
 argument_list|)
 block|{
 comment|/* 				 * Increment time in/out of memory and sleep 				 * time (if sleeping).  We ignore overflow; 				 * with 16-bit int's (remember them?) 				 * overflow takes 45 days. 				 */
-comment|/* XXXKSE **WRONG***/
-comment|/* 				 * the kse slptimes are not touched in wakeup 				 * because the thread may not HAVE a KSE 				 */
+comment|/* 				 * The kse slptimes are not touched in wakeup 				 * because the thread may not HAVE a KSE. 				 */
 if|if
 condition|(
 operator|(
@@ -807,20 +806,21 @@ block|{
 name|ke
 operator|->
 name|ke_slptime
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ke
-operator|->
-name|ke_slptime
 operator|=
 literal|0
 expr_stmt|;
 name|awake
 operator|=
 literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* XXXKSE 					 * This is probably a pointless 					 * statistic in a KSE world. 					 */
+name|ke
+operator|->
+name|ke_slptime
+operator|++
 expr_stmt|;
 block|}
 comment|/* 				 * pctcpu is only for ps? 				 * Do it per kse.. and add them up at the end? 				 * XXXKSE 				 */
@@ -939,6 +939,7 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* end of kse loop */
+comment|/*  			 * If there are ANY running threads in this KSEGRP, 			 * then don't count it as sleeping. 			 */
 if|if
 condition|(
 name|awake
@@ -3854,7 +3855,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"schedlock: null thread pointer"
+literal|"schedclock: null thread pointer"
 operator|)
 argument_list|)
 expr_stmt|;
