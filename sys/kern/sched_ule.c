@@ -5410,6 +5410,12 @@ name|td_priority
 operator|&&
 name|ke
 operator|&&
+name|ke
+operator|->
+name|ke_runq
+operator|!=
+name|NULL
+operator|&&
 operator|(
 name|ke
 operator|->
