@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.4 (Berkeley) %G%"
+literal|"@(#)move.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|"archive.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_include
@@ -160,8 +166,6 @@ name|afd
 decl_stmt|,
 name|curfd
 decl_stmt|,
-name|eval
-decl_stmt|,
 name|mods
 decl_stmt|,
 name|tfd1
@@ -241,17 +245,17 @@ control|)
 block|{
 if|if
 condition|(
+operator|*
+name|argv
+operator|&&
 operator|(
 name|file
 operator|=
-operator|*
-name|argv
-operator|)
-operator|&&
 name|files
 argument_list|(
 name|argv
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -410,12 +414,6 @@ name|SARMAG
 argument_list|,
 name|SEEK_SET
 argument_list|)
-expr_stmt|;
-name|eval
-operator|=
-literal|0
-expr_stmt|;
-name|ORPHANS
 expr_stmt|;
 name|SETCF
 argument_list|(
@@ -576,9 +574,26 @@ argument_list|(
 name|afd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|argv
+condition|)
+block|{
+name|orphans
+argument_list|(
+name|argv
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|eval
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
