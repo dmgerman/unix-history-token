@@ -2322,9 +2322,9 @@ name|td
 operator|&&
 name|td
 operator|->
-name|td_ksegrp
+name|td_proc
 operator|->
-name|kg_nice
+name|p_nice
 operator|>
 literal|0
 condition|)
@@ -2353,9 +2353,9 @@ literal|"ioslow"
 argument_list|,
 name|td
 operator|->
-name|td_ksegrp
+name|td_proc
 operator|->
-name|kg_nice
+name|p_nice
 argument_list|)
 expr_stmt|;
 block|}

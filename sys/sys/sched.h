@@ -142,9 +142,9 @@ name|void
 name|sched_nice
 parameter_list|(
 name|struct
-name|ksegrp
+name|proc
 modifier|*
-name|kg
+name|p
 parameter_list|,
 name|int
 name|nice

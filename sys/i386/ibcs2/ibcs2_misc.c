@@ -4783,9 +4783,9 @@ name|prio
 operator|=
 name|td
 operator|->
-name|td_ksegrp
+name|td_proc
 operator|->
-name|kg_nice
+name|p_nice
 operator|+
 name|uap
 operator|->
@@ -4819,9 +4819,9 @@ index|]
 operator|=
 name|td
 operator|->
-name|td_ksegrp
+name|td_proc
 operator|->
-name|kg_nice
+name|p_nice
 expr_stmt|;
 return|return
 literal|0

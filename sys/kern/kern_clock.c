@@ -1272,11 +1272,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|td
+name|p
 operator|->
-name|td_ksegrp
-operator|->
-name|kg_nice
+name|p_nice
 operator|>
 name|NZERO
 condition|)

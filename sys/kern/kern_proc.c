@@ -3552,6 +3552,14 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
+name|kp
+operator|->
+name|ki_nice
+operator|=
+name|p
+operator|->
+name|p_nice
+expr_stmt|;
 name|kg
 operator|=
 name|td
@@ -3628,14 +3636,6 @@ operator|=
 name|kg
 operator|->
 name|kg_pri_class
-expr_stmt|;
-name|kp
-operator|->
-name|ki_nice
-operator|=
-name|kg
-operator|->
-name|kg_nice
 expr_stmt|;
 comment|/* Things in the thread */
 name|kp

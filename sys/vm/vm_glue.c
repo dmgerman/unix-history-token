@@ -3154,9 +3154,9 @@ condition|)
 block|{
 name|pri
 operator|-=
-name|kg
+name|p
 operator|->
-name|kg_nice
+name|p_nice
 operator|*
 literal|8
 expr_stmt|;

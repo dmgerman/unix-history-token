@@ -4336,11 +4336,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-decl_stmt|;
 name|killproc
 argument_list|(
 name|bigproc
@@ -4354,22 +4349,13 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|FOREACH_KSEGRP_IN_PROC
-argument_list|(
-argument|bigproc
-argument_list|,
-argument|kg
-argument_list|)
-block|{
 name|sched_nice
 argument_list|(
-name|kg
+name|bigproc
 argument_list|,
 name|PRIO_MIN
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE ??? */
-block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&

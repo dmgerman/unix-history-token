@@ -1784,11 +1784,6 @@ name|u_char
 name|kg_user_pri
 decl_stmt|;
 comment|/* (j) User pri from estcpu and nice. */
-name|signed
-name|char
-name|kg_nice
-decl_stmt|;
-comment|/* (c + j) Process "nice" value. */
 define|#
 directive|define
 name|kg_endcopy
@@ -2156,6 +2151,11 @@ name|rlim_t
 name|p_cpulimit
 decl_stmt|;
 comment|/* (j) Current CPU limit in seconds. */
+name|signed
+name|char
+name|p_nice
+decl_stmt|;
+comment|/* (c + j) Process "nice" value. */
 comment|/* End area that is copied on creation. */
 define|#
 directive|define
