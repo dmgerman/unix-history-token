@@ -587,8 +587,6 @@ literal|0
 init|;
 name|Pkgdeps
 condition|;
-name|i
-operator|++
 control|)
 block|{
 name|cp
@@ -606,6 +604,7 @@ condition|(
 operator|*
 name|cp
 condition|)
+block|{
 name|deps
 index|[
 name|i
@@ -613,7 +612,15 @@ index|]
 operator|=
 name|cp
 expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
 block|}
+block|}
+name|ndeps
+operator|=
+name|i
+expr_stmt|;
 name|deps
 index|[
 name|ndeps
