@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.16 1994/11/06 00:58:06 bde Exp $  */
+comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)npx.c	7.2 (Berkeley) 5/12/91  *	$Id: npx.c,v 1.17 1994/11/14 14:59:06 bde Exp $  */
 end_comment
 
 begin_include
@@ -136,7 +136,7 @@ name|fldcw
 parameter_list|(
 name|addr
 parameter_list|)
-value|__asm("fldcw %0" : : "m" (*addr))
+value|__asm("fldcw %0" : : "m" (*(addr)))
 end_define
 
 begin_define
@@ -158,11 +158,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|fnop
+parameter_list|()
+value|__asm("fnop")
+end_define
+
+begin_define
+define|#
+directive|define
 name|fnsave
 parameter_list|(
 name|addr
 parameter_list|)
-value|__asm("fnsave %0" : "=m" (*addr) : "0" (*addr))
+value|__asm("fnsave %0" : "=m" (*(addr)))
 end_define
 
 begin_define
@@ -172,7 +180,7 @@ name|fnstcw
 parameter_list|(
 name|addr
 parameter_list|)
-value|__asm("fnstcw %0" : "=m" (*addr) : "0" (*addr))
+value|__asm("fnstcw %0" : "=m" (*(addr)))
 end_define
 
 begin_define
@@ -182,7 +190,7 @@ name|fnstsw
 parameter_list|(
 name|addr
 parameter_list|)
-value|__asm("fnstsw %0" : "=m" (*addr) : "0" (*addr))
+value|__asm("fnstsw %0" : "=m" (*(addr)))
 end_define
 
 begin_define
@@ -190,7 +198,7 @@ define|#
 directive|define
 name|fp_divide_by_0
 parameter_list|()
-value|__asm("fldz; fld1; fdiv %st,%st(1); fwait")
+value|__asm("fldz; fld1; fdiv %st,%st(1); fnop")
 end_define
 
 begin_define
@@ -200,15 +208,7 @@ name|frstor
 parameter_list|(
 name|addr
 parameter_list|)
-value|__asm("frstor %0" : : "m" (*addr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|fwait
-parameter_list|()
-value|__asm("fwait")
+value|__asm("frstor %0" : : "m" (*(addr)))
 end_define
 
 begin_define
@@ -275,6 +275,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|fnop
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|fnsave
 name|__P
 argument_list|(
@@ -332,18 +344,6 @@ argument_list|(
 operator|(
 name|caddr_t
 name|addr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|fwait
-name|__P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -453,6 +453,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|hw_float
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX currently just alias for npx_exists */
+end_comment
+
+begin_decl_stmt
 name|u_int
 name|npx0_imask
 init|=
@@ -479,12 +489,6 @@ begin_decl_stmt
 specifier|static
 name|bool_t
 name|npx_exists
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|hw_float
 decl_stmt|;
 end_decl_stmt
 
@@ -527,7 +531,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Special interrupt handlers.  Someday intr0-intr15 will be used to count  * interrupts.  We'll still need a special exception 16 handler.  The busy  * latch stuff in probintr() can be moved to npxprobe().  */
+comment|/*  * Special interrupt handlers.  Someday intr0-intr15 will be used to count  * interrupts.  We'll still need a special exception 16 handler.  The busy  * latch stuff in probeintr() can be moved to npxprobe().  */
 end_comment
 
 begin_decl_stmt
@@ -537,7 +541,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|asm (" 	.text _probeintr: 	ss 	incl	_npx_intrs_while_probing 	pushl	%eax 	movb	$0x20,%al	# EOI (asm in strings loses cpp features) 	outb	%al,$0xa0	# IO_ICU2 	outb	%al,$0x20	#IO_ICU1 	movb	$0,%al 	outb	%al,$0xf0	# clear BUSY# latch 	popl	%eax 	iret ");
+asm|asm (" 	.text _probeintr: 	ss 	incl	_npx_intrs_while_probing 	pushl	%eax 	movb	$0x20,%al	# EOI (asm in strings loses cpp features) 	outb	%al,$0xa0	# IO_ICU2 	outb	%al,$0x20	# IO_ICU1 	movb	$0,%al 	outb	%al,$0xf0	# clear BUSY# latch 	popl	%eax 	iret ");
 end_asm
 
 begin_decl_stmt
@@ -773,20 +777,12 @@ modifier|*
 name|dvp
 decl_stmt|;
 block|{
-name|int
+name|u_short
 name|control
 decl_stmt|;
-name|int
+name|u_short
 name|status
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
-name|npxintr
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Partially reset the coprocessor, if any.  Some BIOS's don't reset 	 * it after a warm boot. 	 */
 name|outb
 argument_list|(
@@ -823,12 +819,16 @@ comment|/* 	 * Finish resetting the coprocessor, if any.  If there is an error 	
 name|fninit
 argument_list|()
 expr_stmt|;
+name|fnop
+argument_list|()
+expr_stmt|;
+comment|/* wait for fninit (fwait might hang) */
 name|DELAY
 argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* wait for any IRQ13 (fwait might hang) */
+comment|/* wait for any IRQ13 */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -975,13 +975,13 @@ name|npx_irq13
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 				 * npxattach would be too late to set npx0_imask. 				 */
 name|npx0_imask
-operator|=
+operator||=
 name|dvp
 operator|->
 name|id_irq
 expr_stmt|;
-comment|/* npxattach too late */
 return|return
 operator|(
 name|IO_NPXSIZE
@@ -1051,9 +1051,8 @@ comment|/* parent */
 literal|0
 block|,
 comment|/* parentdata */
-name|DC_UNKNOWN
+name|DC_BUSY
 block|,
-comment|/* not supported */
 literal|"Floating-point unit"
 block|}
 block|}
@@ -1072,17 +1071,24 @@ modifier|*
 name|id
 parameter_list|)
 block|{
-if|if
-condition|(
+name|int
+name|unit
+decl_stmt|;
+name|unit
+operator|=
 name|id
 operator|->
 name|id_unit
+expr_stmt|;
+if|if
+condition|(
+name|unit
+operator|!=
+literal|0
 condition|)
 name|kdc_npx
 index|[
-name|id
-operator|->
-name|id_unit
+name|unit
 index|]
 operator|=
 name|kdc_npx
@@ -1092,22 +1098,16 @@ index|]
 expr_stmt|;
 name|kdc_npx
 index|[
-name|id
-operator|->
-name|id_unit
+name|unit
 index|]
 operator|.
 name|kdc_unit
 operator|=
-name|id
-operator|->
-name|id_unit
+name|unit
 expr_stmt|;
 name|kdc_npx
 index|[
-name|id
-operator|->
-name|id_unit
+name|unit
 index|]
 operator|.
 name|kdc_isa
@@ -1119,9 +1119,7 @@ argument_list|(
 operator|&
 name|kdc_npx
 index|[
-name|id
-operator|->
-name|id_unit
+name|unit
 index|]
 argument_list|)
 expr_stmt|;
@@ -1144,15 +1142,46 @@ modifier|*
 name|dvp
 decl_stmt|;
 block|{
+name|printf
+argument_list|(
+literal|"npx%d: "
+argument_list|,
+name|dvp
+operator|->
+name|id_unit
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|npx_ex16
-operator|&&
-operator|!
+condition|)
+name|printf
+argument_list|(
+literal|"INT 16 interface\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|npx_irq13
 condition|)
-block|{
+name|printf
+argument_list|(
+literal|"IRQ 13 interface\n"
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MATH_EMULATE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|GPL_MATH_EMULATE
+argument_list|)
+elseif|else
 if|if
 condition|(
 name|npx_exists
@@ -1160,38 +1189,39 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"npx%d: Error reporting broken, using 387 emulator\n"
-argument_list|,
-name|dvp
-operator|->
-name|id_unit
+literal|"error reporting broken; using 387 emulator\n"
 argument_list|)
 expr_stmt|;
-name|hw_float
-operator|=
 name|npx_exists
 operator|=
 literal|0
 expr_stmt|;
 block|}
 else|else
-block|{
 name|printf
 argument_list|(
-literal|"npx%d: 387 Emulator\n"
-argument_list|,
-name|dvp
-operator|->
-name|id_unit
+literal|"387 emulator\n"
 argument_list|)
 expr_stmt|;
-block|}
-block|}
+else|#
+directive|else
+else|else
+name|printf
+argument_list|(
+literal|"no 387 emulator in kernel!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|npxinit
 argument_list|(
 name|__INITIAL_NPXCW__
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|npx_exists
+condition|)
 name|npx_registerdev
 argument_list|(
 name|dvp
@@ -1216,7 +1246,7 @@ name|npxinit
 parameter_list|(
 name|control
 parameter_list|)
-name|u_int
+name|u_short
 name|control
 decl_stmt|;
 block|{
@@ -1230,7 +1260,7 @@ operator|!
 name|npx_exists
 condition|)
 return|return;
-comment|/* 	 * fninit has the same h/w bugs as fnsave.  Use the detoxified 	 * fnsave to throw away any junk in the fpu.  fnsave initializes 	 * the fpu and sets npxproc = NULL as important side effects. 	 */
+comment|/* 	 * fninit has the same h/w bugs as fnsave.  Use the detoxified 	 * fnsave to throw away any junk in the fpu.  npxsave() initializes 	 * the fpu and sets npxproc = NULL as important side effects. 	 */
 name|npxsave
 argument_list|(
 operator|&
@@ -1353,7 +1383,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Record the FPU state and reinitialize it all except for the control word.  * Then generate a SIGFPE.  *  * Reinitializing the state allows naive SIGFPE handlers to longjmp without  * doing any fixups.  *  * XXX there is currently no way to pass the full error state to signal  * handlers, and if this is a nested interrupt there is no way to pass even  * a status code!  So there is no way to have a non-naive SIGFPE handler.  At  * best a handler could do an fninit followed by an fldcw of a static value.  * fnclex would be of little use because it would leave junk on the FPU stack.  * Returning from the handler would be even less safe than usual because  * IRQ13 exception handling makes exceptions even less precise than usual.  */
+comment|/*  * Preserve the FP status word, clear FP exceptions, then generate a SIGFPE.  *  * Clearing exceptions is necessary mainly to avoid IRQ13 bugs.  We now  * depend on longjmp() restoring a usable state.  Restoring the state  * or examining it might fail if we didn't clear exceptions.  *  * XXX there is no standard way to tell SIGFPE handlers about the error  * state.  The old interface:  *  *	void handler(int sig, int code, struct sigcontext *scp);  *  * is broken because it is non-ANSI and because the FP state is not in  * struct sigcontext.  *  * XXX the FP state is not preserved across signal handlers.  So signal  * handlers cannot afford to do FP unless they preserve the state or  * longjmp() out.  Both preserving the state and longjmp()ing may be  * destroyed by IRQ13 bugs.  Clearing FP exceptions is not an acceptable  * solution for signals other than SIGFPE.  */
 end_comment
 
 begin_function
@@ -1380,19 +1410,12 @@ operator|!
 name|npx_exists
 condition|)
 block|{
-comment|/* XXX no %p in stand/printf.c.  Cast to quiet gcc -Wall. */
 name|printf
 argument_list|(
-literal|"npxintr: npxproc = %lx, curproc = %lx, npx_exists = %d\n"
+literal|"npxintr: npxproc = %p, curproc = %p, npx_exists = %d\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|npxproc
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|curproc
 argument_list|,
 name|npx_exists
@@ -1413,16 +1436,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"npxintr: npxproc = %lx, curproc = %lx, npx_exists = %d\n"
+literal|"npxintr: npxproc = %p, curproc = %p, npx_exists = %d\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|npxproc
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|curproc
 argument_list|,
 name|npx_exists
@@ -1434,69 +1451,25 @@ literal|"npxintr from non-current process"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Save state.  This does an implied fninit.  It had better not halt 	 * the cpu or we'll hang. 	 */
+name|fnstsw
+argument_list|(
+operator|&
+name|curpcb
+operator|->
+name|pcb_savefpu
+operator|.
+name|sv_ex_sw
+argument_list|)
+expr_stmt|;
+name|fnclex
+argument_list|()
+expr_stmt|;
 name|outb
 argument_list|(
 literal|0xf0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|fnsave
-argument_list|(
-operator|&
-name|curpcb
-operator|->
-name|pcb_savefpu
-argument_list|)
-expr_stmt|;
-name|fwait
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Restore control word (was clobbered by fnsave). 	 */
-name|fldcw
-argument_list|(
-operator|&
-name|curpcb
-operator|->
-name|pcb_savefpu
-operator|.
-name|sv_env
-operator|.
-name|en_cw
-argument_list|)
-expr_stmt|;
-name|fwait
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Remember the exception status word and tag word.  The current 	 * (almost fninit'ed) fpu state is in the fpu and the exception 	 * state just saved will soon be junk.  However, the implied fninit 	 * doesn't change the error pointers or register contents, and we 	 * preserved the control word and will copy the status and tag 	 * words, so the complete exception state can be recovered. 	 */
-name|curpcb
-operator|->
-name|pcb_savefpu
-operator|.
-name|sv_ex_sw
-operator|=
-name|curpcb
-operator|->
-name|pcb_savefpu
-operator|.
-name|sv_env
-operator|.
-name|en_sw
-expr_stmt|;
-name|curpcb
-operator|->
-name|pcb_savefpu
-operator|.
-name|sv_ex_tw
-operator|=
-name|curpcb
-operator|->
-name|pcb_savefpu
-operator|.
-name|sv_env
-operator|.
-name|en_tw
 expr_stmt|;
 comment|/* 	 * Pass exception to process. 	 */
 if|if
@@ -1566,7 +1539,7 @@ block|{
 comment|/* 		 * Nested interrupt.  These losers occur when: 		 *	o an IRQ13 is bogusly generated at a bogus time, e.g.: 		 *		o immediately after an fnsave or frstor of an 		 *		  error state. 		 *		o a couple of 386 instructions after 		 *		  "fstpl _memvar" causes a stack overflow. 		 *	  These are especially nasty when combined with a 		 *	  trace trap. 		 *	o an IRQ13 occurs at the same time as another higher- 		 *	  priority interrupt. 		 * 		 * Treat them like a true async interrupt. 		 */
 name|psignal
 argument_list|(
-name|npxproc
+name|curproc
 argument_list|,
 name|SIGFPE
 argument_list|)
@@ -1576,7 +1549,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement device not available (DNA) exception  *  * It would be better to switch FP context here (only).  This would require  * saving the state in the proc table instead of in the pcb.  */
+comment|/*  * Implement device not available (DNA) exception  *  * It would be better to switch FP context here (if curproc != npxproc)  * and not necessarily for every context switch, but it is too hard to  * access foreign pcb's.  */
 end_comment
 
 begin_function
@@ -1603,16 +1576,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"npxdna: npxproc = %lx, curproc = %lx\n"
+literal|"npxdna: npxproc = %p, curproc = %p\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|npxproc
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|curproc
 argument_list|)
 expr_stmt|;
@@ -1629,6 +1596,14 @@ comment|/* 	 * Record new context early in case frstor causes an IRQ13. 	 */
 name|npxproc
 operator|=
 name|curproc
+expr_stmt|;
+name|curpcb
+operator|->
+name|pcb_savefpu
+operator|.
+name|sv_ex_sw
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * The following frstor may cause an IRQ13 when the state being 	 * restored has a pending error.  The error will appear to have been 	 * triggered by the current (npx) user instruction even when that 	 * instruction is a no-wait instruction that should not trigger an 	 * error (e.g., fnclex).  On at least one 486 system all of the 	 * no-wait instructions are broken the same as frstor, so our 	 * treatment does not amplify the breakage.  On at least one 	 * 386/Cyrix 387 system, fnclex works correctly while frstor and 	 * fnsave are broken, so our treatment breaks fnclex if it is the 	 * first FPU instruction after a context switch. 	 */
 name|frstor
@@ -1757,8 +1732,15 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-name|fwait
+name|fnop
 argument_list|()
+expr_stmt|;
+name|outb
+argument_list|(
+literal|0xf0
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|start_emulating
 argument_list|()
