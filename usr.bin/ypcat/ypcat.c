@@ -99,7 +99,6 @@ begin_struct
 struct|struct
 name|ypalias
 block|{
-specifier|const
 name|char
 modifier|*
 name|alias
