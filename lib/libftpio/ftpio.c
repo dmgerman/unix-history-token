@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.15.2.2 1996/12/17 20:28:06 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.15.2.3 1997/08/03 18:45:21 peter Exp $  *  */
 end_comment
 
 begin_include
@@ -3117,7 +3117,13 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|rcode
 decl_stmt|;
+name|rcode
+operator|=
+name|FAILURE
+expr_stmt|;
 if|if
 condition|(
 name|ftp
@@ -3156,6 +3162,22 @@ name|i
 operator|=
 name|FTP_QUIT_HAPPY
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|check_code
+argument_list|(
+name|ftp
+argument_list|,
+name|i
+argument_list|,
+name|FTP_QUIT_HAPPY
+argument_list|)
+condition|)
+name|rcode
+operator|=
+name|SUCCESS
+expr_stmt|;
 name|close
 argument_list|(
 name|ftp
@@ -3170,36 +3192,22 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
-name|check_code
-argument_list|(
-name|ftp
-argument_list|,
-name|i
-argument_list|,
-name|FTP_QUIT_HAPPY
-argument_list|)
-condition|)
-block|{
 name|ftp
 operator|->
-name|errno
+name|con_state
+operator|==
+name|quit
+condition|)
+name|rcode
 operator|=
-name|i
+name|SUCCESS
 expr_stmt|;
 return|return
-name|FAILURE
-return|;
-block|}
-comment|/* Debug("ftp_pkg: ftp_close() - proper shutdown"); */
-return|return
-name|SUCCESS
-return|;
-block|}
-comment|/* Debug("ftp_pkg: ftp_close() - improper shutdown"); */
-return|return
-name|FAILURE
+name|rcode
 return|;
 block|}
 end_function
