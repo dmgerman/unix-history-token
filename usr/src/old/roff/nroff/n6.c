@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n6.c	4.1 %G%"
+literal|"@(#)n6.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -410,6 +410,17 @@ condition|)
 goto|goto
 name|rtn
 goto|;
+if|if
+condition|(
+name|t
+operator|.
+name|codetab
+index|[
+name|i
+operator|-
+literal|32
+index|]
+condition|)
 name|k
 operator|=
 operator|(
@@ -431,6 +442,11 @@ operator|*
 name|t
 operator|.
 name|Char
+expr_stmt|;
+else|else
+name|k
+operator|=
+literal|0
 expr_stmt|;
 name|widthp
 operator|=
