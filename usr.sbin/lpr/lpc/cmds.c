@@ -282,7 +282,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|queue
+name|jobqueue
 operator|*
 operator|)
 argument_list|)
@@ -3385,7 +3385,7 @@ end_function
 
 begin_decl_stmt
 name|struct
-name|queue
+name|jobqueue
 modifier|*
 modifier|*
 name|queue
@@ -3600,7 +3600,7 @@ index|[
 literal|0
 index|]
 operator|->
-name|q_time
+name|job_time
 expr_stmt|;
 for|for
 control|(
@@ -3742,7 +3742,7 @@ parameter_list|(
 name|q
 parameter_list|)
 name|struct
-name|queue
+name|jobqueue
 modifier|*
 name|q
 decl_stmt|;
@@ -3801,7 +3801,7 @@ name|utimes
 argument_list|(
 name|q
 operator|->
-name|q_name
+name|job_cfname
 argument_list|,
 name|tvp
 argument_list|)
@@ -3837,7 +3837,7 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|queue
+name|jobqueue
 modifier|*
 modifier|*
 name|qq
@@ -3968,7 +3968,7 @@ operator|*
 name|qq
 operator|)
 operator|->
-name|q_name
+name|job_cfname
 operator|+
 literal|3
 init|;
@@ -4051,7 +4051,7 @@ operator|*
 name|qq
 operator|)
 operator|->
-name|q_name
+name|job_cfname
 argument_list|)
 expr_stmt|;
 name|cnt
@@ -4095,7 +4095,7 @@ operator|*
 name|qq
 operator|)
 operator|->
-name|q_name
+name|job_cfname
 argument_list|,
 literal|"r"
 argument_list|)
@@ -4180,7 +4180,7 @@ operator|*
 name|qq
 operator|)
 operator|->
-name|q_name
+name|job_cfname
 argument_list|)
 expr_stmt|;
 name|cnt

@@ -600,14 +600,14 @@ end_comment
 
 begin_struct
 struct|struct
-name|queue
+name|jobqueue
 block|{
 name|time_t
-name|q_time
+name|job_time
 decl_stmt|;
-comment|/* modification time */
+comment|/* last-mod time of cf-file */
 name|char
-name|q_name
+name|job_cfname
 index|[
 name|MAXNAMLEN
 operator|+
@@ -1036,7 +1036,7 @@ name|printer
 operator|*
 operator|,
 expr|struct
-name|queue
+name|jobqueue
 operator|*
 operator|(
 operator|*

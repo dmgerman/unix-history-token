@@ -315,7 +315,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|queue
+name|jobqueue
 modifier|*
 argument_list|(
 operator|*
@@ -335,7 +335,7 @@ name|d
 decl_stmt|;
 specifier|register
 name|struct
-name|queue
+name|jobqueue
 modifier|*
 name|q
 decl_stmt|,
@@ -421,7 +421,7 @@ name|queue
 operator|=
 operator|(
 expr|struct
-name|queue
+name|jobqueue
 operator|*
 operator|*
 operator|)
@@ -432,7 +432,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|queue
+name|jobqueue
 operator|*
 argument_list|)
 argument_list|)
@@ -516,7 +516,7 @@ name|q
 operator|=
 operator|(
 expr|struct
-name|queue
+name|jobqueue
 operator|*
 operator|)
 name|malloc
@@ -547,7 +547,7 @@ name|errdone
 goto|;
 name|q
 operator|->
-name|q_time
+name|job_time
 operator|=
 name|stbuf
 operator|.
@@ -557,7 +557,7 @@ name|strcpy
 argument_list|(
 name|q
 operator|->
-name|q_name
+name|job_cfname
 argument_list|,
 name|d
 operator|->
@@ -581,7 +581,7 @@ name|queue
 operator|=
 operator|(
 expr|struct
-name|queue
+name|jobqueue
 operator|*
 operator|*
 operator|)
@@ -598,7 +598,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|queue
+name|jobqueue
 operator|*
 argument_list|)
 argument_list|)
@@ -641,7 +641,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|queue
+name|jobqueue
 operator|*
 argument_list|)
 argument_list|,
@@ -701,7 +701,7 @@ begin_block
 block|{
 specifier|const
 name|struct
-name|queue
+name|jobqueue
 modifier|*
 name|qe1
 decl_stmt|,
@@ -714,7 +714,7 @@ operator|*
 operator|(
 specifier|const
 expr|struct
-name|queue
+name|jobqueue
 operator|*
 operator|*
 operator|)
@@ -726,7 +726,7 @@ operator|*
 operator|(
 specifier|const
 expr|struct
-name|queue
+name|jobqueue
 operator|*
 operator|*
 operator|)
@@ -736,11 +736,11 @@ if|if
 condition|(
 name|qe1
 operator|->
-name|q_time
+name|job_time
 operator|<
 name|qe2
 operator|->
-name|q_time
+name|job_time
 condition|)
 return|return
 operator|(
@@ -752,11 +752,11 @@ if|if
 condition|(
 name|qe1
 operator|->
-name|q_time
+name|job_time
 operator|>
 name|qe2
 operator|->
-name|q_time
+name|job_time
 condition|)
 return|return
 operator|(
@@ -769,7 +769,7 @@ condition|(
 operator|(
 name|qe1
 operator|->
-name|q_name
+name|job_cfname
 index|[
 literal|3
 index|]
@@ -780,7 +780,7 @@ operator|&&
 operator|(
 name|qe2
 operator|->
-name|q_name
+name|job_cfname
 index|[
 literal|3
 index|]
@@ -799,7 +799,7 @@ condition|(
 operator|(
 name|qe1
 operator|->
-name|q_name
+name|job_cfname
 index|[
 literal|3
 index|]
@@ -810,7 +810,7 @@ operator|&&
 operator|(
 name|qe2
 operator|->
-name|q_name
+name|job_cfname
 index|[
 literal|3
 index|]
@@ -829,11 +829,11 @@ name|strcmp
 argument_list|(
 name|qe1
 operator|->
-name|q_name
+name|job_cfname
 argument_list|,
 name|qe2
 operator|->
-name|q_name
+name|job_cfname
 argument_list|)
 operator|)
 return|;
