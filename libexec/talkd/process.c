@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)process.c	8.2 (Berkeley) 11/16/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)process.c	8.2 (Berkeley) 11/16/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,13 +78,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<paths.h>
 end_include
 
 begin_include
@@ -89,14 +114,52 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<syslog.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
+begin_decl_stmt
+name|int
+name|announce
+name|__P
+argument_list|(
+operator|(
+name|CTL_MSG
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|delete_invite
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|do_announce
+name|__P
+argument_list|(
+operator|(
+name|CTL_MSG
+operator|*
+operator|,
+name|CTL_RESPONSE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|CTL_MSG
@@ -114,29 +177,100 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|process_request
+begin_decl_stmt
+name|int
+name|find_user
+name|__P
 argument_list|(
-name|mp
-argument_list|,
-name|rp
-argument_list|)
-specifier|register
-name|CTL_MSG
+operator|(
+name|char
 operator|*
-name|mp
-expr_stmt|;
-end_expr_stmt
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|insert_table
+name|__P
+argument_list|(
+operator|(
+name|CTL_MSG
+operator|*
+operator|,
+name|CTL_RESPONSE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|new_id
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|print_request
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|CTL_MSG
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|print_response
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|CTL_RESPONSE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|process_request
+parameter_list|(
+name|mp
+parameter_list|,
+name|rp
+parameter_list|)
+specifier|register
+name|CTL_MSG
+modifier|*
+name|mp
+decl_stmt|;
 specifier|register
 name|CTL_RESPONSE
 modifier|*
 name|rp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|CTL_MSG
@@ -187,7 +321,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"Bad protocol version %d"
+literal|"bad protocol version %d"
 argument_list|,
 name|mp
 operator|->
@@ -243,7 +377,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"Bad address, family %d"
+literal|"bad address, family %d"
 argument_list|,
 name|mp
 operator|->
@@ -290,7 +424,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"Bad control address, family %d"
+literal|"bad control address, family %d"
 argument_list|,
 name|mp
 operator|->
@@ -335,7 +469,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"Illegal user name. Aborting"
+literal|"illegal user name. Aborting"
 argument_list|)
 expr_stmt|;
 name|rp
@@ -540,30 +674,25 @@ name|rp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|do_announce
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|,
+parameter_list|,
 name|rp
-argument_list|)
+parameter_list|)
 specifier|register
 name|CTL_MSG
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|CTL_RESPONSE
 modifier|*
 name|rp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|hostent
@@ -767,7 +896,7 @@ name|SUCCESS
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_include
 include|#
@@ -779,24 +908,22 @@ begin_comment
 comment|/*  * Search utmp for the local user  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|find_user
-argument_list|(
-argument|name
-argument_list|,
-argument|tty
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|tty
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|,
-modifier|*
+decl|*
 name|tty
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -865,11 +992,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"talkd: can't read %s.\n"
+literal|"can't read %s"
 argument_list|,
 name|_PATH_UTMP
 argument_list|)
