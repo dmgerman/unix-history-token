@@ -296,6 +296,29 @@ name|math_errhandling
 value|MATH_ERREXCEPT
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ia64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FP_FAST_FMA
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|FP_FAST_FMAF
+end_define
+
 begin_comment
 comment|/* Symbolic constants to classify floating point numbers. */
 end_comment
