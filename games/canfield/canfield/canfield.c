@@ -90,6 +90,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -7882,11 +7894,8 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|srandom
-argument_list|(
-name|getpid
+name|srandomdev
 argument_list|()
-argument_list|)
 expr_stmt|;
 name|time
 argument_list|(
@@ -7898,6 +7907,11 @@ name|initdeck
 argument_list|(
 name|deck
 argument_list|)
+expr_stmt|;
+name|uid
+operator|=
+name|getuid
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -8418,19 +8432,6 @@ argument_list|()
 expr_stmt|;
 name|initall
 argument_list|()
-expr_stmt|;
-comment|/* revoke privs */
-name|setegid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
 expr_stmt|;
 name|instruct
 argument_list|()
