@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.23 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -268,6 +268,11 @@ name|getsockname
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|from
 argument_list|,
@@ -541,8 +546,7 @@ condition|(
 name|wait3
 argument_list|(
 operator|(
-expr|union
-name|wait
+name|int
 operator|*
 operator|)
 name|NULL
