@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.35 1997/08/31 23:02:35 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.36 1997/09/05 23:07:26 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -3195,13 +3195,16 @@ argument_list|,
 literal|"Opening modem\n"
 argument_list|)
 expr_stmt|;
-name|modem
-operator|=
+if|if
+condition|(
 name|OpenModem
 argument_list|(
 name|mode
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return;
 name|LogPrintf
 argument_list|(
 name|LogPHASE
@@ -3227,11 +3230,18 @@ name|modem
 operator|<
 literal|0
 condition|)
-name|modem
-operator|=
+while|while
+condition|(
 name|OpenModem
 argument_list|(
 name|mode
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|sleep
+argument_list|(
+name|VarReconnectTimer
 argument_list|)
 expr_stmt|;
 block|}
@@ -3430,16 +3440,12 @@ argument_list|,
 name|modem
 argument_list|)
 expr_stmt|;
-name|modem
-operator|=
+if|if
+condition|(
 name|OpenModem
 argument_list|(
 name|mode
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|modem
 operator|<
 literal|0
 condition|)
