@@ -3655,6 +3655,22 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|pwd
+operator|->
+name|pw_passwd
+operator|||
+operator|*
+name|pwd
+operator|->
+name|pw_passwd
+operator|!=
+literal|'*'
+condition|)
+block|{
 name|pwd
 operator|->
 name|pw_passwd
@@ -3662,6 +3678,12 @@ operator|=
 literal|"*"
 expr_stmt|;
 comment|/* No access */
+name|edited
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
 else|else
 block|{
 name|int
