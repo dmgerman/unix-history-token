@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.25.2.3 1996/12/03 10:47:24 phk Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.25.2.4 1997/01/05 06:34:11 nate Exp $  */
 end_comment
 
 begin_comment
@@ -1711,6 +1711,29 @@ operator|)
 condition|)
 block|{
 case|case
+literal|1
+case|:
+comment|/* ignore this error */
+if|if
+condition|(
+name|verbose
+condition|)
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"psm%d: strange result for test aux port (%d).\n"
+argument_list|,
+name|PSM_UNIT
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|/* fall though */
+case|case
 literal|0
 case|:
 comment|/* no error */
@@ -1881,11 +1904,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* just check the status of the mouse */
-if|if
-condition|(
-name|verbose
-condition|)
-block|{
+name|i
+operator|=
 name|get_mouse_status
 argument_list|(
 name|port
@@ -1893,11 +1913,20 @@ argument_list|,
 name|stat
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+block|{
+if|if
+condition|(
+name|i
+condition|)
 name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"psm%d: status %02x %02x %02x (reinitialized)\n"
+literal|"psm%d: status %02x %02x %02x\n"
 argument_list|,
 name|PSM_UNIT
 argument_list|(
@@ -1918,6 +1947,19 @@ name|stat
 index|[
 literal|2
 index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"psm%d: failed to get mouse status\n"
+argument_list|,
+name|PSM_UNIT
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2040,6 +2082,13 @@ expr_stmt|;
 comment|/*      * FIXME:XXX      * the keyboard interrupt should be disabled while probing a      * mouse?      */
 comment|/*      * NOTE: two bits in the command byte controls the operation of the      * aux port (mouse port): the aux port disable bit (bit 5) and the aux      * port interrupt (IRQ 12) enable bit (bit 2). When this probe routine      * is called, there are following possibilities about the presence of      * the aux port and the PS/2 mouse.      *       * Case 1: aux port disabled (bit 5:1), aux int. disabled (bit 2:0) The      * aux port most certainly exists. A device may or may not be      * connected to the port. No driver is probably installed yet.      *       * Case 2: aux port enabled (bit 5:0), aux int. disabled (bit 2:0) Three      * possibile situations here:      *       * Case 2a: The aux port does not exist, therefore, is not explicitly      * disabled. Case 2b: The aux port exists. A device and a driver may      * exist, using the device in the polling(remote) mode. Case 2c: The      * aux port exists. A device may exist, but someone who knows nothing      * about the aux port has set the command byte this way (this is the      * case with `syscons').      *       * Case 3: aux port disabled (bit 5:1), aux int. enabled (bit 2:1) The      * aux port exists, but someone is controlloing the device and      * temporalily disabled the port.      *       * Case 4: aux port enabled (bit 5:0), aux int. enabled (bit 2:1) The aux      * port exists, a device is attached to the port, and someone is      * controlling the device. Some BIOS set the bits this way after boot.      *       * All in all, it is no use examing the bits for detecting the presence      * of the port and the mouse device.      */
 comment|/* save the current command byte; it will be used later */
+name|empty_both_buffers
+argument_list|(
+name|ioport
+argument_list|,
+literal|20
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2188,7 +2237,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * NOTE: `test_aux_port()' is designed to return with zero if the aux      * port exists and is functioning. However, some controllers appears      * to respond with zero even when the aux port doesn't exist. (It may      * be that this is only the case when the controller DOES have the aux      * port but the port is not wired on the motherboard.) The keyboard      * controllers without the port, such as the original AT, are      * supporsed to return with an error code or simply time out. In any      * case, we have to continue probing the port even when the controller      * passes this test.      */
+comment|/*      * NOTE: `test_aux_port()' is designed to return with zero if the aux      * port exists and is functioning. However, some controllers appears      * to respond with zero even when the aux port doesn't exist. (It may      * be that this is only the case when the controller DOES have the aux      * port but the port is not wired on the motherboard.) The keyboard      * controllers without the port, such as the original AT, are      * supporsed to return with an error code or simply time out. In any      * case, we have to continue probing the port even when the controller      * passes this test.      *      * XXX: some controllers erroneously return the error code 1 when      * it has the perfectly functional aux port. We have to ignore this      * error code. Even if the controller HAS error with the aux port,      * it will be detected later...      */
 switch|switch
 condition|(
 operator|(
@@ -2201,6 +2250,24 @@ argument_list|)
 operator|)
 condition|)
 block|{
+case|case
+literal|1
+case|:
+comment|/* ignore this error */
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"psm%d: strange result for test aux port (%d).\n"
+argument_list|,
+name|unit
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+comment|/* fall though */
 case|case
 literal|0
 case|:
@@ -2627,85 +2694,49 @@ literal|2
 expr_stmt|;
 comment|/* set mouse parameters */
 comment|/* FIXME:XXX should we set them in `psmattach()' rather than here? */
-if|if
-condition|(
-name|setparams
-condition|)
-block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|mode
-operator|.
-name|rate
-operator|>
+if|#
+directive|if
 literal|0
-condition|)
-name|sc
-operator|->
-name|mode
-operator|.
-name|rate
-operator|=
-name|set_mouse_sampling_rate
-argument_list|(
-name|ioport
-argument_list|,
-name|sc
-operator|->
-name|mode
-operator|.
-name|rate
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|mode
-operator|.
-name|resolution
-operator|>
-literal|0
-condition|)
-name|sc
-operator|->
-name|mode
-operator|.
-name|resolution
-operator|=
-name|set_mouse_resolution
-argument_list|(
-name|ioport
-argument_list|,
-name|sc
-operator|->
-name|mode
-operator|.
-name|resolution
-argument_list|)
-expr_stmt|;
-block|}
+block|if (setparams) {         if (sc->mode.rate> 0)             sc->mode.rate = set_mouse_sampling_rate(ioport, sc->mode.rate);         if (sc->mode.resolution> 0)     sc->mode.resolution =                 set_mouse_resolution(ioport, sc->mode.resolution);     }
 comment|/* FIXME:XXX I don't know if these parameters are reasonable */
-name|set_mouse_scaling
-argument_list|(
-name|ioport
-argument_list|)
-expr_stmt|;
+block|set_mouse_scaling(ioport);
 comment|/* 1:1 scaling */
-name|set_mouse_mode
+block|set_mouse_mode(ioport);
+comment|/* stream mode */
+else|#
+directive|else
+name|i
+operator|=
+name|send_aux_command
 argument_list|(
 name|ioport
+argument_list|,
+name|PSMC_SET_DEFAULTS
 argument_list|)
 expr_stmt|;
-comment|/* stream mode */
-comment|/* just check the status of the mouse */
 if|if
 condition|(
 name|verbose
+operator|>=
+literal|2
 condition|)
-block|{
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"psm%d: SET_DEFAULTS return code:%04x\n"
+argument_list|,
+name|unit
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* just check the status of the mouse */
+comment|/*       * XXX there are some arcane controller/mouse combinations out there,      * which hung the controller unless there is data transmission       * after ACK from the mouse.      */
+name|i
+operator|=
 name|get_mouse_status
 argument_list|(
 name|ioport
@@ -2713,6 +2744,15 @@ argument_list|,
 name|stat
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+block|{
+if|if
+condition|(
+name|i
+condition|)
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -2735,6 +2775,16 @@ name|stat
 index|[
 literal|2
 index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"psm%d: failed to get mouse status\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -2947,6 +2997,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"psm%d: device ID %d, %d buttons?\n"
@@ -2964,6 +3018,20 @@ operator|->
 name|hw
 operator|.
 name|buttons
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"psm%d: device ID %d\n"
+argument_list|,
+name|unit
+argument_list|,
+name|sc
+operator|->
+name|hw
+operator|.
+name|hwid
 argument_list|)
 expr_stmt|;
 if|if
@@ -3022,6 +3090,9 @@ name|stat
 index|[
 literal|3
 index|]
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 comment|/* Validate unit number */
 if|if
@@ -3267,13 +3338,8 @@ name|EIO
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|verbose
-operator|>=
-literal|2
-condition|)
-block|{
+name|ret
+operator|=
 name|get_mouse_status
 argument_list|(
 name|ioport
@@ -3281,11 +3347,22 @@ argument_list|,
 name|stat
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+operator|>=
+literal|2
+condition|)
+block|{
+if|if
+condition|(
+name|ret
+condition|)
 name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"psm%d: status %02x %02x %02x\n"
+literal|"psm%d: status %02x %02x %02x (psmopen)\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3303,6 +3380,16 @@ name|stat
 index|[
 literal|2
 index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"psm%d: failed to get mouse status (psmopen).\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -3413,6 +3500,15 @@ name|sc
 operator|->
 name|addr
 decl_stmt|;
+name|int
+name|stat
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 comment|/* disable the aux interrupt */
 if|if
 condition|(
@@ -3469,6 +3565,67 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"psm%d: failed to disable the device (psmclose).\n"
+argument_list|,
+name|PSM_UNIT
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|ret
+operator|=
+name|get_mouse_status
+argument_list|(
+name|ioport
+argument_list|,
+name|stat
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+operator|>=
+literal|2
+condition|)
+block|{
+if|if
+condition|(
+name|ret
+condition|)
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"psm%d: status %02x %02x %02x (psmclose)\n"
+argument_list|,
+name|PSM_UNIT
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|stat
+index|[
+literal|0
+index|]
+argument_list|,
+name|stat
+index|[
+literal|1
+index|]
+argument_list|,
+name|stat
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"psm%d: failed to get mouse status (psmclose).\n"
 argument_list|,
 name|PSM_UNIT
 argument_list|(
