@@ -677,12 +677,6 @@ begin_comment
 comment|/*  * The kernel symbol table starts here.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__ia64__
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -690,11 +684,6 @@ name|_dynamic
 name|_DYNAMIC
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -769,7 +758,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|dp
+literal|1
 condition|)
 block|{
 name|modname
@@ -867,6 +856,10 @@ name|dynamic
 operator|=
 name|dp
 expr_stmt|;
+if|if
+condition|(
+name|dp
+condition|)
 name|parse_dynamic
 argument_list|(
 name|ef
