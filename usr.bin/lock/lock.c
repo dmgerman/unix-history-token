@@ -164,6 +164,16 @@ begin_comment
 comment|/* keep the timeout time */
 end_comment
 
+begin_decl_stmt
+name|int
+name|no_timeout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lock terminal forever */
+end_comment
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -272,6 +282,10 @@ name|usemine
 operator|=
 literal|0
 expr_stmt|;
+name|no_timeout
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -283,7 +297,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"pt:"
+literal|"npt:"
 argument_list|)
 operator|)
 operator|!=
@@ -382,6 +396,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+name|no_timeout
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -392,7 +414,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lock [-p] [-t timeout]\n"
+literal|"usage: lock [-n] [-p] [-t timeout]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -756,6 +778,11 @@ name|it_value
 operator|=
 name|timeout
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|no_timeout
+condition|)
 name|setitimer
 argument_list|(
 name|ITIMER_REAL
@@ -768,6 +795,34 @@ name|otimer
 argument_list|)
 expr_stmt|;
 comment|/* header info */
+if|if
+condition|(
+name|no_timeout
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"lock: %s on %s. no timeout\ntime now is %.20s%s%s"
+argument_list|,
+name|ttynam
+argument_list|,
+name|hostname
+argument_list|,
+name|ap
+argument_list|,
+name|tzn
+argument_list|,
+name|ap
+operator|+
+literal|19
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -790,6 +845,7 @@ operator|+
 literal|19
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -933,12 +989,37 @@ operator|)
 name|NULL
 argument_list|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"lock: type in the unlock key. timeout in %ld:%ld minutes\n"
+literal|"lock: type in the unlock key. "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|no_timeout
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"timeout in %ld:%ld minutes\n"
 argument_list|,
 operator|(
 name|nexttime
@@ -961,6 +1042,8 @@ operator|%
 literal|60
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -1003,6 +1086,12 @@ name|void
 name|bye
 parameter_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|no_timeout
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1029,6 +1118,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
