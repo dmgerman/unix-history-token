@@ -1341,6 +1341,10 @@ name|AcpiGbl_CreateOsiMethod
 operator|=
 name|acpi_osi_method
 expr_stmt|;
+name|AcpiGbl_LeaveWakeGpesDisabled
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* Start up the ACPI CA subsystem. */
 ifdef|#
 directive|ifdef
