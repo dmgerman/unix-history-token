@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.28 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4786,6 +4786,9 @@ name|F_TTY
 case|:
 case|case
 name|F_CONSOLE
+case|:
+case|case
+name|F_FORW
 case|:
 operator|(
 name|void
