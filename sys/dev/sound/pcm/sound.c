@@ -491,6 +491,24 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|snd
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"Sound driver"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -559,11 +577,11 @@ end_function
 begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
-name|_hw
+name|_hw_snd
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|sndunit
+name|unit
 argument_list|,
 name|CTLTYPE_INT
 operator||
