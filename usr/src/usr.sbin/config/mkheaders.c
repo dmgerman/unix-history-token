@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkheaders.c	5.7 (Berkeley) %G%"
+literal|"@(#)mkheaders.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -357,6 +357,9 @@ name|fl
 decl_stmt|,
 modifier|*
 name|fl_head
+decl_stmt|,
+modifier|*
+name|tflp
 decl_stmt|;
 name|FILE
 modifier|*
@@ -455,7 +458,7 @@ return|return;
 block|}
 name|fl_head
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -655,23 +658,25 @@ name|fl_head
 init|;
 name|fl
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|fl
+operator|=
+name|tflp
+control|)
+block|{
+name|tflp
 operator|=
 name|fl
 operator|->
 name|f_next
-control|)
+expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|fl
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 if|if
@@ -765,13 +770,11 @@ name|fl_head
 init|;
 name|fl
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|fl
 operator|=
-name|fl
-operator|->
-name|f_next
+name|tflp
 control|)
 block|{
 name|fprintf
@@ -793,12 +796,14 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
+name|tflp
+operator|=
+name|fl
+operator|->
+name|f_next
+expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|fl
 argument_list|)
 expr_stmt|;
