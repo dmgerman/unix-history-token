@@ -357,7 +357,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printnat.c,v 1.1.2.7 2002/04/24 17:35:37 darrenr Exp $"
+literal|"@(#)$Id: printnat.c,v 1.1.2.8 2002/04/25 16:44:13 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1999,14 +1999,6 @@ decl_stmt|;
 name|int
 name|bits
 decl_stmt|;
-if|if
-condition|(
-name|np
-operator|->
-name|in_p
-operator|!=
-literal|0
-condition|)
 name|pr
 operator|=
 name|getprotobynumber
