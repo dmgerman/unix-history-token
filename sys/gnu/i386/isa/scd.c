@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  *  * Portions of this file are 
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.6 1995/02/06 22:35:06 jkh Exp $ */
+comment|/* $Id: scd.c,v 1.7 1995/02/09 11:30:07 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -137,7 +137,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gnu/i386/scdreg.h>
+file|<gnu/i386/isa/scdreg.h>
 end_include
 
 begin_define
