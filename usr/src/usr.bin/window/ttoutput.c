@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttoutput.c	3.6 (Berkeley) %G%"
+literal|"@(#)ttoutput.c	3.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,7 +234,12 @@ name|tt_obp
 operator|<
 literal|2
 condition|)
-name|ttflush
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_flush
+call|)
 argument_list|()
 expr_stmt|;
 operator|*
@@ -264,7 +269,12 @@ name|tt_obp
 operator|<
 literal|3
 condition|)
-name|ttflush
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_flush
+call|)
 argument_list|()
 expr_stmt|;
 operator|*
@@ -302,7 +312,12 @@ name|tt_obp
 operator|<
 literal|4
 condition|)
-name|ttflush
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_flush
+call|)
 argument_list|()
 expr_stmt|;
 operator|*
@@ -348,7 +363,12 @@ name|tt_obp
 operator|<
 literal|5
 condition|)
-name|ttflush
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_flush
+call|)
 argument_list|()
 expr_stmt|;
 operator|*
@@ -414,7 +434,12 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|ttflush
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_flush
+call|)
 argument_list|()
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tt.h	3.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tt.h	3.25 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -202,6 +202,10 @@ name|char
 name|tt_retain
 decl_stmt|;
 comment|/* can retain below (db flag) */
+name|short
+name|tt_padc
+decl_stmt|;
+comment|/* the pad character */
 name|int
 name|tt_ntoken
 decl_stmt|;
@@ -227,6 +231,14 @@ name|short
 modifier|*
 name|tt_frame
 decl_stmt|;
+comment|/* the output routine */
+name|int
+function_decl|(
+modifier|*
+name|tt_flush
+function_decl|)
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -237,6 +249,17 @@ name|tt
 name|tt
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * tt_padc is used by the compression routine.  * It is a short to allow the driver to indicate that there is no padding.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TT_PADC_NONE
+value|0x100
+end_define
 
 begin_comment
 comment|/*  * List of terminal drivers.  */
@@ -373,10 +396,8 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
 name|tt_ob
-index|[
-literal|512
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -401,7 +422,7 @@ name|ttputc
 parameter_list|(
 name|c
 parameter_list|)
-value|(tt_obp< tt_obe ? (*tt_obp++ = (c)) \ 				: (ttflush(), *tt_obp++ = (c)))
+value|(tt_obp< tt_obe ? (*tt_obp++ = (c)) \ 				: ((*tt.tt_flush)(), *tt_obp++ = (c)))
 end_define
 
 begin_comment

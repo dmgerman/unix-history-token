@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttinit.c	3.21 (Berkeley) %G%"
+literal|"@(#)ttinit.c	3.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,6 +202,9 @@ end_macro
 
 begin_block
 block|{
+name|int
+name|i
+decl_stmt|;
 specifier|register
 name|struct
 name|tt_tab
@@ -225,11 +228,52 @@ name|struct
 name|winsize
 name|winsize
 decl_stmt|;
+name|int
+name|ttflush
+parameter_list|()
+function_decl|;
 name|tt_strp
 operator|=
 name|tt_strings
 expr_stmt|;
 comment|/* 	 * Set output buffer size to about 1 second of output time. 	 */
+name|i
+operator|=
+name|MIN
+argument_list|(
+name|wwbaud
+operator|/
+literal|10
+argument_list|,
+literal|512
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tt_ob
+operator|=
+name|malloc
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|i
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|wwerrno
+operator|=
+name|WWE_NOMEM
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|tt_obp
 operator|=
 name|tt_ob
@@ -238,15 +282,7 @@ name|tt_obe
 operator|=
 name|tt_ob
 operator|+
-name|MIN
-argument_list|(
-name|wwbaud
-operator|/
-literal|10
-argument_list|,
-sizeof|sizeof
-name|tt_ob
-argument_list|)
+name|i
 expr_stmt|;
 comment|/* 	 * Use the standard name of the terminal (i.e. the second 	 * name in termcap). 	 */
 for|for
@@ -493,6 +529,12 @@ operator|.
 name|ws_col
 expr_stmt|;
 block|}
+name|tt
+operator|.
+name|tt_flush
+operator|=
+name|ttflush
+expr_stmt|;
 return|return
 literal|0
 return|;

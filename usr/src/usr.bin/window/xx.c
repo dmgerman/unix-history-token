@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xx.c	3.3 (Berkeley) %G%"
+literal|"@(#)xx.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,7 @@ name|tt_ncol
 operator|*
 literal|2
 expr_stmt|;
-comment|/* xcinit may choose to change xxbufsize */
+comment|/* ccinit may choose to change xxbufsize */
 if|if
 condition|(
 name|tt
@@ -85,7 +85,7 @@ name|tt_ntoken
 operator|>
 literal|0
 operator|&&
-name|xcinit
+name|ccinit
 argument_list|()
 operator|<
 literal|0
@@ -163,7 +163,7 @@ name|tt_ntoken
 operator|>
 literal|0
 condition|)
-name|xcstart
+name|ccstart
 argument_list|()
 expr_stmt|;
 name|xxreset
@@ -263,6 +263,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_ntoken
+operator|>
+literal|0
+condition|)
+name|ccend
+argument_list|()
+expr_stmt|;
 call|(
 modifier|*
 name|tt
@@ -271,7 +282,12 @@ name|tt_end
 call|)
 argument_list|()
 expr_stmt|;
-name|ttflush
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_flush
+call|)
 argument_list|()
 expr_stmt|;
 block|}
