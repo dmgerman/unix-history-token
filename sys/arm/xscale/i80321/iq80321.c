@@ -292,17 +292,6 @@ name|PCI_MAPREG_MEM_TYPE_64BIT
 value|0x00000004
 end_define
 
-begin_function_decl
-name|void
-name|pmap_kenter
-parameter_list|(
-name|vm_offset_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|iq80321_attach
