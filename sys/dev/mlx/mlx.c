@@ -1580,6 +1580,11 @@ name|MLX_NSEG_NEW
 expr_stmt|;
 break|break;
 default|default:
+name|mlx_free
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -1882,6 +1887,11 @@ argument_list|,
 literal|"can't allocate buffer DMA tag\n"
 argument_list|)
 expr_stmt|;
+name|mlx_free
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -1916,6 +1926,11 @@ operator|->
 name|mlx_dev
 argument_list|,
 literal|"can't make initial s/g list mapping\n"
+argument_list|)
+expr_stmt|;
+name|mlx_free
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1958,6 +1973,11 @@ operator|->
 name|mlx_dev
 argument_list|,
 literal|"ENQUIRY2 failed\n"
+argument_list|)
+expr_stmt|;
+name|mlx_free
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -2031,6 +2051,11 @@ operator|->
 name|mlx_dev
 argument_list|,
 literal|"ENQUIRY_OLD failed\n"
+argument_list|)
+expr_stmt|;
+name|mlx_free
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -2199,6 +2224,11 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+name|mlx_free
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -2238,6 +2268,11 @@ operator|->
 name|mlx_dev
 argument_list|,
 literal|"can't make permanent s/g list mapping\n"
+argument_list|)
+expr_stmt|;
+name|mlx_free
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -5058,6 +5093,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|me
 operator|->
 name|me_event_log_seq_num
@@ -5065,6 +5101,16 @@ operator|!=
 name|sc
 operator|->
 name|mlx_lastevent
+operator|)
+operator|&&
+operator|!
+operator|(
+name|sc
+operator|->
+name|mlx_flags
+operator|&
+name|MLX_EVENTLOG_BUSY
+operator|)
 condition|)
 block|{
 comment|/* record where current events are up to */
@@ -5089,6 +5135,17 @@ argument_list|,
 name|sc
 operator|->
 name|mlx_currevent
+argument_list|)
+expr_stmt|;
+comment|/* mark the event log as busy */
+name|atomic_set_int
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mlx_flags
+argument_list|,
+name|MLX_EVENTLOG_BUSY
 argument_list|)
 expr_stmt|;
 comment|/* drain new eventlog entries */
@@ -5853,18 +5910,14 @@ name|mc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"log operation failed: lastevent = %d, currevent = %d"
-argument_list|,
+comment|/* give up on all the outstanding messages, as we may have come unsynched */
 name|sc
 operator|->
 name|mlx_lastevent
-argument_list|,
+operator|=
 name|sc
 operator|->
 name|mlx_currevent
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* dispose of command and data */
@@ -5893,11 +5946,27 @@ name|sc
 operator|->
 name|mlx_currevent
 condition|)
+block|{
 name|mlx_periodic_eventlog_poll
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* clear log-busy status */
+name|atomic_clear_int
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mlx_flags
+argument_list|,
+name|MLX_EVENTLOG_BUSY
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -488,6 +488,11 @@ directive|define
 name|MLX_SPINUP_REPORTED
 value|(1<<0)
 comment|/* "spinning up drives" message displayed */
+define|#
+directive|define
+name|MLX_EVENTLOG_BUSY
+value|(1<<1)
+comment|/* currently reading event log */
 comment|/* interface-specific accessor functions */
 name|int
 name|mlx_iftype
