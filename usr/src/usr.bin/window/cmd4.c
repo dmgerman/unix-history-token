@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	1.4 83/07/28"
+literal|"@(#)cmd4.c	1.5 83/07/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,9 +208,12 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|terse
 condition|)
+name|Ding
+argument_list|()
+expr_stmt|;
+else|else
 name|wwputs
 argument_list|(
 literal|"No windows.  "
