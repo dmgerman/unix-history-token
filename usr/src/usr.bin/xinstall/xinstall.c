@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.3 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,6 +158,22 @@ name|path
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -178,16 +194,10 @@ specifier|extern
 name|char
 modifier|*
 name|optarg
-decl_stmt|,
-modifier|*
-name|sys_errlist
-index|[]
 decl_stmt|;
 specifier|extern
 name|int
 name|optind
-decl_stmt|,
-name|errno
 decl_stmt|;
 specifier|register
 name|int
