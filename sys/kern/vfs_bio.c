@@ -6791,11 +6791,12 @@ name|b_bufobj
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR3
+name|CTR6
 argument_list|(
 name|KTR_BUF
 argument_list|,
-literal|"getnewbuf(%p) vp %p flags %X (recycling)"
+literal|"getnewbuf(%p) vp %p flags %X kvasize %d bufsize %d "
+literal|"queue %d (recycling)"
 argument_list|,
 name|bp
 argument_list|,
@@ -6806,6 +6807,16 @@ argument_list|,
 name|bp
 operator|->
 name|b_flags
+argument_list|,
+name|bp
+operator|->
+name|b_kvasize
+argument_list|,
+name|bp
+operator|->
+name|b_bufsize
+argument_list|,
+name|qindex
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Sanity Checks 		 */
