@@ -4085,6 +4085,12 @@ operator|=
 name|access
 argument_list|(
 name|dir
+operator|==
+name|local
+condition|?
+literal|"/"
+else|:
+name|dir
 condition|?
 name|local
 else|:
@@ -7981,6 +7987,12 @@ name|d
 operator|=
 name|access
 argument_list|(
+name|cp
+operator|==
+name|local
+condition|?
+literal|"/"
+else|:
 name|cp
 condition|?
 name|local
