@@ -806,11 +806,7 @@ name|sc
 operator|->
 name|mbuf_max_pages
 condition|)
-block|)
-function|return;
-end_function
-
-begin_if
+return|return;
 if|if
 condition|(
 operator|(
@@ -829,9 +825,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-end_if
-
-begin_expr_stmt
 name|bzero
 argument_list|(
 name|pg
@@ -850,9 +843,6 @@ name|card
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|err
 operator|=
 name|bus_dmamap_create
@@ -871,9 +861,6 @@ operator|.
 name|map
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|err
@@ -906,9 +893,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_if
-
-begin_expr_stmt
 name|err
 operator|=
 name|bus_dmamap_load
@@ -939,9 +923,6 @@ argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|err
@@ -987,9 +968,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_if
-
-begin_expr_stmt
 name|sc
 operator|->
 name|mbuf_pages
@@ -1001,9 +979,6 @@ index|]
 operator|=
 name|pg
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|group
@@ -1209,23 +1184,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_if
-
-begin_expr_stmt
 name|sc
 operator|->
 name|mbuf_npages
 operator|++
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Free an mbuf and put it onto the free list.  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|void
 name|hatm_mbuf0_free
 parameter_list|(
