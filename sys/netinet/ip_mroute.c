@@ -2253,7 +2253,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mrouter_init"
+literal|"ip_mrouter_init\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2650,7 +2650,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mrouter_done"
+literal|"ip_mrouter_done\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3128,7 +3128,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_vif #%d, lcladdr %x, %s %x, thresh %x, rate %d"
+literal|"add_vif #%d, lcladdr %x, %s %x, thresh %x, rate %d\n"
 argument_list|,
 name|vifcp
 operator|->
@@ -3443,7 +3443,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"del_vif %d, numvifs %d"
+literal|"del_vif %d, numvifs %d\n"
 argument_list|,
 operator|*
 name|vifip
@@ -3551,7 +3551,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_mfc update o %x g %x m %x p %x"
+literal|"add_mfc update o %x g %x m %x p %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -3761,7 +3761,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_mfc o %x g %x m %x p %x dbg %x"
+literal|"add_mfc o %x g %x m %x p %x dbg %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -3994,7 +3994,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_mfc no upcall h %d o %x g %x m %x p %x"
+literal|"add_mfc no upcall h %d o %x g %x m %x p %x\n"
 argument_list|,
 name|hash
 argument_list|,
@@ -4416,7 +4416,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"del_mfc orig %x mcastgrp %x"
+literal|"del_mfc orig %x mcastgrp %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4721,7 +4721,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mforward: src %x, dst %x, ifp %x"
+literal|"ip_mforward: src %x, dst %x, ifp %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4846,7 +4846,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mforward: bad tunnel from %u (%x %x %x %x %x %x)"
+literal|"ip_mforward: bad tunnel from %u (%x %x %x %x %x %x)\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -5095,7 +5095,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mforward: no rte s %x g %x"
+literal|"ip_mforward: no rte s %x g %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -5732,7 +5732,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mforward: cleanup ipm %d h %d s %x g %x"
+literal|"ip_mforward: cleanup ipm %d h %d s %x g %x\n"
 argument_list|,
 name|ip_mrouter
 argument_list|,
@@ -6004,7 +6004,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"wrong if: ifp %x vifi %d"
+literal|"wrong if: ifp %x vifi %d\n"
 argument_list|,
 name|ifp
 argument_list|,
@@ -6480,7 +6480,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"srcrt_send: no room for tunnel options, from %u"
+literal|"srcrt_send: no room for tunnel options, from %u\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -7388,7 +7388,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mforward: no tunnel with %u"
+literal|"ip_mforward: no tunnel with %u\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -8250,7 +8250,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"tbf_dequeue: vif# %d qlen %d"
+literal|"tbf_dequeue: vif# %d qlen %d\n"
 argument_list|,
 name|vifp
 operator|-
@@ -8548,7 +8548,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"srcrt_send on vif %d err %d"
+literal|"srcrt_send on vif %d err %d\n"
 argument_list|,
 name|vifp
 operator|-
@@ -8638,7 +8638,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"phyint_send on vif %d err %d"
+literal|"phyint_send on vif %d err %d\n"
 argument_list|,
 name|vifp
 operator|-
@@ -9002,7 +9002,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"graddr%x prio%d"
+literal|"graddr%x prio%d\n"
 argument_list|,
 name|graddr
 argument_list|,
