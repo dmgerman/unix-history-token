@@ -820,6 +820,24 @@ modifier|*
 name|caller
 parameter_list|)
 block|{
+if|if
+condition|(
+name|fib
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"aac_print_fib called with NULL fib\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|device_printf
 argument_list|(
 name|sc
