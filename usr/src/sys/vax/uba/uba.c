@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	6.3	85/01/18	*/
+comment|/*	uba.c	6.4	85/03/19	*/
 end_comment
 
 begin_include
@@ -498,8 +498,9 @@ index|[
 name|uban
 index|]
 decl_stmt|;
-specifier|register
 name|int
+name|pfnum
+decl_stmt|,
 name|temp
 decl_stmt|;
 name|int
@@ -1005,11 +1006,15 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
+name|pfnum
+operator|=
 name|pte
 operator|->
 name|pg_pfnum
+expr_stmt|;
+if|if
+condition|(
+name|pfnum
 operator|==
 literal|0
 condition|)
@@ -1017,6 +1022,9 @@ name|panic
 argument_list|(
 literal|"uba zero uentry"
 argument_list|)
+expr_stmt|;
+name|pte
+operator|++
 expr_stmt|;
 operator|*
 operator|(
@@ -1026,10 +1034,7 @@ operator|)
 name|io
 operator|++
 operator|=
-name|pte
-operator|++
-operator|->
-name|pg_pfnum
+name|pfnum
 operator||
 name|temp
 expr_stmt|;
