@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crypt.c	5.2.1.1 (Berkeley) %G%"
+literal|"@(#)crypt.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2186,13 +2186,15 @@ specifier|static
 name|char
 name|L
 index|[
-literal|32
+literal|64
 index|]
 decl_stmt|,
+modifier|*
 name|R
-index|[
+init|=
+name|L
+operator|+
 literal|32
-index|]
 decl_stmt|;
 end_decl_stmt
 
