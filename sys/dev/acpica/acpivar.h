@@ -942,6 +942,10 @@ name|dev
 parameter_list|,
 name|void
 modifier|*
+name|arg
+parameter_list|,
+name|void
+modifier|*
 modifier|*
 name|context
 parameter_list|)
@@ -1158,6 +1162,10 @@ name|struct
 name|acpi_parse_resource_set
 modifier|*
 name|set
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

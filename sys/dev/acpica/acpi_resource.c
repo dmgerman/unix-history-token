@@ -107,6 +107,10 @@ name|struct
 name|acpi_parse_resource_set
 modifier|*
 name|set
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
 name|ACPI_BUFFER
@@ -221,6 +225,8 @@ operator|->
 name|set_init
 argument_list|(
 name|dev
+argument_list|,
+name|arg
 argument_list|,
 operator|&
 name|context
@@ -1957,6 +1963,10 @@ name|dev
 parameter_list|,
 name|void
 modifier|*
+name|arg
+parameter_list|,
+name|void
+modifier|*
 modifier|*
 name|context
 parameter_list|)
@@ -2202,6 +2212,10 @@ decl_stmt|;
 name|int
 name|ar_ndrq
 decl_stmt|;
+name|void
+modifier|*
+name|ar_parent
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2213,6 +2227,10 @@ name|acpi_res_set_init
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|,
 name|void
 modifier|*
@@ -2253,6 +2271,12 @@ operator|*
 name|cp
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|ar_parent
+operator|=
+name|arg
 expr_stmt|;
 operator|*
 name|context

@@ -5552,6 +5552,8 @@ name|handle
 argument_list|,
 operator|&
 name|acpi_res_parse_set
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* If we're debugging, probe/attach now rather than later */
