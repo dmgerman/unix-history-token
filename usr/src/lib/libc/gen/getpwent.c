@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwent.c	5.8 (Berkeley) %G%"
+literal|"@(#)getpwent.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,6 +204,10 @@ operator|!=
 name|_PW_KEYBYNAME
 condition|)
 do|;
+if|if
+condition|(
+name|rval
+condition|)
 name|getpw
 argument_list|()
 expr_stmt|;
@@ -290,11 +294,16 @@ expr_stmt|;
 block|}
 else|else
 comment|/* _pw_fp */
-while|while
-condition|(
+for|for
+control|(
+name|rval
+operator|=
+literal|0
+init|;
 name|scanpw
 argument_list|()
-condition|)
+condition|;
+control|)
 if|if
 condition|(
 operator|!
@@ -322,6 +331,10 @@ condition|)
 name|endpwent
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|rval
+condition|)
 name|getpw
 argument_list|()
 expr_stmt|;
@@ -412,11 +425,16 @@ expr_stmt|;
 block|}
 else|else
 comment|/* _pw_fp */
-while|while
-condition|(
+for|for
+control|(
+name|rval
+operator|=
+literal|0
+init|;
 name|scanpw
 argument_list|()
-condition|)
+condition|;
+control|)
 if|if
 condition|(
 name|_pw_passwd
@@ -440,6 +458,10 @@ condition|)
 name|endpwent
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|rval
+condition|)
 name|getpw
 argument_list|()
 expr_stmt|;
