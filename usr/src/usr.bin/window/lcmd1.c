@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd1.c	3.7 83/11/22"
+literal|"@(#)lcmd1.c	3.8 83/11/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -464,34 +464,21 @@ condition|(
 operator|(
 name|w
 operator|=
-name|window
-index|[
+name|vtowin
+argument_list|(
+operator|&
 name|arg_select
 index|[
 literal|0
 index|]
 operator|.
-name|arg_num
-index|]
+name|arg_val
+argument_list|)
 operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"%d: No such window."
-argument_list|,
-name|arg_select
-index|[
-literal|0
-index|]
-operator|.
-name|arg_num
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|setselwin
 argument_list|(
 name|w
@@ -729,7 +716,7 @@ literal|"flag"
 block|,
 literal|1
 block|,
-name|ARG_NUM
+name|ARG_ANY
 block|}
 block|,
 block|{
@@ -798,9 +785,12 @@ name|v
 operator|->
 name|v_num
 condition|)
-name|wwdelete
+name|wwadd
 argument_list|(
 name|cmdwin
+argument_list|,
+operator|&
+name|wwhead
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -813,12 +803,9 @@ name|v_num
 operator|&&
 name|terse
 condition|)
-name|wwadd
+name|wwdelete
 argument_list|(
 name|cmdwin
-argument_list|,
-operator|&
-name|wwhead
 argument_list|)
 expr_stmt|;
 name|reframe
