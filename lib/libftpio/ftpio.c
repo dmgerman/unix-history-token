@@ -5195,7 +5195,7 @@ return|return
 name|FAILURE
 return|;
 block|}
-name|sinline
+name|sinlen
 operator|=
 sizeof|sizeof
 name|sin
