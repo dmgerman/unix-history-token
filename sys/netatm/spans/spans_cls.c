@@ -2089,6 +2089,10 @@ argument_list|,
 literal|"spanscls_input: bad format\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|spanscls_print
+condition|)
 name|spanscls_pdu_print
 argument_list|(
 name|clp
