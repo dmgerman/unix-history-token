@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1992  * Copyright (c) 1991, 1992  The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_input.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1992  * Copyright (c) 1991, 1992  The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_input.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1257,7 +1257,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   *  X.25 PACKET INPUT  *  *  This procedure is called by a link level procedure whenever  *  an information frame is received. It decodes the packet and  *  demultiplexes based on the logical channel number.  *  *  We change the original conventions of the UBC code here --  *  since there may be multiple pkcb's for 802.2 class 2  *  for a given interface, we must be informed which one it is;  *  so we overwrite the pkthdr.rcvif; it can be recovered if necessary.  *  */
+comment|/*   *  X.25 PACKET INPUT  *  *  This procedure is called by a link level procedure whenever  *  an information frame is received. It decodes the packet and  *  demultiplexes based on the logical channel number.  *  *  We change the original conventions of the UBC code here --  *  since there may be multiple pkcb's for a given interface  *  of type 802.2 class 2, we retrieve which one it is from  *  m_pkthdr.rcvif (which has been overwritten by lower layers);  *  That field is then restored for the benefit of upper layers which  *  may make use of it, such as CLNP.  */
 end_comment
 
 begin_define
@@ -1598,6 +1598,18 @@ name|m
 expr_stmt|;
 return|return;
 block|}
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|pkp
+operator|->
+name|pk_ia
+operator|->
+name|ia_ifp
+expr_stmt|;
 switch|switch
 condition|(
 name|ptype
