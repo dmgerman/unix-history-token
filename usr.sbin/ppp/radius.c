@@ -933,16 +933,6 @@ operator|*
 name|len
 argument_list|)
 expr_stmt|;
-name|log_Printf
-argument_list|(
-name|LogWARN
-argument_list|,
-literal|"demangled %d bytes\n"
-argument_list|,
-operator|*
-name|len
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
