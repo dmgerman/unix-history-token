@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.36 1998/02/12 20:47:39 phk Exp $  */
+comment|/*-  * Copyright (c) 1991-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.37 1998/07/06 06:29:06 imp Exp $  */
 end_comment
 
 begin_ifndef
@@ -302,6 +302,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|CONS_IDLE
+value|_IOR('c', 11, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_SAVERMODE
+value|_IOW('c', 12, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_SAVERSTART
+value|_IOW('c', 13, int)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PIO_FONT8x8
 value|_IOW('c', 64, fnt8_t)
 end_define
@@ -353,6 +374,24 @@ define|#
 directive|define
 name|CONS_GETVERS
 value|_IOR('c', 74, int)
+end_define
+
+begin_comment
+comment|/* CONS_SAVERMODE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONS_LKM_SAVER
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_USR_SAVER
+value|1
 end_define
 
 begin_ifdef
@@ -744,17 +783,6 @@ end_define
 
 begin_comment
 comment|/* PC-98 display            	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KD_PIXEL
-value|7
-end_define
-
-begin_comment
-comment|/* Pixel based display		*/
 end_comment
 
 begin_define
@@ -2369,6 +2397,17 @@ end_define
 
 begin_comment
 comment|/* monochrome adapter mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VESA_BASE
+value|0x100
+end_define
+
+begin_comment
+comment|/* VESA mode number base */
 end_comment
 
 begin_define
