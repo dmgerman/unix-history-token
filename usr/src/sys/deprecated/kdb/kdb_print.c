@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -26,6 +26,12 @@ undef|#
 directive|undef
 name|CTRL
 end_undef
+
+begin_include
+include|#
+directive|include
+file|"ioctl.h"
+end_include
 
 begin_include
 include|#
@@ -974,13 +980,32 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%X pid %5d %5d %c"
+literal|"%X pid %5d%c%5d %c "
 argument_list|,
 name|p
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|p
+operator|==
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+name|var
+index|[
+name|varchk
+argument_list|(
+literal|'p'
+argument_list|)
+index|]
+condition|?
+literal|'*'
+else|:
+literal|' '
 argument_list|,
 name|p
 operator|->
@@ -1027,12 +1052,6 @@ name|p
 operator|->
 name|p_wchan
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|" wait "
-argument_list|)
-expr_stmt|;
 name|psymoff
 argument_list|(
 operator|(
@@ -1047,7 +1066,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
