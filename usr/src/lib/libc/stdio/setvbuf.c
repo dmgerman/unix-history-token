@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setvbuf.c	5.2 (Berkeley) %G%"
+literal|"@(#)setvbuf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,16 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+name|size
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Verify arguments.  The `int' limit on `size' is due to this 	 * particular implementation. 	 */
 if|if
 condition|(
