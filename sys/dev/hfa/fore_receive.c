@@ -1425,11 +1425,11 @@ endif|#
 directive|endif
 block|}
 comment|/* 		 * The STACK_CALL needs to happen at splnet() in order 		 * for the stack sequence processing to work.  Schedule an 		 * interrupt queue callback at splnet() since we are  		 * currently at device level. 		 */
-comment|/* 		 * Prepend callback function pointer and token value to buffer. 		 * We have already guaranteed that the space is available 		 * in the first buffer. 		 */
-name|KB_HEADADJ
-argument_list|(
+comment|/* 		 * Prepend callback function pointer and token value to buffer. 		 * We have already guaranteed that the space is available 		 * in the first buffer. 		 * Don't count this extra fields in m_pkthdr.len (XXX) 		 */
 name|mhead
-argument_list|,
+operator|->
+name|m_data
+operator|-=
 sizeof|sizeof
 argument_list|(
 name|atm_intr_func_t
@@ -1437,15 +1437,30 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|int
-argument_list|)
+name|void
+operator|*
 argument_list|)
 expr_stmt|;
-name|KB_DATASTART
+name|mhead
+operator|->
+name|m_len
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|atm_intr_func_t
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|mtod
 argument_list|(
 name|mhead
-argument_list|,
-name|cp
 argument_list|,
 name|caddr_t
 argument_list|)
