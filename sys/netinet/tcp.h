@@ -374,6 +374,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TCP_MAXBURST
+value|4
+end_define
+
+begin_comment
+comment|/* maximum segments in a burst */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TCP_MAXHLEN
 value|(0xf<<2)
 end_define

@@ -326,6 +326,10 @@ name|u_long
 name|snd_ssthresh
 decl_stmt|;
 comment|/* snd_cwnd size threshold for 					 * for slow start exponential to 					 * linear switch 					 */
+name|tcp_seq
+name|snd_recover
+decl_stmt|;
+comment|/* for use in fast recovery */
 name|u_int
 name|t_maxopd
 decl_stmt|;
@@ -1189,6 +1193,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|tcp_delack_enabled
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_do_newreno
 decl_stmt|;
 end_decl_stmt
 
