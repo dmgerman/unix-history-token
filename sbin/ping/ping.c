@@ -266,7 +266,7 @@ begin_define
 define|#
 directive|define
 name|DEFDATALEN
-value|64
+value|56
 end_define
 
 begin_comment
