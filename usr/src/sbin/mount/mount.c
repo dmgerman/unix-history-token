@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mount.c	4.1 (Berkeley) %G%"
+literal|"@(#)mount.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ file|<fstab.h>
 end_include
 
 begin_comment
-comment|/*  *	Mount file systems.  *  *	mount -a	Mount all file systems, as determined from the  *			file /etc/fstab.  *	If the name entry in /etc/fstab is "/", don't mount.  *	If the read only entry in /etc/fstab is "ro", mount read only  *	The special file names in /etc/fstab are the block devices;  *		this is what we want to mount.  *	Tries to mount all of the files in /etc/fstab.  *	  *	mount special name	Mount special on name  *	mount special name -r	Mount special on name, read/write  */
+comment|/*  * mount  */
 end_comment
 
 begin_decl_stmt
@@ -310,6 +310,9 @@ name|fs_file
 argument_list|)
 condition|)
 block|{
+name|int
+name|ro
+decl_stmt|;
 name|fscanf
 argument_list|(
 name|fs_file
@@ -337,6 +340,34 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+name|ro
+operator|=
+operator|!
+name|strcmp
+argument_list|(
+name|fs
+operator|.
+name|fs_type
+argument_list|,
+literal|"ro"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ro
+operator|==
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|fs
+operator|.
+name|fs_type
+argument_list|,
+literal|"rw"
+argument_list|)
+condition|)
+continue|continue;
 name|fprintf
 argument_list|(
 name|stderr
@@ -351,11 +382,7 @@ name|fs
 operator|.
 name|fs_spec
 argument_list|,
-name|FSRO
-argument_list|(
-operator|&
-name|fs
-argument_list|)
+name|ro
 condition|?
 literal|"(Read Only)\n"
 else|:
@@ -372,11 +399,7 @@ name|fs
 operator|.
 name|fs_file
 argument_list|,
-name|FSRO
-argument_list|(
-operator|&
-name|fs
-argument_list|)
+name|ro
 argument_list|)
 expr_stmt|;
 block|}
@@ -677,6 +700,11 @@ operator|*
 name|NAMSIZ
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 return|return
