@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wall.c	5.10 (Berkeley) %G%"
+literal|"@(#)wall.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,12 @@ end_define
 
 begin_decl_stmt
 name|int
+name|nobanner
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|mbufsize
 decl_stmt|;
 end_decl_stmt
@@ -144,6 +150,13 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+name|int
+name|ch
+decl_stmt|;
 name|struct
 name|iovec
 name|iov
@@ -164,13 +177,50 @@ modifier|*
 name|ttymsg
 argument_list|()
 decl_stmt|;
-if|if
+while|while
 condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
 name|argc
-operator|>
-literal|2
+argument_list|,
+name|argv
+argument_list|,
+literal|"n"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+switch|switch
+condition|(
+name|ch
 condition|)
 block|{
+case|case
+literal|'n'
+case|:
+comment|/* undoc option for shutdown: suppress banner */
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|nobanner
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+default|default:
+name|usage
+label|:
 operator|(
 name|void
 operator|)
@@ -187,10 +237,26 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+goto|goto
+name|usage
+goto|;
 name|makemsg
 argument_list|(
 operator|*
-operator|++
 name|argv
 argument_list|)
 expr_stmt|;
@@ -495,6 +561,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|nobanner
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 operator|(
 name|whom
 operator|=
@@ -550,7 +622,7 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-comment|/* 	 * all this stuff is to blank out a square for the message; we wrap 	 * message lines at column 79, not 80, because some terminals wrap 	 * after 79, some do not, and we can't tell.  Which means that we 	 * may leave a non-blank character in column 80, but that can't be 	 * helped. 	 */
+comment|/* 		 * all this stuff is to blank out a square for the message; 		 * we wrap message lines at column 79, not 80, because some 		 * terminals wrap after 79, some do not, and we can't tell. 		 * Which means that we may leave a non-blank character 		 * in column 80, but that can't be helped. 		 */
 operator|(
 name|void
 operator|)
@@ -624,6 +696,7 @@ argument_list|,
 name|lbuf
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
