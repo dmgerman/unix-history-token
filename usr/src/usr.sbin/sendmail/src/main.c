@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.54	%G%"
+literal|"@(#)main.c	3.55	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1737,18 +1737,11 @@ if|if
 condition|(
 name|QueueUp
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|QueueRun
-condition|)
 name|queueup
 argument_list|(
 name|InFileName
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 operator|(
 name|void

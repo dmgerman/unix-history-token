@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	3.11	%G%"
+literal|"@(#)headers.c	3.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -322,6 +322,7 @@ name|h_flags
 argument_list|)
 operator|&&
 operator|!
+operator|(
 name|bitset
 argument_list|(
 name|H_FORCE
@@ -330,6 +331,10 @@ name|h
 operator|->
 name|h_flags
 argument_list|)
+operator|&&
+operator|!
+name|QueueRun
+operator|)
 condition|)
 break|break;
 block|}

@@ -21,7 +21,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.54	%G%"
+literal|"@(#)sendmail.h	3.55	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -791,14 +791,10 @@ modifier|*
 name|w_name
 decl_stmt|;
 comment|/* name of control file */
-name|short
+name|long
 name|w_pri
 decl_stmt|;
 comment|/* priority of message, see below */
-name|long
-name|w_size
-decl_stmt|;
-comment|/* length of data file */
 name|struct
 name|work
 modifier|*
@@ -830,7 +826,7 @@ comment|/* queue of things to be done */
 end_comment
 
 begin_comment
-comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. */
+comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	MsgPriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT. */
 end_comment
 
 begin_define
@@ -851,14 +847,14 @@ begin_define
 define|#
 directive|define
 name|PRI_FIRSTCL
-value|0
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRI_NORMAL
-value|-4
+value|0
 end_define
 
 begin_define
@@ -875,15 +871,37 @@ name|PRI_THIRDCL
 value|-20
 end_define
 
+begin_define
+define|#
+directive|define
+name|WKPRIFACT
+value|1800
+end_define
+
+begin_comment
+comment|/* bytes each pri point is worth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WKTIMEFACT
+value|400
+end_define
+
+begin_comment
+comment|/* bytes each time unit is worth */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
-name|int
+name|long
 name|MsgPriority
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* priority of this message */
+comment|/* adjusted priority of this message */
 end_comment
 
 begin_comment

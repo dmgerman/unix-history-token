@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.35	%G%"
+literal|"@(#)parseaddr.c	3.36	%G%"
 decl_stmt|;
 end_decl_stmt
 

@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.28	%G%"
+literal|"@(#)collect.c	3.29	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -691,7 +691,17 @@ name|tf
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Find out some information from the headers. 	**	Examples are who is the from person& the date. 	*/
-comment|/* message priority */
+if|if
+condition|(
+operator|!
+name|QueueRun
+condition|)
+block|{
+comment|/* adjust total priority by message priority */
+name|MsgPriority
+operator|=
+name|MsgSize
+expr_stmt|;
 name|p
 operator|=
 name|hvalue
@@ -706,12 +716,15 @@ operator|!=
 name|NULL
 condition|)
 name|MsgPriority
-operator|=
+operator|-=
 name|priencode
 argument_list|(
 name|p
 argument_list|)
+operator|*
+name|WKPRIFACT
 expr_stmt|;
+block|}
 comment|/* from person */
 name|xfrom
 operator|=
