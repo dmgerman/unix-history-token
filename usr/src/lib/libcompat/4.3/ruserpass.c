@@ -43,6 +43,12 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -773,6 +779,10 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|hdir
 operator|=
 name|getenv
@@ -815,6 +825,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
 name|perror
 argument_list|(
 name|buf
