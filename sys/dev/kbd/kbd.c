@@ -349,7 +349,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|new_kbdsw
@@ -391,7 +393,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 name|bcopy
@@ -475,7 +479,9 @@ name|keyboards
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -709,7 +715,9 @@ name|link
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|SLIST_INSERT_HEAD
 argument_list|(
@@ -722,7 +730,9 @@ name|link
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -758,7 +768,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -828,8 +840,10 @@ name|kbd_realloc_array
 argument_list|()
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|kbd
@@ -919,7 +933,9 @@ operator|->
 name|kbdsw
 expr_stmt|;
 return|return
+operator|(
 name|index
+operator|)
 return|;
 block|}
 block|}
@@ -968,13 +984,17 @@ operator|->
 name|kbdsw
 expr_stmt|;
 return|return
+operator|(
 name|index
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1013,7 +1033,9 @@ name|keyboards
 operator|)
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 if|if
 condition|(
@@ -1027,7 +1049,9 @@ operator|!=
 name|kbd
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 name|s
 operator|=
@@ -1075,7 +1099,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 if|if
@@ -1092,7 +1118,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EBUSY
+operator|)
 return|;
 block|}
 block|}
@@ -1125,7 +1153,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1178,9 +1208,11 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|p
 operator|->
 name|kbdsw
+operator|)
 return|;
 block|}
 name|SET_FOREACH
@@ -1209,13 +1241,17 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|p
 operator|->
 name|kbdsw
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -1323,12 +1359,16 @@ operator|)
 condition|)
 continue|continue;
 return|return
+operator|(
 name|i
+operator|)
 return|;
 block|}
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1374,8 +1414,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|s
 operator|=
@@ -1415,8 +1457,10 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|keyboard
@@ -1481,7 +1525,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|index
+operator|)
 return|;
 block|}
 end_function
@@ -1600,7 +1646,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1714,7 +1762,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1747,7 +1797,9 @@ name|keyboards
 operator|)
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 if|if
 condition|(
@@ -1759,7 +1811,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 if|if
 condition|(
@@ -1773,13 +1827,17 @@ index|]
 argument_list|)
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 return|return
+operator|(
 name|keyboard
 index|[
 name|index
 index|]
+operator|)
 return|;
 block|}
 end_function
@@ -1867,7 +1925,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2007,7 +2067,9 @@ operator|>=
 name|keyboards
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2021,7 +2083,9 @@ operator|!=
 name|kbd
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|kbd
 operator|->
@@ -2104,7 +2168,9 @@ name|kb_unit
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2127,7 +2193,9 @@ operator|>=
 name|keyboards
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2141,7 +2209,9 @@ operator|!=
 name|kbd
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|free
 argument_list|(
@@ -2162,7 +2232,9 @@ name|kb_dev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2274,7 +2346,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 name|i
@@ -2313,7 +2387,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EBUSY
+operator|)
 return|;
 block|}
 comment|/* assert(i == kbd->kb_index) */
@@ -2346,7 +2422,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2453,7 +2531,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2547,7 +2627,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 block|}
 while|while
@@ -2574,7 +2656,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EWOULDBLOCK
+operator|)
 return|;
 block|}
 name|sc
@@ -2629,7 +2713,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 comment|/* our keyboard has gone... */
 block|}
@@ -2651,7 +2737,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 block|}
@@ -2727,7 +2815,9 @@ condition|)
 break|break;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2778,10 +2868,14 @@ name|kbd
 argument_list|)
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 return|return
+operator|(
 name|ENODEV
+operator|)
 return|;
 block|}
 end_function
@@ -2841,7 +2935,9 @@ name|kbd
 argument_list|)
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 name|error
 operator|=
@@ -2875,7 +2971,9 @@ operator|=
 name|ENODEV
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -3013,7 +3111,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|revents
+operator|)
 return|;
 block|}
 end_function
@@ -3118,11 +3218,15 @@ name|PZERO
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 default|default:
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* obtain the current key input mode */
@@ -3468,7 +3572,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3849,7 +3955,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|bzero
@@ -3893,7 +4001,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENODEV
+operator|)
 return|;
 endif|#
 directive|endif
@@ -3943,7 +4053,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|bcopy
@@ -4023,7 +4135,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|error
@@ -4063,7 +4177,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|bcopy
@@ -4102,7 +4218,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENODEV
+operator|)
 return|;
 endif|#
 directive|endif
@@ -4165,7 +4283,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|bcopy
@@ -4194,7 +4314,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENODEV
+operator|)
 return|;
 endif|#
 directive|endif
@@ -4227,7 +4349,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|bcopy
@@ -4307,7 +4431,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|error
@@ -4342,7 +4468,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|kbd
@@ -4403,7 +4531,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENODEV
+operator|)
 return|;
 endif|#
 directive|endif
@@ -4414,7 +4544,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOIOCTL
+operator|)
 return|;
 block|}
 name|splx
@@ -4423,7 +4555,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4479,7 +4613,9 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* High keymap_restrict_change means only root can change the keymap. */
 if|if
@@ -4557,7 +4693,9 @@ name|td
 argument_list|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* Otherwise we have to see if any special keys are being changed. */
@@ -4644,7 +4782,9 @@ argument_list|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4717,11 +4857,15 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4765,7 +4909,9 @@ operator|<=
 literal|2
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -4924,7 +5070,9 @@ return|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4955,7 +5103,9 @@ operator|<=
 literal|3
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -4991,7 +5141,9 @@ name|td
 argument_list|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5029,7 +5181,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|fkey
 operator|-=
@@ -5044,7 +5198,9 @@ operator|->
 name|kb_fkeytab_size
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 operator|*
 name|len
@@ -5059,6 +5215,7 @@ operator|.
 name|len
 expr_stmt|;
 return|return
+operator|(
 name|kbd
 operator|->
 name|kb_fkeytab
@@ -5067,6 +5224,7 @@ name|fkey
 index|]
 operator|.
 name|str
+operator|)
 return|;
 block|}
 end_function
@@ -5159,16 +5317,20 @@ operator|.
 name|type
 condition|)
 return|return
+operator|(
 name|name_table
 index|[
 name|i
 index|]
 operator|.
 name|name
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|"unknown"
+operator|)
 return|;
 block|}
 end_function
@@ -5345,7 +5507,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|ERRKEY
+operator|)
 return|;
 block|}
 comment|/* 	 * If the same accent key has been hit twice, produce the accent 	 * char itself. 	 */
@@ -5378,7 +5542,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|key
+operator|)
 return|;
 block|}
 comment|/* remember the index and wait for the next key  */
@@ -5388,7 +5554,9 @@ operator|=
 name|i
 expr_stmt|;
 return|return
+operator|(
 name|NOKEY
+operator|)
 return|;
 block|}
 end_function
@@ -5446,9 +5614,11 @@ operator|==
 literal|' '
 condition|)
 return|return
+operator|(
 name|acc
 operator|->
 name|accchar
+operator|)
 return|;
 comment|/* scan the accent map */
 for|for
@@ -5496,6 +5666,7 @@ operator|==
 name|ch
 condition|)
 return|return
+operator|(
 name|acc
 operator|->
 name|map
@@ -5505,11 +5676,14 @@ index|]
 index|[
 literal|1
 index|]
+operator|)
 return|;
 block|}
 comment|/* this char cannot be accented... */
 return|return
+operator|(
 name|ERRKEY
+operator|)
 return|;
 block|}
 end_function
@@ -6052,7 +6226,9 @@ operator|~
 name|SHIFTAON
 expr_stmt|;
 return|return
+operator|(
 name|NOKEY
+operator|)
 return|;
 block|}
 operator|*
@@ -6432,7 +6608,9 @@ operator|=
 name|state
 expr_stmt|;
 return|return
+operator|(
 name|NOKEY
+operator|)
 return|;
 default|default:
 comment|/* is this an accent (dead) key? */
@@ -6475,7 +6653,9 @@ case|case
 name|ERRKEY
 case|:
 return|return
+operator|(
 name|action
+operator|)
 return|;
 default|default:
 if|if
@@ -6493,7 +6673,9 @@ operator|)
 return|;
 else|else
 return|return
+operator|(
 name|action
+operator|)
 return|;
 block|}
 comment|/* NOT REACHED */
@@ -6513,7 +6695,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|ERRKEY
+operator|)
 return|;
 block|}
 if|if
@@ -6596,7 +6780,9 @@ operator|==
 name|ERRKEY
 condition|)
 return|return
+operator|(
 name|action
+operator|)
 return|;
 block|}
 if|if
@@ -6610,7 +6796,9 @@ operator||=
 name|MKEY
 expr_stmt|;
 return|return
+operator|(
 name|action
+operator|)
 return|;
 block|}
 block|}
