@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fingerd.c,v 1.7 1997/02/22 14:21:25 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,7 +273,8 @@ literal|"slp:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
