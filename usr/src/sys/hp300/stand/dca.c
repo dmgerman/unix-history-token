@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../dev/dcareg.h"
+file|"hp/dev/dcareg.h"
 end_include
 
 begin_include
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../hp300/cons.h"
+file|"hp/dev/cons.h"
 end_include
 
 begin_decl_stmt
@@ -98,6 +98,17 @@ name|CN_DEAD
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|FORCEDCACONSOLE
+name|cp
+operator|->
+name|cn_pri
+operator|=
+name|CN_REMOTE
+expr_stmt|;
+else|#
+directive|else
 name|dca
 operator|=
 name|dcacnaddr
@@ -106,7 +117,7 @@ switch|switch
 condition|(
 name|dca
 operator|->
-name|dca_irid
+name|dca_id
 condition|)
 block|{
 case|case
@@ -144,6 +155,8 @@ name|CN_DEAD
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -174,7 +187,7 @@ name|dcacnaddr
 decl_stmt|;
 name|dca
 operator|->
-name|dca_irid
+name|dca_reset
 operator|=
 literal|0xFF
 expr_stmt|;

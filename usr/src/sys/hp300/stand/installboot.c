@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)installboot.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)installboot.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)installboot.c	7.2 (Berkeley) %G%"
+literal|"@(#)installboot.c	7.2 (Berkeley) 12/16/90"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ufs/fs.h"
+file|"ufs/ffs/fs.h"
 end_include
 
 begin_decl_stmt

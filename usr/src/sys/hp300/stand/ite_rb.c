@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_rb.c 1.5 89/02/20$  *  *	@(#)ite_rb.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_rb.c 1.6 92/01/20$  *  *	@(#)ite_rb.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,19 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../dev/itevar.h"
+file|"hp/dev/itevar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../dev/itereg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../dev/grfvar.h"
+file|"hp/dev/itereg.h"
 end_include
 
 begin_include
@@ -81,7 +75,9 @@ name|i
 decl_stmt|;
 name|rb_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -119,7 +115,7 @@ name|vdrive
 operator|=
 literal|0x0
 expr_stmt|;
-name|ite_devinfo
+name|ite_fontinfo
 argument_list|(
 name|ip
 argument_list|)
@@ -156,7 +152,9 @@ argument_list|)
 expr_stmt|;
 name|rb_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 for|for
@@ -175,7 +173,9 @@ control|)
 block|{
 operator|*
 operator|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 operator|+
 literal|0x63c3
 operator|+
@@ -188,7 +188,9 @@ literal|0x0
 expr_stmt|;
 operator|*
 operator|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 operator|+
 literal|0x6403
 operator|+
@@ -201,7 +203,9 @@ literal|0x0
 expr_stmt|;
 operator|*
 operator|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 operator|+
 literal|0x6803
 operator|+
@@ -214,7 +218,9 @@ literal|0x0
 expr_stmt|;
 operator|*
 operator|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 operator|+
 literal|0x6c03
 operator|+
@@ -227,7 +233,9 @@ literal|0x0
 expr_stmt|;
 operator|*
 operator|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 operator|+
 literal|0x73c3
 operator|+
@@ -240,7 +248,9 @@ literal|0x0
 expr_stmt|;
 operator|*
 operator|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 operator|+
 literal|0x7403
 operator|+
@@ -253,7 +263,9 @@ literal|0x0
 expr_stmt|;
 operator|*
 operator|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 operator|+
 literal|0x7803
 operator|+
@@ -266,7 +278,9 @@ literal|0x0
 expr_stmt|;
 operator|*
 operator|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 operator|+
 literal|0x7c03
 operator|+
@@ -867,7 +881,9 @@ condition|)
 return|return;
 name|rb_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 name|rp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.6 88/05/24$  *  *	@(#)machdep.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.10 92/06/18  *  *	@(#)machdep.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -147,6 +147,23 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ROMPRF
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|userom
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|trap
 argument_list|(
@@ -200,14 +217,37 @@ if|if
 condition|(
 name|intrap
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|intrap
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ROMPRF
+name|userom
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
-literal|"Got unexpected trap, vector = %x, ps = %x, pc = %x\n"
+literal|"Got unexpected trap: format=%x vector=%x ps=%x pc=%x\n"
+argument_list|,
+operator|(
+name|fp
+operator|->
+name|frame
+operator|>>
+literal|12
+operator|)
+operator|&
+literal|0xF
 argument_list|,
 name|fp
 operator|->
@@ -346,10 +386,24 @@ literal|7
 index|]
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ROMPRF
+name|userom
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|intrap
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -419,6 +473,8 @@ break|break;
 case|case
 literal|'\r'
 case|:
+break|break;
+comment|/* ignore */
 case|case
 literal|'\n'
 case|:

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.5 89/08/22$  *  *	@(#)cons.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.7 92/02/28$  *  *	@(#)cons.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../hp300/cons.h"
+file|"../hp/dev/cons.h"
 end_include
 
 begin_ifdef
@@ -315,6 +315,25 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|ROMPRF
+specifier|extern
+name|int
+name|userom
+decl_stmt|;
+if|if
+condition|(
+name|userom
+condition|)
+name|romputchar
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|cn_tab

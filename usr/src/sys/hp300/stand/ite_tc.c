@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_tc.c 1.9 89/02/20$  *  *	@(#)ite_tc.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_tc.c 1.11 92/01/20$  *  *	@(#)ite_tc.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,19 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../dev/itevar.h"
+file|"hp/dev/itevar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../dev/itereg.h"
+file|"hp/dev/itereg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../dev/grfvar.h"
+file|"hp/dev/grfreg.h"
 end_include
 
 begin_include
@@ -74,6 +74,64 @@ end_expr_stmt
 
 begin_block
 block|{
+comment|/* 	 * Catseye looks a lot like a topcat, but not completely. 	 * So, we set some bits to make it work. 	 */
+if|if
+condition|(
+name|REGBASE
+operator|->
+name|fbid
+operator|!=
+name|GID_TOPCAT
+condition|)
+block|{
+while|while
+condition|(
+operator|(
+name|REGBASE
+operator|->
+name|catseye_status
+operator|&
+literal|1
+operator|)
+condition|)
+empty_stmt|;
+name|REGBASE
+operator|->
+name|catseye_status
+operator|=
+literal|0x0
+expr_stmt|;
+name|REGBASE
+operator|->
+name|vb_select
+operator|=
+literal|0x0
+expr_stmt|;
+name|REGBASE
+operator|->
+name|tcntrl
+operator|=
+literal|0x0
+expr_stmt|;
+name|REGBASE
+operator|->
+name|acntrl
+operator|=
+literal|0x0
+expr_stmt|;
+name|REGBASE
+operator|->
+name|pncntrl
+operator|=
+literal|0x0
+expr_stmt|;
+name|REGBASE
+operator|->
+name|rug_cmdstat
+operator|=
+literal|0x90
+expr_stmt|;
+block|}
 comment|/* 	 * Determine the number of planes by writing to the first frame 	 * buffer display location, then reading it back.  	 */
 name|REGBASE
 operator|->
@@ -138,7 +196,7 @@ name|prr
 operator|=
 name|RR_COPY
 expr_stmt|;
-name|ite_devinfo
+name|ite_fontinfo
 argument_list|(
 name|ip
 argument_list|)
@@ -169,7 +227,9 @@ argument_list|)
 expr_stmt|;
 name|tc_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|,
 name|ip
 operator|->
@@ -632,7 +692,9 @@ condition|)
 return|return;
 name|tc_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|,
 name|ip
 operator|->

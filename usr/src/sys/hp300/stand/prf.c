@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)prf.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)prf.c	7.5 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * XXX we know that scankbd is only called from read/write to interrupt  * a boot program.  Since we restart only on ^C and we do that here, we  * always return 0 to avoid a longjmp in the caller.  */
 end_comment
 
 begin_macro
@@ -44,7 +48,7 @@ comment|/* NOTREACHED */
 block|}
 return|return
 operator|(
-name|c
+literal|0
 operator|)
 return|;
 block|}
@@ -107,6 +111,16 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+if|if
+condition|(
+name|c
+operator|!=
+literal|'\b'
+operator|&&
+name|c
+operator|!=
+literal|'\177'
+condition|)
 name|putchar
 argument_list|(
 name|c

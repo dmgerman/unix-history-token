@@ -1,19 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)samachdep.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)samachdep.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NHPIB
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|NITE
 value|4
 end_define
 
@@ -28,21 +21,28 @@ begin_define
 define|#
 directive|define
 name|NRD
-value|(NHPIB * 8)
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|NCT
-value|(NHPIB * 8)
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|NSD
-value|(NSCSI * 8)
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|NITE
+value|4
 end_define
 
 begin_comment
@@ -164,12 +164,67 @@ begin_comment
 comment|/* 50Mhz 68030+32K external cache */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HP_380
+value|7
+end_define
+
+begin_comment
+comment|/* 25Mhz 68040 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MHZ_8
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MHZ_16
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MHZ_25
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MHZ_33
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MHZ_50
+value|6
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cpuspeed
+decl_stmt|,
+name|machineid
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|howto
 decl_stmt|,
-name|devtype
+name|bootdev
 decl_stmt|;
 end_decl_stmt
 
