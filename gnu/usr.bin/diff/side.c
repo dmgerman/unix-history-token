@@ -535,7 +535,7 @@ default|default:
 if|if
 condition|(
 operator|!
-name|isprint
+name|ISPRINT
 argument_list|(
 name|c
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* #ifdef-format output routines for GNU DIFF.    Copyright (C) 1989, 91, 92, 93 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.  No author or distributor accepts responsibility to anyone for the consequences of using it or for whether it serves any particular purpose or works at all, unless he says so in writing.  Refer to the GNU DIFF General Public License for full details.  Everyone is granted permission to copy, modify and redistribute GNU DIFF, but only under the conditions described in the GNU DIFF General Public License.   A copy of this license is supposed to have been given to you along with GNU DIFF so you can know your rights and responsibilities.  It should be in a file named COPYING.  Among other things, the copyright notice and this notice must be preserved on all copies.  */
+comment|/* #ifdef-format output routines for GNU DIFF.    Copyright (C) 1989, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.  No author or distributor accepts responsibility to anyone for the consequences of using it or for whether it serves any particular purpose or works at all, unless he says so in writing.  Refer to the GNU DIFF General Public License for full details.  Everyone is granted permission to copy, modify and redistribute GNU DIFF, but only under the conditions described in the GNU DIFF General Public License.   A copy of this license is supposed to have been given to you along with GNU DIFF so you can know your rights and responsibilities.  It should be in a file named COPYING.  Among other things, the copyright notice and this notice must be preserved on all copies.  */
 end_comment
 
 begin_include
@@ -48,7 +48,7 @@ operator|,
 expr|struct
 name|group
 specifier|const
-index|[]
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -97,7 +97,7 @@ operator|(
 expr|struct
 name|group
 specifier|const
-index|[]
+operator|*
 operator|,
 name|int
 operator|)
@@ -559,8 +559,8 @@ decl_stmt|;
 name|struct
 name|group
 specifier|const
+modifier|*
 name|groups
-index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -666,7 +666,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|f0
 argument_list|)
@@ -684,7 +684,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|(
 name|unsigned
@@ -1039,8 +1039,8 @@ parameter_list|)
 name|struct
 name|group
 specifier|const
+modifier|*
 name|g
-index|[]
 decl_stmt|;
 name|int
 name|letter
@@ -1048,7 +1048,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|isupper
+name|ISUPPER
 argument_list|(
 name|letter
 argument_list|)
@@ -1793,7 +1793,7 @@ condition|)
 continue|continue;
 while|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|c
 argument_list|)
@@ -1812,7 +1812,7 @@ literal|'.'
 condition|)
 while|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|c
 operator|=

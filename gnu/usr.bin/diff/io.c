@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* File I/O for GNU DIFF.    Copyright (C) 1988, 1989, 1992, 1993 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* File I/O for GNU DIFF.    Copyright (C) 1988, 1989, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -70,12 +70,23 @@ begin_comment
 comment|/* Type used for fast prefix comparison in find_identical_ends.  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|word
-typedef|;
-end_typedef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|word
+value|int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
@@ -105,13 +116,13 @@ comment|/* A line that fits this class. */
 name|size_t
 name|length
 decl_stmt|;
-comment|/* The length of that line.  */
+comment|/* That line's length, not counting its newline.  */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* Hash-table: array of buckets, each being a chain of equivalence classes.  */
+comment|/* Hash-table: array of buckets, each being a chain of equivalence classes.    buckets[-1] is reserved for incomplete lines.  */
 end_comment
 
 begin_decl_stmt
@@ -123,7 +134,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of buckets in the hash table array. */
+comment|/* Number of buckets in the hash table array, not counting buckets[-1]. */
 end_comment
 
 begin_decl_stmt
@@ -233,7 +244,7 @@ name|buf
 parameter_list|,
 name|size
 parameter_list|)
-value|(size != 0&& memchr (buf, '\0', size) != 0)
+value|(memchr (buf, '\0', size) != 0)
 end_define
 
 begin_comment
@@ -320,10 +331,26 @@ name|skip_test
 condition|)
 block|{
 comment|/* Check first part of file to see if it's a binary file.  */
+if|#
+directive|if
+name|HAVE_SETMODE
+name|int
+name|oldmode
+init|=
+name|setmode
+argument_list|(
 name|current
 operator|->
-name|buffered_chars
-operator|=
+name|desc
+argument_list|,
+name|O_BINARY
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
+name|size_t
+name|n
+init|=
 name|read
 argument_list|(
 name|current
@@ -338,12 +365,10 @@ name|current
 operator|->
 name|bufsize
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
-name|current
-operator|->
-name|buffered_chars
+name|n
 operator|==
 operator|-
 literal|1
@@ -355,6 +380,67 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|current
+operator|->
+name|buffered_chars
+operator|=
+name|n
+expr_stmt|;
+if|#
+directive|if
+name|HAVE_SETMODE
+if|if
+condition|(
+name|oldmode
+operator|!=
+name|O_BINARY
+condition|)
+block|{
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|current
+operator|->
+name|desc
+argument_list|,
+operator|-
+operator|(
+name|off_t
+operator|)
+name|n
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|pfatal_with_name
+argument_list|(
+name|current
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|setmode
+argument_list|(
+name|current
+operator|->
+name|desc
+argument_list|,
+name|oldmode
+argument_list|)
+expr_stmt|;
+name|current
+operator|->
+name|buffered_chars
+operator|=
+literal|0
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 name|binary_file_p
 argument_list|(
@@ -362,9 +448,7 @@ name|current
 operator|->
 name|buffer
 argument_list|,
-name|current
-operator|->
-name|buffered_chars
+name|n
 argument_list|)
 return|;
 block|}
@@ -814,33 +898,10 @@ name|current
 operator|->
 name|buffered_chars
 decl_stmt|;
-name|char
-specifier|const
-modifier|*
-name|incomplete_tail
-init|=
-name|current
-operator|->
-name|missing_newline
-operator|&&
-name|ROBUST_OUTPUT_STYLE
-argument_list|(
-name|output_style
-argument_list|)
-condition|?
-name|bufend
-else|:
-operator|(
-name|char
-specifier|const
-operator|*
-operator|)
-literal|0
-decl_stmt|;
 name|int
-name|varies
+name|use_line_cmp
 init|=
-name|length_varies
+name|ignore_some_line_changes
 decl_stmt|;
 while|while
 condition|(
@@ -897,7 +958,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|isspace
+name|ISSPACE
 argument_list|(
 name|c
 argument_list|)
@@ -908,7 +969,7 @@ name|HASH
 argument_list|(
 name|h
 argument_list|,
-name|isupper
+name|ISUPPER
 argument_list|(
 name|c
 argument_list|)
@@ -942,23 +1003,33 @@ condition|)
 block|{
 if|if
 condition|(
-name|isspace
+name|ISSPACE
 argument_list|(
 name|c
 argument_list|)
 condition|)
 block|{
-while|while
-condition|(
-name|isspace
-argument_list|(
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|c
 operator|=
 operator|*
 name|p
 operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ISSPACE
+argument_list|(
+name|c
 argument_list|)
 condition|)
+break|break;
 if|if
 condition|(
 name|c
@@ -968,6 +1039,7 @@ condition|)
 goto|goto
 name|hashing_done
 goto|;
+block|}
 name|h
 operator|=
 name|HASH
@@ -985,7 +1057,7 @@ name|HASH
 argument_list|(
 name|h
 argument_list|,
-name|isupper
+name|ISUPPER
 argument_list|(
 name|c
 argument_list|)
@@ -1018,7 +1090,7 @@ name|HASH
 argument_list|(
 name|h
 argument_list|,
-name|isupper
+name|ISUPPER
 argument_list|(
 name|c
 argument_list|)
@@ -1054,7 +1126,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|isspace
+name|ISSPACE
 argument_list|(
 name|c
 argument_list|)
@@ -1089,23 +1161,33 @@ condition|)
 block|{
 if|if
 condition|(
-name|isspace
+name|ISSPACE
 argument_list|(
 name|c
 argument_list|)
 condition|)
 block|{
-while|while
-condition|(
-name|isspace
-argument_list|(
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|c
 operator|=
 operator|*
 name|p
 operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ISSPACE
+argument_list|(
+name|c
 argument_list|)
 condition|)
+break|break;
 if|if
 condition|(
 name|c
@@ -1115,6 +1197,7 @@ condition|)
 goto|goto
 name|hashing_done
 goto|;
+block|}
 name|h
 operator|=
 name|HASH
@@ -1183,7 +1266,10 @@ name|p
 operator|-
 name|ip
 operator|-
-operator|(
+literal|1
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|char
 specifier|const
@@ -1191,9 +1277,53 @@ operator|*
 operator|)
 name|p
 operator|==
-name|incomplete_tail
+name|bufend
+operator|&&
+name|current
+operator|->
+name|missing_newline
+operator|&&
+name|ROBUST_OUTPUT_STYLE
+argument_list|(
+name|output_style
+argument_list|)
+condition|)
+block|{
+comment|/* This line is incomplete.  If this is significant, 	     put the line into bucket[-1].  */
+if|if
+condition|(
+operator|!
+operator|(
+name|ignore_space_change_flag
+operator||
+name|ignore_all_space_flag
 operator|)
+condition|)
+name|bucket
+operator|=
+operator|&
+name|buckets
+index|[
+operator|-
+literal|1
+index|]
 expr_stmt|;
+comment|/* Omit the inserted newline when computing linbuf later.  */
+name|p
+operator|--
+expr_stmt|;
+name|bufend
+operator|=
+name|suffix_begin
+operator|=
+operator|(
+name|char
+specifier|const
+operator|*
+operator|)
+name|p
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -1308,8 +1438,23 @@ operator|.
 name|hash
 operator|==
 name|h
-operator|&&
-operator|(
+condition|)
+block|{
+name|char
+specifier|const
+modifier|*
+name|eqline
+init|=
+name|eqs
+index|[
+name|i
+index|]
+operator|.
+name|line
+decl_stmt|;
+comment|/* Reuse existing equivalence class if the lines are identical. 	       This detects the common case of exact identity 	       faster than complete comparison would.  */
+if|if
+condition|(
 name|eqs
 index|[
 name|i
@@ -1318,34 +1463,35 @@ operator|.
 name|length
 operator|==
 name|length
-operator|||
-name|varies
-operator|)
 operator|&&
-operator|!
-name|line_cmp
+name|memcmp
 argument_list|(
-name|eqs
-index|[
-name|i
-index|]
-operator|.
-name|line
-argument_list|,
-name|eqs
-index|[
-name|i
-index|]
-operator|.
-name|length
+name|eqline
 argument_list|,
 name|ip
 argument_list|,
 name|length
 argument_list|)
+operator|==
+literal|0
 condition|)
-comment|/* Reuse existing equivalence class.  */
 break|break;
+comment|/* Reuse existing class if line_cmp reports the lines equal.  */
+if|if
+condition|(
+name|use_line_cmp
+operator|&&
+name|line_cmp
+argument_list|(
+name|eqline
+argument_list|,
+name|ip
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
 comment|/* Maybe increase the size of the line table. */
 if|if
 condition|(
@@ -1447,7 +1593,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Record the line start for lines in the suffix that we care about.          Record one more line start than lines, 	 so that we can compute the length of any buffered line.  */
+comment|/* Record the line start for lines in the suffix that we care about. 	 Record one more line start than lines, 	 so that we can compute the length of any buffered line.  */
 if|if
 condition|(
 name|line
@@ -1517,23 +1663,7 @@ name|p
 operator|==
 name|bufend
 condition|)
-block|{
-name|linbuf
-index|[
-name|line
-index|]
-operator|-=
-operator|(
-name|char
-specifier|const
-operator|*
-operator|)
-name|p
-operator|==
-name|incomplete_tail
-expr_stmt|;
 break|break;
-block|}
 if|if
 condition|(
 name|context
@@ -1600,7 +1730,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Prepare the end of the text.  Make sure it's initialized.    Make sure text ends in a newline,    but remember that we had to add one unless -B is in effect.  */
+comment|/* Prepare the end of the text.  Make sure it's initialized.    Make sure text ends in a newline,    but remember that we had to add one.  */
 end_comment
 
 begin_function
@@ -1672,8 +1802,7 @@ name|current
 operator|->
 name|missing_newline
 operator|=
-operator|!
-name|ignore_blank_lines_flag
+literal|1
 expr_stmt|;
 block|}
 comment|/* Don't use uninitialized storage when planting or using sentinels.  */
@@ -2953,9 +3082,40 @@ if|if
 condition|(
 name|appears_binary
 condition|)
+block|{
+if|#
+directive|if
+name|HAVE_SETMODE
+name|setmode
+argument_list|(
+name|filevec
+index|[
+literal|0
+index|]
+operator|.
+name|desc
+argument_list|,
+name|O_BINARY
+argument_list|)
+expr_stmt|;
+name|setmode
+argument_list|(
+name|filevec
+index|[
+literal|1
+index|]
+operator|.
+name|desc
+argument_list|,
+name|O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|1
 return|;
+block|}
 name|find_identical_ends
 argument_list|(
 name|filevec
@@ -3046,7 +3206,11 @@ operator|*
 operator|)
 name|xmalloc
 argument_list|(
+operator|(
 name|nbuckets
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3058,8 +3222,13 @@ expr_stmt|;
 name|bzero
 argument_list|(
 name|buckets
+operator|++
 argument_list|,
+operator|(
 name|nbuckets
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3078,8 +3247,8 @@ name|i
 operator|<
 literal|2
 condition|;
-operator|++
 name|i
+operator|++
 control|)
 name|find_and_hash_each_line
 argument_list|(
@@ -3114,6 +3283,8 @@ expr_stmt|;
 name|free
 argument_list|(
 name|buckets
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
