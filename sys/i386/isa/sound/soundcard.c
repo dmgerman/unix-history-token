@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/386bsd/soundcard.c  *   * Soundcard driver for 386BSD.  *   * (C) 1992  Hannu Savolainen (hsavolai@cs.helsinki.fi)  * See COPYING for further details. Should be distributed with this file.  */
+comment|/*  * sound/386bsd/soundcard.c  *   * Soundcard driver for FreeBSD.  *   * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -385,9 +385,9 @@ switch|switch
 condition|(
 name|dev
 operator|&
-literal|0xff
+literal|0x0f
 condition|)
-comment|/* Changed to 0xff from 0x0f */
+comment|/* It really has to be 0x0f */
 block|{
 case|case
 name|SND_DEV_AUDIO
@@ -566,9 +566,9 @@ switch|switch
 condition|(
 name|dev
 operator|&
-literal|0xff
+literal|0x0f
 condition|)
-comment|/* Changed to 0xff from 0x0f */
+comment|/* It really has to be 0x0f */
 block|{
 case|case
 name|SND_DEV_SEQ
@@ -834,9 +834,9 @@ switch|switch
 condition|(
 name|dev
 operator|&
-literal|0xff
+literal|0x0f
 condition|)
-comment|/* Changed to 0xff from 0x0f */
+comment|/* It has to be 0x0f. Trust me */
 block|{
 case|case
 name|SND_DEV_CTL
@@ -1103,9 +1103,9 @@ switch|switch
 condition|(
 name|dev
 operator|&
-literal|0xff
+literal|0x0f
 condition|)
-comment|/* Changed to 0xff from 0x0f */
+comment|/* Has to be 0x0f */
 block|{
 case|case
 name|SND_DEV_SEQ
@@ -1486,6 +1486,7 @@ specifier|static
 name|short
 name|ipri_to_irq
 parameter_list|(
+name|unsigned
 name|short
 name|ipri
 parameter_list|)
@@ -1709,6 +1710,11 @@ name|FALSE
 return|;
 comment|/* No cards detected */
 block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|EXCLUDE_AUDIO
@@ -2128,7 +2134,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Not possible with 386BSD */
+comment|/* Not possible with FreeBSD */
 block|}
 if|if
 condition|(
