@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: temp.c,v 1.3 1997/07/24 06:56:33 charnier Exp $"
+literal|"$Id: temp.c,v 1.4 1998/10/10 09:58:20 thepish Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,11 +159,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|panic
 argument_list|(
-literal|1
-argument_list|,
-name|NULL
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -197,12 +195,18 @@ operator|=
 name|cp
 expr_stmt|;
 block|}
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|tmpdir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
 name|tempMail
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|len
@@ -212,6 +216,14 @@ argument_list|(
 literal|"RsXXXXXX"
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"Out of memory"
+argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -230,12 +242,11 @@ literal|"RsXXXXXX"
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|tempResid
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|len
@@ -245,6 +256,14 @@ argument_list|(
 literal|"RqXXXXXX"
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"Out of memory"
+argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -263,12 +282,11 @@ literal|"RqXXXXXX"
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|tempQuit
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|len
@@ -277,6 +295,14 @@ sizeof|sizeof
 argument_list|(
 literal|"RmXXXXXX"
 argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -296,12 +322,11 @@ literal|"RmXXXXXX"
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|tempEdit
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|len
@@ -310,6 +335,14 @@ sizeof|sizeof
 argument_list|(
 literal|"ReXXXXXX"
 argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -329,12 +362,11 @@ literal|"ReXXXXXX"
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|tempMesg
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|len
@@ -343,6 +375,14 @@ sizeof|sizeof
 argument_list|(
 literal|"RxXXXXXX"
 argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"Out of memory"
 argument_list|)
 expr_stmt|;
 name|strcpy
