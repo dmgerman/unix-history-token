@@ -1175,19 +1175,7 @@ argument_list|,
 literal|"w"
 argument_list|)
 operator|)
-operator|==
-name|NULL
 condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"cannot create PID file: %m"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|fprintf
 argument_list|(
