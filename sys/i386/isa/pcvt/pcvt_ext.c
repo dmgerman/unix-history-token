@@ -11683,11 +11683,6 @@ name|trapframe
 modifier|*
 name|fp
 init|=
-operator|(
-expr|struct
-name|trapframe
-operator|*
-operator|)
 name|p
 operator|->
 name|p_md
@@ -11823,11 +11818,6 @@ name|trapframe
 modifier|*
 name|fp
 init|=
-operator|(
-expr|struct
-name|trapframe
-operator|*
-operator|)
 name|p
 operator|->
 name|p_md
