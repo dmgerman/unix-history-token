@@ -2182,14 +2182,6 @@ name|cnt
 expr_stmt|;
 do|do
 block|{
-comment|/* 			 * gcc-2.6.3 generates poor (un)sign extension code. 			 * Casting the pointers in the following to volatile  			 * should have no effect, but in fact speeds up this  			 * inner loop from 26 to 18 cycles (+ cache misses)  			 * on i486's. 			 * XXX: out of date? 			 */
-define|#
-directive|define
-name|UCVP
-parameter_list|(
-name|ucp
-parameter_list|)
-value|((u_char volatile *)(ucp))
 name|p
 operator|=
 name|sc_vtb_putchar
@@ -2201,16 +2193,10 @@ name|vtb
 argument_list|,
 name|p
 argument_list|,
-name|UCVP
-argument_list|(
 name|map
-argument_list|)
 index|[
 operator|*
-name|UCVP
-argument_list|(
 name|ptr
-argument_list|)
 index|]
 argument_list|,
 name|attr
