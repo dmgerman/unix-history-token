@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)klogin.c	5.10 (Berkeley) %G%"
+literal|"@(#)klogin.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,6 +187,11 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|krb_get_phost
+parameter_list|()
+function_decl|;
 comment|/* 	 * Root logins don't use Kerberos. 	 * If we have a realm, try getting a ticket-granting ticket 	 * and using it to authenticate.  Otherwise, return 	 * failure so that we can try the normal passwd file 	 * for a password.  If that's ok, log the user in 	 * without issuing any tickets. 	 */
 if|if
 condition|(
