@@ -13,8 +13,11 @@ begin_define
 define|#
 directive|define
 name|_MACHINE_SIGFRAME_H_
-value|1
 end_define
+
+begin_comment
+comment|/*  * Signal frames, arguments passed to application signal handlers.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -62,7 +65,7 @@ begin_struct
 struct|struct
 name|sigframe
 block|{
-comment|/* 	 * The first three members may be used by applications. 	 */
+comment|/* 	 * The first four members may be used by applications. 	 * NOTE: The 4th argument is undocumented, ill commented 	 *       on and seems to be somewhat BSD "standard". 	 *       Handlers installed with sigvec may be using it. 	 */
 name|register_t
 name|sf_signum
 decl_stmt|;
@@ -74,10 +77,11 @@ name|register_t
 name|sf_ucontext
 decl_stmt|;
 comment|/* points to sf_uc */
-name|register_t
-name|__spare__
+name|char
+modifier|*
+name|sf_addr
 decl_stmt|;
-comment|/* Align sf_ahu */
+comment|/* undocumented 4th arg */
 union|union
 block|{
 name|__siginfohandler_t
@@ -113,7 +117,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_SIGFRAME_H_ */
+comment|/* !_MACHINE_SIGFRAME_H_ */
 end_comment
 
 end_unit
