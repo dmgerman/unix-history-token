@@ -18,33 +18,15 @@ name|lint
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char sccsid[] = "@(#)initgroups.c	8.1 (Berkeley) 6/4/93";
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)initgroups.c	8.1 (Berkeley) 6/4/93"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -54,6 +36,20 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -97,16 +93,22 @@ name|agroup
 decl_stmt|;
 block|{
 name|int
+name|ngroups
+decl_stmt|;
+comment|/* 	 * Provide space for one group more than NGROUPS to allow 	 * setgroups to fail and set errno. 	 */
+name|gid_t
 name|groups
 index|[
 name|NGROUPS
+operator|+
+literal|1
 index|]
-decl_stmt|,
-name|ngroups
 decl_stmt|;
 name|ngroups
 operator|=
 name|NGROUPS
+operator|+
+literal|1
 expr_stmt|;
 name|getgrouplist
 argument_list|(
