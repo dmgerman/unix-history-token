@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.64 (Berkeley) %G%"
+literal|"@(#)util.c	8.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3343,11 +3343,18 @@ name|l
 argument_list|,
 name|mci
 argument_list|,
-name|TRUE
+name|PXLF_MAPFROM
 argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  PUTXLINE -- putline with flags bits. ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		mci -- the mailer connection information. **		pxflags -- flag bits: **		    PXLF_MAPFROM -- map From_ to>From_. **		    PXLF_STRIP8BIT -- strip 8th bit. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
+end_comment
 
 begin_function
 name|void
@@ -3357,7 +3364,7 @@ name|l
 parameter_list|,
 name|mci
 parameter_list|,
-name|mapfrom
+name|pxflags
 parameter_list|)
 specifier|register
 name|char
@@ -3369,8 +3376,8 @@ name|MCI
 modifier|*
 name|mci
 decl_stmt|;
-name|bool
-name|mapfrom
+name|int
+name|pxflags
 decl_stmt|;
 block|{
 specifier|register
@@ -3397,6 +3404,13 @@ argument_list|,
 name|mci
 operator|->
 name|mci_flags
+argument_list|)
+operator|||
+name|bitset
+argument_list|(
+name|PXLF_STRIP8BIT
+argument_list|,
+name|pxflags
 argument_list|)
 condition|)
 block|{
@@ -3604,7 +3618,12 @@ name|slop
 operator|==
 literal|0
 operator|&&
-name|mapfrom
+name|bitset
+argument_list|(
+name|PXLF_MAPFROM
+argument_list|,
+name|pxflags
+argument_list|)
 operator|&&
 name|strncmp
 argument_list|(
@@ -3616,7 +3635,7 @@ literal|5
 argument_list|)
 operator|==
 literal|0
-operator|&
+operator|&&
 name|bitnset
 argument_list|(
 name|M_ESCFROM

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.123 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.124 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.123		%G%"
+literal|"@(#)sendmail.h	8.124		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4185,10 +4185,41 @@ begin_comment
 comment|/* add To: undisclosed:; header */
 end_comment
 
-begin_escape
-end_escape
+begin_comment
+comment|/* flags to putxline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PXLF_NOTHINGSPECIAL
+value|0
+end_define
 
 begin_comment
+comment|/* no special mapping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PXLF_MAPFROM
+value|0x0001
+end_define
+
+begin_comment
+comment|/* map From_ to>From_ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PXLF_STRIP8BIT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* strip 8th bit *e
 comment|/* **  Additional definitions */
 end_comment
 
@@ -4564,6 +4595,17 @@ end_define
 
 begin_comment
 comment|/* can't have 8-bit in this section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M87F_DIGEST
+value|0x0002
+end_define
+
+begin_comment
+comment|/* processing multipart/digest */
 end_comment
 
 begin_comment

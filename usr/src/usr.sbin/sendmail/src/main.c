@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.103 (Berkeley) %G%"
+literal|"@(#)main.c	8.104 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4066,7 +4066,7 @@ block|}
 end_if
 
 begin_comment
-comment|/* initialize standard MIME classes */
+comment|/* MIME Content-Types that cannot be transfer encoded */
 end_comment
 
 begin_expr_stmt
@@ -4074,37 +4074,41 @@ name|setclass
 argument_list|(
 literal|'n'
 argument_list|,
-literal|"message/rfc822"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|setclass
-argument_list|(
-literal|'n'
-argument_list|,
-literal|"message/partial"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|setclass
-argument_list|(
-literal|'n'
-argument_list|,
-literal|"message/external-body"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|setclass
-argument_list|(
-literal|'n'
-argument_list|,
 literal|"multipart/signed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* MIME Content-Transfer-Encodings that can be encoded */
+end_comment
+
+begin_expr_stmt
+name|setclass
+argument_list|(
+literal|'e'
+argument_list|,
+literal|"7bit"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|setclass
+argument_list|(
+literal|'e'
+argument_list|,
+literal|"8bit"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|setclass
+argument_list|(
+literal|'e'
+argument_list|,
+literal|"binary"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
