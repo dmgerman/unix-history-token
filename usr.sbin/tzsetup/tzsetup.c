@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tzsetup.c,v 1.12 1999/02/02 20:26:31 wollman Exp $"
+literal|"$Id: tzsetup.c,v 1.13 1999/06/23 03:31:36 mharo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2731,7 +2731,11 @@ name|O_EXCL
 operator||
 name|O_WRONLY
 argument_list|,
-literal|0444
+name|S_IRUSR
+operator||
+name|S_IRGRP
+operator||
+name|S_IROTH
 argument_list|)
 expr_stmt|;
 if|if
@@ -2823,6 +2827,8 @@ argument_list|,
 literal|"Error copying %s to "
 name|_PATH_LOCALTIME
 literal|": %s"
+argument_list|,
+name|filename
 argument_list|,
 name|strerror
 argument_list|(
@@ -3355,6 +3361,17 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* Override the user-supplied umask. */
+operator|(
+name|void
+operator|)
+name|umask
+argument_list|(
+name|S_IWGRP
+operator||
+name|S_IWOTH
+argument_list|)
+expr_stmt|;
 name|read_iso3166_table
 argument_list|()
 expr_stmt|;
@@ -3415,7 +3432,11 @@ name|O_CREAT
 operator||
 name|O_TRUNC
 argument_list|,
-literal|0666
+name|S_IRUSR
+operator||
+name|S_IRGRP
+operator||
+name|S_IROTH
 argument_list|)
 expr_stmt|;
 if|if
