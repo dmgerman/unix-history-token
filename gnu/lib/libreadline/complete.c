@@ -482,12 +482,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|VISIBLE_STATS
-end_define
-
 begin_if
 if|#
 directive|if
