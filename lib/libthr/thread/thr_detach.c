@@ -48,10 +48,6 @@ block|{
 if|if
 condition|(
 name|pthread
-operator|==
-name|NULL
-operator|||
-name|pthread
 operator|->
 name|magic
 operator|!=
@@ -72,6 +68,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pthread
 operator|->
 name|attr
@@ -79,6 +76,9 @@ operator|.
 name|flags
 operator|&
 name|PTHREAD_DETACHED
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|UMTX_UNLOCK
@@ -91,6 +91,16 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|pthread
+operator|->
+name|state
+operator|==
+name|PS_DEAD
+operator|)
+condition|?
+name|ESRCH
+else|:
 name|EINVAL
 operator|)
 return|;
