@@ -17,10 +17,14 @@ directive|include
 file|"kadm_locl.h"
 end_include
 
+begin_comment
+comment|/* RCSID("$Id: kadm_cli_wrap.c,v 1.27 1999/09/16 20:41:46 assar Exp $");*/
+end_comment
+
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadm_cli_wrap.c,v 1.27 1999/09/16 20:41:46 assar Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -733,6 +737,16 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+operator|*
+name|ret_dat
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|ret_siz
+operator|=
+literal|0
+expr_stmt|;
 name|dlen
 operator|=
 operator|(
@@ -915,6 +929,17 @@ name|dlen
 operator|)
 condition|)
 block|{
+name|free
+argument_list|(
+operator|*
+name|ret_dat
+argument_list|)
+expr_stmt|;
+operator|*
+name|ret_dat
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|retval
@@ -1021,6 +1046,16 @@ name|void
 modifier|*
 name|tmp_ptr
 decl_stmt|;
+operator|*
+name|ret_dat
+operator|=
+name|NULL
+expr_stmt|;
+operator|*
+name|ret_siz
+operator|=
+literal|0
+expr_stmt|;
 name|act_st
 operator|=
 name|malloc
@@ -1374,7 +1409,7 @@ name|RET_N_FREE2
 parameter_list|(
 name|r
 parameter_list|)
-value|{free(*ret_dat); clear_secrets(); return(r);}
+value|{free(*ret_dat); *ret_dat = NULL; clear_secrets(); return(r);}
 comment|/* first see if it's a YOULOUSE */
 if|if
 condition|(
@@ -1942,10 +1977,6 @@ operator|=
 name|msg
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ret_st
-condition|)
 name|free
 argument_list|(
 name|ret_st
@@ -2201,12 +2232,12 @@ name|retc
 operator|=
 name|KADM_LENGTH_ERROR
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|ret_st
 argument_list|)
 expr_stmt|;
-block|}
 name|kadm_cli_disconn
 argument_list|()
 expr_stmt|;
@@ -2468,12 +2499,12 @@ name|retc
 operator|=
 name|KADM_LENGTH_ERROR
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|ret_st
 argument_list|)
 expr_stmt|;
-block|}
 name|kadm_cli_disconn
 argument_list|()
 expr_stmt|;
@@ -2619,6 +2650,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|st2
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ret_st
 argument_list|)
 expr_stmt|;
 name|kadm_cli_disconn
@@ -2847,12 +2883,12 @@ name|retc
 operator|=
 name|KADM_LENGTH_ERROR
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|ret_st
 argument_list|)
 expr_stmt|;
-block|}
 name|kadm_cli_disconn
 argument_list|()
 expr_stmt|;
