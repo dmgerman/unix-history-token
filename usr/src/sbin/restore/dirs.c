@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	8.3 (Berkeley) %G%"
+literal|"@(#)dirs.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,14 +203,17 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|short
+name|mode_t
 name|mode
 decl_stmt|;
-name|short
+name|uid_t
 name|uid
 decl_stmt|;
-name|short
+name|gid_t
 name|gid
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|}
 struct|;
@@ -3076,6 +3079,18 @@ operator|.
 name|mode
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|chflags
+argument_list|(
+name|cp
+argument_list|,
+name|node
+operator|.
+name|flags
+argument_list|)
+expr_stmt|;
 name|utimes
 argument_list|(
 name|cp
@@ -3640,6 +3655,14 @@ operator|=
 name|dip
 operator|->
 name|di_mode
+expr_stmt|;
+name|node
+operator|.
+name|flags
+operator|=
+name|dip
+operator|->
+name|di_flags
 expr_stmt|;
 name|node
 operator|.
