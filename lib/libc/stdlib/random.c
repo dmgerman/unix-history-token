@@ -889,8 +889,12 @@ argument_list|)
 expr_stmt|;
 name|srandom
 argument_list|(
+operator|(
 name|getpid
 argument_list|()
+operator|<<
+literal|16
+operator|)
 operator|^
 name|tv
 operator|.

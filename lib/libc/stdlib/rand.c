@@ -382,8 +382,12 @@ argument_list|)
 expr_stmt|;
 name|next
 operator|=
+operator|(
 name|getpid
 argument_list|()
+operator|<<
+literal|16
+operator|)
 operator|^
 name|tv
 operator|.
