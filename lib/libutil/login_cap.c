@@ -638,6 +638,15 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|_FILE_LOGIN_CONF_WORKS
+name|dir
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dir
