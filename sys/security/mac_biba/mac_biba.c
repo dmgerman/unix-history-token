@@ -12340,6 +12340,8 @@ argument_list|,
 literal|"TrustedBSD MAC/Biba"
 argument_list|,
 name|MPC_LOADTIME_FLAG_NOTLATE
+operator||
+name|MPC_LOADTIME_FLAG_LABELMBUFS
 argument_list|,
 operator|&
 name|mac_biba_slot

@@ -6595,6 +6595,8 @@ argument_list|,
 literal|"TrustedBSD MAC/Test"
 argument_list|,
 name|MPC_LOADTIME_FLAG_UNLOADOK
+operator||
+name|MPC_LOADTIME_FLAG_LABELMBUFS
 argument_list|,
 operator|&
 name|test_slot
