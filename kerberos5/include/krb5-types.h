@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* krb5-types.h -- this file was generated for i386-unknown-freebsd4.0 by                    $Id: bits.c,v 1.15 1999/03/24 04:04:10 assar Exp $ */
+comment|/* krb5-types.h -- this file was generated for i386-unknown-freebsd5.0 by                    $Id: bits.c,v 1.18 2000/08/27 05:42:46 assar Exp $ */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
