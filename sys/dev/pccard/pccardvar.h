@@ -973,6 +973,25 @@ block|{
 name|PCCARD_IVAR_ETHADDR
 block|,
 comment|/* read ethernet address from CIS tupple */
+name|PCCARD_IVAR_VENDOR
+block|,
+name|PCCARD_IVAR_PRODUCT
+block|,
+name|PCCARD_IVAR_PRODEXT
+block|,
+name|PCCARD_IVAR_FUNCTION_NUMBER
+block|,
+name|PCCARD_IVAR_VENDOR_STR
+block|,
+comment|/* CIS string for "Manufacturer" */
+name|PCCARD_IVAR_PRODUCT_STR
+block|,
+comment|/* CIS strnig for "Product" */
+name|PCCARD_IVAR_CIS3_STR
+block|,
+name|PCCARD_IVAR_CIS4_STR
+block|,
+name|PCCARD_IVAR_FUNCTION
 block|}
 enum|;
 end_enum
