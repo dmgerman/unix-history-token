@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_pty.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_pty.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -314,6 +314,22 @@ begin_comment
 comment|/* waiting for PF_BLOCK to clear */
 end_comment
 
+begin_decl_stmt
+name|void
+name|ptsstop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -334,6 +350,14 @@ end_macro
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|,
+name|devtype
 decl_stmt|;
 end_decl_stmt
 
@@ -565,8 +589,6 @@ operator|(
 name|dev
 operator|,
 name|tp
-operator|,
-name|flag
 operator|)
 expr_stmt|;
 name|ptcwakeup
@@ -701,6 +723,12 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -1157,22 +1185,17 @@ begin_comment
 comment|/*  * Start output on pseudo-tty.  * Wake up process selecting or sleeping for input from controlling tty.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ptsstart
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1231,7 +1254,7 @@ name|FREAD
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|ptcwakeup
@@ -1247,6 +1270,12 @@ name|struct
 name|tty
 modifier|*
 name|tp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -1504,6 +1533,17 @@ name|t_oproc
 operator|=
 name|ptsstart
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun4c
+name|tp
+operator|->
+name|t_stop
+operator|=
+name|ptsstop
+expr_stmt|;
+endif|#
+directive|endif
 call|(
 name|void
 call|)
@@ -1670,6 +1710,12 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -2167,20 +2213,18 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|void
 name|ptswake
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2245,7 +2289,7 @@ name|TS_WCOLL
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|ptsstop
@@ -3284,8 +3328,22 @@ argument_list|,
 argument|data
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cmd
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
@@ -3294,8 +3352,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|dev_t
-name|dev
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -3839,6 +3905,9 @@ operator|(
 literal|0
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|COMPAT_43
 case|case
 name|FIONREAD
 case|:
@@ -3866,6 +3935,8 @@ case|:
 case|case
 name|TIOCSETN
 case|:
+endif|#
+directive|endif
 case|case
 name|TIOCSETD
 case|:
@@ -3878,19 +3949,20 @@ case|:
 case|case
 name|TIOCSETAF
 case|:
-while|while
-condition|(
-name|getc
+name|ndflush
 argument_list|(
 operator|&
 name|tp
 operator|->
 name|t_outq
+argument_list|,
+name|tp
+operator|->
+name|t_outq
+operator|.
+name|c_cc
 argument_list|)
-operator|>=
-literal|0
-condition|)
-empty_stmt|;
+expr_stmt|;
 break|break;
 case|case
 name|TIOCSIG
@@ -4490,6 +4562,8 @@ operator|,
 name|data
 operator|,
 name|flag
+operator|,
+name|p
 operator|)
 expr_stmt|;
 if|if
@@ -4608,15 +4682,28 @@ case|:
 case|case
 name|TIOCSETAF
 case|:
+ifdef|#
+directive|ifdef
+name|COMPAT_43
 case|case
 name|TIOCSETP
 case|:
 case|case
 name|TIOCSETN
 case|:
-ifdef|#
-directive|ifdef
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
 name|COMPAT_43
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
+argument_list|)
 case|case
 name|TIOCSETC
 case|:
