@@ -1444,19 +1444,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ED_VENDOR_PCCARD
-value|0x03
-end_define
-
-begin_comment
-comment|/* PCMCIA/PCCARD */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ED_VENDOR_HP
-value|0x04
+value|0x03
 end_define
 
 begin_comment
@@ -1466,19 +1455,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ED_VENDOR_LINKSYS
-value|0x05
-end_define
-
-begin_comment
-comment|/* Linksys (Dlink) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ED_VENDOR_SIC
-value|0x06
+value|0x04
 end_define
 
 begin_comment
@@ -3786,6 +3764,13 @@ define|#
 directive|define
 name|ED_CHIP_TYPE_AX88190
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_DL100XX
+value|0x03
 end_define
 
 begin_comment

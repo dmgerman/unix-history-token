@@ -530,6 +530,12 @@ operator|)
 return|;
 block|}
 block|}
+name|sc
+operator|->
+name|chip_type
+operator|=
+name|ED_CHIP_TYPE_DP8390
+expr_stmt|;
 comment|/* 8k of memory plus an additional 8k if 16bit */
 name|memsize
 operator|=

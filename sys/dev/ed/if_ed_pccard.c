@@ -1689,9 +1689,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|vendor
-operator|!=
-name|ED_VENDOR_LINKSYS
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_DP8390
 condition|)
 block|{
 name|pccard_get_ether
@@ -1761,9 +1761,9 @@ literal|0
 operator|&&
 name|sc
 operator|->
-name|vendor
+name|chip_type
 operator|==
-name|ED_VENDOR_LINKSYS
+name|ED_CHIP_TYPE_DL100XX
 condition|)
 block|{
 comment|/* Probe for an MII bus, but ignore errors. */
@@ -2403,13 +2403,19 @@ name|sc
 operator|->
 name|vendor
 operator|=
-name|ED_VENDOR_LINKSYS
+name|ED_VENDOR_NOVELL
 expr_stmt|;
 name|sc
 operator|->
 name|type
 operator|=
 name|ED_TYPE_NE2000
+expr_stmt|;
+name|sc
+operator|->
+name|chip_type
+operator|=
+name|ED_CHIP_TYPE_DL100XX
 expr_stmt|;
 name|sc
 operator|->
@@ -2581,7 +2587,7 @@ name|sc
 operator|->
 name|vendor
 operator|=
-name|ED_VENDOR_PCCARD
+name|ED_VENDOR_NOVELL
 expr_stmt|;
 name|sc
 operator|->
