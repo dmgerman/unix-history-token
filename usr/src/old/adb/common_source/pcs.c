@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcs.c	5.4 (Berkeley) %G%"
+literal|"@(#)pcs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,17 +313,11 @@ argument_list|(
 name|dot
 argument_list|)
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
-name|bp
-operator|->
-name|state
-operator|=
-name|BKPT_FREE
-expr_stmt|;
-else|else
 block|{
+comment|/* find a free one, or make one */
 for|for
 control|(
 name|bp
@@ -530,40 +524,24 @@ name|execsig
 operator|=
 literal|0
 expr_stmt|;
+comment|/* if starting at a breakpoint, run over it */
 if|if
 condition|(
+name|scanbkpt
+argument_list|(
 name|gavedot
-condition|)
-block|{
-if|if
-condition|(
-name|scanbkpt
-argument_list|(
+condition|?
 name|dot
-argument_list|)
-operator|==
-name|NULL
-condition|)
-name|runcount
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|scanbkpt
-argument_list|(
+else|:
 name|entrypc
 argument_list|()
 argument_list|)
-operator|==
+operator|!=
 name|NULL
 condition|)
 name|runcount
 operator|++
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'s'
@@ -1570,6 +1548,10 @@ name|BPOUT
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Single step over a location containing a breakpoint.  */
+end_comment
 
 begin_macro
 name|execbkpt
