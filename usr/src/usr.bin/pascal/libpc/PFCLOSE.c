@@ -9,19 +9,13 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PFCLOSE.c	1.1	(Berkeley)	%G%"
+literal|"@(#)PFCLOSE.c	1.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/*  * Close a Pascal file deallocating resources as appropriate.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -50,17 +44,6 @@ modifier|*
 name|filep
 decl_stmt|;
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Closing file %s\n"
-argument_list|,
-name|filep
-operator|->
-name|pfname
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
