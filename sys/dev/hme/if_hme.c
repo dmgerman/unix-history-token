@@ -137,6 +137,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_vlan_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/mii/mii.h>
 end_include
 
@@ -707,6 +713,17 @@ parameter_list|,
 modifier|...
 parameter_list|)
 value|do {					\ 	if (hme_nerr++< HME_MAXERR)					\ 		device_printf(dev, __VA_ARGS__);			\ 	if (hme_nerr == HME_MAXERR) {					\ 		device_printf(dev, "too may errors; not reporting any "	\ 		    "more\n");						\ 	}								\ } while(0)
+end_define
+
+begin_comment
+comment|/* Support oversized VLAN frames. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HME_MAX_FRAMESIZE
+value|(ETHER_MAX_LEN + ETHER_VLAN_ENCAP_LEN)
 end_define
 
 begin_function
@@ -1477,6 +1494,25 @@ name|sc_arpcom
 operator|.
 name|ac_enaddr
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
+name|ifp
+operator|->
+name|if_data
+operator|.
+name|ifi_hdrlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_vlan_header
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_VLAN_MTU
 expr_stmt|;
 name|callout_init
 argument_list|(
@@ -3365,7 +3401,7 @@ name|sc
 argument_list|,
 name|HME_MACI_TXSIZE
 argument_list|,
-name|ETHER_MAX_LEN
+name|HME_MAX_FRAMESIZE
 argument_list|)
 expr_stmt|;
 comment|/* Load station MAC address */
@@ -3526,7 +3562,7 @@ name|sc
 argument_list|,
 name|HME_MACI_RXSIZE
 argument_list|,
-name|ETHER_MAX_LEN
+name|HME_MAX_FRAMESIZE
 argument_list|)
 expr_stmt|;
 comment|/* step 8. Global Configuration& Interrupt Mask */
@@ -4698,13 +4734,7 @@ argument_list|)
 operator|||
 name|len
 operator|>
-name|ETHERMTU
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
+name|HME_MAX_FRAMESIZE
 condition|)
 block|{
 ifdef|#
