@@ -107,6 +107,9 @@ name|MD5End
 parameter_list|(
 name|MD5_CTX
 modifier|*
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -116,6 +119,9 @@ name|char
 modifier|*
 name|MD5File
 parameter_list|(
+name|char
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|)
@@ -134,6 +140,9 @@ modifier|*
 parameter_list|,
 name|unsigned
 name|int
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

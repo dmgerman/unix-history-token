@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mdXhl.c  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: mdXhl.c,v 1.4 1995/04/27 16:05:51 wollman Exp $  *  */
+comment|/* mdXhl.c  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: mdXhl.c,v 1.5 1995/05/30 05:45:17 rgrimes Exp $  *  */
 end_comment
 
 begin_include
@@ -59,6 +59,10 @@ parameter_list|(
 name|MDX_CTX
 modifier|*
 name|ctx
+parameter_list|,
+name|char
+modifier|*
+name|buf
 parameter_list|)
 block|{
 name|int
@@ -88,6 +92,18 @@ index|[]
 init|=
 literal|"0123456789abcdef"
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|p
+condition|)
+name|p
+operator|=
+name|malloc
+argument_list|(
+literal|33
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -177,6 +193,10 @@ parameter_list|(
 name|char
 modifier|*
 name|filename
+parameter_list|,
+name|char
+modifier|*
+name|buf
 parameter_list|)
 block|{
 name|unsigned
@@ -277,6 +297,8 @@ name|MDXEnd
 argument_list|(
 operator|&
 name|ctx
+argument_list|,
+name|buf
 argument_list|)
 return|;
 block|}
@@ -296,6 +318,10 @@ parameter_list|,
 name|unsigned
 name|int
 name|len
+parameter_list|,
+name|char
+modifier|*
+name|buf
 parameter_list|)
 block|{
 name|MDX_CTX
@@ -322,6 +348,8 @@ name|MDXEnd
 argument_list|(
 operator|&
 name|ctx
+argument_list|,
+name|buf
 argument_list|)
 return|;
 block|}
