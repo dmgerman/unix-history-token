@@ -7669,7 +7669,7 @@ argument_list|,
 name|UHCI_STS
 argument_list|)
 operator|&
-name|UHCI_STS_USBINT
+name|UHCI_STS_ALLINTRS
 condition|)
 name|uhci_intr1
 argument_list|(
@@ -7779,7 +7779,7 @@ argument_list|,
 name|UHCI_STS
 argument_list|)
 operator|&
-name|UHCI_STS_USBINT
+name|UHCI_STS_ALLINTRS
 condition|)
 name|uhci_intr1
 argument_list|(
