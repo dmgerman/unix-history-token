@@ -1482,6 +1482,8 @@ condition|(
 name|bus
 operator|->
 name|use_polling
+operator|||
+name|cold
 condition|)
 name|delay
 argument_list|(
