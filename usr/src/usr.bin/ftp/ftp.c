@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.26 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1427,6 +1427,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* last line of previous reply */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1492,10 +1496,6 @@ name|pt
 init|=
 name|pasv
 decl_stmt|;
-name|cp
-operator|=
-name|reply_string
-expr_stmt|;
 name|oldintr
 operator|=
 name|signal
@@ -1518,6 +1518,10 @@ operator|=
 name|code
 operator|=
 literal|0
+expr_stmt|;
+name|cp
+operator|=
+name|reply_string
 expr_stmt|;
 while|while
 condition|(
@@ -1879,6 +1883,21 @@ name|n
 operator|=
 name|c
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|<
+operator|&
+name|reply_string
+index|[
+sizeof|sizeof
+argument_list|(
+name|reply_string
+argument_list|)
+operator|-
+literal|1
+index|]
+condition|)
 operator|*
 name|cp
 operator|++
