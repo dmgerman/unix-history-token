@@ -562,7 +562,7 @@ name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  *	Reset all the memory and I/O windows.  */
+comment|/* Reset all the memory and I/O windows. */
 name|bzero
 argument_list|(
 operator|(
@@ -732,7 +732,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/*  *	copy over preceding string.  */
+comment|/* copy over preceding string. */
 while|while
 condition|(
 name|lp
@@ -747,7 +747,7 @@ operator|*
 name|lp
 operator|++
 expr_stmt|;
-comment|/*  *	stringify ethernet address and place here.  */
+comment|/* stringify ethernet address and place here. */
 if|if
 condition|(
 name|strncmp
@@ -817,14 +817,14 @@ operator|*
 operator|++
 name|cp
 condition|)
-empty_stmt|;
+continue|continue;
 name|lp
 operator|+=
 literal|6
 expr_stmt|;
 block|}
-comment|/*  *	replace device name  */
 elseif|else
+comment|/* replace device name */
 if|if
 condition|(
 name|strncmp
@@ -875,8 +875,8 @@ operator|+=
 literal|7
 expr_stmt|;
 block|}
-comment|/*  *	Copy the `$' and rescan.  */
 else|else
+comment|/* Copy the `$' and rescan. */
 operator|*
 name|cp
 operator|++
@@ -886,7 +886,7 @@ name|lp
 operator|++
 expr_stmt|;
 block|}
-comment|/*  *	No more replacements. Copy rest of string.  */
+comment|/* No more replacements. Copy rest of string. */
 while|while
 condition|(
 operator|(
@@ -901,7 +901,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-empty_stmt|;
+continue|continue;
 ifdef|#
 directive|ifdef
 name|DEBUG

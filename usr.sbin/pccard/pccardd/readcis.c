@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* set tab=4  *	Read/dump CIS tuples.  */
+comment|/*  *	Read/dump CIS tuples.  */
 end_comment
 
 begin_include
@@ -533,7 +533,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|printf("tuple code = 0x%02x, data is\n", tp->code); 		dump(tp->data, tp->length);
+block|printf("tuple code = 0x%02x, data is\n", tp->code); 			dump(tp->data, tp->length);
 endif|#
 directive|endif
 switch|switch
@@ -2344,7 +2344,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  *	Now start processing the links (if any).  */
+comment|/* Now start processing the links (if any). */
 do|do
 block|{
 name|flag
@@ -2452,6 +2452,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* If a link was found, read the tuple list from it. */
 if|if
 condition|(
 name|ck_linktarget
@@ -2464,7 +2465,6 @@ name|flag
 argument_list|)
 condition|)
 block|{
-comment|/*  *	If a link was found, then read the tuple list from it.  */
 name|tl
 operator|=
 name|read_one_tuplelist
@@ -2494,7 +2494,7 @@ condition|(
 name|tl
 condition|)
 do|;
-comment|/*  *	If the primary list had no NOLINK tuple, and no LINKTARGET,  *	then try to read a tuple list at common memory (offset 0).  */
+comment|/* 	 * If the primary list had no NOLINK tuple, and no LINKTARGET, 	 * then try to read a tuple list at common memory (offset 0). 	 */
 if|if
 condition|(
 name|find_tuple_in_list
@@ -2619,7 +2619,7 @@ name|code
 decl_stmt|,
 name|length
 decl_stmt|;
-comment|/*  *	Check to see if this memory has already been scanned.  */
+comment|/* Check to see if this memory has already been scanned. */
 for|for
 control|(
 name|tl
@@ -2863,7 +2863,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/*  *	Check the tuple, and ignore it if it isn't in the table  *	or the length is illegal.  */
+comment|/* 		 * Check the tuple, and ignore it if it isn't in the table 		 * or the length is illegal. 		 */
 name|tinfo
 operator|=
 name|get_tuple_info

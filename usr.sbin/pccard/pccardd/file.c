@@ -135,7 +135,9 @@ end_struct
 begin_function_decl
 name|void
 name|parsefile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -143,7 +145,9 @@ begin_function_decl
 name|char
 modifier|*
 name|token
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -151,7 +155,9 @@ begin_function_decl
 name|char
 modifier|*
 name|getline
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -159,14 +165,18 @@ begin_function_decl
 name|char
 modifier|*
 name|next_tok
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
 name|num_tok
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -263,7 +273,9 @@ end_function_decl
 begin_function_decl
 name|void
 name|parse_card
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -360,7 +372,9 @@ end_function
 begin_function
 name|void
 name|parsefile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -407,10 +421,10 @@ case|case
 literal|7
 case|:
 return|return;
-comment|/*  *	reserved I/O blocks  */
 case|case
 literal|1
 case|:
+comment|/* reserved I/O blocks */
 while|while
 condition|(
 operator|(
@@ -482,10 +496,10 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-comment|/*  *	reserved irqs  */
 case|case
 literal|2
 case|:
+comment|/* reserved irqs */
 while|while
 condition|(
 operator|(
@@ -511,10 +525,10 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-comment|/*  *	reserved memory blocks.  */
 case|case
 literal|3
 case|:
+comment|/* reserved memory blocks. */
 while|while
 condition|(
 operator|(
@@ -592,19 +606,20 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-comment|/*  *	Card definition.  */
 case|case
 literal|4
 case|:
+comment|/* Card definition. */
 name|parse_card
 argument_list|()
 expr_stmt|;
 break|break;
-comment|/*  *	Device description  */
 if|#
 directive|if
 literal|0
-block|case 5: 		parse_device(); 		break;
+block|case 5:
+comment|/* Device description */
+block|parse_device(); 			break;
 endif|#
 directive|endif
 block|}
@@ -618,7 +633,9 @@ end_comment
 begin_function
 name|void
 name|parse_card
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -862,7 +879,7 @@ name|i
 operator|&
 literal|0x3F
 expr_stmt|;
-comment|/*  *	If no valid driver for this config, then do not save  *	this configuration entry.  */
+comment|/* 			 * If no valid driver for this config, then do not save 			 * this configuration entry. 			 */
 if|if
 condition|(
 name|confp
@@ -1159,32 +1176,32 @@ comment|/*  *	Parse the device description.  */
 end_comment
 
 begin_comment
-unit|parse_device() { enum drvclass type = drvclass_tok(); struct device *dp; static struct device *lastp;  	if (type == drv_none) 		{ 		error("Unknown driver class"); 		return; 		} 	dp = xmalloc(sizeof(*dp)); 	dp->type = type; 	if (devlist == 0) 		devlist = dp; 	else 		lastp->next = dp; 	lastp = dp; 	for (;;) 		switch(keyword(next_tok())) 			{ 		default: 			pusht = 1; 			return; 		case 10: 			addcmd(&dp->insert); 			break; 		case 11: 			addcmd(&dp->remove); 			break; 			} }
+unit|parse_device(void) { 	enum drvclass type = drvclass_tok(); 	struct device *dp; 	static struct device *lastp;  	if (type == drv_none) { 		error("Unknown driver class"); 		return; 	} 	dp = xmalloc(sizeof(*dp)); 	dp->type = type; 	if (devlist == 0) 		devlist = dp; 	else 		lastp->next = dp; 	lastp = dp; 	for (;;) 		switch (keyword(next_tok())) { 		default: 			pusht = 1; 			return; 		case 10: 			addcmd(&dp->insert); 			break; 		case 11: 			addcmd(&dp->remove); 			break; 		} }
 comment|/*  *	Parse the driver description.  */
 end_comment
 
 begin_comment
-unit|parse_driver() { char	*name, *dev, *p; struct driver *dp; static struct driver *lastp; int i; struct allocblk *bp; static struct flags io_flags[] = { {	"ws",		0x01 }, {	"16bit",	0x02 }, {	"cs16",		0x04 }, {	"zerows",	0x08 }, {	0, 0 } }; static struct flags mem_flags[] = { {	"16bit",	0x01 }, {	"zerows",	0x02 }, {	"ws0",		0x04 }, {	"ws1",		0x08 }, {	0, 0 } };  	name = newstr(next_tok()); 	dev = newstr(next_tok()); 	type = drvclass_tok(); 	if (type == drv_none) 		{ 		error("Unknown driver class"); 		return; 		} 	dp = xmalloc(sizeof(*dp)); 	dp->name = name; 	dp->kernel = dev; 	dp->type = type; 	dp->unit = -1; 	dp->irq = -1;
-comment|/*  *	Check for unit number in driver name.  */
+unit|parse_driver(void) { 	char   *name, *dev, *p; 	struct driver *dp; 	static struct driver *lastp; 	int     i; 	struct allocblk *bp; 	static struct flags io_flags[] = { 		{"ws", 0x01}, 		{"16bit", 0x02}, 		{"cs16", 0x04}, 		{"zerows", 0x08}, 		{0, 0} 	}; 	static struct flags mem_flags[] = { 		{"16bit", 0x01}, 		{"zerows", 0x02}, 		{"ws0", 0x04}, 		{"ws1", 0x08}, 		{0, 0} 	};  	name = newstr(next_tok()); 	dev = newstr(next_tok()); 	type = drvclass_tok(); 	if (type == drv_none) { 		error("Unknown driver class"); 		return; 	} 	dp = xmalloc(sizeof(*dp)); 	dp->name = name; 	dp->kernel = dev; 	dp->type = type; 	dp->unit = -1; 	dp->irq = -1;
+comment|/* Check for unit number in driver name. */
 end_comment
 
 begin_comment
-unit|p = dev; 	while (*p++) 		if (*p>= '0'&& *p<= '9') 			{ 			dp->unit = atoi(p); 			*p = 0; 			break; 			} 	if (dp->unit< 0) 		error("Illegal kernel driver unit");
-comment|/*  *	Place at end of list.  */
+unit|p = dev; 	while (*p++) 		if (*p>= '0'&& *p<= '9') { 			dp->unit = atoi(p); 			*p = 0; 			break; 		} 	if (dp->unit< 0) 		error("Illegal kernel driver unit");
+comment|/* Place at end of list. */
 end_comment
 
 begin_comment
-unit|if (lastp == 0) 		drivers = dp; 	else 		lastp->next = dp; 	lastp = dp; 	for (;;) 		switch(keyword(next_tok())) 			{ 		default: 			pusht = 1; 			return; 		case 1: 			bp = ioblk_tok(1); 			if (bp) 				{ 				setflags(io_flags,&bp->flags); 				if (dp->io) 					{ 					error("Duplicate I/O spec"); 					free(bp); 					} 				else 					{ 					bit_nclear(io_avail, bp->addr, 						bp->addr+bp->size-1); 					dp->io = bp; 					} 				} 			break; 		case 2: 			dp->irq = irq_tok(1); 			if (dp->irq> 0) 				pool_irq[i] = 0; 			break; 		case 3: 			bp = memblk_tok(1); 			if (bp) 				{ 				setflags(mem_flags,&bp->flags); 				if (dp->mem) 					{ 					error("Duplicate memory spec"); 					free(bp); 					} 				else 					{ 					bit_nclear(mem_avail, 						MEM2BIT(bp->addr), 						MEM2BIT(bp->addr+bp->size)-1); 					dp->mem = bp; 					} 				} 			break; 		case 10: 			addcmd(&dp->insert); 			break; 		case 11: 			addcmd(&dp->remove); 			break;
-comment|/*  *	iosize - Don't allocate an I/O port, but specify  *	a size for the range of ports. The actual port number  *	will be allocated dynamically.  */
+unit|if (lastp == 0) 		drivers = dp; 	else 		lastp->next = dp; 	lastp = dp; 	for (;;) 		switch (keyword(next_tok())) { 		default: 			pusht = 1; 			return; 		case 1: 			bp = ioblk_tok(1); 			if (bp) { 				setflags(io_flags,&bp->flags); 				if (dp->io) { 					error("Duplicate I/O spec"); 					free(bp); 				} else { 					bit_nclear(io_avail, bp->addr, 					    bp->addr + bp->size - 1); 					dp->io = bp; 				} 			} 			break; 		case 2: 			dp->irq = irq_tok(1); 			if (dp->irq> 0) 				pool_irq[i] = 0; 			break; 		case 3: 			bp = memblk_tok(1); 			if (bp) { 				setflags(mem_flags,&bp->flags); 				if (dp->mem) { 					error("Duplicate memory spec"); 					free(bp); 				} else { 					bit_nclear(mem_avail, 					    MEM2BIT(bp->addr), 					    MEM2BIT(bp->addr + bp->size) - 1); 					dp->mem = bp; 				} 			} 			break; 		case 10: 			addcmd(&dp->insert); 			break; 		case 11: 			addcmd(&dp->remove); 			break; 		case 12:
+comment|/* 			 * iosize - Don't allocate an I/O port, but specify 			 * a size for the range of ports. The actual port 			 * number will be allocated dynamically. 			 */
 end_comment
 
 begin_comment
-unit|case 12: 			i = num_tok(); 			if (i<= 0 || i> 128) 				error("Illegal iosize"); 			else 				{ 				int flags = 0; 				setflags(io_flags,&flags); 				if (dp->io) 					error("Duplicate I/O spec"); 				else 					{ 					dp->io = xmalloc(sizeof(*dp->io)); 					dp->io->flags = flags; 					dp->io->size = i; 					} 				} 			break; 		case 13: 			i = num_tok(); 			if (i<= 0 || i> 256*1024) 				error("Illegal memsize"); 			else 				{ 				int flags = 0; 				setflags(mem_flags,&flags); 				if (dp->mem) 					error("Duplicate memory spec"); 				else 					{ 					dp->mem = xmalloc(sizeof(*dp->mem)); 					dp->mem->flags = flags; 					dp->mem->size = i; 					} 				} 			break; 			} }
+unit|i = num_tok(); 			if (i<= 0 || i> 128) 				error("Illegal iosize"); 			else { 				int     flags = 0; 				setflags(io_flags,&flags); 				if (dp->io) 					error("Duplicate I/O spec"); 				else { 					dp->io = xmalloc(sizeof(*dp->io)); 					dp->io->flags = flags; 					dp->io->size = i; 				} 			} 			break; 		case 13: 			i = num_tok(); 			if (i<= 0 || i> 256 * 1024) 				error("Illegal memsize"); 			else { 				int     flags = 0; 				setflags(mem_flags,&flags); 				if (dp->mem) 					error("Duplicate memory spec"); 				else { 					dp->mem = xmalloc(sizeof(*dp->mem)); 					dp->mem->flags = flags; 					dp->mem->size = i; 				} 			} 			break; 		} }
 comment|/*  *	drvclass_tok - next token is expected to  *	be a driver class.  */
 end_comment
 
 begin_endif
-unit|enum drvclass drvclass_tok() { char *s = next_tok();  	if (strcmp(s, "tty")==0) 		return(drv_tty); 	else if (strcmp(s, "net")==0) 		return(drv_net); 	else if (strcmp(s, "bio")==0) 		return(drv_bio); 	else if (strcmp(s, "null")==0) 		return(drv_null); 	return(drv_none); }
+unit|enum drvclass drvclass_tok(void) { 	char   *s = next_tok();  	if (strcmp(s, "tty") == 0) 		return (drv_tty); 	else 		if (strcmp(s, "net") == 0) 			return (drv_net); 		else 			if (strcmp(s, "bio") == 0) 				return (drv_bio); 			else 				if (strcmp(s, "null") == 0) 					return (drv_null); 	return (drv_none); }
 endif|#
 directive|endif
 end_endif
@@ -1792,17 +1809,17 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
+name|struct
+name|cmd
+modifier|*
+name|ncp
+decl_stmt|;
 name|char
 modifier|*
 name|s
 init|=
 name|getline
 argument_list|()
-decl_stmt|;
-name|struct
-name|cmd
-modifier|*
-name|ncp
 decl_stmt|;
 if|if
 condition|(
@@ -1896,7 +1913,9 @@ end_decl_stmt
 begin_function
 name|int
 name|get
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|c
@@ -2024,7 +2043,9 @@ end_comment
 begin_function
 name|int
 name|num_tok
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2318,7 +2339,9 @@ begin_function_decl
 name|char
 modifier|*
 name|_next_tok
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2326,7 +2349,9 @@ begin_function
 name|char
 modifier|*
 name|next_tok
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2357,7 +2382,9 @@ begin_function
 name|char
 modifier|*
 name|_next_tok
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -2458,13 +2485,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*  *	Eat whitespace unless in a string.  */
 case|case
 literal|' '
 case|:
 case|case
 literal|'\t'
 case|:
+comment|/* Eat whitespace unless in a string. */
 if|if
 condition|(
 operator|!
@@ -2591,14 +2618,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	get the rest of the line. If the   *	last character scanned was a newline, then  *	return an empty line. If this isn't checked, then  *	a getline may incorrectly return the next line.  */
+comment|/*  *	get the rest of the line. If the  *	last character scanned was a newline, then  *	return an empty line. If this isn't checked, then  *	a getline may incorrectly return the next line.  */
 end_comment
 
 begin_function
 name|char
 modifier|*
 name|getline
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|buf

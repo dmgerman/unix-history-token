@@ -123,7 +123,9 @@ end_function_decl
 begin_function_decl
 name|void
 name|dump_config_file
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -141,7 +143,9 @@ end_function_decl
 begin_function_decl
 name|void
 name|readslots
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -185,7 +189,6 @@ parameter_list|(
 name|struct
 name|slot
 modifier|*
-name|sp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -334,7 +337,7 @@ name|IOPORTS
 argument_list|)
 expr_stmt|;
 comment|/* Only supports ISA ports */
-comment|/*  *	Mem allocation done in MEMUNIT units.  */
+comment|/* Mem allocation done in MEMUNIT units. */
 name|mem_avail
 operator|=
 name|bit_alloc
@@ -540,7 +543,9 @@ end_comment
 begin_function
 name|void
 name|dump_config_file
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|card
@@ -660,7 +665,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|for (devp = devlist; devp; devp = devp->next) 		{ 		if (devp->insert) 			{ 			printf("Insert commands are:\n"); 			pr_cmd(devp->insert); 			} 		if (devp->remove) 			{ 			printf("Remove commands are:\n"); 			pr_cmd(devp->remove); 			} 		}
+block|for (devp = devlist; devp; devp = devp->next) { 		if (devp->insert) { 			printf("Insert commands are:\n"); 			pr_cmd(devp->insert); 		} 		if (devp->remove) { 			printf("Remove commands are:\n"); 			pr_cmd(devp->remove); 		} 	}
 endif|#
 directive|endif
 block|}
@@ -707,7 +712,9 @@ end_comment
 begin_function
 name|void
 name|readslots
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|name
@@ -809,7 +816,7 @@ name|state
 operator|=
 name|empty
 expr_stmt|;
-comment|/*  *	Check to see if the controller memory has been set up.  */
+comment|/* Check to see if the controller memory has been set up. */
 if|if
 condition|(
 name|slots
@@ -1186,7 +1193,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	dumpcis(sp->cis); */
+if|#
+directive|if
+literal|0
+block|dumpcis(sp->cis);
+endif|#
+directive|endif
 for|for
 control|(
 name|cp
@@ -1240,7 +1252,12 @@ name|card
 operator|=
 name|cp
 expr_stmt|;
-comment|/* 	reset_slot(sp);  */
+if|#
+directive|if
+literal|0
+block|reset_slot(sp);
+endif|#
+directive|endif
 if|if
 condition|(
 name|cp
@@ -1331,7 +1348,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*  *	Once assigned, then set up the I/O& mem contexts, and  *	set up the windows, and then attach the driver.  */
+comment|/* 	 * Once assigned, then set up the I/O& mem contexts, and 	 * set up the windows, and then attach the driver. 	 */
 if|if
 condition|(
 name|setup_slot
@@ -1634,14 +1651,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
 return|return
 operator|(
 name|conf
 operator|)
 return|;
 block|}
-comment|/*  *	New driver must be allocated. Find one that matches the  *	any configurations not in use.  */
+comment|/* 	 * New driver must be allocated. Find one that matches the 	 * any configurations not in use. 	 */
 for|for
 control|(
 name|conf
@@ -1697,14 +1713,14 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*  *	Now we have a free driver and a matching configuration.  *	Before assigning and allocating everything, check to  *	see if a device class can be allocated to this.  */
+comment|/* 	 * Now we have a free driver and a matching configuration. 	 * Before assigning and allocating everything, check to 	 * see if a device class can be allocated to this. 	 */
 name|drvp
 operator|=
 name|conf
 operator|->
 name|driver
 expr_stmt|;
-comment|/*  *	If none available, then we can't use this card.  */
+comment|/* If none available, then we can't use this card. */
 if|if
 condition|(
 name|drvp
@@ -1730,8 +1746,8 @@ block|}
 if|#
 directive|if
 literal|0
-comment|/*  *	Allocate I/O, memory and IRQ resources.  */
-block|for (ap = drvp->io; ap; ap = ap->next) 		{ 		if (ap->addr == 0&& ap->size) 			{ 			int i = bit_fns(io_avail, IOPORTS, ap->size); 	 			if (i< 0) 				{ 				log_1s("Failed to allocate I/O ports for %s\n", 					cp->manuf); 				return(0); 				} 			ap->addr = i; 			bit_nclear(io_avail, i, ap->size); 			} 		} 	if (drvp->irq == 0) 		{ 		int i; 		for (i = 1; i< 16; i++) 			if (pool_irq[i]) 				{ 				drvp->irq = i; 				pool_irq[i] = 0; 				break; 				} 		if (drvp->irq == 0) 			{ 			log_1s("Failed to allocate IRQ for %s\n", cp->manuf); 			return(0); 			} 		} 	for (ap = drvp->mem; ap; ap = ap->next) 		{ 		if (ap->addr == 0&& ap->size) 			{ 			ap->addr = alloc_memory(ap->size); 			if (ap->addr == 0) 				{ 				log_1s("Failed to allocate memory for %s\n", 					cp->manuf); 				return(0); 				} 			} 		}
+comment|/* Allocate I/O, memory and IRQ resources. */
+block|for (ap = drvp->io; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			int     i = bit_fns(io_avail, IOPORTS, ap->size);  			if (i< 0) { 				log_1s("Failed to allocate I/O ports for %s\n", 				    cp->manuf); 				return (0); 			} 			ap->addr = i; 			bit_nclear(io_avail, i, ap->size); 		} 	} 	if (drvp->irq == 0) { 		int     i; 		for (i = 1; i< 16; i++) 			if (pool_irq[i]) { 				drvp->irq = i; 				pool_irq[i] = 0; 				break; 			} 		if (drvp->irq == 0) { 			log_1s("Failed to allocate IRQ for %s\n", cp->manuf); 			return (0); 		} 	} 	for (ap = drvp->mem; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			ap->addr = alloc_memory(ap->size); 			if (ap->addr == 0) { 				log_1s("Failed to allocate memory for %s\n", 				    cp->manuf); 				return (0); 			} 		} 	}
 endif|#
 directive|endif
 comment|/* 0 */
@@ -1853,7 +1869,7 @@ name|card_config
 operator|=
 name|cisconf
 expr_stmt|;
-comment|/*  *	Found a matching configuration. Now look at the I/O, memory and IRQ  *	to create the desired parameters. Look at memory first.  */
+comment|/* 	 * Found a matching configuration. Now look at the I/O, memory and IRQ 	 * to create the desired parameters. Look at memory first. 	 */
 if|if
 condition|(
 name|cisconf
@@ -1913,7 +1929,7 @@ name|mp
 operator|->
 name|address
 expr_stmt|;
-comment|/*  *	For now, we allocate our own memory from the pool.  */
+comment|/* For now, we allocate our own memory from the pool. */
 name|sp
 operator|->
 name|mem
@@ -1928,7 +1944,7 @@ name|driver
 operator|->
 name|mem
 expr_stmt|;
-comment|/*  *	Host memory address is required. Allocate one  *	from our pool.  */
+comment|/* 		 * Host memory address is required. Allocate one 		 * from our pool. 		 */
 if|if
 condition|(
 name|sp
@@ -2028,9 +2044,8 @@ literal|0x4000
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
 block|}
-comment|/*  *	Now look at I/O.  */
+comment|/* Now look at I/O. */
 name|bzero
 argument_list|(
 operator|&
@@ -2081,8 +2096,7 @@ name|cp
 operator|=
 name|defconf
 expr_stmt|;
-comment|/*  *	If # of I/O lines decoded == 10, then card does its  *	own decoding.  */
-comment|/*  *	If an I/O block exists, then use it.  *	If no address (but a length) is available, allocate  *	from the pool.  */
+comment|/*  		* If # of I/O lines decoded == 10, then card does its  		* own decoding.  		*  		* If an I/O block exists, then use it.  		* If no address (but a length) is available, allocate  		* from the pool.  		*/
 if|if
 condition|(
 name|cp
@@ -2115,8 +2129,8 @@ operator|->
 name|size
 expr_stmt|;
 block|}
-comment|/*  *	No I/O block, assume the address lines decode gives the size.  */
 else|else
+comment|/* 			 * No I/O block, assume the address lines 			 * decode gives the size. 			 */
 name|sp
 operator|->
 name|io
@@ -2194,7 +2208,7 @@ operator|.
 name|size
 argument_list|)
 expr_stmt|;
-comment|/*  *	Set up the size to take into account the decode lines.  */
+comment|/* Set up the size to take into account the decode lines. */
 name|sp
 operator|->
 name|io
@@ -2283,7 +2297,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
 block|}
 name|sp
 operator|->
@@ -2561,7 +2574,7 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/*  *	If other config registers exist, set them up.  */
+comment|/* If other config registers exist, set them up. */
 if|if
 condition|(
 name|sp
@@ -2572,8 +2585,8 @@ name|ccrs
 operator|&
 literal|2
 condition|)
-comment|/* CCSR */
 block|{
+comment|/* CCSR */
 name|c
 operator|=
 literal|0
@@ -2833,7 +2846,12 @@ name|io
 operator|.
 name|size
 expr_stmt|;
-comment|/* 		io.start = sp->io.addr& ~((1<< sp->io.cardaddr)-1); 		io.size = 1<< sp->io.cardaddr; 		if (io.start< 0x100) 			{ 			io.start = 0x100; 			io.size = 0x300; 			}  */
+if|#
+directive|if
+literal|0
+block|io.start = sp->io.addr& ~((1<< sp->io.cardaddr) - 1); 		io.size = 1<< sp->io.cardaddr; 		if (io.start< 0x100) { 			io.start = 0x100; 			io.size = 0x300; 		}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -3035,7 +3053,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
-comment|/*  *	If the driver fails to be connected to the device,  *	then it may mean that the driver did not recognise it.  */
+comment|/* 	 * If the driver fails to be connected to the device, 	 * then it may mean that the driver did not recognise it. 	 */
 name|memcpy
 argument_list|(
 name|drv

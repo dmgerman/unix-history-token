@@ -149,7 +149,7 @@ name|int
 name|unit
 decl_stmt|;
 comment|/* Unit of driver */
-comment|/*  *	The rest of the structure is allocated dynamically.  *	Once allocated, it stays allocated.  */
+comment|/* 	 * The rest of the structure is allocated dynamically. 	 * Once allocated, it stays allocated. 	 */
 name|struct
 name|card
 modifier|*
@@ -162,8 +162,13 @@ modifier|*
 name|config
 decl_stmt|;
 comment|/* Config back ptr */
-comment|/*	struct device *device;*/
+if|#
+directive|if
+literal|0
+block|struct device *device;
 comment|/* System device info */
+endif|#
+directive|endif
 name|unsigned
 name|int
 name|mem
@@ -183,12 +188,12 @@ literal|0
 end_if
 
 begin_comment
-unit|struct device 	{ 	struct device *next;
+unit|struct device { 	struct device *next;
 comment|/* List of devices */
 end_comment
 
 begin_comment
-unit|int inuse;
+unit|int     inuse;
 comment|/* Driver being used */
 end_comment
 
@@ -393,9 +398,17 @@ name|cards
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*struct device *devlist; */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|struct device *devlist;
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|bitstr_t
