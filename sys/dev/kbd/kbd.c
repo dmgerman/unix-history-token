@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: $  */
+comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: kbd.c,v 1.1 1999/01/09 02:44:50 yokota Exp $  */
 end_comment
 
 begin_include
@@ -97,26 +97,18 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|int
+name|keyboards
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|keyboard_t
 modifier|*
 name|kbd_ini
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|keyboard_switch_t
-modifier|*
-name|kbdsw_ini
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-modifier|*
-name|kbdcdevsw_ini
 decl_stmt|;
 end_decl_stmt
 
@@ -134,10 +126,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|keyboards
-init|=
-literal|1
+name|keyboard_switch_t
+modifier|*
+name|kbdsw_ini
 decl_stmt|;
 end_decl_stmt
 
@@ -149,6 +140,28 @@ name|kbdsw
 init|=
 operator|&
 name|kbdsw_ini
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KBD_INSTALL_CDEV
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ARRAY_DELTA
+value|4
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+modifier|*
+name|kbdcdevsw_ini
 decl_stmt|;
 end_decl_stmt
 
@@ -164,13 +177,6 @@ operator|&
 name|kbdcdevsw_ini
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|ARRAY_DELTA
-value|4
-end_define
 
 begin_function
 specifier|static
@@ -419,6 +425,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KBD_INSTALL_CDEV */
+end_comment
 
 begin_comment
 comment|/*  * Low-level keyboard driver functions  * Keyboard subdrivers, such as the AT keyboard driver and the USB keyboard  * driver, call these functions to initialize the keyboard_t structure  * and register it to the virtual keyboard driver `kbd'.  */
