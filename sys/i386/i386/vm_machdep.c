@@ -13,7 +13,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/bill/working/sys/i386/i386/RCS/vm_machdep.c,v 1.2 92/01/21 14:22:17 william Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/i386/vm_machdep.c,v 1.1.1.1 1993/06/12 14:58:05 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,20 +327,19 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_function
+specifier|volatile
+name|void
 name|cpu_exit
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|static
 name|struct
@@ -411,27 +410,26 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_expr_stmt
+begin_function
+specifier|volatile
+name|void
 name|cpu_exit
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
@@ -450,7 +448,7 @@ name|swtch
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|cpu_wait
