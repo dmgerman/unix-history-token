@@ -1241,8 +1241,8 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|perror
@@ -1298,8 +1298,8 @@ name|HMA_fd_off
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|perror
@@ -1355,8 +1355,8 @@ name|HMA_fd_off
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|perror
@@ -1472,8 +1472,8 @@ name|HMA_fd_on
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|fatal
@@ -1573,8 +1573,8 @@ name|HMA_fd_off
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|fatal

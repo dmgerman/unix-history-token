@@ -35,6 +35,7 @@ decl_stmt|;
 name|callback_t
 name|func
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -84,6 +85,7 @@ parameter_list|,
 name|callback_t
 name|func
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name

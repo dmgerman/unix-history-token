@@ -392,7 +392,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|unsigned
 name|ecnt
 init|=
 literal|0
@@ -1565,6 +1565,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1581,7 +1582,7 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 name|int
@@ -3368,6 +3369,7 @@ begin_function
 name|void
 name|put_dosenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|value
@@ -3554,6 +3556,7 @@ condition|(
 name|xmode
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|m

@@ -4548,12 +4548,6 @@ begin_decl_stmt
 specifier|static
 name|search_t
 name|dir_search
-init|=
-block|{
-name|dp
-operator|:
-name|NULL
-block|}
 decl_stmt|;
 end_decl_stmt
 

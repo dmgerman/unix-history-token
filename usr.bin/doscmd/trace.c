@@ -645,20 +645,6 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-name|char
-modifier|*
-name|bigfmt
-init|=
-literal|"%04x:%04x "
-if|#
-directive|if
-name|BIG_DEBUG
-literal|"%02x %02x %02x %02x %02x %02x "
-endif|#
-directive|endif
-literal|"%-30s "
-literal|"%04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x "
-decl_stmt|;
 if|if
 condition|(
 name|first
@@ -716,7 +702,15 @@ name|fprintf
 argument_list|(
 name|debugf
 argument_list|,
-name|bigfmt
+literal|"%04x:%04x "
+if|#
+directive|if
+name|BIG_DEBUG
+literal|"%02x %02x %02x %02x %02x %02x "
+endif|#
+directive|endif
+literal|"%-30s "
+literal|"%04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x "
 argument_list|,
 name|R_CS
 argument_list|,

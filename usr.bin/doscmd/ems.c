@@ -459,7 +459,7 @@ name|int
 name|ems_init
 parameter_list|()
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 if|if
@@ -1467,7 +1467,7 @@ name|EMShandlepage
 modifier|*
 name|ehp
 decl_stmt|;
-name|int
+name|unsigned
 name|safecount
 decl_stmt|;
 name|int
@@ -1558,7 +1558,8 @@ operator|)
 condition|)
 name|fatal
 argument_list|(
-literal|"EMS: ems_alloc_handles is wrong, cannot continue\n"
+literal|"EMS: ems_alloc_handles is wrong, "
+literal|"cannot continue\n"
 argument_list|)
 expr_stmt|;
 name|ehp
@@ -4377,8 +4378,8 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|debug
@@ -4623,8 +4624,8 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|MAP_FAILED
 condition|)
 name|fatal
 argument_list|(
@@ -4659,8 +4660,8 @@ name|mapfile_fd
 argument_list|,
 name|file_offs
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|fatal
@@ -5229,7 +5230,7 @@ name|long
 name|npages
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|syspagenum
 decl_stmt|;
 name|int
@@ -5379,14 +5380,14 @@ name|long
 name|npages
 parameter_list|)
 block|{
-name|int
+name|unsigned
+name|allocpagenum
+decl_stmt|;
+name|unsigned
 name|syspagenum
 decl_stmt|;
 name|int
 name|pages_to_alloc
-decl_stmt|;
-name|int
-name|allocpagenum
 decl_stmt|;
 name|long
 name|delta
@@ -5778,7 +5779,7 @@ block|{
 name|int
 name|allocpagenum
 decl_stmt|;
-name|int
+name|unsigned
 name|syspagenum
 decl_stmt|;
 name|int

@@ -1430,6 +1430,7 @@ name|u_int32_t
 name|vmemaddr
 decl_stmt|;
 comment|/* Video memory address */
+specifier|const
 name|char
 modifier|*
 name|fontname

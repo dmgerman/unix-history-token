@@ -1634,7 +1634,7 @@ name|isvalid
 parameter_list|(
 name|x
 parameter_list|)
-value|((magic[x]& 0x01) != 0)
+value|((magic[(int)(x)]& 0x01) != 0)
 end_define
 
 begin_define
@@ -1644,7 +1644,7 @@ name|issep
 parameter_list|(
 name|x
 parameter_list|)
-value|((magic[x]& 0x02) == 0)
+value|((magic[(int)(x)]& 0x02) == 0)
 end_define
 
 begin_define
@@ -1654,7 +1654,7 @@ name|iswhite
 parameter_list|(
 name|x
 parameter_list|)
-value|((magic[x]& 0x04) == 0)
+value|((magic[(int)(x)]& 0x04) == 0)
 end_define
 
 begin_function
@@ -10151,6 +10151,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|dos_return

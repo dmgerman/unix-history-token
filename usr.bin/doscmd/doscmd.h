@@ -796,6 +796,7 @@ begin_function_decl
 name|void
 name|fatal
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -819,6 +820,7 @@ name|debug
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1022,6 +1024,17 @@ begin_function_decl
 name|int
 name|open_prog
 parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|put_dosenv
+parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1951,17 +1964,6 @@ name|int
 name|nmice
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|put_dosenv
-parameter_list|(
-name|char
-modifier|*
-name|value
-parameter_list|)
-function_decl|;
-end_function_decl
 
 end_unit
 

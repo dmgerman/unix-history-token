@@ -1232,7 +1232,6 @@ name|nbytes
 operator|>
 literal|0
 condition|)
-empty_stmt|;
 name|rs
 operator||=
 name|LS_RCV_DATA_RD

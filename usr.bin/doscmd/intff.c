@@ -1880,7 +1880,9 @@ block|{
 name|char
 modifier|*
 name|fname
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|tname
 decl_stmt|;
@@ -2411,6 +2413,7 @@ name|func
 init|=
 name|R_AL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path

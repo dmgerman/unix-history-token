@@ -205,6 +205,7 @@ parameter_list|(
 name|int
 name|flags
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -289,6 +290,7 @@ begin_function
 name|void
 name|fatal
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -314,6 +316,7 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|m
