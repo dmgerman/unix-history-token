@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)stdio.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)stdio.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -155,6 +155,12 @@ name|stderr
 value|(&_iob[2])
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -165,6 +171,12 @@ parameter_list|)
 value|(--(p)->_cnt>=0? (int)(*(unsigned char *)(p)->_ptr++):_filbuf(p))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -172,6 +184,12 @@ name|getchar
 parameter_list|()
 value|getc(stdin)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_define
 define|#
@@ -184,6 +202,12 @@ name|p
 parameter_list|)
 value|(--(p)->_cnt>= 0 ?\ 	(int)(*(unsigned char *)(p)->_ptr++ = (x)) :\ 	(((p)->_flag& _IOLBF)&& -(p)->_cnt< (p)->_bufsiz ?\ 		((*(p)->_ptr = (x)) != '\n' ?\ 			(int)(*(unsigned char *)(p)->_ptr++) :\ 			_flsbuf(*(unsigned char *)(p)->_ptr, p)) :\ 		_flsbuf((unsigned char)(x), p)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_define
 define|#
