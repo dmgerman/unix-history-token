@@ -21,7 +21,7 @@ operator|)
 name|delta
 operator|.
 name|c
-literal|4.3
+literal|4.4
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2466,6 +2466,8 @@ index|]
 decl_stmt|;
 name|int
 name|cnt
+decl_stmt|,
+name|root
 decl_stmt|;
 name|FILE
 modifier|*
@@ -2527,6 +2529,13 @@ argument_list|,
 literal|0644
 argument_list|)
 expr_stmt|;
+name|root
+operator|=
+name|getuid
+argument_list|()
+operator|==
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -2556,6 +2565,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|root
+operator|||
 name|equal
 argument_list|(
 name|pf
