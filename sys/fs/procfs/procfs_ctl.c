@@ -904,11 +904,6 @@ comment|/* 	 * Run.  Let the target process continue running until a breakpoint 
 case|case
 name|PROCFS_CTL_RUN
 case|:
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|p_flag
@@ -917,6 +912,11 @@ operator|~
 name|P_STOPPED_SIG
 expr_stmt|;
 comment|/* this uses SIGSTOP */
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 break|break;
 comment|/* 	 * Wait for the target process to stop. 	 * If the target is not being traced then just wait 	 * to enter 	 */
 case|case
@@ -1307,12 +1307,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 comment|/* XXXKSE: */
 name|p
 operator|->
@@ -1320,6 +1314,12 @@ name|p_flag
 operator|&=
 operator|~
 name|P_STOPPED_SIG
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
 expr_stmt|;
 name|thread_unsuspend
 argument_list|(
