@@ -79,12 +79,23 @@ name|NMODEMS
 value|2
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PPP_CONFDIR
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|_PATH_PPP
+name|PPP_CONFDIR
 value|"/etc/ppp"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

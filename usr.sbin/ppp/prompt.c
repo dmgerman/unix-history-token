@@ -440,6 +440,11 @@ argument_list|,
 sizeof|sizeof
 name|shostname
 argument_list|)
+operator|||
+operator|*
+name|shostname
+operator|==
+literal|'\0'
 condition|)
 name|strcpy
 argument_list|(
@@ -1605,6 +1610,8 @@ operator|=
 operator|*
 name|s
 operator|->
+name|cfg
+operator|.
 name|passwd
 condition|?
 name|LOCAL_NO_AUTH
@@ -2551,6 +2558,8 @@ name|prompt
 operator|->
 name|owner
 operator|->
+name|cfg
+operator|.
 name|passwd
 argument_list|,
 name|pass

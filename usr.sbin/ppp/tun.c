@@ -116,6 +116,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<termios.h>
 end_include
 
@@ -124,12 +130,6 @@ ifdef|#
 directive|ifdef
 name|__NetBSD__
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -158,6 +158,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"id.h"
 end_include
 
 begin_include
@@ -437,7 +443,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|ioctl
+name|ID0ioctl
 argument_list|(
 name|bundle
 operator|->

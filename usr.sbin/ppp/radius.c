@@ -1892,10 +1892,16 @@ name|char
 modifier|*
 name|key
 parameter_list|,
+name|int
+name|klen
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|challenge
+parameter_list|,
+name|int
+name|clen
 parameter_list|)
 block|{
 name|struct
@@ -2161,7 +2167,7 @@ block|{
 comment|/* We're talking CHAP */
 if|if
 condition|(
-name|rad_put_string
+name|rad_put_attr
 argument_list|(
 name|r
 operator|->
@@ -2172,11 +2178,13 @@ argument_list|,
 name|RAD_CHAP_PASSWORD
 argument_list|,
 name|key
+argument_list|,
+name|klen
 argument_list|)
 operator|!=
 literal|0
 operator|||
-name|rad_put_string
+name|rad_put_attr
 argument_list|(
 name|r
 operator|->
@@ -2187,6 +2195,8 @@ argument_list|,
 name|RAD_CHAP_CHALLENGE
 argument_list|,
 name|challenge
+argument_list|,
+name|clen
 argument_list|)
 operator|!=
 literal|0
@@ -2223,7 +2233,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|rad_put_string
+name|rad_put_attr
 argument_list|(
 name|r
 operator|->
@@ -2234,6 +2244,8 @@ argument_list|,
 name|RAD_USER_PASSWORD
 argument_list|,
 name|key
+argument_list|,
+name|klen
 argument_list|)
 operator|!=
 literal|0

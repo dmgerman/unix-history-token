@@ -76,7 +76,7 @@ block|{
 name|char
 name|file
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 comment|/* Radius config file */
@@ -212,9 +212,13 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
