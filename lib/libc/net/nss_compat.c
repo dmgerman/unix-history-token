@@ -59,6 +59,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|group
@@ -99,7 +105,7 @@ parameter_list|,
 name|y
 parameter_list|)
 define|\
-value|do {									\ 	if (_pthread_main_np())						\ 		_term_main_##x = (y);					\ 	else {								\ 		(void)_pthread_once(&_term_once_##x, _term_create_##x);	\ 		(void)_pthread_setspecific(_term_key_##x, y);		\ 	}								\ } while (0)
+value|do {									\ 	if (!__isthreaded || _pthread_main_np())			\ 		_term_main_##x = (y);					\ 	else {								\ 		(void)_pthread_once(&_term_once_##x, _term_create_##x);	\ 		(void)_pthread_setspecific(_term_key_##x, y);		\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -110,7 +116,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(_pthread_main_np() ?						\     (_term_main_##x) :						\     ((void)_pthread_once(&_term_once_##x, _term_create_##x),	\     _pthread_getspecific(_term_key_##x)))
+value|(!__isthreaded || _pthread_main_np() ?				\     (_term_main_##x) :						\     ((void)_pthread_once(&_term_once_##x, _term_create_##x),	\     _pthread_getspecific(_term_key_##x)))
 end_define
 
 begin_expr_stmt
