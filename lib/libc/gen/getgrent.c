@@ -1104,9 +1104,6 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-name|size_t
-name|sz
-decl_stmt|;
 name|r
 operator|=
 name|NS_UNAVAIL
@@ -1409,9 +1406,6 @@ name|datalen
 decl_stmt|;
 name|int
 name|r
-decl_stmt|;
-name|size_t
-name|sz
 decl_stmt|;
 if|if
 condition|(
