@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lib.c	4.3 %G%"
+literal|"@(#)lib.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1509,6 +1509,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|NR
+operator|&&
 operator|*
 name|NR
 operator|>
