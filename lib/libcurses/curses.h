@@ -2924,7 +2924,7 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|int
+name|char
 argument_list|)
 operator|)
 argument_list|)
@@ -2953,7 +2953,7 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|int
+name|char
 argument_list|)
 operator|)
 argument_list|)

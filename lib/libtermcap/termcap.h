@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1994 by Andrew A. Chernov, Moscow, Russia.  * All ri
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: termcap.h,v 1.2 1994/12/04 02:49:24 ache Exp $ */
 end_comment
 
 begin_ifndef
@@ -132,7 +132,7 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|int
+name|char
 argument_list|)
 operator|)
 argument_list|)
