@@ -258,7 +258,7 @@ operator|<
 literal|1
 condition|)
 return|return
-name|argc
+literal|0
 return|;
 for|for
 control|(
