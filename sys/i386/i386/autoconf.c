@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/autoconf.c,v 1.1.1.1 1993/06/12 14:58:07 rgrimes Exp $"
+literal|"$Header: /freefall/a/cvs/386BSD/src/sys/i386/i386/autoconf.c,v 1.2 1993/08/08 06:24:15 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,12 +361,6 @@ begin_comment
 comment|/* should be dev_t, but not until 32 bits */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"sd.h"
-end_include
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -397,25 +391,11 @@ block|,
 literal|'t'
 block|,
 comment|/* 3 = wt */
-if|#
-directive|if
-name|NSD
-operator|<
-literal|1
-literal|'a'
-block|,
-literal|'s'
-block|,
-comment|/* 4 = as */
-else|#
-directive|else
 literal|'s'
 block|,
 literal|'d'
 block|,
 comment|/* 4 = sd -- new SCSI system */
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
