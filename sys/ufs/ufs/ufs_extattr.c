@@ -3537,15 +3537,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* XXX retrieve attribute lists. */
-comment|/* XXX should probably be checking for name == NULL? */
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 name|error
 operator|=
 name|extattr_check_cred
