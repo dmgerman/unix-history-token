@@ -987,9 +987,15 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ssc_debug
+operator|>
+literal|1
+condition|)
 name|printf
 argument_list|(
-literal|"sscstrategy: reading %ld bytes from 0x%ld into 0x%lx\n"
+literal|"sscstrategy: reading %d bytes from 0x%ld into 0x%lx\n"
 argument_list|,
 name|req
 operator|.
