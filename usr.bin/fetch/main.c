@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.18 1996/08/22 23:25:24 jkh Exp $ */
+comment|/* $Id: main.c,v 1.19 1996/08/23 06:21:17 jkh Exp $ */
 end_comment
 
 begin_include
@@ -165,6 +165,14 @@ name|int
 name|verbose
 init|=
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ftp_verbose
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -421,7 +429,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-DHINPMTVLqlmnpr] [-o outputfile]<-f file -h host [-c dir]| URL>\n"
+literal|"usage: %s [-DHINPMTVLqlmnprv] [-o outputfile]<-f file -h host [-c dir]| URL>\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -652,7 +660,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"D:HINPMT:V:Lqc:f:h:o:plmnr"
+literal|"D:HINPMT:V:Lqc:f:h:o:plmnrv"
 argument_list|)
 operator|)
 operator|!=
@@ -765,6 +773,14 @@ case|case
 literal|'r'
 case|:
 name|restart
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|ftp_verbose
 operator|=
 literal|1
 expr_stmt|;
@@ -1253,7 +1269,7 @@ name|ftp_pw
 argument_list|,
 literal|0
 argument_list|,
-name|verbose
+name|ftp_verbose
 argument_list|)
 expr_stmt|;
 if|if
@@ -1268,13 +1284,6 @@ argument_list|,
 literal|"couldn't open FTP connection or login to %s."
 argument_list|,
 name|host
-argument_list|)
-expr_stmt|;
-name|ftpVerbose
-argument_list|(
-name|ftp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Time to set our defaults */
