@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_mrouting.h"
 end_include
 
@@ -31,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -7699,6 +7711,22 @@ operator|==
 name|NULL
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_mbuf_multicast_encap
+argument_list|(
+name|m
+argument_list|,
+name|vifp
+operator|->
+name|v_ifp
+argument_list|,
+name|mb_copy
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mb_copy
 operator|->
 name|m_data
