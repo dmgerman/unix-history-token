@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	4.5 (Berkeley) %G%"
+literal|"@(#)startup.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +203,8 @@ expr_stmt|;
 if|if
 condition|(
 name|gateway
+operator|>
+literal|0
 condition|)
 name|rtdefault
 argument_list|()
