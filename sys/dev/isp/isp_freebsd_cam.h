@@ -231,7 +231,7 @@ begin_define
 define|#
 directive|define
 name|MAXISPREQUEST
-value|256
+value|64
 end_define
 
 begin_define
