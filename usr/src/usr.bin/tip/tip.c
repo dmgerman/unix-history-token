@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	5.1 (Berkeley) %G%"
+literal|"@(#)tip.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,19 @@ name|sname
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|char
+name|PNbuf
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This limits the size of a number */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -404,11 +417,71 @@ condition|)
 goto|goto
 name|notnumber
 goto|;
-name|PN
+comment|/* 	 * System name is really a phone number... 	 * Copy the number then stomp on the original (in case the number 	 *	is private, we don't want 'ps' or 'w' to find it). 	 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|system
+argument_list|)
+operator|>
+sizeof|sizeof
+name|PNbuf
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"tip: phone number too long (max = %d bytes)\n"
+argument_list|,
+sizeof|sizeof
+name|PNbuf
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|strncpy
+argument_list|(
+name|PNbuf
+argument_list|,
+name|system
+argument_list|,
+sizeof|sizeof
+name|PNbuf
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|p
 operator|=
 name|system
+init|;
+operator|*
+name|p
+condition|;
+name|p
+operator|++
+control|)
+operator|*
+name|p
+operator|=
+literal|'\0'
 expr_stmt|;
-comment|/* system name is really a phone number */
+name|PN
+operator|=
+name|PNbuf
+expr_stmt|;
 name|system
 operator|=
 name|sprintf
