@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)findfp.c	5.8 (Berkeley) %G%"
+literal|"@(#)findfp.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,11 +111,11 @@ parameter_list|,
 name|file
 parameter_list|)
 define|\
-value|{0,0,0,flags,file,{0},0,__sF+file,__sread,__swrite,__sseek,__sclose}
+value|{0,0,0,flags,file,{0},0,__sF+file,__sclose,__sread,__sseek,__swrite}
 end_define
 
 begin_comment
-comment|/*	 p r w flags file _bf z  cookie    read    write    seek    close */
+comment|/*	 p r w flags file _bf z  cookie      close    read    seek    write */
 end_comment
 
 begin_decl_stmt
