@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.16 %G%"
+literal|"@(#)fdec.c 1.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,6 +316,8 @@ index|[
 name|cbn
 index|]
 operator|.
+name|curtmps
+operator|.
 name|om_off
 operator|=
 operator|-
@@ -442,6 +444,8 @@ index|[
 name|cbn
 index|]
 operator|.
+name|curtmps
+operator|.
 name|om_off
 operator|-=
 name|lwidth
@@ -462,6 +466,8 @@ name|sizes
 index|[
 name|cbn
 index|]
+operator|.
+name|curtmps
 operator|.
 name|om_off
 expr_stmt|;
@@ -841,6 +847,8 @@ name|sizes
 index|[
 name|cbn
 index|]
+operator|.
+name|curtmps
 operator|.
 name|om_off
 operator|=

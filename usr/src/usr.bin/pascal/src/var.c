@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.6 %G%"
+literal|"@(#)var.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +161,7 @@ name|VPRT
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      *  #ifndef PI0      *      sizes[cbn].om_max = sizes[cbn].om_off = -DPOFF1;      *  #endif      */
+comment|/*      *  #ifndef PI0      *      sizes[cbn].om_max = sizes[cbn].curtmps.om_off = -DPOFF1;      *  #endif      */
 name|forechain
 operator|=
 name|NIL
@@ -374,6 +374,8 @@ directive|ifdef
 name|OBJ
 name|op
 operator|->
+name|curtmp
+operator|.
 name|om_off
 operator|=
 name|roundup
@@ -384,6 +386,8 @@ call|)
 argument_list|(
 name|op
 operator|->
+name|curtmp
+operator|.
 name|om_off
 operator|-
 name|w
@@ -402,6 +406,8 @@ name|o2
 operator|=
 name|op
 operator|->
+name|curtmp
+operator|.
 name|om_off
 expr_stmt|;
 endif|#
@@ -428,6 +434,8 @@ block|{
 comment|/* 				 * locals are aligned, too. 				 */
 name|op
 operator|->
+name|curtmps
+operator|.
 name|om_off
 operator|=
 name|roundup
@@ -438,6 +446,8 @@ call|)
 argument_list|(
 name|op
 operator|->
+name|curtmps
+operator|.
 name|om_off
 operator|-
 name|w
@@ -456,6 +466,8 @@ name|o2
 operator|=
 name|op
 operator|->
+name|curtmps
+operator|.
 name|om_off
 expr_stmt|;
 block|}
@@ -667,6 +679,8 @@ name|sizes
 index|[
 name|cbn
 index|]
+operator|.
+name|curtmps
 operator|.
 name|om_off
 expr_stmt|;

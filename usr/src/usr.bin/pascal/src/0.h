@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.4 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.5 %G%"; */
 end_comment
 
 begin_define
@@ -523,6 +523,22 @@ end_comment
 begin_comment
 comment|/*  * The basic namelist structure.  * There are also two other variants, defining the real  * field as longs or integers given below.  *  * The array disptab defines the hash header for the symbol table.  * Symbols are hashed based on the low 6 bits of their pointer into  * the string table; see the routines in the file "lookup.c" and also "fdec.c"  * especially "funcend".  */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|nl
+modifier|*
+name|Fp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pnumcnt
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -1325,11 +1341,23 @@ struct|struct
 name|om
 block|{
 name|long
+name|om_max
+decl_stmt|;
+name|long
+name|reg_max
+decl_stmt|;
+struct|struct
+name|tmps
+block|{
+name|long
 name|om_off
 decl_stmt|;
 name|long
-name|om_max
+name|reg_off
 decl_stmt|;
+block|}
+name|curtmps
+struct|;
 block|}
 name|sizes
 index|[
@@ -1337,6 +1365,20 @@ name|DSPLYSZ
 index|]
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|NOREG
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGOK
+value|1
+end_define
 
 begin_comment
 comment|/*      *	the following structure records whether a level declares      *	any variables which are (or contain) files.      *	this so that the runtime routines for file cleanup can be invoked.      */

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.6 %G%"
+literal|"@(#)call.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -359,45 +359,17 @@ condition|)
 block|{
 name|tempoffset
 operator|=
-name|sizes
-index|[
-name|cbn
-index|]
-operator|.
-name|om_off
-operator|-=
-name|p_type_width
-expr_stmt|;
-name|putlbracket
+name|tmpalloc
 argument_list|(
-name|ftnno
+name|p_type_width
 argument_list|,
-operator|-
-name|tempoffset
+name|p
+operator|->
+name|type
+argument_list|,
+name|NOREG
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tempoffset
-operator|<
-name|sizes
-index|[
-name|cbn
-index|]
-operator|.
-name|om_max
-condition|)
-block|{
-name|sizes
-index|[
-name|cbn
-index|]
-operator|.
-name|om_max
-operator|=
-name|tempoffset
-expr_stmt|;
-block|}
 comment|/* 			 *	temp 			 *	for (temp = ... 			 */
 name|putRV
 argument_list|(

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)flvalue.c 1.5 %G%"
+literal|"@(#)flvalue.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -362,13 +362,10 @@ name|NIL
 return|;
 block|}
 comment|/* 			 *	formal routine structure: 			 * 			 *	struct formalrtn { 			 *		long		(*entryaddr)(); 			 *		long		cbn; 			 *		struct dispsave	disp[2*MAXLVL]; 			 *	}; 			 */
-name|sizes
-index|[
-name|cbn
-index|]
-operator|.
-name|om_off
-operator|-=
+name|tempoff
+operator|=
+name|tmpalloc
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|long
@@ -392,43 +389,14 @@ argument_list|(
 expr|struct
 name|dispsave
 argument_list|)
+argument_list|,
+name|nl
+operator|+
+name|TSTR
+argument_list|,
+name|NOREG
+argument_list|)
 expr_stmt|;
-name|tempoff
-operator|=
-name|sizes
-index|[
-name|cbn
-index|]
-operator|.
-name|om_off
-expr_stmt|;
-if|if
-condition|(
-name|sizes
-index|[
-name|cbn
-index|]
-operator|.
-name|om_off
-operator|<
-name|sizes
-index|[
-name|cbn
-index|]
-operator|.
-name|om_max
-condition|)
-block|{
-name|sizes
-index|[
-name|cbn
-index|]
-operator|.
-name|om_max
-operator|=
-name|tempoff
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|OBJ
@@ -450,7 +418,6 @@ operator|)
 name|tempoff
 argument_list|)
 expr_stmt|;
-comment|/* put(2, O_FSAV | bn<< 8 + INDX, (long)p->entloc); */
 name|put
 argument_list|(
 literal|2
@@ -475,14 +442,6 @@ endif|OBJ
 ifdef|#
 directive|ifdef
 name|PC
-name|putlbracket
-argument_list|(
-name|ftnno
-argument_list|,
-operator|-
-name|tempoff
-argument_list|)
-expr_stmt|;
 name|putleaf
 argument_list|(
 name|P2ICON
