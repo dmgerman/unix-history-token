@@ -8,7 +8,7 @@ name|char
 modifier|*
 name|krb4_long_version
 init|=
-literal|"@(#)$Version: krb4-1.0 by root on greenpeace.grondar.za (i386-unknown-freebsd3.something) Sat Jan  8 19:34:57 SAST 2000 $"
+literal|"@(#)$Version: krb4-1.0fb1 by root on greenpeace.grondar.za (i386-unknown-freebsd3.something) Sat Jan  8 19:34:57 SAST 2000 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,7 +17,7 @@ name|char
 modifier|*
 name|krb4_version
 init|=
-literal|"krb4-1.0"
+literal|"krb4-1.0fb1"
 decl_stmt|;
 end_decl_stmt
 
