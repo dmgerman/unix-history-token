@@ -3422,7 +3422,7 @@ name|iss
 operator|=
 name|tp
 operator|->
-name|rcv_nxt
+name|snd_nxt
 operator|+
 name|TCP_ISSINCR
 expr_stmt|;
