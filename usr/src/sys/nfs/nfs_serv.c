@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.62 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.63 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1025,7 +1025,6 @@ operator|->
 name|sa_nfssize
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The usec field of sa_atime is overloaded with the va_flags field 		 * for 4.4BSD clients. Hopefully other clients always set both the 		 * sec and usec fields to -1 when not setting the atime. 		 */
 if|if
 condition|(
 name|sp
@@ -1037,6 +1036,24 @@ operator|!=
 name|nfs_xdrneg1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|notyet
+name|fxdr_nfstime
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|sa_nfsatime
+argument_list|,
+operator|&
+name|vap
+operator|->
+name|va_atime
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|vap
 operator|->
 name|va_atime
@@ -1062,32 +1079,9 @@ name|ts_nsec
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 block|}
-if|if
-condition|(
-name|sp
-operator|->
-name|sa_nfsatime
-operator|.
-name|nfs_usec
-operator|!=
-name|nfs_xdrneg1
-condition|)
-name|vap
-operator|->
-name|va_flags
-operator|=
-name|fxdr_unsigned
-argument_list|(
-name|u_long
-argument_list|,
-name|sp
-operator|->
-name|sa_nfsatime
-operator|.
-name|nfs_usec
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sp

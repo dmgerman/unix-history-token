@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.103 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.104 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2914,32 +2914,17 @@ operator|->
 name|va_size
 argument_list|)
 expr_stmt|;
-name|sp
-operator|->
-name|sa_nfsatime
-operator|.
-name|nfs_sec
-operator|=
-name|txdr_unsigned
+name|txdr_nfstime
 argument_list|(
+operator|&
 name|vap
 operator|->
 name|va_atime
-operator|.
-name|ts_sec
-argument_list|)
-expr_stmt|;
+argument_list|,
+operator|&
 name|sp
 operator|->
 name|sa_nfsatime
-operator|.
-name|nfs_usec
-operator|=
-name|txdr_unsigned
-argument_list|(
-name|vap
-operator|->
-name|va_flags
 argument_list|)
 expr_stmt|;
 name|txdr_nfstime
