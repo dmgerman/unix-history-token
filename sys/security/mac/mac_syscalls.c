@@ -1206,20 +1206,6 @@ end_endif
 begin_function_decl
 specifier|static
 name|int
-name|error_select
-parameter_list|(
-name|int
-name|error1
-parameter_list|,
-name|int
-name|error2
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|mac_policy_register
 parameter_list|(
 name|struct
@@ -1661,7 +1647,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {					\ 	struct mac_policy_conf *mpc;					\ 	int entrycount;							\ 									\ 	error = 0;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL)		\ 			error = error_select(				\ 			    mpc->mpc_ops->mpo_ ## check (args),		\ 			    error);					\ 	}								\ 	if ((entrycount = mac_policy_list_conditional_busy()) != 0) {	\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL)	\ 				error = error_select(			\ 				    mpc->mpc_ops->mpo_ ## check (args),	\ 				    error);				\ 		}							\ 		mac_policy_list_unbusy();				\ 	}								\ } while (0)
+value|do {					\ 	struct mac_policy_conf *mpc;					\ 	int entrycount;							\ 									\ 	error = 0;							\ 	LIST_FOREACH(mpc,&mac_static_policy_list, mpc_list) {		\ 		if (mpc->mpc_ops->mpo_ ## check != NULL)		\ 			error = mac_error_select(			\ 			    mpc->mpc_ops->mpo_ ## check (args),		\ 			    error);					\ 	}								\ 	if ((entrycount = mac_policy_list_conditional_busy()) != 0) {	\ 		LIST_FOREACH(mpc,&mac_policy_list, mpc_list) {		\ 			if (mpc->mpc_ops->mpo_ ## check != NULL)	\ 				error = mac_error_select(		\ 				    mpc->mpc_ops->mpo_ ## check (args),	\ 				    error);				\ 		}							\ 		mac_policy_list_unbusy();				\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -2413,9 +2399,8 @@ comment|/*  * Define an error value precedence, and given two arguments, selects
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|error_select
+name|mac_error_select
 parameter_list|(
 name|int
 name|error1
