@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.1 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	5.2 (Berkeley) 85/08/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,12 @@ directive|include
 file|<sys/dir.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BUGS_NAME
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -99,12 +105,28 @@ name|BUGS_NAME
 value|"4bsd-bugs"
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BUGS_HOME
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|BUGS_HOME
-value|"%ucbarpa@BERKELEY"
+value|"@ucbarpa.BERKELEY.EDU"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
