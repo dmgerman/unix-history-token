@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.24 1995/10/23 13:19:35 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.26 1995/10/26 08:55:32 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1020,6 +1020,9 @@ block|{
 name|FILE
 modifier|*
 name|fp
+decl_stmt|,
+modifier|*
+name|debug
 decl_stmt|;
 name|char
 modifier|*
@@ -1027,6 +1030,9 @@ name|lines
 index|[
 name|MAX_LINES
 index|]
+decl_stmt|,
+modifier|*
+name|cp
 decl_stmt|;
 name|char
 name|line
@@ -1051,7 +1057,16 @@ name|fopen
 argument_list|(
 literal|"/etc/sysconfig"
 argument_list|,
-literal|"r"
+literal|"rw"
+argument_list|)
+expr_stmt|;
+name|debug
+operator|=
+name|fopen
+argument_list|(
+literal|"/tmp/ack"
+argument_list|,
+literal|"w"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1115,11 +1130,6 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|v
@@ -1135,6 +1145,21 @@ operator|->
 name|next
 control|)
 block|{
+name|fprintf
+argument_list|(
+name|debug
+argument_list|,
+literal|"Checking for variable: %s<%s>\n"
+argument_list|,
+name|v
+operator|->
+name|name
+argument_list|,
+name|v
+operator|->
+name|value
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1154,10 +1179,6 @@ name|tmp
 index|[
 literal|256
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|cp
 decl_stmt|;
 comment|/* Skip the comments */
 if|if
@@ -1273,35 +1294,27 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-block|}
-name|fp
-operator|=
-name|fopen
+name|fprintf
 argument_list|(
-literal|"/etc/sysconfig"
+name|debug
 argument_list|,
-literal|"w"
+literal|"Found a match!  New line is: %s\n"
+argument_list|,
+name|lines
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|fp
-condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|msgConfirm
-argument_list|(
-literal|"Unable to re-write /etc/sysconfig file!  Things may work\n"
-literal|"rather strangely as a result of this."
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
+block|}
+block|}
+comment|/* Now write it all back out again */
+name|rewind
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1319,6 +1332,18 @@ block|{
 name|fprintf
 argument_list|(
 name|fp
+argument_list|,
+name|lines
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|debug
+argument_list|,
+literal|"writing out `%s' to /etc/sysconfig\n"
 argument_list|,
 name|lines
 index|[
@@ -1372,6 +1397,17 @@ argument_list|(
 name|devp
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|debug
+argument_list|,
+literal|"Found the %s line, now chewing through %d devices\n"
+argument_list|,
+name|VAR_INTERFACES
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -1385,16 +1421,6 @@ condition|;
 name|j
 operator|++
 control|)
-block|{
-if|if
-condition|(
-name|devp
-index|[
-name|j
-index|]
-operator|->
-name|private
-condition|)
 block|{
 name|char
 name|iname
@@ -1420,13 +1446,38 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|debug
+argument_list|,
+literal|"Searching for `%s' variable\n"
+argument_list|,
+name|iname
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|(
+name|cp
+operator|=
 name|variable_get
 argument_list|(
 name|iname
 argument_list|)
+operator|)
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|debug
+argument_list|,
+literal|"Writing out `%s=%s' interface line to /etc/sysconfig\n"
+argument_list|,
+name|iname
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
@@ -1435,10 +1486,7 @@ literal|"%s=\"%s\"\n"
 argument_list|,
 name|iname
 argument_list|,
-name|variable_get
-argument_list|(
-name|iname
-argument_list|)
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1922,6 +1970,11 @@ return|return
 name|RET_FAIL
 return|;
 block|}
+name|msgNotify
+argument_list|(
+literal|"Got INDEX successfully, now building packages menu.."
+argument_list|)
+expr_stmt|;
 name|index_init
 argument_list|(
 operator|&
