@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exec.c	6.9	85/03/12	*/
+comment|/*	kern_exec.c	6.10	85/03/12	*/
 end_comment
 
 begin_include
@@ -991,7 +991,7 @@ name|u
 operator|.
 name|u_procp
 argument_list|,
-literal|"exece"
+literal|"exec: no swap space"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2408,7 +2408,7 @@ name|u
 operator|.
 name|u_procp
 argument_list|,
-literal|"i/o error mapping pages"
+literal|"exec: I/O error mapping pages"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * set SUID/SGID protections, if no tracing 	 */

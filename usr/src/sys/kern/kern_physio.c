@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	6.4	84/10/31	*/
+comment|/*	kern_physio.c	6.5	85/03/12	*/
 end_comment
 
 begin_include
@@ -611,11 +611,7 @@ name|swkill
 argument_list|(
 name|p
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+literal|"swap: read error from swap device"
 argument_list|)
 expr_stmt|;
 block|}
@@ -857,47 +853,26 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-modifier|*
-name|mesg
-decl_stmt|;
 name|printf
 argument_list|(
-literal|"pid %d: "
+literal|"pid %d: %s"
 argument_list|,
 name|p
 operator|->
 name|p_pid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
 name|rout
-condition|)
-name|printf
-argument_list|(
-name|mesg
-operator|=
-literal|"killed due to no swap space\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-name|mesg
-operator|=
-literal|"killed on swap error\n"
 argument_list|)
 expr_stmt|;
 name|uprintf
 argument_list|(
-literal|"sorry, pid %d was %s"
+literal|"sorry, pid %d was killed in %s"
 argument_list|,
 name|p
 operator|->
 name|p_pid
 argument_list|,
-name|mesg
+name|rout
 argument_list|)
 expr_stmt|;
 comment|/* 	 * To be sure no looping (e.g. in vmsched trying to 	 * swap out) mark process locked in core (as though 	 * done by user) after killing it so noone will try 	 * to swap it out. 	 */
