@@ -168,21 +168,6 @@ name|intrmask_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Interrupt handler function type */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-name|inthand2_t
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_endif
 endif|#
 directive|endif
