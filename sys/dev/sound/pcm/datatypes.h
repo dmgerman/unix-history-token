@@ -374,6 +374,9 @@ decl_stmt|;
 name|int
 modifier|*
 name|ref
+decl_stmt|,
+modifier|*
+name|atype
 decl_stmt|;
 name|unsigned
 name|playcount
