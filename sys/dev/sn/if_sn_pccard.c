@@ -108,7 +108,7 @@ init|=
 block|{
 name|PCMCIA_CARD
 argument_list|(
-name|MEGAHERTZ2
+name|DSPSI
 argument_list|,
 name|XJACK
 argument_list|,
