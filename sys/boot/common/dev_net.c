@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	  * $Id: dev_net.c,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  * From: $NetBSD: dev_net.c,v 1.12 1997/12/10 20:38:37 gwr Exp $  */
+comment|/*	  * $Id: dev_net.c,v 1.2 1998/08/22 10:31:01 dfr Exp $  * From: $NetBSD: dev_net.c,v 1.12 1997/12/10 20:38:37 gwr Exp $  */
 end_comment
 
 begin_comment
@@ -63,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<netif.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfs.h>
 end_include
 
 begin_include

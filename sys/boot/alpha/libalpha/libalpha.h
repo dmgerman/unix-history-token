@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: libalpha.h,v 1.1.1.1 1998/08/21 03:17:42 msmith Exp $ */
+comment|/* $Id: libalpha.h,v 1.2 1998/08/31 21:10:40 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -195,6 +195,24 @@ modifier|*
 name|src
 parameter_list|,
 name|vm_offset_t
+name|dest
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|alpha_copyout
+parameter_list|(
+name|vm_offset_t
+name|src
+parameter_list|,
+name|void
+modifier|*
 name|dest
 parameter_list|,
 name|size_t
