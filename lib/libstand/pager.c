@@ -228,6 +228,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|pager_prompt1
 argument_list|)
 expr_stmt|;
