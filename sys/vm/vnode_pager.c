@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993,1994 John S. Dyson  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.4 1994/08/06 09:15:42 davidg Exp $  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993,1994 John S. Dyson  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.5 1994/08/06 10:25:50 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1718,12 +1718,6 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
-name|int
-name|s
-init|=
-name|splbio
-argument_list|()
-decl_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -1816,6 +1810,7 @@ operator|)
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
+comment|/* 		printf("bcount: %d, bufsize: %d, npages: %d\n", 			bp->b_bcount, bp->b_bufsize, npages); */
 for|for
 control|(
 name|i
@@ -1887,6 +1882,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|pmap_qremove
+argument_list|(
+name|paddr
+argument_list|,
+name|npages
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|obj
@@ -1929,23 +1931,12 @@ operator|->
 name|b_vp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|relpbuf
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1989,9 +1980,6 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|;
-name|vm_offset_t
-name|mapsize
 decl_stmt|;
 name|vm_offset_t
 name|foff
@@ -2879,9 +2867,6 @@ decl_stmt|,
 modifier|*
 name|vp
 decl_stmt|;
-name|vm_offset_t
-name|mapsize
-decl_stmt|;
 name|int
 name|bsize
 decl_stmt|;
@@ -2965,10 +2950,6 @@ name|f_iosize
 expr_stmt|;
 comment|/* get the UNDERLYING device for the file with VOP_BMAP() */
 comment|/* 	 * originally, we did not check for an error return value -- assuming 	 * an fs always has a bmap entry point -- that assumption is wrong!!! 	 */
-name|mapsize
-operator|=
-literal|0
-expr_stmt|;
 name|foff
 operator|=
 name|m
@@ -3310,7 +3291,7 @@ name|pager_map
 argument_list|,
 name|kva
 argument_list|,
-name|mapsize
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* 			 * release the buffer back to the block subsystem 			 */
@@ -4218,17 +4199,6 @@ name|i
 operator|++
 control|)
 block|{
-name|pmap_clear_modify
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|m
-index|[
-name|i
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|m
 index|[
 name|i
@@ -4604,9 +4574,6 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|;
-name|vm_offset_t
-name|mapsize
 decl_stmt|;
 name|vm_offset_t
 name|foff
@@ -5087,9 +5054,6 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|;
-name|vm_offset_t
-name|mapsize
 decl_stmt|;
 name|vm_offset_t
 name|reqaddr

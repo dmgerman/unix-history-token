@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.2 1994/05/25 09:20:05 rgrimes Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.3 1994/08/01 11:25:44 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1127,7 +1127,7 @@ index|]
 expr_stmt|;
 name|s
 operator|=
-name|splimp
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|simple_lock
@@ -1248,7 +1248,7 @@ index|]
 expr_stmt|;
 name|s
 operator|=
-name|splimp
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|simple_lock
@@ -1363,7 +1363,7 @@ index|]
 expr_stmt|;
 name|s
 operator|=
-name|splimp
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|simple_lock
@@ -1541,7 +1541,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splimp
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|simple_lock
@@ -1751,7 +1751,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splimp
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|vm_page_remove
@@ -2000,7 +2000,7 @@ condition|)
 block|{
 name|s
 operator|=
-name|splimp
+name|splhigh
 argument_list|()
 expr_stmt|;
 if|if
@@ -2111,7 +2111,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|splimp
+name|splhigh
 argument_list|()
 expr_stmt|;
 if|if
@@ -2185,7 +2185,7 @@ comment|/* 	 *	Only move active pages -- ignore locked or already 	 *	inactive o
 end_comment
 
 begin_define
-unit|spl = splimp(); 	if (!(m->flags& PG_INACTIVE)&& m->wire_count == 0&& 		m->hold_count == 0) {  		pmap_clear_reference(VM_PAGE_TO_PHYS(m)); 		if (m->flags& PG_ACTIVE) { 			TAILQ_REMOVE(&vm_page_queue_active, m, pageq); 			m->flags&= ~PG_ACTIVE; 			cnt.v_active_count--; 		} 		TAILQ_INSERT_TAIL(&vm_page_queue_inactive, m, pageq); 		m->flags |= PG_INACTIVE; 		cnt.v_inactive_count++;
+unit|spl = splhigh(); 	if (!(m->flags& PG_INACTIVE)&& m->wire_count == 0&& 		m->hold_count == 0) {  		pmap_clear_reference(VM_PAGE_TO_PHYS(m)); 		if (m->flags& PG_ACTIVE) { 			TAILQ_REMOVE(&vm_page_queue_active, m, pageq); 			m->flags&= ~PG_ACTIVE; 			cnt.v_active_count--; 		} 		TAILQ_INSERT_TAIL(&vm_page_queue_inactive, m, pageq); 		m->flags |= PG_INACTIVE; 		cnt.v_inactive_count++;
 define|#
 directive|define
 name|NOT_DEACTIVATE_PROTECTS
@@ -2246,7 +2246,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|splimp
+name|splhigh
 argument_list|()
 expr_stmt|;
 comment|/* 	 *	Only move active pages -- ignore locked or already 	 *	inactive ones. 	 */
@@ -2418,7 +2418,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|splimp
+name|splhigh
 argument_list|()
 expr_stmt|;
 if|if
