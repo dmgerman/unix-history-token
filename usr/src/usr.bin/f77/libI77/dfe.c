@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dfe[] = "@(#)dfe.c	1.2";  *  * direct formatted external i/o  */
+comment|/* char id_dfe[] = "@(#)dfe.c	1.3";  *  * direct formatted external i/o  */
 end_comment
 
 begin_include
@@ -47,17 +47,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
-name|dfe
-init|=
-literal|"dfe"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
 name|rdfe
+index|[]
 init|=
 literal|"read dfe"
 decl_stmt|;
@@ -65,8 +56,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|wdfe
+index|[]
 init|=
 literal|"write dfe"
 decl_stmt|;
@@ -116,12 +107,21 @@ condition|(
 name|curunit
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowreading
 argument_list|(
 name|curunit
 argument_list|)
-expr_stmt|;
+condition|)
+name|err
+argument_list|(
+argument|errflag
+argument_list|,
+argument|errno
+argument_list|,
+argument|rdfe
+argument_list|)
 name|getn
 operator|=
 name|y_getc
@@ -223,12 +223,21 @@ operator|!
 name|curunit
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowwriting
 argument_list|(
 name|curunit
 argument_list|)
-expr_stmt|;
+condition|)
+name|err
+argument_list|(
+argument|errflag
+argument_list|,
+argument|errno
+argument_list|,
+argument|wdfe
+argument_list|)
 name|putn
 operator|=
 name|y_putc
@@ -409,7 +418,9 @@ name|errflag
 argument_list|,
 name|F_ERUNIT
 argument_list|,
-name|dfe
+name|rdfe
+operator|+
+literal|5
 argument_list|)
 expr_stmt|;
 name|curunit
@@ -451,7 +462,8 @@ argument|errflag
 argument_list|,
 argument|n
 argument_list|,
-argument|dfe
+argument|rdfe+
+literal|5
 argument_list|)
 name|cf
 operator|=
@@ -482,7 +494,8 @@ argument|errflag
 argument_list|,
 argument|F_ERNOFIO
 argument_list|,
-argument|dfe
+argument|rdfe+
+literal|5
 argument_list|)
 if|if
 condition|(
@@ -502,7 +515,8 @@ argument|errflag
 argument_list|,
 argument|F_ERNODIO
 argument_list|,
-argument|dfe
+argument|rdfe+
+literal|5
 argument_list|)
 name|recnum
 operator|=
@@ -844,7 +858,8 @@ argument|errflag
 argument_list|,
 argument|F_EREREC
 argument_list|,
-argument|dfe
+argument|rdfe+
+literal|5
 argument_list|)
 block|}
 name|fseek
@@ -874,7 +889,7 @@ comment|/* /*y_rev() /*{	/*what about work done?*/
 end_comment
 
 begin_comment
-comment|/*	if(curunit->url==1) return(0); /*	while(recpos<curunit->url) (*putn)(' '); /*	recpos=0; /*	return(0); /*} /* /*y_err() /*{ /*	err(errflag, F_EREREC, dfe); /*} */
+comment|/*	if(curunit->url==1) return(0); /*	while(recpos<curunit->url) (*putn)(' '); /*	recpos=0; /*	return(0); /*} /* /*y_err() /*{ /*	err(errflag, F_EREREC, rdfe+5); /*} */
 end_comment
 
 begin_macro
