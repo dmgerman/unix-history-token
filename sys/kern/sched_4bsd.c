@@ -2325,6 +2325,10 @@ comment|/* Put us back on the run queue (kse and all). */
 name|setrunqueue
 argument_list|(
 name|td
+argument_list|,
+name|SRQ_OURSELF
+operator||
+name|SRQ_YIELDING
 argument_list|)
 expr_stmt|;
 block|}
@@ -2441,6 +2445,8 @@ expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td
+argument_list|,
+name|SRQ_BORING
 argument_list|)
 expr_stmt|;
 block|}
@@ -2454,6 +2460,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -2569,6 +2578,17 @@ index|]
 condition|)
 endif|#
 directive|endif
+comment|/* 	 * Don't try preempt if we are already switching.  	 * all hell might break loose. 	 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|SRQ_YIELDING
+operator|)
+operator|==
+literal|0
+condition|)
 if|if
 condition|(
 name|maybe_preempt

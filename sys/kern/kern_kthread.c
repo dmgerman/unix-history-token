@@ -406,6 +406,8 @@ expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td
+argument_list|,
+name|SRQ_BORING
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
