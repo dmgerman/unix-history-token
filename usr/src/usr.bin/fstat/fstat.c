@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.32 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1498,7 +1498,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<=
+operator|<
 name|filed
 operator|.
 name|fd_lastfile
@@ -1586,7 +1586,10 @@ operator|.
 name|f_type
 operator|==
 name|DTYPE_SOCKET
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|checkfile
 operator|==
 literal|0
@@ -1605,6 +1608,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|dprintf
@@ -1667,6 +1671,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|badtype
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|filename
