@@ -72,16 +72,23 @@ name|MAX_MC_BUS
 value|8
 end_define
 
-begin_comment
-comment|/*  * This is something of a layering violation, but it makes probing cleaner.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|MCPCIA_PER_MCBUS
 value|4
 end_define
+
+begin_define
+define|#
+directive|define
+name|MCPCIA_PCI_MIDMIN
+value|4
+end_define
+
+begin_comment
+comment|/*  * This is something of a layering violation, but it makes probing cleaner.  */
+end_comment
 
 begin_comment
 comment|/* the MCPCIA bridge CSR addresses, offset zero, is a good thing to probe for */
