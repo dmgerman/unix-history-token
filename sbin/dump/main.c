@@ -554,13 +554,13 @@ name|KERBEROS
 define|#
 directive|define
 name|optstring
-value|"0123456789aB:b:cd:f:h:kns:T:uWw"
+value|"0123456789aB:b:cd:f:h:kns:T:uWwD:"
 else|#
 directive|else
 define|#
 directive|define
 name|optstring
-value|"0123456789aB:b:cd:f:h:ns:T:uWw"
+value|"0123456789aB:b:cd:f:h:ns:T:uWwD:"
 endif|#
 directive|endif
 while|while
@@ -711,6 +711,14 @@ literal|'f'
 case|:
 comment|/* output file */
 name|tape
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+name|dumpdates
 operator|=
 name|optarg
 expr_stmt|;
