@@ -1401,11 +1401,19 @@ name|void
 name|usage
 parameter_list|()
 block|{
-name|errx
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: split [-b byte_count] [-l line_count] [-p pattern] [file [prefix]]\n"
+argument_list|)
+expr_stmt|;
+name|exit
 argument_list|(
 name|EX_USAGE
-argument_list|,
-literal|"usage: split [-b byte_count] [-l line_count] [-p pattern] [file [prefix]]"
 argument_list|)
 expr_stmt|;
 block|}
