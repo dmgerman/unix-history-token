@@ -2698,11 +2698,11 @@ argument_list|()
 expr_stmt|;
 name|addl_page_shortage_init
 operator|=
+name|atomic_readandclear_int
+argument_list|(
+operator|&
 name|vm_pageout_deficit
-expr_stmt|;
-name|vm_pageout_deficit
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate the number of pages we want to either free or move 	 * to the cache. 	 */
 name|page_shortage
@@ -5198,10 +5198,6 @@ name|vm_pageout_scan
 argument_list|(
 name|pass
 argument_list|)
-expr_stmt|;
-name|vm_pageout_deficit
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
