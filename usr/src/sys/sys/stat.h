@@ -1,23 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.14 (Berkeley) %G%  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_macro
-unit|struct
-name|ostat
-end_macro
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -27,9 +11,7 @@ end_include
 
 begin_struct
 struct|struct
-name|stat
-endif|#
-directive|endif
+name|ostat
 block|{
 name|u_short
 name|st_dev
@@ -64,18 +46,18 @@ name|st_size
 decl_stmt|;
 comment|/* file size, in bytes */
 name|struct
-name|timeval
-name|st_atimeval
+name|timespec
+name|st_atimespec
 decl_stmt|;
 comment|/* time of last access */
 name|struct
-name|timeval
-name|st_mtimeval
+name|timespec
+name|st_mtimespec
 decl_stmt|;
 comment|/* time of last data modification */
 name|struct
-name|timeval
-name|st_ctimeval
+name|timespec
+name|st_ctimespec
 decl_stmt|;
 comment|/* time of last file status change */
 name|long
@@ -98,27 +80,9 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_macro
-unit|struct
-name|stat
-end_macro
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_struct
 struct|struct
-name|qstat
-endif|#
-directive|endif
+name|stat
 block|{
 name|dev_t
 name|st_dev
@@ -149,18 +113,18 @@ name|st_rdev
 decl_stmt|;
 comment|/* device type */
 name|struct
-name|timeval
-name|st_atimeval
+name|timespec
+name|st_atimespec
 decl_stmt|;
 comment|/* time of last access */
 name|struct
-name|timeval
-name|st_mtimeval
+name|timespec
+name|st_mtimespec
 decl_stmt|;
 comment|/* time of last data modification */
 name|struct
-name|timeval
-name|st_ctimeval
+name|timespec
+name|st_ctimespec
 decl_stmt|;
 comment|/* time of last file status change */
 name|off_t
@@ -184,9 +148,12 @@ name|st_gen
 decl_stmt|;
 comment|/* file generation number */
 name|long
-name|st_spare
+name|st_lspare
+decl_stmt|;
+name|quad_t
+name|st_qspare
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
 block|}
@@ -197,21 +164,21 @@ begin_define
 define|#
 directive|define
 name|st_atime
-value|st_atimeval.tv_sec
+value|st_atimespec.ts_sec
 end_define
 
 begin_define
 define|#
 directive|define
 name|st_mtime
-value|st_mtimeval.tv_sec
+value|st_mtimespec.ts_sec
 end_define
 
 begin_define
 define|#
 directive|define
 name|st_ctime
-value|st_ctimeval.tv_sec
+value|st_ctimespec.ts_sec
 end_define
 
 begin_define
@@ -843,62 +810,6 @@ operator|*
 operator|,
 expr|struct
 name|stat
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* temporarily */
-end_comment
-
-begin_decl_stmt
-name|int
-name|lqstat
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-expr|struct
-name|qstat
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fqstat
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-expr|struct
-name|qstat
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|qstat
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-expr|struct
-name|qstat
 operator|*
 operator|)
 argument_list|)
