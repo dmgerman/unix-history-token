@@ -345,6 +345,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_FORMAT
+value|0x04
+end_define
+
+begin_comment
+comment|/* format unit */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_READ
 value|0x08
 end_define
@@ -629,6 +640,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_READ_DISK_INFO
+value|0x51
+end_define
+
+begin_comment
+comment|/* get disk info structure */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_READ_TRACK_INFO
 value|0x52
 end_define
@@ -640,12 +662,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_RESERVE_TRACK
+value|0x53
+end_define
+
+begin_comment
+comment|/* reserve track */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_SEND_OPC_INFO
+value|0x54
+end_define
+
+begin_comment
+comment|/* send OPC structurek */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_MODE_SELECT_BIG
 value|0x55
 end_define
 
 begin_comment
 comment|/* set device parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_REPAIR_TRACK
+value|0x58
+end_define
+
+begin_comment
+comment|/* repair track */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_READ_MASTER_CUE
+value|0x59
+end_define
+
+begin_comment
+comment|/* read master CUE info */
 end_comment
 
 begin_define
@@ -673,6 +739,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_READ_BUFFER_CAPACITY
+value|0x5c
+end_define
+
+begin_comment
+comment|/* get buffer capicity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_SEND_CUE_SHEET
+value|0x5d
+end_define
+
+begin_comment
+comment|/* send CUE sheet */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_BLANK
 value|0xa1
 end_define
@@ -688,12 +776,20 @@ name|ATAPI_SEND_KEY
 value|0xa3
 end_define
 
+begin_comment
+comment|/* send DVD key structure */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ATAPI_REPORT_KEY
 value|0xa4
 end_define
+
+begin_comment
+comment|/* get DVD key structure */
+end_comment
 
 begin_define
 define|#
@@ -723,6 +819,10 @@ directive|define
 name|ATAPI_READ_STRUCTURE
 value|0xad
 end_define
+
+begin_comment
+comment|/* get DVD structure */
+end_comment
 
 begin_define
 define|#
