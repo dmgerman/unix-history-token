@@ -741,7 +741,6 @@ name|owner
 operator|==
 name|MTX_CONTESTED
 condition|)
-empty_stmt|;
 return|return
 operator|(
 literal|0
