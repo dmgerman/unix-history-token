@@ -7193,7 +7193,10 @@ name|tflags
 operator|=
 name|fuword32
 argument_list|(
+operator|&
 name|tmbx
+operator|->
+name|tm_flags
 argument_list|)
 expr_stmt|;
 comment|/* 			 * On some architectures, TP register points to thread 			 * mailbox but not points to kse mailbox, and userland  			 * can not atomically clear km_curthread, but can  			 * use TP register, and set TMF_NOUPCALL in thread 			 * flag	to indicate a critical region. 			 */
