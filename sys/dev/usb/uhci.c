@@ -14948,6 +14948,17 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+name|UHF_PORT_POWER
+case|:
+comment|/* Pretend we turned on power */
+name|err
+operator|=
+name|USBD_NORMAL_COMPLETION
+expr_stmt|;
+goto|goto
+name|ret
+goto|;
+case|case
 name|UHF_C_PORT_CONNECTION
 case|:
 case|case
@@ -14961,9 +14972,6 @@ name|UHF_PORT_CONNECTION
 case|:
 case|case
 name|UHF_PORT_OVER_CURRENT
-case|:
-case|case
-name|UHF_PORT_POWER
 case|:
 case|case
 name|UHF_PORT_LOW_SPEED
