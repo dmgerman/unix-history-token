@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.18 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1248,19 +1248,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	**  Call the mailer. 	**	The argument vector gets built, pipes 	**	are created as necessary, and we fork& exec as 	**	appropriate. 	**	If we are running SMTP, we just need to clean up. 	*/
-name|message
-argument_list|(
-name|Arpa_Info
-argument_list|,
-literal|"Connecting to %s.%s..."
-argument_list|,
-name|host
-argument_list|,
-name|m
-operator|->
-name|m_name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ctladdr
@@ -1363,6 +1350,22 @@ operator|==
 name|EX_OK
 condition|)
 block|{
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"Connecting to %s.%s..."
+argument_list|,
+name|MxHosts
+index|[
+literal|0
+index|]
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
 comment|/* send the recipient list */
 name|tobuf
 index|[
@@ -1518,6 +1521,20 @@ else|else
 endif|#
 directive|endif
 comment|/* SMTP */
+block|{
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"Connecting to %s.%s..."
+argument_list|,
+name|host
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
 name|rcode
 operator|=
 name|sendoff
@@ -1531,6 +1548,7 @@ argument_list|,
 name|ctladdr
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	**  Do final status disposal. 	**	We check for something in tobuf for the SMTP case. 	**	If we got a temporary failure, arrange to queue the 	**		addressees. 	*/
 if|if
 condition|(
@@ -1556,7 +1574,6 @@ name|rcode
 operator|!=
 name|EX_OK
 condition|)
-block|{
 for|for
 control|(
 name|to
@@ -1582,7 +1599,6 @@ argument_list|,
 name|rcode
 argument_list|)
 expr_stmt|;
-block|}
 name|errno
 operator|=
 literal|0
