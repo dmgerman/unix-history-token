@@ -1945,6 +1945,17 @@ begin_comment
 comment|/* get syscall vector name */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERN_PROC_INC_THREAD
+value|0x10
+end_define
+
+begin_comment
+comment|/* 					 * modifier for pid, pgrp, tty, 					 * uid, ruid, and proc 					 */
+end_comment
+
 begin_comment
 comment|/*  * KERN_IPC identifiers  */
 end_comment
