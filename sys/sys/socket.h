@@ -2558,6 +2558,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sockatmark
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|socket
 parameter_list|(
 name|int
@@ -2584,10 +2593,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * XXX missing sockatmark().  */
-end_comment
 
 begin_macro
 name|__END_DECLS
