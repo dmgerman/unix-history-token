@@ -481,7 +481,7 @@ block|}
 comment|/* Get the amount of free space after the MBR */
 name|blocks
 operator|=
-name|map_unused
+name|map_free
 argument_list|(
 literal|1LL
 argument_list|,
@@ -813,14 +813,14 @@ name|map_start
 operator|-
 literal|1LL
 expr_stmt|;
-name|uuidgen
+name|uuid_create
 argument_list|(
 operator|&
 name|hdr
 operator|->
 name|hdr_uuid
 argument_list|,
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 name|hdr
@@ -892,7 +892,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|uuidgen
+name|uuid_create
 argument_list|(
 operator|&
 name|ent
@@ -902,7 +902,7 @@ index|]
 operator|.
 name|ent_uuid
 argument_list|,
-literal|1
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Mirror partitions. */

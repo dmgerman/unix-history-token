@@ -80,6 +80,13 @@ name|map_t
 typedef|;
 end_typedef
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|lbawidth
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|map_t
 modifier|*
@@ -93,6 +100,18 @@ name|int
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|map_t
+modifier|*
+name|map_alloc
+parameter_list|(
+name|off_t
+parameter_list|,
+name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -129,20 +148,11 @@ end_function_decl
 
 begin_function_decl
 name|off_t
-name|map_unused
+name|map_free
 parameter_list|(
 name|off_t
 parameter_list|,
 name|off_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|map_dump
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
