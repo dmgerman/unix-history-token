@@ -127,7 +127,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bcde:f:n:os:vx"
+literal|"bcCde:f:n:os:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -163,6 +163,25 @@ expr_stmt|;
 name|add
 argument_list|(
 literal|"\"%07.7_ax \" 16/1 \"%3_c \" \"\\n\""
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|add
+argument_list|(
+literal|"\"%08.8_Ax\n\""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"\"%08.8_ax \" 16/1 \"%02x \" "
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"\" |\" 16/1 \"%_p\" \"|\\n\""
 argument_list|)
 expr_stmt|;
 break|break;
