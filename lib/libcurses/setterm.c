@@ -68,6 +68,13 @@ directive|include
 file|"curses.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|DB
+decl_stmt|;
+end_decl_stmt
+
 begin_undef
 undef|#
 directive|undef
