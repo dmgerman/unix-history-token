@@ -5155,7 +5155,7 @@ expr_stmt|;
 define|#
 directive|define
 name|CARDBUS_SYS_RES_MEMORY_START
-value|0x44000000
+value|0x88000000
 define|#
 directive|define
 name|CARDBUS_SYS_RES_MEMORY_END
