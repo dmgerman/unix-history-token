@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)pc.h 1.4 %G%"; */
+comment|/* static	char sccsid[] = "@(#)pc.h 1.5 %G%"; */
 end_comment
 
 begin_comment
@@ -211,17 +211,6 @@ define|#
 directive|define
 name|BITSPERBYTE
 value|8
-end_define
-
-begin_comment
-comment|/*      *	error number for case label not found (ECASE)      *	stolen from ~mckusick/px/lib/h01errs.h      */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ECASE
-value|5
 end_define
 
 end_unit

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 1.7 %G%"
+literal|"@(#)pccaseop.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -804,20 +804,7 @@ argument_list|,
 name|P2PTR
 argument_list|)
 argument_list|,
-literal|"_ERROR"
-argument_list|)
-expr_stmt|;
-name|putleaf
-argument_list|(
-name|P2ICON
-argument_list|,
-name|ECASE
-argument_list|,
-literal|0
-argument_list|,
-name|P2INT
-argument_list|,
-literal|0
+literal|"_CASERNG"
 argument_list|)
 expr_stmt|;
 name|putRV
@@ -836,13 +823,6 @@ argument_list|,
 name|exprnlp
 operator|->
 name|extra_flags
-argument_list|,
-name|P2INT
-argument_list|)
-expr_stmt|;
-name|putop
-argument_list|(
-name|P2LISTOP
 argument_list|,
 name|P2INT
 argument_list|)
