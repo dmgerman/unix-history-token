@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -350,28 +350,6 @@ name|base
 decl_stmt|,
 name|residual
 decl_stmt|;
-if|#
-directive|if
-name|VAX630
-operator|||
-name|VAX650
-comment|/*  	 * Leave last 5k of phys. memory as console work area. 	 */
-if|if
-condition|(
-name|cpu
-operator|==
-name|VAX_630
-operator|||
-name|cpu
-operator|==
-name|VAX_650
-condition|)
-name|maxmem
-operator|-=
-literal|10
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Initialize error message buffer (at end of core). 	 */
 name|maxmem
 operator|-=
