@@ -2467,9 +2467,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -2722,9 +2722,9 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 return|return
@@ -2861,9 +2861,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -3660,9 +3660,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -3714,7 +3714,7 @@ name|data
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3739,7 +3739,7 @@ name|data
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3766,7 +3766,7 @@ name|data
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3795,7 +3795,7 @@ name|data
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3854,7 +3854,7 @@ name|data
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4812,7 +4812,9 @@ name|scp
 operator|->
 name|proc
 operator|!=
-name|p
+name|td
+operator|->
+name|td_proc
 condition|)
 block|{
 if|if
@@ -5009,7 +5011,9 @@ argument_list|,
 operator|(
 literal|"VT_PROCESS %d, "
 operator|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 operator|)
@@ -5035,7 +5039,9 @@ name|scp
 operator|->
 name|proc
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 name|scp
 operator|->
@@ -5158,7 +5164,9 @@ name|scp
 operator|->
 name|proc
 operator|!=
-name|p
+name|td
+operator|->
+name|td_proc
 condition|)
 block|{
 name|splx
@@ -5605,9 +5613,9 @@ case|:
 comment|/* allow io operations */
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5631,9 +5639,9 @@ return|;
 ifdef|#
 directive|ifdef
 name|__i386__
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_eflags
 operator||=
@@ -5651,9 +5659,9 @@ comment|/* disallow io operations (default) */
 ifdef|#
 directive|ifdef
 name|__i386__
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_eflags
 operator|&=
@@ -7249,7 +7257,7 @@ name|data
 operator|,
 name|flag
 operator|,
-name|p
+name|td
 operator|)
 expr_stmt|;
 if|if
