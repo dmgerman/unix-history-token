@@ -2590,7 +2590,7 @@ name|n
 decl_stmt|,
 name|pri
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|data
 decl_stmt|;
@@ -2609,7 +2609,7 @@ block|{
 name|data
 operator|=
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
