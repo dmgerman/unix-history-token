@@ -190,8 +190,7 @@ name|user
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|strcmp
+name|strstr
 argument_list|(
 operator|(
 name|p
