@@ -222,6 +222,10 @@ begin_comment
 comment|/*  * Structure defining a network interface.  *  * (Would like to call this struct ``if'', but C isn't PL/1.)  */
 end_comment
 
+begin_comment
+comment|/*  * NB: For FreeBSD, it is assumed that each NIC driver's softc starts with  * one of these structures, typically held within an arpcom structure.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ifnet
