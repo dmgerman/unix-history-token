@@ -2145,17 +2145,6 @@ operator|->
 name|a_vp
 decl_stmt|;
 comment|/* 	 * Clear out the v_type field to avoid 	 * nasty things happening in vgone(). 	 */
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|ap
-operator|->
-name|a_td
-argument_list|)
-expr_stmt|;
 name|vp
 operator|->
 name|v_type

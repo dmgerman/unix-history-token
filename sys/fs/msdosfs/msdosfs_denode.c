@@ -2585,15 +2585,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If we are done with the denode, reclaim it 	 * so that it can be reused immediately. 	 */
 ifdef|#
 directive|ifdef

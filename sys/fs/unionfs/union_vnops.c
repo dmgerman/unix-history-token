@@ -6098,15 +6098,6 @@ operator|->
 name|a_vp
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|ap
-operator|->
-name|a_td
-decl_stmt|;
-name|struct
 name|union_node
 modifier|*
 name|un
@@ -6136,15 +6127,6 @@ literal|0
 block|if ((un->un_flags& UN_ULOCK)&& un->un_uppervp) { 		un->un_flags&= ~UN_ULOCK; 		VOP_UNLOCK(un->un_uppervp, 0, td); 	}
 endif|#
 directive|endif
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

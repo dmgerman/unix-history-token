@@ -3307,7 +3307,7 @@ name|vp
 operator|->
 name|v_iflag
 operator|&
-name|VI_XLOCK
+name|VI_DOOMED
 condition|)
 return|return
 literal|0

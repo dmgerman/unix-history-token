@@ -386,7 +386,7 @@ name|vp
 operator|->
 name|v_iflag
 operator|&
-name|VI_XLOCK
+name|VI_DOOMED
 operator|)
 operator|!=
 literal|0
@@ -563,7 +563,7 @@ name|ovp
 operator|->
 name|v_iflag
 operator|&
-name|VI_XLOCK
+name|VI_DOOMED
 operator|)
 operator|!=
 literal|0

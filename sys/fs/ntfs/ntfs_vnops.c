@@ -993,17 +993,6 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|ap
-operator|->
-name|a_td
-argument_list|)
-expr_stmt|;
 comment|/* XXX since we don't support any filesystem changes 	 * right now, nothing more needs to be done 	 */
 return|return
 operator|(

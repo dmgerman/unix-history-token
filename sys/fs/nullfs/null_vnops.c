@@ -1538,16 +1538,6 @@ return|;
 block|}
 if|if
 condition|(
-name|vp
-operator|->
-name|v_vnlock
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 		 * The lower level has exported a struct lock to us. Use 		 * it so that all vnodes in the stack lock and unlock 		 * simultaneously. Note: we don't DRAIN the lock as DRAIN 		 * decommissions the lock - just because our vnode is 		 * going away doesn't mean the struct lock below us is. 		 * LK_EXCLUSIVE is fine. 		 */
-if|if
-condition|(
 operator|(
 name|flags
 operator|&
@@ -1567,6 +1557,16 @@ operator||=
 name|LK_INTERLOCK
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|vp
+operator|->
+name|v_vnlock
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * The lower level has exported a struct lock to us. Use 		 * it so that all vnodes in the stack lock and unlock 		 * simultaneously. Note: we don't DRAIN the lock as DRAIN 		 * decommissions the lock - just because our vnode is 		 * going away doesn't mean the struct lock below us is. 		 * LK_EXCLUSIVE is fine. 		 */
 name|nn
 operator|=
 name|VTONULL
@@ -1590,7 +1590,7 @@ argument_list|(
 literal|"null_lock: avoiding LK_DRAIN\n"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Emulate lock draining by waiting for all other 			 * pending locks to complete.  Afterwards the 			 * lockmgr call might block, but no other threads 			 * will attempt to use this nullfs vnode due to the 			 * VI_XLOCK flag. 			 */
+comment|/* 			 * Emulate lock draining by waiting for all other 			 * pending locks to complete.  Afterwards the 			 * lockmgr call might block, but no other threads 			 * will attempt to use this nullfs vnode due to the 			 * VI_DOOMED flag. 			 */
 while|while
 condition|(
 name|nn
@@ -1695,7 +1695,7 @@ name|vp
 operator|->
 name|v_iflag
 operator|&
-name|VI_XLOCK
+name|VI_DOOMED
 operator|)
 operator|!=
 literal|0
@@ -1776,33 +1776,6 @@ name|null_pending_locks
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|error
-operator|==
-name|ENOENT
-operator|&&
-operator|(
-name|vp
-operator|->
-name|v_iflag
-operator|&
-name|VI_XLOCK
-operator|)
-operator|!=
-literal|0
-operator|&&
-name|vp
-operator|->
-name|v_vxthread
-operator|!=
-name|curthread
-condition|)
-name|vx_waitl
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|VI_UNLOCK
 argument_list|(
 name|vp
@@ -2266,15 +2239,6 @@ operator|->
 name|v_object
 operator|=
 name|NULL
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
 expr_stmt|;
 comment|/* 	 * If this is the last reference, then free up the vnode 	 * so as not to tie up the lower vnodes. 	 */
 name|vrecycle
