@@ -518,8 +518,6 @@ decl_stmt|;
 name|int
 name|base64
 decl_stmt|,
-name|ignore
-decl_stmt|,
 name|n1
 decl_stmt|;
 name|char
@@ -555,8 +553,6 @@ name|stat
 name|st
 decl_stmt|;
 name|base64
-operator|=
-name|ignore
 operator|=
 literal|0
 expr_stmt|;
@@ -1025,21 +1021,18 @@ name|F_OK
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"not overwritten: %s\n"
+literal|"not overwritten: %s"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|ignore
-operator|++
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 elseif|else
 if|if
@@ -1219,14 +1212,6 @@ directive|define
 name|OUT_OF_RANGE
 define|\
 value|{	\     warnx( \ "\n\tinput file: %s\n\tencoded file: %s\n\tcharacter out of range: [%d-%d]", \  	filename, buffn, 1 + ' ', 077 + ' ' + 1); \         return(1); \ }
-define|#
-directive|define
-name|PUTCHAR
-parameter_list|(
-name|c
-parameter_list|)
-define|\
-value|if (!ignore) \ 	putchar(c)
 comment|/* 		 * `n' is used to avoid writing out all the characters 		 * at the end of the file. 		 */
 if|if
 condition|(
@@ -1331,7 +1316,7 @@ argument_list|)
 operator|>>
 literal|4
 decl_stmt|;
-name|PUTCHAR
+name|putchar
 argument_list|(
 name|ch
 argument_list|)
@@ -1358,7 +1343,7 @@ argument_list|)
 operator|>>
 literal|2
 expr_stmt|;
-name|PUTCHAR
+name|putchar
 argument_list|(
 name|ch
 argument_list|)
@@ -1383,7 +1368,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|PUTCHAR
+name|putchar
 argument_list|(
 name|ch
 argument_list|)
@@ -1442,7 +1427,7 @@ argument_list|)
 operator|>>
 literal|4
 decl_stmt|;
-name|PUTCHAR
+name|putchar
 argument_list|(
 name|ch
 argument_list|)
@@ -1503,7 +1488,7 @@ argument_list|)
 operator|>>
 literal|2
 decl_stmt|;
-name|PUTCHAR
+name|putchar
 argument_list|(
 name|ch
 argument_list|)
@@ -1562,7 +1547,7 @@ literal|3
 index|]
 argument_list|)
 decl_stmt|;
-name|PUTCHAR
+name|putchar
 argument_list|(
 name|ch
 argument_list|)
