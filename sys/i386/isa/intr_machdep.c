@@ -2241,20 +2241,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-if|if
-condition|(
-name|intr_handler
-index|[
-name|intr
-index|]
-operator|!=
-name|isa_strayintr
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+block|if (intr_handler[intr] != isa_strayintr) 		return (EBUSY);
+endif|#
+directive|endif
 name|ef
 operator|=
 name|read_eflags
