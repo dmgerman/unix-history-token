@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.33 1996/11/21 07:18:57 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.32.2.1 1996/11/23 08:32:08 phk Exp $  */
 end_comment
 
 begin_include
@@ -129,7 +129,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Set up the root directory node in the backing plane  * This is happenning before the vfs system has been  * set up yet, so be careful about what we reference..  * Notice that the ops are by indirection.. as they haven't  * been set up yet!  * DEVFS has a hiddne mountpoint that is used as the anchor point  * for the internal 'blueprint' version of the dev filesystem tree.  */
+comment|/*  * Set up the root directory node in the backing plane  * This is happenning before the vfs system has been  * set up yet, so be careful about what we reference..  * Notice that the ops are by indirection.. as they haven't  * been set up yet!  * DEVFS has a hidden mountpoint that is used as the anchor point  * for the internal 'blueprint' version of the dev filesystem tree.  */
 end_comment
 
 begin_comment
@@ -1030,6 +1030,13 @@ operator|->
 name|nextlink
 operator|)
 expr_stmt|;
+operator|*
+name|devnmp
+operator|->
+name|prevlinkp
+operator|=
+name|devnmp
+expr_stmt|;
 name|dnp
 operator|->
 name|linklist
@@ -1083,7 +1090,7 @@ name|myname
 operator|=
 name|devnmp
 expr_stmt|;
-comment|/* 		 * If we are unlinking from an old dir, decrement it's links 		 * as we point our '..' elsewhere 		 * Note: it's up to the calling code to remove the  		 * us from teh original directory's list 		 */
+comment|/* 		 * If we are unlinking from an old dir, decrement it's links 		 * as we point our '..' elsewhere 		 * Note: it's up to the calling code to remove the  		 * us from the original directory's list 		 */
 if|if
 condition|(
 name|dnp
@@ -1933,6 +1940,39 @@ if|if
 condition|(
 name|dnp
 operator|->
+name|nextsibling
+operator|!=
+name|dnp
+condition|)
+block|{
+name|dn_p
+modifier|*
+name|prevp
+init|=
+name|dnp
+operator|->
+name|prevsiblingp
+decl_stmt|;
+operator|*
+name|prevp
+operator|=
+name|dnp
+operator|->
+name|nextsibling
+expr_stmt|;
+name|dnp
+operator|->
+name|nextsibling
+operator|->
+name|prevsiblingp
+operator|=
+name|prevp
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|dnp
+operator|->
 name|type
 operator|==
 name|DEV_SLNK
@@ -2049,8 +2089,6 @@ init|;
 name|adnp
 operator|!=
 name|pdnp
-operator|->
-name|nextsibling
 condition|;
 name|adnp
 operator|=
@@ -2070,7 +2108,7 @@ name|child
 operator|->
 name|name
 argument_list|,
-name|pdnp
+name|adnp
 argument_list|,
 name|type
 argument_list|,
