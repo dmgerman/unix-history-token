@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*static	char sccsid[] = "@(#)c2.h 4.3 %G%";*/
+comment|/*static	char sccsid[] = "@(#)c2.h 4.4 %G%";*/
 end_comment
 
 begin_comment
@@ -645,7 +645,7 @@ begin_define
 define|#
 directive|define
 name|C2_ASIZE
-value|64
+value|128
 end_define
 
 begin_struct
