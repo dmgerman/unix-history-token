@@ -323,7 +323,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -394,7 +394,7 @@ name|queue
 operator|=
 name|PQ_NONE
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -417,7 +417,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
@@ -499,7 +499,7 @@ operator|)
 operator|&
 name|PQ_L2_MASK
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
