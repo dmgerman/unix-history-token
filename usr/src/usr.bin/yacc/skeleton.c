@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)skeleton.c	5.7 (Berkeley) %G%"
+literal|"@(#)skeleton.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,6 +90,8 @@ block|,
 literal|"static char yysccsid[] = \"@(#)yaccpar	1.9 (Berkeley) 02/21/93\";"
 block|,
 literal|"#endif"
+block|,
+literal|"#include<stdlib.h>"
 block|,
 literal|"#define YYBYACC 1"
 block|,
@@ -167,13 +169,15 @@ literal|"#define YYSTACKSIZE YYMAXDEPTH"
 block|,
 literal|"#else"
 block|,
-literal|"#define YYSTACKSIZE 500"
+literal|"#define YYSTACKSIZE 10000"
 block|,
-literal|"#define YYMAXDEPTH 500"
+literal|"#define YYMAXDEPTH 10000"
+block|,
+literal|"#endif"
 block|,
 literal|"#endif"
 block|,
-literal|"#endif"
+literal|"#define YYINITSTACKSIZE 200"
 block|,
 literal|"int yydebug;"
 block|,
@@ -191,11 +195,13 @@ literal|"YYSTYPE yyval;"
 block|,
 literal|"YYSTYPE yylval;"
 block|,
-literal|"short yyss[YYSTACKSIZE];"
+literal|"short *yyss;"
 block|,
-literal|"YYSTYPE yyvs[YYSTACKSIZE];"
+literal|"short *yysslim;"
 block|,
-literal|"#define yystacksize YYSTACKSIZE"
+literal|"YYSTYPE *yyvs;"
+block|,
+literal|"int yystacksize;"
 block|,
 literal|0
 block|}
@@ -209,6 +215,60 @@ name|body
 index|[]
 init|=
 block|{
+literal|"/* allocate initial stack or double stack size, up to YYMAXDEPTH */"
+block|,
+literal|"static int yygrowstack()"
+block|,
+literal|"{"
+block|,
+literal|"    int newsize, i;"
+block|,
+literal|"    short *newss;"
+block|,
+literal|"    YYSTYPE *newvs;"
+block|,
+literal|""
+block|,
+literal|"    if ((newsize = yystacksize) == 0)"
+block|,
+literal|"        newsize = YYINITSTACKSIZE;"
+block|,
+literal|"    else if (newsize>= YYMAXDEPTH)"
+block|,
+literal|"        return -1;"
+block|,
+literal|"    else if ((newsize *= 2)> YYMAXDEPTH)"
+block|,
+literal|"        newsize = YYMAXDEPTH;"
+block|,
+literal|"    i = yyssp - yyss;"
+block|,
+literal|"    if ((newss = realloc(yyss, newsize * sizeof *newss)) == NULL)"
+block|,
+literal|"        return -1;"
+block|,
+literal|"    yyss = newss;"
+block|,
+literal|"    yyssp = newss + i;"
+block|,
+literal|"    if ((newvs = realloc(yyvs, newsize * sizeof *newvs)) == NULL)"
+block|,
+literal|"        return -1;"
+block|,
+literal|"    yyvs = newvs;"
+block|,
+literal|"    yyvsp = newvs + i;"
+block|,
+literal|"    yystacksize = newsize;"
+block|,
+literal|"    yysslim = yyss + newsize - 1;"
+block|,
+literal|"    return 0;"
+block|,
+literal|"}"
+block|,
+literal|""
+block|,
 literal|"#define YYABORT goto yyabort"
 block|,
 literal|"#define YYREJECT goto yyabort"
@@ -256,6 +316,8 @@ block|,
 literal|"    yychar = (-1);"
 block|,
 literal|""
+block|,
+literal|"    if (yyss == NULL&& yygrowstack()) goto yyoverflow;"
 block|,
 literal|"    yyssp = yyss;"
 block|,
@@ -313,7 +375,7 @@ literal|"                    YYPREFIX, yystate, yytable[yyn]);"
 block|,
 literal|"#endif"
 block|,
-literal|"        if (yyssp>= yyss + yystacksize - 1)"
+literal|"        if (yyssp>= yysslim&& yygrowstack())"
 block|,
 literal|"        {"
 block|,
@@ -395,7 +457,7 @@ literal|" to state %d\\n\", YYPREFIX, *yyssp, yytable[yyn]);"
 block|,
 literal|"#endif"
 block|,
-literal|"                if (yyssp>= yyss + yystacksize - 1)"
+literal|"                if (yyssp>= yysslim&& yygrowstack())"
 block|,
 literal|"                {"
 block|,
@@ -585,7 +647,7 @@ literal|"to state %d\\n\", YYPREFIX, *yyssp, yystate);"
 block|,
 literal|"#endif"
 block|,
-literal|"    if (yyssp>= yyss + yystacksize - 1)"
+literal|"    if (yyssp>= yysslim&& yygrowstack())"
 block|,
 literal|"    {"
 block|,
