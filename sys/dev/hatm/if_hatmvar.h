@@ -573,13 +573,6 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* bitmap for on-card */
-name|uint8_t
-name|used
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/* bitmap for used but not on-card */
 name|uint16_t
 name|nchunks
 decl_stmt|;
@@ -795,25 +788,14 @@ begin_struct
 struct|struct
 name|mbufx_free
 block|{
-name|SLIST_ENTRY
-argument_list|(
-argument|mbufx_free
-argument_list|)
+name|struct
+name|mbufx_free
+modifier|*
 name|link
-expr_stmt|;
+decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_expr_stmt
-name|SLIST_HEAD
-argument_list|(
-name|mbufx_free_list
-argument_list|,
-name|mbufx_free
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*==================================================================*/
@@ -1222,20 +1204,12 @@ name|u_int
 name|mbuf_npages
 decl_stmt|;
 name|struct
-name|mtx
-name|mbuf0_mtx
-decl_stmt|;
-name|struct
-name|mbufx_free_list
-name|mbuf0_list
-decl_stmt|;
-name|struct
-name|mtx
-name|mbuf1_mtx
-decl_stmt|;
-name|struct
-name|mbufx_free_list
-name|mbuf1_list
+name|mbufx_free
+modifier|*
+name|mbuf_list
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/* mbuf cluster tracking and mapping for group 0 */
 name|struct
