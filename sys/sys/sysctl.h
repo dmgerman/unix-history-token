@@ -16,45 +16,6 @@ name|_SYS_SYSCTL_H_
 end_define
 
 begin_comment
-comment|/*  * These are for the eproc structure defined below.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ucred.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Definitions for sysctl call.  The sysctl call uses a hierarchical name  * for objects that can be examined or modified.  The name is expressed as  * a sequence of integers.  Like a file path name, the meaning of each  * component depends on its place in the hierarchy.  The top-level and kern  * identifiers are defined here, and other identifiers are defined in the  * respective subsystem header files.  */
 end_comment
 
@@ -98,7 +59,7 @@ value|0xf
 end_define
 
 begin_comment
-comment|/* Mask */
+comment|/* Mask for the type */
 end_comment
 
 begin_define
@@ -199,37 +160,25 @@ end_define
 begin_define
 define|#
 directive|define
-name|CTLFLAG_XLT
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* Variable is xlated by function */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CTLFLAG_NOLOCK
-value|0x10000000
+value|0x20000000
 end_define
 
 begin_comment
 comment|/* XXX Don't Lock */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CTLBEFORE
-value|0
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|CTLAFTER
-value|1
+name|SYSCTL_HANDLER_ARGS
+value|(struct sysctl_oid *oidp, void *arg1, int arg2,\ 	void *oldp, size_t *oldlenp, void *newp, size_t newlen )
 end_define
 
 begin_struct
@@ -254,42 +203,35 @@ modifier|*
 name|oid_name
 decl_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|oid_handler
-function_decl|)
-parameter_list|(
-name|struct
-name|sysctl_oid
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|*oid_handler
+argument_list|)
+name|SYSCTL_HANDLER_ARGS
+expr_stmt|;
 block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
 name|int
-function_decl|(
-modifier|*
-name|sysctl_handler
-function_decl|)
-parameter_list|(
-name|struct
-name|sysctl_oid
-modifier|*
-parameter_list|,
+name|sysctl_handle_int
+name|SYSCTL_HANDLER_ARGS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-parameter_list|,
+name|sysctl_handle_string
+name|SYSCTL_HANDLER_ARGS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-parameter_list|)
-function_decl|;
-end_typedef
+name|sysctl_handle_opaque
+name|SYSCTL_HANDLER_ARGS
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* This is the "raw" function for a mib-oid */
@@ -364,12 +306,10 @@ name|arg
 parameter_list|,
 name|len
 parameter_list|,
-name|handler
-parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent,number,name, CTLTYPE_STRING|access,\ 		arg,len,handler,descr);
+value|SYSCTL_OID(parent,number,name, CTLTYPE_STRING|access,\ 		arg,len,sysctl_handle_string,descr);
 end_define
 
 begin_comment
@@ -393,12 +333,10 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|,
-name|handler
-parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent,number,name,CTLTYPE_INT|access,\ 		ptr,val,handler,descr);
+value|SYSCTL_OID(parent,number,name,CTLTYPE_INT|access,\ 		ptr,val,sysctl_handle_int,descr);
 end_define
 
 begin_comment
@@ -422,12 +360,10 @@ name|ptr
 parameter_list|,
 name|len
 parameter_list|,
-name|handler
-parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent,number,name,CTLTYPE_OPAQUE|access,\ 		ptr,len,handler,descr);
+value|SYSCTL_OID(parent,number,name,CTLTYPE_OPAQUE|access,\ 		ptr,len,sysctl_handle_opaque,descr);
 end_define
 
 begin_comment
@@ -451,12 +387,10 @@ name|ptr
 parameter_list|,
 name|type
 parameter_list|,
-name|handler
-parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent,number,name,CTLTYPE_OPAQUE|access,\ 		ptr,sizeof(struct type),handler,descr);
+value|SYSCTL_OID(parent,number,name,CTLTYPE_OPAQUE|access,\ 		ptr,sizeof(struct type),sysctl_handle_opaque,descr);
 end_define
 
 begin_comment
@@ -485,8 +419,17 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent,number,name,CTLTYPE_PROC|access,\ 		ptr,arg,handler,descr);
+value|SYSCTL_OID(parent,number,name,access,\ 		ptr,arg,handler,descr);
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Top-level identifiers  */
@@ -1067,136 +1010,6 @@ comment|/* by real uid */
 end_comment
 
 begin_comment
-comment|/*  * KERN_PROC subtype ops return arrays of augmented proc structures:  */
-end_comment
-
-begin_struct
-struct|struct
-name|kinfo_proc
-block|{
-name|struct
-name|proc
-name|kp_proc
-decl_stmt|;
-comment|/* proc structure */
-struct|struct
-name|eproc
-block|{
-name|struct
-name|proc
-modifier|*
-name|e_paddr
-decl_stmt|;
-comment|/* address of proc */
-name|struct
-name|session
-modifier|*
-name|e_sess
-decl_stmt|;
-comment|/* session pointer */
-name|struct
-name|pcred
-name|e_pcred
-decl_stmt|;
-comment|/* process credentials */
-name|struct
-name|ucred
-name|e_ucred
-decl_stmt|;
-comment|/* current credentials */
-name|struct
-name|vmspace
-name|e_vm
-decl_stmt|;
-comment|/* address space */
-name|pid_t
-name|e_ppid
-decl_stmt|;
-comment|/* parent process id */
-name|pid_t
-name|e_pgid
-decl_stmt|;
-comment|/* process group id */
-name|short
-name|e_jobc
-decl_stmt|;
-comment|/* job control counter */
-name|dev_t
-name|e_tdev
-decl_stmt|;
-comment|/* controlling tty dev */
-name|pid_t
-name|e_tpgid
-decl_stmt|;
-comment|/* tty process group id */
-name|struct
-name|session
-modifier|*
-name|e_tsess
-decl_stmt|;
-comment|/* tty session pointer */
-define|#
-directive|define
-name|WMESGLEN
-value|7
-name|char
-name|e_wmesg
-index|[
-name|WMESGLEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* wchan message */
-name|segsz_t
-name|e_xsize
-decl_stmt|;
-comment|/* text size */
-name|short
-name|e_xrssize
-decl_stmt|;
-comment|/* text rss */
-name|short
-name|e_xccount
-decl_stmt|;
-comment|/* text references */
-name|short
-name|e_xswrss
-decl_stmt|;
-name|long
-name|e_flag
-decl_stmt|;
-define|#
-directive|define
-name|EPROC_CTTY
-value|0x01
-comment|/* controlling tty vnode active */
-define|#
-directive|define
-name|EPROC_SLEADER
-value|0x02
-comment|/* session leader */
-name|char
-name|e_login
-index|[
-name|MAXLOGNAME
-index|]
-decl_stmt|;
-comment|/* setlogin() name */
-name|long
-name|e_spare
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|kp_eproc
-struct|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * CTL_HW identifiers  */
 end_comment
 
@@ -1739,13 +1552,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|hw_float
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|char
 name|machine
 index|[]
@@ -1992,24 +1798,6 @@ name|void
 operator|*
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|fill_eproc
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|,
-expr|struct
-name|eproc
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

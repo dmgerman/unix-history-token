@@ -135,6 +135,13 @@ name|SI86_MEM
 value|65
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|hw_float
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|ibcs2_sysi86
