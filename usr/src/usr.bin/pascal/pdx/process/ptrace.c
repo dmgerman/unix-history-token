@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ptrace.c	5.2 (Berkeley) %G%"
+literal|"@(#)ptrace.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -414,6 +414,9 @@ argument_list|)
 expr_stmt|;
 comment|/* ... kill it! */
 block|}
+ifdef|#
+directive|ifdef
+name|tahoe
 name|INTFP
 operator|=
 operator|(
@@ -421,6 +424,9 @@ name|ADDRESS
 operator|)
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
+endif|tahoe
 name|psigtrace
 argument_list|(
 name|p
