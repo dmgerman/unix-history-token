@@ -9537,7 +9537,7 @@ literal|"set psp"
 block|}
 block|,
 block|{
-literal|0x50
+literal|0x51
 block|,
 name|IFT_NOSUBFUNC
 block|,
