@@ -69,6 +69,13 @@ parameter_list|)
 value|((struct ad_softc *)(x.device->driver))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATA_MAGIC
+value|"FreeBSD ATA driver RAID "
+end_define
+
 begin_struct
 struct|struct
 name|ar_disk
@@ -162,6 +169,10 @@ define|#
 directive|define
 name|AR_F_HIGHPOINT_RAID
 value|0x2000
+define|#
+directive|define
+name|AR_F_FREEBSD_RAID
+value|0x4000
 name|int
 name|total_disks
 decl_stmt|;
@@ -199,7 +210,7 @@ decl_stmt|;
 name|int
 name|interleave
 decl_stmt|;
-comment|/* interleave in bytes */
+comment|/* interleave in blocks */
 name|int
 name|reserved
 decl_stmt|;
@@ -308,7 +319,7 @@ name|order
 decl_stmt|;
 define|#
 directive|define
-name|HPT_O_OK
+name|HPT_O_RAID0
 value|0x01
 define|#
 directive|define
@@ -316,7 +327,7 @@ name|HPT_O_RAID1
 value|0x02
 define|#
 directive|define
-name|HPT_O_RAID0
+name|HPT_O_OK
 value|0x04
 name|u_int8_t
 name|array_width
@@ -764,6 +775,26 @@ name|void
 name|ata_raid_attach
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_raid_create
+parameter_list|(
+name|struct
+name|raid_setup
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_raid_delete
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
