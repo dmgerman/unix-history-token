@@ -331,6 +331,28 @@ begin_comment
 comment|/*  * The data structure for the keys is a radix tree with one way  * branching removed.  The index rn_bit at an internal node n represents a bit  * position to be tested.  The tree is arranged so that all descendants  * of a node n have keys whose bits all agree up to position rn_bit - 1.  * (We say the index of n is rn_bit.)  *  * There is at least one descendant which has a one bit at position rn_bit,  * and at least one with a zero there.  *  * A route is determined by a pair of key and mask.  We require that the  * bit-wise logical and of the key and mask to be the key.  * We define the index of a route to associated with the mask to be  * the first bit number in the mask where 0 occurs (with bit number 0  * representing the highest order bit).  *  * We say a mask is normal if every bit is 0, past the index of the mask.  * If a node n has a descendant (k, m) with index(m) == index(n) == rn_bit,  * and m is a normal mask, then the route applies to every descendant of n.  * If the index(m)< rn_bit, this implies the trailing last few bits of k  * before bit b are all 0, (and hence consequently true of every descendant  * of n), so the route applies to all descendants of the node as well.  *  * Similar logic shows that a non-normal mask m such that  * index(m)<= index(n) could potentially apply to many children of n.  * Thus, for each non-host route, we attach its mask to a list at an internal  * node as high in the tree as we can go.  *  * The present version of the code makes use of normal routes in short-  * circuiting an explict mask and compare operation when testing whether  * a key satisfies a normal route, and also in remembering the unique leaf  * that governs a subtree.  */
 end_comment
 
+begin_comment
+comment|/*  * Most of the functions in this code assume that the key/mask arguments  * are sockaddr-like structures, where the first byte is an u_char  * indicating the size of the entire structure.  *  * To make the assumption more explicit, we use the LEN() macro to access  * this field. It is safe to pass an expression with side effects  * to LEN() as the argument is evaluated only once.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LEN
+parameter_list|(
+name|x
+parameter_list|)
+value|(*(const u_char *)(x))
+end_define
+
+begin_comment
+comment|/*  * XXX THIS NEEDS TO BE FIXED  * In the code, pointers to keys and masks are passed as either  * 'void *' (because callers use to pass pointers of various kinds), or  * 'caddr_t' (which is fine for pointer arithmetics, but not very  * clean when you dereference it to access data). Furthermore, caddr_t  * is really 'char *', while the natural type to operate on keys and  * masks would be 'u_char'. This mismatch require a lot of casts and  * intermediate variables to adapt types that clutter the code.  */
+end_comment
+
+begin_comment
+comment|/*  * Search a node in the tree matching the key.  */
+end_comment
+
 begin_function
 specifier|static
 name|struct
@@ -414,6 +436,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Same as above, but with an additional mask.  * XXX note this function is used only once.  */
+end_comment
 
 begin_function
 specifier|static
@@ -561,35 +587,25 @@ name|lim
 operator|=
 name|n
 operator|+
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
+name|LEN
+argument_list|(
 name|n
+argument_list|)
 decl_stmt|;
 name|int
 name|longer
 init|=
-operator|(
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
+name|LEN
+argument_list|(
 name|n
 operator|++
-operator|)
+argument_list|)
 operator|-
-call|(
-name|int
-call|)
-argument_list|(
-operator|*
 operator|(
-name|u_char
-operator|*
+name|int
 operator|)
+name|LEN
+argument_list|(
 name|m
 operator|++
 argument_list|)
@@ -875,19 +891,15 @@ name|length
 init|=
 name|min
 argument_list|(
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
+name|LEN
+argument_list|(
 name|cp
+argument_list|)
 argument_list|,
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
+name|LEN
+argument_list|(
 name|cp2
+argument_list|)
 argument_list|)
 decl_stmt|;
 if|if
@@ -1038,12 +1050,10 @@ name|rn_offset
 decl_stmt|,
 name|vlen
 init|=
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
+name|LEN
+argument_list|(
 name|cp
+argument_list|)
 decl_stmt|,
 name|matched_off
 decl_stmt|;
@@ -1468,6 +1478,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Whenever we add a new leaf to the tree, we also add a parent node,  * so we allocate them as an array of two elements: the first one must be  * the leaf (see RNTORT() in route.c), the second one is the parent.  * This routine initializes the relevant fields of the nodes, so that  * the leaf is the left child of the parent node, and both nodes have  * (almost) all all fields filled as appropriate.  * (XXX some fields are left unset, see the '#if 0' section).  * The function returns a pointer to the parent node.  */
+end_comment
+
 begin_function
 specifier|static
 name|struct
@@ -1543,6 +1557,13 @@ name|b
 operator|>>
 literal|3
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX perhaps we should fill these fields as well. */
+block|t->rn_parent = t->rn_right = NULL;  	tt->rn_mask = NULL; 	tt->rn_dupedkey = NULL; 	tt->rn_bmask = 0;
+endif|#
+directive|endif
 name|tt
 operator|->
 name|rn_bit
@@ -1688,14 +1709,10 @@ init|=
 operator|(
 name|int
 operator|)
-operator|*
-operator|(
-operator|(
-name|u_char
-operator|*
-operator|)
+name|LEN
+argument_list|(
 name|v
-operator|)
+argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
@@ -2112,12 +2129,10 @@ condition|(
 operator|(
 name|mlen
 operator|=
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
+name|LEN
+argument_list|(
 name|netmask
+argument_list|)
 operator|)
 operator|>
 name|max_keylen
@@ -2599,11 +2614,15 @@ name|lim
 decl_stmt|;
 if|if
 condition|(
-operator|*
+name|LEN
+argument_list|(
 name|mp
+argument_list|)
 operator|>
-operator|*
+name|LEN
+argument_list|(
 name|np
+argument_list|)
 condition|)
 return|return
 literal|1
@@ -2611,11 +2630,15 @@ return|;
 comment|/* not really, but need to check longer one first */
 if|if
 condition|(
-operator|*
+name|LEN
+argument_list|(
 name|mp
+argument_list|)
 operator|==
-operator|*
+name|LEN
+argument_list|(
 name|np
+argument_list|)
 condition|)
 for|for
 control|(
@@ -2623,8 +2646,10 @@ name|lim
 operator|=
 name|mp
 operator|+
-operator|*
+name|LEN
+argument_list|(
 name|mp
+argument_list|)
 init|;
 name|mp
 operator|<
@@ -3729,12 +3754,10 @@ name|rn_offset
 expr_stmt|;
 name|vlen
 operator|=
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
+name|LEN
+argument_list|(
 name|v
+argument_list|)
 expr_stmt|;
 name|saved_tt
 operator|=
@@ -4745,7 +4768,7 @@ decl_stmt|;
 name|int
 name|lastb
 decl_stmt|;
-comment|/* 	 * rn_search_m is sort-of-open-coded here. 	 */
+comment|/* 	 * rn_search_m is sort-of-open-coded here. We cannot use the 	 * function because we need to keep track of the last node seen. 	 */
 comment|/* printf("about to search\n"); */
 for|for
 control|(
@@ -4899,6 +4922,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* printf("up too far\n"); */
+comment|/* 				 * XXX we should jump to the 'Process leaves' 				 * part, because the values of 'rn' and 'next' 				 * we compute will not be used. Not a big deal 				 * because this loop will terminate, but it is 				 * inefficient and hard to understand! 				 */
 block|}
 block|}
 comment|/* Find the next *leaf* since next node might vanish, too */
@@ -5201,6 +5225,10 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
+begin_comment
+comment|/*  * Allocate and initialize an empty tree. This has 3 nodes, which are  * part of the radix_node_head (in the order<left,root,right>) and are  * marked RNF_ROOT so they cannot be freed.  * The leaves have all-zero and all-one keys, with significant  * bits starting at 'off'.  * Return 1 on success, 0 on error.  */
+end_comment
+
 begin_function
 name|int
 name|rn_inithead
@@ -5326,6 +5354,7 @@ name|t
 operator|->
 name|rn_left
 expr_stmt|;
+comment|/* ... which in turn is rnh->rnh_nodes */
 name|tt
 operator|->
 name|rn_flags
