@@ -1514,11 +1514,15 @@ operator|.
 name|s_addr
 operator|=
 name|ip_mcast_src
+condition|?
+name|ip_mcast_src
 argument_list|(
 name|imo
 operator|->
 name|imo_multicast_vif
 argument_list|)
+else|:
+name|INADDR_ANY
 expr_stmt|;
 block|}
 else|else
@@ -1701,7 +1705,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Check if rsvp daemon is running. If not, don't 				 * set ip_moptions. This ensures that the packet 				 * is multicast and not just sent down one link 				 * as prescribed by rsvpd. 				 */
+comment|/* 				 * If rsvp daemon is not running, do not 				 * set ip_moptions. This ensures that the packet 				 * is multicast and not just sent down one link 				 * as prescribed by rsvpd. 				 */
 if|if
 condition|(
 operator|!
@@ -1713,6 +1717,8 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+name|ip_mforward
+operator|&&
 name|ip_mforward
 argument_list|(
 name|ip

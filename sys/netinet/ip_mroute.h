@@ -659,17 +659,6 @@ name|vifi_t
 name|xmt_vif
 decl_stmt|;
 comment|/* Saved copy of imo_multicast_vif  */
-ifdef|#
-directive|ifdef
-name|UPCALL_TIMING
-name|struct
-name|timeval
-name|t
-decl_stmt|;
-comment|/* Timestamp */
-endif|#
-directive|endif
-comment|/* UPCALL_TIMING */
 name|struct
 name|rtdetq
 modifier|*

@@ -1538,11 +1538,15 @@ name|INET
 comment|/* Multicast goop, grrr... */
 return|return
 name|mrt_ioctl
+condition|?
+name|mrt_ioctl
 argument_list|(
 name|req
 argument_list|,
 name|data
 argument_list|)
+else|:
+name|EOPNOTSUPP
 return|;
 else|#
 directive|else
