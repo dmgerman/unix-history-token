@@ -970,24 +970,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|acd_devlist
-block|{
-name|dev_t
-name|dev
-decl_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|acd_devlist
-argument_list|)
-name|chain
-expr_stmt|;
-comment|/* list management */
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/* Structure describing an ATAPI CDROM device */
 end_comment
@@ -1025,14 +1007,6 @@ name|bio_queue_head
 name|queue
 decl_stmt|;
 comment|/* queue of i/o requests */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|acd_devlist
-argument_list|)
-name|dev_list
-expr_stmt|;
-comment|/* list of "track" devices */
 name|struct
 name|toc
 name|toc
@@ -1088,23 +1062,26 @@ name|block_size
 decl_stmt|;
 comment|/* blocksize currently used */
 name|struct
-name|devstat
+name|g_geom
 modifier|*
-name|stats
+name|gp
 decl_stmt|;
-comment|/* devstat entry */
-name|dev_t
-name|dev
+comment|/* geom instance */
+name|struct
+name|g_provider
+modifier|*
+name|pp
+index|[
+name|MAXTRK
+operator|+
+literal|1
+index|]
 decl_stmt|;
-comment|/* device place holders */
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-name|eventhandler_tag
-name|clone_evh
+comment|/* providers */
+name|u_int
+name|iomax
 decl_stmt|;
-endif|#
-directive|endif
+comment|/* Max I/O request (bytes) */
 block|}
 struct|;
 end_struct
