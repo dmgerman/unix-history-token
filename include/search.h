@@ -125,6 +125,24 @@ name|node_t
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|que_elem
+block|{
+name|struct
+name|que_elem
+modifier|*
+name|next
+decl_stmt|;
+name|struct
+name|que_elem
+modifier|*
+name|prev
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
@@ -157,6 +175,29 @@ parameter_list|(
 name|ENTRY
 parameter_list|,
 name|ACTION
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|insque
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|remque
+parameter_list|(
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -278,10 +319,6 @@ parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * XXX missing insque(), lsearch(), remque().  */
-end_comment
 
 begin_macro
 name|__END_DECLS
