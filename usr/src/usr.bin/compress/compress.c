@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.5 (Berkeley) %G%"
+literal|"@(#)compress.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5860,6 +5860,11 @@ block|}
 name|onintr
 argument_list|( )
 block|{
+if|if
+condition|(
+operator|!
+name|zcat_flg
+condition|)
 name|unlink
 argument_list|(
 name|ofname
