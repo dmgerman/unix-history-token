@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 Ted Faber  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Ted Faber.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pcic_p.c,v 1.6 1998/08/18 00:32:48 bde Exp $  */
+comment|/*  * Copyright (c) 1997 Ted Faber  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Ted Faber.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pcic_p.c,v 1.9 1999/04/01 15:28:09 nsayer Exp $  */
 end_comment
 
 begin_include
@@ -175,6 +175,111 @@ name|type
 condition|)
 block|{
 case|case
+name|PCI_DEVICE_ID_PCIC_CLPD6832
+case|:
+return|return
+operator|(
+literal|"Cirrus Logic PD6832 PCI/CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1130
+case|:
+return|return
+operator|(
+literal|"TI PCI-1130 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1131
+case|:
+return|return
+operator|(
+literal|"TI PCI-1131 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1220
+case|:
+return|return
+operator|(
+literal|"TI PCI-1220 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1221
+case|:
+return|return
+operator|(
+literal|"TI PCI-1221 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1250
+case|:
+return|return
+operator|(
+literal|"TI PCI-1250 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1251
+case|:
+return|return
+operator|(
+literal|"TI PCI-1251 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_TOSHIBA_TOPIC95
+case|:
+return|return
+operator|(
+literal|"Toshiba ToPIC95 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
+case|:
+return|return
+operator|(
+literal|"Toshiba ToPIC97 PCI-CardBus Bridge"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_RICOH_RL5C465
+case|:
+return|return
+operator|(
+literal|"Ricoh RL5C465 PCI-CardBus Brige"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_RICOH_RL5C475
+case|:
+return|return
+operator|(
+literal|"Ricoh RL5C475 PCI-CardBus Brige"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_RICOH_RL5C476
+case|:
+return|return
+operator|(
+literal|"Ricoh RL5C476 PCI-CardBus Brige"
+operator|)
+return|;
+case|case
+name|PCI_DEVICE_ID_RICOH_RL5C478
+case|:
+return|return
+operator|(
+literal|"Ricoh RL5C478 PCI-CardBus Brige"
+operator|)
+return|;
+comment|/* 16bit PC-card bridges */
+case|case
 name|PCI_DEVICE_ID_PCIC_CLPD6729
 case|:
 return|return
@@ -183,27 +288,19 @@ literal|"Cirrus Logic PD6729/6730 PC-Card Controller"
 operator|)
 return|;
 case|case
-name|PCI_DEVICE_ID_PCIC_CLPD6832
+name|PCI_DEVICE_ID_PCIC_OZ6729
 case|:
 return|return
 operator|(
-literal|"Cirrus Logic PD6832 CardBus Adapter"
+literal|"O2micro OZ6729 PC-Card Bridge"
 operator|)
 return|;
 case|case
-name|PCI_DEVICE_ID_PCIC_TI1130
+name|PCI_DEVICE_ID_PCIC_OZ6730
 case|:
 return|return
 operator|(
-literal|"TI 1130 PCMCIA/CardBus Bridge"
-operator|)
-return|;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1131
-case|:
-return|return
-operator|(
-literal|"TI 1131 PCI to PCMCIA/CardBus bridge"
+literal|"O2micro OZ6730 PC-Card Bridge"
 operator|)
 return|;
 default|default:
