@@ -963,7 +963,7 @@ parameter_list|)
 block|{
 name|setidt
 argument_list|(
-literal|0x80
+name|IDT_SYSCALL
 argument_list|,
 operator|&
 name|IDTVEC
@@ -993,7 +993,7 @@ parameter_list|)
 block|{
 name|setidt
 argument_list|(
-literal|0x80
+name|IDT_SYSCALL
 argument_list|,
 operator|&
 name|IDTVEC
