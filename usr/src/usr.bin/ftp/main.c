@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.7 (Berkeley) %G%"
+literal|"@(#)main.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -434,14 +434,14 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|intr
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
@@ -474,14 +474,14 @@ condition|(
 name|top
 condition|)
 block|{
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|intr
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
