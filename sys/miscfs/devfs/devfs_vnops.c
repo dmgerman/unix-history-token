@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_vnops.c,v 1.73 1999/05/06 20:00:27 phk Exp $  */
+comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_vnops.c,v 1.74 1999/05/11 19:54:35 phk Exp $  */
 end_comment
 
 begin_include
@@ -6285,13 +6285,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|BUF_LOCK
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BUSY
-operator|)
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
+argument_list|)
 condition|)
 continue|continue;
 if|if
@@ -6330,6 +6331,11 @@ name|B_CLUSTEROK
 operator|)
 condition|)
 block|{
+name|BUF_UNLOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|vfs_bio_awrite
 argument_list|(
 name|bp
@@ -6347,12 +6353,6 @@ name|bremfree
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_BUSY
 expr_stmt|;
 name|splx
 argument_list|(
@@ -7419,8 +7419,6 @@ name|bp
 operator|->
 name|b_flags
 operator|=
-name|B_BUSY
-operator||
 name|B_READ
 operator||
 name|B_CALL

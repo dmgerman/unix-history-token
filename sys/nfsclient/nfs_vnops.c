@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.16 (Berkeley) 5/27/95  * $Id: nfs_vnops.c,v 1.130 1999/06/05 05:35:02 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vnops.c	8.16 (Berkeley) 5/27/95  * $Id: nfs_vnops.c,v 1.131 1999/06/16 23:27:48 mckusick Exp $  */
 end_comment
 
 begin_comment
@@ -14972,16 +14972,15 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
+name|BUF_REFCNT
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BUSY
-operator|)
+argument_list|)
+operator|==
+literal|0
 argument_list|,
 operator|(
-literal|"nfs_strategy: buffer %p not B_BUSY"
+literal|"nfs_strategy: buffer %p not locked"
 operator|,
 name|bp
 operator|)
@@ -15404,14 +15403,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|BUF_REFCNT
+argument_list|(
+name|bp
+argument_list|)
+operator|==
+literal|0
+operator|&&
 operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
 operator|(
-name|B_BUSY
-operator||
 name|B_DELWRI
 operator||
 name|B_NEEDCOMMIT
@@ -15553,8 +15557,6 @@ operator|->
 name|b_flags
 operator|&
 operator|(
-name|B_BUSY
-operator||
 name|B_DELWRI
 operator||
 name|B_NEEDCOMMIT
@@ -15566,6 +15568,15 @@ name|B_DELWRI
 operator||
 name|B_NEEDCOMMIT
 operator|)
+operator|||
+name|BUF_LOCK
+argument_list|(
+name|bp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
+argument_list|)
 condition|)
 continue|continue;
 name|bremfree
@@ -15603,11 +15614,7 @@ name|bp
 operator|->
 name|b_flags
 operator||=
-operator|(
-name|B_BUSY
-operator||
 name|B_WRITEINPROG
-operator|)
 expr_stmt|;
 name|vfs_busy_pages
 argument_list|(
@@ -15616,7 +15623,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 			 * bp is protected by being B_BUSY, but nbp is not 			 * and vfs_busy_pages() may sleep.  We have to 			 * recalculate nbp. 			 */
+comment|/* 			 * bp is protected by being locked, but nbp is not 			 * and vfs_busy_pages() may sleep.  We have to 			 * recalculate nbp. 			 */
 name|nbp
 operator|=
 name|TAILQ_NEXT
@@ -15982,11 +15989,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|BUF_LOCK
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BUSY
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
+argument_list|)
 condition|)
 block|{
 if|if
@@ -15998,30 +16008,19 @@ operator|||
 name|passone
 condition|)
 continue|continue;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_WANTED
-expr_stmt|;
 name|error
 operator|=
-name|tsleep
+name|BUF_TIMELOCK
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|bp
 argument_list|,
-name|slpflag
+name|LK_EXCLUSIVE
 operator||
-operator|(
-name|PRIBIO
-operator|+
-literal|1
-operator|)
+name|LK_SLEEPFAIL
 argument_list|,
 literal|"nfsfsync"
+argument_list|,
+name|slpflag
 argument_list|,
 name|slptimeo
 argument_list|)
@@ -16034,8 +16033,23 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-block|{
+name|panic
+argument_list|(
+literal|"nfs_fsync: inconsistent lock"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|ENOLCK
+condition|)
+goto|goto
+name|loop
+goto|;
 if|if
 condition|(
 name|nfs_sigintr
@@ -16079,7 +16093,6 @@ operator|*
 name|hz
 expr_stmt|;
 block|}
-block|}
 goto|goto
 name|loop
 goto|;
@@ -16118,7 +16131,14 @@ operator|&
 name|B_NEEDCOMMIT
 operator|)
 condition|)
+block|{
+name|BUF_UNLOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|bremfree
 argument_list|(
 name|bp
@@ -16135,11 +16155,7 @@ name|bp
 operator|->
 name|b_flags
 operator||=
-operator|(
-name|B_BUSY
-operator||
 name|B_ASYNC
-operator|)
 expr_stmt|;
 else|else
 name|bp
@@ -16147,8 +16163,6 @@ operator|->
 name|b_flags
 operator||=
 operator|(
-name|B_BUSY
-operator||
 name|B_ASYNC
 operator||
 name|B_WRITEINPROG
@@ -16576,18 +16590,16 @@ name|off
 decl_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
+name|BUF_REFCNT
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BUSY
-operator|)
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"bwrite: buffer is not busy???"
+literal|"bwrite: buffer is not locked???"
 argument_list|)
 expr_stmt|;
 if|if
@@ -16801,6 +16813,11 @@ operator|->
 name|b_flags
 operator||=
 name|B_WRITEINPROG
+expr_stmt|;
+name|BUF_KERNPROC
+argument_list|(
+name|bp
+argument_list|)
 expr_stmt|;
 name|VOP_STRATEGY
 argument_list|(

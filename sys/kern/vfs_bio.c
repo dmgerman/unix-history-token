@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.214 1999/06/16 23:27:31 mckusick Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.215 1999/06/22 01:39:53 mckusick Exp $  */
 end_comment
 
 begin_comment
@@ -770,6 +770,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|buf_wmesg
+init|=
+name|BUF_WMESG
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|vm_swap_size
@@ -1058,6 +1067,12 @@ operator|&
 name|invalhash
 argument_list|)
 expr_stmt|;
+name|simple_lock_init
+argument_list|(
+operator|&
+name|buftimelock
+argument_list|)
+expr_stmt|;
 comment|/* first, make a null hash table */
 for|for
 control|(
@@ -1179,6 +1194,11 @@ operator|&
 name|bp
 operator|->
 name|b_dep
+argument_list|)
+expr_stmt|;
+name|BUF_LOCKINIT
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -1439,6 +1459,15 @@ operator|->
 name|b_kvasize
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|BUF_REFCNT
+argument_list|(
+name|bp
+argument_list|)
+operator|==
+literal|1
+condition|)
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1452,6 +1481,29 @@ argument_list|,
 name|bp
 argument_list|,
 name|b_freelist
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|BUF_REFCNT
+argument_list|(
+name|bp
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"bremfree: not locked"
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* Temporary panic to verify exclusive locking */
+comment|/* This panic goes away when we allow shared refs */
+name|panic
+argument_list|(
+literal|"bremfree: multiple refs"
 argument_list|)
 expr_stmt|;
 name|bp
@@ -2014,6 +2066,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|BUF_KERNPROC
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|VOP_STRATEGY
 argument_list|(
 name|vp
@@ -2116,13 +2173,10 @@ name|MAX_PERF
 argument_list|)
 if|if
 condition|(
-operator|(
+name|BUF_REFCNT
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BUSY
-operator|)
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -2196,6 +2250,11 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|BUF_KERNPROC
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 name|VOP_STRATEGY
@@ -2342,23 +2401,18 @@ name|MAX_PERF
 argument_list|)
 if|if
 condition|(
-operator|(
+name|BUF_REFCNT
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BUSY
-operator|)
+argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"bdwrite: buffer is not busy"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -3367,6 +3421,36 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|BUF_REFCNT
+argument_list|(
+name|bp
+argument_list|)
+operator|>
+literal|1
+condition|)
+block|{
+comment|/* Temporary panic to verify exclusive locking */
+comment|/* This panic goes away when we allow shared refs */
+name|panic
+argument_list|(
+literal|"brelse: multiple refs"
+argument_list|)
+expr_stmt|;
+comment|/* do not release to free list */
+name|BUF_UNLOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* enqueue */
 comment|/* buffers with no memory */
 if|if
@@ -3669,33 +3753,12 @@ condition|)
 name|bufspacewakeup
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_WANTED
-condition|)
-block|{
-name|bp
-operator|->
-name|b_flags
-operator|&=
-operator|~
-operator|(
-name|B_WANTED
-operator||
-name|B_AGE
-operator|)
-expr_stmt|;
-name|wakeup
+comment|/* unlock */
+name|BUF_UNLOCK
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* unlock */
 name|bp
 operator|->
 name|b_flags
@@ -3703,10 +3766,6 @@ operator|&=
 operator|~
 operator|(
 name|B_ORDERED
-operator||
-name|B_WANTED
-operator||
-name|B_BUSY
 operator||
 name|B_ASYNC
 operator||
@@ -3791,6 +3850,34 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|BUF_REFCNT
+argument_list|(
+name|bp
+argument_list|)
+operator|>
+literal|1
+condition|)
+block|{
+comment|/* do not release to free list */
+name|panic
+argument_list|(
+literal|"bqrelse: multiple refs"
+argument_list|)
+expr_stmt|;
+name|BUF_UNLOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|bp
@@ -3902,34 +3989,12 @@ condition|)
 name|bufspacewakeup
 argument_list|()
 expr_stmt|;
-comment|/* anyone need this block? */
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_WANTED
-condition|)
-block|{
-name|bp
-operator|->
-name|b_flags
-operator|&=
-operator|~
-operator|(
-name|B_WANTED
-operator||
-name|B_AGE
-operator|)
-expr_stmt|;
-name|wakeup
+comment|/* unlock */
+name|BUF_UNLOCK
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* unlock */
 name|bp
 operator|->
 name|b_flags
@@ -3937,10 +4002,6 @@ operator|&=
 operator|~
 operator|(
 name|B_ORDERED
-operator||
-name|B_WANTED
-operator||
-name|B_BUSY
 operator||
 name|B_ASYNC
 operator||
@@ -4425,6 +4486,13 @@ name|i
 argument_list|)
 operator|)
 operator|&&
+name|BUF_REFCNT
+argument_list|(
+name|bpa
+argument_list|)
+operator|==
+literal|0
+operator|&&
 operator|(
 operator|(
 name|bpa
@@ -4432,8 +4500,6 @@ operator|->
 name|b_flags
 operator|&
 operator|(
-name|B_BUSY
-operator||
 name|B_DELWRI
 operator||
 name|B_CLUSTEROK
@@ -4532,6 +4598,13 @@ name|nwritten
 return|;
 block|}
 block|}
+name|BUF_LOCK
+argument_list|(
+name|bp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|)
+expr_stmt|;
 name|bremfree
 argument_list|(
 name|bp
@@ -4541,8 +4614,6 @@ name|bp
 operator|->
 name|b_flags
 operator||=
-name|B_BUSY
-operator||
 name|B_ASYNC
 expr_stmt|;
 name|splx
@@ -4881,14 +4952,12 @@ block|}
 comment|/* 		 * Sanity Checks 		 */
 name|KASSERT
 argument_list|(
-operator|!
-operator|(
+name|BUF_REFCNT
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BUSY
-operator|)
+argument_list|)
+operator|==
+literal|0
 argument_list|,
 operator|(
 literal|"getnewbuf: busy buffer %p on free list"
@@ -5151,16 +5220,28 @@ literal|0
 condition|)
 continue|continue;
 comment|/* 		 * Start freeing the bp.  This is somewhat involved.  nbp 		 * remains valid only for QUEUE_EMPTY bp's. 		 */
+if|if
+condition|(
+name|BUF_LOCK
+argument_list|(
+name|bp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"getnewbuf: locked buf"
+argument_list|)
+expr_stmt|;
 name|bremfree
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_BUSY
 expr_stmt|;
 if|if
 condition|(
@@ -5202,28 +5283,6 @@ operator|->
 name|b_vp
 condition|)
 name|brelvp
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_WANTED
-condition|)
-block|{
-name|bp
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_WANTED
-expr_stmt|;
-name|wakeup
 argument_list|(
 name|bp
 argument_list|)
@@ -5336,7 +5395,7 @@ name|bp
 operator|->
 name|b_flags
 operator|=
-name|B_BUSY
+literal|0
 expr_stmt|;
 name|bp
 operator|->
@@ -6013,16 +6072,28 @@ operator|&
 name|B_INVAL
 condition|)
 block|{
+if|if
+condition|(
+name|BUF_LOCK
+argument_list|(
+name|bp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"flushbufqueues: locked buf"
+argument_list|)
+expr_stmt|;
 name|bremfree
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_BUSY
 expr_stmt|;
 name|brelse
 argument_list|(
@@ -6819,19 +6890,16 @@ block|{
 comment|/* 		 * Buffer is in-core 		 */
 if|if
 condition|(
+name|BUF_LOCK
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BUSY
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
+argument_list|)
 condition|)
 block|{
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_WANTED
-expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -6847,29 +6915,26 @@ name|b_usecount
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|tsleep
+name|BUF_TIMELOCK
 argument_list|(
 name|bp
 argument_list|,
-operator|(
-name|PRIBIO
-operator|+
-literal|4
-operator|)
+name|LK_EXCLUSIVE
 operator||
-name|slpflag
+name|LK_SLEEPFAIL
 argument_list|,
 literal|"getblk"
 argument_list|,
+name|slpflag
+argument_list|,
 name|slptimeo
 argument_list|)
+operator|==
+name|ENOLCK
 condition|)
-block|{
 goto|goto
 name|loop
 goto|;
-block|}
 name|splx
 argument_list|(
 name|s
@@ -6884,13 +6949,7 @@ operator|)
 name|NULL
 return|;
 block|}
-comment|/* 		 * Busy the buffer.  B_CACHE is cleared if the buffer is  		 * invalid.  Ohterwise, for a non-VMIO buffer, B_CACHE is set 		 * and for a VMIO buffer B_CACHE is adjusted according to the 		 * backing VM cache. 		 */
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_BUSY
-expr_stmt|;
+comment|/* 		 * The buffer is locked.  B_CACHE is cleared if the buffer is  		 * invalid.  Ohterwise, for a non-VMIO buffer, B_CACHE is set 		 * and for a VMIO buffer B_CACHE is adjusted according to the 		 * backing VM cache. 		 */
 if|if
 condition|(
 name|bp
@@ -7139,7 +7198,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Buffer is not in-core, create new buffer.  The buffer 		 * returned by getnewbuf() is marked B_BUSY.  Note that the 		 * returned buffer is also considered valid ( not marked 		 * B_INVAL ). 		 */
+comment|/* 		 * Buffer is not in-core, create new buffer.  The buffer 		 * returned by getnewbuf() is locked.  Note that the returned 		 * buffer is also considered valid (not marked B_INVAL). 		 */
 name|int
 name|bsize
 decl_stmt|,
@@ -7567,14 +7626,12 @@ name|MAX_PERF
 argument_list|)
 if|if
 condition|(
-operator|!
-operator|(
+name|BUF_REFCNT
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BUSY
-operator|)
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -8737,7 +8794,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	biowait:  *  *	Wait for buffer I/O completion, returning error status.  The buffer  *	is left B_BUSY|B_DONE on return.  B_EINTR is converted into a EINTR  *	error and cleared.  */
+comment|/*  *	biowait:  *  *	Wait for buffer I/O completion, returning error status.  The buffer  *	is left locked and B_DONE on return.  B_EINTR is converted into a EINTR  *	error and cleared.  */
 end_comment
 
 begin_function
@@ -8909,13 +8966,12 @@ argument_list|()
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
+name|BUF_REFCNT
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BUSY
-operator|)
+argument_list|)
+operator|>
+literal|0
 argument_list|,
 operator|(
 literal|"biodone: bp %p not busy"
@@ -9649,7 +9705,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * For asynchronous completions, release the buffer now. The brelse 	 * checks for B_WANTED and will do the wakeup there if necessary - so 	 * no need to do a wakeup here in the async case. 	 */
+comment|/* 	 * For asynchronous completions, release the buffer now. The brelse 	 * will do a wakeup there if necessary - so no need to do a wakeup 	 * here in the async case. The sync case always needs to do a wakeup. 	 */
 if|if
 condition|(
 name|bp
@@ -9693,13 +9749,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|bp
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_WANTED
-expr_stmt|;
 name|wakeup
 argument_list|(
 name|bp

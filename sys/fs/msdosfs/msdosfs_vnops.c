@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.84 1999/05/06 18:12:51 peter Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.85 1999/05/11 19:54:43 phk Exp $ */
 end_comment
 
 begin_comment
@@ -4055,13 +4055,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|BUF_LOCK
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BUSY
-operator|)
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
+argument_list|)
 condition|)
 continue|continue;
 if|if
@@ -4085,12 +4086,6 @@ name|bremfree
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_BUSY
 expr_stmt|;
 name|splx
 argument_list|(
