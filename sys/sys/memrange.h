@@ -65,6 +65,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MDF_UNKNOWN
+value|(1<<5)
+end_define
+
+begin_comment
+comment|/* any state we don't understand */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MDF_ATTRMASK
 value|(0x00ffffff)
 end_define

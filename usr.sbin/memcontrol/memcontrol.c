@@ -126,6 +126,14 @@ name|MDF_SETTABLE
 block|}
 block|,
 block|{
+literal|"unknown"
+block|,
+name|MDF_UNKNOWN
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"fixed-base"
 block|,
 name|MDF_FIXBASE
