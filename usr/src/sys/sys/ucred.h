@@ -57,7 +57,7 @@ begin_define
 define|#
 directive|define
 name|NOCRED
-value|((struct ucred *)-1)
+value|((struct ucred *)0)
 end_define
 
 begin_comment
@@ -68,7 +68,7 @@ begin_define
 define|#
 directive|define
 name|FSCRED
-value|((struct ucred *)-2)
+value|((struct ucred *)-1)
 end_define
 
 begin_comment
