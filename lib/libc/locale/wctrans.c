@@ -84,7 +84,7 @@ name|_WCT_TOLOWER
 case|:
 name|wc
 operator|=
-name|tolower
+name|towlower
 argument_list|(
 name|wc
 argument_list|)
@@ -95,7 +95,7 @@ name|_WCT_TOUPPER
 case|:
 name|wc
 operator|=
-name|toupper
+name|towupper
 argument_list|(
 name|wc
 argument_list|)
