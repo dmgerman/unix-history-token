@@ -1356,7 +1356,7 @@ name|locksetup
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Figure out if we're supposed to skip this one. 	 * If we are, we actually go to ISP_ROLE_NONE. 	 */
+comment|/* 	 * Figure out if we're supposed to skip this one. 	 */
 name|tval
 operator|=
 literal|0
@@ -1402,7 +1402,8 @@ return|;
 block|}
 name|role
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1426,22 +1427,20 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-operator|(
-operator|(
 name|role
-operator|&
-operator|~
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|role
+operator|&=
 operator|(
 name|ISP_ROLE_INITIATOR
 operator||
 name|ISP_ROLE_TARGET
 operator|)
-operator|)
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -1459,8 +1458,6 @@ directive|ifdef
 name|ISP_TARGET_MODE
 name|role
 operator|=
-name|ISP_ROLE_INITIATOR
-operator||
 name|ISP_ROLE_TARGET
 expr_stmt|;
 else|#
