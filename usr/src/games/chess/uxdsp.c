@@ -3306,7 +3306,7 @@ argument_list|)
 expr_stmt|;
 name|printz
 argument_list|(
-literal|"%c%c "
+literal|"%c%c"
 argument_list|,
 name|x
 argument_list|,
@@ -3321,6 +3321,11 @@ argument_list|)
 expr_stmt|;
 name|standend
 argument_list|()
+expr_stmt|;
+name|printz
+argument_list|(
+literal|" "
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -3465,17 +3470,7 @@ argument_list|(
 literal|"|"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|j
-operator|%
-literal|2
-operator|==
-name|m
-condition|)
-name|standout
-argument_list|()
-expr_stmt|;
+comment|/*		  if (j % 2 == m) 			  standout(); */
 name|printz
 argument_list|(
 literal|"    "
