@@ -13489,6 +13489,14 @@ name|NULL_PTR
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|OBJFMT_UNKNOWN
+case|:
+name|fatal
+argument_list|(
+literal|"object format unknown"
+argument_list|)
+expr_stmt|;
 block|}
 name|add_prefix
 argument_list|(
@@ -13920,6 +13928,14 @@ literal|"OBJFORMAT=elf"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|OBJFMT_UNKNOWN
+case|:
+name|fatal
+argument_list|(
+literal|"object format unknown"
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
