@@ -26,6 +26,13 @@ name|SPARC_UTRAP_INSTALL
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPARC_SIGTRAMP_INSTALL
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|sparc_utrap_install_args
@@ -38,6 +45,23 @@ name|struct
 name|sparc_utrap_args
 modifier|*
 name|handlers
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sparc_sigtramp_install_args
+block|{
+name|void
+modifier|*
+name|sia_new
+decl_stmt|;
+name|void
+modifier|*
+modifier|*
+name|sia_old
 decl_stmt|;
 block|}
 struct|;

@@ -66,6 +66,10 @@ name|md_utrap
 modifier|*
 name|md_utrap
 decl_stmt|;
+name|void
+modifier|*
+name|md_sigtramp
+decl_stmt|;
 block|}
 struct|;
 end_struct
