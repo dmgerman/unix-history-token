@@ -5691,7 +5691,14 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|)
-block|{ }
+block|{
+name|pcpu
+operator|->
+name|pc_acpi_id
+operator|=
+literal|0xffffffff
+expr_stmt|;
+block|}
 end_function
 
 begin_function

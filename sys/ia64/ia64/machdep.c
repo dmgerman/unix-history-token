@@ -1578,6 +1578,12 @@ operator|+
 name|pcpusz
 operator|)
 expr_stmt|;
+name|pcpu
+operator|->
+name|pc_acpi_id
+operator|=
+literal|0xffffffff
+expr_stmt|;
 block|}
 end_function
 

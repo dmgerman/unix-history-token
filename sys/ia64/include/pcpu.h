@@ -37,10 +37,12 @@ comment|/* CPU is awake? */
 value|\ 	uint64_t	pc_clock;
 comment|/* Clock counter. */
 value|\ 	uint64_t	pc_clockadj;
+comment|/* Clock adjust. */
+value|\ 	uint32_t	pc_acpi_id;
 end_define
 
 begin_comment
-comment|/* Clock adjust. */
+comment|/* ACPI CPU id. */
 end_comment
 
 begin_struct_decl
