@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_rayreg.h,v 1.2 2000/02/20 14:56:17 dmlb Exp $  *  */
 end_comment
 
 begin_comment
@@ -13,6 +13,10 @@ end_comment
 
 begin_comment
 comment|/*  * CCR registers, appearing in the attribute memory space  */
+end_comment
+
+begin_comment
+comment|/* XXX sort these offsets out*/
 end_comment
 
 begin_define
@@ -30,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|RAY_COR
-value|(RAY_CCR + (0x00<< 1))
+value|(RAY_CCR + 0x00)
 end_define
 
 begin_comment
@@ -41,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|RAY_CCSR
-value|(RAY_CCR + (0x01<< 1))
+value|(RAY_CCR + 0x01)
 end_define
 
 begin_comment
@@ -52,7 +56,7 @@ begin_define
 define|#
 directive|define
 name|RAY_PIN
-value|(RAY_CCR + (0x02<< 1))
+value|(RAY_CCR + 0x02)
 end_define
 
 begin_comment
@@ -63,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|RAY_SOCKETCOPY
-value|(RAY_CCR + (0x03<< 1))
+value|(RAY_CCR + 0x03)
 end_define
 
 begin_comment
@@ -74,7 +78,7 @@ begin_define
 define|#
 directive|define
 name|RAY_HCSIR
-value|(RAY_CCR + (0x05<< 1))
+value|(RAY_CCR + 0x05)
 end_define
 
 begin_comment
@@ -85,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|RAY_ECFIR
-value|(RAY_CCR + (0x06<< 1))
+value|(RAY_CCR + 0x06)
 end_define
 
 begin_comment
@@ -291,7 +295,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAY_ECSIR_IRQ
+name|RAY_ECFIR_IRQ
 value|0x01
 end_define
 
@@ -403,7 +407,7 @@ begin_define
 define|#
 directive|define
 name|RAY_SCB_BASE
-value|0x0
+value|0x0000
 end_define
 
 begin_comment
@@ -501,6 +505,10 @@ name|RAY_RX_MASK
 value|0x3fff
 end_define
 
+begin_comment
+comment|/*  * Startup reporting stucture  */
+end_comment
+
 begin_struct
 struct|struct
 name|ray_ecf_startup_v4
@@ -583,7 +591,7 @@ name|u_int8_t
 name|e_asic_version
 decl_stmt|;
 name|u_int8_t
-name|e_tib_size
+name|e_tibsize
 decl_stmt|;
 name|u_int8_t
 name|e_resv1
@@ -596,7 +604,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Status word result codes  */
+comment|/*  * Startup status word result codes  */
 end_comment
 
 begin_define
@@ -679,6 +687,823 @@ directive|define
 name|RAY_ECFS_BUILD_5
 value|0x5
 end_define
+
+begin_comment
+comment|/*  * System Control Block  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_SCB_CCSI
+value|0x00
+end_define
+
+begin_comment
+comment|/* host CCS index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_SCB_RCSI
+value|0x01
+end_define
+
+begin_comment
+comment|/* ecf RCS index */
+end_comment
+
+begin_comment
+comment|/*  * command control structures (for CCSR commands)  */
+end_comment
+
+begin_comment
+comment|/*  * commands for CCSR  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_START_PARAMS
+value|0x01
+end_define
+
+begin_comment
+comment|/* download start params */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_UPDATE_PARAMS
+value|0x02
+end_define
+
+begin_comment
+comment|/* update params */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_REPORT_PARAMS
+value|0x03
+end_define
+
+begin_comment
+comment|/* report params */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_UPDATE_MCAST
+value|0x04
+end_define
+
+begin_comment
+comment|/* update mcast list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_UPDATE_APM
+value|0x05
+end_define
+
+begin_comment
+comment|/* update power saving mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_START_NET
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_JOIN_NET
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_START_ASSOC
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_TX_REQ
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_TEST_MEM
+value|0x0a
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_SHUTDOWN
+value|0x0b
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_DUMP_MEM
+value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_START_TIMER
+value|0x0d
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CMD_MAX
+value|0x0e
+end_define
+
+begin_comment
+comment|/*  * unsolicted commands from the ECF  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_ECMD_RX_DONE
+value|0x80
+end_define
+
+begin_comment
+comment|/* process rx packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_ECMD_REJOIN_DONE
+value|0x81
+end_define
+
+begin_comment
+comment|/* rejoined the network */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_ECMD_ROAM_START
+value|0x82
+end_define
+
+begin_comment
+comment|/* romaining started */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_ECMD_JAPAN_CALL_SIGNAL
+value|0x83
+end_define
+
+begin_comment
+comment|/* japan test thing */
+end_comment
+
+begin_comment
+comment|/*  * CCS area  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_LINK_NULL
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_TX_FIRST
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_TX_LAST
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_NTX
+value|(RAY_CCS_TX_LAST - RAY_CCS_TX_FIRST + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_TX_BUF_SIZE
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_CMD_FIRST
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_CMD_LAST
+value|63
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_NCMD
+value|(RAY_CCS_CMD_LAST - RAY_CCS_CMD_FIRST + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_LAST
+value|63
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_INDEX
+parameter_list|(
+name|ccs
+parameter_list|)
+value|(((ccs) - RAY_CCS_BASE) / RAY_CCS_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_ADDRESS
+parameter_list|(
+name|i
+parameter_list|)
+value|(RAY_CCS_BASE + (i) * RAY_CCS_SIZE)
+end_define
+
+begin_comment
+comment|/*  * RCS area  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_RCS_FIRST
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_RCS_LAST
+value|127
+end_define
+
+begin_comment
+comment|/*  * CCS commands  */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_cmd
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_STATUS_FREE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_STATUS_BUSY
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_STATUS_COMPLETE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_CCS_STATUS_FAIL
+value|0x3
+end_define
+
+begin_comment
+comment|/* RAY_CMD_UPDATE_PARAMS */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_cmd_update
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_paramid
+decl_stmt|;
+name|u_int8_t
+name|c_nparam
+decl_stmt|;
+name|u_int8_t
+name|c_failcause
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* RAY_CMD_REPORT_PARAMS */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_cmd_report
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_paramid
+decl_stmt|;
+name|u_int8_t
+name|c_nparam
+decl_stmt|;
+name|u_int8_t
+name|c_failcause
+decl_stmt|;
+name|u_int8_t
+name|c_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* RAY_CMD_UPDATE_MCAST */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_cmd_update_mcast
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_nmcast
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* RAY_CMD_UPDATE_APM */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_cmd_udpate_apm
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_mode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* RAY_CMD_START_NET and RAY_CMD_JOIN_NET */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_cmd_net
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_upd_param
+decl_stmt|;
+name|u_int8_t
+name|c_bss_id
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+name|u_int8_t
+name|c_inited
+decl_stmt|;
+name|u_int8_t
+name|c_def_txrate
+decl_stmt|;
+name|u_int8_t
+name|c_encrypt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Parameters passed in HOST_TO_ECF section when c_upd_param is set in  * ray_cmd_net.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_net_params
+block|{
+name|u_int8_t
+name|p_net_type
+decl_stmt|;
+name|u_int8_t
+name|p_ssid
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u_int8_t
+name|p_privacy_must_start
+decl_stmt|;
+name|u_int8_t
+name|p_privacy_can_join
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* RAY_CMD_UPDATE_ASSOC */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_cmd_update_assoc
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_astatus
+decl_stmt|;
+name|u_int8_t
+name|c_aid
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* RAY_CMD_TX_REQ */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_cmd_tx
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_bufp
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|c_len
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|c_resv
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|u_int8_t
+name|c_tx_rate
+decl_stmt|;
+name|u_int8_t
+name|c_apm_mode
+decl_stmt|;
+name|u_int8_t
+name|c_nretry
+decl_stmt|;
+name|u_int8_t
+name|c_antenna
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* RAY_CMD_TX_REQ (for bulid 4) */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_cmd_tx_4
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_bufp
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|c_len
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|c_addr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+name|u_int8_t
+name|c_apm_mode
+decl_stmt|;
+name|u_int8_t
+name|c_nretry
+decl_stmt|;
+name|u_int8_t
+name|c_antenna
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* RAY_CMD_DUMP_MEM */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_cmd_dump_mem
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_memtype
+decl_stmt|;
+name|u_int8_t
+name|c_memp
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|c_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* RAY_CMD_START_TIMER */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_cmd_start_timer
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_duration
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ray_cmd_rx
+block|{
+name|u_int8_t
+name|c_status
+decl_stmt|;
+comment|/* ccs generic header */
+name|u_int8_t
+name|c_cmd
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_link
+decl_stmt|;
+comment|/* " */
+name|u_int8_t
+name|c_bufp
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* buffer pointer */
+name|u_int8_t
+name|c_len
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* length */
+name|u_int8_t
+name|c_siglev
+decl_stmt|;
+comment|/* signal level */
+name|u_int8_t
+name|c_nextfrag
+decl_stmt|;
+comment|/* next fragment in packet */
+name|u_int8_t
+name|c_pktlen
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* total packet length */
+name|u_int8_t
+name|c_antenna
+decl_stmt|;
+comment|/* antenna with best reception */
+name|u_int8_t
+name|c_updbss
+decl_stmt|;
+comment|/* only 1 for beacon messages */
+block|}
+struct|;
+end_struct
 
 end_unit
 
