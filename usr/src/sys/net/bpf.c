@@ -224,17 +224,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  'bpf_iftab' is the driver state table per logical unit number  *  'bpf_dtab' holds the descriptors, indexed by minor device #  *  'bpf_units' is the number of attached units  *  * We really don't need NBPFILTER bpf_if entries, but this eliminates  * the need to account for all possible drivers here.  * This problem will go away when these structures are allocated dynamically.  */
+comment|/*  *  bpf_iflist is the list of interfaces; each corresponds to an ifnet  *  bpf_dtab holds the descriptors, indexed by minor device #  *  * We really don't need NBPFILTER bpf_if entries, but this eliminates  * the need to account for all possible drivers here.  * This problem will go away when these structures are allocated dynamically.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
 name|bpf_if
-name|bpf_iftab
-index|[
-name|NBPFILTER
-index|]
+modifier|*
+name|bpf_iflist
 decl_stmt|;
 end_decl_stmt
 
@@ -246,15 +244,6 @@ name|bpf_dtab
 index|[
 name|NBPFILTER
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|bpf_units
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1148,7 +1137,7 @@ name|bd_bufsize
 condition|)
 return|return
 operator|(
-name|EIO
+name|EINVAL
 operator|)
 return|;
 name|s
@@ -1505,9 +1494,7 @@ name|d
 operator|->
 name|bd_bif
 operator|->
-name|bif_devp
-operator|.
-name|bdev_type
+name|bif_dlt
 argument_list|,
 operator|&
 name|m
@@ -1623,7 +1610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  bpfioctl - packet filter control  *  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGFLEN		Get max filter len.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set ethernet read filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCDEVP		Get device parameters.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  */
+comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGFLEN		Get max filter len.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set ethernet read filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  */
 end_comment
 
 begin_comment
@@ -1916,7 +1903,7 @@ expr_stmt|;
 break|break;
 comment|/* 	 * Get device parameters. 	 */
 case|case
-name|BIOCDEVP
+name|BIOCGDLT
 case|:
 if|if
 condition|(
@@ -1933,8 +1920,7 @@ expr_stmt|;
 else|else
 operator|*
 operator|(
-expr|struct
-name|bpf_devp
+name|u_int
 operator|*
 operator|)
 name|addr
@@ -1943,7 +1929,7 @@ name|d
 operator|->
 name|bd_bif
 operator|->
-name|bif_devp
+name|bif_dlt
 expr_stmt|;
 break|break;
 comment|/* 	 * Set interface name. 	 */
@@ -2446,8 +2432,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|,
-name|i
-decl_stmt|,
 name|s
 decl_stmt|;
 comment|/* 	 * Separate string into name part and unit number.  Put a null 	 * byte at the end of the name part, and compute the number.  	 * If the a unit number is unspecified, the default is 0, 	 * as initialized above.  XXX This should be common code. 	 */
@@ -2529,25 +2513,21 @@ break|break;
 block|}
 block|}
 comment|/* 	 * Look through attached interfaces for the named one. 	 */
-name|bp
-operator|=
-name|bpf_iftab
-expr_stmt|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NBPFILTER
-condition|;
-operator|++
 name|bp
-operator|,
-operator|++
-name|i
+operator|=
+name|bpf_iflist
+init|;
+name|bp
+operator|!=
+literal|0
+condition|;
+name|bp
+operator|=
+name|bp
+operator|->
+name|bif_next
 control|)
 block|{
 name|struct
@@ -2915,16 +2895,7 @@ specifier|register
 name|u_int
 name|slen
 decl_stmt|;
-extern|extern bcopy(
-block|)
-function|;
-end_function
-
-begin_comment
 comment|/* 	 * Note that the ipl does not have to be raised at this point. 	 * The only problem that could arise here is that if two different 	 * interfaces shared any data.  This is not the case. 	 */
-end_comment
-
-begin_expr_stmt
 name|bp
 operator|=
 operator|(
@@ -2934,9 +2905,6 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|d
@@ -2966,7 +2934,29 @@ condition|(
 name|d
 operator|->
 name|bd_filter
+operator|==
+literal|0
 condition|)
+block|{
+name|catchpacket
+argument_list|(
+name|d
+argument_list|,
+name|pkt
+argument_list|,
+name|pktlen
+argument_list|,
+operator|(
+name|u_int
+operator|)
+operator|-
+literal|1
+argument_list|,
+name|bcopy
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|slen
 operator|=
 name|bpf_filter
@@ -2981,15 +2971,6 @@ name|pktlen
 argument_list|,
 name|pktlen
 argument_list|)
-expr_stmt|;
-else|else
-name|slen
-operator|=
-operator|(
-name|u_int
-operator|)
-operator|-
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -3007,28 +2988,21 @@ name|pktlen
 argument_list|,
 name|slen
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|bcopy
 argument_list|)
 expr_stmt|;
 block|}
-end_for
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Copy data from an mbuf chain into a buffer.  This code is derived  * from m_copydata in sys/uipc_mbuf.c.  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|void
-name|bpf_m_copydata
+name|bpf_mcopy
 parameter_list|(
 name|src
 parameter_list|,
@@ -3081,7 +3055,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"bpf_m_copydata"
+literal|"bpf_mcopy"
 argument_list|)
 expr_stmt|;
 name|count
@@ -3095,9 +3069,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|bcopy
 argument_list|(
 name|mtod
@@ -3115,19 +3086,19 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-name|len
-operator|-=
-name|count
-expr_stmt|;
-name|dst
-operator|+=
-name|count
-expr_stmt|;
 name|m
 operator|=
 name|m
 operator|->
 name|m_next
+expr_stmt|;
+name|dst
+operator|+=
+name|count
+expr_stmt|;
+name|len
+operator|-=
+name|count
 expr_stmt|;
 block|}
 block|}
@@ -3154,7 +3125,7 @@ name|bpf_mtap
 parameter_list|(
 name|arg
 parameter_list|,
-name|m0
+name|m
 parameter_list|)
 name|caddr_t
 name|arg
@@ -3162,7 +3133,7 @@ decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
-name|m0
+name|m
 decl_stmt|;
 block|{
 name|struct
@@ -3182,22 +3153,25 @@ name|bpf_d
 modifier|*
 name|d
 decl_stmt|;
-name|u_char
-modifier|*
-name|cp
-decl_stmt|;
 name|u_int
-name|slen
-decl_stmt|,
 name|pktlen
-decl_stmt|;
-name|int
-name|nbytes
+decl_stmt|,
+name|slen
 decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
-name|m
+name|m0
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+name|u_char
+modifier|*
+name|cp
+decl_stmt|;
+name|int
+name|nbytes
 decl_stmt|;
 specifier|static
 name|u_char
@@ -3208,7 +3182,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|m0
+name|m
 operator|->
 name|m_len
 operator|>=
@@ -3217,7 +3191,7 @@ condition|)
 block|{
 name|slen
 operator|=
-name|m0
+name|m
 operator|->
 name|m_len
 expr_stmt|;
@@ -3225,7 +3199,7 @@ name|cp
 operator|=
 name|mtod
 argument_list|(
-name|m0
+name|m
 argument_list|,
 name|u_char
 operator|*
@@ -3242,13 +3216,13 @@ name|cp
 operator|=
 name|buf
 expr_stmt|;
-name|m
-operator|=
 name|m0
+operator|=
+name|m
 expr_stmt|;
 while|while
 condition|(
-name|m
+name|m0
 operator|&&
 name|nbytes
 operator|>
@@ -3259,7 +3233,7 @@ name|slen
 operator|=
 name|MIN
 argument_list|(
-name|m
+name|m0
 operator|->
 name|m_len
 argument_list|,
@@ -3270,7 +3244,7 @@ name|bcopy
 argument_list|(
 name|mtod
 argument_list|(
-name|m
+name|m0
 argument_list|,
 name|char
 operator|*
@@ -3293,9 +3267,9 @@ name|nbytes
 operator|-=
 name|slen
 expr_stmt|;
-name|m
+name|m0
 operator|=
-name|m
+name|m0
 operator|->
 name|m_next
 expr_stmt|;
@@ -3317,28 +3291,30 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|pktlen
 operator|=
 literal|0
 expr_stmt|;
-name|m
-operator|=
 name|m0
+operator|=
+name|m
 expr_stmt|;
 while|while
 condition|(
-name|m
+name|m0
 condition|)
 block|{
 name|pktlen
 operator|+=
-name|m
+name|m0
 operator|->
 name|m_len
 expr_stmt|;
-name|m
+name|m0
 operator|=
-name|m
+name|m0
 operator|->
 name|m_next
 expr_stmt|;
@@ -3372,7 +3348,33 @@ condition|(
 name|d
 operator|->
 name|bd_filter
+operator|==
+literal|0
 condition|)
+block|{
+name|catchpacket
+argument_list|(
+name|d
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+name|m
+argument_list|,
+name|pktlen
+argument_list|,
+operator|(
+name|u_int
+operator|)
+operator|-
+literal|1
+argument_list|,
+name|bpf_mcopy
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|slen
 operator|=
 name|bpf_filter
@@ -3381,21 +3383,16 @@ name|d
 operator|->
 name|bd_filter
 argument_list|,
-name|cp
+operator|(
+name|u_char
+operator|*
+operator|)
+name|m
 argument_list|,
 name|pktlen
 argument_list|,
-name|slen
+literal|0
 argument_list|)
-expr_stmt|;
-else|else
-name|slen
-operator|=
-operator|(
-name|u_int
-operator|)
-operator|-
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -3411,13 +3408,13 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|m0
+name|m
 argument_list|,
 name|pktlen
 argument_list|,
 name|slen
 argument_list|,
-name|bpf_m_copydata
+name|bpf_mcopy
 argument_list|)
 expr_stmt|;
 block|}
@@ -3425,7 +3422,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Move the packet data from interface memory ('pkt') into the  * store buffer.  Return 1 if it's time to wakeup a listener (buffer full),  * otherwise 0.  'copy' is the routine called to do the actual data   * transfer.  'bcopy' is passed in to copy contiguous chunks, while  * 'bpf_m_copydata' is passed in to copy mbuf chains.  In the latter  * case, 'pkt' is really an mbuf.  */
+comment|/*  * Move the packet data from interface memory (pkt) into the  * store buffer.  Return 1 if it's time to wakeup a listener (buffer full),  * otherwise 0.  'copy' is the routine called to do the actual data   * transfer.  'bcopy' is passed in to copy contiguous chunks, while  * 'bpf_mcopy' is passed in to copy mbuf chains.  In the latter  * case, 'pkt' is really an mbuf.  */
 end_comment
 
 begin_decl_stmt
@@ -3825,7 +3822,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Register 'ifp' with bpf.  'devp' is the link-level device descriptor  * and 'driverp' is a pointer to the 'struct bpf_if *' in the driver's softc.  */
+comment|/*  * Register 'ifp' with bpf.  XXX  * and 'driverp' is a pointer to the 'struct bpf_if *' in the driver's softc.  */
 end_comment
 
 begin_function
@@ -3836,7 +3833,9 @@ name|driverp
 parameter_list|,
 name|ifp
 parameter_list|,
-name|devp
+name|dlt
+parameter_list|,
+name|hdrlen
 parameter_list|)
 name|caddr_t
 modifier|*
@@ -3847,10 +3846,10 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|struct
-name|bpf_devp
-modifier|*
-name|devp
+name|u_int
+name|dlt
+decl_stmt|,
+name|hdrlen
 decl_stmt|;
 block|{
 name|struct
@@ -3861,36 +3860,36 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|bpf_units
-operator|>=
-name|NBPFILTER
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bpf: too many interfaces: %s%d not attached\n"
-argument_list|,
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|bp
 operator|=
-operator|&
-name|bpf_iftab
-index|[
-name|bpf_units
-operator|++
-index|]
+operator|(
+expr|struct
+name|bpf_if
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|bp
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"bpfattach"
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
@@ -3918,10 +3917,19 @@ name|ifp
 expr_stmt|;
 name|bp
 operator|->
-name|bif_devp
+name|bif_dlt
 operator|=
-operator|*
-name|devp
+name|dlt
+expr_stmt|;
+name|bp
+operator|->
+name|bif_next
+operator|=
+name|bpf_iflist
+expr_stmt|;
+name|bpf_iflist
+operator|=
+name|bp
 expr_stmt|;
 operator|*
 name|bp
@@ -3931,24 +3939,18 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Compute the length of the bpf header.  This is not necessarily 	 * equal to SIZEOF_BPF_HDR because we want to insert spacing such  	 * that the network layer header begins on a longword boundary (for  	 * performance reasons and to alleviate alignment restrictions). 	 */
-name|i
-operator|=
-name|devp
-operator|->
-name|bdev_hdrlen
-expr_stmt|;
 name|bp
 operator|->
 name|bif_hdrlen
 operator|=
 name|BPF_WORDALIGN
 argument_list|(
-name|i
+name|hdrlen
 operator|+
 name|SIZEOF_BPF_HDR
 argument_list|)
 operator|-
-name|i
+name|hdrlen
 expr_stmt|;
 comment|/* 	 * Mark all the descriptors free if this hasn't been done. 	 */
 if|if
