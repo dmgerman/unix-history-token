@@ -10585,7 +10585,7 @@ if|if
 condition|(
 name|pcvt_is_console
 condition|)
-name|cnavaiable
+name|cnavailable
 argument_list|(
 name|pcvt_consptr
 argument_list|,
