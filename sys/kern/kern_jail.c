@@ -298,6 +298,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|jail_allow_raw_sockets
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_security_jail
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|allow_raw_sockets
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|jail_allow_raw_sockets
+argument_list|,
+literal|0
+argument_list|,
+literal|"Prison root can create raw sockets"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* allprison, lastprid, and prisoncount are protected by allprison_mtx. */
 end_comment
