@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.1, Thu Oct 27 21:15:02 MSK 1994  */
+comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.7, Wed Jun  7 22:12:02 MSD 1995  */
 end_comment
 
 begin_ifndef
@@ -28,14 +28,14 @@ name|u_long
 name|magic
 decl_stmt|;
 comment|/* local magic number */
-name|u_long
-name|rmagic
-decl_stmt|;
-comment|/* remote magic number */
 name|u_char
-name|lastid
+name|echoid
 decl_stmt|;
 comment|/* id of last keepalive echo request */
+name|u_char
+name|confid
+decl_stmt|;
+comment|/* id of last configuration request */
 block|}
 struct|;
 end_struct
@@ -48,6 +48,10 @@ name|u_short
 name|state
 decl_stmt|;
 comment|/* state machine */
+name|u_char
+name|confid
+decl_stmt|;
+comment|/* id of last configuration request */
 block|}
 struct|;
 end_struct
@@ -126,6 +130,17 @@ end_define
 
 begin_comment
 comment|/* use Cisco protocol instead of PPP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PP_TIMO
+value|0x04
+end_define
+
+begin_comment
+comment|/* cp_timeout routine active */
 end_comment
 
 begin_define
@@ -313,7 +328,8 @@ parameter_list|,
 name|int
 name|cmd
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|data
 parameter_list|)
 function_decl|;
@@ -324,6 +340,18 @@ name|struct
 name|mbuf
 modifier|*
 name|sppp_dequeue
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sppp_isempty
 parameter_list|(
 name|struct
 name|ifnet
