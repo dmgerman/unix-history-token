@@ -445,6 +445,16 @@ parameter_list|)
 value|((d)& TD_PA_MASK)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TD_GET_TLB
+parameter_list|(
+name|d
+parameter_list|)
+value|(((d)& TD_EXEC) ? (TLB_DTLB | TLB_ITLB) : TLB_DTLB)
+end_define
+
 begin_struct
 struct|struct
 name|tte
