@@ -690,7 +690,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|TF_NEEDSYN
+name|TF_NEEDFIN
 argument_list|)
 comment|/* Show T/TCP `hidden state' */
 if|if
@@ -712,7 +712,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(TF_NEEDSYN)&& defined(TF_NEEDSYN) */
+comment|/* defined(TF_NEEDSYN)&& defined(TF_NEEDFIN) */
 block|}
 block|}
 name|putchar
