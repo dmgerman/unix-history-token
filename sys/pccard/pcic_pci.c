@@ -1667,10 +1667,7 @@ condition|(
 name|desc
 operator|==
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|pci_get_class
 argument_list|(
 name|dev
@@ -1721,7 +1718,6 @@ name|desc
 operator|=
 literal|"YENTA PCI-CARDBUS Bridge"
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
