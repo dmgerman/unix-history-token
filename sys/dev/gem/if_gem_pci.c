@@ -316,6 +316,9 @@ block|{
 name|u_int32_t
 name|gpd_devid
 decl_stmt|;
+name|int
+name|gpd_variant
+decl_stmt|;
 name|char
 modifier|*
 name|gpd_desc
@@ -328,11 +331,15 @@ block|{
 block|{
 literal|0x1101108e
 block|,
+name|GEM_SUN_GEM
+block|,
 literal|"Sun ERI 10/100 Ethernet Adaptor"
 block|}
 block|,
 block|{
 literal|0x2bad108e
+block|,
+name|GEM_SUN_GEM
 block|,
 literal|"Sun GEM Gigabit Ethernet Adaptor"
 block|}
@@ -340,11 +347,15 @@ block|,
 block|{
 literal|0x0021106b
 block|,
+name|GEM_APPLE_GMAC
+block|,
 literal|"Apple GMAC Ethernet Adaptor"
 block|}
 block|,
 block|{
 literal|0x0024106b
+block|,
+name|GEM_APPLE_GMAC
 block|,
 literal|"Apple GMAC2 Ethernet Adaptor"
 block|}
@@ -378,6 +389,11 @@ name|i
 decl_stmt|;
 name|u_int32_t
 name|devid
+decl_stmt|;
+name|struct
+name|gem_pci_softc
+modifier|*
+name|gsc
 decl_stmt|;
 name|devid
 operator|=
@@ -428,6 +444,26 @@ index|]
 operator|.
 name|gpd_desc
 argument_list|)
+expr_stmt|;
+name|gsc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|gsc
+operator|->
+name|gsc_gem
+operator|.
+name|sc_variant
+operator|=
+name|gem_pci_devlist
+index|[
+name|i
+index|]
+operator|.
+name|gpd_variant
 expr_stmt|;
 return|return
 operator|(

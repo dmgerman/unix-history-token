@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2001 Eduardo Horvath.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: gemvar.h,v 1.5 2001/10/18 15:19:22 thorpej Exp  *  * $FreeBSD$  */
+comment|/*  * Copyright (C) 2001 Eduardo Horvath.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: gemvar.h,v 1.8 2002/05/15 02:36:12 matt Exp  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -89,6 +89,16 @@ define|#
 directive|define
 name|GEM_NRXDESC_MASK
 value|(GEM_NRXDESC - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEM_PREVRX
+parameter_list|(
+name|x
+parameter_list|)
+value|((x - 1)& GEM_NRXDESC_MASK)
 end_define
 
 begin_define
@@ -390,6 +400,34 @@ name|int
 name|sc_pci
 decl_stmt|;
 comment|/* XXXXX -- PCI buses are LE. */
+name|u_int
+name|sc_variant
+decl_stmt|;
+comment|/* which GEM are we dealing with? */
+define|#
+directive|define
+name|GEM_UNKNOWN
+value|0
+comment|/* don't know */
+define|#
+directive|define
+name|GEM_SUN_GEM
+value|1
+comment|/* Sun GEM variant */
+define|#
+directive|define
+name|GEM_APPLE_GMAC
+value|2
+comment|/* Apple GMAC variant */
+name|u_int
+name|sc_flags
+decl_stmt|;
+comment|/* */
+define|#
+directive|define
+name|GEM_GIGABIT
+value|0x0001
+comment|/* has a gigabit PHY */
 comment|/* 	 * Ring buffer DMA stuff. 	 */
 name|bus_dma_segment_t
 name|sc_cdseg
@@ -443,6 +481,10 @@ name|int
 name|sc_txnext
 decl_stmt|;
 comment|/* next ready Tx descriptor */
+name|int
+name|sc_txwin
+decl_stmt|;
+comment|/* Tx descriptors since last Tx int */
 name|struct
 name|gem_txsq
 name|sc_txfreeq
@@ -457,6 +499,10 @@ name|int
 name|sc_rxptr
 decl_stmt|;
 comment|/* next ready RX descriptor/descsoft */
+name|int
+name|sc_rxfifosize
+decl_stmt|;
+comment|/* Rx FIFO size (bytes) */
 comment|/* ========== */
 name|int
 name|sc_inited
@@ -465,7 +511,7 @@ name|int
 name|sc_debug
 decl_stmt|;
 name|int
-name|sc_flags
+name|sc_ifflags
 decl_stmt|;
 comment|/* Special hardware hooks */
 name|void
