@@ -782,7 +782,6 @@ literal|"\040<b31>"
 argument_list|)
 expr_stmt|;
 block|}
-literal|0x0183f3ff
 if|if
 condition|(
 name|amd_feature
