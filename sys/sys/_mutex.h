@@ -53,6 +53,19 @@ argument_list|)
 name|mtx_contested
 expr_stmt|;
 comment|/* list of all contested locks */
+comment|/* #ifdef MUTEX_PROFILING */
+name|u_int64_t
+name|cycles
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+decl_stmt|;
+name|int
+name|line
+decl_stmt|;
+comment|/* #endif */
 block|}
 struct|;
 end_struct
