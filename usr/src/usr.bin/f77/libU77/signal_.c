@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_signal[] = "@(#)signal_.c	1.2";  *  * change the action for a specified signal  *  * calling sequence:  *	integer cursig, signal, savsig  *	external proc  *	cursig = signal(signum, proc, flag)  * where:  *	'cursig' will receive the current value of signal(2)  *	'signum' must be in the range 0<= signum<= 16  *  *	If 'flag' is negative, 'proc' must be an external proceedure name.  *	  *	If 'flag' is 0 or positive, it will be passed to signal(2) as the  *	signal action flag. 0 resets the default action; 1 sets 'ignore'.  *	'flag' may be the value returned from a previous call to signal.  *  * This routine arranges to trap user specified signals so that it can  * pass the signum fortran style - by address. (boo)  */
+comment|/* char id_signal[] = "@(#)signal_.c	1.3";  *  * change the action for a specified signal  *  * calling sequence:  *	integer cursig, signal, savsig  *	external proc  *	cursig = signal(signum, proc, flag)  * where:  *	'cursig' will receive the current value of signal(2)  *	'signum' must be in the range 0<= signum<= 16  *  *	If 'flag' is negative, 'proc' must be an external proceedure name.  *	  *	If 'flag' is 0 or positive, it will be passed to signal(2) as the  *	signal action flag. 0 resets the default action; 1 sets 'ignore'.  *	'flag' may be the value returned from a previous call to signal.  *  * This routine arranges to trap user specified signals so that it can  * pass the signum fortran style - by address. (boo)  */
 end_comment
 
 begin_include
@@ -71,6 +71,28 @@ end_function_decl
 
 begin_block
 block|{
+name|int
+function_decl|(
+modifier|*
+name|oldsig
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|oldispatch
+function_decl|)
+parameter_list|()
+function_decl|;
+name|oldispatch
+operator|=
+name|dispatch
+index|[
+operator|*
+name|sigp
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -115,11 +137,8 @@ index|]
 operator|=
 name|procp
 expr_stmt|;
-return|return
-operator|(
-operator|(
-name|long
-operator|)
+name|oldsig
+operator|=
 name|signal
 argument_list|(
 operator|(
@@ -130,16 +149,12 @@ name|sigp
 argument_list|,
 name|sig_trap
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 else|else
 comment|/* integer value passed */
-return|return
-operator|(
-operator|(
-name|long
-operator|)
+name|oldsig
+operator|=
 name|signal
 argument_list|(
 operator|(
@@ -154,6 +169,27 @@ operator|)
 operator|*
 name|flag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|oldsig
+operator|==
+name|sig_trap
+condition|)
+return|return
+operator|(
+operator|(
+name|long
+operator|)
+name|oldispatch
+operator|)
+return|;
+return|return
+operator|(
+operator|(
+name|long
+operator|)
+name|oldsig
 operator|)
 return|;
 block|}
