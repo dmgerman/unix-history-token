@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<sys/time.h>
 end_include
 
 begin_include
