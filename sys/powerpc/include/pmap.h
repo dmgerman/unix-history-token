@@ -304,6 +304,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+modifier|*
+name|pmap_mapdev
+name|__P
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|,
+name|vm_size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|pmap_setavailmem
 name|__P
 argument_list|(
