@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c	8.1 (Berkeley) 6/7/93"
+literal|"@(#)stab.c	8.6 (Berkeley) 8/31/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|STABSIZE
-value|400
+value|2003
 end_define
 
 begin_decl_stmt
@@ -121,7 +121,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 	**  Compute the hashing function 	** 	**	We could probably do better.... 	*/
+comment|/* 	**  Compute the hashing function 	*/
 name|hfunc
 operator|=
 name|type
@@ -144,20 +144,20 @@ name|hfunc
 operator|=
 operator|(
 operator|(
-operator|(
 name|hfunc
 operator|<<
-literal|7
+literal|1
 operator|)
-operator||
+operator|^
+operator|(
 name|lower
 argument_list|(
 operator|*
 name|p
 argument_list|)
-operator|)
 operator|&
-literal|077777
+literal|0377
+operator|)
 operator|)
 operator|%
 name|STABSIZE
@@ -186,6 +186,17 @@ index|[
 name|hfunc
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|ST_MACRO
+operator|||
+name|type
+operator|==
+name|ST_RULESET
+condition|)
+block|{
 while|while
 condition|(
 operator|(
@@ -198,7 +209,13 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
-name|strcasecmp
+name|s
+operator|->
+name|s_type
+operator|!=
+name|type
+operator|||
+name|strcmp
 argument_list|(
 name|name
 argument_list|,
@@ -206,12 +223,6 @@ name|s
 operator|->
 name|s_name
 argument_list|)
-operator|||
-name|s
-operator|->
-name|s_type
-operator|!=
-name|type
 operator|)
 condition|)
 name|ps
@@ -221,6 +232,45 @@ name|s
 operator|->
 name|s_next
 expr_stmt|;
+block|}
+else|else
+block|{
+while|while
+condition|(
+operator|(
+name|s
+operator|=
+operator|*
+name|ps
+operator|)
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|s
+operator|->
+name|s_type
+operator|!=
+name|type
+operator|||
+name|strcasecmp
+argument_list|(
+name|name
+argument_list|,
+name|s
+operator|->
+name|s_name
+argument_list|)
+operator|)
+condition|)
+name|ps
+operator|=
+operator|&
+name|s
+operator|->
+name|s_next
+expr_stmt|;
+block|}
 comment|/* 	**  Dispose of the entry. 	*/
 if|if
 condition|(
@@ -356,13 +406,6 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-name|makelower
-argument_list|(
-name|s
-operator|->
-name|s_name
-argument_list|)
-expr_stmt|;
 name|s
 operator|->
 name|s_type
@@ -476,7 +519,7 @@ if|if
 condition|(
 name|tTd
 argument_list|(
-literal|38
+literal|36
 argument_list|,
 literal|90
 argument_list|)
