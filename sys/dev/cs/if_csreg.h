@@ -10,6 +10,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CS_89x0_IO_PORTS
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
 name|PP_ChipID
 value|0x0000
 end_define

@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"cs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"cx.h"
 end_include
 
@@ -365,14 +359,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|ardriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|csdriver
 decl_stmt|;
 end_decl_stmt
 
@@ -1096,20 +1082,6 @@ name|INTR_TYPE_NET
 block|,
 operator|&
 name|lncdriver
-block|}
-block|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|NCS
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_NET
-block|,
-operator|&
-name|csdriver
 block|}
 block|,
 endif|#
