@@ -4,7 +4,7 @@ comment|/* for FreeBSD */
 end_comment
 
 begin_comment
-comment|/*  * $Id: local.h,v 1.9 1994/09/27 17:58:19 davidg Exp $  */
+comment|/*  * $Id: local.h,v 1.10 1994/10/01 02:16:44 swallace Exp $  */
 end_comment
 
 begin_include
@@ -96,16 +96,6 @@ directive|define
 name|DSP_BUFFSIZE
 value|65536
 end_define
-
-begin_define
-define|#
-directive|define
-name|NO_AUTODMA
-end_define
-
-begin_comment
-comment|/* still */
-end_comment
 
 begin_define
 define|#

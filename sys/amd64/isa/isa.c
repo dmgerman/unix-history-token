@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.33 1994/10/25 23:06:15 se Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.34 1994/10/26 00:16:20 phk Exp $  */
 end_comment
 
 begin_comment
@@ -3285,6 +3285,45 @@ condition|)
 block|{
 comment|/* 		 * Program one of DMA channels 0..3.  These are 		 * byte mode channels. 		 */
 comment|/* set dma channel mode, and reset address ff */
+comment|/* If B_RAW flag is set, then use autoinitialise mode */
+if|if
+condition|(
+name|flags
+operator|&
+name|B_RAW
+condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|B_READ
+condition|)
+name|outb
+argument_list|(
+name|DMA1_MODE
+argument_list|,
+name|DMA37MD_AUTO
+operator||
+name|DMA37MD_WRITE
+operator||
+name|chan
+argument_list|)
+expr_stmt|;
+else|else
+name|outb
+argument_list|(
+name|DMA1_MODE
+argument_list|,
+name|DMA37MD_AUTO
+operator||
+name|DMA37MD_READ
+operator||
+name|chan
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|flags
@@ -3392,6 +3431,53 @@ else|else
 block|{
 comment|/* 		 * Program one of DMA channels 4..7.  These are 		 * word mode channels. 		 */
 comment|/* set dma channel mode, and reset address ff */
+comment|/* If B_RAW flag is set, then use autoinitialise mode */
+if|if
+condition|(
+name|flags
+operator|&
+name|B_RAW
+condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|B_READ
+condition|)
+name|outb
+argument_list|(
+name|DMA2_MODE
+argument_list|,
+name|DMA37MD_AUTO
+operator||
+name|DMA37MD_WRITE
+operator||
+operator|(
+name|chan
+operator|&
+literal|3
+operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|outb
+argument_list|(
+name|DMA2_MODE
+argument_list|,
+name|DMA37MD_AUTO
+operator||
+name|DMA37MD_READ
+operator||
+operator|(
+name|chan
+operator|&
+literal|3
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|flags
