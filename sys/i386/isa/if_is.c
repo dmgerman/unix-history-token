@@ -1,4 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_define
+define|#
+directive|define
+name|ISDEBUG
+end_define
+
 begin_comment
 comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  * */
 end_comment
@@ -20,12 +26,6 @@ name|NIS
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"bpfilter.h"
-end_include
 
 begin_include
 include|#
@@ -168,6 +168,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|"bpfilter.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"net/bpf.h"
 end_include
 
@@ -244,11 +250,12 @@ name|int
 name|iobase
 decl_stmt|;
 comment|/* IO base address of card */
-name|void
+name|struct
+name|init_block
 modifier|*
-name|lance_mem
+name|init_block
 decl_stmt|;
-comment|/* Base of memory allocated to card */
+comment|/* Lance initialisation block */
 name|struct
 name|mds
 modifier|*
@@ -291,12 +298,8 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|struct
-name|init_block
-name|init_block
-index|[
-name|NIS
-index|]
+name|int
+name|is_debug
 decl_stmt|;
 end_decl_stmt
 
@@ -549,7 +552,7 @@ name|isa_dev
 operator|->
 name|id_iobase
 expr_stmt|;
-comment|/* Stop the lance chip, put it known state */
+comment|/* Stop the lance chip, put it in known state */
 name|iswrcsr
 argument_list|(
 name|unit
@@ -684,11 +687,6 @@ operator|>=
 name|NIS
 condition|)
 return|return;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"is%d: reset\n"
@@ -699,14 +697,6 @@ expr_stmt|;
 name|is_init
 argument_list|(
 name|unit
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -834,12 +824,62 @@ name|if_watchdog
 operator|=
 name|is_watchdog
 expr_stmt|;
-comment|/*  	 * XXX - Set is->lance_mem to NULL so first pass  	 * through init_mem it won't try and free memory 	 * This is getting messy and needs redoing. 	 * Yes, I know NULL != 0 but it does what I want :-)  	 */
+comment|/* 	 * XXX -- not sure this is right place to do this 	 * Allocate memory for use by Lance 	 * Memory allocated for: 	 * 	initialisation block, 	 * 	ring descriptors, 	 * 	transmit and receive buffers. 	 */
+comment|/* 	 * XXX - hopefully have better way to get dma'able memory later, 	 * this code assumes that the physical memory address returned 	 * from malloc will be below 16Mb. The Lance's address registers 	 * are only 16 bits wide! 	 */
+define|#
+directive|define
+name|MAXMEM
+value|((NRBUF+NTBUF)*(BUFSIZE) + (NRBUF+NTBUF)*sizeof(struct mds) \                  + sizeof(struct init_block) + 8)
 name|is
 operator|->
-name|lance_mem
+name|init_block
 operator|=
-name|NULL
+operator|(
+expr|struct
+name|init_block
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|MAXMEM
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|is
+operator|->
+name|init_block
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"is%d : Couldn't allocate memory for card\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*  	 * XXX -- should take corrective action if not 	 * quadword alilgned, the 8 byte slew factor in MAXMEM 	 * allows for this. 	 */
+if|if
+condition|(
+operator|(
+name|u_long
+operator|)
+name|is
+operator|->
+name|init_block
+operator|&
+literal|0x3
+condition|)
+name|printf
+argument_list|(
+literal|"is%d: memory allocated not quadword aligned\n"
+argument_list|)
 expr_stmt|;
 comment|/* Set up DMA */
 name|isa_dmacascade
@@ -1051,7 +1091,8 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_long
+name|void
+modifier|*
 name|temp
 decl_stmt|;
 name|struct
@@ -1065,81 +1106,25 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-comment|/* Allocate memory */
-comment|/* 	 * XXX - hopefully have better way to get dma'able memory later, 	 * this code assumes that the physical memory address returned 	 * from malloc will be below 16Mb. The Lance's address registers 	 * are only 16 bits wide! 	 */
-define|#
-directive|define
-name|MAXMEM
-value|((NRBUF+NTBUF)*(BUFSIZE) + (NRBUF+NTBUF)*sizeof(struct mds) + 8)
-comment|/*  	 * XXX - If we've been here before then free  	 * the previously allocated memory 	 */
-if|if
-condition|(
-name|is
-operator|->
-name|lance_mem
-condition|)
-name|free
-argument_list|(
-name|is
-operator|->
-name|lance_mem
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
-name|is
-operator|->
-name|lance_mem
-operator|=
-name|malloc
-argument_list|(
-name|MAXMEM
-argument_list|,
-name|M_TEMP
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|is
-operator|->
-name|lance_mem
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"is%d : Couldn't allocate memory for card\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+comment|/* 	 * At this point we assume that the 	 * memory allocated to the Lance is 	 * quadword aligned. If it isn't 	 * then the initialisation is going 	 * fail later on. 	 */
+comment|/*  	 * Set up lance initialisation block 	 */
 name|temp
 operator|=
 operator|(
-name|u_long
+name|void
+operator|*
 operator|)
 name|is
 operator|->
-name|lance_mem
+name|init_block
 expr_stmt|;
-comment|/* Align message descriptors on quad word boundary  		(this is essential) */
 name|temp
-operator|=
-operator|(
-name|temp
-operator|+
-literal|8
-operator|)
-operator|-
-operator|(
-name|temp
-operator|%
-literal|8
-operator|)
+operator|+=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|init_block
+argument_list|)
 expr_stmt|;
 name|is
 operator|->
@@ -1189,20 +1174,73 @@ expr|struct
 name|mds
 argument_list|)
 expr_stmt|;
+name|is
+operator|->
 name|init_block
-index|[
-name|unit
-index|]
-operator|.
+operator|->
 name|mode
 operator|=
 literal|0
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ETHER_ADDR_LEN
+condition|;
+name|i
+operator|++
+control|)
+name|is
+operator|->
 name|init_block
+operator|->
+name|padr
 index|[
-name|unit
+name|i
 index|]
+operator|=
+name|is
+operator|->
+name|arpcom
 operator|.
+name|ac_enaddr
+index|[
+name|i
+index|]
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|8
+condition|;
+operator|++
+name|i
+control|)
+name|is
+operator|->
+name|init_block
+operator|->
+name|ladrf
+index|[
+name|i
+index|]
+operator|=
+name|MULTI_INIT_ADDR
+expr_stmt|;
+name|is
+operator|->
+name|init_block
+operator|->
 name|rdra
 operator|=
 name|kvtop
@@ -1212,11 +1250,10 @@ operator|->
 name|rd
 argument_list|)
 expr_stmt|;
+name|is
+operator|->
 name|init_block
-index|[
-name|unit
-index|]
-operator|.
+operator|->
 name|rlen
 operator|=
 operator|(
@@ -1240,11 +1277,10 @@ operator|<<
 literal|13
 operator|)
 expr_stmt|;
+name|is
+operator|->
 name|init_block
-index|[
-name|unit
-index|]
-operator|.
+operator|->
 name|tdra
 operator|=
 name|kvtop
@@ -1254,11 +1290,10 @@ operator|->
 name|td
 argument_list|)
 expr_stmt|;
+name|is
+operator|->
 name|init_block
-index|[
-name|unit
-index|]
-operator|.
+operator|->
 name|tlen
 operator|=
 operator|(
@@ -1282,7 +1317,7 @@ operator|<<
 literal|13
 operator|)
 expr_stmt|;
-comment|/* Set up receive ring descriptors */
+comment|/*  	 * Set up receive ring descriptors 	 */
 name|is
 operator|->
 name|rbuf
@@ -1378,7 +1413,7 @@ operator|+=
 name|BUFSIZE
 expr_stmt|;
 block|}
-comment|/* Set up transmit ring descriptors */
+comment|/*  	 * Set up transmit ring descriptors 	 */
 name|is
 operator|->
 name|tbuf
@@ -1543,6 +1578,16 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+comment|/*  	 * Lance must be stopped 	 * to access registers. 	 */
+name|iswrcsr
+argument_list|(
+name|unit
+argument_list|,
+literal|0
+argument_list|,
+name|STOP
+argument_list|)
+expr_stmt|;
 name|is
 operator|->
 name|last_rd
@@ -1563,82 +1608,6 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* Stop Lance to get access to other registers */
-name|iswrcsr
-argument_list|(
-name|unit
-argument_list|,
-literal|0
-argument_list|,
-name|STOP
-argument_list|)
-expr_stmt|;
-comment|/* Get ethernet address */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ETHER_ADDR_LEN
-condition|;
-name|i
-operator|++
-control|)
-name|init_block
-index|[
-name|unit
-index|]
-operator|.
-name|padr
-index|[
-name|i
-index|]
-operator|=
-name|is
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-index|[
-name|i
-index|]
-expr_stmt|;
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
-comment|/*          * Initialize multicast address hashing registers to accept          *       all multicasts (only used when in promiscuous mode)          */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|8
-condition|;
-operator|++
-name|i
-control|)
-name|init_block
-index|[
-name|unit
-index|]
-operator|.
-name|ladrf
-index|[
-name|i
-index|]
-operator|=
-literal|0xff
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* No byte swapping etc */
 name|iswrcsr
 argument_list|(
@@ -1658,11 +1627,9 @@ literal|1
 argument_list|,
 name|kvtop
 argument_list|(
-operator|&
+name|is
+operator|->
 name|init_block
-index|[
-name|unit
-index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1675,11 +1642,9 @@ argument_list|,
 operator|(
 name|kvtop
 argument_list|(
-operator|&
+name|is
+operator|->
 name|init_block
-index|[
-name|unit
-index|]
 argument_list|)
 operator|>>
 literal|16
@@ -2267,11 +2232,13 @@ name|mcnt
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ISDEBUG
-operator|>
-literal|3
+if|if
+condition|(
+name|is_debug
+condition|)
 name|xmit_print
 argument_list|(
 name|unit
@@ -2336,11 +2303,13 @@ name|if_flags
 operator||=
 name|IFF_OACTIVE
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ISDEBUG
-operator|>
-literal|4
+if|if
+condition|(
+name|is_debug
+condition|)
 name|printf
 argument_list|(
 literal|"no_td = %x, last_td = %x\n"
@@ -2747,11 +2716,13 @@ operator|+
 name|i
 operator|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ISDEBUG
-operator|>
-literal|4
+if|if
+condition|(
+name|is_debug
+condition|)
 name|printf
 argument_list|(
 literal|"Trans cdm = %x\n"
@@ -3102,11 +3073,13 @@ block|}
 block|}
 else|else
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ISDEBUG
-operator|>
-literal|2
+if|if
+condition|(
+name|is_debug
+condition|)
 name|recv_print
 argument_list|(
 name|unit
@@ -3164,11 +3137,13 @@ literal|0
 expr_stmt|;
 name|NEXTRDS
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ISDEBUG
-operator|>
-literal|4
+if|if
+condition|(
+name|is_debug
+condition|)
 name|printf
 argument_list|(
 literal|"is->last_rd = %x, cdm = %x\n"
@@ -4245,6 +4220,28 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ISDEBUG
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_DEBUG
+condition|)
+name|is_debug
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|is_debug
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|NBPFILTER
@@ -4260,11 +4257,10 @@ name|IFF_PROMISC
 condition|)
 block|{
 comment|/*                          * Set promiscuous mode on interface.                          *      XXX - for multicasts to work, we would need to                          *              write 1's in all bits of multicast                          *              hashing array. For now we assume that                          *              this was done in is_init().                          */
+name|is
+operator|->
 name|init_block
-index|[
-name|unit
-index|]
-operator|.
+operator|->
 name|mode
 operator|=
 name|PROM
