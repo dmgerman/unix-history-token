@@ -2729,6 +2729,12 @@ name|scparam
 expr_stmt|;
 name|tp
 operator|->
+name|t_stop
+operator|=
+name|nottystop
+expr_stmt|;
+name|tp
+operator|->
 name|t_dev
 operator|=
 name|dev
