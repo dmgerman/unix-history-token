@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)f77.c	5.5 (Berkeley) %G%"
+literal|"@(#)f77.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3379,24 +3379,14 @@ argument_list|(
 name|optzfname
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-name|sprintf
+elseif|else
+if|if
+condition|(
+name|rename
 argument_list|(
-name|buff
-argument_list|,
-literal|"mv %s %s"
-argument_list|,
 name|optzfname
 argument_list|,
 name|asmpass2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sys
-argument_list|(
-name|buff
 argument_list|)
 condition|)
 name|fatal
@@ -3404,7 +3394,6 @@ argument_list|(
 literal|"can't rename optimizer output file"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
