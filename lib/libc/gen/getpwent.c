@@ -894,9 +894,14 @@ name|_PW_KEYBYNAME
 expr_stmt|;
 name|len
 operator|=
+name|MIN
+argument_list|(
 name|strlen
 argument_list|(
 name|name
+argument_list|)
+argument_list|,
+name|UT_NAMESIZE
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -907,12 +912,7 @@ name|bf
 operator|+
 literal|1
 argument_list|,
-name|MIN
-argument_list|(
 name|len
-argument_list|,
-name|UT_NAMESIZE
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|key
