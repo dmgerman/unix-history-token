@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hunt.c	5.1 (Berkeley) %G%"
+literal|"@(#)hunt.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,10 +121,6 @@ argument_list|,
 name|dead
 argument_list|)
 expr_stmt|;
-name|deadfl
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 name|cp
@@ -135,6 +131,10 @@ name|name
 argument_list|)
 condition|)
 block|{
+name|deadfl
+operator|=
+literal|0
+expr_stmt|;
 name|uucplock
 operator|=
 name|rindex
