@@ -1,71 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: inp.h,v 2.0 86/09/17 15:37:25 lwall Exp $  *  * $Log:	inp.h,v $  * Revision 2.0  86/09/17  15:37:25  lwall  * Baseline for netwide release.  *   */
-end_comment
-
-begin_decl_stmt
-name|EXT
-name|LINENUM
-name|input_lines
-name|INIT
-argument_list|(
-literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* how long is input file in lines */
-end_comment
-
-begin_decl_stmt
-name|EXT
-name|LINENUM
-name|last_frozen_line
-name|INIT
-argument_list|(
-literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* how many input lines have been */
+comment|/*	$OpenBSD: inp.h,v 1.8 2003/08/15 08:00:51 otto Exp $	*/
 end_comment
 
 begin_comment
-comment|/* irretractibly output */
+comment|/*  * patch - a program to apply diffs to original files  *   * Copyright 1986, Larry Wall  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following condition is met:  * 1. Redistributions of source code must retain the above copyright notice,  * this condition and the following disclaimer.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * -C option added in 1998, original code by Marc Espie, based on FreeBSD  * behaviour  */
 end_comment
 
 begin_function_decl
-name|bool
-name|rev_in_string
-parameter_list|()
+name|void
+name|re_input
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|scan_input
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
-name|plan_a
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* returns false if insufficient memory */
-end_comment
-
-begin_function_decl
-name|void
-name|plan_b
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -73,7 +31,11 @@ begin_function_decl
 name|char
 modifier|*
 name|ifetch
-parameter_list|()
+parameter_list|(
+name|LINENUM
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
