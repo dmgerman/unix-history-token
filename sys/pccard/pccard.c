@@ -3034,13 +3034,6 @@ name|vpp
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|->
-name|pwr_off_pending
-condition|)
-block|{
 name|untimeout
 argument_list|(
 name|power_off_slot
@@ -3055,6 +3048,12 @@ operator|->
 name|poff_ch
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|pwr_off_pending
+condition|)
 name|sp
 operator|->
 name|ctrl
@@ -3064,7 +3063,6 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-block|}
 name|sp
 operator|->
 name|pwr_off_pending
