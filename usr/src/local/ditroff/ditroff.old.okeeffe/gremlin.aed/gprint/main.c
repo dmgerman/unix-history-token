@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* main.c	1.5	83/05/13  *  * Copyright -C- 1982 Barry S. Roitblat  *  *	This file contains the main and file system dependent routines  * for producing hard copy from gremlin files.  It is extensively modified  * from the vplot source.  */
+comment|/* main.c	1.6	83/06/17  *  * Copyright -C- 1982 Barry S. Roitblat  *  *	This file contains the main and file system dependent routines  * for producing hard copy from gremlin files.  It is extensively modified  * from the vplot source.  */
 end_comment
 
 begin_include
@@ -612,10 +612,6 @@ case|case
 literal|'W'
 case|:
 comment|/* Print to wide (versatec) device */
-name|BytPrLin
-operator|=
-name|Wbytperlin
-expr_stmt|;
 name|DevRange
 operator|=
 name|Wxlen
@@ -646,10 +642,6 @@ case|case
 literal|'V'
 case|:
 comment|/* Print to narrow (varian) device */
-name|BytPrLin
-operator|=
-name|Vbytperlin
-expr_stmt|;
 name|DevRange
 operator|=
 name|Vxlen
@@ -1482,6 +1474,32 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|WriteRaster
+condition|)
+block|{
+comment|/* over-ride dimension settings */
+name|DevRange
+operator|=
+name|Vxlen
+expr_stmt|;
+comment|/* if printing to file to be gdumped */
+name|DevRange8
+operator|=
+name|Vxlen
+operator|/
+literal|8
+expr_stmt|;
+name|BytPrLin
+operator|=
+name|Vbytperlin
+expr_stmt|;
+name|NumOfLin
+operator|=
+name|Wylen
+expr_stmt|;
+block|}
 name|signal
 argument_list|(
 name|SIGTERM
@@ -1846,7 +1864,7 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
-comment|/* traverse picture, printing elements */
+comment|/* traverse picture;  print elements */
 name|e
 operator|=
 name|DBNextElt
