@@ -111,9 +111,11 @@ operator|&
 name|tvec
 argument_list|)
 expr_stmt|;
+comment|/* day since 1977 */
 operator|*
 name|d
 operator|=
+operator|(
 name|tptr
 operator|->
 name|tm_yday
@@ -127,8 +129,41 @@ name|tm_year
 operator|-
 literal|77
 operator|)
+operator|+
+operator|(
+name|tptr
+operator|->
+name|tm_year
+operator|-
+literal|77
+operator|)
+operator|/
+literal|4
+operator|-
+operator|(
+name|tptr
+operator|->
+name|tm_year
+operator|-
+literal|1
+operator|)
+operator|/
+literal|100
+operator|+
+operator|(
+name|tptr
+operator|->
+name|tm_year
+operator|+
+literal|299
+operator|)
+operator|/
+literal|400
+operator|)
 expr_stmt|;
-comment|/* day since 1977  (mod leap)   */
+comment|/* bug: this will overflow in the year 2066 AD (with 16 bit int) */
+comment|/* it will be attributed to Wm the C's millenial celebration    */
+comment|/* and minutes since midnite */
 operator|*
 name|t
 operator|=
@@ -142,13 +177,8 @@ name|tptr
 operator|->
 name|tm_min
 expr_stmt|;
-comment|/* and minutes since midnite    */
 block|}
 end_block
-
-begin_comment
-comment|/* pretty painless              */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -193,9 +223,7 @@ end_block
 
 begin_macro
 name|Start
-argument_list|(
-argument|n
-argument_list|)
+argument_list|()
 end_macro
 
 begin_block
@@ -377,12 +405,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|weq
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
 name|magic
+argument_list|,
+literal|5
 argument_list|)
 condition|)
 block|{
@@ -412,17 +441,8 @@ end_block
 
 begin_macro
 name|ciao
-argument_list|(
-argument|cmdfile
-argument_list|)
+argument_list|()
 end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|cmdfile
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -457,29 +477,51 @@ argument_list|(
 literal|"What would you like to call the saved version?\n"
 argument_list|)
 expr_stmt|;
+comment|/* XXX - should use fgetln to avoid arbitrary limit */
 for|for
 control|(
 name|c
 operator|=
 name|fname
 init|;
+name|c
+operator|<
+name|fname
+operator|+
+sizeof|sizeof
+name|fname
+operator|-
+literal|1
 condition|;
 name|c
 operator|++
 control|)
-if|if
-condition|(
-operator|(
-operator|*
-name|c
+block|{
+name|int
+name|ch
+decl_stmt|;
+name|ch
 operator|=
 name|getchar
 argument_list|()
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ch
 operator|==
 literal|'\n'
+operator|||
+name|ch
+operator|==
+name|EOF
 condition|)
 break|break;
+operator|*
+name|c
+operator|=
+name|ch
+expr_stmt|;
+block|}
 operator|*
 name|c
 operator|=

@@ -146,6 +146,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|error_file
@@ -155,6 +156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|byebye_string
@@ -218,6 +220,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|const
 name|char
 modifier|*
 name|pn
@@ -722,6 +725,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|estr
@@ -1363,6 +1367,7 @@ name|i
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|t
@@ -1482,7 +1487,12 @@ name|char
 modifier|*
 modifier|*
 name|str
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
 modifier|*
 name|dflt
 decl_stmt|;

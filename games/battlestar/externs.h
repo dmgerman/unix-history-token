@@ -1233,6 +1233,7 @@ begin_struct
 struct|struct
 name|room
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1275,6 +1276,7 @@ define|#
 directive|define
 name|flyhere
 value|link[7]
+specifier|const
 name|char
 modifier|*
 name|desc
@@ -1320,8 +1322,10 @@ comment|/* object characteristics */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|objdes
 index|[
 name|NUMOFOBJECTS
@@ -1330,8 +1334,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|objsht
 index|[
 name|NUMOFOBJECTS
@@ -1340,8 +1346,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|ouch
 index|[
 name|NUMOFINJURIES
@@ -1350,6 +1358,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|int
 name|objwt
 index|[
@@ -1359,6 +1368,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|int
 name|objcumber
 index|[
@@ -1421,6 +1431,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|truedirec
@@ -1658,6 +1669,7 @@ begin_struct
 struct|struct
 name|wlist
 block|{
+specifier|const
 name|char
 modifier|*
 name|string
@@ -1733,6 +1745,7 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|objs
 name|dayobjs
@@ -1742,6 +1755,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|objs
 name|nightobjs

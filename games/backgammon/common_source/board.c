@@ -73,6 +73,7 @@ name|int
 name|l
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 name|bl
 index|[]
@@ -80,6 +81,7 @@ init|=
 literal|"|                       |   |                       |\n"
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 name|sv
 index|[]

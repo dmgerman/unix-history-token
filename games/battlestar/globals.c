@@ -51,8 +51,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|objdes
 index|[
 name|NUMOFOBJECTS
@@ -193,8 +195,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|objsht
 index|[
 name|NUMOFOBJECTS
@@ -333,8 +337,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|ouch
 index|[
 name|NUMOFINJURIES
@@ -371,6 +377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|int
 name|objwt
 index|[
@@ -510,6 +517,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|int
 name|objcumber
 index|[

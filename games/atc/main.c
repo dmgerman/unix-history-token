@@ -82,6 +82,9 @@ name|ac
 parameter_list|,
 name|av
 parameter_list|)
+name|int
+name|ac
+decl_stmt|;
 name|char
 modifier|*
 name|av
@@ -111,6 +114,7 @@ name|f_printpath
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|file
@@ -134,6 +138,7 @@ decl_stmt|;
 endif|#
 directive|endif
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|default_game
@@ -825,6 +830,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|s
@@ -905,6 +911,7 @@ block|}
 end_block
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|default_game
@@ -1045,6 +1052,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|okay_game
@@ -1067,12 +1075,14 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ret
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+name|char
 name|line
 index|[
 literal|256

@@ -1059,6 +1059,7 @@ operator|=
 name|wordnumber
 expr_stmt|;
 block|}
+comment|/* Setting wordnumber to last1 - 1 looks wrong if last1 is 0, e.g., 	 * plain `give'.  However, detecting this case is liable to detect 	 * `give foo' as well, which would give a confusing error.  We 	 * need to make sure the -1 value can cause no problems if it arises. 	 * If in the below we get to the drop("Given") then drop will look 	 * at word 0 for an object to give, and fail, which is OK; then 	 * result will be -1 and we get to the end, where wordnumber gets 	 * set to something more sensible.  If we get to "I don't think 	 * that is possible" then again wordnumber is set to something 	 * sensible.  The wordnumber we leave with still isn't right if 	 * you include words the game doesn't know in your command, but 	 * that's no worse than what other commands than give do in 	 * the same place.  */
 name|wordnumber
 operator|=
 name|last1
@@ -1121,6 +1122,17 @@ name|puts
 argument_list|(
 literal|"I don't think that is possible."
 argument_list|)
+expr_stmt|;
+name|wordnumber
+operator|=
+name|max
+argument_list|(
+name|last1
+argument_list|,
+name|last2
+argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -1455,6 +1467,8 @@ name|last1
 argument_list|,
 name|last2
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 return|return
 operator|(

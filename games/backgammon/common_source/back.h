@@ -46,6 +46,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 name|EXEC
 index|[]
@@ -58,6 +59,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 name|TEACH
 index|[]
@@ -69,6 +71,7 @@ comment|/* object for tutorial program */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|pnum
 decl_stmt|;
@@ -79,6 +82,7 @@ comment|/* color of player: 					-1 = white 					 1 = red 					 0 = both 					 2
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|args
@@ -93,6 +97,7 @@ comment|/* args passed to teachgammon and back */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|acnt
 decl_stmt|;
@@ -103,6 +108,7 @@ comment|/* number of args */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|aflag
 decl_stmt|;
@@ -113,6 +119,7 @@ comment|/* flag to ask for rules or instructions */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|bflag
 decl_stmt|;
@@ -123,6 +130,7 @@ comment|/* flag for automatic board printing */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|cflag
 decl_stmt|;
@@ -133,6 +141,7 @@ comment|/* case conversion flag */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|hflag
 decl_stmt|;
@@ -143,6 +152,7 @@ comment|/* flag for cleaning screen */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|mflag
 decl_stmt|;
@@ -153,6 +163,7 @@ comment|/* backgammon flag */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|raflag
 decl_stmt|;
@@ -163,6 +174,7 @@ comment|/* 'roll again' flag for recovered game */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|rflag
 decl_stmt|;
@@ -173,6 +185,7 @@ comment|/* recovered game flag */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|tflag
 decl_stmt|;
@@ -183,6 +196,7 @@ comment|/* cursor addressing flag */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|rfl
 decl_stmt|;
@@ -193,6 +207,7 @@ comment|/* saved value of rflag */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|iroll
 decl_stmt|;
@@ -203,6 +218,7 @@ comment|/* special flag for inputting rolls */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|board
 index|[
@@ -216,6 +232,7 @@ comment|/* board:  negative values are white, 				   positive are red */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|dice
 index|[
@@ -229,6 +246,7 @@ comment|/* value of dice */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|mvlim
 decl_stmt|;
@@ -239,6 +257,7 @@ comment|/* 'move limit':  max. number of moves */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|mvl
 decl_stmt|;
@@ -249,6 +268,7 @@ comment|/* working copy of mvlim */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|p
 index|[
@@ -262,6 +282,7 @@ comment|/* starting position of moves */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|g
 index|[
@@ -275,6 +296,7 @@ comment|/* ending position of moves (goals) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|h
 index|[
@@ -288,6 +310,7 @@ comment|/* flag for each move if a man was hit */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|cturn
 decl_stmt|;
@@ -298,6 +321,7 @@ comment|/* whose turn it currently is: 					-1 = white 					 1 = red 					 0 = j
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|d0
 decl_stmt|;
@@ -308,6 +332,7 @@ comment|/* flag if dice have been reversed from 				   original position */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|table
 index|[
@@ -324,6 +349,7 @@ comment|/* odds table for possible rolls */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|rscore
 decl_stmt|;
@@ -334,6 +360,7 @@ comment|/* red's score */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|wscore
 decl_stmt|;
@@ -344,6 +371,7 @@ comment|/* white's score */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|gvalue
 decl_stmt|;
@@ -354,6 +382,7 @@ comment|/* value of game (64 max.) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|dlast
 decl_stmt|;
@@ -364,6 +393,7 @@ comment|/* who doubled last (0 = neither) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|bar
 decl_stmt|;
@@ -374,6 +404,7 @@ comment|/* position of bar for current player */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|home
 decl_stmt|;
@@ -384,6 +415,7 @@ comment|/* position of home for current player */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|off
 index|[
@@ -397,6 +429,7 @@ comment|/* number of men off board */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 modifier|*
 name|offptr
@@ -408,6 +441,7 @@ comment|/* pointer to off for current player */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 modifier|*
 name|offopp
@@ -419,6 +453,7 @@ comment|/* pointer to off for opponent */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|in
 index|[
@@ -432,6 +467,7 @@ comment|/* number of men in inner table */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 modifier|*
 name|inptr
@@ -443,6 +479,7 @@ comment|/* pointer to in for current player */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 modifier|*
 name|inopp
@@ -454,6 +491,7 @@ comment|/* pointer to in for opponent */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|ncin
 decl_stmt|;
@@ -464,6 +502,7 @@ comment|/* number of characters in cin */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 name|cin
 index|[
@@ -478,8 +517,10 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|color
 index|[]
 decl_stmt|;
@@ -490,8 +531,11 @@ comment|/* colors as strings */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|colorptr
 decl_stmt|;
@@ -502,8 +546,11 @@ comment|/* color of current player */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|Colorptr
 decl_stmt|;
@@ -514,6 +561,7 @@ comment|/* color of current player, capitalized */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|colen
 decl_stmt|;
@@ -524,6 +572,7 @@ comment|/* length of color of current player */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|sgttyb
 name|tty
@@ -535,6 +584,7 @@ comment|/* tty information buffer */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|old
 decl_stmt|;
@@ -545,6 +595,7 @@ comment|/* original tty status */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|noech
 decl_stmt|;
@@ -555,6 +606,7 @@ comment|/* original tty status without echo */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|raw
 decl_stmt|;
@@ -565,6 +617,7 @@ comment|/* raw tty status, no echo */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|curr
 decl_stmt|;
@@ -575,6 +628,7 @@ comment|/* row position of cursor */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|curc
 decl_stmt|;
@@ -585,6 +639,7 @@ comment|/* column position of cursor */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|begscr
 decl_stmt|;
@@ -595,7 +650,7 @@ comment|/* 'beginning' of screen 				   (not including board) */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|getout
 parameter_list|()
 function_decl|;

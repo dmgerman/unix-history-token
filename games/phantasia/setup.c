@@ -36,6 +36,13 @@ begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: main() / / FUNCTION: setup files for Phantasia 3.3.2 / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: time(), exit(), stat(), Error(), creat(), close(), fopen(), /	fgets(), floor(), srandom(), umask(), drandom(), strcpy(), getuid(), /	unlink(), fwrite(), fclose(), sscanf(), printf(), strlen(), fprintf() / / GLOBAL INPUTS: Curmonster, _iob[], Databuf[], *Monstfp, Enrgyvoid / / GLOBAL OUTPUTS: Curmonster, Databuf[], *Monstfp, Enrgyvoid / / DESCRIPTION: / /	This program tries to verify the parameters specified in /	the Makefile. / /	Create all necessary files.  Note that nothing needs to be /	put in these files. /	Also, the monster binary data base is created here. / *************************************************************************/
 end_comment
 
+begin_function_decl
+name|void
+name|Error
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -699,24 +706,22 @@ begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: Error() / / FUNCTION: print an error message, and exit / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *str - format string for printf() /	char *file - file which caused error / / RETURN VALUE: none / / MODULES CALLED: exit(), perror(), fprintf() / / GLOBAL INPUTS: _iob[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Print an error message, then exit. / *************************************************************************/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|Error
-argument_list|(
-argument|str
-argument_list|,
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|,
+name|file
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|,
-modifier|*
+decl|*
 name|file
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{

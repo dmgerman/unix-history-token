@@ -1782,7 +1782,8 @@ end_comment
 begin_block
 block|{
 name|delhit
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 comment|/* main checks, treats as QUIT  */
 name|signal
@@ -1806,9 +1807,7 @@ block|{
 name|demo
 operator|=
 name|Start
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|srandomdev
 argument_list|()

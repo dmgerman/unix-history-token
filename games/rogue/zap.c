@@ -1274,7 +1274,9 @@ name|buf
 index|[
 name|DCOLS
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|s
 decl_stmt|;

@@ -35,8 +35,10 @@ file|"back.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|help2
 index|[]
 init|=
@@ -70,6 +72,8 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|state
 name|atmata

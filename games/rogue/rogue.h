@@ -1027,6 +1027,7 @@ name|long
 name|m_flags
 decl_stmt|;
 comment|/* monster flags */
+specifier|const
 name|char
 modifier|*
 name|damage
@@ -2117,6 +2118,7 @@ comment|/* external routine declarations.  */
 end_comment
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|mon_name
@@ -2125,6 +2127,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|get_ench_color
@@ -2133,6 +2136,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|name_of
@@ -2141,6 +2145,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|md_gln

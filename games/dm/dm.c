@@ -250,6 +250,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|unsetenv
+argument_list|(
+literal|"TZ"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)

@@ -56,6 +56,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_macro
 name|getin
 argument_list|(
@@ -241,6 +247,19 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+case|case
+name|EOF
+case|:
+name|printf
+argument_list|(
+literal|"user closed input stream, quitting...\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 default|default:
 if|if
 condition|(
@@ -281,65 +300,6 @@ block|}
 end_block
 
 begin_macro
-name|confirm
-argument_list|(
-argument|mesg
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* confirm irreversible action  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|mesg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|int
-name|result
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|mesg
-argument_list|)
-expr_stmt|;
-comment|/* tell him what he did         */
-if|if
-condition|(
-name|getchar
-argument_list|()
-operator|==
-literal|'y'
-condition|)
-comment|/* was his first letter a 'y'?  */
-name|result
-operator|=
-literal|1
-expr_stmt|;
-else|else
-name|result
-operator|=
-literal|0
-expr_stmt|;
-name|FLUSHLINE
-expr_stmt|;
-return|return
-operator|(
-name|result
-operator|)
-return|;
-block|}
-end_block
-
-begin_macro
 name|yes
 argument_list|(
 argument|x
@@ -370,8 +330,7 @@ specifier|register
 name|int
 name|result
 decl_stmt|;
-specifier|register
-name|char
+name|int
 name|ch
 decl_stmt|;
 for|for
@@ -412,6 +371,25 @@ name|result
 operator|=
 name|FALSE
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ch
+operator|==
+name|EOF
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"user closed input stream, quitting...\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|FLUSHLINE
 expr_stmt|;
 if|if
@@ -492,8 +470,7 @@ specifier|register
 name|int
 name|result
 decl_stmt|;
-specifier|register
-name|char
+name|int
 name|ch
 decl_stmt|;
 for|for
@@ -534,6 +511,25 @@ name|result
 operator|=
 name|FALSE
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ch
+operator|==
+name|EOF
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"user closed input stream, quitting...\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|FLUSHLINE
 expr_stmt|;
 if|if
@@ -611,6 +607,7 @@ comment|/* putting stuff to data file?  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 name|iotape
 index|[]
@@ -620,6 +617,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|tape
@@ -1285,14 +1283,11 @@ operator|>
 name|RTXSIZ
 condition|)
 block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Too many random msgs\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
+literal|1
+argument_list|,
+literal|"Too many random msgs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1361,14 +1356,11 @@ operator|>
 name|MAGSIZ
 condition|)
 block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Too many magic msgs\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
+literal|1
+argument_list|,
+literal|"Too many magic msgs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1394,14 +1386,11 @@ name|seekstart
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|errx
 argument_list|(
-literal|"rdesc called with bad section\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
+literal|1
+argument_list|,
+literal|"rdesc called with bad section"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1588,6 +1577,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*      printf("New travel list for %d\n",locc);        */
+if|if
+condition|(
+name|t
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory!"
+argument_list|)
+expr_stmt|;
 name|entries
 operator|=
 literal|0
@@ -1634,12 +1636,10 @@ literal|0
 expr_stmt|;
 name|len
 operator|=
-name|length
+name|strlen
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 expr_stmt|;
 comment|/* quad long number handling    */
 comment|/*      printf("Newloc: %s (%d chars)\n",buf,len);              */
@@ -1709,6 +1709,7 @@ condition|(
 name|entries
 operator|++
 condition|)
+block|{
 name|t
 operator|=
 name|t
@@ -1729,6 +1730,20 @@ name|travlist
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|t
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Out of memory!"
+argument_list|)
+expr_stmt|;
+block|}
 name|t
 operator|->
 name|tverb
@@ -2347,6 +2362,7 @@ comment|/* read, decrypt, and print a message (not ptext)      */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|text
 modifier|*
@@ -2606,9 +2622,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|bug
+name|errx
 argument_list|(
-literal|108
+literal|1
+argument_list|,
+literal|"Out of memory!"
 argument_list|)
 expr_stmt|;
 name|memcpy

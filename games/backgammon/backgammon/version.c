@@ -29,8 +29,10 @@ comment|/* not lint */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|message
 index|[]
 init|=

@@ -194,7 +194,7 @@ end_comment
 begin_block
 block|{
 comment|/* at dusk, and subtracted at dawn.		*/
-specifier|register
+specifier|const
 name|struct
 name|objs
 modifier|*

@@ -68,19 +68,17 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|int
 name|hash
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
-specifier|register
+parameter_list|)
+specifier|const
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|hashval
@@ -112,7 +110,7 @@ return|return
 name|hashval
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|struct
@@ -122,6 +120,7 @@ name|lookup
 parameter_list|(
 name|s
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s

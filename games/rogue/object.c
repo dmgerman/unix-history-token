@@ -1316,6 +1316,14 @@ name|obj
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|row
+decl_stmt|,
+name|col
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|obj
@@ -1471,6 +1479,9 @@ name|get_letter_object
 parameter_list|(
 name|ch
 parameter_list|)
+name|int
+name|ch
+decl_stmt|;
 block|{
 name|object
 modifier|*
@@ -1565,17 +1576,20 @@ block|}
 end_block
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|name_of
 parameter_list|(
 name|obj
 parameter_list|)
+specifier|const
 name|object
 modifier|*
 name|obj
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|retstring
@@ -3120,6 +3134,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|obj

@@ -1459,8 +1459,8 @@ begin_block
 block|{
 specifier|static
 name|char
-modifier|*
 name|pos
+index|[]
 init|=
 literal|"\010\007\001\003\004\005\002\006\0"
 decl_stmt|;

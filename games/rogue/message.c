@@ -105,6 +105,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|more
@@ -152,6 +153,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -438,12 +440,10 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|prompt
-decl_stmt|,
-modifier|*
-name|buf
 decl_stmt|,
 modifier|*
 name|insert
@@ -451,6 +451,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|if_cancelled
@@ -1390,6 +1398,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1664,6 +1673,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|str

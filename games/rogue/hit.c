@@ -112,6 +112,7 @@ name|damage
 decl_stmt|,
 name|hit_chance
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|mn
@@ -700,6 +701,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|ds
@@ -853,6 +855,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|obj
@@ -965,17 +968,20 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|get_number
 argument_list|(
-name|s
+argument|s
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
+specifier|const
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1045,6 +1051,7 @@ name|lget_number
 parameter_list|(
 name|s
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1118,6 +1125,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|obj
@@ -1298,6 +1306,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|const
 name|char
 modifier|*
 name|mn
@@ -2092,6 +2101,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|weapon
@@ -2154,6 +2164,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|weapon

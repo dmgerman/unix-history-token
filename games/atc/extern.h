@@ -12,7 +12,13 @@ specifier|extern
 name|char
 name|GAMES
 index|[]
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
 modifier|*
 name|file
 decl_stmt|;

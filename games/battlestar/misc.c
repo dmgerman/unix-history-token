@@ -34,30 +34,25 @@ directive|include
 file|"externs.h"
 end_include
 
-begin_expr_stmt
+begin_function
+name|int
 name|card
-argument_list|(
+parameter_list|(
 name|array
-argument_list|,
+parameter_list|,
 name|size
-argument_list|)
+parameter_list|)
 comment|/* for beenthere, injuries */
-specifier|register
+specifier|const
 name|char
-operator|*
+modifier|*
 name|array
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|end
@@ -93,21 +88,20 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|ucard
-argument_list|(
+parameter_list|(
 name|array
-argument_list|)
-specifier|register
+parameter_list|)
+specifier|const
 name|unsigned
-operator|*
+name|int
+modifier|*
 name|array
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -148,7 +142,7 @@ name|j
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

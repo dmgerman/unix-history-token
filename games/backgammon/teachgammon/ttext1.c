@@ -35,6 +35,7 @@ file|"back.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|opts
@@ -44,6 +45,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|prompt
@@ -53,8 +55,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|list
 index|[]
 init|=
@@ -89,8 +93,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|hello
 index|[]
 init|=
@@ -129,8 +135,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|intro1
 index|[]
 init|=
@@ -157,8 +165,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|intro2
 index|[]
 init|=
@@ -194,8 +204,10 @@ begin_escape
 end_escape
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|moves
 index|[]
 init|=
@@ -262,8 +274,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|remove
 index|[]
 init|=
@@ -319,8 +333,10 @@ begin_escape
 end_escape
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|hits
 index|[]
 init|=
@@ -362,8 +378,10 @@ begin_escape
 end_escape
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|endgame
 index|[]
 init|=

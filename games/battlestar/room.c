@@ -44,7 +44,7 @@ block|{
 name|int
 name|compass
 decl_stmt|;
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
@@ -344,6 +344,7 @@ block|}
 end_block
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|truedirec

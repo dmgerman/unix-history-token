@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"back.h"
 end_include
 
@@ -107,8 +113,10 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|instr
 index|[]
 decl_stmt|;
@@ -120,8 +128,10 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|message
 index|[]
 decl_stmt|;
@@ -142,6 +152,7 @@ comment|/* tty output speed */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|helpm
@@ -161,6 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|contin
@@ -179,46 +191,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-name|user1a
-index|[]
-init|=
-literal|"Sorry, you cannot play backgammon when there are more than "
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|user1b
-index|[]
-init|=
-literal|" users\non the system."
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|user2a
-index|[]
-init|=
-literal|"\nThere are now more than "
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|user2b
-index|[]
-init|=
-literal|" users on the system, so you cannot play\nanother game.  "
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
+specifier|const
 name|char
 name|rules
 index|[]
@@ -229,6 +202,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|noteach
 index|[]
@@ -239,6 +213,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|need
 index|[]
@@ -249,6 +224,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|askcol
 index|[]
@@ -259,6 +235,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rollr
 index|[]
@@ -269,6 +246,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rollw
 index|[]
@@ -279,6 +257,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rstart
 index|[]
@@ -289,6 +268,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|wstart
 index|[]
@@ -299,6 +279,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|toobad1
 index|[]
@@ -309,6 +290,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|unable
 index|[]
@@ -319,6 +301,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|toobad2
 index|[]
@@ -329,6 +312,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|cantmv
 index|[]
@@ -339,6 +323,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|bgammon
 index|[]
@@ -349,6 +334,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|gammon
 index|[]
@@ -359,6 +345,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|again
 index|[]
@@ -369,6 +356,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|svpromt
 index|[]
@@ -379,6 +367,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|password
 index|[]
@@ -448,7 +437,7 @@ expr_stmt|;
 comment|/* Nuber of args */
 name|signal
 argument_list|(
-literal|2
+name|SIGINT
 argument_list|,
 name|getout
 argument_list|)
@@ -525,39 +514,6 @@ operator|.
 name|sg_ospeed
 expr_stmt|;
 comment|/* for termlib */
-comment|/* check user count */
-ifdef|#
-directive|ifdef
-name|CORY
-if|if
-condition|(
-name|ucount
-argument_list|()
-operator|>
-name|MAXUSERS
-condition|)
-block|{
-name|writel
-argument_list|(
-name|user1a
-argument_list|)
-expr_stmt|;
-name|wrint
-argument_list|(
-name|MAXUSERS
-argument_list|)
-expr_stmt|;
-name|writel
-argument_list|(
-name|user1b
-argument_list|)
-expr_stmt|;
-name|getout
-argument_list|()
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* get terminal 							 * capabilities, and 					   		 * decide if it can 							 * cursor address */
 name|tflag
 operator|=
@@ -885,7 +841,7 @@ argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
-literal|14
+name|SIGALRM
 argument_list|,
 name|getout
 argument_list|)
@@ -2003,41 +1959,6 @@ comment|/* write score */
 name|wrscore
 argument_list|()
 expr_stmt|;
-comment|/* check user count */
-ifdef|#
-directive|ifdef
-name|CORY
-if|if
-condition|(
-name|ucount
-argument_list|()
-operator|>
-name|MAXUSERS
-condition|)
-block|{
-name|writel
-argument_list|(
-name|user2a
-argument_list|)
-expr_stmt|;
-name|wrint
-argument_list|(
-name|MAXUSERS
-argument_list|)
-expr_stmt|;
-name|writel
-argument_list|(
-name|user2b
-argument_list|)
-expr_stmt|;
-name|rfl
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-block|}
-endif|#
-directive|endif
 comment|/* see if he wants 							 * another game */
 name|writel
 argument_list|(

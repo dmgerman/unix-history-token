@@ -528,24 +528,16 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|die
-argument_list|(
-argument|entry
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|entry
+parameter_list|)
 comment|/* label 90             */
-end_comment
-
-begin_decl_stmt
 name|int
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -705,13 +697,8 @@ name|oldloc
 operator|=
 name|loc
 expr_stmt|;
-return|return
-operator|(
-literal|2000
-operator|)
-return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -43,8 +43,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text0
 index|[]
 init|=
@@ -63,8 +65,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text1
 index|[]
 init|=
@@ -83,8 +87,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text2
 index|[]
 init|=
@@ -113,8 +119,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text3
 index|[]
 init|=
@@ -135,8 +143,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text4
 index|[]
 init|=
@@ -151,8 +161,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text5
 index|[]
 init|=
@@ -171,8 +183,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text6
 index|[]
 init|=
@@ -191,8 +205,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text7
 index|[]
 init|=
@@ -211,8 +227,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text8
 index|[]
 init|=
@@ -229,8 +247,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text9
 index|[]
 init|=
@@ -245,8 +265,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text10
 index|[]
 init|=
@@ -263,8 +285,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text11
 index|[]
 init|=
@@ -283,8 +307,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text12
 index|[]
 init|=
@@ -299,8 +325,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text13
 index|[]
 init|=
@@ -317,8 +345,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text14
 index|[]
 init|=
@@ -339,8 +369,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text15
 index|[]
 init|=
@@ -355,8 +387,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text16
 index|[]
 init|=
@@ -373,8 +407,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text17
 index|[]
 init|=
@@ -387,8 +423,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text18
 index|[]
 init|=
@@ -407,8 +445,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text19
 index|[]
 init|=
@@ -421,8 +461,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text20
 index|[]
 init|=
@@ -437,8 +479,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text21
 index|[]
 init|=
@@ -453,8 +497,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text22
 index|[]
 init|=
@@ -469,8 +515,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|text23
 index|[]
 init|=
@@ -491,6 +539,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|situatn
 name|test

@@ -331,7 +331,6 @@ argument_list|,
 name|n
 argument_list|)
 operator|&&
-operator|*
 name|objsht
 index|[
 name|n
@@ -411,7 +410,6 @@ argument_list|,
 name|n
 argument_list|)
 operator|&&
-operator|*
 name|objsht
 index|[
 name|n
@@ -588,7 +586,6 @@ argument_list|,
 name|n
 argument_list|)
 operator|&&
-operator|*
 name|objsht
 index|[
 name|n
@@ -822,7 +819,6 @@ argument_list|,
 name|n
 argument_list|)
 operator|&&
-operator|*
 name|objsht
 index|[
 name|n

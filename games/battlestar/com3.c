@@ -816,6 +816,10 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+name|firstnumber
+operator|=
+name|wordnumber
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -833,10 +837,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|firstnumber
-operator|=
-name|wordnumber
-expr_stmt|;
 while|while
 condition|(
 name|wordtype

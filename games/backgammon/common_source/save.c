@@ -31,18 +31,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"back.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|confirm
 index|[]
@@ -53,6 +59,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|prompt
 index|[]
@@ -63,6 +70,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|exist1
 index|[]
@@ -73,6 +81,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|exist2
 index|[]
@@ -83,6 +92,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|cantuse
 index|[]
@@ -93,6 +103,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|saved
 index|[]
@@ -103,6 +114,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|type
 index|[]
@@ -113,6 +125,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rec
 index|[]
@@ -123,6 +136,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|cantrec
 index|[]
@@ -304,7 +318,7 @@ name|open
 argument_list|(
 name|fname
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 operator|)
 operator|==
@@ -313,7 +327,7 @@ literal|1
 operator|&&
 name|errno
 operator|==
-literal|2
+name|ENOENT
 condition|)
 block|{
 if|if
@@ -325,7 +339,7 @@ name|creat
 argument_list|(
 name|fname
 argument_list|,
-literal|0700
+literal|0600
 argument_list|)
 operator|)
 operator|!=
@@ -620,21 +634,17 @@ end_block
 begin_escape
 end_escape
 
-begin_macro
+begin_function
+name|int
 name|recover
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -652,7 +662,7 @@ name|open
 argument_list|(
 name|s
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|==
@@ -791,23 +801,21 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|norec
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
-specifier|register
+parameter_list|)
+specifier|const
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|c
@@ -843,7 +851,7 @@ name|getout
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -49,8 +49,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|finis
 index|[]
 decl_stmt|;
@@ -58,6 +60,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|situatn
 name|test
@@ -67,6 +70,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|better
 index|[]
@@ -75,12 +79,10 @@ literal|"That is a legal move, but there is a better one.\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|tutor
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -528,7 +530,7 @@ name|leave
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|clrest
@@ -590,26 +592,27 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
-name|brdeq
-argument_list|(
-name|b1
-argument_list|,
-name|b2
-argument_list|)
-specifier|register
+begin_function
 name|int
-operator|*
+name|brdeq
+parameter_list|(
 name|b1
-operator|,
-operator|*
+parameter_list|,
 name|b2
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+specifier|const
+name|int
+modifier|*
+name|b1
+decl_stmt|,
+decl|*
+name|b2
+decl_stmt|;
+end_function
 
 begin_block
 block|{
-specifier|register
+specifier|const
 name|int
 modifier|*
 name|e

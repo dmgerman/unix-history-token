@@ -35,6 +35,7 @@ file|"externs.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|objs
 name|nightobjs

@@ -31,6 +31,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"trek.h"
 end_include
 
@@ -326,7 +332,7 @@ name|open
 argument_list|(
 literal|"trek.dump"
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<

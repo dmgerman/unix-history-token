@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -6877,7 +6883,7 @@ expr|struct
 name|betinfo
 argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|write
@@ -7940,7 +7946,7 @@ expr|struct
 name|betinfo
 argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 if|if
@@ -8207,7 +8213,7 @@ expr|struct
 name|betinfo
 argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|write
@@ -8330,19 +8336,7 @@ end_comment
 
 begin_function
 name|main
-parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
-name|int
-name|argc
-decl_stmt|;
-name|char
-modifier|*
-name|argv
-index|[]
-decl_stmt|;
+parameter_list|()
 block|{
 name|dbfd
 operator|=
@@ -8350,7 +8344,7 @@ name|open
 argument_list|(
 name|_PATH_SCORE
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 comment|/* revoke */

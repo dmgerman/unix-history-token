@@ -35,8 +35,10 @@ file|"back.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|instr
 index|[]
 init|=
@@ -175,28 +177,25 @@ end_decl_stmt
 begin_escape
 end_escape
 
-begin_macro
+begin_function
+name|int
 name|text
-argument_list|(
-argument|t
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|t
+parameter_list|)
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|t
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|s
@@ -304,7 +303,7 @@ name|raw
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

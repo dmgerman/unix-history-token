@@ -67,7 +67,7 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+specifier|const
 name|struct
 name|objs
 modifier|*
@@ -248,8 +248,10 @@ block|}
 end_block
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|list
 index|[]
 init|=
@@ -275,8 +277,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|badguys
 index|[]
 init|=
@@ -292,21 +296,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|wizard
-argument_list|(
-argument|uname
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|uname
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|uname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|flag
@@ -331,25 +331,24 @@ return|return
 name|flag
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|checkout
-argument_list|(
+parameter_list|(
 name|uname
-argument_list|)
-specifier|register
-name|char
-operator|*
-name|uname
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-specifier|register
+parameter_list|)
+specifier|const
 name|char
 modifier|*
+name|uname
+decl_stmt|;
+block|{
+specifier|const
+name|char
+modifier|*
+specifier|const
 modifier|*
 name|ptr
 decl_stmt|;
@@ -494,7 +493,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

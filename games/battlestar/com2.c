@@ -582,6 +582,13 @@ expr_stmt|;
 name|gtime
 operator|++
 expr_stmt|;
+name|notes
+index|[
+name|CANTSEE
+index|]
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0

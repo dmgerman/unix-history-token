@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"back.h"
 end_include
 
@@ -197,8 +203,10 @@ comment|/* tty output speed for termlib */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|helpm
 index|[]
 init|=
@@ -217,8 +225,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|contin
 index|[]
 init|=
@@ -263,7 +273,7 @@ literal|1
 expr_stmt|;
 name|signal
 argument_list|(
-literal|2
+name|SIGINT
 argument_list|,
 name|getout
 argument_list|)

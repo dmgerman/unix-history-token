@@ -108,6 +108,7 @@ begin_struct
 struct|struct
 name|option
 block|{
+specifier|const
 name|char
 modifier|*
 name|prompt
@@ -438,6 +439,14 @@ argument_list|,
 argument|col
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|row
+decl_stmt|,
+name|col
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3503,6 +3512,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -3650,6 +3660,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|UNIX
+specifier|const
 name|char
 modifier|*
 name|sh

@@ -141,10 +141,12 @@ decl_stmt|;
 name|int
 name|to_state
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|str
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 function_decl|(
@@ -254,6 +256,7 @@ value|NUMELS(st)
 end_define
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|setplane
@@ -1452,6 +1455,7 @@ name|i
 decl_stmt|,
 name|done
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2126,6 +2130,7 @@ block|}
 end_block
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|setplane
@@ -2186,6 +2191,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|turn
@@ -2215,6 +2221,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|circle
@@ -2250,6 +2257,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|left
@@ -2294,6 +2302,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|right
@@ -2338,6 +2347,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|Left
@@ -2378,6 +2388,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|Right
@@ -2418,6 +2429,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|delayb
@@ -2735,6 +2747,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|beacon
@@ -2755,6 +2768,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|ex_it
@@ -2775,6 +2789,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|airport
@@ -2795,6 +2810,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|climb
@@ -2815,6 +2831,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|descend
@@ -2835,6 +2852,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|setalt
@@ -2886,6 +2904,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|setrelalt
@@ -2987,6 +3006,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|benum
@@ -3172,6 +3192,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|to_dir
@@ -3197,6 +3218,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|rel_dir
@@ -3292,6 +3314,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|mark
@@ -3340,6 +3363,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|unmark
@@ -3388,6 +3412,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|ignore

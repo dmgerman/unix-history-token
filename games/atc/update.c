@@ -41,6 +41,13 @@ directive|include
 file|"include.h"
 end_include
 
+begin_function_decl
+name|char
+name|name
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_macro
 name|update
 argument_list|()
@@ -987,12 +994,14 @@ block|}
 end_block
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|command
 parameter_list|(
 name|pp
 parameter_list|)
+specifier|const
 name|PLANE
 modifier|*
 name|pp
@@ -1235,21 +1244,17 @@ begin_comment
 comment|/* char */
 end_comment
 
-begin_macro
+begin_function
+name|char
 name|name
-argument_list|(
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|)
+specifier|const
 name|PLANE
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1279,7 +1284,7 @@ name|plane_no
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|number
@@ -1936,6 +1941,9 @@ name|findplane
 parameter_list|(
 name|n
 parameter_list|)
+name|int
+name|n
+decl_stmt|;
 block|{
 name|PLANE
 modifier|*
@@ -2011,24 +2019,29 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|too_close
-argument_list|(
-argument|p1
-argument_list|,
-argument|p2
-argument_list|,
-argument|dist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|dist
+parameter_list|)
+specifier|const
 name|PLANE
 modifier|*
 name|p1
 decl_stmt|,
-modifier|*
+decl|*
 name|p2
+decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|int
+name|dist
 decl_stmt|;
 end_decl_stmt
 

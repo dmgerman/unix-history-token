@@ -287,6 +287,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|sfile
@@ -1020,6 +1021,7 @@ unit|}  restore
 operator|(
 name|fname
 operator|)
+specifier|const
 name|char
 operator|*
 name|fname
@@ -1763,6 +1765,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|pack
@@ -1795,6 +1798,7 @@ argument_list|(
 name|fp
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1822,6 +1826,7 @@ argument_list|(
 name|fp
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2274,6 +2279,7 @@ argument_list|(
 name|fp
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2298,6 +2304,7 @@ argument_list|(
 name|fp
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2703,6 +2710,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -2769,6 +2777,7 @@ name|saved_time
 parameter_list|,
 name|mod_time
 parameter_list|)
+specifier|const
 name|struct
 name|rogue_time
 modifier|*

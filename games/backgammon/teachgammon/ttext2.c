@@ -48,8 +48,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|doubl
 index|[]
 init|=
@@ -84,8 +86,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|stragy
 index|[]
 init|=
@@ -125,8 +129,10 @@ begin_escape
 end_escape
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|prog
 index|[]
 init|=
@@ -199,8 +205,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|lastch
 index|[]
 init|=
@@ -245,28 +253,28 @@ end_decl_stmt
 begin_escape
 end_escape
 
-begin_macro
+begin_function
+name|int
 name|text
-argument_list|(
-argument|txt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|txt
+parameter_list|)
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|txt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|begin
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|a
@@ -274,6 +282,7 @@ decl_stmt|;
 name|char
 name|b
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|c
@@ -539,7 +548,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

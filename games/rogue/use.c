@@ -111,6 +111,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|strange_feeling
@@ -2690,6 +2691,7 @@ block|}
 end_block
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|get_ench_color

@@ -48,6 +48,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|press_space
@@ -57,8 +58,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|wand_materials
 index|[
 name|WAND_MATERIALS
@@ -129,8 +132,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|gems
 index|[
 name|GEMS
@@ -169,8 +174,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|syllables
 index|[
 name|MAXSYLLABLES
@@ -274,6 +281,7 @@ block|{
 name|short
 name|com_char
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|com_desc
@@ -283,6 +291,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|id_com_s
 name|com_id_tab
@@ -515,6 +524,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|pack
@@ -1945,6 +1955,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|obj
@@ -1960,6 +1971,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|const
 name|char
 modifier|*
 name|item_name
@@ -3323,6 +3335,7 @@ name|get_id_table
 parameter_list|(
 name|obj
 parameter_list|)
+specifier|const
 name|object
 modifier|*
 name|obj
@@ -3485,6 +3498,7 @@ end_macro
 
 begin_block
 block|{
+specifier|const
 name|char
 modifier|*
 name|id

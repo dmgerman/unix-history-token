@@ -39,6 +39,7 @@ file|"rogue.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|curse_message
@@ -73,6 +74,12 @@ decl|*
 name|pack
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|int
+name|condense
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -243,6 +250,11 @@ name|col
 parameter_list|,
 name|status
 parameter_list|)
+name|int
+name|row
+decl_stmt|,
+name|col
+decl_stmt|;
 name|short
 modifier|*
 name|status
@@ -1239,6 +1251,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|prompt
@@ -2164,6 +2177,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|new_obj
@@ -2314,6 +2328,7 @@ name|pack
 parameter_list|,
 name|mask
 parameter_list|)
+specifier|const
 name|object
 modifier|*
 name|pack

@@ -3775,24 +3775,6 @@ comment|/* put CL in buffer */
 block|}
 end_block
 
-begin_macro
-name|tos
-argument_list|()
-end_macro
-
-begin_block
-block|{
-comment|/* home cursor */
-name|curmove
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_escape
 end_escape
 
@@ -4259,19 +4241,17 @@ end_block
 begin_escape
 end_escape
 
-begin_expr_stmt
+begin_function
+name|int
 name|getcaps
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
-specifier|register
+parameter_list|)
+specifier|const
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -4303,6 +4283,10 @@ name|tgetent
 argument_list|(
 name|tentry
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|s
 argument_list|)
 expr_stmt|;
@@ -4511,7 +4495,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hdr.h"
 end_include
 
@@ -218,9 +224,7 @@ end_block
 
 begin_macro
 name|liq
-argument_list|(
-argument|foo
-argument_list|)
+argument_list|()
 end_macro
 
 begin_block
@@ -431,9 +435,7 @@ end_block
 
 begin_macro
 name|dark
-argument_list|(
-argument|foo
-argument_list|)
+argument_list|()
 end_macro
 
 begin_block
@@ -2457,16 +2459,11 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|badmove
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 20                   */
-end_comment
-
-begin_block
 block|{
 name|spk
 operator|=
@@ -2575,28 +2572,18 @@ argument_list|(
 name|spk
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|2
-operator|)
-return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|bug
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|n
+parameter_list|)
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -2607,22 +2594,17 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|checkhints
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 2600&c              */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -2924,7 +2906,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_macro
 name|trsay
@@ -2948,11 +2930,11 @@ name|wd2
 operator|!=
 literal|0
 condition|)
-name|copystr
+name|strcpy
 argument_list|(
-name|wd2
-argument_list|,
 name|wd1
+argument_list|,
+name|wd2
 argument_list|)
 expr_stmt|;
 name|i
@@ -3130,9 +3112,7 @@ name|bottle
 argument_list|)
 operator|&&
 name|liq
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|==
 name|obj
 condition|)
@@ -3329,9 +3309,7 @@ expr_stmt|;
 name|k
 operator|=
 name|liq
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3373,9 +3351,7 @@ block|{
 name|k
 operator|=
 name|liq
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4655,20 +4631,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|weq
+name|strncmp
 argument_list|(
 name|wd1
 argument_list|,
 literal|"y"
+argument_list|,
+literal|1
 argument_list|)
 operator|&&
-operator|!
-name|weq
+name|strncmp
 argument_list|(
 name|wd1
 argument_list|,
 literal|"yes"
+argument_list|,
+literal|3
 argument_list|)
 condition|)
 return|return
@@ -5546,9 +5524,7 @@ expr_stmt|;
 if|if
 condition|(
 name|liq
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|!=
 literal|0
 condition|)
@@ -5590,9 +5566,7 @@ expr_stmt|;
 name|k
 operator|=
 name|liq
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -5627,16 +5601,11 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|closing
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 10000 */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -5782,24 +5751,14 @@ name|closng
 operator|=
 name|TRUE
 expr_stmt|;
-return|return
-operator|(
-literal|19999
-operator|)
-return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|caveclose
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* 11000 */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -6035,13 +5994,8 @@ name|closed
 operator|=
 name|TRUE
 expr_stmt|;
-return|return
-operator|(
-literal|2
-operator|)
-return|;
 block|}
-end_block
+end_function
 
 end_unit
 

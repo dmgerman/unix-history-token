@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hdr.h"
 end_include
 
@@ -97,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"Usage: setup file> data.c (file is typically glorkz)\n"
+value|"Usage: setup file> data.c (file is typically glorkz)"
 end_define
 
 begin_define
@@ -113,13 +119,6 @@ directive|define
 name|NO
 value|0
 end_define
-
-begin_function_decl
-name|void
-name|fatal
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -165,8 +164,10 @@ name|argc
 operator|!=
 literal|2
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 name|USAGE
 argument_list|)
 expr_stmt|;
@@ -188,9 +189,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|err
 argument_list|(
-literal|"Can't read file %s.\n"
+literal|1
+argument_list|,
+literal|"Can't read file %s"
 argument_list|,
 name|argv
 index|[
@@ -378,36 +381,6 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|fatal
-parameter_list|(
-name|format
-parameter_list|,
-name|arg
-parameter_list|)
-name|char
-modifier|*
-name|format
-decl_stmt|;
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|format
-argument_list|,
-name|arg
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -17,6 +17,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|datfd
@@ -28,7 +34,8 @@ comment|/* message file descriptor      */
 end_comment
 
 begin_decl_stmt
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|delhit
 decl_stmt|;
 end_decl_stmt
@@ -69,7 +76,7 @@ begin_define
 define|#
 directive|define
 name|FLUSHLINE
-value|while (getchar()!='\n')
+value|do { int flushline_ch; while ((flushline_ch = getchar()) != EOF&& flushline_ch != '\n'); } while (0)
 end_define
 
 begin_define

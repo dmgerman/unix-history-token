@@ -112,6 +112,12 @@ literal|1
 expr_stmt|;
 comment|/* flag for "first time in" */
 block|}
+else|else
+name|lastmove
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Shut up gcc */
 endif|#
 directive|endif
 for|for

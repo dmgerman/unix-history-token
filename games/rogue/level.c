@@ -73,6 +73,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|new_level_message
@@ -96,6 +97,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|long
 name|level_points
 index|[
@@ -3442,6 +3444,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|short
 modifier|*
 name|offsets

@@ -38,15 +38,14 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|u_long
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_decl_stmt
+specifier|const
 name|u_long
 name|crctab
 index|[]
@@ -578,7 +577,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_int
 name|step
 decl_stmt|;
 end_decl_stmt
@@ -608,6 +607,7 @@ parameter_list|,
 name|nr
 parameter_list|)
 comment|/* Process nr bytes at a time; ptr points to them */
+specifier|const
 name|char
 modifier|*
 name|ptr
@@ -621,6 +621,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|p

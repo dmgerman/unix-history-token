@@ -498,6 +498,7 @@ name|md_get_file_id
 parameter_list|(
 name|fname
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -548,6 +549,7 @@ name|md_link_count
 parameter_list|(
 name|fname
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -692,6 +694,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -805,6 +808,7 @@ name|md_df
 parameter_list|(
 name|fname
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -837,6 +841,7 @@ comment|/* md_gln: (Get login name)  *  * This routine returns the login name of
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|md_gln
@@ -936,6 +941,7 @@ name|md_getenv
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1005,10 +1011,21 @@ end_macro
 
 begin_block
 block|{
+name|time_t
+name|seconds
+decl_stmt|;
+name|time
+argument_list|(
+operator|&
+name|seconds
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|getpid
-argument_list|()
+operator|(
+name|int
+operator|)
+name|seconds
 operator|)
 return|;
 block|}
@@ -1160,6 +1177,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|shell

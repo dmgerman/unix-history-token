@@ -69,6 +69,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|plred
 index|[]
@@ -79,6 +80,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|plwhite
 index|[]
@@ -89,6 +91,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|nocomp
 index|[]
@@ -98,8 +101,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|descr
 index|[]
 init|=
@@ -158,43 +163,6 @@ expr_stmt|;
 name|getout
 argument_list|()
 expr_stmt|;
-block|}
-end_block
-
-begin_expr_stmt
-name|strset
-argument_list|(
-name|s1
-argument_list|,
-name|s2
-argument_list|)
-specifier|register
-name|char
-operator|*
-name|s1
-operator|,
-operator|*
-name|s2
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-while|while
-condition|(
-operator|(
-operator|*
-name|s1
-operator|++
-operator|=
-operator|*
-name|s2
-operator|++
-operator|)
-operator|!=
-literal|'\0'
-condition|)
-empty_stmt|;
 block|}
 end_block
 
@@ -451,24 +419,22 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|void
 name|writel
-argument_list|(
+parameter_list|(
 name|l
-argument_list|)
-specifier|register
+parameter_list|)
+specifier|const
 name|char
-operator|*
+modifier|*
 name|l
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|s
@@ -571,7 +537,7 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|proll
@@ -1295,7 +1261,7 @@ literal|"-n"
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* player is both read and white */
+comment|/* player is both red and white */
 case|case
 literal|'b'
 case|:
@@ -1790,12 +1756,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|getout
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* go to bottom of screen */
 if|if
@@ -1832,7 +1796,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|roll

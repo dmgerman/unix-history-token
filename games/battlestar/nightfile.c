@@ -658,7 +658,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|"This was the seen of a mass suicide. Hundreds of ambassadors and assorted\n\ dignitaries sit slumped over their breakfast cereal. I suppose the news\n\ of the cylon attack killed them. There is a strange chill in this room.  I\n\ would not linger here. * The kitchen is +. Entrances + and +.\n"
+literal|"This was the scene of a mass suicide. Hundreds of ambassadors and assorted\n\ dignitaries sit slumped over their breakfast cereal. I suppose the news\n\ of the cylon attack killed them. There is a strange chill in this room.  I\n\ would not linger here. * The kitchen is +. Entrances + and +.\n"
 block|}
 block|,
 block|{
@@ -2176,7 +2176,7 @@ literal|0
 block|,
 literal|1
 block|,
-literal|"What have you gotten us into?\n\ I cant see a thing! ****\n"
+literal|"What have you gotten us into?\n\ I can't see a thing! ****\n"
 block|}
 block|,
 block|{
@@ -2572,7 +2572,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|"The road is beginning to turn slightly -.  I can here the surf +.  The road\n\ continues into the dark forest +.*\n"
+literal|"The road is beginning to turn slightly -.  I can hear the surf +.  The road\n\ continues into the dark forest +.*\n"
 block|}
 block|,
 block|{

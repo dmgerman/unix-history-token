@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"externs.h"
 end_include
 
@@ -586,6 +592,9 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* We must check the last read, to catch truncated save files.  */
+if|if
+condition|(
 name|fread
 argument_list|(
 operator|&
@@ -596,6 +605,22 @@ name|ego
 argument_list|,
 literal|1
 argument_list|,
+name|fp
+argument_list|)
+operator|<
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"save file %s too short"
+argument_list|,
+name|home1
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;

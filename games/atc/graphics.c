@@ -499,6 +499,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|C_SCREEN
 modifier|*
 name|scp
@@ -518,7 +519,9 @@ name|str
 index|[
 literal|3
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|airstr
 decl_stmt|;
@@ -1214,6 +1217,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|x
+decl_stmt|,
+name|y
+decl_stmt|,
+name|lx
+decl_stmt|,
+name|ly
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1369,6 +1385,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1443,6 +1460,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1927,6 +1945,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|PLANE
 modifier|*
 name|p
@@ -1934,6 +1953,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|s

@@ -106,6 +106,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|monster
@@ -874,6 +875,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|monster
@@ -1706,6 +1708,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|n_name
@@ -1721,6 +1724,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|monster
@@ -2305,6 +2309,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|object
 modifier|*
 name|obj
@@ -2685,7 +2690,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|s1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
 modifier|*
 name|s2
 decl_stmt|;
@@ -2897,7 +2907,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|buf
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
 modifier|*
 name|score
 decl_stmt|,
@@ -3037,6 +3052,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|buf

@@ -273,9 +273,10 @@ goto|;
 default|default:
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Shouldn't happen */
 block|}
 block|}
 end_function

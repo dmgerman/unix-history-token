@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -166,7 +178,7 @@ name|open
 argument_list|(
 name|_PATH_SCORE
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -397,7 +409,7 @@ expr|struct
 name|betinfo
 argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 if|if

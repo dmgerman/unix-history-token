@@ -884,7 +884,7 @@ name|fp
 operator|->
 name|drift
 expr_stmt|;
-name|move
+name|sail_move
 argument_list|(
 name|movement
 argument_list|,
@@ -1021,7 +1021,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|move
+name|sail_move
 argument_list|(
 name|p
 argument_list|,
@@ -1329,6 +1329,10 @@ decl_stmt|,
 name|ta
 decl_stmt|,
 name|af
+decl_stmt|,
+name|vma
+decl_stmt|,
+name|dir
 decl_stmt|,
 modifier|*
 name|high

@@ -94,6 +94,7 @@ file|<stdlib.h>
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 name|keylist
 index|[]
@@ -103,6 +104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|defaultkeys
 index|[]
@@ -112,6 +114,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|keys
@@ -201,6 +204,13 @@ name|void
 name|intr
 parameter_list|()
 function_decl|;
+comment|/* Revoke setgid privileges */
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -229,6 +239,7 @@ literal|'o'
 case|:
 block|{
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|p

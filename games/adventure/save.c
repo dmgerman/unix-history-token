@@ -563,6 +563,7 @@ comment|/* Two passes on data: first to get checksum, second */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|outfile
@@ -767,6 +768,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|infile

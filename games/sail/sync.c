@@ -270,6 +270,12 @@ argument|game
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|game
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|char
