@@ -5415,7 +5415,7 @@ name|len
 operator|=
 operator|*
 operator|(
-name|unsigned
+name|size_t
 operator|*
 operator|)
 name|c
