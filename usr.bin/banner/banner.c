@@ -122,6 +122,7 @@ comment|/* Pointers into data_table for each ASCII char */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|int
 name|asc_ptr
 index|[
@@ -409,6 +410,7 @@ comment|/*  * Table of stuff to print. Format:  * 128+n -> print current line n 
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 name|data_table
 index|[
