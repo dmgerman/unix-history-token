@@ -614,7 +614,17 @@ block|}
 comment|/* 	 * Use NULL path to indicate we are mounting the root filesystem. 	 */
 if|if
 condition|(
-name|path
+operator|(
+name|mp
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ROOTFS
+operator|)
+operator|&&
+name|mp
+operator|->
+name|mnt_data
 operator|==
 name|NULL
 condition|)
