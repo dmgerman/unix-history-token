@@ -91,6 +91,7 @@ file|"ypxfr_extern.h"
 end_include
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|ypxfrerr_string

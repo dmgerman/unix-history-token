@@ -1756,7 +1756,6 @@ name|ypxfr_exit
 argument_list|(
 name|YPXFR_DBM
 argument_list|,
-operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
@@ -1820,7 +1819,6 @@ name|ypxfr_exit
 argument_list|(
 name|YPXFR_DBM
 argument_list|,
-operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
@@ -1884,7 +1882,6 @@ name|ypxfr_exit
 argument_list|(
 name|YPXFR_DBM
 argument_list|,
-operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
@@ -1965,7 +1962,6 @@ name|ypxfr_exit
 argument_list|(
 name|YPXFR_DBM
 argument_list|,
-operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
@@ -2048,7 +2044,6 @@ name|ypxfr_exit
 argument_list|(
 name|YPXFR_DBM
 argument_list|,
-operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
@@ -2114,7 +2109,6 @@ name|ypxfr_exit
 argument_list|(
 name|YPXFR_DBM
 argument_list|,
-operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
@@ -2181,7 +2175,6 @@ name|ypxfr_exit
 argument_list|(
 name|YPXFR_DBM
 argument_list|,
-operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
@@ -2211,7 +2204,6 @@ name|ypxfr_exit
 argument_list|(
 name|YPXFR_YPERR
 argument_list|,
-operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
@@ -2296,7 +2288,6 @@ name|ypxfr_exit
 argument_list|(
 name|YPXFR_YPERR
 argument_list|,
-operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
@@ -2311,7 +2302,6 @@ name|ypxfr_exit
 argument_list|(
 name|YPXFR_SKEW
 argument_list|,
-operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
@@ -2390,7 +2380,6 @@ name|ypxfr_exit
 argument_list|(
 name|YPXFR_CLEAR
 argument_list|,
-operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
