@@ -217,7 +217,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy module-related data into the load area, where it can be  * used as a directory for loaded modules.  *  * Module data is presented in a self-describing format.  Each datum  * is preceeded by a 32-bit identifier and a 32-bit size field.  *  * Currently, the following data are saved:  *  * MOD_NAME	(variable)		module name (string)  * MOD_TYPE	(variable)		module type (string)  * MOD_ARGS	(variable)		module parameters (string)  * MOD_ADDR	sizeof(vm_offset_t)	module load address  * MOD_SIZE	sizeof(size_t)		module size  * MOD_METADATA	(variable)		type-specific metadata  */
+comment|/*  * Copy module-related data into the load area, where it can be  * used as a directory for loaded modules.  *  * Module data is presented in a self-describing format.  Each datum  * is preceded by a 32-bit identifier and a 32-bit size field.  *  * Currently, the following data are saved:  *  * MOD_NAME	(variable)		module name (string)  * MOD_TYPE	(variable)		module type (string)  * MOD_ARGS	(variable)		module parameters (string)  * MOD_ADDR	sizeof(vm_offset_t)	module load address  * MOD_SIZE	sizeof(size_t)		module size  * MOD_METADATA	(variable)		type-specific metadata  */
 end_comment
 
 begin_define

@@ -3561,7 +3561,7 @@ operator|==
 name|LM_SLC
 condition|)
 block|{
-comment|/* SLC is not preceeded by WILL or WONT */
+comment|/* SLC is not preceded by WILL or WONT */
 comment|/* 		 * Process suboption buffer of slc's 		 */
 name|start_slc
 argument_list|(

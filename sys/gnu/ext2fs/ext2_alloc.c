@@ -651,7 +651,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reallocate a sequence of blocks into a contiguous sequence of blocks.  *  * The vnode and an array of buffer pointers for a range of sequential  * logical blocks to be made contiguous is given. The allocator attempts  * to find a range of sequential blocks starting as close as possible to  * an fs_rotdelay offset from the end of the allocation for the logical  * block immediately preceeding the current range. If successful, the  * physical block numbers in the buffer pointers and in the inode are  * changed to reflect the new allocation. If unsuccessful, the allocation  * is left unchanged. The success in doing the reallocation is returned.  * Note that the error return is not reflected back to the user. Rather  * the previous block allocation will be used.  */
+comment|/*  * Reallocate a sequence of blocks into a contiguous sequence of blocks.  *  * The vnode and an array of buffer pointers for a range of sequential  * logical blocks to be made contiguous is given. The allocator attempts  * to find a range of sequential blocks starting as close as possible to  * an fs_rotdelay offset from the end of the allocation for the logical  * block immediately preceding the current range. If successful, the  * physical block numbers in the buffer pointers and in the inode are  * changed to reflect the new allocation. If unsuccessful, the allocation  * is left unchanged. The success in doing the reallocation is returned.  * Note that the error return is not reflected back to the user. Rather  * the previous block allocation will be used.  */
 end_comment
 
 begin_ifdef

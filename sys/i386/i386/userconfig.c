@@ -7950,7 +7950,7 @@ break|break;
 case|case
 literal|'['
 case|:
-comment|/* cheat : always preceeds cursor move */
+comment|/* cheat : always precedes cursor move */
 case|case
 literal|'O'
 case|:
@@ -11206,7 +11206,7 @@ break|break;
 case|case
 literal|'['
 case|:
-comment|/* cheat : always preceeds cursor move */
+comment|/* cheat : always precedes cursor move */
 case|case
 literal|'O'
 case|:

@@ -5003,7 +5003,7 @@ argument_list|(
 name|cd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * since this implementation does NOT support overlap sending, 	 * we react here as if we received a CALL PROCEEDING because 	 * several PBX's react with a SETUP ACK even if the called 	 * number is complete AND we sent a SENDING COMPLETE in the 	 * preceeding SETUP message. (-hm) 	 */
+comment|/* 	 * since this implementation does NOT support overlap sending, 	 * we react here as if we received a CALL PROCEEDING because 	 * several PBX's react with a SETUP ACK even if the called 	 * number is complete AND we sent a SENDING COMPLETE in the 	 * preceding SETUP message. (-hm) 	 */
 name|T310_start
 argument_list|(
 name|cd
