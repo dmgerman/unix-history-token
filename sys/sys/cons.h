@@ -258,18 +258,22 @@ begin_comment
 comment|/* Not supported with debugger. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CN_FLAG_NOAVAIL
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Temporarily not available. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cons_unavail
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -331,6 +335,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cnavailable
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cnremove
 parameter_list|(
 name|struct
@@ -383,6 +400,15 @@ name|void
 name|cnputc
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cn_unavailable
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

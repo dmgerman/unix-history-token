@@ -2500,6 +2500,10 @@ name|pcvt_is_console
 operator|=
 literal|1
 expr_stmt|;
+name|pcvt_consptr
+operator|=
+name|cp
+expr_stmt|;
 comment|/* 	 * Don't reset the keyboard via `kbdio' just yet. 	 * The system clock has not been calibrated... 	 */
 name|reset_keyboard
 operator|=

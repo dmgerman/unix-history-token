@@ -4506,6 +4506,16 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|consdev
+modifier|*
+name|pcvt_consptr
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -5419,6 +5429,15 @@ specifier|extern
 name|keyboard_t
 modifier|*
 name|kbd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|consdev
+modifier|*
+name|pcvt_consptr
 decl_stmt|;
 end_decl_stmt
 
