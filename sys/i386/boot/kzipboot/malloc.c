@@ -54,6 +54,11 @@ if|if
 condition|(
 name|storage
 operator|>=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 literal|0xa0000
 condition|)
 block|{

@@ -377,5 +377,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|install_pkgs_indir
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
