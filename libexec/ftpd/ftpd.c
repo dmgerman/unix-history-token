@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.50 1998/05/25 03:45:35 steve Exp $"
+literal|"$Id: ftpd.c,v 1.51 1998/06/03 11:33:44 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4584,13 +4584,6 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
-specifier|static
-name|char
-name|homedir
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|logged_in
@@ -4977,6 +4970,8 @@ name|uid_t
 operator|)
 literal|0
 argument_list|,
+name|LOGIN_SETLOGIN
+operator||
 name|LOGIN_SETGROUP
 operator||
 name|LOGIN_SETPRIORITY
@@ -4988,6 +4983,13 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|setlogin
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5256,27 +5258,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * Set home directory so that use of ~ (tilde) works correctly. 	 */
-if|if
-condition|(
-name|getcwd
-argument_list|(
-name|homedir
-argument_list|,
-name|MAXPATHLEN
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-name|setenv
-argument_list|(
-literal|"HOME"
-argument_list|,
-name|homedir
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Display a login message, if it exists. 	 * N.B. reply(230,) must follow the message. 	 */
 ifdef|#
 directive|ifdef
