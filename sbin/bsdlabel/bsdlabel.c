@@ -245,27 +245,30 @@ name|BIG_NEWFS_CPG
 value|64U
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|tahoe
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|NUMBOOT
-value|0
+value|2
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__alpha__
@@ -273,14 +276,9 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|hp300
+name|__sparc64__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|hp800
-argument_list|)
-end_if
+end_elif
 
 begin_define
 define|#
@@ -294,17 +292,11 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|NUMBOOT
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_error
+error|#
+directive|error
+error|I do not know about this architecture.
+end_error
 
 begin_endif
 endif|#
@@ -3073,7 +3065,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Strange rules: 	 * 1. One-piece bootstrap (hp300/hp800) 	 *	up to d_bbsize bytes of ``xxboot'' go in bootarea, the rest 	 *	is remembered and written later following the bootarea. 	 * 2. Two-piece bootstraps (vax/i386?/mips?) 	 *	up to d_secsize bytes of ``xxboot'' go in first d_secsize 	 *	bytes of bootarea, remaining d_bbsize-d_secsize filled 	 *	from ``bootxx''. 	 */
+comment|/* 	 * Strange rules: 	 * 1. One-piece bootstrap (alpha/sparc64) 	 *	up to d_bbsize bytes of ``xxboot'' go in bootarea, the rest 	 *	is remembered and written later following the bootarea. 	 * 2. Two-piece bootstraps (vax/i386?/mips?) 	 *	up to d_secsize bytes of ``xxboot'' go in first d_secsize 	 *	bytes of bootarea, remaining d_bbsize-d_secsize filled 	 *	from ``bootxx''. 	 */
 name|b
 operator|=
 name|open
