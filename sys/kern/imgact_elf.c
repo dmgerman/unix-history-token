@@ -4336,22 +4336,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|psinfo
-operator|->
-name|pr_fname
-index|[
-sizeof|sizeof
-argument_list|(
-name|psinfo
-operator|->
-name|pr_fname
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 comment|/* XXX - We don't fill in the command line arguments properly yet. */
 name|strncpy
 argument_list|(
