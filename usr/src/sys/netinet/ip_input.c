@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -840,6 +840,24 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_v
+operator|!=
+name|IPVERSION
+condition|)
+block|{
+name|ipstat
+operator|.
+name|ips_badvers
+operator|++
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 name|hlen
 operator|=
 name|ip
@@ -934,19 +952,6 @@ operator|.
 name|ips_badsum
 operator|++
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_v
-operator|!=
-name|IPVERSION
-condition|)
-block|{
 goto|goto
 name|bad
 goto|;
@@ -1609,8 +1614,9 @@ name|ip
 operator|)
 operator|->
 name|ipf_mff
-operator|=
-literal|0
+operator|&=
+operator|~
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1630,7 +1636,7 @@ name|ip
 operator|)
 operator|->
 name|ipf_mff
-operator|=
+operator||=
 literal|1
 expr_stmt|;
 name|ip
@@ -1652,6 +1658,8 @@ name|ip
 operator|)
 operator|->
 name|ipf_mff
+operator|&
+literal|1
 operator|||
 name|ip
 operator|->
@@ -2235,6 +2243,8 @@ operator|->
 name|ipf_prev
 operator|->
 name|ipf_mff
+operator|&
+literal|1
 condition|)
 return|return
 operator|(
@@ -2325,6 +2335,13 @@ operator|->
 name|ip_len
 operator|=
 name|next
+expr_stmt|;
+name|ip
+operator|->
+name|ipf_mff
+operator|&=
+operator|~
+literal|1
 expr_stmt|;
 operator|(
 operator|(
