@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tran.c	4.1	82/05/07	*/
+comment|/*	tran.c	4.2	83/02/09	*/
 end_comment
 
 begin_include
@@ -371,7 +371,7 @@ name|setsymtab
 argument_list|(
 literal|"FILENAME"
 argument_list|,
-name|NULL
+name|EMPTY
 argument_list|,
 literal|0.0
 argument_list|,
@@ -390,7 +390,7 @@ name|setsymtab
 argument_list|(
 literal|"NF"
 argument_list|,
-name|NULL
+name|EMPTY
 argument_list|,
 literal|0.0
 argument_list|,
@@ -412,7 +412,7 @@ name|setsymtab
 argument_list|(
 literal|"NR"
 argument_list|,
-name|NULL
+name|EMPTY
 argument_list|,
 literal|0.0
 argument_list|,
@@ -593,14 +593,14 @@ operator|->
 name|nextval
 control|)
 block|{
-name|xfree
+name|strfree
 argument_list|(
 name|cp
 operator|->
 name|nval
 argument_list|)
 expr_stmt|;
-name|xfree
+name|strfree
 argument_list|(
 name|cp
 operator|->
@@ -703,11 +703,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|s
+operator|!=
+name|EMPTY
+condition|)
 name|xfree
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* careful here */
 name|dprintf
 argument_list|(
 literal|"setsymtab found %o: %s"
@@ -1184,7 +1191,7 @@ operator|&
 name|FLD
 operator|)
 condition|)
-name|xfree
+name|strfree
 argument_list|(
 name|vp
 operator|->
@@ -1419,7 +1426,7 @@ operator|&
 name|FLD
 operator|)
 condition|)
-name|xfree
+name|strfree
 argument_list|(
 name|vp
 operator|->
@@ -1604,6 +1611,43 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+block|{
+name|p
+operator|=
+name|malloc
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"out of space in tostring on %s"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+else|else
+block|{
 name|p
 operator|=
 name|malloc
@@ -1638,6 +1682,7 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|p

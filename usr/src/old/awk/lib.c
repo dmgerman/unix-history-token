@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lib.c	4.1	82/05/07	*/
+comment|/*	lib.c	4.2	83/02/09	*/
 end_comment
 
 begin_include
@@ -68,6 +68,15 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|EMPTY
+index|[]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -109,7 +118,7 @@ begin_define
 define|#
 directive|define
 name|FINIT
-value|{0, NULL, 0.0, FLD|STR}
+value|{EMPTY, EMPTY, 0.0, FLD|STR}
 end_define
 
 begin_decl_stmt
@@ -821,7 +830,7 @@ operator|&
 name|FLD
 operator|)
 condition|)
-name|xfree
+name|strfree
 argument_list|(
 name|fldtab
 index|[
@@ -937,7 +946,7 @@ operator|&
 name|FLD
 operator|)
 condition|)
-name|xfree
+name|strfree
 argument_list|(
 name|fldtab
 index|[
@@ -1045,7 +1054,7 @@ operator|&
 name|FLD
 operator|)
 condition|)
-name|xfree
+name|strfree
 argument_list|(
 name|fldtab
 index|[
@@ -1073,7 +1082,7 @@ index|]
 operator|.
 name|sval
 operator|=
-name|NULL
+name|EMPTY
 expr_stmt|;
 block|}
 name|maxfld
@@ -1577,6 +1586,17 @@ name|char
 modifier|*
 name|es
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|d1
 operator|=
 name|d2

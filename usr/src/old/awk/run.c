@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	run.c	4.1	82/05/07	*/
+comment|/*	run.c	4.2	83/02/09	*/
 end_comment
 
 begin_include
@@ -141,9 +141,9 @@ name|cell
 name|nullval
 init|=
 block|{
-literal|0
+name|EMPTY
 block|,
-literal|0
+name|EMPTY
 block|,
 literal|0.0
 block|,
@@ -708,7 +708,7 @@ name|ARR
 operator|)
 condition|)
 block|{
-name|xfree
+name|strfree
 argument_list|(
 name|x
 operator|->
@@ -1365,7 +1365,7 @@ name|a
 argument_list|)
 condition|)
 return|return;
-name|xfree
+name|strfree
 argument_list|(
 name|a
 operator|.
