@@ -724,7 +724,7 @@ name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
-name|SIG_DFL
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|openlog
