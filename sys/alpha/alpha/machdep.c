@@ -4274,6 +4274,10 @@ case|:
 case|case
 literal|'V'
 case|:
+name|boothowto
+operator||=
+name|RB_VERBOSE
+expr_stmt|;
 name|bootverbose
 operator|=
 literal|1
@@ -9354,10 +9358,24 @@ begin_comment
 comment|/*  * dummy version of read_random() until the random driver is ported.  */
 end_comment
 
+begin_decl_stmt
+name|int
+name|read_random
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|read_random
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
