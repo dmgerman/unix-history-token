@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)read_password.c	8.2 (Berkeley) 12/15/93"
+literal|"@(#)read_password.c	8.3 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $Source: /home/ncvs/src/secure/lib/libtelnet/read_password.c,v $  * $Author: csgr $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * This routine prints the supplied string to standard  * output as a prompt, and reads a password string without  * echoing.  */
+comment|/*  * $Source: /mit/kerberos/src/lib/des/RCS/read_password.c,v $  * $Author: jon $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * This routine prints the supplied string to standard  * output as a prompt, and reads a password string without  * echoing.  */
 end_comment
 
 begin_if
@@ -153,19 +153,19 @@ literal|1
 return|;
 block|}
 comment|/* XXX assume jmp_buf is typedef'ed to an array */
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
-name|old_env
+name|env
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
-name|env
+name|old_env
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -279,7 +279,7 @@ condition|(
 operator|(
 name|ptr
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s
 argument_list|,
@@ -340,7 +340,7 @@ condition|(
 operator|(
 name|ptr
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|key_string
 argument_list|,
@@ -391,9 +391,11 @@ condition|(
 operator|!
 name|ok
 condition|)
-name|bzero
+name|memset
 argument_list|(
 name|s
+argument_list|,
+literal|0
 argument_list|,
 name|max
 argument_list|)
@@ -431,19 +433,19 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*     pop_signals(); */
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
-name|env
+name|old_env
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
-name|old_env
+name|env
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -455,9 +457,11 @@ if|if
 condition|(
 name|verify
 condition|)
-name|bzero
+name|memset
 argument_list|(
 name|key_string
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

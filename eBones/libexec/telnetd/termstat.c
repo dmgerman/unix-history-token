@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termstat.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)termstat.c	8.2 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1496,7 +1496,7 @@ name|struct
 name|winsize
 name|ws
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1504,6 +1504,8 @@ operator|*
 operator|)
 operator|&
 name|ws
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

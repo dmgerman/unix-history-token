@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slc.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)slc.c	8.2 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1715,11 +1715,11 @@ literal|0
 condition|)
 return|return;
 comment|/* too bad */
-name|bcopy
+name|memmove
 argument_list|(
-name|ptr
-argument_list|,
 name|def_slcbuf
+argument_list|,
+name|ptr
 argument_list|,
 name|len
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	8.2 (Berkeley) 12/15/93"
+literal|"@(#)commands.c	8.4 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -6570,7 +6570,7 @@ argument_list|,
 name|SIGTSTP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we didn't get the window size before the SUSPEND, but we 	 * can get them now (???), then send the NAWS to make sure that 	 * we are set up for the right window size. 	 */
+comment|/* 	 * If we didn't get the window size before the SUSPEND, but we 	 * can get them now (?), then send the NAWS to make sure that 	 * we are set up for the right window size. 	 */
 if|if
 condition|(
 name|TerminalWindowSize
@@ -6728,7 +6728,7 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|rindex
+name|strrchr
 parameter_list|()
 function_decl|;
 name|shellp
@@ -6753,7 +6753,7 @@ condition|(
 operator|(
 name|shellname
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|shellp
 argument_list|,
@@ -8145,7 +8145,7 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|index
+name|strchr
 parameter_list|()
 function_decl|;
 for|for
@@ -8165,7 +8165,7 @@ if|if
 condition|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 operator|*
 name|epp
@@ -8269,7 +8269,7 @@ name|char
 modifier|*
 name|cp2
 init|=
-name|index
+name|strchr
 argument_list|(
 operator|(
 name|char
@@ -11090,7 +11090,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* clear the socket address prior to use */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -11098,6 +11098,8 @@ operator|*
 operator|)
 operator|&
 name|sin
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -11206,13 +11208,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|isprefix
+name|strcmp
 argument_list|(
 operator|*
 name|argv
 argument_list|,
 literal|"help"
 argument_list|)
+operator|==
+literal|0
 operator|||
 name|isprefix
 argument_list|(
@@ -11572,7 +11576,7 @@ argument_list|(
 name|h_addr
 argument_list|)
 comment|/* In 4.3, this is a #define */
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|caddr_t
@@ -11597,7 +11601,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* defined(h_addr) */
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|caddr_t
@@ -12152,7 +12156,7 @@ operator|->
 name|h_addr_list
 operator|++
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|caddr_t
@@ -14473,7 +14477,7 @@ name|defined
 argument_list|(
 name|h_addr
 argument_list|)
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|caddr_t
@@ -14495,7 +14499,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|caddr_t
@@ -14528,7 +14532,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|memcpy
+name|memmove
 argument_list|(
 name|lsrp
 argument_list|,

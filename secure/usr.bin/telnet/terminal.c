@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)terminal.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)terminal.c	8.2 (Berkeley) 2/16/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,6 +484,12 @@ argument_list|,
 name|n1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n1
+operator|>
+literal|0
+condition|)
 name|n
 operator|+=
 name|n1

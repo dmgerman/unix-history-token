@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)encrypt.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)encrypt.c	8.2 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -3249,7 +3249,7 @@ name|keylen
 operator|)
 operator|||
 operator|(
-name|bcmp
+name|memcmp
 argument_list|(
 name|keyid
 argument_list|,
@@ -3271,12 +3271,12 @@ name|keylen
 operator|=
 name|len
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|keyid
-argument_list|,
 name|kp
 operator|->
+name|keyid
+argument_list|,
 name|keyid
 argument_list|,
 name|len
@@ -3455,12 +3455,12 @@ else|:
 literal|1
 index|]
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|keyid
-argument_list|,
 name|kp
 operator|->
+name|keyid
+argument_list|,
 name|keyid
 argument_list|,
 name|keylen

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)auth.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)auth.c	8.3 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -764,6 +764,26 @@ name|way
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|auth_debug_mode
+condition|)
+name|printf
+argument_list|(
+literal|">>>%s: Init failed: auth type %d %d\r\n"
+argument_list|,
+name|Name
+argument_list|,
+name|ap
+operator|->
+name|type
+argument_list|,
+name|ap
+operator|->
+name|way
+argument_list|)
+expr_stmt|;
 operator|++
 name|ap
 expr_stmt|;
@@ -1592,19 +1612,19 @@ argument_list|)
 else|:
 name|cnt
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
-name|data
+name|_auth_send_data
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|_auth_send_data
+name|data
 argument_list|,
 name|auth_send_cnt
 argument_list|)
@@ -2115,19 +2135,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
-name|data
+name|savename
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|savename
+name|data
 argument_list|,
 name|cnt
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Source: /home/ncvs/src/secure/lib/libtelnet/kerberos5.c,v $  *	$Author: csgr $  *	$Id: kerberos5.c,v 1.1.1.1 1994/08/12 22:02:59 csgr Exp $  */
+comment|/*  *	$Source: /home/ncvs/src/secure/lib/libtelnet/kerberos5.c,v $  *	$Author: rgrimes $  *	$Id: kerberos5.c,v 1.2 1995/05/30 06:11:54 rgrimes Exp $  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid_kerberos5_c
 index|[]
 init|=
-literal|"$Id: kerberos5.c,v 1.1.1.1 1994/08/12 22:02:59 csgr Exp $"
+literal|"$Id: kerberos5.c,v 1.2 1995/05/30 06:11:54 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kerberos5.c	8.2 (Berkeley) 12/15/93"
+literal|"@(#)kerberos5.c	8.3 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -743,12 +743,14 @@ argument_list|(
 name|sum
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|Voidptr
 operator|)
 name|sum
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -979,7 +981,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -987,6 +989,8 @@ operator|*
 operator|)
 operator|&
 name|creds
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1212,7 +1216,7 @@ operator|==
 name|KEYTYPE_DES
 condition|)
 comment|/* use the session key in credentials instead */
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|char
@@ -1242,7 +1246,7 @@ empty_stmt|;
 block|}
 else|else
 block|{
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|char
@@ -1986,8 +1990,13 @@ operator|==
 name|KEYTYPE_DES
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
+operator|(
+name|Voidptr
+operator|)
+name|session_key
+argument_list|,
 operator|(
 name|Voidptr
 operator|)
@@ -1998,11 +2007,6 @@ operator|->
 name|subkey
 operator|->
 name|contents
-argument_list|,
-operator|(
-name|Voidptr
-operator|)
-name|session_key
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2027,8 +2031,13 @@ operator|==
 name|KEYTYPE_DES
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
+operator|(
+name|Voidptr
+operator|)
+name|session_key
+argument_list|,
 operator|(
 name|Voidptr
 operator|)
@@ -2041,11 +2050,6 @@ operator|->
 name|session
 operator|->
 name|contents
-argument_list|,
-operator|(
-name|Voidptr
-operator|)
-name|session_key
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	8.2 (Berkeley) 12/15/93"
+literal|"@(#)sys_term.c	8.4 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -249,41 +249,35 @@ end_include
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|_SC_CRAY_SECURE_SYS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SCM_SECURITY
-argument_list|)
+operator|(
+name|UNICOS_LVL
+operator|==
+literal|'7.0'
+operator|)
+operator|||
+operator|(
+name|UNICOS_LVL
+operator|==
+literal|'7.1'
+operator|)
 end_if
 
-begin_comment
-comment|/*     * UNICOS 6.0/6.1 do not have SCM_SECURITY defined, so we can     * use it to tell us to turn off all the socket security code,     * since that is only used in UNICOS 7.0 and later.     */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_SC_CRAY_SECURE_SYS
-end_undef
+begin_define
+define|#
+directive|define
+name|UNICOS7x
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_SC_CRAY_SECURE_SYS
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNICOS7x
+end_ifdef
 
 begin_include
 include|#
@@ -318,7 +312,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SC_CRAY_SECURE_SYS */
+comment|/* UNICOS7x */
 end_comment
 
 begin_endif
@@ -1107,16 +1101,16 @@ argument_list|(
 name|termbuf
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|cp
-argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
 name|termbuf
+argument_list|,
+name|cp
 argument_list|,
 name|len
 argument_list|)
@@ -1148,7 +1142,7 @@ directive|ifndef
 name|USE_TERMIO
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
 operator|(
 name|char
@@ -1197,7 +1191,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
 operator|(
 name|char
@@ -1246,7 +1240,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
 operator|(
 name|char
@@ -1327,7 +1321,7 @@ directive|else
 comment|/* USE_TERMIO */
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
 operator|(
 name|char
@@ -4311,6 +4305,35 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Try to guess whether speeds are "encoded" (4.2BSD) or just numeric (4.4BSD).  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|B4800
+operator|!=
+literal|4800
+end_if
+
+begin_define
+define|#
+directive|define
+name|DECODE_BAUD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DECODE_BAUD
+end_ifdef
+
+begin_comment
 comment|/*  * A table of available terminal speeds  */
 end_comment
 
@@ -4407,33 +4430,118 @@ block|,
 name|B4800
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|B7200
+block|{
+literal|7200
+block|,
+name|B7200
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|9600
 block|,
 name|B9600
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|B14400
+block|{
+literal|14400
+block|,
+name|B14400
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B19200
 block|{
 literal|19200
 block|,
-name|B9600
+name|B19200
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B28800
+block|{
+literal|28800
+block|,
+name|B28800
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B38400
 block|{
 literal|38400
 block|,
-name|B9600
+name|B38400
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B57600
+block|{
+literal|57600
+block|,
+name|B57600
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B115200
+block|{
+literal|115200
+block|,
+name|B115200
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B230400
+block|{
+literal|230400
+block|,
+name|B230400
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 operator|-
 literal|1
 block|,
-name|B9600
+literal|0
 block|}
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DECODE_BUAD */
+end_comment
 
 begin_function
 name|void
@@ -4445,6 +4553,9 @@ name|int
 name|val
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|DECODE_BAUD
 specifier|register
 name|struct
 name|termspeeds
@@ -4478,6 +4589,19 @@ name|tp
 operator|++
 control|)
 empty_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|speed
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* back up to last valid value */
+operator|--
+name|tp
+expr_stmt|;
 name|cfsetospeed
 argument_list|(
 operator|&
@@ -4488,6 +4612,20 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* DECODE_BUAD */
+name|cfsetospeed
+argument_list|(
+operator|&
+name|termbuf
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DECODE_BUAD */
 block|}
 end_function
 
@@ -4501,6 +4639,9 @@ name|int
 name|val
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|DECODE_BAUD
 specifier|register
 name|struct
 name|termspeeds
@@ -4534,6 +4675,19 @@ name|tp
 operator|++
 control|)
 empty_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|speed
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* back up to last valid value */
+operator|--
+name|tp
+expr_stmt|;
 name|cfsetispeed
 argument_list|(
 operator|&
@@ -4544,6 +4698,20 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* DECODE_BAUD */
+name|cfsetispeed
+argument_list|(
+operator|&
+name|termbuf
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DECODE_BAUD */
 block|}
 end_function
 
@@ -5014,7 +5182,7 @@ operator|||
 name|def_col
 condition|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -5022,6 +5190,8 @@ operator|*
 operator|)
 operator|&
 name|ws
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5384,19 +5554,16 @@ specifier|register
 name|int
 name|t
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_SC_CRAY_SECURE_SYS
-argument_list|)
+ifdef|#
+directive|ifdef
+name|UNICOS7x
 name|struct
 name|secstat
 name|secbuf
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* _SC_CRAY_SECURE_SYS */
+comment|/* UNICOS7x */
 ifndef|#
 directive|ifndef
 name|STREAMSPTY
@@ -5448,12 +5615,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_SC_CRAY_SECURE_SYS
-argument_list|)
+ifdef|#
+directive|ifdef
+name|UNICOS7x
 if|if
 condition|(
 name|secflag
@@ -5514,7 +5678,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* _SC_CRAY_SECURE_SYS */
+comment|/* UNICOS7x */
 name|t
 operator|=
 name|open
@@ -5526,12 +5690,9 @@ operator||
 name|O_NOCTTY
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_SC_CRAY_SECURE_SYS
-argument_list|)
+ifdef|#
+directive|ifdef
+name|UNICOS7x
 if|if
 condition|(
 name|secflag
@@ -5572,7 +5733,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* _SC_CRAY_SECURE_SYS */
+comment|/* UNICOS7x */
 if|if
 condition|(
 name|t
@@ -5712,15 +5873,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-name|setpgrp
-argument_list|()
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_SC_CRAY_SECURE_SYS
-argument_list|)
+ifdef|#
+directive|ifdef
+name|UNICOS7x
 if|if
 condition|(
 name|secflag
@@ -5781,7 +5936,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* _SC_CRAY_SECURE_SYS */
+comment|/* UNICOS7x */
 name|i
 operator|=
 name|open
@@ -5791,12 +5946,9 @@ argument_list|,
 name|O_RDWR
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_SC_CRAY_SECURE_SYS
-argument_list|)
+ifdef|#
+directive|ifdef
+name|UNICOS7x
 if|if
 condition|(
 name|secflag
@@ -5837,7 +5989,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* _SC_CRAY_SECURE_SYS */
+comment|/* UNICOS7x */
 if|if
 condition|(
 name|i
@@ -6009,6 +6161,9 @@ directive|endif
 else|#
 directive|else
 comment|/* 	 * We get our controlling tty assigned as a side-effect 	 * of opening up a tty device.  But on BSD based systems, 	 * this only happens if our process group is zero.  The 	 * setsid() call above may have set our pgrp, so clear 	 * it out before opening the tty... 	 */
+ifndef|#
+directive|ifndef
+name|SOLARIS
 operator|(
 name|void
 operator|)
@@ -6019,6 +6174,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|setpgrp
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|open
@@ -7005,10 +7170,12 @@ ifdef|#
 directive|ifdef
 name|UTMPX
 comment|/* 	 * Create utmp entry for child 	 */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|utmpx
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7104,7 +7271,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|makeutx
+name|pututxline
 argument_list|(
 operator|&
 name|utmpx
@@ -7116,7 +7283,7 @@ name|fatal
 argument_list|(
 name|net
 argument_list|,
-literal|"makeutx failed"
+literal|"pututxline failed"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7278,6 +7445,52 @@ argument_list|,
 literal|"-p"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|LINEMODE
+comment|/* 	 * Set the environment variable "LINEMODE" to either 	 * "real" or "kludge" if we are operating in either 	 * real or kludge linemode. 	 */
+if|if
+condition|(
+name|lmodetype
+operator|==
+name|REAL_LINEMODE
+condition|)
+name|setenv
+argument_list|(
+literal|"LINEMODE"
+argument_list|,
+literal|"real"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KLUDGELINEMODE
+elseif|else
+if|if
+condition|(
+name|lmodetype
+operator|==
+name|KLUDGE_LINEMODE
+operator|||
+name|lmodetype
+operator|==
+name|KLUDGE_OK
+condition|)
+name|setenv
+argument_list|(
+literal|"LINEMODE"
+argument_list|,
+literal|"kludge"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#
@@ -7710,6 +7923,54 @@ literal|"USER"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SOLARIS
+else|else
+block|{
+name|char
+modifier|*
+modifier|*
+name|p
+decl_stmt|;
+name|argv
+operator|=
+name|addarg
+argument_list|(
+name|argv
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/* no login name */
+for|for
+control|(
+name|p
+operator|=
+name|environ
+init|;
+operator|*
+name|p
+condition|;
+name|p
+operator|++
+control|)
+block|{
+name|argv
+operator|=
+name|addarg
+argument_list|(
+name|argv
+argument_list|,
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* SOLARIS */
 if|#
 directive|if
 name|defined
@@ -7741,6 +8002,12 @@ endif|#
 directive|endif
 name|closelog
 argument_list|()
+expr_stmt|;
+comment|/* 	 * This sleep(1) is in here so that telnetd can 	 * finish up with the tty.  There's a race condition 	 * the login banner message gets lost... 	 */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|execv
 argument_list|(
@@ -7918,6 +8185,13 @@ name|realloc
 argument_list|(
 name|argv
 argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+operator|*
+operator|(
 call|(
 name|int
 call|)
@@ -7927,6 +8201,7 @@ name|argv
 argument_list|)
 operator|+
 literal|2
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8184,6 +8459,17 @@ specifier|register
 name|int
 name|t
 decl_stmt|;
+name|int
+name|child_status
+decl_stmt|;
+comment|/* status of child process as returned by waitpid */
+name|int
+name|flags
+init|=
+name|WNOHANG
+operator||
+name|WUNTRACED
+decl_stmt|;
 comment|/* 	 * 1: Pick up the zombie, if we are being called 	 *    as the signal handler. 	 * 2: If we are a nested cleanup(), return. 	 * 3: Try to clean up TMPDIR. 	 * 4: Fill in utmp with shutdown of process. 	 * 5: Close down the network and pty connections. 	 * 6: Finish up the TMPDIR cleanup, if needed. 	 */
 if|if
 condition|(
@@ -8191,6 +8477,7 @@ name|sig
 operator|==
 name|SIGCHLD
 condition|)
+block|{
 while|while
 condition|(
 name|waitpid
@@ -8198,15 +8485,28 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|0
+operator|&
+name|child_status
 argument_list|,
-name|WNOHANG
+name|flags
 argument_list|)
 operator|>
 literal|0
 condition|)
 empty_stmt|;
 comment|/* VOID */
+comment|/* Check if the child process was stopped 		 * rather than exited.  We want cleanup only if 		 * the child has died. 		 */
+if|if
+condition|(
+name|WIFSTOPPED
+argument_list|(
+name|child_status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+block|}
 name|t
 operator|=
 name|sigblock
@@ -8238,6 +8538,9 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UNICOS7x
 if|if
 condition|(
 name|secflag
@@ -8260,6 +8563,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* UNICOS7x */
 name|t
 operator|=
 name|cleantmp
@@ -8617,6 +8923,75 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	jid_getutid:  *		called by jobend() before calling cleantmp()  *		to find the correct $TMPDIR to cleanup.  */
+end_comment
+
+begin_function
+name|struct
+name|utmp
+modifier|*
+name|jid_getutid
+parameter_list|(
+name|jid
+parameter_list|)
+name|int
+name|jid
+decl_stmt|;
+block|{
+name|struct
+name|utmp
+modifier|*
+name|cur
+init|=
+name|NULL
+decl_stmt|;
+name|setutent
+argument_list|()
+expr_stmt|;
+comment|/* just to make sure */
+while|while
+condition|(
+name|cur
+operator|=
+name|getutent
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|cur
+operator|->
+name|ut_type
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|jid
+operator|==
+name|cur
+operator|->
+name|ut_jid
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|cur
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Clean up the TMPDIR that login created.  * The first time this is called we pick up the info  * from the utmp.  If the job has already gone away,  * then we'll clean up and be done.  If not, then  * when this is called the second time it will wait  * for the signal that the job is done.  */
 end_comment
 
@@ -8832,6 +9207,12 @@ init|=
 literal|0
 decl_stmt|;
 specifier|static
+name|int
+name|pty_saved_jid
+init|=
+literal|0
+decl_stmt|;
+specifier|static
 name|char
 name|saved_path
 index|[
@@ -8859,6 +9240,36 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+comment|/* 	 * this little piece of code comes into play 	 * only when ptyreconnect is used to reconnect 	 * to an previous session. 	 * 	 * this is the only time when the 	 * "saved_jid != jid" code is executed. 	 */
+if|if
+condition|(
+name|saved_jid
+operator|&&
+name|saved_jid
+operator|!=
+name|jid
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|path
+condition|)
+block|{
+comment|/* called from signal handler */
+name|pty_saved_jid
+operator|=
+name|jid
+expr_stmt|;
+block|}
+else|else
+block|{
+name|pty_saved_jid
+operator|=
+name|saved_jid
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|path
@@ -8927,6 +9338,74 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+comment|/* if the jid has changed, get the correct entry from the utmp file */
+if|if
+condition|(
+name|saved_jid
+operator|!=
+name|jid
+condition|)
+block|{
+name|struct
+name|utmp
+modifier|*
+name|utp
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|utmp
+modifier|*
+name|jid_getutid
+parameter_list|()
+function_decl|;
+name|utp
+operator|=
+name|jid_getutid
+argument_list|(
+name|pty_saved_jid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|utp
+operator|==
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Can't get /etc/utmp entry to clean TMPDIR"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+name|cleantmpdir
+argument_list|(
+name|jid
+argument_list|,
+name|utp
+operator|->
+name|ut_tpath
+argument_list|,
+name|utp
+operator|->
+name|ut_user
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 block|}
