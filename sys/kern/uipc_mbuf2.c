@@ -1077,9 +1077,8 @@ comment|/* Free a packet tag. */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|_m_tag_free
+name|m_tag_free_default
 parameter_list|(
 name|struct
 name|m_tag
@@ -1198,7 +1197,7 @@ name|t
 operator|->
 name|m_tag_free
 operator|=
-name|_m_tag_free
+name|m_tag_free_default
 expr_stmt|;
 return|return
 name|t
