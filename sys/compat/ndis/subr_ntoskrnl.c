@@ -7166,6 +7166,9 @@ name|gl_freefunc
 operator|=
 name|freefunc
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 name|KeInitializeSpinLock
 argument_list|(
 operator|&
@@ -7174,6 +7177,8 @@ operator|->
 name|nll_obsoletelock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|lookaside
 operator|->
 name|nll_l
@@ -7401,6 +7406,9 @@ name|gl_freefunc
 operator|=
 name|freefunc
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 name|KeInitializeSpinLock
 argument_list|(
 operator|&
@@ -7409,6 +7417,8 @@ operator|->
 name|nll_obsoletelock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|lookaside
 operator|->
 name|nll_l

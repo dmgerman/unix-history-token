@@ -1168,9 +1168,14 @@ block|{
 name|general_lookaside
 name|nll_l
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 name|kspin_lock
 name|nll_obsoletelock
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -2111,10 +2116,6 @@ directive|define
 name|IRP_MN_TRACK_LINK
 value|0x04
 end_define
-
-begin_comment
-comment|// To be obsoleted soon
-end_comment
 
 begin_define
 define|#
