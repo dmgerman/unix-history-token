@@ -687,7 +687,12 @@ argument_list|(
 operator|*
 name|vpp
 argument_list|,
-literal|0
+name|DIP
+argument_list|(
+name|ip
+argument_list|,
+name|i_size
+argument_list|)
 argument_list|,
 name|curthread
 argument_list|)

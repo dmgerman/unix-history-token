@@ -1117,7 +1117,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Open called.  *  * Nothing to do.  */
+comment|/*  * Open called.  */
 end_comment
 
 begin_comment
@@ -1144,6 +1144,11 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
+name|struct
+name|inode
+modifier|*
+name|ip
+decl_stmt|;
 if|if
 condition|(
 name|vp
@@ -1163,14 +1168,18 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-comment|/* 	 * Files marked append-only must be opened for appending. 	 */
-if|if
-condition|(
-operator|(
+name|ip
+operator|=
 name|VTOI
 argument_list|(
 name|vp
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Files marked append-only must be opened for appending. 	 */
+if|if
+condition|(
+operator|(
+name|ip
 operator|->
 name|i_flags
 operator|&
@@ -1196,12 +1205,16 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* XXX: if we have the size we should pass it for speed */
 name|vnode_create_vobject
 argument_list|(
 name|vp
 argument_list|,
-literal|0
+name|DIP
+argument_list|(
+name|ip
+argument_list|,
+name|i_size
+argument_list|)
 argument_list|,
 name|ap
 operator|->
