@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.180 1998/10/25 17:44:52 phk Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.181 1998/10/28 13:36:59 dg Exp $  */
 end_comment
 
 begin_comment
@@ -3614,18 +3614,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_ASYNC
-operator|)
-operator|==
-literal|0
-condition|)
 name|vm_page_unwire
 argument_list|(
 name|m
