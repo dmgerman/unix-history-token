@@ -3443,6 +3443,9 @@ name|void
 modifier|*
 name|sc_fwbuf
 decl_stmt|;
+name|int
+name|sc_rxbufprod
+decl_stmt|;
 name|struct
 name|txp_cmd_ring
 name|sc_cmdring
