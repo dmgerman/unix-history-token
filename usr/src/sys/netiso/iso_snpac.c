@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_snpac.c	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_snpac.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1040,7 +1040,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|ether_addmulti
+name|ether_delmulti
 argument_list|(
 operator|&
 name|ifr
@@ -1063,6 +1063,13 @@ if|if
 condition|(
 name|doreset
 condition|)
+block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_reset
+condition|)
 call|(
 modifier|*
 name|ifp
@@ -1075,6 +1082,21 @@ operator|->
 name|if_unit
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"iso_setmcasts: %s%d needs reseting to receive iso mcasts\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
