@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1245,13 +1245,75 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
+name|vattr_null
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* set attributes to null */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|getnewvnode
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* allocate a new vnode */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|bdevvp
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* allocate a new special dev vnode */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|vnode
+modifier|*
+name|checkalias
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* check for special device aliases */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|vget
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* get first reference to a vnode */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
 name|vref
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* reference vnode */
+comment|/* increase reference to a vnode */
 end_comment
 
 begin_function_decl
@@ -1281,27 +1343,25 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
-name|vattr_null
+name|vclean
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* set attributes to null */
+comment|/* clean out filesystem data in vnode */
 end_comment
 
 begin_function_decl
 specifier|extern
-name|struct
-name|vnode
-modifier|*
-name|checkalias
+name|void
+name|vgone
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* check for block device aliases */
+comment|/* completely recycle vnode */
 end_comment
 
 begin_define
@@ -1315,7 +1375,7 @@ value|(vp)->v_count++;
 end_define
 
 begin_comment
-comment|/* increment vnode reference count */
+comment|/* increase reference to a vnode */
 end_comment
 
 begin_comment
