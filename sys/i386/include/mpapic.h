@@ -118,6 +118,10 @@ name|EISA
 init|=
 literal|3
 block|,
+name|MCA
+init|=
+literal|4
+block|,
 name|ISA
 init|=
 literal|6
