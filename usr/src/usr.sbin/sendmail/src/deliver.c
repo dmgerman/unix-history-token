@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.64 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7493,6 +7493,31 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|11
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mailfile %s\n  ctladdr="
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|ctladdr
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**  Fork so we can change permissions here. 	**	Note that we MUST use fork, not vfork, because of 	**	the complications of calling subroutines, etc. 	*/
 name|DOFORK
 argument_list|(
