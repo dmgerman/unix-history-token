@@ -916,21 +916,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PPPOE_KEEPSTANDARD
+name|PPPOE_SYSCTL_KEEPSTANDARD
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PPPOE_STANDARD
+name|PPPOE_SYSCTL_STANDARD
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|PPPOE_NONSTANDARD
+name|PPPOE_SYSCTL_NONSTANDARD
 value|1
 end_define
 
@@ -939,7 +939,7 @@ specifier|static
 name|int
 name|pppoe_mode
 init|=
-name|PPPOE_KEEPSTANDARD
+name|PPPOE_SYSCTL_KEEPSTANDARD
 decl_stmt|;
 end_decl_stmt
 
@@ -1013,7 +1013,7 @@ name|val
 condition|)
 block|{
 case|case
-name|PPPOE_NONSTANDARD
+name|PPPOE_SYSCTL_NONSTANDARD
 case|:
 name|sysctl_mode
 operator|=
@@ -1023,10 +1023,10 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-name|PPPOE_STANDARD
+name|PPPOE_SYSCTL_STANDARD
 case|:
 case|case
-name|PPPOE_KEEPSTANDARD
+name|PPPOE_SYSCTL_KEEPSTANDARD
 case|:
 name|sysctl_mode
 operator|=
