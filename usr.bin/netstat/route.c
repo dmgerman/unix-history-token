@@ -151,6 +151,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -2926,12 +2932,14 @@ name|addr
 decl_stmt|,
 name|mask
 decl_stmt|;
-comment|/* 	 * Don't print protocol-cloned routes unless -a. 	 */
+comment|/* 	 * Don't print cloned routes unless -a. 	 */
 if|if
 condition|(
 name|rt
 operator|->
-name|rt_parent
+name|rt_flags
+operator|&
+name|RTF_WASCLONED
 operator|&&
 operator|!
 name|aflag
@@ -3283,8 +3291,6 @@ name|char
 name|line
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -3336,6 +3342,11 @@ expr_stmt|;
 name|trimdomain
 argument_list|(
 name|cp
+argument_list|,
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3665,8 +3676,6 @@ name|char
 name|line
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -3760,6 +3769,11 @@ expr_stmt|;
 name|trimdomain
 argument_list|(
 name|cp
+argument_list|,
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3965,8 +3979,6 @@ name|char
 name|line
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|u_char
@@ -4215,8 +4227,6 @@ name|char
 name|line
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|int

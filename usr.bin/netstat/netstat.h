@@ -10,6 +10,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|Aflag
 decl_stmt|;
@@ -20,6 +21,7 @@ comment|/* show addresses of protocol control block */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|aflag
 decl_stmt|;
@@ -30,6 +32,7 @@ comment|/* show all sockets (including servers) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|bflag
 decl_stmt|;
@@ -40,6 +43,7 @@ comment|/* show i/f total bytes in/out */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|dflag
 decl_stmt|;
@@ -50,6 +54,7 @@ comment|/* show i/f dropped packets */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|gflag
 decl_stmt|;
@@ -60,6 +65,7 @@ comment|/* show group (multicast) routing or stats */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|iflag
 decl_stmt|;
@@ -70,6 +76,7 @@ comment|/* show interfaces */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|lflag
 decl_stmt|;
@@ -80,6 +87,7 @@ comment|/* show routing table with use and ref */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|Lflag
 decl_stmt|;
@@ -90,6 +98,7 @@ comment|/* show size of listen queues */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|mflag
 decl_stmt|;
@@ -100,6 +109,7 @@ comment|/* show memory stats */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|nflag
 decl_stmt|;
@@ -110,6 +120,7 @@ comment|/* show addresses numerically */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|pflag
 decl_stmt|;
@@ -120,6 +131,7 @@ comment|/* show given protocol */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|rflag
 decl_stmt|;
@@ -130,6 +142,7 @@ comment|/* show routing tables (or routing stats) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|sflag
 decl_stmt|;
@@ -140,6 +153,7 @@ comment|/* show protocol statistics */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|tflag
 decl_stmt|;
@@ -150,6 +164,18 @@ comment|/* show i/f watchdog timers */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|Wflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* wide display */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|interval
 decl_stmt|;
@@ -160,6 +186,7 @@ comment|/* repeat interval for i/f stats */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|interface
@@ -171,6 +198,7 @@ comment|/* desired i/f for stats, or NULL for all i/fs */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|unit
 decl_stmt|;
@@ -181,6 +209,7 @@ comment|/* unit number for above */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|af
 decl_stmt|;
@@ -231,19 +260,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|trimdomain
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
