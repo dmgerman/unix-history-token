@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: vmparam.h,v 1.2 1998/06/10 10:55:30 dfr Exp $ */
+comment|/* $Id: vmparam.h,v 1.3 1998/06/14 13:45:15 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -38,11 +38,19 @@ name|USRTEXT
 value|CLBYTES
 end_define
 
+begin_comment
+comment|/* #define	USRSTACK	VM_MAXUSER_ADDRESS */
+end_comment
+
+begin_comment
+comment|/*  * This stack location is suitable for OSF1 emulation.  Some OSF  * programs are built as 32bit and assume that the stack is reachable  * with a 32bit value.  OSF1 manages to have a variable location for  * the user stack which we should probably also support.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|USRSTACK
-value|VM_MAXUSER_ADDRESS
+value|(0x12000000LL - (UPAGES*PAGE_SIZE))
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: trap.c,v 1.8 1998/12/04 22:54:42 archie Exp $ */
+comment|/* $Id: trap.c,v 1.9 1998/12/16 15:21:50 bde Exp $ */
 end_comment
 
 begin_comment
@@ -1592,6 +1592,16 @@ operator|>=
 name|vm
 operator|->
 name|vm_maxsaddr
+operator|&&
+operator|(
+name|caddr_t
+operator|)
+name|va
+operator|<
+operator|(
+name|caddr_t
+operator|)
+name|USRSTACK
 condition|)
 block|{
 if|if
