@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	4.6 84/10/05"
+literal|"@(#)mbuf.c	4.7 84/11/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,7 +361,9 @@ argument_list|)
 expr_stmt|;
 name|totmem
 operator|=
-name|totmbufs
+name|mbstat
+operator|.
+name|m_mbufs
 operator|*
 name|MSIZE
 operator|+
@@ -384,7 +386,7 @@ name|MSIZE
 operator|+
 name|mbstat
 operator|.
-name|m_clusters
+name|m_clfree
 operator|*
 name|CLBYTES
 expr_stmt|;
