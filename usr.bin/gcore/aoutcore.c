@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gcore.c,v 1.6 1997/07/08 11:04:17 charnier Exp $"
+literal|"$Id: gcore.c,v 1.7 1997/11/18 03:50:25 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -729,6 +729,54 @@ else|:
 name|strerror
 argument_list|(
 name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* check the text segment size of the executable and the process */
+if|if
+condition|(
+name|exec
+operator|.
+name|a_text
+operator|!=
+name|ptoa
+argument_list|(
+name|ki
+operator|->
+name|kp_eproc
+operator|.
+name|e_vm
+operator|.
+name|vm_tsize
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"The executable %s does not belong to process %d!\n"
+literal|"Text segment size (in bytes): executable %d, process %d"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|pid
+argument_list|,
+name|exec
+operator|.
+name|a_text
+argument_list|,
+name|ptoa
+argument_list|(
+name|ki
+operator|->
+name|kp_eproc
+operator|.
+name|e_vm
+operator|.
+name|vm_tsize
 argument_list|)
 argument_list|)
 expr_stmt|;
