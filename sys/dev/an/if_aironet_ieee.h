@@ -412,6 +412,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * The card provides an 8-bit signal strength value (RSSI), which can  * be converted to a dBm power value (or a percent) using a table in  * the card's firmware (when available).  The tables are slightly  * different in individual cards, even of the same model.  If the  * table is not available, the mapping can be approximated by dBm =  * RSSI - 100.  This approximation can be seen by plotting a few  * tables, and also matches some info on the Intersil web site (I  * think they make the RF front end for the cards.  However, the linux  * driver uses the approximation dBm = RSSI/2 - 95.  I think that is  * just wrong.   */
+end_comment
+
+begin_struct
+struct|struct
+name|an_rssi_entry
+block|{
+name|u_int8_t
+name|an_rss_pct
+decl_stmt|;
+name|u_int8_t
+name|an_rss_dbm
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|an_ltv_key
@@ -1246,6 +1264,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AN_RXMODE_NORMALIZED_RSSI
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
 name|AN_RATE_1MBPS
 value|0x0002
 end_define
@@ -1891,6 +1916,31 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*   * RSSI map.  If available in the card's firmware, this can be used to  * convert the 8-bit RSSI values from the card into dBm.  */
+end_comment
+
+begin_struct
+struct|struct
+name|an_ltv_rssi_map
+block|{
+name|u_int16_t
+name|an_len
+decl_stmt|;
+name|u_int16_t
+name|an_type
+decl_stmt|;
+name|struct
+name|an_rssi_entry
+name|an_entries
+index|[
+literal|256
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Status (read only). Note: the manual claims this RID is 108 bytes  * long (0x6A is the last datum, which is 2 bytes long) however when  * this RID is read from the NIC, it returns a length of 110. To be  * on the safe side, this structure is padded with an extra 16-bit  * word. (There is a misprint in the manual which says the macaddr  * field is 8 bytes long.)  *  * Also, the channel_set and current_channel fields appear to be  * reversed. Either that, or the hop_period field is unused.  */
 end_comment
 
@@ -1922,7 +1972,7 @@ name|an_errcode
 decl_stmt|;
 comment|/* 0x0A */
 name|u_int16_t
-name|an_cur_signal_strength
+name|an_signal_quality
 decl_stmt|;
 comment|/* 0x0C */
 name|u_int16_t
@@ -2024,7 +2074,7 @@ name|an_ap_device
 decl_stmt|;
 comment|/* 0x70 */
 name|u_int16_t
-name|an_normalized_rssi
+name|an_normalized_strength
 decl_stmt|;
 comment|/* 0x72 */
 name|u_int16_t
@@ -2038,18 +2088,30 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* 0x76 */
-name|u_int16_t
-name|an_max_noise_prev_sec
+name|u_int8_t
+name|an_noise_prev_sec_pc
 decl_stmt|;
 comment|/* 0x7A */
-name|u_int16_t
-name|an_avg_noise_prev_min
+name|u_int8_t
+name|an_noise_prev_sec_db
+decl_stmt|;
+comment|/* 0x7B */
+name|u_int8_t
+name|an_avg_noise_prev_min_pc
 decl_stmt|;
 comment|/* 0x7C */
-name|u_int16_t
-name|an_max_noise_prev_min
+name|u_int8_t
+name|an_avg_noise_prev_min_db
+decl_stmt|;
+comment|/* 0x7D */
+name|u_int8_t
+name|an_max_noise_prev_min_pc
 decl_stmt|;
 comment|/* 0x7E */
+name|u_int8_t
+name|an_max_noise_prev_min_db
+decl_stmt|;
+comment|/* 0x7F */
 name|u_int16_t
 name|an_spare
 index|[
@@ -2465,6 +2527,17 @@ end_define
 
 begin_comment
 comment|/* Radio info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_RID_RSSI_MAP
+value|0xFF04
+end_define
+
+begin_comment
+comment|/* RSSI<-> dBm table */
 end_comment
 
 begin_define

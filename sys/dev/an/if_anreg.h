@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|AN_TIMEOUT
-value|65536
+value|600000
 end_define
 
 begin_comment
@@ -100,6 +100,126 @@ value|bus_space_read_1(sc->an_btag, sc->an_bhandle, reg)
 end_define
 
 begin_comment
+comment|/*  * memory space access macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSR_MEM_WRITE_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_2(sc->an_mem_btag, sc->an_mem_bhandle, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_MEM_READ_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_2(sc->an_mem_btag, sc->an_mem_bhandle, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_MEM_WRITE_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_1(sc->an_mem_btag, sc->an_mem_bhandle, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_MEM_READ_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_1(sc->an_mem_btag, sc->an_mem_bhandle, reg)
+end_define
+
+begin_comment
+comment|/*  * aux. memory space access macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSR_MEM_AUX_WRITE_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_4(sc->an_mem_aux_btag, sc->an_mem_aux_bhandle, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_MEM_AUX_READ_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_4(sc->an_mem_aux_btag, sc->an_mem_aux_bhandle, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_MEM_AUX_WRITE_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_1(sc->an_mem_aux_btag, sc->an_mem_aux_bhandle, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_MEM_AUX_READ_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_1(sc->an_mem_aux_btag, sc->an_mem_aux_bhandle, reg)
+end_define
+
+begin_comment
 comment|/*  * Size of Aironet I/O space.  */
 end_comment
 
@@ -108,6 +228,17 @@ define|#
 directive|define
 name|AN_IOSIZ
 value|0x40
+end_define
+
+begin_comment
+comment|/*  * Size of aux. memory space ... probably not needed DJA   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_AUXMEMSIZE
+value|(256 * 1024)
 end_define
 
 begin_comment
@@ -122,63 +253,90 @@ begin_define
 define|#
 directive|define
 name|AN_COMMAND
-value|0x00
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x00 : 0x00)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_PARAM0
-value|0x02
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x04 : 0x02)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_PARAM1
-value|0x04
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x08 : 0x04)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_PARAM2
-value|0x06
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x0c : 0x06)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_STATUS
-value|0x08
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x10 : 0x08)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_RESP0
-value|0x0A
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x14 : 0x0A)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_RESP1
-value|0x0C
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x18 : 0x0C)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_RESP2
-value|0x0E
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x1c : 0x0E)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_LINKSTAT
-value|0x10
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x20 : 0x10)
 end_define
 
 begin_comment
@@ -347,6 +505,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AN_CMD_ALLOC_DESC
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
 name|AN_CMD_ACCESS
 value|0x0021
 end_define
@@ -392,6 +557,243 @@ directive|define
 name|AN_CMD_SAVECFG
 value|0x0108
 end_define
+
+begin_comment
+comment|/*  * MPI 350 DMA descriptor information  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AN_DESCRIPTOR_TX
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_DESCRIPTOR_RX
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_DESCRIPTOR_TXCMP
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_DESCRIPTOR_HOSTWRITE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_DESCRIPTOR_HOSTREAD
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_DESCRIPTOR_HOSTRW
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_MAX_RX_DESC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_MAX_TX_DESC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_HOSTBUFSIZ
+value|1840
+end_define
+
+begin_struct
+struct|struct
+name|an_card_rid_desc
+block|{
+name|unsigned
+name|an_rid
+range|:
+literal|16
+decl_stmt|;
+name|unsigned
+name|an_len
+range|:
+literal|15
+decl_stmt|;
+name|unsigned
+name|an_valid
+range|:
+literal|1
+decl_stmt|;
+name|u_int64_t
+name|an_phys
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|an_card_rx_desc
+block|{
+name|unsigned
+name|an_ctrl
+range|:
+literal|15
+decl_stmt|;
+name|unsigned
+name|an_done
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|an_len
+range|:
+literal|15
+decl_stmt|;
+name|unsigned
+name|an_valid
+range|:
+literal|1
+decl_stmt|;
+name|u_int64_t
+name|an_phys
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|an_card_tx_desc
+block|{
+name|unsigned
+name|an_offset
+range|:
+literal|15
+decl_stmt|;
+name|unsigned
+name|an_eoc
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|an_len
+range|:
+literal|15
+decl_stmt|;
+name|unsigned
+name|an_valid
+range|:
+literal|1
+decl_stmt|;
+name|u_int64_t
+name|an_phys
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|AN_RID_BUFFER_SIZE
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_RX_BUFFER_SIZE
+value|1840
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_TX_BUFFER_SIZE
+value|1840
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_HOST_DESC_OFFSET
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_RX_DESC_OFFSET
+value|(AN_HOST_DESC_OFFSET + \     sizeof(struct an_card_rid_desc))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_TX_DESC_OFFSET
+value|(AN_RX_DESC_OFFSET + \     (AN_MAX_RX_DESC * sizeof(struct an_card_rx_desc)))
+end_define
+
+begin_struct
+struct|struct
+name|an_command
+block|{
+name|u_int16_t
+name|an_cmd
+decl_stmt|;
+name|u_int16_t
+name|an_parm0
+decl_stmt|;
+name|u_int16_t
+name|an_parm1
+decl_stmt|;
+name|u_int16_t
+name|an_parm2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|an_reply
+block|{
+name|u_int16_t
+name|an_status
+decl_stmt|;
+name|u_int16_t
+name|an_resp0
+decl_stmt|;
+name|u_int16_t
+name|an_resp1
+decl_stmt|;
+name|u_int16_t
+name|an_resp2
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Reclaim qualifier bit, applicable to the  * TX command.  */
@@ -671,7 +1073,10 @@ begin_define
 define|#
 directive|define
 name|AN_EVENT_STAT
-value|0x30
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x60 : 0x30)
 end_define
 
 begin_comment
@@ -682,18 +1087,24 @@ begin_define
 define|#
 directive|define
 name|AN_INT_EN
-value|0x32
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x64 : 0x32)
 end_define
 
 begin_comment
-comment|/* Interrupt enable/disable */
+comment|/* Interrupt enable/ 							   disable */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|AN_EVENT_ACK
-value|0x34
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x68 : 0x34)
 end_define
 
 begin_comment
@@ -819,28 +1230,40 @@ begin_define
 define|#
 directive|define
 name|AN_SW0
-value|0x28
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x50 : 0x28)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_SW1
-value|0x2A
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x54 : 0x2A)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_SW2
-value|0x2C
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x58 : 0x2C)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_SW3
-value|0x2E
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x5c : 0x2E)
 end_define
 
 begin_define
@@ -1337,6 +1760,32 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|an_dma_alloc
+block|{
+name|u_int32_t
+name|an_dma_paddr
+decl_stmt|;
+name|caddr_t
+name|an_dma_vaddr
+decl_stmt|;
+name|bus_dmamap_t
+name|an_dma_map
+decl_stmt|;
+name|bus_dma_segment_t
+name|an_dma_seg
+decl_stmt|;
+name|bus_size_t
+name|an_dma_size
+decl_stmt|;
+name|int
+name|an_dma_nseg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -1378,6 +1827,9 @@ decl_stmt|;
 name|int
 name|an_tx_cons
 decl_stmt|;
+name|int
+name|an_tx_empty
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1404,20 +1856,48 @@ name|port_res
 decl_stmt|;
 comment|/* resource for port range */
 name|int
+name|mem_rid
+decl_stmt|;
+comment|/* resource id for memory range */
+name|int
+name|mem_used
+decl_stmt|;
+comment|/* nonzero if memory used */
+name|struct
+name|resource
+modifier|*
+name|mem_res
+decl_stmt|;
+comment|/* resource for memory range */
+name|int
+name|mem_aux_rid
+decl_stmt|;
+comment|/* resource id for memory range */
+name|int
+name|mem_aux_used
+decl_stmt|;
+comment|/* nonzero if memory used */
+name|struct
+name|resource
+modifier|*
+name|mem_aux_res
+decl_stmt|;
+comment|/* resource for memory range */
+name|int
 name|irq_rid
 decl_stmt|;
 comment|/* resource id for irq */
+name|void
+modifier|*
+name|irq_handle
+decl_stmt|;
+comment|/* handle for irq handler */
 name|struct
 name|resource
 modifier|*
 name|irq_res
 decl_stmt|;
 comment|/* resource for irq */
-name|void
-modifier|*
-name|irq_handle
-decl_stmt|;
-comment|/* handle for irq handler */
 name|bus_space_handle_t
 name|an_bhandle_p
 decl_stmt|;
@@ -1426,6 +1906,21 @@ name|an_bhandle
 decl_stmt|;
 name|bus_space_tag_t
 name|an_btag
+decl_stmt|;
+name|bus_space_handle_t
+name|an_mem_bhandle
+decl_stmt|;
+name|bus_space_tag_t
+name|an_mem_btag
+decl_stmt|;
+name|bus_space_handle_t
+name|an_mem_aux_bhandle
+decl_stmt|;
+name|bus_space_tag_t
+name|an_mem_aux_btag
+decl_stmt|;
+name|bus_dma_tag_t
+name|an_dtag
 decl_stmt|;
 name|struct
 name|an_ltv_genconfig
@@ -1500,6 +1995,13 @@ decl_stmt|;
 name|int
 name|an_nextitem
 decl_stmt|;
+name|int
+name|an_have_rssimap
+decl_stmt|;
+name|struct
+name|an_ltv_rssi_map
+name|an_rssimap
+decl_stmt|;
 endif|#
 directive|endif
 name|struct
@@ -1532,6 +2034,32 @@ decl_stmt|;
 name|struct
 name|an_req
 name|areq
+decl_stmt|;
+name|unsigned
+name|short
+modifier|*
+name|an_flash_buffer
+decl_stmt|;
+name|int
+name|mpi350
+decl_stmt|;
+name|struct
+name|an_dma_alloc
+name|an_rid_buffer
+decl_stmt|;
+name|struct
+name|an_dma_alloc
+name|an_rx_buffer
+index|[
+name|AN_MAX_RX_DESC
+index|]
+decl_stmt|;
+name|struct
+name|an_dma_alloc
+name|an_tx_buffer
+index|[
+name|AN_MAX_TX_DESC
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1582,6 +2110,19 @@ end_function_decl
 begin_function_decl
 name|int
 name|an_alloc_memory
+parameter_list|(
+name|device_t
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|an_alloc_aux_memory
 parameter_list|(
 name|device_t
 parameter_list|,
