@@ -3,6 +3,23 @@ begin_comment
 comment|/*  * (C)opyright 1993-1996 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -75,6 +92,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -161,6 +184,25 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -246,7 +288,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipt.c,v 2.0.2.4 1997/04/02 12:23:30 darrenr Exp $"
+literal|"$Id: ipt.c,v 2.0.2.5 1997/04/30 13:59:39 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,6 +465,9 @@ condition|(
 operator|(
 name|c
 operator|=
+operator|(
+name|char
+operator|)
 name|getopt
 argument_list|(
 name|argc

@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993, 1994, 1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.0.2.6 1997/04/02 12:23:17 darrenr Exp $  */
+comment|/*  * (C)opyright 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.0.2.11 1997/05/04 05:29:02 darrenr Exp $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__IP_COMPAT_H_
+name|__IP_COMPAT_H__
 end_ifndef
 
 begin_define
@@ -74,6 +74,128 @@ directive|define
 name|SOLARIS
 value|(defined(sun)&& (defined(__svr4__) || defined(__SVR4)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_KERNEL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__SVR4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__svr4__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|index
+value|strchr
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|bzero
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|memset(a,0,b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bcmp
+value|memcmp
+end_define
+
+begin_define
+define|#
+directive|define
+name|bcopy
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|memmove(b,a,c)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -268,6 +390,13 @@ name|U_QUAD_T
 value|u_quad_t
 end_define
 
+begin_define
+define|#
+directive|define
+name|QUAD_T
+value|quad_t
+end_define
+
 begin_else
 else|#
 directive|else
@@ -278,6 +407,13 @@ define|#
 directive|define
 name|U_QUAD_T
 value|u_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUAD_T
+value|long
 end_define
 
 begin_endif
@@ -955,6 +1091,18 @@ parameter_list|)
 value|kmem_free((char *)(x), sizeof(*(x)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|KFREES
+parameter_list|(
+name|x
+parameter_list|,
+name|s
+parameter_list|)
+value|kmem_free((char *)(x), (s))
+end_define
+
 begin_if
 if|#
 directive|if
@@ -1294,7 +1442,7 @@ comment|/* __FreeBSD__ */
 end_comment
 
 begin_comment
-comment|/* #  define	KMALLOC(a,b,c)	(a) = (b)kmem_alloc(kmem_map, (c)) #  define	KFREE(x)	kmem_free(kmem_map, (vm_offset_t)(x), \ 					  sizeof(*(x))) */
+comment|/* #  define	KMALLOC(a,b,c)	(a) = (b)kmem_alloc(kmem_map, (c)) #  define	KFREE(x)	kmem_free(kmem_map, (vm_offset_t)(x), \ 					  sizeof(*(x))) #  define	KFREES(x,s)	kmem_free(kmem_map, (vm_offset_t)(x), (s)) */
 end_comment
 
 begin_ifdef
@@ -1327,6 +1475,18 @@ parameter_list|)
 value|FREE((x), M_PFIL)
 end_define
 
+begin_define
+define|#
+directive|define
+name|KFREES
+parameter_list|(
+name|x
+parameter_list|,
+name|s
+parameter_list|)
+value|FREE((x), M_PFIL)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1352,6 +1512,18 @@ directive|define
 name|KFREE
 parameter_list|(
 name|x
+parameter_list|)
+value|FREE((x), M_TEMP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KFREES
+parameter_list|(
+name|x
+parameter_list|,
+name|s
 parameter_list|)
 value|FREE((x), M_TEMP)
 end_define
@@ -1465,10 +1637,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|PANIC
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|if (x) panic y
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|PANIC
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|;
+end_define
 
 begin_define
 define|#
@@ -1536,6 +1732,18 @@ directive|define
 name|KFREE
 parameter_list|(
 name|x
+parameter_list|)
+value|free(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KFREES
+parameter_list|(
+name|x
+parameter_list|,
+name|s
 parameter_list|)
 value|free(x)
 end_define
@@ -2063,6 +2271,18 @@ parameter_list|(
 name|x
 parameter_list|)
 value|kfree_s((x), sizeof(*(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|KFREES
+parameter_list|(
+name|x
+parameter_list|,
+name|s
+parameter_list|)
+value|kfree_s((x), (s))
 end_define
 
 begin_define

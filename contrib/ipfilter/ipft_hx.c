@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -182,6 +188,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ip_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipf.h"
 end_include
 
@@ -222,7 +234,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipft_hx.c,v 2.0.2.3 1997/03/10 08:10:25 darrenr Exp $"
+literal|"$Id: ipft_hx.c,v 2.0.2.4 1997/04/30 13:55:07 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -3,6 +3,23 @@ begin_comment
 comment|/*  * (C)opyright 1993,1994,1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -117,8 +134,33 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -193,7 +235,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipf.c,v 2.0.2.5 1997/03/31 10:05:33 darrenr Exp $"
+literal|"$Id: ipf.c,v 2.0.2.6 1997/04/30 13:59:59 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

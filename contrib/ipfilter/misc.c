@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -234,7 +240,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: misc.c,v 2.0.2.5 1997/03/31 10:05:36 darrenr Exp $"
+literal|"$Id: misc.c,v 2.0.2.6 1997/04/30 13:54:24 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
