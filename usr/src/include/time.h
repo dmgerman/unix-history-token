@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	time.h	1.1	85/03/13	*/
+comment|/*  * Copyright (c) 1983, 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)time.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -37,6 +37,13 @@ name|tm_yday
 decl_stmt|;
 name|int
 name|tm_isdst
+decl_stmt|;
+name|long
+name|tm_gmtoff
+decl_stmt|;
+name|char
+modifier|*
+name|tm_zone
 decl_stmt|;
 block|}
 struct|;
