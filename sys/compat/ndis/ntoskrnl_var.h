@@ -495,6 +495,10 @@ name|EVENT_TYPE_SYNC
 value|1
 end_define
 
+begin_comment
+comment|/*  * We need to use the timeout()/untimeout() API for ktimers  * since timers can be initialized, but not destroyed (so  * malloc()ing our own callout structures would mean a leak,  * since there'd be no way to free() them). This means we  * need to use struct callout_handle, which is really just a  * pointer. To make it easier to deal with, we use a union  * to overlay the callout_handle over the k_timerlistentry.  * The latter is a list_entry, which is two pointers, so  * there's enough space available to hide a callout_handle  * there.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ktimer
@@ -505,9 +509,18 @@ decl_stmt|;
 name|uint64_t
 name|k_duetime
 decl_stmt|;
+union|union
+block|{
 name|list_entry
 name|k_timerlistentry
 decl_stmt|;
+name|struct
+name|callout_handle
+name|k_handle
+decl_stmt|;
+block|}
+name|u
+union|;
 name|void
 modifier|*
 name|k_dpc
@@ -518,6 +531,28 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|k_timerlistentry
+value|u.k_timerlistentry
+end_define
+
+begin_define
+define|#
+directive|define
+name|k_handle
+value|u.k_handle
+end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ktimer
+name|ktimer
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -611,6 +646,14 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|kdpc
+name|kdpc
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Note: the acquisition count is BSD-specific. The Microsoft  * documentation says that mutexes can be acquired recursively  * by a given thread, but that you must release the mutex as  * many times as you acquired it before it will be set to the  * signalled state (i.e. before any other threads waiting on  * the object will be woken up). However the Windows KMUTANT  * structure has no field for keeping track of the number of  * acquisitions, so we need to add one ourselves. As long as  * driver code treats the mutex as opaque, we should be ok.  */
 end_comment
@@ -622,9 +665,17 @@ block|{
 name|nt_dispatch_header
 name|km_header
 decl_stmt|;
+union|union
+block|{
 name|list_entry
 name|km_listentry
 decl_stmt|;
+name|uint32_t
+name|km_acquirecnt
+decl_stmt|;
+block|}
+name|u
+union|;
 name|void
 modifier|*
 name|km_ownerthread
@@ -635,12 +686,23 @@ decl_stmt|;
 name|uint8_t
 name|km_apcdisable
 decl_stmt|;
-name|uint32_t
-name|km_acquirecnt
-decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|km_listentry
+value|u.km_listentry
+end_define
+
+begin_define
+define|#
+directive|define
+name|km_acquirecnt
+value|u.km_acquirecnt
+end_define
 
 begin_typedef
 typedef|typedef
