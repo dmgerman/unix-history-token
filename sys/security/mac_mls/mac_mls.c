@@ -13019,11 +13019,6 @@ operator|=
 name|mac_mls_check_vnode_mmap
 block|,
 operator|.
-name|mpo_check_vnode_mprotect
-operator|=
-name|mac_mls_check_vnode_mmap
-block|,
-operator|.
 name|mpo_check_vnode_open
 operator|=
 name|mac_mls_check_vnode_open
