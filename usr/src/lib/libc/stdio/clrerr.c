@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -20,15 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clrerr.c	5.2 (Berkeley) %G%"
+literal|"@(#)clrerr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_include
 include|#
@@ -42,33 +49,24 @@ directive|undef
 name|clearerr
 end_undef
 
-begin_expr_stmt
+begin_function
+name|void
 name|clearerr
-argument_list|(
-name|iop
-argument_list|)
-specifier|register
+parameter_list|(
+name|fp
+parameter_list|)
 name|FILE
-operator|*
-name|iop
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+modifier|*
+name|fp
+decl_stmt|;
 block|{
-name|iop
-operator|->
-name|_flag
-operator|&=
-operator|~
-operator|(
-name|_IOERR
-operator||
-name|_IOEOF
-operator|)
+name|__sclearerr
+argument_list|(
+name|fp
+argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
