@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gprint.h	1.4	83/05/13  *  * This file contains standard definitions used by the gprint program.  */
+comment|/* gprint.h	1.5	83/05/22  *  * This file contains standard definitions used by the gprint program.  */
 end_comment
 
 begin_define
@@ -18,7 +18,7 @@ begin_define
 define|#
 directive|define
 name|Vylen
-value|1536
+value|1600
 end_define
 
 begin_define
