@@ -12,7 +12,7 @@ name|TZFILE_H
 end_define
 
 begin_comment
-comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). */
+comment|/* ** This file is in the public domain, so clarified as of ** 1996-06-05 by Arthur David Olson (arthur_david_olson@nih.gov). */
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ name|NOID
 end_ifndef
 
 begin_comment
-comment|/* static char	tzfilehid[] = "@(#)tzfile.h	7.8"; */
+comment|/* static char	tzfilehid[] = "@(#)tzfile.h	7.14"; */
 end_comment
 
 begin_endif
@@ -135,14 +135,28 @@ begin_comment
 comment|/* ** Each file begins with. . . */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TZ_MAGIC
+value|"TZif"
+end_define
+
 begin_struct
 struct|struct
 name|tzhead
 block|{
 name|char
+name|tzh_magic
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* TZ_MAGIC */
+name|char
 name|tzh_reserved
 index|[
-literal|20
+literal|16
 index|]
 decl_stmt|;
 comment|/* reserved for future use */
@@ -193,7 +207,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* ** . . .followed by. . . ** **	tzh_timecnt (char [4])s		coded transition times a la time(2) **	tzh_timecnt (unsigned char)s	types of local time starting at above **	tzh_typecnt repetitions of **		one (char [4])		coded GMT offset in seconds **		one (unsigned char)	used to set tm_isdst **		one (unsigned char)	that's an abbreviation list index **	tzh_charcnt (char)s		'\0'-terminated zone abbreviations **	tzh_leapcnt repetitions of **		one (char [4])		coded leap second transition times **		one (char [4])		total correction after above **	tzh_ttisstdcnt (char)s		indexed by type; if TRUE, transition **					time is standard time, if FALSE, **					transition time is wall clock time **					if absent, transition times are **					assumed to be wall clock time **	tzh_ttisgmtcnt (char)s		indexed by type; if TRUE, transition **					time is GMT, if FALSE, **					transition time is local time **					if absent, transition times are **					assumed to be local time */
+comment|/* ** . . .followed by. . . ** **	tzh_timecnt (char [4])s		coded transition times a la time(2) **	tzh_timecnt (unsigned char)s	types of local time starting at above **	tzh_typecnt repetitions of **		one (char [4])		coded UTC offset in seconds **		one (unsigned char)	used to set tm_isdst **		one (unsigned char)	that's an abbreviation list index **	tzh_charcnt (char)s		'\0'-terminated zone abbreviations **	tzh_leapcnt repetitions of **		one (char [4])		coded leap second transition times **		one (char [4])		total correction after above **	tzh_ttisstdcnt (char)s		indexed by type; if TRUE, transition **					time is standard time, if FALSE, **					transition time is wall clock time **					if absent, transition times are **					assumed to be wall clock time **	tzh_ttisgmtcnt (char)s		indexed by type; if TRUE, transition **					time is UTC, if FALSE, **					transition time is local time **					if absent, transition times are **					assumed to be local time */
 end_comment
 
 begin_comment
