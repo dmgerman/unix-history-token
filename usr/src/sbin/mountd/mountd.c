@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	5.17 (Berkeley) %G%"
+literal|"@(#)mountd.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5025,7 +5025,7 @@ name|strcmp
 argument_list|(
 name|cpopt
 argument_list|,
-literal|"allanon"
+literal|"all"
 argument_list|)
 operator|)
 operator|)
