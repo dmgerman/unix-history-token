@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	4.9	83/03/29	*/
+comment|/*	rx.c	4.10	83/04/04	*/
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ comment|/*  * RX02 floppy disk device driver  *  */
 end_comment
 
 begin_comment
-comment|/*  * TODO:  *    - Make it possible to access blocks containing less than  *	512 bytes properly.  *  * 	Note: If the drive subsystem is  * 	powered off at boot time, the controller won't interrupt!  */
+comment|/*  * 	Note: If the drive subsystem is  * 	powered off at boot time, the controller won't interrupt!  */
 end_comment
 
 begin_include
@@ -304,6 +304,12 @@ name|sc_bcnt
 decl_stmt|;
 comment|/* save total transfer count for */
 comment|/* multisector transfers */
+name|int
+name|sc_offset
+decl_stmt|;
+comment|/* raw mode kludge: gives the offset into */
+comment|/* a block of DEV_BSIZE for the current */
+comment|/* request */
 block|}
 name|rx_softc
 index|[
@@ -455,6 +461,17 @@ name|reg
 parameter_list|)
 value|(reg&0xffff)
 end_define
+
+begin_define
+define|#
+directive|define
+name|NDPC
+value|2
+end_define
+
+begin_comment
+comment|/* # drives per controller */
+end_comment
 
 begin_comment
 comment|/* constants related to floppy data capacity */
@@ -890,15 +907,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|rxtimo
-argument_list|(
-name|ctlr
-argument_list|)
-expr_stmt|;
-comment|/* start watchdog */
 name|rxwstart
 operator|++
 expr_stmt|;
+name|rxtimo
+argument_list|()
+expr_stmt|;
+comment|/* start watchdog */
 block|}
 return|return
 operator|(
@@ -950,6 +965,9 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|sc
 operator|->
 name|sc_flags
@@ -963,10 +981,49 @@ name|sc_csbits
 operator|=
 literal|0
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NFX
+operator|*
+name|NDPC
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|rx_softc
+index|[
+name|i
+index|]
+operator|.
+name|sc_flags
+operator|&
+name|RXF_OPEN
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|i
+operator|==
+name|NFX
+operator|*
+name|NDPC
+condition|)
 name|rxwstart
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Turn off watchdog if all */
+comment|/* devices are closed */
 block|}
 end_block
 
@@ -992,12 +1049,6 @@ name|ui
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_ctlr
-modifier|*
-name|um
-decl_stmt|;
-specifier|register
-name|struct
 name|buf
 modifier|*
 name|dp
@@ -1019,6 +1070,15 @@ operator|->
 name|b_dev
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|unit
+operator|>=
+name|NRX
+condition|)
+goto|goto
+name|bad
+goto|;
 name|ui
 operator|=
 name|rxdinfo
@@ -1049,12 +1109,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|um
-operator|=
-name|ui
-operator|->
-name|ui_mi
-expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1086,22 +1140,8 @@ operator|=
 operator|&
 name|rxutab
 index|[
-name|ui
-operator|->
-name|ui_unit
+name|unit
 index|]
-expr_stmt|;
-name|disksort
-argument_list|(
-name|dp
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-name|rxustart
-argument_list|(
-name|ui
-argument_list|)
 expr_stmt|;
 name|bp
 operator|->
@@ -1111,29 +1151,56 @@ name|bp
 operator|->
 name|b_bcount
 expr_stmt|;
-name|sc
-operator|->
-name|sc_uaddr
-operator|=
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_addr
-expr_stmt|;
-name|sc
-operator|->
-name|sc_bcnt
-operator|=
-name|bp
-operator|->
-name|b_bcount
-expr_stmt|;
-name|rxstart
+name|disksort
 argument_list|(
-name|um
+name|dp
+argument_list|,
+name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|b_active
+operator|==
+literal|0
+condition|)
+block|{
+name|rxustart
+argument_list|(
+name|ui
+argument_list|)
+expr_stmt|;
+name|bp
+operator|=
+operator|&
+name|ui
+operator|->
+name|ui_mi
+operator|->
+name|um_tab
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_actf
+operator|&&
+name|bp
+operator|->
+name|b_active
+operator|==
+literal|0
+condition|)
+name|rxstart
+argument_list|(
+name|ui
+operator|->
+name|ui_mi
+argument_list|)
+expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -1158,7 +1225,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Unit start routine.  * Put this unit on the ready queue for the controller,  * unless it is already there.  */
+comment|/*  * Unit start routine.  * Put this unit on the ready queue for the controller  */
 end_comment
 
 begin_expr_stmt
@@ -1180,14 +1247,7 @@ name|struct
 name|buf
 modifier|*
 name|dp
-decl_stmt|;
-name|struct
-name|uba_ctlr
-modifier|*
-name|um
-decl_stmt|;
-name|dp
-operator|=
+init|=
 operator|&
 name|rxutab
 index|[
@@ -1195,21 +1255,16 @@ name|ui
 operator|->
 name|ui_unit
 index|]
-expr_stmt|;
+decl_stmt|;
+name|struct
+name|uba_ctlr
+modifier|*
 name|um
-operator|=
+init|=
 name|ui
 operator|->
 name|ui_mi
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dp
-operator|->
-name|b_active
-condition|)
-block|{
+decl_stmt|;
 name|dp
 operator|->
 name|b_forw
@@ -1258,7 +1313,6 @@ operator|->
 name|b_active
 operator|++
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -1333,7 +1387,7 @@ operator|+
 operator|(
 name|sc
 operator|->
-name|sc_bcnt
+name|sc_offset
 operator|-
 name|bp
 operator|->
@@ -1438,7 +1492,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Controller start routine  */
+comment|/*  * Controller start routine.  * Start a new transfer or continue a multisector  * transfer. If this is a new transfer (dp->b_active == 1)  * save the start address of the data buffer and the total  * byte count in the soft control structure. These are  * restored into the buffer structure when the transfer has  * been completed, before calling 'iodone'.  */
 end_comment
 
 begin_expr_stmt
@@ -1542,13 +1596,6 @@ goto|goto
 name|loop
 goto|;
 block|}
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_active
-operator|++
-expr_stmt|;
 name|unit
 operator|=
 name|RXUNIT
@@ -1565,6 +1612,54 @@ name|rx_softc
 index|[
 name|unit
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|b_active
+operator|==
+literal|1
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_uaddr
+operator|=
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+expr_stmt|;
+name|sc
+operator|->
+name|sc_bcnt
+operator|=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
+name|sc
+operator|->
+name|sc_offset
+operator|+=
+name|sc
+operator|->
+name|sc_bcnt
+expr_stmt|;
+name|dp
+operator|->
+name|b_active
+operator|++
+expr_stmt|;
+block|}
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|++
 expr_stmt|;
 name|rxaddr
 operator|=
@@ -1624,7 +1719,7 @@ operator|==
 literal|0x800
 condition|)
 block|{
-comment|/* 		 * Simulated check for 'volume valid', check 		 * if the drive unit has been powered down 		 */
+comment|/* 		 * 'Volume valid'?, check 		 * if the drive unit has been powered down 		 */
 name|rxaddr
 operator|->
 name|rxcs
@@ -2188,17 +2283,21 @@ operator|&
 name|RX_ERR
 operator|)
 operator|&&
+operator|(
 name|rxc
 operator|->
 name|rxc_state
 operator|!=
 name|RXS_RDSTAT
+operator|)
 operator|&&
+operator|(
 name|rxc
 operator|->
 name|rxc_state
 operator|!=
 name|RXS_RDERR
+operator|)
 condition|)
 goto|goto
 name|error
@@ -2304,6 +2403,17 @@ name|sc
 operator|->
 name|sc_csbits
 expr_stmt|;
+name|rxmap
+argument_list|(
+name|bp
+argument_list|,
+operator|&
+name|sector
+argument_list|,
+operator|&
+name|track
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2317,17 +2427,6 @@ operator|==
 literal|0
 condition|)
 empty_stmt|;
-name|rxmap
-argument_list|(
-name|bp
-argument_list|,
-operator|&
-name|sector
-argument_list|,
-operator|&
-name|track
-argument_list|)
-expr_stmt|;
 name|rxaddr
 operator|->
 name|rxdb
@@ -2400,6 +2499,13 @@ goto|;
 case|case
 name|RXS_RDERR
 case|:
+name|bp
+operator|=
+name|bp
+operator|->
+name|b_back
+expr_stmt|;
+comment|/* kludge, see 'rderr:' */
 name|rxmap
 argument_list|(
 name|bp
@@ -2413,19 +2519,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rx%d: hard error, lsn%d (trk %d psec %d) "
+literal|"rx%d: hard error, trk %d psec %d "
 argument_list|,
 name|unit
-argument_list|,
-name|bp
-operator|->
-name|b_blkno
-operator|*
-operator|(
-name|NBPS
-operator|/
-name|DEV_BSIZE
-operator|)
 argument_list|,
 name|track
 argument_list|,
@@ -2434,7 +2530,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cs=%b, db=%b, err=%x\n"
+literal|"cs=%b, db=%b, err="
 argument_list|,
 name|MASKREG
 argument_list|(
@@ -2453,6 +2549,11 @@ name|rxdb
 argument_list|)
 argument_list|,
 name|RXES_BITS
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"0x%x, 0x%x, 0x%x, 0x%x\n"
 argument_list|,
 name|MASKREG
 argument_list|(
@@ -2463,33 +2564,29 @@ index|[
 literal|0
 index|]
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
+argument_list|,
+name|MASKREG
 argument_list|(
-literal|"errstatus: 0x%x, 0x%x, 0x%x, 0x%x\n"
-argument_list|,
-name|er
-operator|->
-name|rxxt
-index|[
-literal|0
-index|]
-argument_list|,
 name|er
 operator|->
 name|rxxt
 index|[
 literal|1
 index|]
+argument_list|)
 argument_list|,
+name|MASKREG
+argument_list|(
 name|er
 operator|->
 name|rxxt
 index|[
 literal|2
 index|]
+argument_list|)
 argument_list|,
+name|MASKREG
+argument_list|(
 name|er
 operator|->
 name|rxxt
@@ -2497,14 +2594,8 @@ index|[
 literal|3
 index|]
 argument_list|)
+argument_list|)
 expr_stmt|;
-name|bp
-operator|=
-name|bp
-operator|->
-name|b_back
-expr_stmt|;
-comment|/* kludge, see 'rderr:' */
 goto|goto
 name|done
 goto|;
@@ -2688,7 +2779,7 @@ expr_stmt|;
 return|return;
 name|rderr
 label|:
-comment|/* 	 * A hard error (other than not ready or density) has occurred. 	 * Read the extended error status information. 	 * Before doing this, save the current CS and DB register values, 	 * because the read error status operation may modify them. 	 * Insert buffer with request at the head of the queue. 	 */
+comment|/* 	 * A hard error (other than not ready or density) has occurred. 	 * Read the extended error status information. 	 * Before doing this, save the current CS and DB register values, 	 * because the read error status operation may modify them. 	 * Insert buffer with request at the head of the queue, and 	 * save a pointer to the data buffer, so it can be restored 	 * when the read error status operation is finished. 	 */
 name|bp
 operator|->
 name|b_error
@@ -2782,21 +2873,13 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_actf
+name|dp
 operator|->
 name|b_actf
 operator|==
 name|NULL
 condition|)
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_actf
+name|dp
 operator|->
 name|b_actl
 operator|=
@@ -2806,19 +2889,11 @@ name|bp
 operator|->
 name|b_forw
 operator|=
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_actf
+name|dp
 operator|->
 name|b_actf
 expr_stmt|;
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_actf
+name|dp
 operator|->
 name|b_actf
 operator|=
@@ -2920,6 +2995,13 @@ name|sc
 operator|->
 name|sc_bcnt
 expr_stmt|;
+name|sc
+operator|->
+name|sc_offset
+operator|=
+literal|0
+expr_stmt|;
+comment|/* move this statement to a more appropriate place! */
 name|iodone
 argument_list|(
 name|bp
@@ -2961,15 +3043,18 @@ name|bp
 operator|->
 name|av_forw
 expr_stmt|;
-comment|/* 	 * If this controller has more work to do, 	 * start it up right away 	 */
+comment|/* 	 * If this unit has more work to do, 	 * start it up right away 	 */
 if|if
 condition|(
-name|um
+name|dp
 operator|->
-name|um_tab
-operator|.
 name|b_actf
 condition|)
+name|rxustart
+argument_list|(
+name|ui
+argument_list|)
+expr_stmt|;
 name|rxstart
 argument_list|(
 name|um
@@ -2982,83 +3067,14 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_macro
-name|minrxphys
-argument_list|(
-argument|bp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|struct
-name|rx_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|rx_softc
-index|[
-name|RXUNIT
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_bcount
-operator|>
-name|NBPS
-condition|)
-name|bp
-operator|->
-name|b_bcount
-operator|=
-name|NBPS
-expr_stmt|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*   * Wake up every second and if an interrupt is pending  * but nothing has happened increment a counter.  * If nothing happens for RX_MAXTIMEOUT seconds,   * call the interrupt routine (hoping that it will   * detect an error condition in the controller)  */
+comment|/*   * Wake up every second, check if an interrupt is pending  * on one of the present controllers.  * if it is, but nothing has happened increment a counter.  * If nothing happens for RX_MAXTIMEOUT seconds,   * call the interrupt routine with the 'dead' controller  * as an argument, thereby simulating an interrupt.  * If this occurs, the error bit will probably be set  * in the controller, and the interrupt routine will  * be able to recover ( or at least report) the error  * appropriately.  */
 end_comment
 
 begin_macro
 name|rxtimo
-argument_list|(
-argument|ctlr
-argument_list|)
+argument_list|()
 end_macro
-
-begin_decl_stmt
-name|int
-name|ctlr
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -3067,12 +3083,15 @@ name|struct
 name|rx_ctlr
 modifier|*
 name|rxc
-init|=
-operator|&
-name|rx_ctlr
-index|[
-name|ctlr
-index|]
+decl_stmt|;
+specifier|register
+name|struct
+name|uba_ctlr
+modifier|*
+name|um
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -3080,6 +3099,7 @@ name|rxwstart
 operator|>
 literal|0
 condition|)
+block|{
 name|timeout
 argument_list|(
 name|rxtimo
@@ -3087,10 +3107,58 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|ctlr
+literal|0
 argument_list|,
 name|hz
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NFX
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|um
+operator|=
+name|rxminfo
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|um
+operator|==
+literal|0
+operator|||
+name|um
+operator|->
+name|um_alive
+operator|||
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|==
+literal|0
+condition|)
+continue|continue;
+name|rxc
+operator|=
+operator|&
+name|rx_ctlr
+index|[
+name|i
+index|]
 expr_stmt|;
 if|if
 condition|(
@@ -3101,17 +3169,22 @@ name|rxc_tocnt
 operator|<
 name|RX_MAXTIMEOUT
 condition|)
-return|return;
+block|{
 name|printf
 argument_list|(
-literal|"rx: timeout\n"
+literal|"fx%d: timeout\n"
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 name|rxintr
 argument_list|(
-name|ctlr
+name|i
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+block|}
 block|}
 end_block
 
@@ -3246,10 +3319,6 @@ block|}
 block|}
 end_block
 
-begin_comment
-comment|/*  * make the world believe this is a   * 512b/s device  */
-end_comment
-
 begin_macro
 name|rxread
 argument_list|(
@@ -3334,6 +3403,16 @@ operator|(
 name|EIO
 operator|)
 return|;
+name|sc
+operator|->
+name|sc_offset
+operator|=
+name|uio
+operator|->
+name|uio_offset
+operator|%
+name|DEV_BSIZE
+expr_stmt|;
 return|return
 operator|(
 name|physio
@@ -3443,6 +3522,16 @@ operator|(
 name|EIO
 operator|)
 return|;
+name|sc
+operator|->
+name|sc_offset
+operator|=
+name|uio
+operator|->
+name|uio_offset
+operator|%
+name|DEV_BSIZE
+expr_stmt|;
 return|return
 operator|(
 name|physio
