@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	6.1	83/07/29	*/
+comment|/*	if_ec.c	6.2	84/03/20	*/
 end_comment
 
 begin_include
@@ -1021,6 +1021,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* mr disable (no alloc) */
+name|ec_softc
+index|[
+name|unit
+index|]
+operator|.
+name|es_if
+operator|.
+name|if_flags
+operator|&=
+operator|~
+name|IFF_RUNNING
+expr_stmt|;
 name|ecinit
 argument_list|(
 name|unit
@@ -2957,6 +2969,15 @@ label|:
 name|m_freem
 argument_list|(
 name|m0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mcopy
+condition|)
+name|m_freem
+argument_list|(
+name|mcopy
 argument_list|)
 expr_stmt|;
 return|return
