@@ -800,11 +800,28 @@ operator|!
 name|pfunc
 condition|)
 block|{
+if|if
+condition|(
+name|Wflag
+condition|)
 name|printf
 argument_list|(
-literal|"%-5.5s %5.5s %-13.13s %-17.17s %8.8s %5.5s"
+literal|"%-7.7s"
 argument_list|,
 literal|"Name"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%-5.5s"
+argument_list|,
+literal|"Name"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %5.5s %-13.13s %-17.17s %8.8s %5.5s"
 argument_list|,
 literal|"Mtu"
 argument_list|,
@@ -1129,11 +1146,28 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|Wflag
+condition|)
 name|printf
 argument_list|(
-literal|"%-5.5s %5lu "
+literal|"%-7.7s"
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%-5.5s"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %5lu "
 argument_list|,
 name|ifnet
 operator|.
@@ -1251,11 +1285,28 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|Wflag
+condition|)
 name|printf
 argument_list|(
-literal|"%-5.5s %5lu "
+literal|"%-7.7s"
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%-5.5s"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %5lu "
 argument_list|,
 name|ifnet
 operator|.
