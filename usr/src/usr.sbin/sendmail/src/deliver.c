@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.19 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3690,6 +3690,14 @@ directive|ifdef
 name|EPROCLIM
 case|case
 name|EPROCLIM
+case|:
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ETIMEDOUT
+case|case
+name|ETIMEDOUT
 case|:
 endif|#
 directive|endif
