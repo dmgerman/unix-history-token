@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997,1998 Maxim Bolotin and Oleg Sharoiko.  * All ri
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_cs.c,v 1.1.2.2 1998/07/20 21:00:02 msmith Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
+comment|/*  * $Id: if_cs.c,v 1.1.2.3 1998/08/13 20:31:56 msmith Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
 end_comment
 
 begin_comment
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -304,24 +310,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CS_WAIT_NEXT_PACKET
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CS_WAIT_NEXT_PACKET
-value|570
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * cs_softc: per line info and status  */
 end_comment
@@ -400,6 +388,36 @@ init|=
 name|NCS
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cs_recv_delay
+init|=
+literal|570
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cs_recv_delay
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|cs_recv_delay
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -3900,7 +3918,7 @@ name|ETHER_CRC_LEN
 condition|)
 name|DELAY
 argument_list|(
-name|CS_WAIT_NEXT_PACKET
+name|cs_recv_delay
 argument_list|)
 expr_stmt|;
 block|}
@@ -5542,13 +5560,25 @@ name|IFM_AUTO
 case|:
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|enable_tp
 argument_list|(
 name|sc
 argument_list|)
+operator|)
+operator|==
+literal|0
 condition|)
+name|error
+operator|=
+name|cs_duplex_auto
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|error
