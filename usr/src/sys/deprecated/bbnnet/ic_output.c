@@ -215,7 +215,9 @@ name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-comment|/* #ifdef bsd42 */
+ifdef|#
+directive|ifdef
+name|bsd42
 comment|/* note we use ip_src, not ip_dst here */
 if|if
 condition|(
@@ -249,7 +251,13 @@ name|l
 operator|)
 return|;
 block|}
-comment|/* #endif     ia = in_iafromif(inetifp); */
+name|ia
+operator|=
+name|in_iafromif
+argument_list|(
+name|inetifp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|IA_INADDR
