@@ -1484,7 +1484,7 @@ name|char
 modifier|*
 name|link_command_spec
 init|=
-literal|"\ %{!fsyntax-only: \  %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z}\ 			%{!A:%{!nostartfiles:%{!nostdlib:%S}}} %{static:}\ 			%{L*} %D %o %{!nostdlib:libgcc.a%s %L libgcc.a%s %{!A:%E}}\n }}}}}}"
+literal|"\ %{!fsyntax-only: \  %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z} %{Z} \ 			%{!A:%{!nostartfiles:%{!nostdlib:%S}}} %{static:}\ 			%{L*} %D %o %{!nostdlib:libgcc.a%s %L libgcc.a%s %{!A:%E}}\n }}}}}}"
 decl_stmt|;
 end_decl_stmt
 
@@ -1509,7 +1509,7 @@ name|char
 modifier|*
 name|link_command_spec
 init|=
-literal|"\ %{!fsyntax-only: \  %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z}\ 			%{!A:%{!nostartfiles:%{!nostdlib:%S}}} %{static:}\ 			%{L*} %o %{!nostdlib:libgcc.a%s %L libgcc.a%s %{!A:%E}}\n }}}}}}"
+literal|"\ %{!fsyntax-only: \  %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z} %{Z} \ 			%{!A:%{!nostartfiles:%{!nostdlib:%S}}} %{static:}\ 			%{L*} %o %{!nostdlib:libgcc.a%s %L libgcc.a%s %{!A:%E}}\n }}}}}}"
 decl_stmt|;
 end_decl_stmt
 
@@ -1528,7 +1528,7 @@ name|char
 modifier|*
 name|link_command_spec
 init|=
-literal|"\ %{!fsyntax-only: \  %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z}\ 			%{!A:%{!nostartfiles:%{!nostdlib:%S}}} %{static:}\ 			%{L*} %D %o %{!nostdlib:-lgcc %L -lgcc %{!A:%E}}\n }}}}}}"
+literal|"\ %{!fsyntax-only: \  %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z} %{Z} \ 			%{!A:%{!nostartfiles:%{!nostdlib:%S}}} %{static:}\ 			%{L*} %D %o %{!nostdlib:-lgcc %L -lgcc %{!A:%E}}\n }}}}}}"
 decl_stmt|;
 end_decl_stmt
 
