@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	6.6	85/01/03	*/
+comment|/*	ioctl.h	6.7	85/01/24	*/
 end_comment
 
 begin_comment
@@ -182,16 +182,16 @@ name|winsize
 block|{
 name|unsigned
 name|short
-name|row
+name|ws_row
 decl_stmt|,
-name|col
+name|ws_col
 decl_stmt|;
 comment|/* character size of window */
 name|unsigned
 name|short
-name|xpixel
+name|ws_xpixel
 decl_stmt|,
-name|ypixel
+name|ws_ypixel
 decl_stmt|;
 comment|/* pixel size of window */
 block|}
