@@ -1543,9 +1543,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Returns the decl for a function which will return a type_info node for    TYPE.  This version does not mark the function used, for use in    set_rtti_entry; for the vtable case, we'll get marked in    finish_vtable_vardecl, when we know that we want to be emitted.     We do this to avoid emitting the tinfo node itself, since we don't    currently support DECL_DEFER_OUTPUT for variables.  Also, we don't    associate constant pools with their functions properly, so we would    emit string constants and such even though we don't emit the actual    function.  When those bugs are fixed, this function should go away.  */
+end_comment
+
 begin_function
 name|tree
-name|get_tinfo_fn
+name|get_tinfo_fn_unused
 parameter_list|(
 name|type
 parameter_list|)
@@ -1697,11 +1701,6 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|mark_used
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 name|mark_inline_for_output
 argument_list|(
 name|d
@@ -1709,6 +1708,39 @@ argument_list|)
 expr_stmt|;
 name|pop_obstacks
 argument_list|()
+expr_stmt|;
+return|return
+name|d
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Likewise, but also mark it used.  Called by various EH and RTTI code.  */
+end_comment
+
+begin_function
+name|tree
+name|get_tinfo_fn
+parameter_list|(
+name|type
+parameter_list|)
+name|tree
+name|type
+decl_stmt|;
+block|{
+name|tree
+name|d
+init|=
+name|get_tinfo_fn_unused
+argument_list|(
+name|type
+argument_list|)
+decl_stmt|;
+name|mark_used
+argument_list|(
+name|d
+argument_list|)
 expr_stmt|;
 return|return
 name|d

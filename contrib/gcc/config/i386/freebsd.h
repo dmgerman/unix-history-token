@@ -61,7 +61,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_VTABLE_THUNKS
-value|1
+value|2
 end_define
 
 begin_comment
