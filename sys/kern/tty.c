@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty.c	8.8 (Berkeley) 1/21/94  * $Id: tty.c,v 1.46.2.1 1995/09/14 07:10:00 davidg Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty.c	8.8 (Berkeley) 1/21/94  * $Id: tty.c,v 1.46.2.2 1995/11/03 08:01:04 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1474,9 +1474,15 @@ name|t_outq
 argument_list|,
 name|TTMAXHIWAT
 operator|+
-literal|200
+name|OBUFSIZ
+operator|+
+literal|100
 argument_list|,
-literal|512
+name|TTMAXHIWAT
+operator|+
+name|OBUFSIZ
+operator|+
+literal|100
 argument_list|)
 expr_stmt|;
 name|clist_alloc_cblocks
@@ -6406,52 +6412,26 @@ name|TS_TBLOCK
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|rw
+operator|&
+name|FWRITE
+condition|)
+name|FLUSHQ
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|)
+expr_stmt|;
 name|ttyunblock
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ISSET
-argument_list|(
-name|tp
-operator|->
-name|t_iflag
-argument_list|,
-name|IXOFF
-argument_list|)
-condition|)
-block|{
-comment|/* 				 * XXX wait a bit in the hope that the stop 				 * character (if any) will go out.  Waiting 				 * isn't good since it allows races.  This 				 * will be fixed when the stop character is 				 * put in a special queue.  Don't bother with 				 * the checks in ttywait() since the timeout 				 * will save us. 				 */
-name|SET
-argument_list|(
-name|tp
-operator|->
-name|t_state
-argument_list|,
-name|TS_SO_OCOMPLETE
-argument_list|)
-expr_stmt|;
-name|ttysleep
-argument_list|(
-name|tp
-argument_list|,
-name|TSA_OCOMPLETE
-argument_list|(
-name|tp
-argument_list|)
-argument_list|,
-name|TTOPRI
-argument_list|,
-literal|"ttyfls"
-argument_list|,
-name|hz
-operator|/
-literal|10
-argument_list|)
-expr_stmt|;
-comment|/* 				 * Don't try sending the stop character again. 				 */
+comment|/* 			 * Don't let leave any state that might clobber the 			 * next line discipline (although we should do more 			 * to send the START char).  Not clearing the state 			 * may have caused the "putc to a clist with no 			 * reserved cblocks" panic/printf. 			 */
 name|CLR
 argument_list|(
 name|tp
@@ -6461,10 +6441,17 @@ argument_list|,
 name|TS_TBLOCK
 argument_list|)
 expr_stmt|;
-goto|goto
-name|again
-goto|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* forget it, sleeping isn't always safe and we don't know when it is */
+block|if (ISSET(tp->t_iflag, IXOFF)) {
+comment|/* 				 * XXX wait a bit in the hope that the stop 				 * character (if any) will go out.  Waiting 				 * isn't good since it allows races.  This 				 * will be fixed when the stop character is 				 * put in a special queue.  Don't bother with 				 * the checks in ttywait() since the timeout 				 * will save us. 				 */
+block|SET(tp->t_state, TS_SO_OCOMPLETE); 				ttysleep(tp, TSA_OCOMPLETE(tp), TTOPRI, 					 "ttyfls", hz / 10);
+comment|/* 				 * Don't try sending the stop character again. 				 */
+block|CLR(tp->t_state, TS_TBLOCK); 				goto again; 			}
+endif|#
+directive|endif
 block|}
 block|}
 if|if
@@ -8510,7 +8497,9 @@ name|c_cc
 operator|>
 name|hiwat
 operator|+
-literal|200
+name|OBUFSIZ
+operator|+
+literal|100
 condition|)
 while|while
 condition|(
