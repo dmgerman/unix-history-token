@@ -179,6 +179,8 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_TAPE
+operator||
+name|D_TRACKCLOSE
 block|,
 comment|/* bmaj */
 operator|-

@@ -1590,8 +1590,8 @@ operator|)
 operator|)
 operator|||
 name|dma_stat
-operator|!=
-name|ATA_BMSTAT_INTERRUPT
+operator|&
+name|ATA_BMSTAT_ERROR
 condition|)
 block|{
 name|request

@@ -2488,15 +2488,19 @@ name|ATA_S_ERROR
 operator|)
 operator|||
 operator|(
+operator|(
 name|request
 operator|->
 name|flags
 operator|&
 name|AR_F_DMA_USED
+operator|)
 operator|&&
+operator|(
 name|dma_stat
-operator|!=
-name|ATA_BMSTAT_INTERRUPT
+operator|&
+name|ATA_BMSTAT_ERROR
+operator|)
 operator|)
 condition|)
 block|{
@@ -2520,7 +2524,7 @@ operator|&
 name|ATA_E_ICRC
 operator|)
 condition|?
-literal|"UDMA CRC"
+literal|"UDMA ICRC"
 else|:
 literal|"HARD"
 argument_list|,

@@ -179,15 +179,6 @@ name|lun
 decl_stmt|;
 comment|/* logical device unit */
 name|int32_t
-name|flags
-decl_stmt|;
-comment|/* device state flags */
-define|#
-directive|define
-name|F_OPEN
-value|0x0001
-comment|/* the device is opened */
-name|int32_t
 name|refcnt
 decl_stmt|;
 comment|/* the number of raw opens */

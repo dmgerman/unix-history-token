@@ -209,6 +209,8 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
+operator||
+name|D_TRACKCLOSE
 block|,
 comment|/* bmaj */
 literal|31
@@ -1276,12 +1278,6 @@ operator|->
 name|block_size
 operator|=
 literal|2048
-expr_stmt|;
-name|acd
-operator|->
-name|refcnt
-operator|=
-literal|0
 expr_stmt|;
 name|acd
 operator|->
@@ -2964,6 +2960,7 @@ operator|!
 name|cdp
 operator|->
 name|refcnt
+operator|++
 condition|)
 block|{
 name|acd_prevent_allow
@@ -3009,11 +3006,6 @@ name|atp
 argument_list|)
 expr_stmt|;
 block|}
-name|cdp
-operator|->
-name|refcnt
-operator|++
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3049,15 +3041,10 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
-name|cdp
-operator|->
-name|refcnt
-operator|--
-expr_stmt|;
-comment|/* are we the last open ?? */
 if|if
 condition|(
 operator|!
+operator|--
 name|cdp
 operator|->
 name|refcnt
@@ -8572,15 +8559,6 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"dvd_report_key: format=0x%x\n"
-argument_list|,
-name|ai
-operator|->
-name|format
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|ai
@@ -9088,15 +9066,6 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"dvd_send_key: format=0x%x\n"
-argument_list|,
-name|ai
-operator|->
-name|format
-argument_list|)
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -9327,15 +9296,6 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"dvd_read_structure: format=0x%x\n"
-argument_list|,
-name|s
-operator|->
-name|format
-argument_list|)
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|&

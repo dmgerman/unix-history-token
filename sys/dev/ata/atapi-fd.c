@@ -185,10 +185,12 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
+operator||
+name|D_TRACKCLOSE
 block|,
 comment|/* bmaj */
 literal|32
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1314,6 +1316,14 @@ operator|->
 name|atp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fdp
+operator|->
+name|refcnt
+operator|++
+condition|)
 name|afd_prevent_allow
 argument_list|(
 name|fdp
@@ -1460,6 +1470,14 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|--
+name|fdp
+operator|->
+name|refcnt
+condition|)
 name|afd_prevent_allow
 argument_list|(
 name|fdp
@@ -1515,17 +1533,11 @@ name|CDIOCEJECT
 case|:
 if|if
 condition|(
-operator|(
-name|fdp
-operator|->
-name|flags
-operator|&
-name|F_OPEN
-operator|)
-operator|&&
 name|fdp
 operator|->
 name|refcnt
+operator|>
+literal|1
 condition|)
 return|return
 name|EBUSY
@@ -1543,17 +1555,11 @@ name|CDIOCCLOSE
 case|:
 if|if
 condition|(
-operator|(
-name|fdp
-operator|->
-name|flags
-operator|&
-name|F_OPEN
-operator|)
-operator|&&
 name|fdp
 operator|->
 name|refcnt
+operator|>
+literal|1
 condition|)
 return|return
 literal|0
