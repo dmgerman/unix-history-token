@@ -77,6 +77,8 @@ literal|"Async"
 block|,
 literal|"Carrier"
 block|,
+literal|"CCP"
+block|,
 literal|"Chat"
 block|,
 literal|"Command"
@@ -86,6 +88,8 @@ block|,
 literal|"Debug"
 block|,
 literal|"HDLC"
+block|,
+literal|"IPCP"
 block|,
 literal|"LCP"
 block|,

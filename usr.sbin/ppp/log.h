@@ -27,29 +27,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|LogCHAT
+name|LogCCP
 value|(3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogCOMMAND
+name|LogCHAT
 value|(4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogCONNECT
+name|LogCOMMAND
 value|(5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogDEBUG
+name|LogCONNECT
 value|(6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LogDEBUG
+value|(7)
 end_define
 
 begin_comment
@@ -60,49 +67,56 @@ begin_define
 define|#
 directive|define
 name|LogHDLC
-value|(7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LogLCP
 value|(8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogLINK
+name|LogIPCP
 value|(9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogLQM
+name|LogLCP
 value|(10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogPHASE
+name|LogLINK
 value|(11)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogTCPIP
+name|LogLQM
 value|(12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogTUN
+name|LogPHASE
 value|(13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LogTCPIP
+value|(14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LogTUN
+value|(15)
 end_define
 
 begin_comment
@@ -113,14 +127,14 @@ begin_define
 define|#
 directive|define
 name|LogMAXCONF
-value|(13)
+value|(15)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogWARN
-value|(14)
+value|(16)
 end_define
 
 begin_comment
@@ -131,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|LogERROR
-value|(15)
+value|(17)
 end_define
 
 begin_comment
@@ -142,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|LogALERT
-value|(16)
+value|(18)
 end_define
 
 begin_comment
@@ -153,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|LogMAX
-value|(16)
+value|(18)
 end_define
 
 begin_comment

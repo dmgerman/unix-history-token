@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.13 1997/06/09 03:27:21 brian Exp $  *  *  TODO:  *		o Refer loglevel for log output  *		o Better option log display  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.7.2.4 1997/06/10 09:43:24 brian Exp $  *  *  TODO:  *		o Refer loglevel for log output  *		o Better option log display  */
 end_comment
 
 begin_include
@@ -37,6 +37,24 @@ begin_include
 include|#
 directive|include
 file|"ccp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"modem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"loadalias.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vars.h"
 end_include
 
 begin_function_decl
@@ -119,6 +137,47 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
+name|void
+name|StoppedTimeout
+parameter_list|(
+name|fp
+parameter_list|)
+name|struct
+name|fsm
+modifier|*
+name|fp
+decl_stmt|;
+block|{
+name|LogPrintf
+argument_list|(
+name|fp
+operator|->
+name|LogLevel
+argument_list|,
+literal|"Stopped timer expired\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|modem
+operator|!=
+operator|-
+literal|1
+condition|)
+name|DownConnection
+argument_list|()
+expr_stmt|;
+else|else
+name|FsmDown
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|FsmInit
 parameter_list|(
@@ -183,7 +242,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"State change %s --> %s\n"
 argument_list|,
@@ -198,6 +259,30 @@ name|StateNames
 index|[
 name|new
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|state
+operator|==
+name|ST_STOPPED
+operator|&&
+name|fp
+operator|->
+name|StoppedTimer
+operator|.
+name|state
+operator|==
+name|TIMER_RUNNING
+condition|)
+name|StopTimer
+argument_list|(
+operator|&
+name|fp
+operator|->
+name|StoppedTimer
 argument_list|)
 expr_stmt|;
 name|fp
@@ -224,6 +309,7 @@ operator|==
 name|ST_OPENED
 operator|)
 condition|)
+block|{
 name|StopTimer
 argument_list|(
 operator|&
@@ -232,6 +318,57 @@ operator|->
 name|FsmTimer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|new
+operator|==
+name|ST_STOPPED
+operator|&&
+name|fp
+operator|->
+name|StoppedTimer
+operator|.
+name|load
+condition|)
+block|{
+name|fp
+operator|->
+name|StoppedTimer
+operator|.
+name|state
+operator|=
+name|TIMER_STOPPED
+expr_stmt|;
+name|fp
+operator|->
+name|StoppedTimer
+operator|.
+name|func
+operator|=
+name|StoppedTimeout
+expr_stmt|;
+name|fp
+operator|->
+name|StoppedTimer
+operator|.
+name|arg
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|fp
+expr_stmt|;
+name|StartTimer
+argument_list|(
+operator|&
+name|fp
+operator|->
+name|StoppedTimer
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -557,7 +694,9 @@ break|break;
 default|default:
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"Oops, Up at %s\n"
 argument_list|,
@@ -836,7 +975,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"SendTerminateReq.\n"
 argument_list|)
@@ -917,7 +1058,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"SendConfigAck(%s)\n"
 argument_list|,
@@ -993,7 +1136,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"SendConfigRej(%s)\n"
 argument_list|,
@@ -1069,7 +1214,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"SendConfigNak(%s)\n"
 argument_list|,
@@ -1437,7 +1584,9 @@ name|ST_STARTING
 case|:
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"Oops, RCR in %s.\n"
 argument_list|,
@@ -1953,7 +2102,9 @@ name|ST_STARTING
 case|:
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"Oops, RCN in %s.\n"
 argument_list|,
@@ -2125,7 +2276,9 @@ name|ST_STARTING
 case|:
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"Oops, RTR in %s\n"
 argument_list|,
@@ -2428,7 +2581,9 @@ return|return;
 block|}
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"RecvConfigRej.\n"
 argument_list|)
@@ -2449,7 +2604,9 @@ name|ST_STARTING
 case|:
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"Oops, RCJ in %s.\n"
 argument_list|,
@@ -2607,7 +2764,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"RecvCodeRej\n"
 argument_list|)
@@ -2673,7 +2832,9 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"-- Protocol (%04x) was rejected.\n"
 argument_list|,
@@ -2850,7 +3011,9 @@ expr_stmt|;
 comment|/* Insert local magic number */
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"SendEchoRep(%s)\n"
 argument_list|,
@@ -3016,7 +3179,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"RecvDiscReq\n"
 argument_list|)
@@ -3057,7 +3222,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"RecvIdent\n"
 argument_list|)
@@ -3098,7 +3265,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"RecvTimeRemain\n"
 argument_list|)
@@ -3139,7 +3308,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"RecvResetReq\n"
 argument_list|)
@@ -3151,7 +3322,9 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"SendResetAck\n"
 argument_list|)
@@ -3207,7 +3380,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"RecvResetAck\n"
 argument_list|)
@@ -3451,7 +3626,9 @@ literal|1
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|fp
+operator|->
+name|LogLevel
 argument_list|,
 literal|"Received %s (%d) state = %s (%d)\n"
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.13 1997/06/09 03:27:14 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
+comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.7.2.4 1997/06/10 09:43:07 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
 end_comment
 
 begin_include
@@ -223,6 +223,22 @@ name|NULL
 block|,
 name|NULL
 block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+name|LogCCP
 block|,
 name|CcpLayerUp
 block|,
@@ -517,7 +533,7 @@ name|ReqBuff
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogCCP
 argument_list|,
 literal|"CcpSendConfigReq\n"
 argument_list|)
@@ -591,7 +607,7 @@ expr_stmt|;
 comment|/* Initialize Input part */
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogCCP
 argument_list|,
 literal|"CcpSendResetReq\n"
 argument_list|)
@@ -646,7 +662,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogCCP
 argument_list|,
 literal|"CcpSendTerminateAck\n"
 argument_list|)
@@ -706,7 +722,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogCCP
 argument_list|,
 literal|"CcpLayerStart.\n"
 argument_list|)
@@ -729,7 +745,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogCCP
 argument_list|,
 literal|"CcpLayerFinish.\n"
 argument_list|)
@@ -752,7 +768,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogCCP
 argument_list|,
 literal|"CcpLayerDown.\n"
 argument_list|)
@@ -779,7 +795,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogCCP
 argument_list|,
 literal|"CcpLayerUp(%d).\n"
 argument_list|,
@@ -790,7 +806,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogCCP
 argument_list|,
 literal|"myproto = %d, hisproto = %d\n"
 argument_list|,
@@ -825,7 +841,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogCCP
 argument_list|,
 literal|"CCP Up event!!\n"
 argument_list|)
@@ -969,7 +985,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LogLCP
+name|LogCCP
 argument_list|,
 literal|"%s\n"
 argument_list|,
