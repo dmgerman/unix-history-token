@@ -2770,25 +2770,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|bus_space_barrier
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|,
-name|l
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|((void)((void)(t), (void)(h), (void)(o), (void)(l), (void)(f)))
-end_define
-
-begin_define
-define|#
-directive|define
 name|BUS_SPACE_BARRIER_READ
 value|0x01
 end_define
@@ -2807,6 +2788,37 @@ end_define
 begin_comment
 comment|/* force write barrier */
 end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|bus_space_barrier
+parameter_list|(
+name|bus_space_tag_t
+name|tag
+name|__unused
+parameter_list|,
+name|bus_space_handle_t
+name|bsh
+name|__unused
+parameter_list|,
+name|bus_size_t
+name|offset
+name|__unused
+parameter_list|,
+name|bus_size_t
+name|len
+name|__unused
+parameter_list|,
+name|int
+name|flags
+name|__unused
+parameter_list|)
+block|{
+asm|__asm __volatile("" : : : "memory");
+block|}
+end_function
 
 begin_define
 define|#
