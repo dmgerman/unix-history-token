@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n9.c	4.1 %G%"
+literal|"@(#)n9.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -579,11 +579,15 @@ decl_stmt|,
 name|o
 index|[
 name|NOV
+operator|+
+literal|1
 index|]
 decl_stmt|,
 name|w
 index|[
 name|NOV
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
