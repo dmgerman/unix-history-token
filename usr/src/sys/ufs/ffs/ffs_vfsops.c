@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vfsops.c	6.8	84/08/29	*/
+comment|/*	ffs_vfsops.c	6.9	84/09/28	*/
 end_comment
 
 begin_include
@@ -814,11 +814,12 @@ name|fs
 operator|->
 name|fs_csp
 index|[
-name|i
-operator|/
+name|fragstoblks
+argument_list|(
 name|fs
-operator|->
-name|fs_frag
+argument_list|,
+name|i
+argument_list|)
 index|]
 operator|=
 operator|(
