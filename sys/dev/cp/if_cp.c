@@ -13759,7 +13759,7 @@ name|node
 operator|->
 name|nd_flags
 operator|&
-name|NG_REALLY_DIE
+name|NGF_REALLY_DIE
 condition|)
 block|{
 name|NG_NODE_SET_PRIVATE
@@ -13775,13 +13775,12 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
+name|NG_NODE_REVIVE
+argument_list|(
 name|node
-operator|->
-name|nd_flags
-operator|&=
-operator|~
-name|NG_INVALID
+argument_list|)
 expr_stmt|;
+comment|/* Persistant node */
 endif|#
 directive|endif
 else|#

@@ -316,7 +316,7 @@ block|,
 operator|&
 name|ng_deadtype
 block|,
-name|NG_INVALID
+name|NGF_INVALID
 block|,
 literal|1
 block|,
@@ -2632,7 +2632,7 @@ name|node
 operator|->
 name|nd_flags
 operator|&
-name|NG_CLOSING
+name|NGF_CLOSING
 operator|)
 operator|!=
 literal|0
@@ -2659,14 +2659,14 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Mark it invalid so any newcomers know not to try use it 	 * Also add our own mark so we can't recurse 	 * note that NG_INVALID does not do this as it's also set during 	 * creation 	 */
+comment|/* 	 * Mark it invalid so any newcomers know not to try use it 	 * Also add our own mark so we can't recurse 	 * note that NGF_INVALID does not do this as it's also set during 	 * creation 	 */
 name|node
 operator|->
 name|nd_flags
 operator||=
-name|NG_INVALID
+name|NGF_INVALID
 operator||
-name|NG_CLOSING
+name|NGF_CLOSING
 expr_stmt|;
 comment|/* If node has its pre-shutdown method, then call it first*/
 if|if
@@ -2758,16 +2758,16 @@ name|node
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Well, blow me down if the node code hasn't declared 			 * that it doesn't want to die. 			 * Presumably it is a persistant node. 			 * If we REALLY want it to go away, 			 *  e.g. hardware going away, 			 * Our caller should set NG_REALLY_DIE in nd_flags. 			 */
+comment|/* 			 * Well, blow me down if the node code hasn't declared 			 * that it doesn't want to die. 			 * Presumably it is a persistant node. 			 * If we REALLY want it to go away, 			 *  e.g. hardware going away, 			 * Our caller should set NGF_REALLY_DIE in nd_flags. 			 */
 name|node
 operator|->
 name|nd_flags
 operator|&=
 operator|~
 operator|(
-name|NG_INVALID
+name|NGF_INVALID
 operator||
-name|NG_CLOSING
+name|NGF_CLOSING
 operator|)
 expr_stmt|;
 name|NG_NODE_UNREF
@@ -5289,7 +5289,7 @@ name|node
 operator|->
 name|nd_flags
 operator||=
-name|NG_INVALID
+name|NGF_INVALID
 expr_stmt|;
 if|if
 condition|(
@@ -5297,7 +5297,7 @@ name|node
 operator|->
 name|nd_flags
 operator|&
-name|NG_CLOSING
+name|NGF_CLOSING
 condition|)
 return|return
 operator|(
@@ -7582,7 +7582,7 @@ name|node
 operator|->
 name|nd_flags
 operator|&
-name|NG_FORCE_WRITER
+name|NGF_FORCE_WRITER
 operator|)
 operator|||
 operator|(
@@ -12292,7 +12292,7 @@ operator|->
 name|nd_flags
 operator|&=
 operator|~
-name|NG_WORKQ
+name|NGF_WORKQ
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
@@ -12421,7 +12421,7 @@ name|node
 operator|->
 name|nd_flags
 operator|&
-name|NG_WORKQ
+name|NGF_WORKQ
 condition|)
 block|{
 name|node
@@ -12429,7 +12429,7 @@ operator|->
 name|nd_flags
 operator|&=
 operator|~
-name|NG_WORKQ
+name|NGF_WORKQ
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
@@ -12491,7 +12491,7 @@ name|node
 operator|->
 name|nd_flags
 operator|&
-name|NG_WORKQ
+name|NGF_WORKQ
 operator|)
 operator|==
 literal|0
@@ -12502,7 +12502,7 @@ name|node
 operator|->
 name|nd_flags
 operator||=
-name|NG_WORKQ
+name|NGF_WORKQ
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(

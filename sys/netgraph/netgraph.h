@@ -1962,7 +1962,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NG_INVALID
+name|NGF_INVALID
 value|0x00000001
 end_define
 
@@ -1973,7 +1973,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NG_WORKQ
+name|NG_INVALID
+value|NGF_INVALID
+end_define
+
+begin_comment
+comment|/* compat for old code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGF_WORKQ
 value|0x00000002
 end_define
 
@@ -1984,7 +1995,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NG_FORCE_WRITER
+name|NG_WORKQ
+value|NGF_WORKQ
+end_define
+
+begin_comment
+comment|/* compat for old code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGF_FORCE_WRITER
 value|0x00000004
 end_define
 
@@ -1995,7 +2017,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NG_CLOSING
+name|NG_FORCE_WRITER
+value|NGF_FORCE_WRITER
+end_define
+
+begin_comment
+comment|/* compat for old code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGF_CLOSING
 value|0x00000008
 end_define
 
@@ -2006,12 +2039,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NG_REALLY_DIE
+name|NG_CLOSING
+value|NGF_CLOSING
+end_define
+
+begin_comment
+comment|/* compat for old code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGF_REALLY_DIE
 value|0x00000010
 end_define
 
 begin_comment
-comment|/* "persistant" node is unloading */
+comment|/* "persistent" node is unloading */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_REALLY_DIE
+value|NGF_REALLY_DIE
+end_define
+
+begin_comment
+comment|/* compat for old code */
 end_comment
 
 begin_define
@@ -2155,7 +2210,7 @@ name|_NG_NODE_IS_VALID
 parameter_list|(
 name|node
 parameter_list|)
-value|(!((node)->nd_flags& NG_INVALID))
+value|(!((node)->nd_flags& NGF_INVALID))
 end_define
 
 begin_define
@@ -2165,7 +2220,7 @@ name|_NG_NODE_NOT_VALID
 parameter_list|(
 name|node
 parameter_list|)
-value|((node)->nd_flags& NG_INVALID)
+value|((node)->nd_flags& NGF_INVALID)
 end_define
 
 begin_define
@@ -2190,7 +2245,7 @@ parameter_list|(
 name|node
 parameter_list|)
 define|\
-value|do{ node->nd_flags |= NG_FORCE_WRITER; }while (0)
+value|do{ node->nd_flags |= NGF_FORCE_WRITER; }while (0)
 end_define
 
 begin_define
@@ -2201,7 +2256,18 @@ parameter_list|(
 name|node
 parameter_list|)
 define|\
-value|do{ node->nd_flags |= (NG_REALLY_DIE|NG_INVALID); }while (0)
+value|do{ node->nd_flags |= (NGF_REALLY_DIE|NGF_INVALID); }while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_NG_NODE_REVIVE
+parameter_list|(
+name|node
+parameter_list|)
+define|\
+value|do { node->nd_flags&= ~NGF_INVALID; } while (0)
 end_define
 
 begin_comment
@@ -2527,6 +2593,25 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|_ng_node_revive
+parameter_list|(
+name|node_p
+name|node
 parameter_list|,
 name|char
 modifier|*
@@ -3038,6 +3123,40 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|void
+name|_ng_node_revive
+parameter_list|(
+name|node_p
+name|node
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+block|{
+name|_chknode
+argument_list|(
+name|node
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+name|_NG_NODE_REVIVE
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|hook_p
 name|_ng_node_foreach_hook
 parameter_list|(
@@ -3216,6 +3335,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|NG_NODE_REVIVE
+parameter_list|(
+name|node
+parameter_list|)
+value|_ng_node_revive(node, _NN_)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NG_NODE_FOREACH_HOOK
 parameter_list|(
 name|node
@@ -3363,6 +3492,16 @@ parameter_list|(
 name|node
 parameter_list|)
 value|_NG_NODE_NUMHOOKS(node)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_REVIVE
+parameter_list|(
+name|node
+parameter_list|)
+value|_NG_NODE_REVIVE(node)
 end_define
 
 begin_define

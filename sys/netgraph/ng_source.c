@@ -1716,12 +1716,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|node
-operator|->
-name|nd_flags
-operator||=
-name|NG_INVALID
-expr_stmt|;
 name|ng_source_stop
 argument_list|(
 name|sc

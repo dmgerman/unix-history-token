@@ -5775,7 +5775,7 @@ name|node
 operator|->
 name|nd_flags
 operator|&
-name|NG_REALLY_DIE
+name|NGF_REALLY_DIE
 condition|)
 block|{
 comment|/* 		 * We are called from unloading the ATM driver. Really, 		 * really need to shutdown this node. The ifp was 		 * already handled in the detach routine. 		 */
@@ -5812,13 +5812,12 @@ condition|(
 operator|!
 name|allow_shutdown
 condition|)
+name|NG_NODE_REVIVE
+argument_list|(
 name|node
-operator|->
-name|nd_flags
-operator|&=
-operator|~
-name|NG_INVALID
+argument_list|)
 expr_stmt|;
+comment|/* we persist */
 else|else
 block|{
 name|IFP2NG
@@ -5853,12 +5852,10 @@ block|}
 else|#
 directive|else
 comment|/* 	 * We are persistant - reinitialize 	 */
+name|NG_NODE_REVIVE
+argument_list|(
 name|node
-operator|->
-name|nd_flags
-operator|&=
-operator|~
-name|NG_INVALID
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

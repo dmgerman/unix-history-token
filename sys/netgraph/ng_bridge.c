@@ -3121,7 +3121,7 @@ argument_list|,
 name|M_NETGRAPH_BRIDGE
 argument_list|)
 expr_stmt|;
-comment|/* NG_INVALID flag is now set so node will be freed at next timeout */
+comment|/* NGF_INVALID flag is now set so node will be freed at next timeout */
 return|return
 operator|(
 literal|0
@@ -3974,7 +3974,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle our once-per-second timeout event. We do two things:  * we decrement link->loopCount for those links being muted due to  * a detected loopback condition, and we remove any hosts from  * the hashtable whom we haven't heard from in a long while.  *  * If the node has the NG_INVALID flag set, our job is to kill it.  */
+comment|/*  * Handle our once-per-second timeout event. We do two things:  * we decrement link->loopCount for those links being muted due to  * a detected loopback condition, and we remove any hosts from  * the hashtable whom we haven't heard from in a long while.  *  * If the node has the NGF_INVALID flag set, our job is to kill it.  */
 end_comment
 
 begin_function

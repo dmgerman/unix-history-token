@@ -2275,7 +2275,7 @@ name|node
 operator|->
 name|nd_flags
 operator|&
-name|NG_REALLY_DIE
+name|NGF_REALLY_DIE
 condition|)
 block|{
 comment|/* 		 * WE came here because the ethernet card is being unloaded, 		 * so stop being persistant. 		 * Actually undo all the things we did on creation. 		 * Assume the ifp has already been freed. 		 */
@@ -2339,12 +2339,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* reset auto-src-addr flag */
+name|NG_NODE_REVIVE
+argument_list|(
 name|node
-operator|->
-name|nd_flags
-operator|&=
-operator|~
-name|NG_INVALID
+argument_list|)
 expr_stmt|;
 comment|/* Signal ng_rmnode we are persisant */
 return|return
