@@ -2101,7 +2101,7 @@ name|UGETW
 argument_list|(
 name|ur
 operator|->
-name|request
+name|ucr_request
 operator|.
 name|wLength
 argument_list|)
@@ -2125,7 +2125,7 @@ name|addr
 init|=
 name|ur
 operator|->
-name|addr
+name|ucr_addr
 decl_stmt|;
 name|usbd_status
 name|err
@@ -2203,7 +2203,7 @@ name|caddr_t
 operator|)
 name|ur
 operator|->
-name|data
+name|ucr_data
 expr_stmt|;
 name|iov
 operator|.
@@ -2248,7 +2248,7 @@ name|uio_rw
 operator|=
 name|ur
 operator|->
-name|request
+name|ucr_request
 operator|.
 name|bmRequestType
 operator|&
@@ -2321,18 +2321,18 @@ argument_list|,
 operator|&
 name|ur
 operator|->
-name|request
+name|ucr_request
 argument_list|,
 name|ptr
 argument_list|,
 name|ur
 operator|->
-name|flags
+name|ucr_flags
 argument_list|,
 operator|&
 name|ur
 operator|->
-name|actlen
+name|ucr_actlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -2424,7 +2424,7 @@ name|addr
 init|=
 name|di
 operator|->
-name|addr
+name|udi_addr
 decl_stmt|;
 name|usbd_device_handle
 name|dev
@@ -3140,7 +3140,7 @@ name|u
 operator|.
 name|ue_device
 operator|.
-name|cookie
+name|udi_cookie
 operator|.
 name|cookie
 condition|)

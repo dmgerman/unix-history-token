@@ -115,7 +115,7 @@ name|rep
 decl_stmt|;
 name|rep
 operator|.
-name|size
+name|ucrd_size
 operator|=
 literal|0
 expr_stmt|;
@@ -143,7 +143,7 @@ name|hid_use_report_desc
 argument_list|(
 name|rep
 operator|.
-name|data
+name|ucrd_data
 argument_list|,
 operator|(
 name|unsigned
@@ -151,7 +151,7 @@ name|int
 operator|)
 name|rep
 operator|.
-name|size
+name|ucrd_size
 argument_list|)
 return|;
 block|}
