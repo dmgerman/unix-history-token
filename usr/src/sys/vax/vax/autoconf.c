@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.42	82/10/13	*/
+comment|/*	autoconf.c	4.43	82/10/23	*/
 end_comment
 
 begin_comment
@@ -811,35 +811,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-if|#
-directive|if
-name|VAX780
-if|if
-condition|(
-name|cpu
-operator|==
-name|VAX_780
-condition|)
-block|{
-name|int
-name|ubawatch
-parameter_list|()
-function_decl|;
-name|timeout
-argument_list|(
-name|ubawatch
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 end_block
 
