@@ -1551,6 +1551,13 @@ name|__FreeBSD_version
 operator|>=
 literal|400000
 operator|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|NOINET6
+argument_list|)
 operator|)
 operator|||
 expr|\
