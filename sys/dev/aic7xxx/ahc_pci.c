@@ -731,10 +731,8 @@ block|,
 comment|/* aic7859 based controllers */
 block|{
 name|ID_AHA_2930CU
-operator|&
-name|ID_DEV_VENDOR_MASK
 block|,
-name|ID_DEV_VENDOR_MASK
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 2930CU SCSI adapter"
 block|,
@@ -4314,6 +4312,20 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Manual SE Termination\n"
+argument_list|,
+name|ahc_name
+argument_list|(
+name|ahc
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|enableSEC_low
 operator|=
 operator|(
@@ -4342,6 +4354,20 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Manual LVD Termination\n"
+argument_list|,
+name|ahc_name
+argument_list|(
+name|ahc
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|enablePRI_low
 operator|=
 name|enablePRI_high
