@@ -371,7 +371,7 @@ file|"pathnames.h"
 end_include
 
 begin_comment
-comment|/*  * Disklabel: read and write disklabels.  * The label is usually placed on one of the first sectors of the disk.  * Many machines also place a bootstrap in the same area,  * in which case the label is embedded in the bootstrap.  * The bootstrap source must leave space at the proper offset  * for the label on such machines.  */
+comment|/*  * Disklabel: read and write bsdlabels.  * The label is usually placed on one of the first sectors of the disk.  * Many machines also place a bootstrap in the same area,  * in which case the label is embedded in the bootstrap.  * The bootstrap source must leave space at the proper offset  * for the label on such machines.  */
 end_comment
 
 begin_ifndef
@@ -8074,31 +8074,31 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: disklabel [-r] disk"
+literal|"usage: bsdlabel [-r] disk"
 argument_list|,
 literal|"\t\t(to read label)"
 argument_list|,
-literal|"	disklabel -w [-nr] [-m machine] disk type [packid]"
+literal|"	bsdlabel -w [-nr] [-m machine] disk type [packid]"
 argument_list|,
 literal|"\t\t(to write label with existing boot program)"
 argument_list|,
-literal|"	disklabel -e [-nr] [-m machine] disk"
+literal|"	bsdlabel -e [-nr] [-m machine] disk"
 argument_list|,
 literal|"\t\t(to edit label)"
 argument_list|,
-literal|"	disklabel -R [-nr] [-m machine] disk protofile"
+literal|"	bsdlabel -R [-nr] [-m machine] disk protofile"
 argument_list|,
 literal|"\t\t(to restore label with existing boot program)"
 argument_list|,
-literal|"	disklabel -B [-b boot] [-m machine] disk"
+literal|"	bsdlabel -B [-b boot] [-m machine] disk"
 argument_list|,
 literal|"\t\t(to install boot program with existing on-disk label)"
 argument_list|,
-literal|"	disklabel -w -B [-n] [-b boot] [-m machine] disk type [packid]"
+literal|"	bsdlabel -w -B [-n] [-b boot] [-m machine] disk type [packid]"
 argument_list|,
 literal|"\t\t(to write label and install boot program)"
 argument_list|,
-literal|"	disklabel -R -B [-n] [-b boot] [-m machine] disk protofile"
+literal|"	bsdlabel -R -B [-n] [-b boot] [-m machine] disk protofile"
 argument_list|,
 literal|"\t\t(to restore label and install boot program)"
 argument_list|)
