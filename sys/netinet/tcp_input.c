@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_input.c	8.12 (Berkeley) 5/24/95  *	$Id: tcp_input.c,v 1.67 1997/12/19 23:46:15 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_input.c	8.12 (Berkeley) 5/24/95  *	$Id: tcp_input.c,v 1.68 1998/01/21 02:05:59 fenner Exp $  */
 end_comment
 
 begin_include
@@ -401,35 +401,6 @@ begin_comment
 comment|/*  * Insert segment ti into reassembly queue of tcp with  * control block tp.  Return TH_FIN if reassembly now includes  * a segment with FIN.  The macro form does the common case inline  * (segment is the next to be received on an established connection,  * and the queue is empty), avoiding linkage into and removal  * from the queue and repetition of various conversions.  * Set DELACK for segments received in order, but ack immediately  * when segments are out of order (so fast retransmit can work).  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCP_ACK_HACK
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TCP_REASS
-parameter_list|(
-name|tp
-parameter_list|,
-name|ti
-parameter_list|,
-name|m
-parameter_list|,
-name|so
-parameter_list|,
-name|flags
-parameter_list|)
-value|{ \ 	if ((ti)->ti_seq == (tp)->rcv_nxt&& \ 	    (tp)->seg_next == (struct tcpiphdr *)(tp)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		if (ti->ti_flags& TH_PUSH) \ 			tp->t_flags |= TF_ACKNOW; \ 		else \ 			tp->t_flags |= TF_DELACK; \ 		(tp)->rcv_nxt += (ti)->ti_len; \ 		flags = (ti)->ti_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += (ti)->ti_len;\ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (ti), (m)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -447,11 +418,6 @@ name|flags
 parameter_list|)
 value|{ \ 	if ((ti)->ti_seq == (tp)->rcv_nxt&& \ 	    (tp)->seg_next == (struct tcpiphdr *)(tp)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		tp->t_flags |= TF_DELACK; \ 		(tp)->rcv_nxt += (ti)->ti_len; \ 		flags = (ti)->ti_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += (ti)->ti_len;\ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (ti), (m)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -1503,7 +1469,7 @@ name|findpcb
 label|:
 name|inp
 operator|=
-name|in_pcblookuphash
+name|in_pcblookup_hash
 argument_list|(
 operator|&
 name|tcbinfo
@@ -1856,16 +1822,35 @@ name|ti
 operator|->
 name|ti_dport
 expr_stmt|;
-name|in_pcbrehash
+if|if
+condition|(
+name|in_pcbinshash
 argument_list|(
 name|inp
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 				 * Undo the assignments above if we failed to put 				 * the PCB on the hash lists. 				 */
+name|inp
+operator|->
+name|inp_laddr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
 expr_stmt|;
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|43
+name|inp
+operator|->
+name|inp_lport
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|drop
+goto|;
+block|}
 name|inp
 operator|->
 name|inp_options
@@ -1873,8 +1858,6 @@ operator|=
 name|ip_srcroute
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|tp
 operator|=
 name|intotcpcb

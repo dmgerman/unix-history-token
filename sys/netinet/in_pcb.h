@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_pcb.h	8.1 (Berkeley) 6/10/93  * $Id: in_pcb.h,v 1.21 1997/04/27 20:01:04 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_pcb.h	8.1 (Berkeley) 6/10/93  * $Id: in_pcb.h,v 1.22 1997/08/16 19:15:36 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -35,6 +35,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|inpcbporthead
+argument_list|,
+name|inpcbport
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|inpcb
@@ -43,22 +53,9 @@ name|LIST_ENTRY
 argument_list|(
 argument|inpcb
 argument_list|)
-name|inp_list
-expr_stmt|;
-comment|/* list for all PCBs of this proto */
-name|LIST_ENTRY
-argument_list|(
-argument|inpcb
-argument_list|)
 name|inp_hash
 expr_stmt|;
 comment|/* hash list */
-name|struct
-name|inpcbinfo
-modifier|*
-name|inp_pcbinfo
-decl_stmt|;
-comment|/* PCB list info */
 name|struct
 name|in_addr
 name|inp_faddr
@@ -77,10 +74,23 @@ name|u_short
 name|inp_lport
 decl_stmt|;
 comment|/* local port */
+name|LIST_ENTRY
+argument_list|(
+argument|inpcb
+argument_list|)
+name|inp_list
+expr_stmt|;
+comment|/* list for all PCBs of this proto */
 name|caddr_t
 name|inp_ppcb
 decl_stmt|;
 comment|/* pointer to per-protocol pcb */
+name|struct
+name|inpcbinfo
+modifier|*
+name|inp_pcbinfo
+decl_stmt|;
+comment|/* PCB list info */
 name|struct
 name|socket
 modifier|*
@@ -127,14 +137,40 @@ modifier|*
 name|inp_moptions
 decl_stmt|;
 comment|/* IP multicast options */
-if|#
-directive|if
-literal|0
-comment|/* Someday, perhaps... */
-block|struct	ip inp_ip;
-comment|/* header prototype; should have more */
-endif|#
-directive|endif
+name|LIST_ENTRY
+argument_list|(
+argument|inpcb
+argument_list|)
+name|inp_portlist
+expr_stmt|;
+comment|/* list for this PCB's local port */
+name|struct
+name|inpcbport
+modifier|*
+name|inp_phd
+decl_stmt|;
+comment|/* head of list for this PCB's local port */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|inpcbport
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|inpcbport
+argument_list|)
+name|phd_hash
+expr_stmt|;
+name|struct
+name|inpcbhead
+name|phd_pcblist
+decl_stmt|;
+name|u_short
+name|phd_port
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -146,16 +182,25 @@ block|{
 name|struct
 name|inpcbhead
 modifier|*
-name|listhead
-decl_stmt|;
-name|struct
-name|inpcbhead
-modifier|*
 name|hashbase
 decl_stmt|;
 name|unsigned
 name|long
 name|hashmask
+decl_stmt|;
+name|struct
+name|inpcbporthead
+modifier|*
+name|porthashbase
+decl_stmt|;
+name|unsigned
+name|long
+name|porthashmask
+decl_stmt|;
+name|struct
+name|inpcbhead
+modifier|*
+name|listhead
 decl_stmt|;
 name|unsigned
 name|short
@@ -187,7 +232,20 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|(((faddr) ^ ((faddr)>> 16) ^ (lport) ^ (fport))& (mask))
+value|(((faddr) ^ ((faddr)>> 16) ^ ntohs((lport) ^ (fport)))& (mask))
+end_define
+
+begin_define
+define|#
+directive|define
+name|INP_PCBPORTHASH
+parameter_list|(
+name|lport
+parameter_list|,
+name|mask
+parameter_list|)
+define|\
+value|(ntohs((lport))& (mask))
 end_define
 
 begin_comment
@@ -433,6 +491,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|in_pcbinshash
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|in_pcbladdr
 name|__P
 argument_list|(
@@ -458,18 +530,13 @@ begin_decl_stmt
 name|struct
 name|inpcb
 modifier|*
-name|in_pcblookup
+name|in_pcblookup_local
 name|__P
 argument_list|(
 operator|(
 expr|struct
 name|inpcbinfo
 operator|*
-operator|,
-expr|struct
-name|in_addr
-operator|,
-name|u_int
 operator|,
 expr|struct
 name|in_addr
@@ -486,7 +553,7 @@ begin_decl_stmt
 name|struct
 name|inpcb
 modifier|*
-name|in_pcblookuphash
+name|in_pcblookup_hash
 name|__P
 argument_list|(
 operator|(

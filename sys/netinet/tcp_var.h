@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_var.h	8.4 (Berkeley) 5/24/95  * 	$Id: tcp_var.h,v 1.38 1997/02/22 09:41:43 peter Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_var.h	8.4 (Berkeley) 5/24/95  * 	$Id: tcp_var.h,v 1.39 1997/04/27 20:01:15 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ comment|/*  * Kernel variables for tcp.  */
 end_comment
 
 begin_comment
-comment|/*  * Tcp control block, one per tcp; fields:  */
+comment|/*  * Tcp control block, one per tcp; fields:  * Organized for 16 byte cacheline efficiency.  */
 end_comment
 
 begin_struct
@@ -39,9 +39,15 @@ modifier|*
 name|seg_prev
 decl_stmt|;
 name|int
-name|t_state
+name|t_dupacks
 decl_stmt|;
-comment|/* state of this connection */
+comment|/* consecutive dup acks recd */
+name|struct
+name|tcpiphdr
+modifier|*
+name|t_template
+decl_stmt|;
+comment|/* skeletal packet for transmit */
 name|int
 name|t_timer
 index|[
@@ -49,30 +55,16 @@ name|TCPT_NTIMERS
 index|]
 decl_stmt|;
 comment|/* tcp timers */
+name|struct
+name|inpcb
+modifier|*
+name|t_inpcb
+decl_stmt|;
+comment|/* back pointer to internet pcb */
 name|int
-name|t_rxtshift
+name|t_state
 decl_stmt|;
-comment|/* log(2) of rexmt exp. backoff */
-name|int
-name|t_rxtcur
-decl_stmt|;
-comment|/* current retransmit value */
-name|int
-name|t_dupacks
-decl_stmt|;
-comment|/* consecutive dup acks recd */
-name|u_int
-name|t_maxseg
-decl_stmt|;
-comment|/* maximum segment size */
-name|u_int
-name|t_maxopd
-decl_stmt|;
-comment|/* mss plus options */
-name|int
-name|t_force
-decl_stmt|;
-comment|/* 1 if forcing out a byte */
+comment|/* state of this connection */
 name|u_int
 name|t_flags
 decl_stmt|;
@@ -156,24 +148,18 @@ directive|define
 name|TF_SENDCCNEW
 value|0x8000
 comment|/* send CCnew instead of CC in SYN */
-name|struct
-name|tcpiphdr
-modifier|*
-name|t_template
+name|int
+name|t_force
 decl_stmt|;
-comment|/* skeletal packet for transmit */
-name|struct
-name|inpcb
-modifier|*
-name|t_inpcb
-decl_stmt|;
-comment|/* back pointer to internet pcb */
-comment|/*  * The following fields are used as in the protocol specification.  * See RFC783, Dec. 1981, page 21.  */
-comment|/* send sequence variables */
+comment|/* 1 if forcing out a byte */
 name|tcp_seq
 name|snd_una
 decl_stmt|;
 comment|/* send unacknowledged */
+name|tcp_seq
+name|snd_max
+decl_stmt|;
+comment|/* highest sequence number sent; 					 * used to recognize retransmits 					 */
 name|tcp_seq
 name|snd_nxt
 decl_stmt|;
@@ -194,39 +180,30 @@ name|tcp_seq
 name|iss
 decl_stmt|;
 comment|/* initial send sequence number */
-name|u_long
-name|snd_wnd
+name|tcp_seq
+name|irs
 decl_stmt|;
-comment|/* send window */
-comment|/* receive sequence variables */
-name|u_long
-name|rcv_wnd
-decl_stmt|;
-comment|/* receive window */
+comment|/* initial receive sequence number */
 name|tcp_seq
 name|rcv_nxt
 decl_stmt|;
 comment|/* receive next */
 name|tcp_seq
-name|rcv_up
-decl_stmt|;
-comment|/* receive urgent pointer */
-name|tcp_seq
-name|irs
-decl_stmt|;
-comment|/* initial receive sequence number */
-comment|/*  * Additional variables for this implementation.  */
-comment|/* receive variables */
-name|tcp_seq
 name|rcv_adv
 decl_stmt|;
 comment|/* advertised window */
-comment|/* retransmit variables */
-name|tcp_seq
-name|snd_max
+name|u_long
+name|rcv_wnd
 decl_stmt|;
-comment|/* highest sequence number sent; 					 * used to recognize retransmits 					 */
-comment|/* congestion control (for slow start, source quench, retransmit after loss) */
+comment|/* receive window */
+name|tcp_seq
+name|rcv_up
+decl_stmt|;
+comment|/* receive urgent pointer */
+name|u_long
+name|snd_wnd
+decl_stmt|;
+comment|/* send window */
 name|u_long
 name|snd_cwnd
 decl_stmt|;
@@ -235,11 +212,18 @@ name|u_long
 name|snd_ssthresh
 decl_stmt|;
 comment|/* snd_cwnd size threshold for 					 * for slow start exponential to 					 * linear switch 					 */
-comment|/*  * transmit timing stuff.  See below for scale of srtt and rttvar.  * "Variance" is actually smoothed difference.  */
+name|u_int
+name|t_maxopd
+decl_stmt|;
+comment|/* mss plus options */
 name|u_int
 name|t_idle
 decl_stmt|;
 comment|/* inactivity time */
+name|u_long
+name|t_duration
+decl_stmt|;
+comment|/* connection duration */
 name|int
 name|t_rtt
 decl_stmt|;
@@ -249,6 +233,14 @@ name|t_rtseq
 decl_stmt|;
 comment|/* sequence number being timed */
 name|int
+name|t_rxtcur
+decl_stmt|;
+comment|/* current retransmit value */
+name|u_int
+name|t_maxseg
+decl_stmt|;
+comment|/* maximum segment size */
+name|int
 name|t_srtt
 decl_stmt|;
 comment|/* smoothed round-trip time */
@@ -256,14 +248,26 @@ name|int
 name|t_rttvar
 decl_stmt|;
 comment|/* variance in round-trip time */
+name|int
+name|t_rxtshift
+decl_stmt|;
+comment|/* log(2) of rexmt exp. backoff */
 name|u_int
 name|t_rttmin
 decl_stmt|;
 comment|/* minimum rtt allowed */
 name|u_long
+name|t_rttupdated
+decl_stmt|;
+comment|/* number of times rtt sampled */
+name|u_long
 name|max_sndwnd
 decl_stmt|;
 comment|/* largest window peer has offered */
+name|int
+name|t_softerror
+decl_stmt|;
+comment|/* possible error not yet reported */
 comment|/* out-of-band data */
 name|char
 name|t_oobflags
@@ -281,10 +285,6 @@ define|#
 directive|define
 name|TCPOOB_HADDATA
 value|0x02
-name|int
-name|t_softerror
-decl_stmt|;
-comment|/* possible error not yet reported */
 comment|/* RFC 1323 variables */
 name|u_char
 name|snd_scale
@@ -321,20 +321,11 @@ name|tcp_cc
 name|cc_recv
 decl_stmt|;
 comment|/* receive connection count */
-name|u_long
-name|t_duration
-decl_stmt|;
-comment|/* connection duration */
 comment|/* TUBA stuff */
 name|caddr_t
 name|t_tuba_pcb
 decl_stmt|;
 comment|/* next level down pcb for TCP over z */
-comment|/* More RTT stuff */
-name|u_long
-name|t_rttupdated
-decl_stmt|;
-comment|/* number of times rtt sampled */
 block|}
 struct|;
 end_struct
