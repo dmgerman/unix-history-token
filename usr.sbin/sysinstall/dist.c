@@ -4774,7 +4774,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|save_free
+name|safe_free
 argument_list|(
 name|buf
 argument_list|)
