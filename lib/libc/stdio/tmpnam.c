@@ -87,7 +87,7 @@ name|s
 argument_list|,
 name|L_tmpnam
 argument_list|,
-literal|"%s/tmp.XXXXXX"
+literal|"%stmp.XXXXXX"
 argument_list|,
 name|P_tmpdir
 argument_list|)
