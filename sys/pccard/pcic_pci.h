@@ -35,6 +35,13 @@ name|CLPD6832_BCR_MGMT_IRQ_ENA
 value|0x0800
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLPD6832_BCR_ISA_IRQ
+value|0x0080
+end_define
+
 begin_comment
 comment|/* End of CL-PD6832 defines */
 end_comment
@@ -808,12 +815,20 @@ name|CB_SM_CD
 value|0x6
 end_define
 
+begin_comment
+comment|/* Socket MASK Card detect */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CB_SE_CD
 value|0x6
 end_define
+
+begin_comment
+comment|/* Socket Event Card detect */
+end_comment
 
 begin_define
 define|#
