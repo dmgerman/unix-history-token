@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.22.1.8 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,17 @@ end_endif
 
 begin_comment
 comment|/*  * remote login server:  *	\0  *	remuser\0  *	locuser\0  *	terminal_type/speed\0  *	data  *  * Automatic login protocol is done here, using login -f upon success,  * unless OLD_LOGIN is defined (then done in login, ala 4.2/4.3BSD).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FD_SETSIZE
+value|16
+end_define
+
+begin_comment
+comment|/* don't need many bits for select */
 end_comment
 
 begin_include
@@ -625,6 +636,12 @@ name|line
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|confirmed
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|char
@@ -1007,16 +1024,6 @@ argument_list|,
 name|encrypt
 argument_list|)
 expr_stmt|;
-name|write
-argument_list|(
-name|f
-argument_list|,
-operator|&
-name|c
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|retval
@@ -1062,6 +1069,21 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|write
+argument_list|(
+name|f
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|confirmed
+operator|=
+literal|1
+expr_stmt|;
+comment|/* we sent the null! */
 block|}
 else|else
 ifndef|#
@@ -1115,15 +1137,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|write
-argument_list|(
-name|f
-argument_list|,
-literal|""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|do_rlogin
@@ -1134,31 +1147,12 @@ name|h_name
 argument_list|)
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|hostok
 condition|)
 name|authenticated
 operator|++
 expr_stmt|;
-else|else
-name|write
-argument_list|(
-name|f
-argument_list|,
-literal|"rlogind: Host address mismatch.\r\n"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-literal|"rlogind: Host address mismatch.\r\n"
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 for|for
 control|(
@@ -1397,6 +1391,80 @@ expr_stmt|;
 name|setup_term
 argument_list|(
 name|t
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|confirmed
+operator|==
+literal|0
+condition|)
+block|{
+name|write
+argument_list|(
+name|f
+argument_list|,
+literal|""
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|confirmed
+operator|=
+literal|1
+expr_stmt|;
+comment|/* we sent the null! */
+block|}
+ifdef|#
+directive|ifdef
+name|KERBEROS
+if|if
+condition|(
+name|encrypt
+condition|)
+operator|(
+name|void
+operator|)
+name|des_write
+argument_list|(
+name|f
+argument_list|,
+name|SECURE_MESSAGE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|SECURE_MESSAGE
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|use_kerberos
+operator|==
+literal|0
+condition|)
+endif|#
+directive|endif
+if|if
+condition|(
+operator|!
+name|authenticated
+operator|&&
+operator|!
+name|hostok
+condition|)
+name|write
+argument_list|(
+name|f
+argument_list|,
+literal|"rlogind: Host address mismatch.\r\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+literal|"rlogind: Host address mismatch.\r\n"
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|pid
@@ -1638,23 +1706,9 @@ argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
-name|SIGTSTP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
 name|SIGCHLD
 argument_list|,
 name|cleanup
-argument_list|)
-expr_stmt|;
-name|setpgrp
-argument_list|(
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|protocol
@@ -1896,6 +1950,8 @@ name|char
 name|pibuf
 index|[
 literal|1024
+operator|+
+literal|1
 index|]
 decl_stmt|,
 name|fibuf
@@ -1970,6 +2026,30 @@ name|p
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|nfd
+operator|>
+name|FD_SETSIZE
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"select mask too small, increase FD_SETSIZE"
+argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|f
+argument_list|,
+literal|"internal error (select mask too small)"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -1982,6 +2062,9 @@ decl_stmt|,
 name|obits
 decl_stmt|,
 name|ebits
+decl_stmt|,
+modifier|*
+name|omask
 decl_stmt|;
 name|FD_ZERO
 argument_list|(
@@ -1995,10 +2078,19 @@ operator|&
 name|obits
 argument_list|)
 expr_stmt|;
+name|omask
+operator|=
+operator|(
+name|fd_set
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|fcc
 condition|)
+block|{
 name|FD_SET
 argument_list|(
 name|p
@@ -2007,6 +2099,12 @@ operator|&
 name|obits
 argument_list|)
 expr_stmt|;
+name|omask
+operator|=
+operator|&
+name|obits
+expr_stmt|;
+block|}
 else|else
 name|FD_SET
 argument_list|(
@@ -2026,6 +2124,7 @@ if|if
 condition|(
 name|pcc
 condition|)
+block|{
 name|FD_SET
 argument_list|(
 name|f
@@ -2034,6 +2133,12 @@ operator|&
 name|obits
 argument_list|)
 expr_stmt|;
+name|omask
+operator|=
+operator|&
+name|obits
+expr_stmt|;
+block|}
 else|else
 name|FD_SET
 argument_list|(
@@ -2063,8 +2168,7 @@ argument_list|,
 operator|&
 name|ibits
 argument_list|,
-operator|&
-name|obits
+name|omask
 argument_list|,
 operator|&
 name|ebits
@@ -2536,7 +2640,18 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 block|{
-comment|/* also shouldn't happen */
+comment|/* 				 * This happens when we try write after read 				 * from p, but some old kernels balk at large 				 * writes even when select returns true. 				 */
+if|if
+condition|(
+operator|!
+name|FD_ISSET
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|ibits
+argument_list|)
+condition|)
 name|sleep
 argument_list|(
 literal|5
@@ -2702,11 +2817,21 @@ name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
+decl_stmt|,
+modifier|*
+name|bp
+init|=
 name|buf
-index|[
-literal|0
-index|]
+decl_stmt|;
+comment|/* 	 * Prepend binary one to message if we haven't sent 	 * the magic null as confirmation. 	 */
+if|if
+condition|(
+operator|!
+name|confirmed
+condition|)
+operator|*
+name|bp
+operator|++
 operator|=
 literal|'\01'
 expr_stmt|;
@@ -2719,9 +2844,7 @@ name|len
 operator|=
 name|sprintf
 argument_list|(
-name|buf
-operator|+
-literal|1
+name|bp
 argument_list|,
 literal|"rlogind: %s: %s.\r\n"
 argument_list|,
@@ -2738,9 +2861,7 @@ name|len
 operator|=
 name|sprintf
 argument_list|(
-name|buf
-operator|+
-literal|1
+name|bp
 argument_list|,
 literal|"rlogind: %s.\r\n"
 argument_list|,
@@ -2756,7 +2877,11 @@ name|f
 argument_list|,
 name|buf
 argument_list|,
+name|bp
+operator|+
 name|len
+operator|-
+name|buf
 argument_list|)
 expr_stmt|;
 name|exit
