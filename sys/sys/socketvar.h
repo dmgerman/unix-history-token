@@ -146,7 +146,7 @@ comment|/* (e) max number queued connections */
 name|short
 name|so_timeo
 decl_stmt|;
-comment|/* connection timeout */
+comment|/* (g) connection timeout */
 name|u_short
 name|so_error
 decl_stmt|;
@@ -192,51 +192,51 @@ name|mbuf
 modifier|*
 name|sb_mb
 decl_stmt|;
-comment|/* the mbuf chain */
+comment|/* (c/d) the mbuf chain */
 name|struct
 name|mbuf
 modifier|*
 name|sb_mbtail
 decl_stmt|;
-comment|/* the last mbuf in the chain */
+comment|/* (c/d) the last mbuf in the chain */
 name|struct
 name|mbuf
 modifier|*
 name|sb_lastrecord
 decl_stmt|;
-comment|/* first mbuf of last record in 						 * socket buffer */
+comment|/* (c/d) first mbuf of last 						 * record in socket buffer */
 name|u_int
 name|sb_cc
 decl_stmt|;
-comment|/* actual chars in buffer */
+comment|/* (c/d) actual chars in buffer */
 name|u_int
 name|sb_hiwat
 decl_stmt|;
-comment|/* max actual char count */
+comment|/* (c/d) max actual char count */
 name|u_int
 name|sb_mbcnt
 decl_stmt|;
-comment|/* chars of mbufs used */
+comment|/* (c/d) chars of mbufs used */
 name|u_int
 name|sb_mbmax
 decl_stmt|;
-comment|/* max chars of mbufs to use */
+comment|/* (c/d) max chars of mbufs to use */
 name|u_int
 name|sb_ctl
 decl_stmt|;
-comment|/* non-data chars in buffer */
+comment|/* (c/d) non-data chars in buffer */
 name|int
 name|sb_lowat
 decl_stmt|;
-comment|/* low water mark */
+comment|/* (c/d) low water mark */
 name|int
 name|sb_timeo
 decl_stmt|;
-comment|/* timeout for read/write */
+comment|/* (c/d) timeout for read/write */
 name|short
 name|sb_flags
 decl_stmt|;
-comment|/* flags, see below */
+comment|/* (c/d) flags, see below */
 name|short
 name|sb_state
 decl_stmt|;
@@ -321,7 +321,7 @@ name|ucred
 modifier|*
 name|so_cred
 decl_stmt|;
-comment|/* user credentials */
+comment|/* (a) user credentials */
 name|struct
 name|label
 modifier|*
