@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.97 1997/11/06 08:29:50 joerg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.98 1997/12/20 00:28:49 bde Exp $  */
 end_comment
 
 begin_include
@@ -1869,9 +1869,32 @@ operator|&
 name|worm_mode_philips
 block|}
 block|,
-comment|/* 	 * The Plasmon's are dual-faced: they appear as T_WORM if the 	 * drive is empty, or a CD-R medium is in the drive, and they 	 * announce theirselves as T_READONLY if a CD-ROM (or fixated 	 * CD-R) is there.  This record catches the latter case, while 	 * the former one falls under the terms of the generic T_WORM 	 * below. 	 */
+comment|/* 	 * The Plasmon's are dual-faced: they appear as T_WORM if the 	 * drive is empty, or a CD-R medium is in the drive, and they 	 * announce theirselves as T_READONLY if a CD-ROM (or fixated 	 * CD-R) is there.  We need both entries here, so the worm_mode 	 * hook will be properly filled in. 	 */
 block|{
 name|T_READONLY
+block|,
+name|T_WORM
+block|,
+name|T_REMOV
+block|,
+literal|"PLASMON"
+block|,
+literal|"RF41*"
+block|,
+literal|"*"
+block|,
+literal|"worm"
+block|,
+name|SC_ONE_LU
+block|,
+literal|0
+block|,
+operator|&
+name|worm_mode_plasmon
+block|}
+block|,
+block|{
+name|T_WORM
 block|,
 name|T_WORM
 block|,
