@@ -1995,18 +1995,9 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|_offsetof
-parameter_list|(
-name|t
-parameter_list|,
-name|m
-parameter_list|)
-value|((int)((caddr_t)&((t *)0)->m))
 name|masklen
 operator|=
-name|_offsetof
+name|offsetof
 argument_list|(
 expr|struct
 name|sockaddr_dl
@@ -2059,6 +2050,9 @@ argument_list|(
 name|socksize
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|ROUNDUP
 name|ifasize
 operator|=
 sizeof|sizeof
