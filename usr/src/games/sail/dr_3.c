@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_3.c	2.4 83/12/17"
+literal|"@(#)dr_3.c	2.5 84/01/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -1401,7 +1401,7 @@ literal|0
 init|;
 name|n
 operator|<
-literal|3
+name|NBP
 operator|&&
 name|bp
 index|[
@@ -1418,7 +1418,7 @@ if|if
 condition|(
 name|n
 operator|<
-literal|3
+name|NBP
 operator|&&
 name|sections
 condition|)
@@ -1435,6 +1435,8 @@ name|from
 argument_list|,
 literal|0
 argument_list|,
+name|n
+argument_list|,
 name|turn
 argument_list|,
 name|to
@@ -1444,8 +1446,6 @@ operator|->
 name|index
 argument_list|,
 name|sections
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
