@@ -1473,6 +1473,10 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|LogTag
+operator|=
+name|NULL
+expr_stmt|;
 name|connected
 operator|=
 literal|0
