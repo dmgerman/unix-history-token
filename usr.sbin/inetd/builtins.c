@@ -1599,9 +1599,10 @@ name|fallback
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|size_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|c
 decl_stmt|,
 name|fflag
