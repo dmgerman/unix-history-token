@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.54 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.55 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2645,6 +2645,43 @@ block|{
 case|case
 name|VCHR
 case|:
+comment|/* 		 * Hack: a tty device that is a controlling terminal 		 * has a reference from the session structure. 		 * We cannot easily tell that a character device is 		 * a controlling terminal, unless it is the closing 		 * process' controlling terminal.  In that case, 		 * if the reference count is 2 (this last descriptor 		 * plus the session), release the reference from the session. 		 */
+if|if
+condition|(
+name|vp
+operator|==
+name|ap
+operator|->
+name|a_p
+operator|->
+name|p_session
+operator|->
+name|s_ttyvp
+operator|&&
+name|vcount
+argument_list|(
+name|vp
+argument_list|)
+operator|==
+literal|2
+condition|)
+block|{
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|ap
+operator|->
+name|a_p
+operator|->
+name|p_session
+operator|->
+name|s_ttyvp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* 		 * If the vnode is locked, then we are in the midst 		 * of forcably closing the device, otherwise we only 		 * close on last reference. 		 */
 if|if
 condition|(
