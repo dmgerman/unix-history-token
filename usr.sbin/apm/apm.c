@@ -233,7 +233,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-specifier|static
 name|char
 name|messages
 index|[]
