@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.7.2.5 1997/08/25 00:34:35 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.7.2.6 1997/09/23 00:01:25 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -90,23 +96,6 @@ begin_include
 include|#
 directive|include
 file|"libutil.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOPASSWDAUTH
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"passwdauth.h"
 end_include
 
 begin_endif
@@ -565,20 +554,54 @@ name|ConfPasswdAuth
 argument_list|)
 condition|)
 block|{
+name|struct
+name|passwd
+modifier|*
+name|pwd
+decl_stmt|;
+name|int
+name|result
+decl_stmt|;
 name|LogPrintf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|"PasswdAuth enabled - calling\n"
+literal|"Using PasswdAuth\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|PasswdAuth
+name|result
+operator|=
+operator|(
+name|pwd
+operator|=
+name|getpwnam
 argument_list|(
 name|name
-argument_list|,
-name|key
 argument_list|)
+operator|)
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|crypt
+argument_list|(
+name|key
+argument_list|,
+name|pwd
+operator|->
+name|pw_passwd
+argument_list|)
+argument_list|,
+name|pwd
+operator|->
+name|pw_passwd
+argument_list|)
+expr_stmt|;
+name|endpwent
+argument_list|()
+expr_stmt|;
+return|return
+name|result
 return|;
 block|}
 endif|#
