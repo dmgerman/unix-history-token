@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ik.c	1.4	86/12/15	*/
+comment|/*	ik.c	1.5	86/12/23	*/
 end_comment
 
 begin_include
@@ -276,6 +276,9 @@ union|;
 comment|/* address of last symbol lookup */
 name|caddr_t
 name|is_buf
+index|[
+name|PS_MAXDMA
+index|]
 decl_stmt|;
 comment|/* i/o buffer XXX */
 block|}
@@ -457,7 +460,7 @@ name|ui_hd
 operator|->
 name|vh_lastiv
 expr_stmt|;
-comment|/* 	 * Use extended non-privileged address modifier to 	 * insure DMA to/from intermediate buffer works when 	 * buffer is not in lower 16Mb of memory (also avoids 	 * other 24-bit devices mapped into overlapping regions). 	 */
+comment|/* 	 * Use extended non-privileged address modifier 	 * to avoid address overlap with 24-bit devices. 	 */
 name|ik
 operator|->
 name|ik_mod
@@ -742,33 +745,6 @@ condition|)
 block|{
 name|sc
 operator|->
-name|is_buf
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|wmemall
-argument_list|(
-name|vmemall
-argument_list|,
-name|PS_MAXDMA
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|is_buf
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-name|sc
-operator|->
 name|is_timeout
 operator|=
 literal|0
@@ -853,21 +829,6 @@ name|caddr_t
 operator|)
 name|unit
 argument_list|)
-expr_stmt|;
-name|wmemfree
-argument_list|(
-name|sc
-operator|->
-name|is_buf
-argument_list|,
-name|PS_MAXDMA
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|is_buf
-operator|=
-literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -968,29 +929,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|is_buf
-condition|)
-block|{
-name|wmemfree
-argument_list|(
-name|sc
-operator|->
-name|is_buf
-argument_list|,
-name|PS_MAXDMA
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|is_buf
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|untimeout
 argument_list|(
 name|iktimer
