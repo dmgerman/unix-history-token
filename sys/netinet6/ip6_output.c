@@ -3637,8 +3637,8 @@ name|id
 init|=
 name|htonl
 argument_list|(
-name|ip6_id
-operator|++
+name|ip6_randomid
+argument_list|()
 argument_list|)
 decl_stmt|;
 name|u_char
