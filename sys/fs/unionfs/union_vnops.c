@@ -2844,31 +2844,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is absolutely necessary or UFS will blow up. 	 */
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-operator|&&
-name|vn_canvmio
-argument_list|(
-name|tvp
-argument_list|)
-operator|==
-name|TRUE
-condition|)
-name|error
-operator|=
-name|VOP_CREATEVOBJECT
-argument_list|(
-name|tvp
-argument_list|,
-name|cred
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Release any locks held. 	 */
 if|if
 condition|(
