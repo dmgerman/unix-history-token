@@ -95,6 +95,21 @@ directive|include
 file|<gnu/ext2fs/i386-bitops.h>
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<gnu/ext2fs/alpha-bitops.h>
+end_include
+
 begin_else
 else|#
 directive|else

@@ -959,7 +959,7 @@ name|ext2_sb_info
 modifier|*
 name|fs
 decl_stmt|;
-name|u_int
+name|size_t
 name|size
 decl_stmt|;
 name|int
