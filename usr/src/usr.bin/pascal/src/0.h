@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.15 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.16 %G%"; */
 end_comment
 
 begin_define
@@ -655,6 +655,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|align_info
+value|info[3]
+end_define
+
+begin_define
+define|#
+directive|define
 name|range
 value|nl_un.un_range
 end_define
@@ -929,10 +936,14 @@ name|NL_FORV
 value|1
 end_define
 
+begin_comment
+comment|/*      *	nlp -> nl_un.un_ptr[] subscripts for records      *	NL_FIELDLIST	the chain of fixed fields of a record, in order.      *			the fields are also chained through ptr[NL_FIELDLIST].      *			this does not include the tag, or fields of variants.      *	NL_VARNT	pointer to the variants of a record,      *			these are then chained through the .chain field.      *	NL_VTOREC	pointer from a VARNT to the RECORD that is the variant.      *	NL_TAG		pointer from a RECORD to the tagfield      *			if there are any variants.      *	align_info	the alignment of a RECORD is in info[3].      */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|NL_FLDSZ
+name|NL_FIELDLIST
 value|1
 end_define
 
@@ -956,6 +967,10 @@ directive|define
 name|NL_TAG
 value|3
 end_define
+
+begin_comment
+comment|/* and align_info is info[3].  #defined above */
+end_comment
 
 begin_define
 define|#
@@ -2170,7 +2185,7 @@ begin_function_decl
 name|struct
 name|nl
 modifier|*
-name|tyrecl
+name|tyrec
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -2180,24 +2195,6 @@ name|struct
 name|nl
 modifier|*
 name|tyary
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|nl
-modifier|*
-name|fields
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|nl
-modifier|*
-name|variants
 parameter_list|()
 function_decl|;
 end_function_decl
