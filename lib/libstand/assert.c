@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stand.h>
+file|<assert.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|"stand.h"
 end_include
 
 begin_function
