@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -139,6 +139,13 @@ comment|/*  * trap(frame):  *	Exception, fault, and trap interface to BSD kernel
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|caddr_t
+name|edata
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|rcr2
 argument_list|()
@@ -200,10 +207,6 @@ name|struct
 name|timeval
 name|syst
 decl_stmt|;
-specifier|extern
-name|int
-name|nofault
-decl_stmt|;
 name|int
 name|ucode
 decl_stmt|,
@@ -213,9 +216,6 @@ name|code
 decl_stmt|,
 name|eva
 decl_stmt|;
-define|#
-directive|define
-name|DEBUG
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -313,9 +313,9 @@ argument_list|,
 name|cpl
 argument_list|)
 expr_stmt|;
-name|pg
+name|printf
 argument_list|(
-literal|"trap cr2 %x"
+literal|"trap cr2 %x "
 argument_list|,
 name|rcr2
 argument_list|()
@@ -323,7 +323,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*if(um&& frame.tf_trapno == 0xc&& (rcr2()&0xfffff000) == 0){ 	if (ISPL(locr0[tCS]) != SEL_UPL) { 		if(nofault) goto anyways; 		locr0[tEFLAGS] |= PSL_T; 		*(int *)PTmap |= 1; load_cr3(rcr3()); 		return; 	} } else if (um) { printf("p %x ", *(int *) PTmap); *(int *)PTmap&= 0xfffffffe; load_cr3(rcr3()); printf("p %x ", *(int *) PTmap); } anyways:  if(pc == 0) um++;*/
+comment|/*if(um&& frame.tf_trapno == 0xc&& (rcr2()&0xfffff000) == 0){ 	if (ISPL(locr0[tCS]) != SEL_UPL) { 		if(curpcb->pcb_onfault) goto anyways; 		locr0[tEFLAGS] |= PSL_T; 		*(int *)PTmap |= 1; load_cr3(rcr3()); 		return; 	} } else if (um) { printf("p %x ", *(int *) PTmap); *(int *)PTmap&= 0xfffffffe; load_cr3(rcr3()); printf("p %x ", *(int *) PTmap); } anyways:  if(pc == 0) um++;*/
 name|frame
 operator|.
 name|tf_eflags
@@ -340,7 +340,9 @@ name|tf_trapno
 expr_stmt|;
 if|if
 condition|(
-name|nofault
+name|curpcb
+operator|->
+name|pcb_onfault
 operator|&&
 name|frame
 operator|.
@@ -353,7 +355,12 @@ name|frame
 operator|.
 name|tf_eip
 operator|=
-name|nofault
+operator|(
+name|int
+operator|)
+name|curpcb
+operator|->
+name|pcb_onfault
 expr_stmt|;
 return|return;
 block|}
@@ -377,7 +384,7 @@ condition|)
 block|{
 name|type
 operator||=
-name|USER
+name|T_USER
 expr_stmt|;
 name|p
 operator|->
@@ -390,7 +397,44 @@ operator|)
 operator|&
 name|frame
 expr_stmt|;
+name|curpcb
+operator|->
+name|pcb_flags
+operator||=
+name|FM_TRAP
+expr_stmt|;
+comment|/* used by sendsig */
 block|}
+if|if
+condition|(
+operator|(
+name|caddr_t
+operator|)
+name|p
+operator|<
+name|edata
+condition|)
+name|printf
+argument_list|(
+literal|"trap with curproc garbage "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|caddr_t
+operator|)
+name|p
+operator|->
+name|p_regs
+operator|<
+name|edata
+condition|)
+name|printf
+argument_list|(
+literal|"trap with pregs garbage "
+argument_list|)
+expr_stmt|;
 name|ucode
 operator|=
 literal|0
@@ -465,7 +509,7 @@ expr_stmt|;
 name|type
 operator|&=
 operator|~
-name|USER
+name|T_USER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -476,12 +520,12 @@ comment|/*NOTREACHED*/
 case|case
 name|T_SEGNPFLT
 operator|+
-name|USER
+name|T_USER
 case|:
 case|case
 name|T_PROTFLT
 operator|+
-name|USER
+name|T_USER
 case|:
 comment|/* protection fault */
 name|copyfault
@@ -500,25 +544,25 @@ break|break;
 case|case
 name|T_PRIVINFLT
 operator|+
-name|USER
+name|T_USER
 case|:
 comment|/* privileged instruction fault */
 case|case
 name|T_RESADFLT
 operator|+
-name|USER
+name|T_USER
 case|:
 comment|/* reserved addressing fault */
 case|case
 name|T_RESOPFLT
 operator|+
-name|USER
+name|T_USER
 case|:
 comment|/* reserved operand fault */
 case|case
 name|T_FPOPFLT
 operator|+
-name|USER
+name|T_USER
 case|:
 comment|/* coprocessor operand fault */
 name|ucode
@@ -526,7 +570,7 @@ operator|=
 name|type
 operator|&
 operator|~
-name|USER
+name|T_USER
 expr_stmt|;
 name|i
 operator|=
@@ -536,7 +580,7 @@ break|break;
 case|case
 name|T_ASTFLT
 operator|+
-name|USER
+name|T_USER
 case|:
 comment|/* Allow process switch */
 case|case
@@ -594,7 +638,7 @@ goto|;
 case|case
 name|T_DNA
 operator|+
-name|USER
+name|T_USER
 case|:
 ifdef|#
 directive|ifdef
@@ -620,7 +664,7 @@ break|break;
 case|case
 name|T_BOUND
 operator|+
-name|USER
+name|T_USER
 case|:
 name|ucode
 operator|=
@@ -634,7 +678,7 @@ break|break;
 case|case
 name|T_OFLOW
 operator|+
-name|USER
+name|T_USER
 case|:
 name|ucode
 operator|=
@@ -648,7 +692,7 @@ break|break;
 case|case
 name|T_DIVIDE
 operator|+
-name|USER
+name|T_USER
 case|:
 name|ucode
 operator|=
@@ -662,7 +706,7 @@ break|break;
 case|case
 name|T_ARITHTRAP
 operator|+
-name|USER
+name|T_USER
 case|:
 name|ucode
 operator|=
@@ -690,7 +734,7 @@ comment|/* fall into */
 case|case
 name|T_PAGEFLT
 operator|+
-name|USER
+name|T_USER
 case|:
 comment|/* page fault */
 block|{
@@ -737,8 +781,8 @@ operator|)
 name|eva
 argument_list|)
 expr_stmt|;
-comment|/* 		 * It is only a kernel address space fault iff: 		 * 	1. (type& USER) == 0  and 		 * 	2. nofault not set or 		 *	3. nofault set but supervisor space data fault 		 * The last can occur during an exec() copyin where the 		 * argument space is lazy-allocated. 		 */
-comment|/*if (type == T_PAGEFLT&& !nofault)*/
+comment|/* 		 * It is only a kernel address space fault iff: 		 * 	1. (type& T_USER) == 0  and 		 * 	2. pcb_onfault not set or 		 *	3. pcb_onfault set but supervisor space fault 		 * The last can occur during an exec() copyin where the 		 * argument space is lazy-allocated. 		 */
+comment|/*if (type == T_PAGEFLT&& !curpcb->pcb_onfault)*/
 if|if
 condition|(
 name|type
@@ -1039,7 +1083,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|nofault
+name|curpcb
+operator|->
+name|pcb_onfault
 condition|)
 goto|goto
 name|copyfault
@@ -1121,13 +1167,13 @@ return|return;
 case|case
 name|T_BPTFLT
 operator|+
-name|USER
+name|T_USER
 case|:
 comment|/* bpt instruction fault */
 case|case
 name|T_TRCTRAP
 operator|+
-name|USER
+name|T_USER
 case|:
 comment|/* trace trap */
 name|frame
@@ -1156,7 +1202,7 @@ case|:
 case|case
 name|T_NMI
 operator|+
-name|USER
+name|T_USER
 case|:
 comment|/* machine/parity/power fail/"kitchen sink" faults */
 if|if
@@ -1191,7 +1237,7 @@ condition|(
 operator|(
 name|type
 operator|&
-name|USER
+name|T_USER
 operator|)
 operator|==
 literal|0
@@ -1381,6 +1427,14 @@ name|p
 operator|->
 name|p_pri
 expr_stmt|;
+name|curpcb
+operator|->
+name|pcb_flags
+operator|&=
+operator|~
+name|FM_TRAP
+expr_stmt|;
+comment|/* used by sendsig */
 name|spl0
 argument_list|()
 expr_stmt|;

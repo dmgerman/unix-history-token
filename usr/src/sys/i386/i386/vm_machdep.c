@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	5.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -196,6 +196,7 @@ name|void
 operator|)
 name|vm_fault
 argument_list|(
+operator|&
 name|p2
 operator|->
 name|p_vmspace
@@ -233,6 +234,7 @@ operator|++
 control|)
 name|pmap_enter
 argument_list|(
+operator|&
 name|p2
 operator|->
 name|p_vmspace
@@ -249,9 +251,18 @@ name|pmap_extract
 argument_list|(
 name|kernel_pmap
 argument_list|,
+operator|(
+operator|(
+name|int
+operator|)
 name|p2
 operator|->
 name|p_addr
+operator|)
+operator|+
+name|i
+operator|*
+name|NBPG
 argument_list|)
 argument_list|,
 name|VM_PROT_READ
@@ -300,6 +311,12 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_comment
 comment|/*  * cpu_exit is called as the last action during exit.  *  * We change to an inactive address space and a "safe" stack,  * passing thru an argument to the new stack. Now, safely isolated  * from the resources we're shedding, we release the address space  * and any remaining machine-dependent resources, including the  * memory for the user structure and kernel stack.  *  * Next, we assign a dummy context to be written over by swtch,  * calling it to send this process off to oblivion.  * [The nullpcb allows us to minimize cost in swtch() by not having  * a special case].  */
 end_comment
@@ -313,20 +330,18 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|cpu_exit
 argument_list|(
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
 name|p
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+expr|struct
+name|proc
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -387,6 +402,99 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 end_block
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|cpu_exit
+argument_list|(
+name|p
+argument_list|)
+specifier|register
+expr|struct
+name|proc
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|vm_map_remove
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_vmspace
+operator|->
+name|vm_map
+argument_list|,
+name|VM_MIN_ADDRESS
+argument_list|,
+name|VM_MAXUSER_ADDRESS
+argument_list|)
+expr_stmt|;
+name|swtch
+argument_list|()
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|cpu_wait
+argument_list|(
+argument|p
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* drop per-process resources */
+name|vmspace_free
+argument_list|(
+name|p
+operator|->
+name|p_vmspace
+argument_list|)
+expr_stmt|;
+name|kmem_free
+argument_list|(
+name|kernel_map
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|p
+operator|->
+name|p_addr
+argument_list|,
+name|ctob
+argument_list|(
+name|UPAGES
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Set a red zone in the kernel stack after the u. area.  */

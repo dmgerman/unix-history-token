@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	5.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -105,17 +105,6 @@ directive|include
 file|"net/netisr.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|MAXMEM
-value|64*1024*CLSIZE
-end_define
-
-begin_comment
-comment|/* XXX - from cmap.h */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -133,10 +122,6 @@ include|#
 directive|include
 file|"vm/vm_page.h"
 end_include
-
-begin_comment
-comment|/*#include "vm/vm_param.h" #include "vm/vm_map.h" #include "vm/vm_object.h" #include "vm/pmap.h"*/
-end_comment
 
 begin_decl_stmt
 name|vm_map_t
@@ -271,17 +256,6 @@ begin_comment
 comment|/*  * Machine-dependent startup code  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SYSTEM
-value|0xfe000000
-end_define
-
-begin_comment
-comment|/* extern struct pte	EMCmap[]; extern char		EMCbase[]; */
-end_comment
-
 begin_decl_stmt
 name|int
 name|boothowto
@@ -301,23 +275,11 @@ name|bootdev
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMALL
-end_ifdef
-
 begin_decl_stmt
-specifier|extern
 name|int
 name|forcemaxmem
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -330,17 +292,9 @@ extern|extern cyloffset;
 end_extern
 
 begin_macro
-name|startup
-argument_list|(
-argument|firstaddr
-argument_list|)
+name|cpu_startup
+argument_list|()
 end_macro
-
-begin_decl_stmt
-name|int
-name|firstaddr
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -368,6 +322,8 @@ name|caddr_t
 name|v
 decl_stmt|;
 name|int
+name|firstaddr
+decl_stmt|,
 name|maxbufs
 decl_stmt|,
 name|base
@@ -386,71 +342,6 @@ decl_stmt|;
 name|vm_size_t
 name|size
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-specifier|extern
-name|int
-name|pmapdebug
-decl_stmt|;
-name|int
-name|opmapdebug
-init|=
-name|pmapdebug
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * Initialize the console before we print anything out. 	 */
-comment|/*cninit();*/
-comment|/* 	 * Bounds check memory size information against bios values 	 * use the lesser of the two 	 */
-name|biosmem
-operator|=
-name|rtcin
-argument_list|(
-name|RTC_BASELO
-argument_list|)
-operator|+
-operator|(
-name|rtcin
-argument_list|(
-name|RTC_BASEHI
-argument_list|)
-operator|<<
-literal|8
-operator|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Maxmem %x howto %x bootdev %x cyloff %x firstaddr %x bios %d %d\n"
-argument_list|,
-name|Maxmem
-argument_list|,
-name|boothowto
-argument_list|,
-name|bootdev
-argument_list|,
-name|cyloffset
-argument_list|,
-name|firstaddr
-argument_list|,
-name|biosmem
-argument_list|,
-name|rtcin
-argument_list|(
-name|RTC_EXTLO
-argument_list|)
-operator|+
-operator|(
-name|rtcin
-argument_list|(
-name|RTC_EXTHI
-argument_list|)
-operator|<<
-literal|8
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*maxmem = Maxmem-1;  	if(biosmem != 640) 		panic("does not have 640K of base memory");  	biosmem = 1024; 	biosmem += rtcin(RTC_EXTLO) + (rtcin(RTC_EXTHI)<<8); 	biosmem = biosmem/4 - 1 ; 	if (biosmem< maxmem) maxmem=biosmem;  #ifdef SMALL if(forcemaxmem&& maxmem> forcemaxmem) 	maxmem = forcemaxmem-1; #endif*/
 comment|/* 	 * Initialize error message buffer (at end of core). 	 */
 comment|/* avail_end was pre-decremented in pmap_bootstrap to compensate */
 for|for
@@ -495,36 +386,6 @@ name|msgbufmapped
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* XXX EMC */
-name|pte
-operator|=
-name|EMCmap
-expr_stmt|;
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|pte
-operator|=
-name|PG_V
-operator||
-name|PG_UW
-operator||
-literal|0xc0000000
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"EMC at %x\n"
-argument_list|,
-name|EMCbase
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|KDB
@@ -1111,15 +972,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|pmapdebug
-operator|=
-name|opmapdebug
-expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"avail mem = %d\n"
@@ -3904,15 +3756,9 @@ name|proc0paddr
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|cninit
-argument_list|(
-name|SYSTEM
-operator|+
-literal|0xa0000
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* 	 * Initialize the console before we print anything out. 	 */
+end_comment
 
 begin_comment
 comment|/*pg("init386 first %x&x %x Maxmem %x", first,&x, Maxmem); pg("init386 PTmap[0] %x PTD[0] %x", *(int *)PTmap, *(int *)PTD);*/
@@ -4794,6 +4640,33 @@ name|NBPG
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|if
+condition|(
+name|forcemaxmem
+operator|&&
+name|maxmem
+operator|>
+name|forcemaxmem
+condition|)
+name|maxmem
+operator|=
+name|forcemaxmem
+operator|-
+literal|1
+expr_stmt|;
+end_if
+
+begin_expr_stmt
+name|cninit
+argument_list|(
+name|KERNBASE
+operator|+
+literal|0xa0000
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_else
 else|#
 directive|else
@@ -4957,15 +4830,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*pg("maxmem %dk", 4*maxmem);*/
-end_comment
-
-begin_comment
 comment|/* call pmap initialization to make new kernel address space */
-end_comment
-
-begin_comment
-comment|/*pg("pmap_bootstrap");*/
 end_comment
 
 begin_expr_stmt
@@ -5039,10 +4904,6 @@ name|SEL_KPL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*pg("ltr");*/
-end_comment
 
 begin_expr_stmt
 name|ltr
@@ -5209,7 +5070,7 @@ name|u_pcb
 operator|.
 name|pcb_sigc
 argument_list|,
-name|szicode
+name|szsigcode
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5295,14 +5156,12 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-comment|/*printf( " CMAP2 %x * %x CADDR2 %x\n", (int) CMAP2, *(int *) CMAP2, (int)CADDR2); */
 name|load_cr3
 argument_list|(
 name|rcr3
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/*printf("*CADDR2 %x", * (int *) CADDR2);*/
 name|bzero
 argument_list|(
 name|CADDR2
@@ -5310,7 +5169,15 @@ argument_list|,
 name|NBPG
 argument_list|)
 expr_stmt|;
-comment|/*printf("*CADDR2 %x", * (int *) CADDR2); 	*(int *) CADDR2 = 0; printf("*CADDR2 %x", * (int *) CADDR2);*/
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|CADDR2
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 
@@ -6000,129 +5867,6 @@ operator|(
 name|ENAMETOOLONG
 operator|)
 return|;
-block|}
-end_block
-
-begin_comment
-comment|/*   * ovbcopy - like bcopy, but recognizes overlapping ranges and handles   *           them correctly.  */
-end_comment
-
-begin_function
-name|void
-name|ovbcopy
-parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|,
-name|bytes
-parameter_list|)
-name|void
-modifier|*
-name|from
-decl_stmt|,
-decl|*
-name|to
-decl_stmt|;
-end_function
-
-begin_decl_stmt
-name|u_int
-name|bytes
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* num bytes to copy */
-end_comment
-
-begin_block
-block|{
-comment|/* Assume that bcopy copies left-to-right (low addr first). */
-if|if
-condition|(
-name|from
-operator|+
-name|bytes
-operator|<=
-name|to
-operator|||
-name|to
-operator|+
-name|bytes
-operator|<=
-name|from
-operator|||
-name|to
-operator|==
-name|from
-condition|)
-name|bcopy
-argument_list|(
-name|from
-argument_list|,
-name|to
-argument_list|,
-name|bytes
-argument_list|)
-expr_stmt|;
-comment|/* non-overlapping or no-op*/
-elseif|else
-if|if
-condition|(
-name|from
-operator|>
-name|to
-condition|)
-name|bcopy
-argument_list|(
-name|from
-argument_list|,
-name|to
-argument_list|,
-name|bytes
-argument_list|)
-expr_stmt|;
-comment|/* overlapping but OK */
-else|else
-block|{
-comment|/* to> from: overlapping, and must copy right-to-left. */
-name|from
-operator|+=
-name|bytes
-operator|-
-literal|1
-expr_stmt|;
-name|to
-operator|+=
-name|bytes
-operator|-
-literal|1
-expr_stmt|;
-while|while
-condition|(
-name|bytes
-operator|--
-operator|>
-literal|0
-condition|)
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
-name|to
-operator|--
-operator|=
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
-name|from
-operator|--
-expr_stmt|;
-block|}
 block|}
 end_block
 
