@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.11 (Berkeley) %G%"
+literal|"@(#)print.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -765,14 +765,6 @@ else|else
 operator|*
 name|cp
 operator|=
-operator|(
-name|flag
-operator|&
-name|SPAGE
-operator|)
-condition|?
-literal|'P'
-else|:
 literal|'D'
 expr_stmt|;
 break|break;
