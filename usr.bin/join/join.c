@@ -33,13 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)join.c	5.1 (Berkeley) 11/18/91";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)join.c	5.1 (Berkeley) 11/18/91"
+literal|"$Id: join.c,v 1.6 1994/01/04 05:24:34 cgd Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,19 +65,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
@@ -86,6 +84,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_comment
@@ -1294,9 +1298,6 @@ name|bp
 decl_stmt|,
 modifier|*
 name|fieldp
-decl_stmt|,
-modifier|*
-name|token
 decl_stmt|;
 comment|/* 	 * Read all of the lines from an input file that have the same 	 * join field. 	 */
 name|F
@@ -1470,7 +1471,7 @@ condition|(
 operator|(
 name|bp
 operator|=
-name|fgetline
+name|fgetln
 argument_list|(
 name|F
 operator|->
@@ -1484,6 +1485,31 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+name|lp
+operator|->
+name|linealloc
+operator|<=
+name|len
+operator|+
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|lp
+operator|->
+name|linealloc
+operator|==
+literal|0
+condition|)
+name|lp
+operator|->
+name|linealloc
+operator|=
+literal|128
+expr_stmt|;
 while|while
 condition|(
 name|lp
@@ -1491,13 +1517,14 @@ operator|->
 name|linealloc
 operator|<=
 name|len
+operator|+
+literal|1
 condition|)
-block|{
 name|lp
 operator|->
 name|linealloc
-operator|+=
-literal|100
+operator|*=
+literal|2
 expr_stmt|;
 if|if
 condition|(
@@ -1542,13 +1569,46 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Split the line into fields, allocate space as necessary. */
-name|token
+comment|/* Replace trailing newline, if it exists. */
+if|if
+condition|(
+name|bp
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+name|lp
+operator|->
+name|line
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+else|else
+name|lp
+operator|->
+name|line
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|bp
 operator|=
 name|lp
 operator|->
 name|line
 expr_stmt|;
+comment|/* Split the line into fields, allocate space as necessary. */
 name|lp
 operator|->
 name|fieldcnt
@@ -1563,7 +1623,7 @@ operator|=
 name|strsep
 argument_list|(
 operator|&
-name|token
+name|bp
 argument_list|,
 name|tabchar
 argument_list|)

@@ -33,13 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)rev.c	5.2 (Berkeley) 3/21/92";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)rev.c	5.2 (Berkeley) 3/21/92"
+literal|"$Id: rev.c,v 1.4 1994/01/04 05:24:10 cgd Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,7 +262,7 @@ while|while
 condition|(
 name|p
 operator|=
-name|fgetline
+name|fgetln
 argument_list|(
 name|fp
 argument_list|,
@@ -267,6 +271,20 @@ name|len
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|p
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+operator|--
+name|len
+expr_stmt|;
 name|t
 operator|=
 name|p
