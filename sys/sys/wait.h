@@ -220,6 +220,17 @@ begin_comment
 comment|/* tell about stopped, untraced children */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WLINUXCLONE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* wait for kthread spawned from linux_clone */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
