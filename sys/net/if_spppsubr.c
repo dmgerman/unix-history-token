@@ -5389,7 +5389,7 @@ comment|/* Initialize keepalive handler. */
 if|if
 condition|(
 name|spppq
-operator|!=
+operator|==
 name|NULL
 condition|)
 name|TIMEOUT
@@ -5777,7 +5777,7 @@ comment|/* Stop keepalive handler. */
 if|if
 condition|(
 name|spppq
-operator|!=
+operator|==
 name|NULL
 condition|)
 name|UNTIMEOUT
