@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -839,8 +839,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
+modifier|*
 name|kmembase
-index|[]
 decl_stmt|;
 end_decl_stmt
 

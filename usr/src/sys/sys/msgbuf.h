@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981, 1984 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)msgbuf.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981, 1984 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)msgbuf.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -49,7 +49,8 @@ end_ifdef
 begin_decl_stmt
 name|struct
 name|msgbuf
-name|msgbuf
+modifier|*
+name|msgbufp
 decl_stmt|;
 end_decl_stmt
 

@@ -1,17 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mman.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * %sccs.include.redist.c%  *  *	@(#)mman.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/* protections are chosen from these bits, or-ed together */
+comment|/*  * Protections are chosen from these bits, or-ed together  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PROT_READ
-value|0x1
+value|0x04
 end_define
 
 begin_comment
@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|PROT_WRITE
-value|0x2
+value|0x02
 end_define
 
 begin_comment
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|PROT_EXEC
-value|0x4
+value|0x01
 end_define
 
 begin_comment
@@ -41,14 +41,62 @@ comment|/* pages can be executed */
 end_comment
 
 begin_comment
-comment|/* sharing types: choose either SHARED or PRIVATE */
+comment|/*  * Flags contain mapping type, sharing type and options.  * Mapping type; choose one  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_FILE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* mapped from a file or device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_ANON
+value|0x0002
+end_define
+
+begin_comment
+comment|/* allocated from memory, swap space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_TYPE
+value|0x000f
+end_define
+
+begin_comment
+comment|/* mask for type field */
+end_comment
+
+begin_comment
+comment|/*  * Sharing types; choose one  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_COPY
+value|0x0020
+end_define
+
+begin_comment
+comment|/* "copy" region at mmap time */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAP_SHARED
-value|1
+value|0x0010
 end_define
 
 begin_comment
@@ -59,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|MAP_PRIVATE
-value|2
+value|0x0000
 end_define
 
 begin_comment
@@ -67,7 +115,55 @@ comment|/* changes are private */
 end_comment
 
 begin_comment
-comment|/* advice to madvise */
+comment|/*  * Other flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_FIXED
+value|0x0100
+end_define
+
+begin_comment
+comment|/* map addr must be exactly as requested */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_NOEXTEND
+value|0x0200
+end_define
+
+begin_comment
+comment|/* for MAP_FILE, don't change file size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_HASSEMPHORE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* region may contain semaphores */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_INHERIT
+value|0x0800
+end_define
+
+begin_comment
+comment|/* region is retained after exec */
+end_comment
+
+begin_comment
+comment|/*  * Advice to madvise  */
 end_comment
 
 begin_define

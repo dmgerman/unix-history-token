@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -177,12 +177,10 @@ modifier|*
 name|vu_socket
 decl_stmt|;
 comment|/* unix ipc (VSOCK) */
-name|struct
-name|text
-modifier|*
-name|vu_text
+name|caddr_t
+name|vu_vmdata
 decl_stmt|;
-comment|/* text/mapped region (VREG) */
+comment|/* private data for vm */
 name|struct
 name|specinfo
 modifier|*
@@ -231,8 +229,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|v_text
-value|v_un.vu_text
+name|v_vmdata
+value|v_un.vu_vmdata
 end_define
 
 begin_define

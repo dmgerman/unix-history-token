@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mbuf.h	7.13 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mbuf.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -91,7 +91,7 @@ name|dtom
 parameter_list|(
 name|x
 parameter_list|)
-value|((struct mbuf *)((int)x& ~(MSIZE-1)))
+value|((struct mbuf *)((int)(x)& ~(MSIZE-1)))
 end_define
 
 begin_define
@@ -101,7 +101,7 @@ name|mtocl
 parameter_list|(
 name|x
 parameter_list|)
-value|(((u_int)x - (u_int)mbutl)>> MCLSHIFT)
+value|(((u_int)(x) - (u_int)mbutl)>> MCLSHIFT)
 end_define
 
 begin_define
@@ -111,7 +111,7 @@ name|cltom
 parameter_list|(
 name|x
 parameter_list|)
-value|((caddr_t)mbutl[x])
+value|((caddr_t)((u_int)mbutl + ((u_int)(x)>> MCLSHIFT)))
 end_define
 
 begin_comment
@@ -934,12 +934,10 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|struct
+name|mbuf
+modifier|*
 name|mbutl
-index|[]
-index|[
-name|MCLBYTES
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -949,15 +947,14 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|pte
-name|Mbmap
-index|[]
+name|char
+modifier|*
+name|mclrefcnt
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* page tables to map mbutl */
+comment|/* cluster reference counts */
 end_comment
 
 begin_decl_stmt
@@ -978,19 +975,6 @@ name|union
 name|mcluster
 modifier|*
 name|mclfree
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|mclrefcnt
-index|[
-name|NMBCLUSTERS
-operator|+
-name|CLBYTES
-operator|/
-name|MCLBYTES
-index|]
 decl_stmt|;
 end_decl_stmt
 

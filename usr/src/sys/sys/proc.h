@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -107,12 +107,10 @@ modifier|*
 name|p_prev
 decl_stmt|;
 comment|/* also zombies, and free proc's */
-name|struct
-name|pte
-modifier|*
+name|caddr_t
 name|p_addr
 decl_stmt|;
-comment|/* u-area kernel map address */
+comment|/* kernel virtual address of u-area */
 name|char
 name|p_usrpri
 decl_stmt|;
@@ -201,30 +199,26 @@ modifier|*
 name|p_ru
 decl_stmt|;
 comment|/* exit information */
-name|short
-name|p_poip
+name|struct
+name|vm_map
+modifier|*
+name|p_map
 decl_stmt|;
-comment|/* page outs in progress */
-name|short
-name|p_szpt
+comment|/* VM address map */
+name|caddr_t
+name|p_shm
 decl_stmt|;
-comment|/* copy of page table size */
-name|segsz_t
-name|p_tsize
+comment|/* SYS5 shared memory private data */
+name|int
+name|p_thread
 decl_stmt|;
-comment|/* size of text (clicks) */
-name|segsz_t
-name|p_dsize
+comment|/* id for this "thread" (Mach glue) XXX */
+name|int
+name|p_pad1
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* size of data space (clicks) */
-name|segsz_t
-name|p_mmsize
-decl_stmt|;
-comment|/* size of mapmem beyond p_dsize (clicks) */
-name|segsz_t
-name|p_ssize
-decl_stmt|;
-comment|/* copy of stack size (clicks) */
 name|segsz_t
 name|p_rssize
 decl_stmt|;
@@ -245,24 +239,12 @@ name|caddr_t
 name|p_wchan
 decl_stmt|;
 comment|/* event process is awaiting */
-name|struct
-name|text
-modifier|*
-name|p_textp
+name|int
+name|pad2
+index|[
+literal|3
+index|]
 decl_stmt|;
-comment|/* pointer to text structure */
-name|struct
-name|pte
-modifier|*
-name|p_p0br
-decl_stmt|;
-comment|/* page table base P0BR */
-name|struct
-name|proc
-modifier|*
-name|p_xlink
-decl_stmt|;
-comment|/* linked list of procs sharing same text */
 name|int
 name|p_cpticks
 decl_stmt|;
