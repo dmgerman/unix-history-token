@@ -201,6 +201,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_page_t
+name|pmap_extract_and_hold
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pmap_growkernel
 parameter_list|(
