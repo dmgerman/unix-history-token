@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.8 (Berkeley) %G%"
+literal|"@(#)inet.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -791,11 +791,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|printf("	m\n",tcpstat.tcps_
-comment|/**/
-value|f,plural(tcpstat.tcps_
-comment|/**/
-value|f))
+value|printf(m, tcpstat.f, plural(tcpstat.f))
 define|#
 directive|define
 name|p2
@@ -806,282 +802,274 @@ name|f2
 parameter_list|,
 name|m
 parameter_list|)
-value|printf("	m\n",tcpstat.tcps_
-comment|/**/
-value|f1,plural(tcpstat.tcps_
-comment|/**/
-value|f1),tcpstat.tcps_
-comment|/**/
-value|f2,plural(tcpstat.tcps_
-comment|/**/
-value|f2))
+value|printf(m, tcpstat.f1, plural(tcpstat.f1), tcpstat.f2, plural(tcpstat.f2))
 name|p
 argument_list|(
-argument|sndtotal
+name|tcps_sndtotal
 argument_list|,
-argument|%d packet%s sent
+literal|"\t%d packet%s sent\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p2
 argument_list|(
-argument|sndpack
+name|tcps_sndpack
 argument_list|,
-argument|sndbyte
+name|tcps_sndbyte
 argument_list|,
-argument|\t%d data packet%s (%d byte%s)
+literal|"\t\t%d data packet%s (%d byte%s)\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p2
 argument_list|(
-argument|sndrexmitpack
+name|tcps_sndrexmitpack
 argument_list|,
-argument|sndrexmitbyte
+name|tcps_sndrexmitbyte
 argument_list|,
-argument|\t%d data packet%s (%d byte%s) retransmitted
+literal|"\t\t%d data packet%s (%d byte%s) retransmitted\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p2
 argument_list|(
-argument|sndacks
+name|tcps_sndacks
 argument_list|,
-argument|delack
+name|tcps_delack
 argument_list|,
-argument|\t%d ack-only packet%s (%d delayed)
+literal|"\t\t%d ack-only packet%s (%d delayed)\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|sndurg
+name|tcps_sndurg
 argument_list|,
-argument|\t%d URG only packet%s
+literal|"\t\t%d URG only packet%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|sndprobe
+name|tcps_sndprobe
 argument_list|,
-argument|\t%d window probe packet%s
+literal|"\t\t%d window probe packet%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|sndwinup
+name|tcps_sndwinup
 argument_list|,
-argument|\t%d window update packet%s
+literal|"\t\t%d window update packet%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|sndctrl
+name|tcps_sndctrl
 argument_list|,
-argument|\t%d control packet%s
+literal|"\t\t%d control packet%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|rcvtotal
+name|tcps_rcvtotal
 argument_list|,
-argument|%d packet%s received
+literal|"\t%d packet%s received\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p2
 argument_list|(
-argument|rcvackpack
+name|tcps_rcvackpack
 argument_list|,
-argument|rcvackbyte
+name|tcps_rcvackbyte
 argument_list|,
-argument|\t%d ack%s (for %d byte%s)
+literal|"\t\t%d ack%s (for %d byte%s)\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|rcvdupack
+name|tcps_rcvdupack
 argument_list|,
-argument|\t%d duplicate ack%s
+literal|"\t\t%d duplicate ack%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|rcvacktoomuch
+name|tcps_rcvacktoomuch
 argument_list|,
-argument|\t%d ack%s for unsent data
+literal|"\t\t%d ack%s for unsent data\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p2
 argument_list|(
-argument|rcvpack
+name|tcps_rcvpack
 argument_list|,
-argument|rcvbyte
+name|tcps_rcvbyte
 argument_list|,
-argument|\t%d packet%s (%d byte%s) received in-sequence
+literal|"\t\t%d packet%s (%d byte%s) received in-sequence\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p2
 argument_list|(
-argument|rcvduppack
+name|tcps_rcvduppack
 argument_list|,
-argument|rcvdupbyte
+name|tcps_rcvdupbyte
 argument_list|,
-argument|\t%d completely duplicate packet%s (%d byte%s)
+literal|"\t\t%d completely duplicate packet%s (%d byte%s)\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p2
 argument_list|(
-argument|rcvpartduppack
+name|tcps_rcvpartduppack
 argument_list|,
-argument|rcvpartdupbyte
+name|tcps_rcvpartdupbyte
 argument_list|,
-argument|\t%d packet%s with some dup. data (%d byte%s duped)
+literal|"\t\t%d packet%s with some dup. data (%d byte%s duped)\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p2
 argument_list|(
-argument|rcvoopack
+name|tcps_rcvoopack
 argument_list|,
-argument|rcvoobyte
+name|tcps_rcvoobyte
 argument_list|,
-argument|\t%d out-of-order packet%s (%d byte%s)
+literal|"\t\t%d out-of-order packet%s (%d byte%s)\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p2
 argument_list|(
-argument|rcvpackafterwin
+name|tcps_rcvpackafterwin
 argument_list|,
-argument|rcvbyteafterwin
+name|tcps_rcvbyteafterwin
 argument_list|,
-argument|\t%d packet%s (%d byte%s) of data after window
+literal|"\t\t%d packet%s (%d byte%s) of data after window\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|rcvwinprobe
+name|tcps_rcvwinprobe
 argument_list|,
-argument|\t%d window probe%s
+literal|"\t\t%d window probe%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|rcvwinupd
+name|tcps_rcvwinupd
 argument_list|,
-argument|\t%d window update packet%s
+literal|"\t\t%d window update packet%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|rcvafterclose
+name|tcps_rcvafterclose
 argument_list|,
-argument|\t%d packet%s received after close
+literal|"\t\t%d packet%s received after close\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|rcvbadsum
+name|tcps_rcvbadsum
 argument_list|,
-argument|\t%d discarded for bad checksum%s
+literal|"\t\t%d discarded for bad checksum%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|rcvbadoff
+name|tcps_rcvbadoff
 argument_list|,
-argument|\t%d discarded for bad header offset field%s
+literal|"\t\t%d discarded for bad header offset field%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|rcvshort
+name|tcps_rcvshort
 argument_list|,
-argument|\t%d discarded because packet too short
+literal|"\t\t%d discarded because packet too short\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|connattempt
+name|tcps_connattempt
 argument_list|,
-argument|%d connection request%s
+literal|"\t%d connection request%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|accepts
+name|tcps_accepts
 argument_list|,
-argument|%d connection accept%s
+literal|"\t%d connection accept%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|connects
+name|tcps_connects
 argument_list|,
-argument|%d connection%s established (including accepts)
+literal|"\t%d connection%s established (including accepts)\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p2
 argument_list|(
-argument|closed
+name|tcps_closed
 argument_list|,
-argument|drops
+name|tcps_drops
 argument_list|,
-argument|%d connection%s closed (including %d drop%s)
+literal|"\t%d connection%s closed (including %d drop%s)\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|conndrops
+name|tcps_conndrops
 argument_list|,
-argument|%d embryonic connection%s dropped
+literal|"\t%d embryonic connection%s dropped\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p2
 argument_list|(
-argument|rttupdated
+name|tcps_rttupdated
 argument_list|,
-argument|segstimed
+name|tcps_segstimed
 argument_list|,
-argument|%d segment%s updated rtt (of %d attempt%s)
+literal|"\t%d segment%s updated rtt (of %d attempt%s)\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|rexmttimeo
+name|tcps_rexmttimeo
 argument_list|,
-argument|%d retransmit timeout%s
+literal|"\t%d retransmit timeout%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|timeoutdrop
+name|tcps_timeoutdrop
 argument_list|,
-argument|\t%d connection%s dropped by rexmit timeout
+literal|"\t\t%d connection%s dropped by rexmit timeout\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|persisttimeo
+name|tcps_persisttimeo
 argument_list|,
-argument|%d persist timeout%s
+literal|"\t%d persist timeout%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|keeptimeo
+name|tcps_keeptimeo
 argument_list|,
-argument|%d keepalive timeout%s
+literal|"\t%d keepalive timeout%s\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|keepprobe
+name|tcps_keepprobe
 argument_list|,
-argument|\t%d keepalive probe%s sent
+literal|"\t\t%d keepalive probe%s sent\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|p
 argument_list|(
-argument|keepdrops
+name|tcps_keepdrops
 argument_list|,
-argument|\t%d connection%s dropped by keepalive
+literal|"\t\t%d connection%s dropped by keepalive\n"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 undef|#
 directive|undef
 name|p
