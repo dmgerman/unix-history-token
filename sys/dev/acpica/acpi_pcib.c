@@ -476,7 +476,7 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"matched entry for %d.%d.INT%c (source %s)\n"
+literal|"matched entry for %d.%d.INT%c (src %s)\n"
 argument_list|,
 name|pci_get_bus
 argument_list|(
@@ -661,7 +661,7 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"PCI interrupt link device %s has wrong _HID (%s)\n"
+literal|"PCI interrupt link %s has invalid _HID (%s)\n"
 argument_list|,
 name|prt
 operator|->
@@ -743,7 +743,7 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"couldn't get PCI interrupt link device _CRS data - %s\n"
+literal|"PCI interrupt link device _CRS failed - %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -781,7 +781,7 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"couldn't get PCI interrupt link device _PRS data - %s\n"
+literal|"PCI interrupt link device _PRS failed - %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -1384,7 +1384,7 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"couldn't route interrupt %d via %s, interrupt resource build failed - %s\n"
+literal|"buf append failed for interrupt %d via %s - %s\n"
 argument_list|,
 name|Interrupts
 index|[
@@ -1426,7 +1426,7 @@ name|device_printf
 argument_list|(
 name|pcib
 argument_list|,
-literal|"couldn't route interrupt %d via %s - %s\n"
+literal|"_SRS failed for interrupt %d via %s - %s\n"
 argument_list|,
 name|Interrupts
 index|[
