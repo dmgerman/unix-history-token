@@ -1056,7 +1056,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read data from a drive  *  * Return error number  */
+comment|/*  * Read data from a drive.  * Return error number.  */
 end_comment
 
 begin_function
@@ -1229,68 +1229,6 @@ operator|.
 name|uio_resid
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|drive
-operator|->
-name|vp
-operator|->
-name|v_lastr
-operator|+
-name|bscale
-operator|==
-name|blocknum
-condition|)
-block|{
-comment|/* did our last read finish in this block? */
-name|nextbn
-operator|=
-name|blocknum
-operator|+
-name|bscale
-expr_stmt|;
-comment|/* note the end of the transfer */
-name|error
-operator|=
-name|breadn
-argument_list|(
-name|drive
-operator|->
-name|vp
-argument_list|,
-comment|/* and read with read-ahead */
-name|blocknum
-argument_list|,
-operator|(
-name|int
-operator|)
-name|drive
-operator|->
-name|blocksize
-argument_list|,
-operator|&
-name|nextbn
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|drive
-operator|->
-name|blocksize
-argument_list|,
-literal|1
-argument_list|,
-name|NOCRED
-argument_list|,
-operator|&
-name|bp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-comment|/* random read: just read this block */
 name|error
 operator|=
 name|bread
@@ -1314,15 +1252,6 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
-name|drive
-operator|->
-name|vp
-operator|->
-name|v_lastr
-operator|=
-name|blocknum
-expr_stmt|;
-comment|/* note the last block we read */
 name|count
 operator|=
 name|min
