@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.33 2002/07/17 04:01:57 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.34 2002/09/10 06:29:09 imp Exp   */
 end_comment
 
 begin_comment
@@ -4161,6 +4161,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_ARGOSY
+value|-1
+end_define
+
+begin_comment
+comment|/* ARGOSY */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_AMD
 value|-1
 end_define
@@ -4472,6 +4483,27 @@ define|#
 directive|define
 name|PCMCIA_STR_AMBICOM_AMB8002T
 value|"AmbiCom AMB8002T"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_ARGOSY_SP320
+value|{ "PCMCIA", "RS-COM 2P", NULL, NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ARGOSY_SP320
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ARGOSY_SP320
+value|"} ARGOSY SP320 Dual port serial PCMCIA"
 end_define
 
 begin_define
