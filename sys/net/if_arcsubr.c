@@ -628,6 +628,7 @@ name|ifp
 operator|->
 name|if_broadcastaddr
 argument_list|,
+operator|&
 name|adst
 argument_list|,
 name|ARC_ADDR_LEN
@@ -641,6 +642,7 @@ argument_list|(
 name|ah
 argument_list|)
 argument_list|,
+operator|&
 name|adst
 argument_list|,
 name|ARC_ADDR_LEN
