@@ -378,11 +378,6 @@ operator|=
 name|TARG_CDEV_MAJOR
 block|,
 operator|.
-name|d_flags
-operator|=
-name|D_KQFILTER
-block|,
-operator|.
 name|d_kqfilter
 operator|=
 name|targkqfilter

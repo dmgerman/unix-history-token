@@ -380,8 +380,6 @@ operator|.
 name|d_flags
 operator|=
 name|D_TTY
-operator||
-name|D_KQFILTER
 block|,
 if|#
 directive|if

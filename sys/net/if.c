@@ -697,11 +697,6 @@ operator|=
 name|MAJOR_AUTO
 block|,
 operator|.
-name|d_flags
-operator|=
-name|D_KQFILTER
-block|,
-operator|.
 name|d_kqfilter
 operator|=
 name|netkqfilter

@@ -252,7 +252,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|ENODEV
+literal|1
 operator|)
 return|;
 block|}
