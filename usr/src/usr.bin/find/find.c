@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.18 (Berkeley) %G%"
+literal|"@(#)find.c	4.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,6 +214,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* true if SHOULD cross devices (file systems) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|follow
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if SHOULD descend symlinked directories */
 end_comment
 
 begin_decl_stmt
@@ -1355,6 +1365,42 @@ operator|)
 literal|0
 argument_list|)
 operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|EQ
+argument_list|(
+name|a
+argument_list|,
+literal|"-follow"
+argument_list|)
+condition|)
+block|{
+name|follow
+operator|=
+literal|1
+expr_stmt|;
+return|return
+name|mk
+argument_list|(
+name|dummy
+argument_list|,
+operator|(
+expr|struct
+name|anode
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+expr|struct
+name|anode
+operator|*
+operator|)
+literal|0
+argument_list|)
 return|;
 block|}
 name|b
@@ -4435,6 +4481,17 @@ name|endofname
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|follow
+condition|?
+name|stat
+argument_list|(
+name|fname
+argument_list|,
+operator|&
+name|Statb
+argument_list|)
+else|:
 name|lstat
 argument_list|(
 name|fname
@@ -4442,6 +4499,7 @@ argument_list|,
 operator|&
 name|Statb
 argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
