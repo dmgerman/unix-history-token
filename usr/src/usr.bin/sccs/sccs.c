@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.56 %G%"
+literal|"@(#)sccs.c	1.57 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -903,6 +903,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|V6
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+endif|V6
+end_endif
+
 begin_escape
 end_escape
 
@@ -938,6 +959,47 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|V6
+ifndef|#
+directive|ifndef
+name|SCCSDIR
+comment|/* pull "SccsDir" out of the environment (possibly) */
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"PROJECT"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+condition|)
+name|SccsDir
+operator|=
+name|p
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"PROJECT must be a full pathname\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|SCCSDIR
+endif|#
+directive|endif
+endif|V6
 comment|/* 	**  Detect and decode flags intended for this program. 	*/
 if|if
 condition|(
