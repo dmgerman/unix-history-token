@@ -1018,6 +1018,9 @@ decl_stmt|;
 name|device_t
 name|child
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 comment|/* 	 * this is here so that when socket_enable calls gettype, trt happens 	 */
 name|STAILQ_INIT
 argument_list|(
@@ -1145,6 +1148,11 @@ literal|"functions scanning\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|pf
@@ -1154,6 +1162,9 @@ argument_list|,
 argument|pf_list
 argument_list|)
 block|{
+name|i
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|STAILQ_EMPTY
@@ -1164,7 +1175,18 @@ operator|->
 name|cfe_head
 argument_list|)
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Function %d has no config entries.!\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|pf
 operator|->
 name|sc
@@ -1184,6 +1206,22 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|DEVPRINTF
+argument_list|(
+operator|(
+name|dev
+operator|,
+literal|"Card has %d functions. pccard_mfc is %d\n"
+operator|,
+name|i
+operator|,
+name|pccard_mfc
+argument_list|(
+name|sc
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|pf
@@ -3260,9 +3298,6 @@ name|reg
 operator||=
 name|PCCARD_CCR_OPTION_LEVIREQ
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COOKIE_FOR_WARNER
 if|if
 condition|(
 name|pccard_mfc
@@ -3283,8 +3318,6 @@ operator|)
 expr_stmt|;
 comment|/* PCCARD_CCR_OPTION_IRQ_ENABLE set elsewhere as needed */
 block|}
-endif|#
-directive|endif
 name|pccard_ccr_write
 argument_list|(
 name|pf
@@ -3851,21 +3884,8 @@ unit|if (pf->pf_mfc_iobase> pcihp->addr + offset) 				pf->pf_mfc_iobase = pcihp-
 comment|/* round up to nearest (2^n)-1 */
 end_comment
 
-begin_ifdef
-unit|for (iosize = 1; iosize>= tmp; iosize<<= 1) 			; 		iosize--;  		pccard_ccr_write(pf, PCCARD_CCR_IOBASE0, 		    pf->pf_mfc_iobase& 0xff); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE1, 		    (pf->pf_mfc_iobase>> 8)& 0xff); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE2, 0); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE3, 0);  		pccard_ccr_write(pf, PCCARD_CCR_IOSIZE, iosize);
-ifdef|#
-directive|ifdef
-name|COOKIE_FOR_WARNER
-end_ifdef
-
-begin_endif
-unit|reg = pccard_ccr_read(pf, PCCARD_CCR_OPTION); 		reg |= PCCARD_CCR_OPTION_ADDR_DECODE; 		pccard_ccr_write(pf, PCCARD_CCR_OPTION, reg);
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-unit|} 	return (0); }  void pccard_io_unmap(struct pccard_function *pf, int window) {  	pccard_chip_io_unmap(pf->sc->pct, pf->sc->pch, window);
+unit|for (iosize = 1; iosize>= tmp; iosize<<= 1) 			; 		iosize--;  		pccard_ccr_write(pf, PCCARD_CCR_IOBASE0, 		    pf->pf_mfc_iobase& 0xff); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE1, 		    (pf->pf_mfc_iobase>> 8)& 0xff); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE2, 0); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE3, 0);  		pccard_ccr_write(pf, PCCARD_CCR_IOSIZE, iosize);  		reg = pccard_ccr_read(pf, PCCARD_CCR_OPTION); 		reg |= PCCARD_CCR_OPTION_ADDR_DECODE; 		pccard_ccr_write(pf, PCCARD_CCR_OPTION, reg); 	} 	return (0); }  void pccard_io_unmap(struct pccard_function *pf, int window) {  	pccard_chip_io_unmap(pf->sc->pct, pf->sc->pch, window);
 comment|/* XXX Anything for multi-function cards? */
 end_comment
 
@@ -6017,6 +6037,16 @@ name|cookiep
 parameter_list|)
 block|{
 name|struct
+name|pccard_softc
+modifier|*
+name|sc
+init|=
+name|PCCARD_SOFTC
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+name|struct
 name|pccard_ivar
 modifier|*
 name|ivar
@@ -6100,10 +6130,14 @@ operator|=
 operator|*
 name|cookiep
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COOKIE_FOR_WARNER
-comment|/* XXX Not sure this is right to write to ccr */
+if|if
+condition|(
+name|pccard_mfc
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 name|pccard_ccr_write
 argument_list|(
 name|func
@@ -6120,8 +6154,7 @@ operator||
 name|PCCARD_CCR_OPTION_IREQ_ENABLE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 return|return
 operator|(
 literal|0
@@ -6152,6 +6185,16 @@ name|cookie
 parameter_list|)
 block|{
 name|struct
+name|pccard_softc
+modifier|*
+name|sc
+init|=
+name|PCCARD_SOFTC
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+name|struct
 name|pccard_ivar
 modifier|*
 name|ivar
@@ -6173,10 +6216,14 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|COOKIE_FOR_WARNER
-comment|/* XXX Not sure this is right to write to ccr */
+if|if
+condition|(
+name|pccard_mfc
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 name|pccard_ccr_write
 argument_list|(
 name|func
@@ -6194,8 +6241,7 @@ operator|~
 name|PCCARD_CCR_OPTION_IREQ_ENABLE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|ret
 operator|=
 name|bus_generic_teardown_intr
