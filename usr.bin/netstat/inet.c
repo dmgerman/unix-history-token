@@ -1283,6 +1283,13 @@ argument_list|,
 literal|"\t%lu dropped due to full socket buffers\n"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|udpps_pcbhashmiss
+argument_list|,
+literal|"\t%lu not for hashed pcb\n"
+argument_list|)
+expr_stmt|;
 name|delivered
 operator|=
 name|udpstat
