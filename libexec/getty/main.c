@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.10.2.3 1997/05/11 05:28:54 davidn Exp $"
+literal|"$Id: main.c,v 1.10.2.4 1997/06/03 13:01:44 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1039,15 +1039,6 @@ modifier|*
 name|tname
 decl_stmt|;
 name|int
-name|repcnt
-init|=
-literal|0
-decl_stmt|,
-name|failopenlogged
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|first_sleep
 init|=
 literal|1
@@ -1208,9 +1199,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|int
-name|i
-decl_stmt|;
 name|strcpy
 argument_list|(
 name|ttyn
