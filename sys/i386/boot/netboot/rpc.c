@@ -541,6 +541,8 @@ argument_list|,
 argument|path
 argument_list|,
 argument|file_fh
+argument_list|,
+argument|sizep
 argument_list|)
 end_macro
 
@@ -574,6 +576,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|file_fh
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|sizep
 decl_stmt|;
 end_decl_stmt
 
@@ -794,6 +803,27 @@ argument_list|,
 name|file_fh
 argument_list|,
 literal|32
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sizep
+condition|)
+operator|*
+name|sizep
+operator|=
+name|ntohl
+argument_list|(
+name|rpc
+operator|->
+name|u
+operator|.
+name|reply
+operator|.
+name|data
+index|[
+literal|14
+index|]
 argument_list|)
 expr_stmt|;
 return|return

@@ -3,6 +3,41 @@ begin_comment
 comment|/************************************************************************** NETBOOT -  BOOTP/TFTP Bootstrap Program  Author: Martin Renters   Date: May/94   This code is based heavily on David Greenman's if_ed.c driver   Copyright (C) 1993-1994, David Greenman, Martin Renters.   This software may be used, modified, copied, distributed, and sold, in   both source and binary form provided that the above copyright and these   terms are retained. Under no circumstances are the authors responsible for   the proper functioning of this software, nor do the authors assume any   responsibility for damages incurred with its use.  3c503 support added by Bill Paul (wpaul@ctr.columbia.edu) on 11/15/94 SMC8416 support added by Bill Paul (wpaul@ctr.columbia.edu) on 12/25/94  **************************************************************************/
 end_comment
 
+begin_macro
+name|DELAY
+argument_list|(
+argument|int x
+argument_list|)
+end_macro
+
+begin_block
+block|{
+specifier|volatile
+name|long
+name|a
+decl_stmt|,
+name|b
+decl_stmt|,
+name|l
+decl_stmt|;
+for|for
+control|(
+name|x
+init|;
+name|x
+operator|>
+literal|0
+condition|;
+name|x
+operator|--
+control|)
+name|b
+operator|=
+name|a
+expr_stmt|;
+block|}
+end_block
+
 begin_include
 include|#
 directive|include
@@ -1353,6 +1388,13 @@ operator|=
 operator|*
 name|tent_base
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Looking for NE1000/NE2000 at 0x%x\n"
+argument_list|,
+name|eth_nic_base
+argument_list|)
+expr_stmt|;
 name|eth_vendor
 operator|=
 name|VENDOR_NOVELL
@@ -1369,6 +1411,25 @@ name|eth_tx_start
 operator|=
 literal|32
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GWETHER
+name|outb
+argument_list|(
+name|eth_asic_base
+operator|+
+name|NE_RESET
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|c
 operator|=
 name|inb
@@ -1385,6 +1446,11 @@ operator|+
 name|NE_RESET
 argument_list|,
 name|c
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|5000
 argument_list|)
 expr_stmt|;
 name|inb
@@ -1590,7 +1656,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\r\nNE1000/NE2000 base 0x%x, addr "
+literal|"\nNE1000/NE2000 (%d bit) base 0x%x, addr "
+argument_list|,
+name|eth_flags
+operator|&
+name|FLAG_16BIT
+condition|?
+literal|16
+else|:
+literal|8
 argument_list|,
 name|eth_nic_base
 argument_list|)
