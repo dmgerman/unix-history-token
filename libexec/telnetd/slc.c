@@ -1791,11 +1791,11 @@ literal|0
 condition|)
 return|return;
 comment|/* too bad */
-name|bcopy
+name|memmove
 argument_list|(
-name|ptr
-argument_list|,
 name|def_slcbuf
+argument_list|,
+name|ptr
 argument_list|,
 name|len
 argument_list|)
