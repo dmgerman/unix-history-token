@@ -800,7 +800,11 @@ argument_list|(
 literal|"CAN'T CHECK FILE SYSTEM."
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 operator|-
 literal|1
