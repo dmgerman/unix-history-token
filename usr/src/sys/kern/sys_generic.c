@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.5	82/08/01	*/
+comment|/*	sys_generic.c	5.6	82/08/10	*/
 end_comment
 
 begin_include
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|"../h/tty.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/fcntl.h"
 end_include
 
 begin_include
@@ -625,7 +619,7 @@ name|fp
 operator|->
 name|f_flag
 operator|&
-name|O_APPEND
+name|FAPPEND
 condition|)
 name|fp
 operator|->
@@ -833,7 +827,7 @@ name|cmd
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|ONLYNEWIOCTLS
+name|NOCOMPAT
 comment|/* 	 * Map old style ioctl's into new for the 	 * sake of backwards compatibility (sigh). 	 */
 if|if
 condition|(
@@ -949,11 +943,9 @@ return|return;
 block|}
 if|if
 condition|(
-operator|(
 name|com
 operator|&
 name|IOC_IN
-operator|)
 operator|&&
 name|size
 condition|)
@@ -1191,12 +1183,18 @@ label|:
 comment|/* 	 * Copy any data to user, size was 	 * already set and checked above. 	 */
 if|if
 condition|(
-operator|(
+name|u
+operator|.
+name|u_error
+operator|==
+literal|0
+operator|&&
 name|com
 operator|&
 name|IOC_OUT
-operator|)
-operator|&&
+condition|)
+if|if
+condition|(
 name|size
 operator|&&
 name|copyout
@@ -1715,26 +1713,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|UNFAST
-name|iomove
-argument_list|(
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_addr
-operator|+
-name|on
-argument_list|,
-name|n
-argument_list|,
-name|B_READ
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|u
@@ -1814,8 +1792,6 @@ expr_stmt|;
 name|bad
 label|:
 empty_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -2328,26 +2304,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UNFAST
-name|iomove
-argument_list|(
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_addr
-operator|+
-name|on
-argument_list|,
-name|n
-argument_list|,
-name|B_WRITE
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|u
@@ -2427,8 +2383,6 @@ expr_stmt|;
 name|bad
 label|:
 empty_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|u
