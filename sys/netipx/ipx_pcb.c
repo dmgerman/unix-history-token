@@ -305,7 +305,7 @@ operator|)
 name|sipx
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1226,7 +1226,7 @@ name|so
 operator|->
 name|so_pcb
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sotryfree
 argument_list|(
@@ -1710,7 +1710,7 @@ decl_stmt|,
 modifier|*
 name|match
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|int
 name|matchwild
