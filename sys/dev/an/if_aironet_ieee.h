@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|AN_MAX_DATALEN
-value|512
+value|4096
 end_define
 
 begin_struct
@@ -869,7 +869,7 @@ comment|/* 0x180 */
 name|u_int32_t
 name|an_rsvd
 index|[
-literal|10
+literal|15
 index|]
 decl_stmt|;
 block|}
@@ -1158,6 +1158,12 @@ decl_stmt|;
 comment|/* 0x99 */
 name|u_int16_t
 name|an_rsvd9
+decl_stmt|;
+name|u_int16_t
+name|an_spare
+index|[
+literal|13
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1551,6 +1557,51 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|an_ltv_ssid_entry
+block|{
+name|u_int16_t
+name|an_len
+decl_stmt|;
+name|char
+name|an_ssid
+index|[
+literal|32
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MAX_SSIDS
+value|25
+end_define
+
+begin_struct
+struct|struct
+name|an_ltv_ssidlist_new
+block|{
+name|u_int16_t
+name|an_len
+decl_stmt|;
+name|u_int16_t
+name|an_type
+decl_stmt|;
+name|struct
+name|an_ltv_ssid_entry
+name|an_entry
+index|[
+name|MAX_SSIDS
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Valid AP list.  */
 end_comment
@@ -1866,6 +1917,9 @@ decl_stmt|;
 comment|/* 0x80 */
 name|u_int16_t
 name|an_unknown
+index|[
+literal|31
+index|]
 decl_stmt|;
 comment|/* 0x82 */
 block|}
@@ -2115,7 +2169,7 @@ comment|/* 0x7F */
 name|u_int16_t
 name|an_spare
 index|[
-literal|5
+literal|8
 index|]
 decl_stmt|;
 block|}

@@ -789,7 +789,7 @@ name|sc
 operator|->
 name|mem_aux_rid
 argument_list|,
-name|AN_AUXMEMSIZE
+name|AN_AUX_MEM_SIZE
 argument_list|)
 expr_stmt|;
 if|if
