@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.10	%G%	*/
+comment|/*	machdep.c	4.11	%G%	*/
 end_comment
 
 begin_include
@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<frame.h>
 end_include
 
@@ -126,7 +132,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.10) 81/02/08 01:02:22 \n"
+literal|"VM/UNIX (Berkeley Version 4.11) 81/02/08 18:34:34 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,17 +281,6 @@ name|maxmem
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Clear warm-restart inhibit flag. 	 */
-name|tocons
-argument_list|(
-name|TXDB_CWSI
-argument_list|)
-expr_stmt|;
-name|tocons
-argument_list|(
-name|TXDB_CCSI
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allow for the u. area of process 0 and its (single) 	 * page of page tables. 	 */
 name|unixsize
 operator|=
@@ -370,9 +365,25 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Configure the system. 	 */
+name|configure
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Clear restart inhibit flags. 	 */
+name|tocons
+argument_list|(
+name|TXDB_CWSI
+argument_list|)
+expr_stmt|;
+name|tocons
+argument_list|(
+name|TXDB_CCSI
+argument_list|)
+expr_stmt|;
 name|ubainit
 argument_list|()
 expr_stmt|;
+comment|/* GROT */
 name|timeout
 argument_list|(
 name|memchk
@@ -1792,6 +1803,13 @@ operator|&&
 name|waittime
 operator|<
 literal|0
+operator|&&
+name|bfreelist
+index|[
+literal|0
+index|]
+operator|.
+name|b_forw
 condition|)
 block|{
 name|waittime
