@@ -62,17 +62,6 @@ name|MAXKPT
 value|(PAGE_SIZE/sizeof(vm_offset_t))
 end_define
 
-begin_comment
-comment|/*  *	Routine:	pmap_kextract  *	Function:  *		Extract the physical page address associated  *		kernel virtual address.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|pmap_kextract
-value|ia64_tpa
-end_define
-
 begin_define
 define|#
 directive|define
@@ -349,6 +338,16 @@ name|va
 parameter_list|,
 name|vm_offset_t
 name|pa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_paddr_t
+name|pmap_kextract
+parameter_list|(
+name|vm_offset_t
+name|va
 parameter_list|)
 function_decl|;
 end_function_decl
