@@ -384,7 +384,7 @@ name|g_sysctl_stripe_fast
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Fast, but memory-consuming mode"
+literal|"Fast, but memory-consuming, mode"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -427,7 +427,7 @@ name|g_stripe_maxmem
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum memory that could be allocated in \"fast\" mode (in bytes)"
+literal|"Maximum memory that can be allocated in \"fast\" mode (in bytes)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
