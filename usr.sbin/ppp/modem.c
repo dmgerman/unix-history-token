@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.82 1998/05/21 22:55:08 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.83 1998/05/23 22:24:44 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -5486,6 +5486,19 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"%s: PPP packet detected, coming up\n"
+argument_list|,
+name|p
+operator|->
+name|link
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
 name|datalink_Up
 argument_list|(
 name|p
@@ -6197,6 +6210,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Don't need to lock the device in -direct mode */
+comment|/* XXX: What if it's not a -direct link ! */
 return|return
 name|p
 return|;
@@ -6346,6 +6360,20 @@ operator|->
 name|Timer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|physical_IsATTY
+argument_list|(
+name|p
+argument_list|)
+operator|||
+name|p
+operator|->
+name|fd
+operator|!=
+name|STDIN_FILENO
+condition|)
 name|p
 operator|->
 name|Timer
