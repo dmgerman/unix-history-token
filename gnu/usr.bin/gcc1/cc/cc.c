@@ -570,7 +570,7 @@ name|char
 modifier|*
 name|link_spec
 init|=
-literal|"%{!c:%{!M*:%{!E:%{!S:ld %{o*} %l\  %{A} %{d} %{e*} %{N} %{n} %{r} %{s} %{S} %{T*} %{t} %{u*} %{X} %{x} %{z}\  %{y*} %{!A:%{!nostdlib:%S}} \  %{L*} %o %{!nostdlib:%L -lgnulib %{!A:%E}}\n }}}}"
+literal|"%{!c:%{!M*:%{!E:%{!S:ld %{o*} %l\  %{A} %{d} %{e*} %{N} %{n} %{r} %{s} %{S} %{T*} %{t} %{u*} %{X} %{x} %{z}\  %{y*} %{!A:%{!nostdlib:%S}} \  %{L*} %o %{!nostdlib:%L -lgnulib %L -lgnulib %{!A:%E}}\n }}}}"
 decl_stmt|;
 end_decl_stmt
 
