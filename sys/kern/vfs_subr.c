@@ -1999,50 +1999,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get what should become the root fsid.  *  * This is somewhat of a hack.  If the rootdev is not known we  * assume that vfs_getnewfsid() will be called momentarily to  * allocate it, and we return what vfs_getnewfsid() will return.  */
-end_comment
-
-begin_function
-name|dev_t
-name|vfs_getrootfsid
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|)
-block|{
-name|int
-name|mtype
-decl_stmt|;
-name|mtype
-operator|=
-name|mp
-operator|->
-name|mnt_vfc
-operator|->
-name|vfc_typenum
-expr_stmt|;
-return|return
-operator|(
-name|makedev
-argument_list|(
-literal|255
-argument_list|,
-name|mtype
-operator|+
-operator|(
-name|mntid_base
-operator|<<
-literal|16
-operator|)
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Knob to control the precision of file timestamps:  *  *   0 = seconds only; nanoseconds zeroed.  *   1 = seconds and nanoseconds, accurate within 1/HZ.  *   2 = seconds and nanoseconds, truncated to microseconds.  *>=3 = seconds and nanoseconds, maximum precision.  */
 end_comment
 
