@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1998 Juniper Networks, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 1998, 2001, Juniper Networks, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -96,6 +96,17 @@ end_define
 
 begin_comment
 comment|/* Maximum number of servers to try */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXAVPAIRS
+value|255
+end_define
+
+begin_comment
+comment|/* Maximum number of AV pairs */
 end_comment
 
 begin_comment
@@ -339,6 +350,72 @@ end_struct
 
 begin_struct
 struct|struct
+name|tac_author_request
+block|{
+name|u_int8_t
+name|authen_meth
+decl_stmt|;
+name|u_int8_t
+name|priv_lvl
+decl_stmt|;
+name|u_int8_t
+name|authen_type
+decl_stmt|;
+name|u_int8_t
+name|service
+decl_stmt|;
+name|u_int8_t
+name|user_len
+decl_stmt|;
+name|u_int8_t
+name|port_len
+decl_stmt|;
+name|u_int8_t
+name|rem_addr_len
+decl_stmt|;
+name|u_int8_t
+name|av_cnt
+decl_stmt|;
+name|unsigned
+name|char
+name|rest
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|tac_author_response
+block|{
+name|u_int8_t
+name|status
+decl_stmt|;
+name|u_int8_t
+name|av_cnt
+decl_stmt|;
+name|u_int16_t
+name|msg_len
+decl_stmt|;
+name|u_int16_t
+name|data_len
+decl_stmt|;
+name|unsigned
+name|char
+name|rest
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|tac_msg
 block|{
 name|u_int8_t
@@ -375,6 +452,14 @@ decl_stmt|;
 name|struct
 name|tac_authen_cont
 name|authen_cont
+decl_stmt|;
+name|struct
+name|tac_author_request
+name|author_request
+decl_stmt|;
+name|struct
+name|tac_author_response
+name|author_response
 decl_stmt|;
 name|unsigned
 name|char
@@ -449,6 +534,13 @@ name|clnt_str
 name|user_msg
 decl_stmt|;
 name|struct
+name|clnt_str
+name|avs
+index|[
+name|MAXAVPAIRS
+index|]
+decl_stmt|;
+name|struct
 name|tac_msg
 name|request
 decl_stmt|;
@@ -467,6 +559,13 @@ decl_stmt|;
 name|struct
 name|srvr_str
 name|srvr_data
+decl_stmt|;
+name|struct
+name|srvr_str
+name|srvr_avs
+index|[
+name|MAXAVPAIRS
+index|]
 decl_stmt|;
 block|}
 struct|;
