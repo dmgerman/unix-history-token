@@ -509,6 +509,16 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|ACPI_SERIAL_DECL
+argument_list|(
+name|asus
+argument_list|,
+literal|"ACPI ASUS extras"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Function prototypes */
 end_comment
@@ -2028,6 +2038,11 @@ name|oidp
 operator|->
 name|oid_arg1
 expr_stmt|;
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|asus
+argument_list|)
+expr_stmt|;
 comment|/* Sanity check */
 name|brn
 operator|=
@@ -2173,6 +2188,11 @@ block|}
 block|}
 name|out
 label|:
+name|ACPI_SERIAL_END
+argument_list|(
+name|asus
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
@@ -2221,6 +2241,11 @@ operator|)
 name|oidp
 operator|->
 name|oid_arg1
+expr_stmt|;
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|asus
+argument_list|)
 expr_stmt|;
 comment|/* Sanity check */
 name|lcd
@@ -2337,6 +2362,11 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|ACPI_SERIAL_END
+argument_list|(
+name|asus
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
@@ -2387,6 +2417,11 @@ operator|->
 name|oid_arg1
 expr_stmt|;
 comment|/* Sanity check */
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|asus
+argument_list|)
+expr_stmt|;
 name|disp
 operator|=
 name|sc
@@ -2465,6 +2500,11 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|ACPI_SERIAL_END
+argument_list|(
+name|asus
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
@@ -2528,6 +2568,11 @@ argument_list|(
 name|sc
 operator|->
 name|dev
+argument_list|)
+expr_stmt|;
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|asus
 argument_list|)
 expr_stmt|;
 if|if
@@ -2662,6 +2707,11 @@ name|notify
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_SERIAL_END
+argument_list|(
+name|asus
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
