@@ -2660,6 +2660,12 @@ name|plttype
 init|=
 name|DT_REL
 decl_stmt|;
+name|obj
+operator|->
+name|bind_now
+operator|=
+name|false
+expr_stmt|;
 for|for
 control|(
 name|dynp
@@ -4770,6 +4776,19 @@ name|objtmp
 decl_stmt|;
 comment|/* Temporary rtld object */
 comment|/*      * Conjure up an Obj_Entry structure for the dynamic linker.      *      * The "path" member can't be initialized yet because string constatns      * cannot yet be acessed. Below we will set it correctly.      */
+name|memset
+argument_list|(
+operator|&
+name|objtmp
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|objtmp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|objtmp
 operator|.
 name|path
