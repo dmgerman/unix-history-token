@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5286,6 +5286,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|got
+decl_stmt|,
 name|run
 decl_stmt|,
 name|bno
@@ -5549,17 +5551,17 @@ name|run
 operator|=
 literal|0
 operator|,
-name|i
+name|got
 operator|=
 name|bpref
 init|;
-name|i
+name|got
 operator|<
 name|cgp
 operator|->
 name|cg_nclusterblks
 condition|;
-name|i
+name|got
 operator|++
 control|)
 block|{
@@ -5595,7 +5597,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|i
+name|got
 operator|&
 operator|(
 name|NBBY
@@ -5632,7 +5634,7 @@ block|}
 block|}
 if|if
 condition|(
-name|i
+name|got
 operator|==
 name|cgp
 operator|->
@@ -5642,6 +5644,43 @@ goto|goto
 name|fail
 goto|;
 comment|/* 	 * Allocate the cluster that we have found. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<=
+name|len
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|ffs_isblock
+argument_list|(
+name|fs
+argument_list|,
+name|cg_blksfree
+argument_list|(
+name|cgp
+argument_list|)
+argument_list|,
+name|got
+operator|-
+name|run
+operator|+
+name|i
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"ffs_clusteralloc: map mismatch"
+argument_list|)
+expr_stmt|;
 name|bno
 operator|=
 name|cg
@@ -5654,7 +5693,7 @@ name|blkstofrags
 argument_list|(
 name|fs
 argument_list|,
-name|i
+name|got
 operator|-
 name|run
 operator|+
@@ -5688,6 +5727,9 @@ name|fs_frag
 control|)
 if|if
 condition|(
+operator|(
+name|got
+operator|=
 name|ffs_alloccgblk
 argument_list|(
 name|fs
@@ -5698,6 +5740,7 @@ name|bno
 operator|+
 name|i
 argument_list|)
+operator|)
 operator|!=
 name|bno
 operator|+
