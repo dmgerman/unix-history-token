@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  * 'C' definitions for Specialix serial multiplex driver.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.h,v 1.3 1995/08/22 00:42:07 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  * 'C' definitions for Specialix serial multiplex driver.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.h,v 1.6 1995/11/28 02:07:31 peter Exp $  */
 end_comment
 
 begin_comment
@@ -244,7 +244,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SLXOS_BUFFERSIZE
+name|SI_BUFFERSIZE
 value|256
 end_define
 
@@ -567,13 +567,13 @@ decl_stmt|;
 name|BYTE
 name|hi_txbuf
 index|[
-name|SLXOS_BUFFERSIZE
+name|SI_BUFFERSIZE
 index|]
 decl_stmt|;
 name|BYTE
 name|hi_rxbuf
 index|[
-name|SLXOS_BUFFERSIZE
+name|SI_BUFFERSIZE
 index|]
 decl_stmt|;
 name|BYTE
@@ -1299,12 +1299,12 @@ name|sp_active_out
 decl_stmt|;
 comment|/* callout is open */
 name|int
-name|sp_flags
-decl_stmt|;
-name|int
 name|sp_dtr_wait
 decl_stmt|;
 comment|/* DTR holddown in hz */
+name|int
+name|sp_delta_overflows
+decl_stmt|;
 name|u_int
 name|sp_wopeners
 decl_stmt|;
@@ -1454,179 +1454,6 @@ end_define
 
 begin_comment
 comment|/* DTR held off				*/
-end_comment
-
-begin_comment
-comment|/* sp_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPF_COOKMODE
-value|0x0003
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPFC_WELL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPFC_MEDIUM
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPFC_RAW
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|spfc_clear
-parameter_list|(
-name|pp
-parameter_list|)
-value|(pp)->sp_flags&= ~SPF_COOKMODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPF_COOK_WELL
-parameter_list|(
-name|pp
-parameter_list|)
-value|spfc_clear(pp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPF_COOK_MEDIUM
-parameter_list|(
-name|pp
-parameter_list|)
-value|{spfc_clear(pp);(pp)->sp_flags|=SPFC_MEDIUM;}
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPF_COOK_RAW
-parameter_list|(
-name|pp
-parameter_list|)
-value|{spfc_clear(pp);(pp)->sp_flags|=SPFC_RAW;}
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPF_SETCOOK
-parameter_list|(
-name|pp
-parameter_list|,
-name|c
-parameter_list|)
-value|{spfc_clear(pp);(pp)->sp_flags|=(c);}
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPF_ISCOOKWELL
-parameter_list|(
-name|pp
-parameter_list|)
-value|(((pp)->sp_flags& SPF_COOKMODE) == SPFC_WELL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPF_ISCOOKMEDIUM
-parameter_list|(
-name|pp
-parameter_list|)
-value|(((pp)->sp_flags& SPF_COOKMODE) == SPFC_MEDIUM)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPF_ISCOOKRAW
-parameter_list|(
-name|pp
-parameter_list|)
-value|(((pp)->sp_flags& SPF_COOKMODE) == SPFC_RAW)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPF_COOKWELL_ALWAYS
-value|0x0004
-end_define
-
-begin_comment
-comment|/* always use line disc */
-end_comment
-
-begin_comment
-comment|/*				0x0008	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPF_IXANY
-value|0x0020
-end_define
-
-begin_comment
-comment|/* IXANY enable/disable flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPF_CTSOFLOW
-value|0x0040
-end_define
-
-begin_comment
-comment|/* use CTS to handle o/p flow */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPF_RTSIFLOW
-value|0x0080
-end_define
-
-begin_comment
-comment|/* use RTS to handle i/p flow */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPF_PPP
-value|0x0100
-end_define
-
-begin_comment
-comment|/* special handling for upper 						 * level protocol code */
 end_comment
 
 begin_comment
@@ -1982,17 +1809,6 @@ begin_comment
 comment|/* 103 defunct */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TCSIIXANY
-value|_IOW('S', 103, struct si_tcsi)
-end_define
-
-begin_comment
-comment|/* enable ixany */
-end_comment
-
 begin_comment
 comment|/* 104 defunct */
 end_comment
@@ -2009,15 +1825,8 @@ comment|/* get current state of RTS 						   DCD and DTR pins */
 end_comment
 
 begin_comment
-comment|/* Set/reset/enquire cook mode, 1 = always use line disc 		 * -1 = enquire current setting */
+comment|/* 106 defunct */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TCSICOOKMODE
-value|_IOWR('S', 106, struct si_tcsi)
-end_define
 
 begin_define
 define|#
@@ -2082,15 +1891,8 @@ begin_comment
 comment|/* 116 defunct */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TCSIMODEM
-value|_IOWR('S', 117, struct si_tcsi)
-end_define
-
 begin_comment
-comment|/* set/clear/query the modem bit */
+comment|/* 117 defunct */
 end_comment
 
 begin_define
@@ -2115,15 +1917,8 @@ begin_comment
 comment|/* get global debug level */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TCSIFLOW
-value|_IOWR('S', 120, struct si_tcsi)
-end_define
-
 begin_comment
-comment|/* set/get h/w flow state */
+comment|/* 120 defunct */
 end_comment
 
 begin_comment
@@ -2134,15 +1929,8 @@ begin_comment
 comment|/* 122 defunct */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TCSIPPP
-value|_IOWR('S', 123, struct si_tcsi)
-end_define
-
 begin_comment
-comment|/* set/get PPP flag bit */
+comment|/* 123 defunct */
 end_comment
 
 begin_define
