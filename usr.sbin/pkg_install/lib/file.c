@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.10.4.2 1995/10/09 11:16:28 jkh Exp $"
+literal|"$Id: file.c,v 1.10.4.3 1995/10/09 11:49:45 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1201,8 +1201,7 @@ literal|"tar"
 argument_list|,
 literal|"tar"
 argument_list|,
-name|isDebug
-argument_list|()
+name|Verbose
 condition|?
 literal|"-xvf"
 else|:
@@ -1215,10 +1214,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isDebug
-argument_list|()
+name|Verbose
 condition|)
-name|msgDebug
+name|printf
 argument_list|(
 literal|"tar command returns %d status\n"
 argument_list|,
