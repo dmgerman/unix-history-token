@@ -1107,6 +1107,40 @@ operator|!=
 name|BHT_S1_SMALL
 condition|)
 block|{
+comment|/* 			 * Do this here tot, because atm_subr will just 			 * drop the new mbuf without copying over the 			 * header. 			 */
+name|mhead
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|NULL
+expr_stmt|;
+name|mhead
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|=
+literal|0
+expr_stmt|;
+name|SLIST_INIT
+argument_list|(
+operator|&
+name|mhead
+operator|->
+name|m_pkthdr
+operator|.
+name|tags
+argument_list|)
+expr_stmt|;
+name|KB_PLENSET
+argument_list|(
+name|mhead
+argument_list|,
+name|pdulen
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Small buffers already have headroom built-in, but 			 * if CP had to use a large buffer for the first  			 * buffer, then we have to allocate a buffer here to 			 * contain the headroom. 			 */
 name|fup
 operator|->
@@ -1153,13 +1187,12 @@ goto|goto
 name|free_ent
 goto|;
 block|}
-comment|/* 			 * Put new buffer at head of PDU chain 			 */
-name|KB_LINKHEAD
-argument_list|(
+comment|/* 			 * Put new buffer at head of PDU chain 			 * We cannot use LINKHEAD here, because LINKHEAD 			 * move the packet header from mhead to m. atm_intr 			 * on the other hand simply throws away the mbuf that 			 * we have just prepended, so the header is lost. 			 */
 name|m
-argument_list|,
+operator|->
+name|m_next
+operator|=
 name|mhead
-argument_list|)
 expr_stmt|;
 name|KB_LEN
 argument_list|(
