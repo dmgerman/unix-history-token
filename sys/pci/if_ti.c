@@ -8268,6 +8268,8 @@ operator|=
 name|cur_rx
 operator|->
 name|ti_vlan_tag
+operator|&
+literal|0xfff
 expr_stmt|;
 block|}
 endif|#
@@ -9629,6 +9631,8 @@ operator|=
 name|ifv
 operator|->
 name|ifv_tag
+operator|&
+literal|0xfff
 expr_stmt|;
 block|}
 else|else
