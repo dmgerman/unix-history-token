@@ -7,6 +7,20 @@ begin_comment
 comment|/*  * Luke Mewburn<lm@rmit.edu.au> added the following on 940622:  *    - mail status ("No Mail", "Mail read:...", or "New Mail ...,  *	Unread since ...".)  *    - 4 digit phone extensions (3210 is printed as x3210.)  *    - host/office toggling in short format with -h& -o.  *    - short day names (`Tue' printed instead of `Jun 21' if the  *	login time is< 6 days.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -39,26 +53,14 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)finger.c	8.5 (Berkeley) 5/4/95";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)finger.c	8.5 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,10 +68,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/*  * Finger prints out information about users.  It is not portable since  * certain fields (e.g. the full user name, office, and phone numbers) are  * extracted from the gecos field of the passwd file which other UNIXes  * may not have or may use for other things.  *  * There are currently two output formats; the short format is one line  * per user and displays login name, tty, login time, real name, idle time,  * and either remote host information (default) or office location/phone  * number, depending on if -h or -o is used respectively.  * The long format gives the same information (in a more legible format) as  * well as home directory, shell, mail info, and .plan/.project files.  */
@@ -211,6 +209,23 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|option
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -240,6 +255,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|option
 parameter_list|(
@@ -422,6 +438,13 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
+specifier|static
+name|char
+name|myname
+index|[]
+init|=
+literal|"finger"
+decl_stmt|;
 if|if
 condition|(
 name|getuid
@@ -523,7 +546,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"finger"
+name|myname
 expr_stmt|;
 name|envargv
 index|[
@@ -662,7 +685,6 @@ name|void
 name|loginlist
 parameter_list|()
 block|{
-specifier|register
 name|PERSON
 modifier|*
 name|pn
@@ -684,7 +706,7 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|,
-name|sflag
+name|sflag1
 decl_stmt|;
 name|char
 name|name
@@ -831,12 +853,12 @@ name|lflag
 condition|)
 for|for
 control|(
-name|sflag
+name|sflag1
 operator|=
 name|R_FIRST
 init|;
 condition|;
-name|sflag
+name|sflag1
 operator|=
 name|R_NEXT
 control|)
@@ -862,7 +884,7 @@ argument_list|,
 operator|&
 name|data
 argument_list|,
-name|sflag
+name|sflag1
 argument_list|)
 expr_stmt|;
 if|if
@@ -917,18 +939,15 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
-specifier|register
 name|int
 name|argc
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|PERSON
 modifier|*
 name|pn
@@ -950,7 +969,7 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|,
-name|sflag
+name|sflag1
 decl_stmt|,
 modifier|*
 name|used
@@ -1644,12 +1663,12 @@ name|db
 condition|)
 for|for
 control|(
-name|sflag
+name|sflag1
 operator|=
 name|R_FIRST
 init|;
 condition|;
-name|sflag
+name|sflag1
 operator|=
 name|R_NEXT
 control|)
@@ -1675,7 +1694,7 @@ argument_list|,
 operator|&
 name|data
 argument_list|,
-name|sflag
+name|sflag1
 argument_list|)
 expr_stmt|;
 if|if
