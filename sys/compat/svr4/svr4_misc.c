@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mman.h>
 end_include
 
@@ -112,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -131,18 +119,6 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/utsname.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/unistd.h>
 end_include
 
 begin_include
@@ -173,18 +149,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ptrace.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signalvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/dir.h>
 end_include
 
 begin_include
