@@ -232,13 +232,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|vn_isdisk
+argument_list|(
 name|drive
 operator|->
 name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
+argument_list|)
 condition|)
 block|{
 comment|/* only consider block devices */
@@ -274,7 +274,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"vinum open_drive %s: Not a block device\n"
+literal|"vinum open_drive %s: Not a disk device\n"
 argument_list|,
 name|drive
 operator|->
