@@ -58,7 +58,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: disklabel.c,v 1.20 1998/08/21 23:44:16 gpalmer Exp $"
+literal|"$Id: disklabel.c,v 1.21 1998/08/23 07:32:37 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,36 +176,6 @@ end_include
 begin_comment
 comment|/*  * Disklabel: read and write disklabels.  * The label is usually placed on one of the first sectors of the disk.  * Many machines also place a bootstrap in the same area,  * in which case the label is embedded in the bootstrap.  * The bootstrap source must leave space at the proper offset  * for the label on such machines.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|tahoe
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RAWPARTITION
-value|'a'
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RAWPARTITION
-value|'c'
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -1109,7 +1079,7 @@ name|_PATH_DEV
 argument_list|,
 name|dkname
 argument_list|,
-name|RAWPARTITION
+name|RAW_PART
 argument_list|)
 expr_stmt|;
 name|specname
@@ -2411,9 +2381,13 @@ name|EXDEV
 case|:
 name|warnx
 argument_list|(
-literal|"%s: labeled partition or 'a' partition must start at beginning of disk"
+literal|"%s: '%c' partition must start at beginning of disk"
 argument_list|,
 name|s
+argument_list|,
+literal|'a'
+operator|+
+name|RAW_PART
 argument_list|)
 expr_stmt|;
 break|break;
