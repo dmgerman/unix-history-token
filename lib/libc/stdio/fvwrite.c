@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fvwrite.c,v 1.5 1997/02/22 15:02:08 peter Exp $"
+literal|"$Id: fvwrite.c,v 1.6 1997/12/24 13:17:13 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,7 +289,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Fully buffered: fill partially full buffer, if any, 		 * and then flush.  If there is no partial buffer, write 		 * one _bf._size byte chunk directly (without copying). 		 * 		 * String output is a special case: write as many bytes 		 * as fit, but pretend we wrote everything.  This avoids 		 * snprintf() write function (so that the write function 		 * can be invalid). 		 */
+comment|/* 		 * Fully buffered: fill partially full buffer, if any, 		 * and then flush.  If there is no partial buffer, write 		 * one _bf._size byte chunk directly (without copying). 		 * 		 * String output is a special case: write as many bytes 		 * as fit, but pretend we wrote everything.  This makes 		 * snprintf() return the number of bytes needed, rather 		 * than the number used, and avoids its write function 		 * (so that the write function can be invalid). 		 */
 do|do
 block|{
 name|GETIOV
@@ -322,6 +322,13 @@ name|w
 operator|=
 name|len
 expr_stmt|;
+if|if
+condition|(
+name|w
+operator|>
+literal|0
+condition|)
+block|{
 name|COPY
 argument_list|(
 name|w
@@ -340,6 +347,7 @@ name|_p
 operator|+=
 name|w
 expr_stmt|;
+block|}
 name|w
 operator|=
 name|len
