@@ -3563,29 +3563,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  * This routine is called specifically to set up cpu_class before  * startrtclock() uses it.  Probably this should be rearranged so that  * startrtclock() doesn't need to run until after identifycpu() has been  * called.  Another alternative formulation would be for this routine  * to do all the identification work, and make identifycpu() into a  * printing-only routine.  */
-end_comment
-
-begin_function
-name|void
-name|earlysetcpuclass
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|cpu_class
-operator|=
-name|i386_cpus
-index|[
-name|cpu
-index|]
-operator|.
-name|cpu_class
-expr_stmt|;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|void
