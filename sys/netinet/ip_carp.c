@@ -9938,11 +9938,9 @@ name|carpr
 operator|.
 name|carpr_vhid
 condition|)
-block|{
 return|return
-name|EINVAL
+name|EEXIST
 return|;
-block|}
 block|}
 name|sc
 operator|->
