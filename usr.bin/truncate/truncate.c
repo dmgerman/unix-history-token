@@ -176,6 +176,16 @@ decl_stmt|,
 modifier|*
 name|rname
 decl_stmt|;
+name|rsize
+operator|=
+name|tsize
+operator|=
+literal|0
+expr_stmt|;
+name|rname
+operator|=
+name|NULL
+expr_stmt|;
 name|error
 operator|=
 literal|0
