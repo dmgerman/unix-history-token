@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.8 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -948,6 +948,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|oobdata
+index|[]
+init|=
+block|{
+name|TIOCPKT_WINDOW
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Handle a "control" request (signaled by magic being present)  * in the data stream.  For now, we are only willing to handle  * window size changes.  */
 end_comment
@@ -1020,6 +1031,15 @@ operator|(
 literal|0
 operator|)
 return|;
+name|oobdata
+index|[
+literal|0
+index|]
+operator|&=
+operator|~
+name|TIOCPKT_WINDOW
+expr_stmt|;
+comment|/* we know he heard */
 name|wp
 operator|=
 operator|(
@@ -1154,23 +1174,8 @@ literal|0
 expr_stmt|;
 name|int
 name|cc
-decl_stmt|,
-name|stop
-init|=
-name|TIOCPKT_DOSTOP
-decl_stmt|,
-name|wsize
 decl_stmt|;
-specifier|static
-name|char
-name|oob
-index|[]
-init|=
-block|{
-name|TIOCPKT_WINDOW
-block|}
-decl_stmt|;
-comment|/* 	 * Must ignore SIGTTOU, otherwise we'll stop 	 * when we try and set slave pty's window shape 	 * (our pgrp is that of the master pty). 	 */
+comment|/* 	 * Must ignore SIGTTOU, otherwise we'll stop 	 * when we try and set slave pty's window shape 	 * (our controlling tty is the master pty). 	 */
 operator|(
 name|void
 operator|)
@@ -1185,7 +1190,7 @@ name|send
 argument_list|(
 name|f
 argument_list|,
-name|oob
+name|oobdata
 argument_list|,
 literal|1
 argument_list|,
@@ -1387,6 +1392,8 @@ operator|<
 name|fibuf
 operator|+
 name|fcc
+operator|-
+literal|1
 condition|;
 name|cp
 operator|++
@@ -1453,10 +1460,10 @@ condition|)
 name|bcopy
 argument_list|(
 name|cp
-argument_list|,
-name|cp
 operator|+
 name|n
+argument_list|,
+name|cp
 argument_list|,
 name|left
 argument_list|)
@@ -1470,13 +1477,9 @@ name|top
 goto|;
 comment|/* n^2 */
 block|}
-comment|/* if (n) */
 block|}
-comment|/* for (cp = ) */
 block|}
-comment|/* else */
 block|}
-comment|/* if (ibits& (1<<f)) */
 if|if
 condition|(
 operator|(
@@ -1494,12 +1497,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|wsize
-operator|=
-name|fcc
-expr_stmt|;
-do|do
-block|{
 name|cc
 operator|=
 name|write
@@ -1508,27 +1505,9 @@ name|p
 argument_list|,
 name|fbp
 argument_list|,
-name|wsize
+name|fcc
 argument_list|)
 expr_stmt|;
-name|wsize
-operator|/=
-literal|2
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|cc
-operator|<
-literal|0
-operator|&&
-name|errno
-operator|==
-name|EWOULDBLOCK
-operator|&&
-name|wsize
-condition|)
-do|;
 if|if
 condition|(
 name|cc
@@ -1622,11 +1601,6 @@ parameter_list|(
 name|c
 parameter_list|)
 value|((c)&(TIOCPKT_FLUSHWRITE|TIOCPKT_NOSTOP|TIOCPKT_DOSTOP))
-name|int
-name|out
-init|=
-name|FREAD
-decl_stmt|;
 if|if
 condition|(
 name|pkcontrol
@@ -1638,37 +1612,12 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* The following 3 lines do nothing. */
-name|int
-name|nstop
-init|=
-name|pibuf
-index|[
-literal|0
-index|]
-operator|&
-operator|(
-name|TIOCPKT_NOSTOP
-operator||
-name|TIOCPKT_DOSTOP
-operator|)
-decl_stmt|;
-if|if
-condition|(
-name|nstop
-condition|)
-name|stop
-operator|=
-name|nstop
-expr_stmt|;
 name|pibuf
 index|[
 literal|0
 index|]
 operator||=
-name|nstop
-operator||
-name|oob
+name|oobdata
 index|[
 literal|0
 index|]
@@ -1686,29 +1635,6 @@ argument_list|,
 literal|1
 argument_list|,
 name|MSG_OOB
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pibuf
-index|[
-literal|0
-index|]
-operator|&
-name|TIOCPKT_FLUSHWRITE
-condition|)
-name|ioctl
-argument_list|(
-name|p
-argument_list|,
-name|TIOCFLUSH
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|out
 argument_list|)
 expr_stmt|;
 block|}
@@ -1735,12 +1661,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|wsize
-operator|=
-name|pcc
-expr_stmt|;
-do|do
-block|{
 name|cc
 operator|=
 name|write
@@ -1749,15 +1669,10 @@ name|f
 argument_list|,
 name|pbp
 argument_list|,
-name|wsize
+name|pcc
 argument_list|)
 expr_stmt|;
-name|wsize
-operator|/=
-literal|2
-expr_stmt|;
-block|}
-do|while
+if|if
 condition|(
 name|cc
 operator|<
@@ -1766,10 +1681,16 @@ operator|&&
 name|errno
 operator|==
 name|EWOULDBLOCK
-operator|&&
-name|wsize
 condition|)
-do|;
+block|{
+comment|/* also shouldn't happen */
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|cc
