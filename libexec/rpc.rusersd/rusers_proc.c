@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -31,37 +32,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -73,7 +44,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -85,7 +68,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_ifdef
@@ -488,7 +501,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: Unable to get idle time."
+literal|"%s: unable to get idle time"
 argument_list|,
 name|display
 argument_list|)
@@ -507,7 +520,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: Xidle extension not loaded."
+literal|"%s: Xidle extension not loaded"
 argument_list|,
 name|display
 argument_list|)
@@ -531,7 +544,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: Server grabbed for over 10 seconds."
+literal|"%s: server grabbed for over 10 seconds"
 argument_list|,
 name|display
 argument_list|)
@@ -1780,23 +1793,13 @@ operator|&
 name|argument
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unable to free arguments\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to free arguments"
 argument_list|)
 expr_stmt|;
-block|}
 name|leave
 label|:
 if|if
