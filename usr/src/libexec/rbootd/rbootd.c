@@ -1,6 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * %sccs.include.redist.c%  *  *	@(#)rbootd.c	8.1 (Berkeley) %G%  *  * Utah $Hdr: rbootd.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
+comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * %sccs.include.redist.c%  *  *	@(#)rbootd.c	5.4 (Berkeley) %G%  *  * Utah $Hdr: rbootd.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1993 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_ifndef
@@ -15,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rbootd.c	8.1 (Berkeley) %G%"
+literal|"@(#)rbootd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
