@@ -102,6 +102,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|_MSKanji_init
+name|__P
+argument_list|(
+operator|(
+name|_RuneLocale
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|_xpg4_setrunelocale
 name|__P
 argument_list|(
@@ -117,20 +131,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|_MSKanji_init
-name|__P
-argument_list|(
-operator|(
-name|_RuneLocale
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -452,7 +452,6 @@ argument_list|,
 literal|"UTF2"
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|_UTF2_init
@@ -473,7 +472,6 @@ index|[
 literal|0
 index|]
 condition|)
-block|{
 return|return
 operator|(
 name|EINVAL
@@ -481,7 +479,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-block|}
 elseif|else
 if|if
 condition|(
@@ -495,7 +492,6 @@ argument_list|,
 literal|"NONE"
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|_none_init
@@ -507,7 +503,6 @@ return|;
 ifdef|#
 directive|ifdef
 name|XPG4
-block|}
 elseif|else
 if|if
 condition|(
@@ -521,7 +516,6 @@ argument_list|,
 literal|"EUC"
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|_EUC_init
@@ -530,9 +524,6 @@ name|rl
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
-block|}
 elseif|else
 if|if
 condition|(
@@ -546,7 +537,6 @@ argument_list|,
 literal|"MSKanji"
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|_MSKanji_init
@@ -555,7 +545,8 @@ name|rl
 argument_list|)
 operator|)
 return|;
-block|}
+endif|#
+directive|endif
 else|else
 return|return
 operator|(
