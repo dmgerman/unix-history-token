@@ -138,12 +138,6 @@ name|m
 init|=
 name|m0
 decl_stmt|;
-specifier|register
-name|int
-name|sockets
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|socket
 modifier|*
@@ -304,9 +298,6 @@ argument_list|(
 name|last
 argument_list|)
 expr_stmt|;
-name|sockets
-operator|++
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -356,9 +347,6 @@ name|sorwakeup
 argument_list|(
 name|last
 argument_list|)
-expr_stmt|;
-name|sockets
-operator|++
 expr_stmt|;
 block|}
 block|}
