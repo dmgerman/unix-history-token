@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.51 (Berkeley) %G%"
+literal|"@(#)ls.c	5.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -231,6 +231,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* show group ownership of a file */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show flags associated with a file */
 end_comment
 
 begin_decl_stmt
@@ -586,7 +596,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ACFLRTacdfgiklqrstu"
+literal|"1ACFLRTacdfgikloqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -749,6 +759,14 @@ case|case
 literal|'k'
 case|:
 name|f_kblocks
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|f_flags
 operator|=
 literal|1
 expr_stmt|;
