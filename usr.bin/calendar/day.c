@@ -1,12 +1,44 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -24,37 +56,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -178,6 +192,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+specifier|const
 modifier|*
 name|days
 index|[]
@@ -204,6 +219,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|months
@@ -1898,13 +1914,12 @@ name|getmonth
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -2045,13 +2060,12 @@ name|getday
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -2196,17 +2210,15 @@ name|getdayvar
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|int
-name|offset
+name|offs
 decl_stmt|;
-name|offset
+name|offs
 operator|=
 name|strlen
 argument_list|(
@@ -2214,14 +2226,14 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* Sun+1 or Wednesday-2 	 *    ^              ^   */
-comment|/* fprintf(stderr, "x: %s %s %d\n", s, s + offset - 2, offset); */
+comment|/* fprintf(stderr, "x: %s %s %d\n", s, s + offs - 2, offs); */
 switch|switch
 condition|(
 operator|*
 operator|(
 name|s
 operator|+
-name|offset
+name|offs
 operator|-
 literal|2
 operator|)
@@ -2238,7 +2250,7 @@ name|atoi
 argument_list|(
 name|s
 operator|+
-name|offset
+name|offs
 operator|-
 literal|1
 argument_list|)
@@ -2255,7 +2267,7 @@ name|atoi
 argument_list|(
 name|s
 operator|+
-name|offset
+name|offs
 operator|-
 literal|1
 argument_list|)
@@ -2267,7 +2279,7 @@ comment|/* 	 * some aliases: last, first, second, third, fourth 	 */
 comment|/* last */
 if|if
 condition|(
-name|offset
+name|offs
 operator|>
 literal|4
 operator|&&
@@ -2276,7 +2288,7 @@ name|strcasecmp
 argument_list|(
 name|s
 operator|+
-name|offset
+name|offs
 operator|-
 literal|4
 argument_list|,
@@ -2292,7 +2304,7 @@ return|;
 elseif|else
 if|if
 condition|(
-name|offset
+name|offs
 operator|>
 literal|5
 operator|&&
@@ -2301,7 +2313,7 @@ name|strcasecmp
 argument_list|(
 name|s
 operator|+
-name|offset
+name|offs
 operator|-
 literal|5
 argument_list|,
@@ -2317,7 +2329,7 @@ return|;
 elseif|else
 if|if
 condition|(
-name|offset
+name|offs
 operator|>
 literal|6
 operator|&&
@@ -2326,7 +2338,7 @@ name|strcasecmp
 argument_list|(
 name|s
 operator|+
-name|offset
+name|offs
 operator|-
 literal|6
 argument_list|,
@@ -2342,7 +2354,7 @@ return|;
 elseif|else
 if|if
 condition|(
-name|offset
+name|offs
 operator|>
 literal|5
 operator|&&
@@ -2351,7 +2363,7 @@ name|strcasecmp
 argument_list|(
 name|s
 operator|+
-name|offset
+name|offs
 operator|-
 literal|5
 argument_list|,
@@ -2367,7 +2379,7 @@ return|;
 elseif|else
 if|if
 condition|(
-name|offset
+name|offs
 operator|>
 literal|6
 operator|&&
@@ -2376,7 +2388,7 @@ name|strcasecmp
 argument_list|(
 name|s
 operator|+
-name|offset
+name|offs
 operator|-
 literal|6
 argument_list|,
