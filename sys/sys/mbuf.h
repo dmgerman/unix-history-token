@@ -15,6 +15,16 @@ directive|define
 name|_SYS_MBUF_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_comment
 comment|/*  * Mbufs are of a single size, MSIZE (machine/param.h), which  * includes overhead.  An mbuf may add a single "mbuf cluster" of size  * MCLBYTES (also in machine/param.h), which has no additional overhead  * and is used instead of the internal data area; this is done when  * at least MINCLSIZE of data must be stored.  */
 end_comment
@@ -62,6 +72,17 @@ end_define
 begin_comment
 comment|/* max amount to copy for compression */
 end_comment
+
+begin_comment
+comment|/*  * Maximum number of allocatable counters for external buffers. This  * ensures enough VM address space for the allocation of counters  * in the extreme case where all possible external buffers are allocated.  *  * Note: When new types of external storage are allocated, EXT_COUNTERS  * 	 must be tuned accordingly. Practically, this isn't a big deal  *	 as each counter is only a word long, so we can fit  *	 (PAGE_SIZE / length of word) counters in a single page.  *  * XXX: Must increase this if using any of if_ti, if_wb, if_sk drivers,  *	or any other drivers which may manage their own buffers and  *	eventually attach them to mbufs.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_COUNTERS
+value|(nmbclusters + nsfbufs)
+end_define
 
 begin_comment
 comment|/*  * Macros for type conversion  * mtod(m, t) -	convert mbuf pointer to data pointer of correct type  * dtom(x) -	convert data pointer within mbuf to mbuf pointer (XXX)  */
@@ -851,23 +872,23 @@ block|{
 name|u_long
 name|m_mbufs
 decl_stmt|;
-comment|/* mbufs obtained from page pool */
+comment|/* # mbufs obtained from page pool */
 name|u_long
 name|m_clusters
 decl_stmt|;
-comment|/* clusters obtained from page pool */
+comment|/* # clusters obtained from page pool */
 name|u_long
 name|m_clfree
 decl_stmt|;
-comment|/* free clusters */
+comment|/* # clusters on freelist (cache) */
 name|u_long
 name|m_refcnt
 decl_stmt|;
-comment|/* refcnt structs obtained from page pool */
+comment|/* # ref counters obtained from page pool */
 name|u_long
 name|m_refree
 decl_stmt|;
-comment|/* free refcnt structs */
+comment|/* # ref counters on freelist (cache) */
 name|u_long
 name|m_spare
 decl_stmt|;
@@ -935,7 +956,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Freelists:  *  * Normal mbuf clusters are normally treated as character arrays  * after allocation, but use the first word of the buffer as a free list  * pointer while on the free list.  */
+comment|/*  * Normal mbuf clusters are normally treated as character arrays  * after allocation, but use the first word of the buffer as a free list  * pointer while on the free list.  */
 end_comment
 
 begin_union
@@ -958,24 +979,6 @@ union|;
 end_union
 
 begin_comment
-comment|/*  * These are identifying numbers passed to the m_mballoc_wait function,  * allowing us to determine whether the call came from an MGETHDR or  * an MGET.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MGETHDR_C
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MGET_C
-value|2
-end_define
-
-begin_comment
 comment|/*  * The m_ext object reference counter structure.  */
 end_comment
 
@@ -996,41 +999,72 @@ union|;
 end_union
 
 begin_comment
-comment|/*  * Wake up the next instance (if any) of m_mballoc_wait() which is  * waiting for an mbuf to be freed.  This should be called at splimp().  *  * XXX: If there is another free mbuf, this routine will be called [again]  * from the m_mballoc_wait routine in order to wake another sleep instance.  */
+comment|/*  * free list header definitions: mbffree_lst, mclfree_lst, mcntfree_lst  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MMBWAKEUP
-parameter_list|()
-value|do {						\ 	if (m_mballoc_wid) {						\ 		m_mballoc_wid--;					\ 		wakeup_one(&m_mballoc_wid); 				\ 	}								\ } while (0)
-end_define
+begin_struct
+struct|struct
+name|mbffree_lst
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m_head
+decl_stmt|;
+name|struct
+name|mtx
+name|m_mtx
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mclfree_lst
+block|{
+name|union
+name|mcluster
+modifier|*
+name|m_head
+decl_stmt|;
+name|struct
+name|mtx
+name|m_mtx
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mcntfree_lst
+block|{
+name|union
+name|mext_refcnt
+modifier|*
+name|m_head
+decl_stmt|;
+name|struct
+name|mtx
+name|m_mtx
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
-comment|/*  * Same as above, but for mbuf cluster(s).  */
+comment|/*  * Wake up the next instance (if any) of a sleeping allocation - which is  * waiting for a {cluster, mbuf} to be freed.  *  * Must be called with the appropriate mutex held.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MCLWAKEUP
-parameter_list|()
-value|do {						\ 	if (m_clalloc_wid) {						\ 		m_clalloc_wid--;					\ 		wakeup_one(&m_clalloc_wid);				\ 	}								\ } while (0)
-end_define
-
-begin_comment
-comment|/*  * mbuf utility macros:  *  *	MBUFLOCK(code)  * prevents a section of code from from being interrupted by network  * drivers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBUFLOCK
+name|MBWAKEUP
 parameter_list|(
-name|code
+name|m_wid
 parameter_list|)
-value|do {						\ 	int _ms = splimp();						\ 									\ 	{ code }							\ 	splx(_ms);							\ } while (0)
+value|do {						\ 	if ((m_wid)) {							\ 		m_wid--;						\ 		wakeup_one(&(m_wid)); 					\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -1073,8 +1107,10 @@ directive|define
 name|_MEXT_ALLOC_CNT
 parameter_list|(
 name|m_cnt
+parameter_list|,
+name|how
 parameter_list|)
-value|MBUFLOCK(				\ 	union mext_refcnt *__mcnt;					\ 									\ 	if ((mext_refcnt_free == NULL)&& (m_alloc_ref(1) == 0))	\ 		panic("mbuf subsystem: out of ref counts!");		\ 	__mcnt = mext_refcnt_free;					\ 	mext_refcnt_free = __mcnt->next_ref;				\ 	__mcnt->refcnt = 0;					\ 	(m_cnt) = __mcnt;						\ 	mbstat.m_refree--;						\ )
+value|do {				\ 	union mext_refcnt *__mcnt;					\ 									\ 	mtx_enter(&mcntfree.m_mtx, MTX_DEF);				\ 	if (mcntfree.m_head == NULL)					\ 		m_alloc_ref(1, (how));					\ 	__mcnt = mcntfree.m_head;					\ 	if (__mcnt != NULL) {						\ 		mcntfree.m_head = __mcnt->next_ref;			\ 		mbstat.m_refree--;					\ 		__mcnt->refcnt = 0;					\ 	}								\ 	mtx_exit(&mcntfree.m_mtx, MTX_DEF);				\ 	(m_cnt) = __mcnt;						\ } while (0)
 end_define
 
 begin_define
@@ -1084,7 +1120,7 @@ name|_MEXT_DEALLOC_CNT
 parameter_list|(
 name|m_cnt
 parameter_list|)
-value|do {					\ 	union mext_refcnt *__mcnt = (m_cnt);				\ 									\ 	__mcnt->next_ref = mext_refcnt_free;				\ 	mext_refcnt_free = __mcnt;					\ 	mbstat.m_refree++;						\ } while (0)
+value|do {					\ 	union mext_refcnt *__mcnt = (m_cnt);				\ 									\ 	mtx_enter(&mcntfree.m_mtx, MTX_DEF);				\ 	__mcnt->next_ref = mcntfree.m_head;				\ 	mcntfree.m_head = __mcnt;					\ 	mbstat.m_refree++;						\ 	mtx_exit(&mcntfree.m_mtx, MTX_DEF);				\ } while (0)
 end_define
 
 begin_define
@@ -1093,13 +1129,43 @@ directive|define
 name|MEXT_INIT_REF
 parameter_list|(
 name|m
+parameter_list|,
+name|how
 parameter_list|)
-value|do {						\ 	struct mbuf *__mmm = (m);					\ 									\ 	_MEXT_ALLOC_CNT(__mmm->m_ext.ref_cnt);				\ 	MEXT_ADD_REF(__mmm);						\ } while (0)
+value|do {					\ 	struct mbuf *__mmm = (m);					\ 									\ 	_MEXT_ALLOC_CNT(__mmm->m_ext.ref_cnt, (how));			\ 	if (__mmm != NULL)						\ 		MEXT_ADD_REF(__mmm);					\ } while (0)
 end_define
 
 begin_comment
 comment|/*  * mbuf allocation/deallocation macros:  *  *	MGET(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain internal data.  *  *	MGETHDR(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain a packet header  * and internal data.  */
 end_comment
+
+begin_comment
+comment|/*  * Lower-level macros for MGET(HDR)... Not to be used outside the  * subsystem ("non-exportable" macro names are prepended with "_").  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_MGET_SETUP
+parameter_list|(
+name|m_set
+parameter_list|,
+name|m_set_type
+parameter_list|)
+value|do {				\ 	(m_set)->m_type = (m_set_type);					\ 	(m_set)->m_next = NULL;						\ 	(m_set)->m_nextpkt = NULL;					\ 	(m_set)->m_data = (m_set)->m_dat;				\ 	(m_set)->m_flags = 0;						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MGET
+parameter_list|(
+name|m_mget
+parameter_list|,
+name|m_get_how
+parameter_list|)
+value|do {					\ 	if (mmbfree.m_head == NULL)					\ 		m_mballoc(1, (m_get_how));				\ 	(m_mget) = mmbfree.m_head;					\ 	if ((m_mget) != NULL) {						\ 		mmbfree.m_head = (m_mget)->m_next;			\ 		mbtypes[MT_FREE]--;					\ 	} else {							\ 		if ((m_get_how) == M_WAIT)				\ 			(m_mget) = m_mballoc_wait();			\ 	}								\ } while (0)
+end_define
 
 begin_define
 define|#
@@ -1112,7 +1178,19 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, _mhow);				\ 	_mm = mmbfree;							\ 	if (_mm != NULL) {						\ 		mmbfree = _mm->m_next;					\ 		mbtypes[MT_FREE]--;					\ 		mbtypes[_mtype]++;					\ 		splx(_ms);						\ 		_mm->m_type = _mtype;					\ 		_mm->m_next = NULL;					\ 		_mm->m_nextpkt = NULL;					\ 		_mm->m_data = _mm->m_dat;				\ 		_mm->m_flags = 0;					\ 	} else {							\ 		splx(_ms);						\ 		_mm = m_retry(_mhow, _mtype);				\ 		if (_mm == NULL&& _mhow == M_WAIT)			\ 			_mm = m_mballoc_wait(MGET_C, _mtype);		\ 	}								\ 	(m) = _mm;							\ } while (0)
+value|do {						\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_enter(&mmbfree.m_mtx, MTX_DEF);				\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		 mbtypes[_mtype]++;					\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 		_MGET_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 	(m) = _mm;							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MGETHDR_SETUP
+parameter_list|(
+name|m_set
+parameter_list|,
+name|m_set_type
+parameter_list|)
+value|do {				\ 	(m_set)->m_type = (m_set_type);					\ 	(m_set)->m_next = NULL;						\ 	(m_set)->m_nextpkt = NULL;					\ 	(m_set)->m_data = (m_set)->m_pktdat;				\ 	(m_set)->m_flags = M_PKTHDR;					\ 	(m_set)->m_pkthdr.rcvif = NULL;					\ 	(m_set)->m_pkthdr.csum_flags = 0;				\ 	(m_set)->m_pkthdr.aux = NULL;					\ } while (0)
 end_define
 
 begin_define
@@ -1126,7 +1204,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, _mhow);				\ 	_mm = mmbfree;							\ 	if (_mm != NULL) {						\ 		mmbfree = _mm->m_next;					\ 		mbtypes[MT_FREE]--;					\ 		mbtypes[_mtype]++;					\ 		splx(_ms);						\ 		_mm->m_type = _mtype;					\ 		_mm->m_next = NULL;					\ 		_mm->m_nextpkt = NULL;					\ 		_mm->m_data = _mm->m_pktdat;				\ 		_mm->m_flags = M_PKTHDR;				\ 		_mm->m_pkthdr.rcvif = NULL;				\ 		_mm->m_pkthdr.csum_flags = 0;				\ 		_mm->m_pkthdr.aux = NULL;				\ 	} else {							\ 		splx(_ms);						\ 		_mm = m_retryhdr(_mhow, _mtype);			\ 		if (_mm == NULL&& _mhow == M_WAIT)			\ 			_mm = m_mballoc_wait(MGETHDR_C, _mtype);	\ 	}								\ 	(m) = _mm;							\ } while (0)
+value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_enter(&mmbfree.m_mtx, MTX_DEF);				\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		 mbtypes[_mtype]++;					\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 		_MGETHDR_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 	(m) = _mm;							\ } while (0)
 end_define
 
 begin_comment
@@ -1142,7 +1220,7 @@ name|p
 parameter_list|,
 name|how
 parameter_list|)
-value|do {						\ 	caddr_t _mp;							\ 	int _mhow = (how);						\ 	int _ms = splimp();						\ 									\ 	if (mclfree == NULL)						\ 		(void)m_clalloc(1, _mhow);				\ 	_mp = (caddr_t)mclfree;						\ 	if (_mp != NULL) {						\ 		mbstat.m_clfree--;					\ 		mclfree = ((union mcluster *)_mp)->mcl_next;		\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		if (_mhow == M_WAIT)					\ 			_mp = m_clalloc_wait();				\ 	}								\ 	(p) = _mp;							\ } while (0)
+value|do {						\ 	caddr_t _mp;							\ 	int _mhow = (how);						\ 									\ 	if (mclfree.m_head == NULL)					\ 		m_clalloc(1, _mhow);					\ 	_mp = (caddr_t)mclfree.m_head;					\ 	if (_mp != NULL) {						\ 		mbstat.m_clfree--;					\ 		mclfree.m_head = ((union mcluster *)_mp)->mcl_next;	\ 	} else {							\ 		if (_mhow == M_WAIT)					\ 			_mp = m_clalloc_wait();				\ 	}								\ 	(p) = _mp;							\ } while (0)
 end_define
 
 begin_define
@@ -1154,7 +1232,7 @@ name|m
 parameter_list|,
 name|how
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	_MCLALLOC(_mm->m_ext.ext_buf, (how));				\ 	if (_mm->m_ext.ext_buf != NULL) {				\ 		_mm->m_data = _mm->m_ext.ext_buf;			\ 		_mm->m_flags |= M_EXT;					\ 		_mm->m_ext.ext_free = NULL;				\ 		_mm->m_ext.ext_args = NULL;				\ 		_mm->m_ext.ext_size = MCLBYTES;				\ 		MEXT_INIT_REF(_mm);					\ 	}								\ } while (0)
+value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	mtx_enter(&mclfree.m_mtx, MTX_DEF);				\ 	_MCLALLOC(_mm->m_ext.ext_buf, (how));				\ 	mtx_exit(&mclfree.m_mtx, MTX_DEF);				\ 	if (_mm->m_ext.ext_buf != NULL) {				\ 		MEXT_INIT_REF(_mm, (how));				\ 		if (_mm->m_ext.ref_cnt == NULL) {			\ 			_MCLFREE(_mm->m_ext.ext_buf);			\ 			_mm->m_ext.ext_buf = NULL;			\ 		} else {						\ 			_mm->m_data = _mm->m_ext.ext_buf;		\ 			_mm->m_flags |= M_EXT;				\ 			_mm->m_ext.ext_free = NULL;			\ 			_mm->m_ext.ext_args = NULL;			\ 			_mm->m_ext.ext_size = MCLBYTES;			\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1172,7 +1250,7 @@ name|free
 parameter_list|,
 name|args
 parameter_list|)
-value|do {				\ 	struct mbuf *_mm = (m);						\ 									\ 	_mm->m_flags |= M_EXT;						\ 	_mm->m_ext.ext_buf = (caddr_t)(buf);				\ 	_mm->m_data = _mm->m_ext.ext_buf;				\ 	_mm->m_ext.ext_size = (size);					\ 	_mm->m_ext.ext_free = (free);					\ 	_mm->m_ext.ext_args = (args);					\ 	MEXT_INIT_REF(_mm);						\ } while (0)
+value|do {				\ 	struct mbuf *_mm = (m);						\ 									\ 	MEXT_INIT_REF(_mm, M_WAIT);					\ 	if (_mm->m_ext.ref_cnt != NULL) {				\ 		_mm->m_flags |= M_EXT;					\ 		_mm->m_ext.ext_buf = (caddr_t)(buf);			\ 		_mm->m_data = _mm->m_ext.ext_buf;			\ 		_mm->m_ext.ext_size = (size);				\ 		_mm->m_ext.ext_free = (free);				\ 		_mm->m_ext.ext_args = (args);				\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1182,17 +1260,7 @@ name|_MCLFREE
 parameter_list|(
 name|p
 parameter_list|)
-value|MBUFLOCK(						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	_mp->mcl_next = mclfree;					\ 	mclfree = _mp;							\ 	mbstat.m_clfree++;						\ 	MCLWAKEUP();							\ )
-end_define
-
-begin_define
-define|#
-directive|define
-name|_MEXTFREE
-parameter_list|(
-name|m
-parameter_list|)
-value|do {						\ 	struct mbuf *_mmm = (m);					\ 									\ 	if (MEXT_IS_REF(_mmm))						\ 		MEXT_REM_REF(_mmm);					\ 	else if (_mmm->m_ext.ext_free != NULL) {			\ 		(*(_mmm->m_ext.ext_free))(_mmm->m_ext.ext_buf,		\ 		    _mmm->m_ext.ext_args);				\ 		_MEXT_DEALLOC_CNT(_mmm->m_ext.ref_cnt);			\ 	} else {							\ 		_MCLFREE(_mmm->m_ext.ext_buf);				\ 		_MEXT_DEALLOC_CNT(_mmm->m_ext.ref_cnt);			\ 	}								\ 	_mmm->m_flags&= ~M_EXT;					\ } while (0)
+value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	mtx_enter(&mclfree.m_mtx, MTX_DEF);				\ 	_mp->mcl_next = mclfree.m_head;					\ 	mclfree.m_head = _mp;						\ 	mbstat.m_clfree++;						\ 	MBWAKEUP(m_clalloc_wid);					\ 	mtx_exit(&mclfree.m_mtx, MTX_DEF); 				\ } while (0)
 end_define
 
 begin_define
@@ -1202,7 +1270,7 @@ name|MEXTFREE
 parameter_list|(
 name|m
 parameter_list|)
-value|MBUFLOCK(						\ 	_MEXTFREE(m);							\ )
+value|do {						\ 	struct mbuf *_mmm = (m);					\ 									\ 	if (MEXT_IS_REF(_mmm))						\ 		MEXT_REM_REF(_mmm);					\ 	else if (_mmm->m_ext.ext_free != NULL) {			\ 		(*(_mmm->m_ext.ext_free))(_mmm->m_ext.ext_buf,		\ 		    _mmm->m_ext.ext_args);				\ 		_MEXT_DEALLOC_CNT(_mmm->m_ext.ref_cnt);			\ 	} else {							\ 		_MCLFREE(_mmm->m_ext.ext_buf);				\ 		_MEXT_DEALLOC_CNT(_mmm->m_ext.ref_cnt);			\ 	}								\ 	_mmm->m_flags&= ~M_EXT;					\ } while (0)
 end_define
 
 begin_comment
@@ -1218,7 +1286,7 @@ name|m
 parameter_list|,
 name|n
 parameter_list|)
-value|MBUFLOCK(						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	if (_mm->m_flags& M_EXT)					\ 		_MEXTFREE(_mm);						\ 	mbtypes[_mm->m_type]--;						\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	(n) = _mm->m_next;						\ 	_mm->m_next = mmbfree;						\ 	mmbfree = _mm;							\ 	MMBWAKEUP();							\ )
+value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE(_mm);						\ 	mtx_enter(&mmbfree.m_mtx, MTX_DEF);				\ 	mbtypes[_mm->m_type]--;						\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	(n) = _mm->m_next;						\ 	_mm->m_next = mmbfree.m_head;					\ 	mmbfree.m_head = _mm;						\ 	MBWAKEUP(m_mballoc_wid);					\ 	mtx_exit(&mmbfree.m_mtx, MTX_DEF); 				\ } while (0)
 end_define
 
 begin_comment
@@ -1320,7 +1388,7 @@ value|do {					\ 	struct mbuf **_mmp =&(m);					\ 	struct mbuf *_mm = *_mmp;				
 end_define
 
 begin_comment
-comment|/* change mbuf to new type */
+comment|/*  * change mbuf to new type  */
 end_comment
 
 begin_define
@@ -1332,7 +1400,7 @@ name|m
 parameter_list|,
 name|t
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm = (m);						\ 	int _mt = (t);							\ 	int _ms = splimp();						\ 									\ 	mbtypes[_mm->m_type]--;						\ 	mbtypes[_mt]++;							\ 	splx(_ms);							\ 	_mm->m_type = (_mt);						\ } while (0)
+value|do {						\ 	struct mbuf *_mm = (m);						\ 	int _mt = (t);							\ 									\ 	atomic_subtract_long(mbtypes[_mm->m_type], 1);			\ 	atomic_add_long(mbtypes[_mt], 1);				\ 	_mm->m_type = (_mt);						\ } while (0)
 end_define
 
 begin_comment
@@ -1390,7 +1458,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|u_int
+name|u_long
 name|m_clalloc_wid
 decl_stmt|;
 end_decl_stmt
@@ -1401,7 +1469,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_int
+name|u_long
 name|m_mballoc_wid
 decl_stmt|;
 end_decl_stmt
@@ -1502,9 +1570,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|union
-name|mcluster
-modifier|*
+name|struct
+name|mclfree_lst
 name|mclfree
 decl_stmt|;
 end_decl_stmt
@@ -1512,18 +1579,16 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|mbuf
-modifier|*
+name|mbffree_lst
 name|mmbfree
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|union
-name|mext_refcnt
-modifier|*
-name|mext_refcnt_free
+name|struct
+name|mcntfree_lst
+name|mcntfree
 decl_stmt|;
 end_decl_stmt
 
@@ -1571,6 +1636,8 @@ name|__P
 argument_list|(
 operator|(
 name|u_int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1855,9 +1922,7 @@ name|m_mballoc_wait
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|,
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1933,38 +1998,6 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|m_retry
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|m_retryhdr
-name|__P
-argument_list|(
-operator|(
-name|int
 operator|,
 name|int
 operator|)

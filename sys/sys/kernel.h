@@ -310,9 +310,14 @@ init|=
 literal|0x2600000
 block|,
 comment|/* required idle procs */
-name|SI_SUB_SOFTINTR
+name|SI_SUB_MBUF
 init|=
 literal|0x2700000
+block|,
+comment|/* mbuf subsystem */
+name|SI_SUB_SOFTINTR
+init|=
+literal|0x2800000
 block|,
 comment|/* start soft interrupt thread */
 name|SI_SUB_DRIVERS
@@ -335,11 +340,6 @@ init|=
 literal|0x4800000
 block|,
 comment|/* real time and stat clocks*/
-name|SI_SUB_MBUF
-init|=
-literal|0x5000000
-block|,
-comment|/* mbufs*/
 name|SI_SUB_CLIST
 init|=
 literal|0x5800000
