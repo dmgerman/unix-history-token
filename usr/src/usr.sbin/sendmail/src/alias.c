@@ -99,7 +99,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.11 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.12 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -114,7 +114,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.11 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.12 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.11 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.12 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.11 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.12 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2982,6 +2982,16 @@ directive|ifdef
 name|IF_MAKEDBMFILES
 name|IF_MAKEDBMFILES
 block|{
+ifdef|#
+directive|ifdef
+name|YPCOMPAT
+name|nis_magic
+argument_list|(
+name|dbmp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dbm_store
@@ -3098,6 +3108,204 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  NIS_MAGIC -- Add NIS magic dbm data ** **	This adds the magic entries needed by SunOS to make this a valid **	NIS map. ** **	Parameters: **		dbmp -- a pointer to the DBM structure. ** **	Returns: **		none. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YPCOMPAT
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|nis_magic
+parameter_list|(
+name|dbmp
+parameter_list|)
+name|DBM
+modifier|*
+name|dbmp
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+specifier|static
+name|datum
+name|key
+index|[
+literal|2
+index|]
+init|=
+block|{
+block|{
+literal|"YP_LAST_MODIFIED"
+block|,
+sizeof|sizeof
+expr|"YP_LAST_MODIFIED"
+operator|-
+literal|1
+block|}
+block|,
+block|{
+literal|"YP_MASTER_NAME"
+block|,
+sizeof|sizeof
+expr|"YP_MASTER_NAME"
+operator|-
+literal|1
+block|}
+block|, 	}
+decl_stmt|;
+name|datum
+name|contents
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|tbuf
+index|[
+literal|12
+index|]
+decl_stmt|;
+name|char
+name|hbuf
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|tbuf
+argument_list|,
+literal|"%010ld"
+argument_list|,
+name|curtime
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|contents
+index|[
+literal|0
+index|]
+operator|.
+name|dptr
+operator|=
+name|tbuf
+expr_stmt|;
+name|contents
+index|[
+literal|0
+index|]
+operator|.
+name|dsize
+operator|=
+name|strlen
+argument_list|(
+name|tbuf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|myhostname
+argument_list|(
+name|hbuf
+argument_list|,
+sizeof|sizeof
+name|hbuf
+argument_list|)
+expr_stmt|;
+name|contents
+index|[
+literal|1
+index|]
+operator|.
+name|dptr
+operator|=
+name|hbuf
+expr_stmt|;
+name|contents
+index|[
+literal|1
+index|]
+operator|.
+name|dptr
+operator|=
+name|strlen
+argument_list|(
+name|hbuf
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+name|key
+operator|/
+sizeof|sizeof
+expr|*
+name|key
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|dbm_store
+argument_list|(
+name|dbmp
+argument_list|,
+name|key
+index|[
+name|i
+index|]
+argument_list|,
+name|contents
+index|[
+name|i
+index|]
+argument_list|,
+name|DBM_REPLACE
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|dbm_error
+argument_list|(
+name|dbmp
+argument_list|)
+condition|)
+name|syserr
+argument_list|(
+literal|"nis_magic: dbm_store failure"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Parameters: **		user -- the name of the user who's mail we would like **			to forward to.  It must have been verified -- **			i.e., the q_home field must have been filled **			in. **		sendq -- a pointer to the head of the send queue to **			put this user's aliases in. ** **	Returns: **		none. ** **	Side Effects: **		New names are added to send queues. */
 end_comment
 
@@ -3194,11 +3402,19 @@ name|q_home
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"forward: no home"
 argument_list|)
 expr_stmt|;
+name|user
+operator|->
+name|q_home
+operator|=
+literal|"/nosuchdirectory"
+expr_stmt|;
+block|}
 comment|/* good address -- look for .forward file in home */
 name|define
 argument_list|(
