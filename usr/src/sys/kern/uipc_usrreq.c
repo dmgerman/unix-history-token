@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	6.2	83/09/08	*/
+comment|/*	uipc_usrreq.c	6.3	84/02/15	*/
 end_comment
 
 begin_include
@@ -836,6 +836,12 @@ init|=
 literal|1024
 operator|*
 literal|2
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1957,9 +1963,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|socket
+modifier|*
+name|so
+init|=
 name|unp
 operator|->
 name|unp_socket
+decl_stmt|;
+name|so
 operator|->
 name|so_error
 operator|=
@@ -1970,6 +1983,39 @@ argument_list|(
 name|unp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|->
+name|so_head
+condition|)
+block|{
+name|so
+operator|->
+name|so_pcb
+operator|=
+operator|(
+name|caddr_t
+operator|)
+literal|0
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|m_free
+argument_list|(
+name|dtom
+argument_list|(
+name|unp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sofree
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
