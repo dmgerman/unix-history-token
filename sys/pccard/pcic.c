@@ -2377,12 +2377,32 @@ directive|endif
 name|validslots
 operator|++
 expr_stmt|;
-comment|/* XXX Do I need to allocated the port resources? */
+name|slt
+operator|=
+name|pccard_alloc_slot
+argument_list|(
+operator|&
+name|cinfo
+argument_list|)
+expr_stmt|;
+name|slt
+operator|->
+name|cdata
+operator|=
+name|sp
+expr_stmt|;
+name|sp
+operator|->
+name|slt
+operator|=
+name|slt
+expr_stmt|;
+comment|/* XXX need to allocated the port resources */
 name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"NEC PC98 Original PCMCIA Controller"
+literal|"MECIA PC98 Original PCMCIA Controller"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4159,15 +4179,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|cinfo
-operator|.
-name|disable
-argument_list|(
-name|sp
-operator|->
-name|slt
-argument_list|)
-expr_stmt|;
 name|pccard_event
 argument_list|(
 name|sp
@@ -4175,6 +4186,15 @@ operator|->
 name|slt
 argument_list|,
 name|card_removed
+argument_list|)
+expr_stmt|;
+name|cinfo
+operator|.
+name|disable
+argument_list|(
+name|sp
+operator|->
+name|slt
 argument_list|)
 expr_stmt|;
 block|}
