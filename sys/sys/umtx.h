@@ -493,6 +493,10 @@ name|id
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|timeout
 argument_list|)
 operator|)
