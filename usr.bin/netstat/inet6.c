@@ -2137,9 +2137,9 @@ literal|"node information request"
 block|,
 literal|"node information reply"
 block|,
-literal|"#141"
+literal|"inverse neighbor solicitation"
 block|,
-literal|"#142"
+literal|"inverse neighbor advertisement"
 block|,
 literal|"#143"
 block|,
@@ -2524,6 +2524,10 @@ argument_list|,
 literal|"\t%llu error%s not generated because rate limitation\n"
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|NELEM
+value|(sizeof(icmp6stat.icp6s_outhist)/sizeof(icmp6stat.icp6s_outhist[0]))
 for|for
 control|(
 name|first
@@ -2536,7 +2540,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|256
+name|NELEM
 condition|;
 name|i
 operator|++
@@ -2591,6 +2595,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+undef|#
+directive|undef
+name|NELEM
 name|p
 argument_list|(
 name|icp6s_badcode
@@ -2619,6 +2626,10 @@ argument_list|,
 literal|"\t%llu message%s with bad length\n"
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|NELEM
+value|(sizeof(icmp6stat.icp6s_inhist)/sizeof(icmp6stat.icp6s_inhist[0]))
 for|for
 control|(
 name|first
@@ -2631,7 +2642,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ICMP6_MAXTYPE
+name|NELEM
 condition|;
 name|i
 operator|++
@@ -2686,6 +2697,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+undef|#
+directive|undef
+name|NELEM
 name|printf
 argument_list|(
 literal|"\tHistogram of error messages to be generated:\n"
