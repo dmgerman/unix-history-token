@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.15 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.16 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.15 (Berkeley) %G%"
+literal|"@(#)queue.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2866,7 +2866,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|")\n--QID-- --Size-- -Priority- -----Q-Time----- --------Sender/Recipient--------\n"
+literal|")\n--QID-- --Size-- -Priority- ---Q-Time--- -----------Sender/Recipient-----------\n"
 argument_list|)
 expr_stmt|;
 else|else
