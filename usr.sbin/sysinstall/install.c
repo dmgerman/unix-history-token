@@ -2093,9 +2093,11 @@ name|DITEM_RESTORE
 return|;
 if|if
 condition|(
-operator|!
 name|Dists
-operator|&&
+condition|)
+break|break;
+if|if
+condition|(
 name|msgYesNo
 argument_list|(
 literal|"No distributions selected.  Revisit the distributions menu?"
