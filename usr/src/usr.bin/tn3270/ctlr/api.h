@@ -118,6 +118,35 @@ name|NAME_RESOLUTION
 value|0x81
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * In unix, we offer a service to allow the application to keep from  * having to poll us constantly.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_OR_OIA_MODIFIED
+value|0x99
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(unix) */
+end_comment
+
 begin_comment
 comment|/*  * Codes specified in AL for various services.  */
 end_comment
