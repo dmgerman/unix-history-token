@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.130 (Berkeley) 8/2/97"
+literal|"@(#)parseaddr.c	8.132 (Berkeley) 10/20/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -7817,6 +7817,12 @@ name|QTHISPASS
 block|}
 block|,
 block|{
+literal|"QRCPTOK"
+block|,
+name|QRCPTOK
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -8955,7 +8961,27 @@ name|pvp
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"maplocaluser: cannot prescan %s\n"
+argument_list|,
+name|a
+operator|->
+name|q_user
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|define
 argument_list|(
 literal|'h'
@@ -9005,6 +9031,20 @@ operator|==
 name|EX_TEMPFAIL
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"maplocaluser: rewrite tempfail\n"
+argument_list|)
+expr_stmt|;
 name|a
 operator|->
 name|q_flags
@@ -9042,7 +9082,23 @@ operator|)
 operator|!=
 name|CANONNET
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"maplocaluser: doesn't resolve\n"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* if non-null, mailer destination specified -- has it changed? */
 name|a1
 operator|=
@@ -9071,6 +9127,20 @@ name|a1
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"maplocaluser: address unchanged\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|a1

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.133 (Berkeley) 8/1/97"
+literal|"@(#)util.c	8.137 (Berkeley) 10/22/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -1434,7 +1434,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTXLINE -- putline with flags bits. ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		len -- the length of the line. **		mci -- the mailer connection information. **		pxflags -- flag bits: **		    PXLF_MAPFROM -- map From_ to>From_. **		    PXLF_STRIP8BIT -- strip 8th bit. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
+comment|/* **  PUTXLINE -- putline with flags bits. ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		len -- the length of the line. **		mci -- the mailer connection information. **		pxflags -- flag bits: **		    PXLF_MAPFROM -- map From_ to>From_. **		    PXLF_STRIP8BIT -- strip 8th bit. **		    PXLF_HEADER -- map bare newline in header to newline space. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
 end_comment
 
 begin_function
@@ -2103,6 +2103,13 @@ operator|*
 name|l
 operator|!=
 literal|'\0'
+operator|&&
+name|bitset
+argument_list|(
+name|PXLF_HEADER
+argument_list|,
+name|pxflags
+argument_list|)
 condition|)
 block|{
 operator|(
@@ -3462,10 +3469,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|struct
-name|stat
-name|stbuf
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -3871,12 +3874,6 @@ index|[
 literal|200
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|hostnamebyanyaddr
-parameter_list|()
-function_decl|;
 name|p
 operator|=
 name|buf
@@ -4566,8 +4563,12 @@ argument_list|(
 name|LOG_DEBUG
 argument_list|,
 name|CurEnv
+condition|?
+name|CurEnv
 operator|->
 name|e_id
+else|:
+name|NULL
 argument_list|,
 literal|"%.800s"
 argument_list|,

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.154 (Berkeley) 8/2/97 (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.159 (Berkeley) 10/19/97 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.154 (Berkeley) 8/2/97 (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.159 (Berkeley) 10/19/97 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -663,6 +663,7 @@ comment|/* count of HELO/EHLO commands */
 name|bool
 name|ok
 decl_stmt|;
+specifier|volatile
 name|int
 name|lognullconnection
 init|=
@@ -1202,6 +1203,43 @@ literal|"lost input channel from %.100s"
 argument_list|,
 name|CurSmtpClient
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lognullconnection
+operator|&&
+name|LogLevel
+operator|>
+literal|5
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Null connection from %.100s"
+argument_list|,
+name|CurSmtpClient
+argument_list|)
+expr_stmt|;
+comment|/* 			** If have not accepted mail (DATA), do not bounce 			** bad addresses back to sender. 			*/
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_CLRQUEUE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+name|e
+operator|->
+name|e_sendqueue
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -3578,6 +3616,10 @@ condition|)
 goto|goto
 name|undo_subproc
 goto|;
+name|QuickAbort
+operator|=
+name|TRUE
+expr_stmt|;
 name|vrfyqueue
 operator|=
 name|NULL
@@ -3800,27 +3842,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|id
-operator|=
-name|p
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|id
-operator|==
-literal|'@'
-condition|)
-name|id
-operator|++
-expr_stmt|;
-else|else
-operator|*
-operator|--
-name|id
-operator|=
-literal|'@'
-expr_stmt|;
 if|if
 condition|(
 name|LogLevel
@@ -3841,11 +3862,32 @@ name|CurSmtpClient
 argument_list|,
 name|shortenstring
 argument_list|(
-name|id
+name|p
 argument_list|,
 literal|203
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|id
+operator|=
+name|p
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|id
+operator|==
+literal|'@'
+condition|)
+name|id
+operator|++
+expr_stmt|;
+else|else
+operator|*
+operator|--
+name|id
+operator|=
+literal|'@'
 expr_stmt|;
 name|QueueLimitRecipient
 operator|=
