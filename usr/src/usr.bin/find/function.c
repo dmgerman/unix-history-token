@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.5 (Berkeley) %G%"
+literal|"@(#)function.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1254,6 +1254,14 @@ operator|.
 name|st_dev
 condition|)
 block|{
+name|curdev
+operator|=
+name|entry
+operator|->
+name|fts_statb
+operator|.
+name|st_dev
+expr_stmt|;
 if|if
 condition|(
 name|statfs
