@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prim.c	5.5 (Berkeley) %G%"
+literal|"@(#)prim.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1550,6 +1550,7 @@ name|c
 operator|==
 literal|'\''
 condition|)
+block|{
 name|pos
 operator|=
 name|marks
@@ -1557,7 +1558,19 @@ index|[
 name|LASTMARK
 index|]
 expr_stmt|;
-elseif|else
+if|if
+condition|(
+name|pos
+operator|==
+name|NULL_POSITION
+condition|)
+name|pos
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|badmark
@@ -1566,7 +1579,6 @@ name|c
 argument_list|)
 condition|)
 return|return;
-else|else
 name|pos
 operator|=
 name|marks
@@ -1582,12 +1594,15 @@ name|pos
 operator|==
 name|NULL_POSITION
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"mark not set"
 argument_list|)
 expr_stmt|;
-else|else
+return|return;
+block|}
+block|}
 name|jump_loc
 argument_list|(
 name|pos
