@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)flvalue.c 1.6 %G%"
+literal|"@(#)flvalue.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -305,8 +305,6 @@ directive|endif
 endif|PC
 return|return
 name|p
-operator|->
-name|type
 return|;
 case|case
 name|FUNC
@@ -636,8 +634,6 @@ directive|endif
 endif|PC
 return|return
 name|p
-operator|->
-name|type
 return|;
 default|default:
 name|error

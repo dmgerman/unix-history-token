@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.11 %G%"
+literal|"@(#)put.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1034,32 +1034,6 @@ operator|(
 name|oldlc
 operator|)
 return|;
-case|case
-name|O_FCALL
-case|:
-name|lp
-operator|=
-operator|(
-name|long
-operator|*
-operator|)
-operator|&
-name|p
-index|[
-literal|1
-index|]
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|lp
-operator|==
-literal|0
-condition|)
-goto|goto
-name|longgen
-goto|;
-comment|/* and fall through */
 case|case
 name|O_PUSH
 case|:

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)error.c 1.2 %G%"
+literal|"@(#)error.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,6 +171,8 @@ argument_list|,
 name|a3
 argument_list|,
 name|a4
+argument_list|,
+name|a5
 argument_list|)
 specifier|register
 name|char
@@ -326,6 +328,8 @@ argument_list|,
 name|a3
 argument_list|,
 name|a4
+argument_list|,
+name|a5
 argument_list|)
 expr_stmt|;
 if|if
@@ -387,6 +391,8 @@ argument_list|,
 argument|a3
 argument_list|,
 argument|a4
+argument_list|,
+argument|a5
 argument_list|)
 end_macro
 
@@ -411,6 +417,8 @@ argument_list|,
 name|a3
 argument_list|,
 name|a4
+argument_list|,
+name|a5
 argument_list|)
 expr_stmt|;
 block|}
@@ -436,6 +444,8 @@ argument_list|,
 argument|a3
 argument_list|,
 argument|a4
+argument_list|,
+argument|a5
 argument_list|)
 end_macro
 
@@ -455,6 +465,8 @@ argument_list|,
 name|a3
 argument_list|,
 name|a4
+argument_list|,
+name|a5
 argument_list|)
 expr_stmt|;
 name|errpfx
