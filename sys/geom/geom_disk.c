@@ -958,7 +958,7 @@ expr_stmt|;
 name|bp2
 operator|->
 name|bio_data
-operator|-=
+operator|+=
 name|off
 expr_stmt|;
 if|if
