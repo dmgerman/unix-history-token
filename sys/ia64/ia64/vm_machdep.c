@@ -233,23 +233,6 @@ end_function
 
 begin_function
 name|void
-name|cpu_save_upcall
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|kse
-modifier|*
-name|newkse
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
 name|cpu_set_upcall
 parameter_list|(
 name|struct
@@ -266,7 +249,7 @@ end_function
 
 begin_function
 name|void
-name|cpu_set_args
+name|cpu_set_upcall_kse
 parameter_list|(
 name|struct
 name|thread
@@ -279,36 +262,6 @@ modifier|*
 name|ke
 parameter_list|)
 block|{ }
-end_function
-
-begin_function
-name|void
-name|cpu_free_kse_mdstorage
-parameter_list|(
-name|struct
-name|kse
-modifier|*
-name|ke
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|int
-name|cpu_export_context
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 end_function
 
 begin_comment
