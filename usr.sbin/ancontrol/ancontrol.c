@@ -8429,7 +8429,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ANISCTRht:a:e:o:s:n:v:d:j:b:c:r:p:w:m:l:k:K:W:QZM:L:"
+literal|"ANISCTRht:a:e:o:s:n:v:d:j:b:c:f:r:p:w:m:l:k:K:W:QZM:L:"
 argument_list|)
 operator|)
 operator|!=
