@@ -4623,6 +4623,10 @@ condition|(
 name|errno
 operator|!=
 name|ENXIO
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
 condition|)
 block|{
 comment|/* there was an error, on a device that does 				 * exist (device is configured) 				 */
