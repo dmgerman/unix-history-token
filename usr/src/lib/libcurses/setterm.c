@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.7  */
+comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.8  */
 end_comment
 
 begin_undef
@@ -194,7 +194,7 @@ specifier|static
 name|char
 name|tspace
 index|[
-literal|128
+literal|256
 index|]
 decl_stmt|,
 comment|/* Space for capability strings */
