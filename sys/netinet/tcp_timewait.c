@@ -3901,7 +3901,9 @@ operator|)
 condition|)
 block|{
 return|return
+operator|(
 name|inp
+operator|)
 return|;
 block|}
 elseif|else
@@ -3949,7 +3951,9 @@ operator|=
 name|error
 expr_stmt|;
 return|return
+operator|(
 name|inp
+operator|)
 return|;
 block|}
 if|#
@@ -4036,7 +4040,9 @@ name|xtcpcb
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -4048,7 +4054,9 @@ operator|!=
 name|NULL
 condition|)
 return|return
+operator|(
 name|EPERM
+operator|)
 return|;
 comment|/* 	 * OK, now we're committed to doing something. 	 */
 name|s
@@ -4161,7 +4169,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|inp_list
 operator|=
@@ -4185,7 +4195,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|s
 operator|=
@@ -4610,7 +4622,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -6527,7 +6541,9 @@ operator|+=
 name|isn_offset
 expr_stmt|;
 return|return
+operator|(
 name|new_isn
+operator|)
 return|;
 block|}
 end_function
@@ -6720,15 +6736,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-expr|struct
-name|inpcb
-operator|*
+name|NULL
 operator|)
-literal|0
 return|;
 block|}
 return|return
+operator|(
 name|inp
+operator|)
 return|;
 block|}
 end_function
@@ -6907,7 +6922,9 @@ comment|/* INET6 */
 name|tcp_mssdflt
 expr_stmt|;
 return|return
+operator|(
 name|inp
+operator|)
 return|;
 block|}
 name|mss
@@ -6958,7 +6975,9 @@ operator|<=
 name|mss
 condition|)
 return|return
+operator|(
 name|inp
+operator|)
 return|;
 name|tp
 operator|->
@@ -7092,7 +7111,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|inp
+operator|)
 return|;
 block|}
 end_function
@@ -7553,7 +7574,9 @@ name|NULL
 operator|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|MGETHDR
 argument_list|(
@@ -7570,7 +7593,9 @@ operator|!
 name|m
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -7727,7 +7752,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|hdrsiz
+operator|)
 return|;
 block|}
 end_function
@@ -8147,11 +8174,15 @@ name|rcv_nxt
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 else|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
