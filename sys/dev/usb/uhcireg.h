@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhcireg.h,v 1.6 1999/04/03 19:01:20 augustss Exp $	*/
+comment|/*	$NetBSD: uhcireg.h,v 1.8 1999/11/18 23:32:28 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -57,6 +57,13 @@ define|#
 directive|define
 name|PCI_USBREV_1_0
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_USBREV_1_1
+value|0x11
 end_define
 
 begin_define
