@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  ncp.h  *  *  Copyright (C) 1995 by Volker Lendecke  *  New version derived from original ncp.h, 1998 Boris Popov  *  * $FreeBSD$  */
+comment|/*  *  ncp.h  */
+end_comment
+
+begin_comment
+comment|/*-  *  Copyright (C) 1995 by Volker Lendecke  *  New version derived from original ncp.h, 1998 Boris Popov  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
