@@ -14192,6 +14192,8 @@ name|char
 name|buf
 index|[
 literal|1024
+operator|+
+name|ALIGNBYTES
 index|]
 decl_stmt|;
 comment|/*XXX*/
@@ -14357,6 +14359,10 @@ name|cpp
 operator|=
 name|lsrp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|ALIGN
 argument_list|(
 name|buf
