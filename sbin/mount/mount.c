@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount.c,v 1.25 1998/04/08 18:31:18 wosch Exp $"
+literal|"$Id: mount.c,v 1.26 1998/05/17 21:57:17 dt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2582,7 +2582,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|sfp
 operator|->
 name|f_syncwrites
@@ -2594,24 +2593,13 @@ operator|->
 name|f_asyncwrites
 operator|!=
 literal|0
-operator|)
-operator|&&
-operator|(
-name|sfp
-operator|->
-name|f_flags
-operator|&
-name|MNT_RDONLY
-operator|)
-operator|==
-literal|0
 condition|)
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%swrites: sync %d async %d"
+literal|"%swrites: sync %ld async %ld"
 argument_list|,
 operator|!
 name|f
