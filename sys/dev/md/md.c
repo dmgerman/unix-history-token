@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -90,29 +84,6 @@ include|#
 directive|include
 file|<sys/queue.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/devfs/devfs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -572,11 +543,13 @@ name|dev
 operator|->
 name|si_drv1
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|DEVFS
 if|if
 condition|(
+operator|(
+operator|!
+name|devfs_present
+operator|)
+operator|&&
 name|sc
 operator|->
 name|unit
@@ -591,8 +564,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|dl
 operator|=
 operator|&
@@ -2120,12 +2091,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -2162,7 +2127,7 @@ condition|)
 return|return;
 name|i
 operator|=
-name|devfs_stdclone
+name|dev_stdclone
 argument_list|(
 name|name
 argument_list|,
@@ -2191,11 +2156,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -2373,12 +2333,9 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEVFS
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|devfs_clone
+name|dev_clone
 argument_list|,
 name|md_clone
 argument_list|,
@@ -2387,16 +2344,17 @@ argument_list|,
 literal|999
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+if|if
+condition|(
+operator|!
+name|devfs_present
+condition|)
 name|mdcreate_malloc
 argument_list|(
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

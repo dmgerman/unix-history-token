@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"card.h"
 end_include
 
@@ -170,35 +164,6 @@ include|#
 directive|include
 file|<isa/rtc.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/devfs/devfs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* misuse a flag to identify format operation */
@@ -4444,12 +4409,6 @@ begin_comment
 comment|/* NCARD> 0 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -4701,7 +4660,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|devfs_stdclone
+name|dev_stdclone
 argument_list|(
 name|name
 argument_list|,
@@ -4836,11 +4795,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/******************************************************************/
@@ -5533,6 +5487,12 @@ name|fd_data
 modifier|*
 name|fd
 decl_stmt|;
+specifier|static
+name|int
+name|cdevsw_add_done
+init|=
+literal|0
+decl_stmt|;
 name|fd
 operator|=
 name|device_get_softc
@@ -5540,16 +5500,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|DEVFS
-block|{
-specifier|static
-name|int
-name|cdevsw_add_done
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -5567,12 +5517,9 @@ name|cdevsw_add_done
 operator|++
 expr_stmt|;
 block|}
-block|}
-else|#
-directive|else
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|devfs_clone
+name|dev_clone
 argument_list|,
 name|fd_clone
 argument_list|,
@@ -5581,8 +5528,6 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|make_dev
 argument_list|(
 operator|&

@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -69,34 +63,11 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/devfs/devfs.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<sys/ctype.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -161,12 +132,6 @@ name|disklist
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
 
 begin_function
 specifier|static
@@ -486,11 +451,6 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -745,12 +705,9 @@ operator|!
 name|once
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEVFS
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|devfs_clone
+name|dev_clone
 argument_list|,
 name|disk_clone
 argument_list|,
@@ -759,8 +716,6 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|once
 operator|++
 expr_stmt|;

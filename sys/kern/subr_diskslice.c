@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stddef.h>
 end_include
 
@@ -2298,7 +2292,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXX should free devfs toks. */
 name|free
 argument_list|(
 name|lp
@@ -2306,7 +2299,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/* XXX should restore devfs toks. */
 operator|*
 name|sspp
 operator|=
@@ -2320,7 +2312,6 @@ return|;
 block|}
 block|}
 block|}
-comment|/* XXX devfs tokens? */
 name|free
 argument_list|(
 name|lp
@@ -3378,7 +3369,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* 	 * Initialize secondary info for all slices.  It is needed for more 	 * than the current slice in the DEVFS case. 	 */
+comment|/* Initialize secondary info for all slices.  */
 for|for
 control|(
 name|slice

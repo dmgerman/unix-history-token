@@ -22,12 +22,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ccd.h"
 end_include
 
@@ -132,29 +126,6 @@ include|#
 directive|include
 file|<sys/ccdvar.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/devfs/devfs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -988,12 +959,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -1034,7 +999,7 @@ condition|)
 return|return;
 name|i
 operator|=
-name|devfs_stdclone
+name|dev_stdclone
 argument_list|(
 name|name
 argument_list|,
@@ -1112,12 +1077,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-endif|DEVFS
-end_endif
 
 begin_comment
 comment|/*  * Called by main() during pseudo-device attachment.  All we need  * to do is allocate enough space for devices to be configured later, and  * add devsw entries.  */
@@ -1310,12 +1269,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|devfs_clone
+name|dev_clone
 argument_list|,
 name|ccd_clone
 argument_list|,
@@ -1324,8 +1280,6 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

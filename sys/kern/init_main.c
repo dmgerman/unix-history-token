@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -115,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
 end_include
 
 begin_include
@@ -2010,9 +2010,11 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|DEVFS
+if|if
+condition|(
+name|devfs_present
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -2028,8 +2030,7 @@ name|options
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 if|if
 condition|(
 name|options

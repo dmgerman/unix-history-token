@@ -118,42 +118,6 @@ modifier|*
 name|ds_label
 decl_stmt|;
 comment|/* BSD label, if any */
-name|void
-modifier|*
-name|ds_dev
-decl_stmt|;
-comment|/* devfs token for raw whole slice */
-ifdef|#
-directive|ifdef
-name|MAXPARTITIONS
-comment|/* XXX don't depend on disklabel.h */
-if|#
-directive|if
-name|MAXPARTITIONS
-operator|!=
-literal|8
-comment|/* but check consistency if possible */
-error|#
-directive|error
-literal|"inconsistent MAXPARTITIONS"
-endif|#
-directive|endif
-else|#
-directive|else
-define|#
-directive|define
-name|MAXPARTITIONS
-value|8
-endif|#
-directive|endif
-name|void
-modifier|*
-name|ds_devs
-index|[
-name|MAXPARTITIONS
-index|]
-decl_stmt|;
-comment|/* XXX s.b. in label */
 name|u_char
 name|ds_openmask
 decl_stmt|;

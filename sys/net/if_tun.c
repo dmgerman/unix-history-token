@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -179,29 +173,6 @@ include|#
 directive|include
 file|<net/if_tun.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/devfs/devfs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 specifier|static
@@ -455,12 +426,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -529,7 +494,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|devfs_stdclone
+name|dev_stdclone
 argument_list|(
 name|name
 argument_list|,
@@ -569,11 +534,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -586,12 +546,9 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DEVFS
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|devfs_clone
+name|dev_clone
 argument_list|,
 name|tun_clone
 argument_list|,
@@ -600,16 +557,12 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
 name|cdevsw_add
 argument_list|(
 operator|&
 name|tun_cdevsw
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

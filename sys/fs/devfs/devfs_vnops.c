@@ -1549,7 +1549,7 @@ name|NODEV
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
-name|devfs_clone
+name|dev_clone
 argument_list|,
 name|specname
 operator|+
