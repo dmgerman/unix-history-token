@@ -35,9 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/* static char sccsid[] = "@(#)ping.c	8.1 (Berkeley) 6/5/93"; */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)ping.c	8.1 (Berkeley) 6/5/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -46,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.37 1998/05/25 20:16:05 fenner Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +68,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  *			P I N G . C  *  * Using the InterNet Control Message Protocol (ICMP) "ECHO" facility,  * measure round-trip-delays and packet loss across network paths.  *  * Author -  *	Mike Muuss  *	U. S. Army Ballistic Research Laboratory  *	December, 1983  *  * Status -  *	Public Domain.  Distribution Unlimited.  * Bugs -  *	More statistics could always be gathered.  *	This program has to run SUID to ROOT to access the ICMP socket.  */
+comment|/*  *			P I N G . C  *  * Using the Internet Control Message Protocol (ICMP) "ECHO" facility,  * measure round-trip-delays and packet loss across network paths.  *  * Author -  *	Mike Muuss  *	U. S. Army Ballistic Research Laboratory  *	December, 1983  *  * Status -  *	Public Domain.  Distribution Unlimited.  * Bugs -  *	More statistics could always be gathered.  *	This program has to run SUID to ROOT to access the ICMP socket.  */
 end_comment
 
 begin_include
@@ -149,12 +157,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
 end_include
 
 begin_include
@@ -876,9 +878,7 @@ specifier|static
 name|void
 name|usage
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|void
 argument_list|)
 name|__dead2
 decl_stmt|;
@@ -1514,12 +1514,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -1532,12 +1527,7 @@ operator|!=
 literal|1
 condition|)
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|target
 operator|=
@@ -2617,7 +2607,7 @@ condition|(
 name|timeout
 operator|.
 name|tv_usec
-operator|>
+operator|>=
 literal|1000000
 condition|)
 block|{
@@ -2746,9 +2736,9 @@ operator|==
 name|EINTR
 condition|)
 continue|continue;
-name|perror
+name|warn
 argument_list|(
-literal|"ping: recvmsg"
+literal|"recvmsg"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -6480,44 +6470,17 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-name|argv0
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|argv0
-decl_stmt|;
+parameter_list|()
 block|{
-if|if
-condition|(
-name|strrchr
-argument_list|(
-name|argv0
-argument_list|,
-literal|'/'
-argument_list|)
-condition|)
-name|argv0
-operator|=
-name|strrchr
-argument_list|(
-name|argv0
-argument_list|,
-literal|'/'
-argument_list|)
-operator|+
-literal|1
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-QRadfnqrv] [-c count] [-i wait] [-l preload] "
-literal|"[-p pattern]\n       [-s packetsize] "
-literal|"[host | [-L] [-I iface] [-T ttl] mcast-group]\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|argv0
+literal|"usage: ping [-QRadfnqrv] [-c count] [-i wait] [-l preload] [-p pattern]"
+argument_list|,
+literal|"            [-s packetsize] [host | [-L] [-I iface] [-T ttl] mcast-group]"
 argument_list|)
 expr_stmt|;
 name|exit
