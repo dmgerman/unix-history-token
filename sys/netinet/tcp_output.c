@@ -442,7 +442,9 @@ decl_stmt|;
 name|long
 name|len
 decl_stmt|,
-name|win
+name|recwin
+decl_stmt|,
+name|sendwin
 decl_stmt|;
 name|int
 name|off
@@ -698,7 +700,7 @@ name|tp
 operator|->
 name|snd_una
 expr_stmt|;
-name|win
+name|sendwin
 operator|=
 name|min
 argument_list|(
@@ -711,11 +713,11 @@ operator|->
 name|snd_cwnd
 argument_list|)
 expr_stmt|;
-name|win
+name|sendwin
 operator|=
 name|min
 argument_list|(
-name|win
+name|sendwin
 argument_list|,
 name|tp
 operator|->
@@ -766,7 +768,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|win
+name|sendwin
 operator|==
 literal|0
 condition|)
@@ -787,7 +789,7 @@ operator|&=
 operator|~
 name|TH_FIN
 expr_stmt|;
-name|win
+name|sendwin
 operator|=
 literal|1
 expr_stmt|;
@@ -809,7 +811,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If snd_nxt == snd_max and we have transmitted a FIN, the  	 * offset will be> 0 even if so_snd.sb_cc is 0, resulting in 	 * a negative length.  This can also occur when tcp opens up 	 * its congestion window while receiving additional duplicate 	 * acks after fast-retransmit because TCP will reset snd_nxt 	 * to snd_max after the fast-retransmit. 	 * 	 * In the normal retransmit-FIN-only case, however, snd_nxt will 	 * be set to snd_una, the offset will be 0, and the length may 	 * wind up 0. 	 */
+comment|/* 	 * If snd_nxt == snd_max and we have transmitted a FIN, the  	 * offset will be> 0 even if so_snd.sb_cc is 0, resulting in 	 * a negative length.  This can also occur when TCP opens up 	 * its congestion window while receiving additional duplicate 	 * acks after fast-retransmit because TCP will reset snd_nxt 	 * to snd_max after the fast-retransmit. 	 * 	 * In the normal retransmit-FIN-only case, however, snd_nxt will 	 * be set to snd_una, the offset will be 0, and the length may 	 * wind up 0. 	 */
 name|len
 operator|=
 operator|(
@@ -823,7 +825,7 @@ name|so_snd
 operator|.
 name|sb_cc
 argument_list|,
-name|win
+name|sendwin
 argument_list|)
 operator|-
 name|off
@@ -969,7 +971,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|win
+name|sendwin
 operator|==
 literal|0
 condition|)
@@ -1059,7 +1061,7 @@ operator|&=
 operator|~
 name|TH_FIN
 expr_stmt|;
-name|win
+name|recwin
 operator|=
 name|sbspace
 argument_list|(
@@ -1186,7 +1188,7 @@ block|}
 comment|/* 	 * Compare available window to amount of window 	 * known to peer (as advertised window less 	 * next expected input).  If the difference is at least two 	 * max size segments, or at least 50% of the maximum possible 	 * window, then want to send a window update to peer. 	 * Skip this if the connection is in T/TCP half-open state. 	 */
 if|if
 condition|(
-name|win
+name|recwin
 operator|>
 literal|0
 operator|&&
@@ -1206,7 +1208,7 @@ name|adv
 init|=
 name|min
 argument_list|(
-name|win
+name|recwin
 argument_list|,
 operator|(
 name|long
@@ -2801,7 +2803,7 @@ expr_stmt|;
 comment|/* 	 * Calculate receive window.  Don't shrink window, 	 * but avoid silly window syndrome. 	 */
 if|if
 condition|(
-name|win
+name|recwin
 operator|<
 call|(
 name|long
@@ -2816,7 +2818,7 @@ operator|/
 literal|4
 argument_list|)
 operator|&&
-name|win
+name|recwin
 operator|<
 operator|(
 name|long
@@ -2825,13 +2827,13 @@ name|tp
 operator|->
 name|t_maxseg
 condition|)
-name|win
+name|recwin
 operator|=
 literal|0
 expr_stmt|;
 if|if
 condition|(
-name|win
+name|recwin
 operator|<
 call|(
 name|long
@@ -2846,7 +2848,7 @@ operator|->
 name|rcv_nxt
 argument_list|)
 condition|)
-name|win
+name|recwin
 operator|=
 call|(
 name|long
@@ -2863,7 +2865,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|win
+name|recwin
 operator|>
 operator|(
 name|long
@@ -2874,7 +2876,7 @@ name|tp
 operator|->
 name|rcv_scale
 condition|)
-name|win
+name|recwin
 operator|=
 operator|(
 name|long
@@ -2895,7 +2897,7 @@ call|(
 name|u_short
 call|)
 argument_list|(
-name|win
+name|recwin
 operator|>>
 name|tp
 operator|->
@@ -2906,7 +2908,7 @@ expr_stmt|;
 comment|/* 	 * Adjust the RXWIN0SENT flag - indicate that we have advertised 	 * a 0 window.  This may cause the remote transmitter to stall.  This 	 * flag tells soreceive() to disable delayed acknowledgements when 	 * draining the buffer.  This can occur if the receiver is attempting 	 * to read more data then can be buffered prior to transmitting on 	 * the connection. 	 */
 if|if
 condition|(
-name|win
+name|recwin
 operator|==
 literal|0
 condition|)
@@ -3763,7 +3765,7 @@ expr_stmt|;
 comment|/* 	 * Data sent (as far as we can tell). 	 * If this advertises a larger window than any other segment, 	 * then remember the size of the advertised window. 	 * Any pending ACK has now been sent. 	 */
 if|if
 condition|(
-name|win
+name|recwin
 operator|>
 literal|0
 operator|&&
@@ -3773,7 +3775,7 @@ name|tp
 operator|->
 name|rcv_nxt
 operator|+
-name|win
+name|recwin
 argument_list|,
 name|tp
 operator|->
@@ -3788,7 +3790,7 @@ name|tp
 operator|->
 name|rcv_nxt
 operator|+
-name|win
+name|recwin
 expr_stmt|;
 name|tp
 operator|->
