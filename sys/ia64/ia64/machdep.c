@@ -1542,6 +1542,16 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_init
+argument_list|(
+operator|&
+name|callout_lock
+argument_list|,
+literal|"callout"
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined

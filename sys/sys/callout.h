@@ -125,6 +125,17 @@ begin_comment
 comment|/* callout is waiting for timeout */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CALLOUT_MPSAFE
+value|0x0008
+end_define
+
+begin_comment
+comment|/* callout handler is mp safe */
+end_comment
+
 begin_struct
 struct|struct
 name|callout_handle
@@ -187,6 +198,14 @@ decl_stmt|,
 name|callwheelmask
 decl_stmt|,
 name|softticks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|callout_lock
 decl_stmt|;
 end_decl_stmt
 

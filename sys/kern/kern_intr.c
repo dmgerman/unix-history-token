@@ -1081,7 +1081,7 @@ name|NULL
 argument_list|,
 name|SWI_CLOCK
 argument_list|,
-literal|0
+name|INTR_MPSAFE
 argument_list|)
 expr_stmt|;
 name|vm_ih

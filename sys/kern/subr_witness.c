@@ -3276,6 +3276,8 @@ literal|"clk"
 block|,
 endif|#
 directive|endif
+literal|"callout"
+block|,
 comment|/* 	 * leaf locks 	 */
 name|NULL
 block|}

@@ -362,6 +362,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|need_softclock
+init|=
+literal|0
+decl_stmt|;
 name|p
 operator|=
 name|curproc
@@ -507,10 +512,18 @@ expr_stmt|;
 name|tc_windup
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Process callouts at a very low cpu priority, so we don't keep the 	 * relatively high clock interrupt priority any longer than necessary. 	 */
+name|mtx_enter
+argument_list|(
+operator|&
+name|callout_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|ticks
 operator|++
 expr_stmt|;
-comment|/* 	 * Process callouts at a very low cpu priority, so we don't keep the 	 * relatively high clock interrupt priority any longer than necessary. 	 */
 if|if
 condition|(
 name|TAILQ_FIRST
@@ -527,12 +540,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sched_swi
-argument_list|(
-name|softclock_ih
-argument_list|,
-name|SWI_NOSWITCH
-argument_list|)
+name|need_softclock
+operator|=
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -546,6 +556,26 @@ name|ticks
 condition|)
 operator|++
 name|softticks
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|callout_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+comment|/* 	 * sched_swi acquires sched_lock, so we don't want to call it with 	 * callout_lock held; incorrect locking order. 	 */
+if|if
+condition|(
+name|need_softclock
+condition|)
+name|sched_swi
+argument_list|(
+name|softclock_ih
+argument_list|,
+name|SWI_NOSWITCH
+argument_list|)
 expr_stmt|;
 block|}
 end_function
