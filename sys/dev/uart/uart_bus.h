@@ -258,6 +258,13 @@ name|UART_IOCTL_OFLOW
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|UART_IOCTL_BAUD
+value|4
+end_define
+
 begin_comment
 comment|/*  * UART class& instance (=softc)  */
 end_comment
