@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.18.2.1 1999/01/24 00:15:39 msmith Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.18.2.2 1999/02/25 17:49:24 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -4015,6 +4015,9 @@ break|break;
 case|case
 literal|'\b'
 case|:
+case|case
+literal|'\177'
+case|:
 if|if
 condition|(
 name|s
@@ -4027,7 +4030,7 @@ operator|--
 expr_stmt|;
 name|putchar
 argument_list|(
-name|c
+literal|'\b'
 argument_list|)
 expr_stmt|;
 name|putchar
