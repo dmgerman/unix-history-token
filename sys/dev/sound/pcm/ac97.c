@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/sound/pcm/ac97_patch.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mixer_if.h"
 end_include
 
@@ -173,6 +179,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|ac97_patch
+name|patch
 decl_stmt|;
 block|}
 struct|;
@@ -515,6 +524,8 @@ block|,
 literal|0
 block|,
 literal|"Analog Devices AD1819"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -523,6 +534,8 @@ block|,
 literal|0
 block|,
 literal|"Analog Devices AD1881"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -531,6 +544,8 @@ block|,
 literal|0
 block|,
 literal|"Analog Devices AD1881A"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -539,6 +554,18 @@ block|,
 literal|0
 block|,
 literal|"Analog Devices AD1885"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x41445361
+block|,
+literal|0
+block|,
+literal|"Analog Devices AD1886"
+block|,
+name|ad1886_patch
 block|}
 block|,
 block|{
@@ -547,6 +574,8 @@ block|,
 literal|1
 block|,
 literal|"Asahi Kasei AK4540"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -555,6 +584,8 @@ block|,
 literal|1
 block|,
 literal|"Asahi Kasei AK4542"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -563,6 +594,8 @@ block|,
 literal|1
 block|,
 literal|"Asahi Kasei AK4543"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -571,6 +604,8 @@ block|,
 literal|0
 block|,
 literal|"Avance Logic ALC200/200P"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -579,6 +614,8 @@ block|,
 literal|0
 block|,
 literal|"Realtek Semiconductor ALC650"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -587,6 +624,8 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4297"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -595,6 +634,8 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4297"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -603,6 +644,8 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4297A"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -611,6 +654,8 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4297B"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -619,6 +664,8 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4294C"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -627,6 +674,8 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4298C"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -635,6 +684,8 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4299A"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -643,6 +694,8 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4299C"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -651,6 +704,8 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4299D"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -659,6 +714,8 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4201A"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -667,6 +724,8 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4205A"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -675,6 +734,18 @@ block|,
 literal|0
 block|,
 literal|"Cirrus Logic CS4291A"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x43585429
+block|,
+literal|0
+block|,
+literal|"Conexant CX20468"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -683,6 +754,8 @@ block|,
 literal|0
 block|,
 literal|"ESS Technology ES1921"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -691,6 +764,8 @@ block|,
 literal|0
 block|,
 literal|"ICEnsemble ICE1232"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -699,6 +774,8 @@ block|,
 literal|0
 block|,
 literal|"National Semiconductor LM4549"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -707,6 +784,8 @@ block|,
 literal|0
 block|,
 literal|"SigmaTel STAC9700/9783/9784"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -715,6 +794,8 @@ block|,
 literal|0
 block|,
 literal|"SigmaTel STAC9701/9703/9704/9705"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -723,6 +804,8 @@ block|,
 literal|0
 block|,
 literal|"SigmaTel STAC9704"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -731,6 +814,8 @@ block|,
 literal|0
 block|,
 literal|"SigmaTel STAC9708/9711"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -739,6 +824,8 @@ block|,
 literal|0
 block|,
 literal|"SigmaTel STAC9721/9723"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -747,6 +834,8 @@ block|,
 literal|0
 block|,
 literal|"SigmaTel STAC9744"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -755,6 +844,8 @@ block|,
 literal|0
 block|,
 literal|"SigmaTel STAC9756/9757"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -763,6 +854,8 @@ block|,
 literal|0
 block|,
 literal|"Silicon Laboratory Si3036"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -771,6 +864,8 @@ block|,
 literal|0
 block|,
 literal|"Silicon Laboratory Si3038"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -779,6 +874,8 @@ block|,
 literal|0
 block|,
 literal|"TriTech TR?????"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -787,6 +884,8 @@ block|,
 literal|0
 block|,
 literal|"TriTech TR28026"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -795,6 +894,8 @@ block|,
 literal|0
 block|,
 literal|"TriTech TR28028"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -803,6 +904,8 @@ block|,
 literal|0
 block|,
 literal|"TriTech TR28602"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -811,6 +914,8 @@ block|,
 literal|0
 block|,
 literal|"Wolfson WM9701A"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -819,6 +924,8 @@ block|,
 literal|0
 block|,
 literal|"Wolfson WM9703/9704"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -827,6 +934,8 @@ block|,
 literal|0
 block|,
 literal|"Wolfson WM9704 (quad)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -835,6 +944,8 @@ block|,
 literal|0
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|}
 decl_stmt|;
@@ -986,9 +1097,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|u_int16_t
-name|rdcd
+name|ac97_rdcd
 parameter_list|(
 name|struct
 name|ac97_info
@@ -1017,9 +1127,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|wrcd
+name|ac97_wrcd
 parameter_list|(
 name|struct
 name|ac97_info
@@ -1067,7 +1176,7 @@ name|i
 decl_stmt|,
 name|ps
 decl_stmt|;
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1092,7 +1201,7 @@ control|)
 block|{
 name|ps
 operator|=
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1202,7 +1311,7 @@ name|v
 operator|>>=
 literal|1
 expr_stmt|;
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1214,7 +1323,7 @@ expr_stmt|;
 block|}
 name|v
 operator|=
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1300,7 +1409,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1313,7 +1422,7 @@ name|codec
 operator|->
 name|extstat
 operator|=
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1458,7 +1567,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1703,7 +1812,7 @@ block|{
 name|int
 name|cur
 init|=
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1754,7 +1863,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1798,7 +1907,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int ac97_getmixer(struct ac97_info *codec, int channel) { 	struct ac97mixtable_entry *e =&codec->mix[channel]; 	if (channel< SOUND_MIXER_NRDEVICES&& e->reg != 0) { 		int max, val, volume;  		max = (1<< e->bits) - 1; 		val = rdcd(code, e->reg); 		if (val == AC97_MUTE&& e->mute == 1) 			volume = 0; 		else { 			if (e->stereo == 0) val>>= e->ofs; 			val&= max; 			volume = (val * 100) / max; 			if (e->reg> 0) volume = 100 - volume; 		} 		return volume; 	} else 		return -1; }
+unit|static int ac97_getmixer(struct ac97_info *codec, int channel) { 	struct ac97mixtable_entry *e =&codec->mix[channel]; 	if (channel< SOUND_MIXER_NRDEVICES&& e->reg != 0) { 		int max, val, volume;  		max = (1<< e->bits) - 1; 		val = ac97_rdcd(code, e->reg); 		if (val == AC97_MUTE&& e->mute == 1) 			volume = 0; 		else { 			if (e->stereo == 0) val>>= e->ofs; 			val&= max; 			volume = (val * 100) / max; 			if (e->reg> 0) volume = 100 - volume; 		} 		return volume; 	} else 		return -1; }
 endif|#
 directive|endif
 end_endif
@@ -1836,7 +1945,7 @@ name|extcaps
 operator|&
 name|AC97_EXTCAP_SDAC
 operator|&&
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -1916,6 +2025,9 @@ modifier|*
 name|codec
 parameter_list|)
 block|{
+name|ac97_patch
+name|codec_patch
+decl_stmt|;
 name|unsigned
 name|i
 decl_stmt|,
@@ -1979,7 +2091,7 @@ return|return
 name|ENODEV
 return|;
 block|}
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2003,7 +2115,7 @@ argument_list|(
 name|codec
 argument_list|)
 expr_stmt|;
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2024,7 +2136,7 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2054,7 +2166,7 @@ expr_stmt|;
 name|id
 operator|=
 operator|(
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2064,7 +2176,7 @@ operator|<<
 literal|16
 operator|)
 operator||
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2124,6 +2236,10 @@ name|id
 operator|=
 name|NULL
 expr_stmt|;
+name|codec_patch
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2175,6 +2291,15 @@ index|]
 operator|.
 name|noext
 expr_stmt|;
+name|codec_patch
+operator|=
+name|ac97codecid
+index|[
+name|i
+index|]
+operator|.
+name|patch
+expr_stmt|;
 block|}
 block|}
 name|codec
@@ -2205,7 +2330,7 @@ condition|)
 block|{
 name|i
 operator|=
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2243,7 +2368,7 @@ name|codec
 operator|->
 name|extstat
 operator|=
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2282,6 +2407,15 @@ index|]
 expr_stmt|;
 block|}
 name|ac97_fix_auxout
+argument_list|(
+name|codec
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|codec_patch
+condition|)
+name|codec_patch
 argument_list|(
 name|codec
 argument_list|)
@@ -2337,7 +2471,7 @@ condition|)
 block|{
 name|old
 operator|=
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2351,7 +2485,7 @@ operator|.
 name|reg
 argument_list|)
 expr_stmt|;
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2369,7 +2503,7 @@ argument_list|)
 expr_stmt|;
 name|j
 operator|=
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2383,7 +2517,7 @@ operator|.
 name|reg
 argument_list|)
 expr_stmt|;
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2690,7 +2824,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2786,7 +2920,7 @@ return|return
 name|ENODEV
 return|;
 block|}
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2810,7 +2944,7 @@ argument_list|(
 name|codec
 argument_list|)
 expr_stmt|;
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2837,7 +2971,7 @@ operator|->
 name|noext
 condition|)
 block|{
-name|wrcd
+name|ac97_wrcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2851,7 +2985,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2877,7 +3011,7 @@ name|codec
 operator|->
 name|extstat
 argument_list|,
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
@@ -2891,7 +3025,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|rdcd
+name|ac97_rdcd
 argument_list|(
 name|codec
 argument_list|,
