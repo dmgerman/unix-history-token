@@ -1100,12 +1100,6 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1118,13 +1112,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|msleep
@@ -1159,7 +1146,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-block|}
 name|td
 operator|->
 name|td_flags
