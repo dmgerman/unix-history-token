@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	4.8	83/02/05	*/
+comment|/*	ip_var.h	4.9	83/02/23	*/
 end_comment
 
 begin_comment
@@ -177,6 +177,18 @@ name|int
 name|ips_tooshort
 decl_stmt|;
 comment|/* packet too short */
+name|int
+name|ips_toosmall
+decl_stmt|;
+comment|/* not enough data */
+name|int
+name|ips_badhlen
+decl_stmt|;
+comment|/* ip header length< data size */
+name|int
+name|ips_badlen
+decl_stmt|;
+comment|/* ip length< ip header length */
 block|}
 struct|;
 end_struct
