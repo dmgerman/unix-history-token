@@ -5396,7 +5396,7 @@ argument_list|,
 comment|/* maxsegsz*/
 name|BUS_DMA_ALLOCNOW
 operator||
-name|BUS_DMAMEM_NOSYNC
+name|BUS_DMA_COHERENT
 argument_list|,
 comment|/* flags*/
 operator|&
@@ -5446,7 +5446,7 @@ argument_list|,
 comment|/* KV addr of the allocated memory */
 name|BUS_DMA_NOWAIT
 operator||
-name|BUS_DMAMEM_NOSYNC
+name|BUS_DMA_COHERENT
 argument_list|,
 comment|/* flags */
 operator|&

@@ -4045,12 +4045,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BUS_DMAMEM_NOSYNC
+name|BUS_DMA_COHERENT
 value|0x04
 end_define
 
 begin_comment
-comment|/* map memory to not require sync */
+comment|/* hint: map memory in a coherent way */
 end_comment
 
 begin_define
