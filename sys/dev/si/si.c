@@ -8619,24 +8619,6 @@ name|sp_delta_overflows
 operator|++
 expr_stmt|;
 block|}
-comment|/* 					 * doesn't seem to be much point doing 					 * this here.. this driver has no 					 * softtty processing! ?? 					 */
-if|if
-condition|(
-name|pp
-operator|->
-name|sp_hotchar
-operator|&&
-name|i
-operator|==
-name|pp
-operator|->
-name|sp_hotchar
-condition|)
-block|{
-name|setsofttty
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 block|}
 goto|goto
