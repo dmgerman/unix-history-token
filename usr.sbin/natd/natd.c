@@ -6,36 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -49,24 +19,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_include
@@ -126,13 +78,67 @@ end_include
 begin_include
 include|#
 directive|include
+file|<alias.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<alias.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -665,20 +671,13 @@ name|ifName
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Aliasing address not given.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"aliasing address not given"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|aliasAddr
@@ -691,21 +690,13 @@ name|ifName
 operator|!=
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Both alias address and interface name "
-literal|"are not allowed.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"both alias address and interface name are not allowed"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/*  * Check that valid port number is known.  */
 if|if
 condition|(
@@ -727,21 +718,13 @@ name|outPort
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Both input and output ports"
-literal|" are required.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"both input and output ports are required"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|inPort
@@ -1560,11 +1543,9 @@ operator|!=
 literal|'-'
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Invalid option %s.\n"
+literal|"invalid option %s"
 argument_list|,
 name|opt
 argument_list|)
@@ -1740,7 +1721,7 @@ name|EINTR
 condition|)
 name|Warn
 argument_list|(
-literal|"Read from divert socket failed."
+literal|"read from divert socket failed"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2059,7 +2040,7 @@ name|sprintf
 argument_list|(
 name|msgBuf
 argument_list|,
-literal|"Failed to write packet back."
+literal|"failed to write packet back"
 argument_list|)
 expr_stmt|;
 name|Warn
@@ -2117,7 +2098,7 @@ condition|)
 block|{
 name|Warn
 argument_list|(
-literal|"Read from routing socket failed."
+literal|"read from routing socket failed"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2133,7 +2114,7 @@ condition|)
 block|{
 name|Warn
 argument_list|(
-literal|"Unexpected packet read from routing socket."
+literal|"unexpected packet read from routing socket"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2738,7 +2719,7 @@ name|msg
 argument_list|)
 expr_stmt|;
 else|else
-name|perror
+name|warn
 argument_list|(
 name|msg
 argument_list|)
@@ -3294,11 +3275,9 @@ operator|>=
 name|max
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unknown option %s.\n"
+literal|"unknown option %s"
 argument_list|,
 name|option
 argument_list|)
@@ -3369,22 +3348,15 @@ operator|=
 literal|0
 expr_stmt|;
 else|else
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s needs yes/no parameter.\n"
+literal|"%s needs yes/no parameter"
 argument_list|,
 name|option
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|Service
@@ -3394,23 +3366,15 @@ condition|(
 operator|!
 name|parms
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s needs service name or "
-literal|"port number  parameter.\n"
+literal|"%s needs service name or port number parameter"
 argument_list|,
 name|option
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|numValue
 operator|=
 name|StrToPort
@@ -3451,22 +3415,15 @@ name|end
 operator|==
 name|parms
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s needs numeric parameter.\n"
+literal|"%s needs numeric parameter"
 argument_list|,
 name|option
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|String
@@ -3480,22 +3437,15 @@ condition|(
 operator|!
 name|strValue
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s needs parameter.\n"
+literal|"%s needs parameter"
 argument_list|,
 name|option
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|None
@@ -3504,22 +3454,15 @@ if|if
 condition|(
 name|parms
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s does not take parameters.\n"
+literal|"%s does not take parameters"
 argument_list|,
 name|option
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|Address
@@ -3529,22 +3472,15 @@ condition|(
 operator|!
 name|parms
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s needs address/host parameter.\n"
+literal|"%s needs address/host parameter"
 argument_list|,
 name|option
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|StrToAddr
 argument_list|(
 name|parms
@@ -3794,22 +3730,15 @@ condition|(
 operator|!
 name|ptr
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"config line too link: %s\n"
+literal|"config line too link: %s"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
 name|ptr
 operator|=
@@ -4106,20 +4035,13 @@ condition|(
 operator|!
 name|protoName
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"permanent_link: missing protocol.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"permanent_link: missing protocol"
 argument_list|)
 expr_stmt|;
-block|}
 name|proto
 operator|=
 name|StrToProto
@@ -4142,20 +4064,13 @@ condition|(
 operator|!
 name|ptr
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"permanent_link: missing src address.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"permanent_link: missing src address"
 argument_list|)
 expr_stmt|;
-block|}
 name|srcPort
 operator|=
 name|StrToAddrAndPort
@@ -4183,20 +4098,13 @@ condition|(
 operator|!
 name|ptr
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"permanent_link: missing dst address.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"permanent_link: missing dst address"
 argument_list|)
 expr_stmt|;
-block|}
 name|dstPort
 operator|=
 name|StrToAddrAndPort
@@ -4224,20 +4132,13 @@ condition|(
 operator|!
 name|ptr
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"permanent_link: missing alias port.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"permanent_link: missing alias port"
 argument_list|)
 expr_stmt|;
-block|}
 name|aliasPort
 operator|=
 name|StrToPort
@@ -4338,20 +4239,13 @@ condition|(
 operator|!
 name|protoName
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"redirect_port: missing protocol.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"redirect_port: missing protocol"
 argument_list|)
 expr_stmt|;
-block|}
 name|proto
 operator|=
 name|StrToProto
@@ -4374,20 +4268,13 @@ condition|(
 operator|!
 name|ptr
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"redirect_port: missing local address.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"redirect_port: missing local address"
 argument_list|)
 expr_stmt|;
-block|}
 name|localPort
 operator|=
 name|StrToAddrAndPort
@@ -4415,20 +4302,13 @@ condition|(
 operator|!
 name|ptr
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"redirect_port: missing public port.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"redirect_port: missing public port"
 argument_list|)
 expr_stmt|;
-block|}
 name|separator
 operator|=
 name|strchr
@@ -4610,20 +4490,13 @@ condition|(
 operator|!
 name|ptr
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"redirect_address: missing local address.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"redirect_address: missing local address"
 argument_list|)
 expr_stmt|;
-block|}
 name|StrToAddr
 argument_list|(
 name|ptr
@@ -4647,20 +4520,13 @@ condition|(
 operator|!
 name|ptr
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"redirect_address: missing public address.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"redirect_address: missing public address"
 argument_list|)
 expr_stmt|;
-block|}
 name|StrToAddr
 argument_list|(
 name|ptr
@@ -4720,22 +4586,15 @@ condition|(
 operator|!
 name|hp
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Unknown host %s.\n"
+literal|"unknown host %s"
 argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|memcpy
 argument_list|(
 name|addr
@@ -4817,24 +4676,17 @@ condition|(
 operator|!
 name|sp
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Unknown service %s/%s.\n"
+literal|"unknown service %s/%s"
 argument_list|,
 name|str
 argument_list|,
 name|proto
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 name|sp
 operator|->
@@ -4878,18 +4730,13 @@ condition|)
 return|return
 name|IPPROTO_UDP
 return|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Unknown protocol %s. Expected tcp or udp.\n"
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unknown protocol %s. Expected tcp or udp"
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 block|}
@@ -4931,22 +4778,15 @@ condition|(
 operator|!
 name|ptr
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s is missing port number.\n"
+literal|"%s is missing port number"
 argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
 name|ptr
 operator|=
