@@ -118,7 +118,6 @@ operator|(
 name|AE_BAD_PARAMETER
 operator|)
 return|;
-comment|/* XXX is it OK to block here? */
 name|at
 operator|=
 name|malloc
@@ -131,9 +130,21 @@ argument_list|)
 argument_list|,
 name|M_ACPITASK
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+comment|/* Interrupt Context */
+if|if
+condition|(
+name|at
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|AE_NO_MEMORY
+operator|)
+return|;
 name|bzero
 argument_list|(
 name|at
