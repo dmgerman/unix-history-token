@@ -6596,7 +6596,7 @@ operator|&&
 operator|(
 name|n
 operator|=
-name|digitoint
+name|digittoint
 argument_list|(
 name|c
 argument_list|)
