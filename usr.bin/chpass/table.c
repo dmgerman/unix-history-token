@@ -159,7 +159,7 @@ literal|"full name"
 block|,
 name|p_gecos
 block|,
-literal|1
+literal|0
 block|,
 literal|9
 block|,

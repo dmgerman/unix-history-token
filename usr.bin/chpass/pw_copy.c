@@ -387,6 +387,41 @@ condition|(
 operator|!
 name|done
 condition|)
+ifdef|#
+directive|ifdef
+name|YP
+comment|/* Ultra paranoid: shouldn't happen. */
+if|if
+condition|(
+name|getuid
+argument_list|()
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: not found in %s -- permission denied"
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|_PATH_MASTERPASSWD
+argument_list|)
+expr_stmt|;
+name|pw_error
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* YP */
 operator|(
 name|void
 operator|)
