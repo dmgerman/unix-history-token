@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 86 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 89 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -215,7 +215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetInternalNameLength  *  * PARAMETERS:  Info            - Info struct initialized with the   *                                external name pointer.  *  * RETURN:      Status  *  * DESCRIPTION: Calculate the length of the internal (AML) namestring   *              corresponding to the external (ASL) namestring.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetInternalNameLength  *  * PARAMETERS:  Info            - Info struct initialized with the  *                                external name pointer.  *  * RETURN:      Status  *  * DESCRIPTION: Calculate the length of the internal (AML) namestring  *              corresponding to the external (ASL) namestring.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -234,6 +234,9 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|NextExternalChar
 operator|=
 name|Info
@@ -381,7 +384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsBuildInternalName  *  * PARAMETERS:  Info            - Info struct fully initialized  *  * RETURN:      Status  *  * DESCRIPTION: Construct the internal (AML) namestring   *              corresponding to the external (ASL) namestring.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsBuildInternalName  *  * PARAMETERS:  Info            - Info struct fully initialized  *  * RETURN:      Status  *  * DESCRIPTION: Construct the internal (AML) namestring  *              corresponding to the external (ASL) namestring.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -427,7 +430,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiNsBuildInternalName"
+literal|"NsBuildInternalName"
 argument_list|)
 expr_stmt|;
 comment|/* Setup the correct prefixes, counts, and pointers */
@@ -1389,6 +1392,9 @@ name|ACPI_HANDLE
 name|Handle
 parameter_list|)
 block|{
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * Simple implementation for now;      * TBD: [Future] Real integer handles allow for more verification      * and keep all pointers within this subsystem!      */
 if|if
 condition|(
@@ -1812,7 +1818,7 @@ name|ParentNode
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"FindParentName"
+literal|"NsFindParentName"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1980,6 +1986,9 @@ modifier|*
 name|Node
 parameter_list|)
 block|{
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 5 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 7 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiExAcquireMutex"
+literal|"ExAcquireMutex"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -393,7 +393,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiExReleaseMutex"
+literal|"ExReleaseMutex"
 argument_list|)
 expr_stmt|;
 if|if
@@ -408,7 +408,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  The mutex must have been previously acquired in order to release it */
+comment|/* The mutex must have been previously acquired in order to release it */
 if|if
 condition|(
 operator|!
@@ -557,6 +557,9 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|This
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * Traverse the list of owned mutexes, releasing each one.      */
 while|while
 condition|(

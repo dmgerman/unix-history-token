@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 54 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -58,13 +58,13 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    _UtCreateInternalObject  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *              Type                - ACPI Type of the new object  *  * RETURN:      Object              - The new object.  Null on failure  *  * DESCRIPTION: Create and initialize a new internal object.  *  * NOTE:        We always allocate the worst-case object descriptor because  *              these objects are cached, and we want them to be  *              one-size-satisifies-any-request.  This in itself may not be  *              the most memory efficient, but the efficiency of the object  *              cache should more than make up for this!  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateInternalObjectDbg  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *              Type                - ACPI Type of the new object  *  * RETURN:      Object              - The new object.  Null on failure  *  * DESCRIPTION: Create and initialize a new internal object.  *  * NOTE:        We always allocate the worst-case object descriptor because  *              these objects are cached, and we want them to be  *              one-size-satisifies-any-request.  This in itself may not be  *              the most memory efficient, but the efficiency of the object  *              cache should more than make up for this!  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|_UtCreateInternalObject
+name|AcpiUtCreateInternalObjectDbg
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -86,7 +86,7 @@ name|Object
 decl_stmt|;
 name|FUNCTION_TRACE_STR
 argument_list|(
-literal|"UtCreateInternalObject"
+literal|"UtCreateInternalObjectDbg"
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -97,7 +97,7 @@ expr_stmt|;
 comment|/* Allocate the raw object descriptor */
 name|Object
 operator|=
-name|_UtAllocateObjectDesc
+name|AcpiUtAllocateObjectDescDbg
 argument_list|(
 name|ModuleName
 argument_list|,
@@ -300,13 +300,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    _UtAllocateObjectDesc  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      Pointer to newly allocated object descriptor.  Null on error  *  * DESCRIPTION: Allocate a new object descriptor.  Gracefully handle  *              error conditions.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAllocateObjectDescDbg  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      Pointer to newly allocated object descriptor.  Null on error  *  * DESCRIPTION: Allocate a new object descriptor.  Gracefully handle  *              error conditions.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|_UtAllocateObjectDesc
+name|AcpiUtAllocateObjectDescDbg
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -325,7 +325,7 @@ name|Object
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"_AllocateObjectDesc"
+literal|"UtAllocateObjectDescDbg"
 argument_list|)
 expr_stmt|;
 name|Object
@@ -408,7 +408,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiUtDeleteObjectDesc"
+literal|"UtDeleteObjectDesc"
 argument_list|,
 name|Object
 argument_list|)
@@ -1016,6 +1016,9 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(

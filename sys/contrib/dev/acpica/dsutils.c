@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 68 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 72 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -86,6 +86,7 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|ParentInfo
@@ -567,6 +568,11 @@ decl_stmt|;
 name|OPERATING_MODE
 name|InterpreterMode
 decl_stmt|;
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
 literal|"DsCreateOperand"
@@ -647,15 +653,23 @@ name|Arg
 operator|->
 name|Parent
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|AcpiPsIsNodeOp
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|ParentOp
 operator|->
 name|Opcode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NSNODE
 operator|)
 operator|&&
 operator|(
@@ -1303,6 +1317,7 @@ name|DataType
 init|=
 name|INTERNAL_TYPE_INVALID
 decl_stmt|;
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
@@ -1588,6 +1603,9 @@ block|{
 name|ACPI_OBJECT_TYPE8
 name|DataType
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* Decode Opcode */
 switch|switch
 condition|(

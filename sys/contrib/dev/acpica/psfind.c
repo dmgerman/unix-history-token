@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 25 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 28 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -149,12 +149,26 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|Field
 decl_stmt|;
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
 comment|/* search scope level for matching name segment */
 name|Op
 operator|=
 name|AcpiPsGetChild
 argument_list|(
 name|Scope
+argument_list|)
+expr_stmt|;
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|Op
+operator|->
+name|Opcode
 argument_list|)
 expr_stmt|;
 while|while
@@ -164,12 +178,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|AcpiPsIsFieldOp
-argument_list|(
-name|Op
+name|OpInfo
 operator|->
-name|Opcode
-argument_list|)
+name|Flags
+operator|&
+name|AML_FIELD
 condition|)
 block|{
 comment|/* Field, search named fields */
@@ -185,14 +198,24 @@ condition|(
 name|Field
 condition|)
 block|{
-if|if
-condition|(
-name|AcpiPsIsNamedOp
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Field
 operator|->
 name|Opcode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NAMED
+operator|)
 operator|&&
 name|AcpiPsGetName
 argument_list|(
@@ -230,12 +253,11 @@ block|}
 elseif|else
 if|if
 condition|(
-name|AcpiPsIsCreateFieldOp
-argument_list|(
-name|Op
+name|OpInfo
 operator|->
-name|Opcode
-argument_list|)
+name|Flags
+operator|&
+name|AML_CREATE
 condition|)
 block|{
 if|if
@@ -317,12 +339,11 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|AcpiPsIsNamedOp
-argument_list|(
-name|Op
+name|OpInfo
 operator|->
-name|Opcode
-argument_list|)
+name|Flags
+operator|&
+name|AML_NAMED
 operator|)
 operator|&&
 operator|(

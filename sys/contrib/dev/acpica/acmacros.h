@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 86 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 94 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1018,7 +1018,7 @@ value|(((value) + ((boundary)-1)) / (boundary))
 end_define
 
 begin_comment
-comment|/*   * Bitmask creation  * Bit positions start at zero.  * MASK_BITS_ABOVE creates a mask starting AT the position and above  * MASK_BITS_BELOW creates a mask starting one bit BELOW the position  */
+comment|/*  * Bitmask creation  * Bit positions start at zero.  * MASK_BITS_ABOVE creates a mask starting AT the position and above  * MASK_BITS_BELOW creates a mask starting one bit BELOW the position  */
 end_comment
 
 begin_define
@@ -1263,17 +1263,17 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|OP_INFO_ENTRY
+name|ACPI_OP
 parameter_list|(
-name|Flags
-parameter_list|,
 name|Name
 parameter_list|,
 name|PArgs
 parameter_list|,
 name|IArgs
+parameter_list|,
+name|Flags
 parameter_list|)
-value|{Flags,PArgs,IArgs,Name}
+value|{PArgs,IArgs,Flags,Name}
 end_define
 
 begin_else
@@ -1284,17 +1284,17 @@ end_else
 begin_define
 define|#
 directive|define
-name|OP_INFO_ENTRY
+name|ACPI_OP
 parameter_list|(
-name|Flags
-parameter_list|,
 name|Name
 parameter_list|,
 name|PArgs
 parameter_list|,
 name|IArgs
+parameter_list|,
+name|Flags
 parameter_list|)
-value|{Flags,PArgs,IArgs}
+value|{PArgs,IArgs,Flags}
 end_define
 
 begin_endif
@@ -1638,7 +1638,7 @@ name|REPORT_INFO
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportInfo(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportInfo(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1648,7 +1648,7 @@ name|REPORT_ERROR
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportError(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportError(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1658,7 +1658,7 @@ name|REPORT_WARNING
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportWarning(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportWarning(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_else
@@ -1673,7 +1673,7 @@ name|REPORT_INFO
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportInfo("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportInfo("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1683,7 +1683,7 @@ name|REPORT_ERROR
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportError("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportError("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1693,7 +1693,7 @@ name|REPORT_WARNING
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportWarning("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportWarning("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_endif
@@ -1718,7 +1718,7 @@ name|c
 parameter_list|,
 name|fp
 parameter_list|)
-value|{_ReportInfo(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportInfo(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1734,7 +1734,7 @@ name|c
 parameter_list|,
 name|fp
 parameter_list|)
-value|{_ReportError(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportError(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1750,23 +1750,7 @@ name|c
 parameter_list|,
 name|fp
 parameter_list|)
-value|{_ReportWarning(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
-end_define
-
-begin_comment
-comment|/* Buffer dump macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DUMP_BUFFER
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|AcpiUtDumpBuffer((UINT8 *)a,b,DB_BYTE_DISPLAY,_COMPONENT)
+value|{AcpiUtReportWarning(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_comment
@@ -1800,7 +1784,7 @@ name|PROC_NAME
 parameter_list|(
 name|a
 parameter_list|)
-value|char * _ProcName = a;
+value|ACPI_DEBUG_PRINT_INFO _Dbg;     \                                         _Dbg.ComponentId = _COMPONENT;  \                                         _Dbg.ProcName    = a;           \                                         _Dbg.ModuleName  = _THIS_MODULE;
 end_define
 
 begin_define
@@ -1810,7 +1794,7 @@ name|FUNCTION_TRACE
 parameter_list|(
 name|a
 parameter_list|)
-value|char * _ProcName = a;\                                         FunctionTrace(_THIS_MODULE,__LINE__,_COMPONENT,a)
+value|PROC_NAME(a)\                                         AcpiUtTrace(__LINE__,&_Dbg)
 end_define
 
 begin_define
@@ -1822,7 +1806,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|char * _ProcName = a;\                                         FunctionTracePtr(_THIS_MODULE,__LINE__,_COMPONENT,a,(void *)b)
+value|PROC_NAME(a)\                                         AcpiUtTracePtr(__LINE__,&_Dbg,(void *)b)
 end_define
 
 begin_define
@@ -1834,7 +1818,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|char * _ProcName = a;\                                         FunctionTraceU32(_THIS_MODULE,__LINE__,_COMPONENT,a,(UINT32)b)
+value|PROC_NAME(a)\                                         AcpiUtTraceU32(__LINE__,&_Dbg,(UINT32)b)
 end_define
 
 begin_define
@@ -1846,7 +1830,15 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|char * _ProcName = a;\                                         FunctionTraceStr(_THIS_MODULE,__LINE__,_COMPONENT,a,(NATIVE_CHAR *)b)
+value|PROC_NAME(a)\                                         AcpiUtTraceStr(__LINE__,&_Dbg,(NATIVE_CHAR *)b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_ENTRY
+parameter_list|()
+value|AcpiUtTrackStackPtr()
 end_define
 
 begin_comment
@@ -1857,7 +1849,7 @@ begin_define
 define|#
 directive|define
 name|return_VOID
-value|{FunctionExit(_THIS_MODULE,__LINE__,_COMPONENT,_ProcName);return;}
+value|{AcpiUtExit(__LINE__,&_Dbg);return;}
 end_define
 
 begin_define
@@ -1867,7 +1859,7 @@ name|return_ACPI_STATUS
 parameter_list|(
 name|s
 parameter_list|)
-value|{FunctionStatusExit(_THIS_MODULE,__LINE__,_COMPONENT,_ProcName,s);return(s);}
+value|{AcpiUtStatusExit(__LINE__,&_Dbg,s);return(s);}
 end_define
 
 begin_define
@@ -1877,7 +1869,7 @@ name|return_VALUE
 parameter_list|(
 name|s
 parameter_list|)
-value|{FunctionValueExit(_THIS_MODULE,__LINE__,_COMPONENT,_ProcName,s);return(s);}
+value|{AcpiUtValueExit(__LINE__,&_Dbg,s);return(s);}
 end_define
 
 begin_define
@@ -1887,7 +1879,7 @@ name|return_PTR
 parameter_list|(
 name|s
 parameter_list|)
-value|{FunctionPtrExit(_THIS_MODULE,__LINE__,_COMPONENT,_ProcName,(UINT8 *)s);return(s);}
+value|{AcpiUtPtrExit(__LINE__,&_Dbg,(UINT8 *)s);return(s);}
 end_define
 
 begin_comment
@@ -2025,6 +2017,18 @@ parameter_list|(
 name|a
 parameter_list|)
 value|AcpiRsDumpResourceList(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DUMP_BUFFER
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|AcpiUtDumpBuffer((UINT8 *)a,b,DB_BYTE_DISPLAY,_COMPONENT)
 end_define
 
 begin_define
@@ -2246,6 +2250,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FUNCTION_ENTRY
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
 name|DUMP_STACK_ENTRY
 parameter_list|(
 name|a
@@ -2312,6 +2323,17 @@ directive|define
 name|DUMP_RESOURCE_LIST
 parameter_list|(
 name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DUMP_BUFFER
+parameter_list|(
+name|a
+parameter_list|,
+name|b
 parameter_list|)
 end_define
 
@@ -2612,6 +2634,13 @@ end_endif
 begin_comment
 comment|/* ACPI_DBG_TRACK_ALLOCATIONS */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_STACK_POINTER
+value|_asm {mov eax, ebx}
+end_define
 
 begin_endif
 endif|#

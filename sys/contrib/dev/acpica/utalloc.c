@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utalloc - local cache and memory allocation routines  *              $Revision: 95 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utalloc - local cache and memory allocation routines  *              $Revision: 100 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -77,6 +77,9 @@ name|ACPI_MEMORY_LIST
 modifier|*
 name|CacheInfo
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* If walk cache is full, just free this wallkstate object */
 name|CacheInfo
 operator|=
@@ -177,7 +180,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiUtAcquireFromCache  *  * PARAMETERS:  ListId              - Memory list ID  *  * RETURN:      A requested object.  NULL if the object could not be   *              allocated.  *  * DESCRIPTION: Get an object from the specified cache.  If cache is empty,  *              the object is allocated.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiUtAcquireFromCache  *  * PARAMETERS:  ListId              - Memory list ID  *  * RETURN:      A requested object.  NULL if the object could not be  *              allocated.  *  * DESCRIPTION: Get an object from the specified cache.  If cache is empty,  *              the object is allocated.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -199,7 +202,7 @@ name|Object
 decl_stmt|;
 name|PROC_NAME
 argument_list|(
-literal|"AcpiUtAcquireFromCache"
+literal|"UtAcquireFromCache"
 argument_list|)
 expr_stmt|;
 name|CacheInfo
@@ -275,19 +278,29 @@ operator|->
 name|CacheDepth
 operator|--
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_DBG_TRACK_ALLOCATIONS
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Object %p from cache %d\n"
+literal|"Object %p from %s\n"
 operator|,
 name|Object
 operator|,
+name|AcpiGbl_MemoryLists
+index|[
 name|ListId
+index|]
+operator|.
+name|ListName
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
@@ -361,6 +374,9 @@ name|char
 modifier|*
 name|Next
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|CacheInfo
 operator|=
 operator|&
@@ -430,7 +446,7 @@ name|ACPI_DBG_TRACK_ALLOCATIONS
 end_ifdef
 
 begin_comment
-comment|/*  * These procedures are used for tracking memory leaks in the subsystem, and  * they get compiled out when the ACPI_DBG_TRACK_ALLOCATIONS is not set.  *  * Each memory allocation is tracked via a doubly linked list.  Each  * element contains the caller's component, module name, function name, and  * line number.  AcpiUtAllocate and AcpiUtCallocate call   * AcpiUtAddElementToAllocList to add an element to the list; deletion   * occurs in the body of AcpiUtFree.  */
+comment|/*  * These procedures are used for tracking memory leaks in the subsystem, and  * they get compiled out when the ACPI_DBG_TRACK_ALLOCATIONS is not set.  *  * Each memory allocation is tracked via a doubly linked list.  Each  * element contains the caller's component, module name, function name, and  * line number.  AcpiUtAllocate and AcpiUtCallocate call  * AcpiUtAddElementToAllocList to add an element to the list; deletion  * occurs in the body of AcpiUtFree.  */
 end_comment
 
 begin_comment
@@ -454,6 +470,9 @@ name|ACPI_DEBUG_MEM_BLOCK
 modifier|*
 name|Element
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ListId
@@ -1280,7 +1299,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-literal|"AcpiUtAllocate"
+literal|"UtAllocate"
 argument_list|,
 name|Size
 argument_list|)
@@ -1465,7 +1484,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-literal|"AcpiUtCallocate"
+literal|"UtCallocate"
 argument_list|,
 name|Size
 argument_list|)
@@ -1648,7 +1667,7 @@ name|DebugBlock
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiUtFree"
+literal|"UtFree"
 argument_list|,
 name|Address
 argument_list|)

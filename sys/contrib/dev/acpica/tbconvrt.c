@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 25 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 27 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTableCount  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTableCount  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION: Calculate the number of tables  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -71,6 +71,9 @@ block|{
 name|UINT32
 name|PointerSize
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|_IA64
@@ -124,7 +127,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertToXsdt  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertToXsdt  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION: Convert an RSDT to an XSDT (internal common format)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -150,6 +153,9 @@ name|XSDT_DESCRIPTOR
 modifier|*
 name|NewTable
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 operator|*
 name|NumberOfTables
 operator|=
@@ -427,7 +433,7 @@ name|TableDesc
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiTbConvertTableFadt"
+literal|"TbConvertTableFadt"
 argument_list|)
 expr_stmt|;
 comment|/* AcpiGbl_FADT is valid */
@@ -1381,7 +1387,7 @@ name|FACS2
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiTbBuildCommonFacs"
+literal|"TbBuildCommonFacs"
 argument_list|)
 expr_stmt|;
 comment|/* Allocate a common FACS */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 18 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 19 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2902,7 +2902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsAddress64Stream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status   *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsAddress64Stream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's return buffer  *              BytesConsumed           - UINT32 pointer that is filled with  *                                        the number of bytes of the  *                                        OutputBuffer used  *  * RETURN:      Status  *  * DESCRIPTION: Take the linked list resource structure and fills in the  *              the appropriate bytes in a byte stream  *  ******************************************************************************/
 end_comment
 
 begin_function

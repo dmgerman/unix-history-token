@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 44 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 47 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -63,13 +63,6 @@ literal|"dbfileio"
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|root
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -85,7 +78,7 @@ end_include
 begin_decl_stmt
 name|FILE
 modifier|*
-name|DebugFile
+name|AcpiGbl_DebugFile
 init|=
 name|NULL
 decl_stmt|;
@@ -213,19 +206,19 @@ directive|ifdef
 name|ACPI_APPLICATION
 if|if
 condition|(
-name|DebugFile
+name|AcpiGbl_DebugFile
 condition|)
 block|{
 name|fclose
 argument_list|(
-name|DebugFile
+name|AcpiGbl_DebugFile
 argument_list|)
 expr_stmt|;
-name|DebugFile
+name|AcpiGbl_DebugFile
 operator|=
 name|NULL
 expr_stmt|;
-name|OutputToFile
+name|AcpiGbl_DbOutputToFile
 operator|=
 name|FALSE
 expr_stmt|;
@@ -233,7 +226,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Debug output file %s closed\n"
 argument_list|,
-name|DebugFilename
+name|AcpiGbl_DbDebugFilename
 argument_list|)
 expr_stmt|;
 block|}
@@ -261,7 +254,7 @@ name|ACPI_APPLICATION
 name|AcpiDbCloseDebugFile
 argument_list|()
 expr_stmt|;
-name|DebugFile
+name|AcpiGbl_DebugFile
 operator|=
 name|fopen
 argument_list|(
@@ -272,7 +265,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|DebugFile
+name|AcpiGbl_DebugFile
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -284,12 +277,12 @@ argument_list|)
 expr_stmt|;
 name|STRCPY
 argument_list|(
-name|DebugFilename
+name|AcpiGbl_DbDebugFilename
 argument_list|,
 name|Name
 argument_list|)
 expr_stmt|;
-name|OutputToFile
+name|AcpiGbl_DbOutputToFile
 operator|=
 name|TRUE
 expr_stmt|;

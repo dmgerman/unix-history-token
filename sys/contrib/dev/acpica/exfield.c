@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 92 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 95 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -626,7 +626,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiExAccessBufferField"
+literal|"ExAccessBufferField"
 argument_list|,
 name|ObjDesc
 argument_list|)

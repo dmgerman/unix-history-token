@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 107 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 109 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -747,7 +747,7 @@ name|ADDR_HANDLER_DEFAULT_INSTALLED
 operator|)
 condition|)
 block|{
-comment|/* We just returned from a non-default handler, we must re-enter the         interpreter */
+comment|/*          * We just returned from a non-default handler, we must re-enter the          * interpreter          */
 name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;

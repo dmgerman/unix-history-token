@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: pstree - Parser op tree manipulation/traversal/search  *              $Revision: 30 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: pstree - Parser op tree manipulation/traversal/search  *              $Revision: 32 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -68,10 +68,14 @@ name|Arg
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* Get the info structure for this opcode */
 name|OpInfo
 operator|=
@@ -173,10 +177,14 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|PrevArg
 decl_stmt|;
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -317,6 +325,9 @@ name|Child
 init|=
 name|NULL
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|Op
@@ -450,6 +461,9 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|Arg
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!

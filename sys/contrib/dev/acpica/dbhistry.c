@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dbhistry - debugger HISTORY command  *              $Revision: 18 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dbhistry - debugger HISTORY command  *              $Revision: 19 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -129,7 +129,7 @@ end_typedef
 
 begin_decl_stmt
 name|HISTORY_INFO
-name|HistoryBuffer
+name|AcpiGbl_HistoryBuffer
 index|[
 name|HISTORY_SIZE
 index|]
@@ -138,7 +138,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|UINT16
-name|LoHistory
+name|AcpiGbl_LoHistory
 init|=
 literal|0
 decl_stmt|;
@@ -146,7 +146,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|UINT16
-name|NumHistory
+name|AcpiGbl_NumHistory
 init|=
 literal|0
 decl_stmt|;
@@ -154,7 +154,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|UINT16
-name|NextHistoryIndex
+name|AcpiGbl_NextHistoryIndex
 init|=
 literal|0
 decl_stmt|;
@@ -162,7 +162,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|UINT32
-name|NextCmdNum
+name|AcpiGbl_NextCmdNum
 init|=
 literal|1
 decl_stmt|;
@@ -184,9 +184,9 @@ block|{
 comment|/* Put command into the next available slot */
 name|STRCPY
 argument_list|(
-name|HistoryBuffer
+name|AcpiGbl_HistoryBuffer
 index|[
-name|NextHistoryIndex
+name|AcpiGbl_NextHistoryIndex
 index|]
 operator|.
 name|Command
@@ -194,73 +194,73 @@ argument_list|,
 name|CommandLine
 argument_list|)
 expr_stmt|;
-name|HistoryBuffer
+name|AcpiGbl_HistoryBuffer
 index|[
-name|NextHistoryIndex
+name|AcpiGbl_NextHistoryIndex
 index|]
 operator|.
 name|CmdNum
 operator|=
-name|NextCmdNum
+name|AcpiGbl_NextCmdNum
 expr_stmt|;
 comment|/* Adjust indexes */
 if|if
 condition|(
 operator|(
-name|NumHistory
+name|AcpiGbl_NumHistory
 operator|==
 name|HISTORY_SIZE
 operator|)
 operator|&&
 operator|(
-name|NextHistoryIndex
+name|AcpiGbl_NextHistoryIndex
 operator|==
-name|LoHistory
+name|AcpiGbl_LoHistory
 operator|)
 condition|)
 block|{
-name|LoHistory
+name|AcpiGbl_LoHistory
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|LoHistory
+name|AcpiGbl_LoHistory
 operator|>=
 name|HISTORY_SIZE
 condition|)
 block|{
-name|LoHistory
+name|AcpiGbl_LoHistory
 operator|=
 literal|0
 expr_stmt|;
 block|}
 block|}
-name|NextHistoryIndex
+name|AcpiGbl_NextHistoryIndex
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|NextHistoryIndex
+name|AcpiGbl_NextHistoryIndex
 operator|>=
 name|HISTORY_SIZE
 condition|)
 block|{
-name|NextHistoryIndex
+name|AcpiGbl_NextHistoryIndex
 operator|=
 literal|0
 expr_stmt|;
 block|}
-name|NextCmdNum
+name|AcpiGbl_NextCmdNum
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|NumHistory
+name|AcpiGbl_NumHistory
 operator|<
 name|HISTORY_SIZE
 condition|)
 block|{
-name|NumHistory
+name|AcpiGbl_NumHistory
 operator|++
 expr_stmt|;
 block|}
@@ -286,7 +286,7 @@ name|HistoryIndex
 decl_stmt|;
 name|HistoryIndex
 operator|=
-name|LoHistory
+name|AcpiGbl_LoHistory
 expr_stmt|;
 comment|/* Dump entire history buffer */
 for|for
@@ -297,7 +297,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NumHistory
+name|AcpiGbl_NumHistory
 condition|;
 name|i
 operator|++
@@ -307,14 +307,14 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%ld  %s\n"
 argument_list|,
-name|HistoryBuffer
+name|AcpiGbl_HistoryBuffer
 index|[
 name|HistoryIndex
 index|]
 operator|.
 name|CmdNum
 argument_list|,
-name|HistoryBuffer
+name|AcpiGbl_HistoryBuffer
 index|[
 name|HistoryIndex
 index|]
@@ -373,7 +373,7 @@ condition|)
 block|{
 name|CmdNum
 operator|=
-name|NextCmdNum
+name|AcpiGbl_NextCmdNum
 operator|-
 literal|1
 expr_stmt|;
@@ -395,7 +395,7 @@ block|}
 comment|/* Search history buffer */
 name|HistoryIndex
 operator|=
-name|LoHistory
+name|AcpiGbl_LoHistory
 expr_stmt|;
 for|for
 control|(
@@ -405,7 +405,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NumHistory
+name|AcpiGbl_NumHistory
 condition|;
 name|i
 operator|++
@@ -413,7 +413,7 @@ control|)
 block|{
 if|if
 condition|(
-name|HistoryBuffer
+name|AcpiGbl_HistoryBuffer
 index|[
 name|HistoryIndex
 index|]
@@ -426,7 +426,7 @@ block|{
 comment|/* Found the commnad, return it */
 return|return
 operator|(
-name|HistoryBuffer
+name|AcpiGbl_HistoryBuffer
 index|[
 name|HistoryIndex
 index|]

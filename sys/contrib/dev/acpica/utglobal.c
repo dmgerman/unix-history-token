@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 127 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 131 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -77,6 +77,7 @@ name|ACPI_STATUS
 name|Status
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|Exception
@@ -338,6 +339,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|UINT8
 name|AcpiGbl_DecodeTo8bit
 index|[
@@ -364,6 +366,33 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|const
+name|NATIVE_CHAR
+modifier|*
+name|AcpiGbl_DbSleepStates
+index|[
+name|ACPI_NUM_SLEEP_STATES
+index|]
+init|=
+block|{
+literal|"\\_S0_"
+block|,
+literal|"\\_S1_"
+block|,
+literal|"\\_S2_"
+block|,
+literal|"\\_S3_"
+block|,
+literal|"\\_S4_"
+block|,
+literal|"\\_S5_"
+block|,
+literal|"\\_S4B"
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/******************************************************************************  *  * Namespace globals  *  ******************************************************************************/
 end_comment
@@ -373,6 +402,7 @@ comment|/*  * Names built-in to the interpreter  *  * Initial values are current
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|PREDEFINED_NAMES
 name|AcpiGbl_PreDefinedNames
 index|[]
@@ -447,6 +477,7 @@ comment|/*  * Properties of the ACPI Object Types, both internal and external.  
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|UINT8
 name|AcpiGbl_NsProperties
 index|[]
@@ -582,6 +613,7 @@ comment|/* Hex to ASCII conversion table */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|NATIVE_CHAR
 name|AcpiGbl_HexToAscii
 index|[]
@@ -621,6 +653,10 @@ literal|'F'
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtHexToAsciiChar  *  * PARAMETERS:  Integer             - Contains the hex digit  *              Position            - bit position of the digit within the  *                                    integer  *  * RETURN:      Ascii character  *  * DESCRIPTION: Convert a hex digit to an ascii character  *  ****************************************************************************/
+end_comment
 
 begin_function
 name|UINT8
@@ -840,17 +876,8 @@ name|ACPI_DEBUG
 end_ifdef
 
 begin_comment
-comment|/******************************************************************************  *  * Strings and procedures used for debug only  *  ******************************************************************************/
+comment|/*  * Strings and procedures used for debug only  *  */
 end_comment
-
-begin_decl_stmt
-name|NATIVE_CHAR
-modifier|*
-name|MsgAcpiErrorBreak
-init|=
-literal|"*** Break on ACPI_ERROR ***\n"
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetMutexName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a mutex ID into a name string (Debug only)  *  ****************************************************************************/
@@ -895,6 +922,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|NATIVE_CHAR
 name|AcpiGbl_BadType
 index|[]
@@ -916,6 +944,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_NsTypeNames
@@ -1056,12 +1085,20 @@ condition|)
 block|{
 return|return
 operator|(
+operator|(
+name|NATIVE_CHAR
+operator|*
+operator|)
 name|AcpiGbl_BadType
 operator|)
 return|;
 block|}
 return|return
 operator|(
+operator|(
+name|NATIVE_CHAR
+operator|*
+operator|)
 name|AcpiGbl_NsTypeNames
 index|[
 name|Type
@@ -1076,6 +1113,7 @@ comment|/* Region type decoding */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_RegionTypes
@@ -1143,6 +1181,10 @@ return|;
 block|}
 return|return
 operator|(
+operator|(
+name|NATIVE_CHAR
+operator|*
+operator|)
 name|AcpiGbl_RegionTypes
 index|[
 name|SpaceId
@@ -1157,6 +1199,7 @@ comment|/* Data used in keeping track of fields */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_FENames
@@ -1177,6 +1220,7 @@ comment|/* FE = Field Element */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_MatchOps
@@ -1207,6 +1251,7 @@ comment|/* Access type decoding */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_AccessTypes
@@ -1237,6 +1282,7 @@ comment|/* Update rule decoding */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_UpdateRules
@@ -2085,6 +2131,15 @@ name|Flags
 operator|=
 name|ANOBJ_END_OF_PEER_LIST
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
+name|AcpiGbl_LowestStackPointer
+operator|=
+name|ACPI_UINT32_MAX
+expr_stmt|;
+endif|#
+directive|endif
 name|return_VOID
 expr_stmt|;
 block|}

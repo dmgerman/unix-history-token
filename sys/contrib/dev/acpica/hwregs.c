@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 104 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 109 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -44,34 +44,6 @@ argument_list|(
 literal|"hwregs"
 argument_list|)
 end_macro
-
-begin_comment
-comment|/* This matches the #defines in actypes.h. */
-end_comment
-
-begin_decl_stmt
-name|NATIVE_CHAR
-modifier|*
-name|SleepStateTable
-index|[]
-init|=
-block|{
-literal|"\\_S0_"
-block|,
-literal|"\\_S1_"
-block|,
-literal|"\\_S2_"
-block|,
-literal|"\\_S3_"
-block|,
-literal|"\\_S4_"
-block|,
-literal|"\\_S5_"
-block|,
-literal|"\\_S4B"
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwGetBitShift  *  * PARAMETERS:  Mask            - Input mask to determine bit shift from.  *                                Must have at least 1 bit set.  *  * RETURN:      Bit location of the lsb of the mask  *  * DESCRIPTION: Returns the bit number for the low order bit that's set.  *  ******************************************************************************/
@@ -404,7 +376,11 @@ name|Status
 operator|=
 name|AcpiNsEvaluateByName
 argument_list|(
-name|SleepStateTable
+operator|(
+name|NATIVE_CHAR
+operator|*
+operator|)
+name|AcpiGbl_DbSleepStates
 index|[
 name|SleepState
 index|]
@@ -1309,8 +1285,7 @@ name|RegisterValue
 operator||=
 name|Value
 expr_stmt|;
-comment|/* This write will put the Action state into the General Purpose */
-comment|/* Enable Register indexed by the value in Mask */
+comment|/*              * This write will put the Action state into the General Purpose              * Enable Register indexed by the value in Mask              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1429,7 +1404,7 @@ name|BankOffset
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiHwRegisterRead"
+literal|"HwRegisterRead"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1599,7 +1574,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*      * For the GPE? Blocks, the lower word of RegisterId contains the       * byte offset for which to read, as each part of each block may be       * several bytes long.      */
+comment|/*      * For the GPE? Blocks, the lower word of RegisterId contains the      * byte offset for which to read, as each part of each block may be      * several bytes long.      */
 case|case
 name|GPE0_STS_BLOCK
 case|:
@@ -1783,7 +1758,7 @@ name|BankOffset
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiHwRegisterWrite"
+literal|"HwRegisterWrite"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2188,6 +2163,9 @@ decl_stmt|;
 name|UINT16
 name|PciRegister
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * Must have a valid pointer to a GAS structure, and      * a non-zero address within      */
 if|if
 condition|(
@@ -2396,6 +2374,9 @@ decl_stmt|;
 name|UINT16
 name|PciRegister
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * Must have a valid pointer to a GAS structure, and      * a non-zero address within      */
 if|if
 condition|(

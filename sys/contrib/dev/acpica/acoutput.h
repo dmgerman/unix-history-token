@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 81 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 84 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -256,99 +256,117 @@ value|0x0000003F
 end_define
 
 begin_comment
-comment|/* Trace level -- also used in the global "DebugLevel" */
+comment|/* Trace verbosity level 1 [Standard Trace Level] */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_LV_THREADS
-value|0x00000080
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_LV_PARSE
-value|0x00000100
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LV_DISPATCH
-value|0x00000200
+value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_LV_LOAD
-value|0x00000400
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_DISPATCH
+value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_LV_EXEC
-value|0x00000800
+value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_LV_NAMES
-value|0x00001000
+value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_LV_OPREGION
-value|0x00002000
+value|0x00000800
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_LV_BFIELD
-value|0x00004000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LV_TRASH
-value|0x00008000
+value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_LV_TABLES
-value|0x00010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LV_FUNCTIONS
-value|0x00020000
+value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_LV_VALUES
-value|0x00040000
+value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_LV_OBJECTS
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_RESOURCES
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_USER_REQUESTS
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_PACKAGE
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_INIT
 value|0x00080000
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_VERBOSITY1
+value|0x000FFF40 | ACPI_LV_ALL_EXCEPTIONS
+end_define
+
+begin_comment
+comment|/* Trace verbosity level 2 [Function tracing and memory allocation] */
+end_comment
 
 begin_define
 define|#
@@ -360,57 +378,61 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_LV_RESOURCES
+name|ACPI_LV_FUNCTIONS
 value|0x00200000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_LV_IO
-value|0x00400000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LV_INTERRUPTS
-value|0x00800000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LV_USER_REQUESTS
-value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LV_PACKAGE
-value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LV_MUTEX
-value|0x04000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LV_INIT
-value|0x08000000
+name|ACPI_LV_VERBOSITY2
+value|0x00300000 | ACPI_LV_VERBOSITY1
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_LV_ALL
-value|0x0FFFFF80
+value|ACPI_LV_VERBOSITY2
+end_define
+
+begin_comment
+comment|/* Trace verbosity level 3 [Threading, I/O, and Interrupts] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_MUTEX
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_THREADS
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_IO
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_INTERRUPTS
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_VERBOSITY3
+value|0x0F000000 | ACPI_LV_VERBOSITY2
 end_define
 
 begin_comment
@@ -422,9 +444,9 @@ define|#
 directive|define
 name|ACPI_DEBUG_LEVEL
 parameter_list|(
-name|val
+name|dl
 parameter_list|)
-value|val,_COMPONENT,_ProcName,_THIS_MODULE,__LINE__
+value|dl,__LINE__,&_Dbg
 end_define
 
 begin_comment
@@ -538,13 +560,6 @@ define|#
 directive|define
 name|ACPI_DB_BFIELD
 value|ACPI_DEBUG_LEVEL (ACPI_LV_BFIELD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DB_TRASH
-value|ACPI_DEBUG_LEVEL (ACPI_LV_TRASH)
 end_define
 
 begin_define

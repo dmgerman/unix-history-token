@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 39 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 40 $  *  *****************************************************************************/
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 29 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -397,7 +397,7 @@ name|ObjDesc
 decl_stmt|;
 name|PROC_NAME
 argument_list|(
-literal|"AcpiNsInitOneObject"
+literal|"NsInitOneObject"
 argument_list|)
 expr_stmt|;
 name|Info
@@ -720,7 +720,7 @@ name|Context
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiNsInitOneDevice"
+literal|"NsInitOneDevice"
 argument_list|)
 expr_stmt|;
 if|if

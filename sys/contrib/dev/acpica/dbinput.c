@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 64 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 68 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -69,7 +69,7 @@ end_comment
 
 begin_decl_stmt
 name|NATIVE_CHAR
-name|LineBuf
+name|AcpiGbl_DbLineBuf
 index|[
 literal|80
 index|]
@@ -78,7 +78,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|NATIVE_CHAR
-name|ParsedBuf
+name|AcpiGbl_DbParsedBuf
 index|[
 literal|80
 index|]
@@ -87,7 +87,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|NATIVE_CHAR
-name|ScopeBuf
+name|AcpiGbl_DbScopeBuf
 index|[
 literal|40
 index|]
@@ -96,7 +96,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|NATIVE_CHAR
-name|DebugFilename
+name|AcpiGbl_DbDebugFilename
 index|[
 literal|40
 index|]
@@ -106,7 +106,7 @@ end_decl_stmt
 begin_decl_stmt
 name|NATIVE_CHAR
 modifier|*
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 name|DB_MAX_ARGS
 index|]
@@ -116,14 +116,14 @@ end_decl_stmt
 begin_decl_stmt
 name|NATIVE_CHAR
 modifier|*
-name|Buffer
+name|AcpiGbl_DbBuffer
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|NATIVE_CHAR
 modifier|*
-name|Filename
+name|AcpiGbl_DbFilename
 init|=
 name|NULL
 decl_stmt|;
@@ -131,7 +131,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|BOOLEAN
-name|OutputToFile
+name|AcpiGbl_DbOutputToFile
 init|=
 name|FALSE
 decl_stmt|;
@@ -141,7 +141,7 @@ begin_decl_stmt
 name|UINT32
 name|AcpiGbl_DbDebugLevel
 init|=
-literal|0x0FFFFFFF
+name|ACPI_LV_VERBOSITY2
 decl_stmt|;
 end_decl_stmt
 
@@ -165,7 +165,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|BOOLEAN
-name|opt_tables
+name|AcpiGbl_DbOpt_tables
 init|=
 name|FALSE
 decl_stmt|;
@@ -173,7 +173,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|BOOLEAN
-name|opt_disasm
+name|AcpiGbl_DbOpt_disasm
 init|=
 name|FALSE
 decl_stmt|;
@@ -181,7 +181,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|BOOLEAN
-name|opt_stats
+name|AcpiGbl_DbOpt_stats
 init|=
 name|FALSE
 decl_stmt|;
@@ -189,7 +189,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|BOOLEAN
-name|opt_parse_jit
+name|AcpiGbl_DbOpt_parse_jit
 init|=
 name|FALSE
 decl_stmt|;
@@ -197,7 +197,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|BOOLEAN
-name|opt_verbose
+name|AcpiGbl_DbOpt_verbose
 init|=
 name|TRUE
 decl_stmt|;
@@ -205,9 +205,83 @@ end_decl_stmt
 
 begin_decl_stmt
 name|BOOLEAN
-name|opt_ini_methods
+name|AcpiGbl_DbOpt_ini_methods
 init|=
 name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Statistic globals  */
+end_comment
+
+begin_decl_stmt
+name|UINT16
+name|AcpiGbl_ObjTypeCount
+index|[
+name|INTERNAL_TYPE_NODE_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|UINT16
+name|AcpiGbl_NodeTypeCount
+index|[
+name|INTERNAL_TYPE_NODE_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|UINT16
+name|AcpiGbl_ObjTypeCountMisc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|UINT16
+name|AcpiGbl_NodeTypeCountMisc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|UINT32
+name|AcpiGbl_NumNodes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|UINT32
+name|AcpiGbl_NumObjects
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|UINT32
+name|AcpiGbl_SizeOfParseTree
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|UINT32
+name|AcpiGbl_SizeOfMethodTrees
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|UINT32
+name|AcpiGbl_SizeOfNodeEntries
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|UINT32
+name|AcpiGbl_SizeOfAcpiObjects
 decl_stmt|;
 end_decl_stmt
 
@@ -326,8 +400,9 @@ value|2
 end_define
 
 begin_decl_stmt
+specifier|const
 name|COMMAND_INFO
-name|Commands
+name|AcpiGbl_DbCommands
 index|[]
 init|=
 block|{
@@ -1135,19 +1210,19 @@ name|This
 decl_stmt|;
 name|STRCPY
 argument_list|(
-name|ParsedBuf
+name|AcpiGbl_DbParsedBuf
 argument_list|,
 name|InputBuffer
 argument_list|)
 expr_stmt|;
 name|STRUPR
 argument_list|(
-name|ParsedBuf
+name|AcpiGbl_DbParsedBuf
 argument_list|)
 expr_stmt|;
 name|This
 operator|=
-name|ParsedBuf
+name|AcpiGbl_DbParsedBuf
 expr_stmt|;
 for|for
 control|(
@@ -1163,7 +1238,7 @@ name|i
 operator|++
 control|)
 block|{
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 name|i
 index|]
@@ -1179,7 +1254,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 name|i
 index|]
@@ -1195,7 +1270,7 @@ block|}
 comment|/* Uppercase the actual command */
 if|if
 condition|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|0
 index|]
@@ -1203,7 +1278,7 @@ condition|)
 block|{
 name|STRUPR
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|0
 index|]
@@ -1273,7 +1348,7 @@ name|i
 operator|=
 name|CMD_FIRST_VALID
 init|;
-name|Commands
+name|AcpiGbl_DbCommands
 index|[
 name|i
 index|]
@@ -1288,7 +1363,7 @@ if|if
 condition|(
 name|STRSTR
 argument_list|(
-name|Commands
+name|AcpiGbl_DbCommands
 index|[
 name|i
 index|]
@@ -1298,7 +1373,7 @@ argument_list|,
 name|UserCommand
 argument_list|)
 operator|==
-name|Commands
+name|AcpiGbl_DbCommands
 index|[
 name|i
 index|]
@@ -1384,7 +1459,7 @@ name|CommandIndex
 operator|=
 name|AcpiDbMatchCommand
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|0
 index|]
@@ -1399,7 +1474,7 @@ if|if
 condition|(
 name|ParamCount
 operator|<
-name|Commands
+name|AcpiGbl_DbCommands
 index|[
 name|CommandIndex
 index|]
@@ -1413,14 +1488,14 @@ literal|"%d parameters entered, [%s] requires %d parameters\n"
 argument_list|,
 name|ParamCount
 argument_list|,
-name|Commands
+name|AcpiGbl_DbCommands
 index|[
 name|CommandIndex
 index|]
 operator|.
 name|Name
 argument_list|,
-name|Commands
+name|AcpiGbl_DbCommands
 index|[
 name|CommandIndex
 index|]
@@ -1490,7 +1565,7 @@ name|CMD_BREAKPOINT
 case|:
 name|AcpiDbSetMethodBreakpoint
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -1526,13 +1601,13 @@ name|CMD_DEBUG
 case|:
 name|AcpiDbExecute
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|,
 operator|&
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|2
 index|]
@@ -1546,12 +1621,12 @@ name|CMD_DUMP
 case|:
 name|AcpiDbDecodeAndDisplayObject
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|,
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|2
 index|]
@@ -1602,13 +1677,13 @@ name|CMD_EXECUTE
 case|:
 name|AcpiDbExecute
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|,
 operator|&
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|2
 index|]
@@ -1622,7 +1697,7 @@ name|CMD_FIND
 case|:
 name|AcpiDbFindNameInNamespace
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -1649,7 +1724,7 @@ name|CMD_HELP2
 case|:
 name|AcpiDbDisplayHelp
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -1670,7 +1745,7 @@ name|CommandLine
 operator|=
 name|AcpiDbGetFromHistory
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -1840,7 +1915,7 @@ name|AcpiGbl_DbConsoleDebugLevel
 operator|=
 name|STRTOUL
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -1870,7 +1945,7 @@ name|AcpiGbl_DbDebugLevel
 operator|=
 name|STRTOUL
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -1896,7 +1971,7 @@ name|CMD_LIST
 case|:
 name|AcpiDbDisassembleAml
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -1912,7 +1987,7 @@ name|Status
 operator|=
 name|AcpiDbLoadAcpiTable
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -1954,7 +2029,7 @@ name|AcpiDbDisplayObjects
 argument_list|(
 literal|"METHOD"
 argument_list|,
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -1966,12 +2041,12 @@ name|CMD_NAMESPACE
 case|:
 name|AcpiDbDumpNamespace
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|,
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|2
 index|]
@@ -1985,7 +2060,7 @@ name|Temp
 operator|=
 name|STRTOUL
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|2
 index|]
@@ -1997,7 +2072,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiDbSendNotify
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -2013,13 +2088,13 @@ name|AcpiDbDisplayObjects
 argument_list|(
 name|STRUPR
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|)
 argument_list|,
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|2
 index|]
@@ -2031,7 +2106,7 @@ name|CMD_OPEN
 case|:
 name|AcpiDbOpenDebugFile
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -2043,12 +2118,12 @@ name|CMD_OWNER
 case|:
 name|AcpiDbDumpNamespaceByOwner
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|,
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|2
 index|]
@@ -2060,7 +2135,7 @@ name|CMD_PREFIX
 case|:
 name|AcpiDbSetScope
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -2072,7 +2147,7 @@ name|CMD_REFERENCES
 case|:
 name|AcpiDbFindReferences
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -2084,7 +2159,7 @@ name|CMD_RESOURCES
 case|:
 name|AcpiDbDisplayResources
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -2103,17 +2178,17 @@ name|CMD_SET
 case|:
 name|AcpiDbSetMethodData
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|,
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|2
 index|]
 argument_list|,
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|3
 index|]
@@ -2125,7 +2200,7 @@ name|CMD_STATS
 case|:
 name|AcpiDbDisplayStatistics
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -2146,7 +2221,7 @@ name|CMD_TABLES
 case|:
 name|AcpiDbDisplayTableInfo
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
@@ -2172,17 +2247,17 @@ name|CMD_THREADS
 case|:
 name|AcpiDbCreateExecutionThreads
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|,
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|2
 index|]
 argument_list|,
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|3
 index|]
@@ -2201,12 +2276,12 @@ name|CMD_UNLOAD
 case|:
 name|AcpiDbUnloadAcpiTable
 argument_list|(
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|1
 index|]
 argument_list|,
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 literal|2
 index|]
@@ -2238,7 +2313,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|OutputToFile
+name|AcpiGbl_DbOutputToFile
 condition|)
 block|{
 name|AcpiDbgLevel
@@ -2330,7 +2405,7 @@ name|Status
 operator|=
 name|AcpiDbCommandDispatch
 argument_list|(
-name|LineBuf
+name|AcpiGbl_DbLineBuf
 argument_list|,
 name|NULL
 argument_list|,
@@ -2374,7 +2449,7 @@ name|Status
 operator|=
 name|AcpiDbCommandDispatch
 argument_list|(
-name|LineBuf
+name|AcpiGbl_DbLineBuf
 argument_list|,
 name|NULL
 argument_list|,
@@ -2446,7 +2521,7 @@ block|}
 comment|/* Get the user input line */
 name|AcpiOsGetLine
 argument_list|(
-name|LineBuf
+name|AcpiGbl_DbLineBuf
 argument_list|)
 expr_stmt|;
 comment|/* Check for single or multithreaded debug */

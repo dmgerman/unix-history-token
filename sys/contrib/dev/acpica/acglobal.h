@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 103 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 106 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -51,14 +51,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|NATIVE_CHAR
-modifier|*
-name|MsgAcpiErrorBreak
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*****************************************************************************  *  * Debug support  *  ****************************************************************************/
@@ -377,6 +369,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|UINT8
 name|AcpiGbl_DecodeTo8bit
 index|[
@@ -387,10 +380,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|NATIVE_CHAR
-name|AcpiGbl_HexToAscii
+modifier|*
+name|AcpiGbl_DbSleepStates
 index|[
-literal|16
+name|ACPI_NUM_SLEEP_STATES
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -430,6 +425,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|UINT8
 name|AcpiGbl_NsProperties
 index|[
@@ -440,6 +436,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|PREDEFINED_NAMES
 name|AcpiGbl_PreDefinedNames
 index|[
@@ -475,6 +472,27 @@ name|AcpiGbl_MaxConcurrentNodeCount
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT32
+name|AcpiGbl_EntryStackPointer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT32
+name|AcpiGbl_LowestStackPointer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT32
+name|AcpiGbl_DeepestNesting
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -493,7 +511,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Table of Address Space handlers  */
+comment|/* Address Space handlers */
 end_comment
 
 begin_decl_stmt

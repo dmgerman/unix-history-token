@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 50 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -404,7 +404,7 @@ name|EnableRegister
 decl_stmt|;
 name|PROC_NAME
 argument_list|(
-literal|"AcpiEvFixedEventDetect"
+literal|"EvFixedEventDetect"
 argument_list|)
 expr_stmt|;
 comment|/*      * Read the fixed feature status and enable registers, as all the cases      * depend on their values.      */
@@ -558,6 +558,9 @@ block|{
 name|UINT32
 name|RegisterId
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* Clear the status bit */
 switch|switch
 condition|(

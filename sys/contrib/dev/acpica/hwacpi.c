@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 43 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 45 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -89,8 +89,7 @@ name|AE_NO_ACPI_TABLES
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Must support *some* mode! */
-comment|/*     if (!(SystemFlags& SYS_MODES_MASK))     {         RestoreAcpiChipset = FALSE;          ACPI_DEBUG_PRINT ((ACPI_DB_ERROR,             "Supported modes uninitialized!\n"));         return_ACPI_STATUS (AE_ERROR);     }  */
+comment|/* Identify current ACPI/legacy mode   */
 switch|switch
 condition|(
 name|AcpiGbl_SystemFlags
@@ -98,7 +97,6 @@ operator|&
 name|SYS_MODES_MASK
 condition|)
 block|{
-comment|/* Identify current ACPI/legacy mode   */
 case|case
 operator|(
 name|SYS_MODE_ACPI
@@ -484,6 +482,12 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Give the platform some time to react */
+name|AcpiOsStall
+argument_list|(
+literal|5000
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|AcpiHwGetMode

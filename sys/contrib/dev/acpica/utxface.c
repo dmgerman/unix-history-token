@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 77 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 80 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -92,6 +92,12 @@ decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiInitializeSubsystem"
+argument_list|)
+expr_stmt|;
+name|DEBUG_EXEC
+argument_list|(
+name|AcpiUtInitStackPtrTrace
+argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* Initialize all globals used by the subsystem */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 32 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 33 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -426,6 +426,9 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|HandlerObj
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * We will invoke a global notify handler if installed.      * This is done _before_ we invoke the per-device handler attached to the device.      */
 if|if
 condition|(

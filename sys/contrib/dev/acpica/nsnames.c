@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 61 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 63 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -85,7 +85,7 @@ name|ParentNode
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiNsGetTablePathname"
+literal|"NsGetTablePathname"
 argument_list|,
 name|Node
 argument_list|)
@@ -282,6 +282,9 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|NextNode
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * Compute length of pathname as 5 * number of name segments.      * Go back up the parent tree to the root      */
 for|for
 control|(

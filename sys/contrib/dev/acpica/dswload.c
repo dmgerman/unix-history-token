@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -108,6 +108,11 @@ name|NATIVE_CHAR
 modifier|*
 name|Path
 decl_stmt|;
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
 name|PROC_NAME
 argument_list|(
 literal|"DsLoad1BeginOp"
@@ -127,13 +132,23 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* We are only interested in opcodes that have an associated name */
-if|if
-condition|(
-operator|!
-name|AcpiPsIsNamedOp
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Opcode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NAMED
+operator|)
 condition|)
 block|{
 operator|*
@@ -356,6 +371,11 @@ block|{
 name|ACPI_OBJECT_TYPE8
 name|DataType
 decl_stmt|;
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
 name|PROC_NAME
 argument_list|(
 literal|"DsLoad1EndOp"
@@ -375,15 +395,25 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* We are only interested in opcodes that have an associated name */
-if|if
-condition|(
-operator|!
-name|AcpiPsIsNamedOp
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
 name|Opcode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NAMED
+operator|)
 condition|)
 block|{
 return|return
@@ -541,6 +571,11 @@ name|Original
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
 name|PROC_NAME
 argument_list|(
 literal|"DsLoad2BeginOp"
@@ -560,13 +595,23 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* We only care about Namespace opcodes here */
-if|if
-condition|(
-operator|!
-name|AcpiPsIsNamespaceOp
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Opcode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NSOPCODE
+operator|)
 operator|&&
 name|Opcode
 operator|!=
@@ -579,14 +624,17 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/* Temp! same code as in psparse */
+comment|/* TBD: [Restructure] Temp! same code as in psparse */
 if|if
 condition|(
 operator|!
-name|AcpiPsIsNamedOp
-argument_list|(
-name|Opcode
-argument_list|)
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NAMED
+operator|)
 condition|)
 block|{
 return|return
@@ -983,6 +1031,11 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|NewNode
 decl_stmt|;
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
 name|PROC_NAME
 argument_list|(
 literal|"DsLoad2EndOp"
@@ -1001,15 +1054,26 @@ name|WalkState
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|AcpiPsIsNamespaceObjectOp
+comment|/* Only interested in opcodes that have namespace objects */
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
 name|Opcode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NSOBJECT
+operator|)
 condition|)
 block|{
 return|return

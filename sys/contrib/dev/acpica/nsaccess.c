@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 130 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 133 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -73,6 +73,7 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
+specifier|const
 name|PREDEFINED_NAMES
 modifier|*
 name|InitVal

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 55 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -815,7 +815,7 @@ name|TablePtr
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiTbVerifyRsdp"
+literal|"TbVerifyRsdp"
 argument_list|)
 expr_stmt|;
 comment|/*      * Obtain access to the RSDP structure      */
@@ -1014,6 +1014,9 @@ block|{
 name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * For RSDP revision 0 or 1, we use the RSDT.      * For RSDP revision 2 (and above), we use the XSDT      */
 if|if
 condition|(
@@ -1078,7 +1081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbValidateRsdt   *  * PARAMETERS:  TablePtr        - Addressable pointer to the RSDT.  *  * RETURN:      Status  *  * DESCRIPTION: Validate signature for the RSDT or XSDT  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbValidateRsdt  *  * PARAMETERS:  TablePtr        - Addressable pointer to the RSDT.  *  * RETURN:      Status  *  * DESCRIPTION: Validate signature for the RSDT or XSDT  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1226,6 +1229,9 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1409,7 +1415,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * Valid RSDT signature, verify the checksum.  If it fails, just      * print a warning and ignore it.      */
+comment|/*      * Valid RSDT signature, verify the checksum.  If it fails, just      * print a warning and ignore it.      */
 name|Status
 operator|=
 name|AcpiTbVerifyTableChecksum

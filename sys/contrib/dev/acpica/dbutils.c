@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 41 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 43 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -109,7 +109,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|OutputToFile
+name|AcpiGbl_DbOutputToFile
 condition|)
 block|{
 name|AcpiDbgLevel
