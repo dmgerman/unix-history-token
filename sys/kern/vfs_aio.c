@@ -142,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
