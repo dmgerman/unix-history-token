@@ -663,7 +663,7 @@ begin_define
 define|#
 directive|define
 name|SCOPE_DELIMITER
-value|'@'
+value|'%'
 end_define
 
 begin_decl_stmt
