@@ -99,9 +99,6 @@ name|char
 modifier|*
 name|mbp
 decl_stmt|;
-name|size_t
-name|mbresult
-decl_stmt|;
 name|int
 name|ret
 decl_stmt|,
