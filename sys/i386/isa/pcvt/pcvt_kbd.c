@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 Hellmuth Michaelis  *  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Holger Veit.  *  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * This code is derived from software contributed to 386BSD by  * Holger Veit.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Holger Veit.  *  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * This code is derived from software contributed to 386BSD by  * Holger Veit.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_kbd.c	VT220 Driver Keyboard Interface Code  *	----------------------------------------------------  *  *	Last Edit-Date: [Mon Dec 27 14:01:50 1999]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_kbd.c	VT220 Driver Keyboard Interface Code  *	----------------------------------------------------  *  *	Last Edit-Date: [Sun Mar 26 10:54:07 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -269,6 +269,16 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_include
+include|#
+directive|include
+file|<i386/isa/pcvt/pcvt_kbd.h>
+end_include
+
+begin_comment
+comment|/* tables etc */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -311,32 +321,6 @@ name|snc
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-end_ifndef
-
-begin_function_decl
-specifier|static
-name|int
-name|kbc_8042cmd
-parameter_list|(
-name|int
-name|val
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_DEV_KBD_KBDREG_H_ */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -383,6 +367,26 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|scrollback_save_screen
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|scrollback_restore_screen
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|setkeydef
 parameter_list|(
@@ -400,7 +404,7 @@ name|u_char
 modifier|*
 name|xlatkey2ascii
 parameter_list|(
-name|U_short
+name|int
 name|key
 parameter_list|)
 function_decl|;
@@ -475,25 +479,28 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
-name|scrollback_save_screen
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+name|int
+name|lost_intr_timeout_queued
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
-name|scrollback_restore_screen
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+name|struct
+name|callout_handle
+name|lost_intr_ch
+init|=
+name|CALLOUT_HANDLE_INITIALIZER
+argument_list|(
+operator|&
+name|lost_intr_ch
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -515,14 +522,116 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/pcvt/pcvt_kbd.h>
-end_include
+begin_if
+if|#
+directive|if
+name|PCVT_USEKBDSEC
+end_if
 
 begin_comment
-comment|/* tables etc */
+comment|/* security enabled */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PCVT_SCANSET
+operator|==
+literal|2
+end_if
+
+begin_define
+define|#
+directive|define
+name|KBDINITCMD
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* PCVT_SCANSET != 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KBDINITCMD
+value|KBD_TRANSLATION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PCVT_SCANSET == 2 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! PCVT_USEKBDSEC */
+end_comment
+
+begin_comment
+comment|/* security disabled */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PCVT_SCANSET
+operator|==
+literal|2
+end_if
+
+begin_define
+define|#
+directive|define
+name|KBDINITCMD
+value|KBD_OVERRIDE_KBD_LOCK
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* PCVT_SCANSET != 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KBDINITCMD
+value|KBD_TRANSLATION | KBD_OVERRIDE_KBD_LOCK
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PCVT_SCANSET == 2 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PCVT_USEKBDSEC */
 end_comment
 
 begin_if
@@ -704,61 +813,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This code from Lon Willett enclosed in #if PCVT_UPDLED_LOSES_INTR is  * abled because it crashes FreeBSD 1.1.5.1 at boot time.  * The cause is obviously that the timeout queue is not yet initialized  * timeout is called from here the first time.  * Anyway it is a pointer in the right direction so it is included for  * reference here.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCVT_UPDLED_LOSES_INTR
-value|0
-end_define
-
-begin_comment
-comment|/* disabled for now */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|PCVT_UPDLED_LOSES_INTR
-operator|||
-name|defined
-argument_list|(
-name|_DEV_KBD_KBDREG_H_
-argument_list|)
-end_if
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	check for lost keyboard interrupts  *---------------------------------------------------------------------------*/
 end_comment
-
-begin_comment
-comment|/*  * The two commands to change the LEDs generate two KEYB_R_ACK responses  * from the keyboard, which aren't explicitly checked for (maybe they  * should be?).  However, when a lot of other I/O is happening, one of  * the interrupts sometimes gets lost (I'm not sure of the details of  * how and why and what hardware this happens with).  *  * This may have had something to do with spltty() previously not being  * called before the kbd_cmd() calls in update_led().  *  * This is a real problem, because normally the keyboard is only polled  * by pcrint(), and no more interrupts will be generated until the ACK  * has been read.  So the keyboard is hung.  This code polls a little  * while after changing the LEDs to make sure that this hasn't happened.  *  * XXX Quite possibly we should poll the kbd on a regular basis anyway,  * in the interest of robustness.  It may be possible that interrupts  * get lost other times as well.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|lost_intr_timeout_queued
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|callout_handle
-name|lost_intr_ch
-init|=
-name|CALLOUT_HANDLE_INITIALIZER
-argument_list|(
-operator|&
-name|lost_intr_ch
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -770,40 +826,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-name|lost_intr_timeout_queued
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|inb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|)
-operator|&
-name|STATUS_OUTPBF
-condition|)
-block|{
-name|int
-name|opri
-init|=
-name|spltty
-argument_list|()
-decl_stmt|;
-name|pcrint
-argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|opri
-argument_list|)
-expr_stmt|;
-block|}
-else|#
-directive|else
 name|int
 name|opri
 decl_stmt|;
@@ -902,20 +924,8 @@ name|lost_intr_timeout_queued
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PCVT_UPDLED_LOSES_INTR || defined(_DEV_KBD_KBDREG_H_) */
-end_comment
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	update keyboard led's  *---------------------------------------------------------------------------*/
@@ -943,35 +953,6 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-name|new_ledstate
-operator|=
-operator|(
-name|vsp
-operator|->
-name|scroll_lock
-operator|)
-operator||
-operator|(
-name|vsp
-operator|->
-name|num_lock
-operator|*
-literal|2
-operator|)
-operator||
-operator|(
-name|vsp
-operator|->
-name|caps_lock
-operator|*
-literal|4
-operator|)
-expr_stmt|;
-else|#
-directive|else
 name|new_ledstate
 operator|=
 operator|(
@@ -1010,9 +991,6 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _DEV_KBD_KBDREG_H_ */
 if|if
 condition|(
 name|new_ledstate
@@ -1020,100 +998,6 @@ operator|!=
 name|ledstate
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-name|int
-name|response1
-decl_stmt|,
-name|response2
-decl_stmt|;
-name|ledstate
-operator|=
-name|LEDSTATE_UPDATE_PENDING
-expr_stmt|;
-if|if
-condition|(
-name|kbd_cmd
-argument_list|(
-name|KEYB_C_LEDS
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Keyboard LED command timeout\n"
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|opri
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* 		 * For some keyboards or keyboard controllers, it is an 		 * error to issue a command without waiting long enough 		 * for an ACK for the previous command.  The keyboard 		 * gets confused, and responds with KEYB_R_RESEND, but 		 * we ignore that.  Wait for the ACK here.  The busy 		 * waiting doesn't matter much, since we lose anyway by 		 * busy waiting to send the command. 		 * 		 * XXX actually wait for any response, since we can't 		 * handle normal scancodes here. 		 * 		 * XXX all this should be interrupt driven.  Issue only 		 * one command at a time wait for a ACK before proceeding. 		 * Retry after a timeout or on receipt of a KEYB_R_RESEND. 		 * KEYB_R_RESENDs seem to be guaranteed by working 		 * keyboard controllers with broken (or disconnected) 		 * keyboards.  There is another code for keyboard 		 * reconnects.  The keyboard hardware is very simple and 		 * well designed :-). 		 */
-name|response1
-operator|=
-name|kbd_response
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|kbd_cmd
-argument_list|(
-name|new_ledstate
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Keyboard LED data timeout\n"
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|opri
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|response2
-operator|=
-name|kbd_response
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|response1
-operator|==
-name|KEYB_R_ACK
-operator|&&
-name|response2
-operator|==
-name|KEYB_R_ACK
-condition|)
-name|ledstate
-operator|=
-name|new_ledstate
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"Keyboard LED command not ACKed (responses %#x %#x)\n"
-argument_list|,
-name|response1
-argument_list|,
-name|response2
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* _DEV_KBD_KBDREG_H_ */
 if|if
 condition|(
 name|kbd
@@ -1174,54 +1058,7 @@ operator|=
 name|new_ledstate
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
-if|#
-directive|if
-name|PCVT_UPDLED_LOSES_INTR
-if|if
-condition|(
-name|lost_intr_timeout_queued
-condition|)
-name|untimeout
-argument_list|(
-name|check_for_lost_intr
-argument_list|,
-name|NULL
-argument_list|,
-name|lost_intr_ch
-argument_list|)
-expr_stmt|;
-name|lost_intr_ch
-operator|=
-name|timeout
-argument_list|(
-name|check_for_lost_intr
-argument_list|,
-name|NULL
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
-name|lost_intr_timeout_queued
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_UPDLED_LOSES_INTR */
 block|}
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-name|splx
-argument_list|(
-name|opri
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* !PCVT_NO_LED_UPDATE */
@@ -1241,46 +1078,6 @@ name|int
 name|rate
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-name|tpmrate
-operator|=
-name|rate
-operator|&
-literal|0x7f
-expr_stmt|;
-if|if
-condition|(
-name|kbd_cmd
-argument_list|(
-name|KEYB_C_TYPEM
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"Keyboard TYPEMATIC command timeout\n"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|kbd_cmd
-argument_list|(
-name|tpmrate
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"Keyboard TYPEMATIC data timeout\n"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|kbd
@@ -1324,231 +1121,8 @@ argument_list|(
 literal|"pcvt: failed to set keyboard TYPEMATIC.\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-end_ifndef
-
-begin_comment
-comment|/*---------------------------------------------------------------------------*  *	Pass command to keyboard controller (8042)  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|kbc_8042cmd
-parameter_list|(
-name|int
-name|val
-parameter_list|)
-block|{
-name|unsigned
-name|timeo
-decl_stmt|;
-name|timeo
-operator|=
-literal|100000
-expr_stmt|;
-comment|/*> 100 msec */
-while|while
-condition|(
-name|inb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|)
-operator|&
-name|STATUS_INPBF
-condition|)
-if|if
-condition|(
-operator|--
-name|timeo
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-name|outb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|,
-name|val
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*---------------------------------------------------------------------------*  *	Pass command to keyboard itself  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-name|int
-name|kbd_cmd
-parameter_list|(
-name|int
-name|val
-parameter_list|)
-block|{
-name|unsigned
-name|timeo
-decl_stmt|;
-name|timeo
-operator|=
-literal|100000
-expr_stmt|;
-comment|/*> 100 msec */
-while|while
-condition|(
-name|inb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|)
-operator|&
-name|STATUS_INPBF
-condition|)
-if|if
-condition|(
-operator|--
-name|timeo
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-name|outb
-argument_list|(
-name|CONTROLLER_DATA
-argument_list|,
-name|val
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|PCVT_SHOWKEYS
-name|showkey
-argument_list|(
-literal|'>'
-argument_list|,
-name|val
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_SHOWKEYS */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*---------------------------------------------------------------------------*  *	Read response from keyboard  *	NB: make sure to call spltty() before kbd_cmd(), kbd_response().  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-name|int
-name|kbd_response
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_char
-name|ch
-decl_stmt|;
-name|unsigned
-name|timeo
-decl_stmt|;
-name|timeo
-operator|=
-literal|500000
-expr_stmt|;
-comment|/*> 500 msec (KEYB_R_SELFOK requires 87) */
-while|while
-condition|(
-operator|!
-operator|(
-name|inb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|)
-operator|&
-name|STATUS_OUTPBF
-operator|)
-condition|)
-if|if
-condition|(
-operator|--
-name|timeo
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-name|PCVT_KBD_DELAY
-argument_list|()
-expr_stmt|;
-comment|/* 7 us delay */
-name|ch
-operator|=
-name|inb
-argument_list|(
-name|CONTROLLER_DATA
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|PCVT_SHOWKEYS
-name|showkey
-argument_list|(
-literal|'<'
-argument_list|,
-name|ch
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_SHOWKEYS */
-return|return
-name|ch
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _DEV_KBD_KBDREG_H_ */
-end_comment
 
 begin_if
 if|#
@@ -1570,72 +1144,6 @@ name|int
 name|do_emulation
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-name|int
-name|cmd
-decl_stmt|,
-name|timeo
-init|=
-literal|10000
-decl_stmt|;
-name|cmd
-operator|=
-name|COMMAND_SYSFLG
-operator||
-name|COMMAND_IRQEN
-expr_stmt|;
-comment|/* common base cmd */
-if|#
-directive|if
-operator|!
-name|PCVT_USEKBDSEC
-name|cmd
-operator||=
-name|COMMAND_INHOVR
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|do_emulation
-condition|)
-name|cmd
-operator||=
-name|COMMAND_PCSCAN
-expr_stmt|;
-name|kbc_8042cmd
-argument_list|(
-name|CONTR_WRITE
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|inb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|)
-operator|&
-name|STATUS_INPBF
-condition|)
-if|if
-condition|(
-operator|--
-name|timeo
-operator|==
-literal|0
-condition|)
-break|break;
-name|outb
-argument_list|(
-name|CONTROLLER_DATA
-argument_list|,
-name|cmd
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|set_controller_command_byte
 argument_list|(
 operator|*
@@ -1658,9 +1166,6 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
 block|}
 end_function
 
@@ -1671,32 +1176,6 @@ end_endif
 
 begin_comment
 comment|/* PCVT_SCANSET> 1 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PCVT_NONRESP_KEYB_TRY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PCVT_NONRESP_KEYB_TRY
-value|25
-end_define
-
-begin_comment
-comment|/* no of times to try to detect	*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* a nonresponding keyboard	*/
 end_comment
 
 begin_comment
@@ -1711,476 +1190,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-name|int
-name|again
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|once
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|response
-decl_stmt|,
-name|opri
-decl_stmt|;
-comment|/* Enable interrupts and keyboard, etc. */
-if|if
-condition|(
-name|kbc_8042cmd
-argument_list|(
-name|CONTR_WRITE
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"pcvt: doreset() - timeout controller write command\n"
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|PCVT_USEKBDSEC
-comment|/* security enabled */
-if|#
-directive|if
-name|PCVT_SCANSET
-operator|==
-literal|2
-define|#
-directive|define
-name|KBDINITCMD
-value|COMMAND_SYSFLG|COMMAND_IRQEN
-else|#
-directive|else
-comment|/* PCVT_SCANSET != 2 */
-define|#
-directive|define
-name|KBDINITCMD
-value|COMMAND_PCSCAN|COMMAND_SYSFLG|COMMAND_IRQEN
-endif|#
-directive|endif
-comment|/* PCVT_SCANSET == 2 */
-else|#
-directive|else
-comment|/* ! PCVT_USEKBDSEC */
-comment|/* security disabled */
-if|#
-directive|if
-name|PCVT_SCANSET
-operator|==
-literal|2
-define|#
-directive|define
-name|KBDINITCMD
-value|COMMAND_INHOVR|COMMAND_SYSFLG|COMMAND_IRQEN
-else|#
-directive|else
-comment|/* PCVT_SCANSET != 2 */
-define|#
-directive|define
-name|KBDINITCMD
-value|COMMAND_PCSCAN|COMMAND_INHOVR|COMMAND_SYSFLG\ 	|COMMAND_IRQEN
-endif|#
-directive|endif
-comment|/* PCVT_SCANSET == 2 */
-endif|#
-directive|endif
-comment|/* PCVT_USEKBDSEC */
-if|if
-condition|(
-name|kbd_cmd
-argument_list|(
-name|KBDINITCMD
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"pcvt: doreset() - timeout writing keyboard init command\n"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Discard any stale keyboard activity.  The 0.1 boot code isn't 	 * very careful and sometimes leaves a KEYB_R_RESEND.  Versions 	 * between 1992 and Oct 1996 didn't have the delay and sometimes 	 * left a KEYB_R_RESEND. 	 */
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|inb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|)
-operator|&
-name|STATUS_OUTPBF
-condition|)
-name|kbd_response
-argument_list|()
-expr_stmt|;
-else|else
-block|{
-name|DELAY
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|inb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|)
-operator|&
-name|STATUS_OUTPBF
-operator|)
-condition|)
-break|break;
-block|}
-block|}
-comment|/* Start keyboard reset */
-name|opri
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|kbd_cmd
-argument_list|(
-name|KEYB_C_RESET
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pcvt: doreset() - timeout for keyboard reset command\n"
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|CONTROLLER_DATA
-argument_list|,
-name|KEYB_C_RESET
-argument_list|)
-expr_stmt|;
-comment|/* force */
-block|}
-comment|/* Wait for the first response to reset and handle retries */
-while|while
-condition|(
-operator|(
-name|response
-operator|=
-name|kbd_response
-argument_list|()
-operator|)
-operator|!=
-name|KEYB_R_ACK
-condition|)
-block|{
-if|if
-condition|(
-name|response
-operator|<
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|again
-condition|)
-comment|/* print message only once ! */
-name|printf
-argument_list|(
-literal|"pcvt: doreset() - response != ack and response< 0 [one time only msg]\n"
-argument_list|)
-expr_stmt|;
-name|response
-operator|=
-name|KEYB_R_RESEND
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|response
-operator|==
-name|KEYB_R_RESEND
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|again
-condition|)
-comment|/* print message only once ! */
-name|printf
-argument_list|(
-literal|"pcvt: doreset() - got KEYB_R_RESEND response ... [one time only msg]\n"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|response
-operator|==
-name|KEYB_R_RESEND
-condition|)
-block|{
-if|if
-condition|(
-operator|++
-name|again
-operator|>
-name|PCVT_NONRESP_KEYB_TRY
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pcvt: doreset() - Caution - no PC keyboard detected!\n"
-argument_list|)
-expr_stmt|;
-name|keyboard_type
-operator|=
-name|KB_UNKNOWN
-expr_stmt|;
-name|splx
-argument_list|(
-name|opri
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|(
-name|kbd_cmd
-argument_list|(
-name|KEYB_C_RESET
-argument_list|)
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
-name|once
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-name|once
-operator|++
-expr_stmt|;
-comment|/* print message only once ! */
-name|printf
-argument_list|(
-literal|"pcvt: doreset() - timeout for loop keyboard reset command [one time only msg]\n"
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|CONTROLLER_DATA
-argument_list|,
-name|KEYB_C_RESET
-argument_list|)
-expr_stmt|;
-comment|/* force */
-block|}
-block|}
-block|}
-comment|/* Wait for the second response to reset */
-while|while
-condition|(
-operator|(
-name|response
-operator|=
-name|kbd_response
-argument_list|()
-operator|)
-operator|!=
-name|KEYB_R_SELFOK
-condition|)
-block|{
-if|if
-condition|(
-name|response
-operator|<
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pcvt: doreset() - response != OK and resonse< 0\n"
-argument_list|)
-expr_stmt|;
-comment|/* 			 * If KEYB_R_SELFOK never arrives, the loop will 			 * finish here unless the keyboard babbles or 			 * STATUS_OUTPBF gets stuck. 			 */
-break|break;
-block|}
-block|}
-name|splx
-argument_list|(
-name|opri
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|PCVT_KEYBDID
-name|opri
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|kbd_cmd
-argument_list|(
-name|KEYB_C_ID
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pcvt: doreset() - timeout for keyboard ID command\n"
-argument_list|)
-expr_stmt|;
-name|keyboard_type
-operator|=
-name|KB_UNKNOWN
-expr_stmt|;
-block|}
-else|else
-block|{
-name|r_entry
-label|:
-if|if
-condition|(
-operator|(
-name|response
-operator|=
-name|kbd_response
-argument_list|()
-operator|)
-operator|==
-name|KEYB_R_MF2ID1
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|response
-operator|=
-name|kbd_response
-argument_list|()
-operator|)
-operator|==
-name|KEYB_R_MF2ID2
-condition|)
-block|{
-name|keyboard_type
-operator|=
-name|KB_MFII
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|response
-operator|==
-name|KEYB_R_MF2ID2HP
-condition|)
-block|{
-name|keyboard_type
-operator|=
-name|KB_MFII
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"\npcvt: doreset() - kbdid, response 2 = [%d]\n"
-argument_list|,
-name|response
-argument_list|)
-expr_stmt|;
-name|keyboard_type
-operator|=
-name|KB_UNKNOWN
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|response
-operator|==
-name|KEYB_R_ACK
-condition|)
-block|{
-goto|goto
-name|r_entry
-goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|response
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|keyboard_type
-operator|=
-name|KB_AT
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"\npcvt: doreset() - kbdid, response 1 = [%d]\n"
-argument_list|,
-name|response
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|splx
-argument_list|(
-name|opri
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* PCVT_KEYBDID */
-name|keyboard_type
-operator|=
-name|KB_MFII
-expr_stmt|;
-comment|/* force it .. */
-endif|#
-directive|endif
-comment|/* PCVT_KEYBDID */
-else|#
-directive|else
-comment|/* _DEV_KBD_KBDREG_H_ */
 name|int
 name|type
 decl_stmt|;
@@ -2231,55 +1240,6 @@ name|ledstate
 operator|=
 name|LEDSTATE_UPDATE_PENDING
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_USEKBDSEC
-comment|/* security enabled */
-if|#
-directive|if
-name|PCVT_SCANSET
-operator|==
-literal|2
-define|#
-directive|define
-name|KBDINITCMD
-value|0
-else|#
-directive|else
-comment|/* PCVT_SCANSET != 2 */
-define|#
-directive|define
-name|KBDINITCMD
-value|KBD_TRANSLATION
-endif|#
-directive|endif
-comment|/* PCVT_SCANSET == 2 */
-else|#
-directive|else
-comment|/* ! PCVT_USEKBDSEC */
-comment|/* security disabled */
-if|#
-directive|if
-name|PCVT_SCANSET
-operator|==
-literal|2
-define|#
-directive|define
-name|KBDINITCMD
-value|KBD_OVERRIDE_KBD_LOCK
-else|#
-directive|else
-comment|/* PCVT_SCANSET != 2 */
-define|#
-directive|define
-name|KBDINITCMD
-value|KBD_TRANSLATION | KBD_OVERRIDE_KBD_LOCK
-endif|#
-directive|endif
-comment|/* PCVT_SCANSET == 2 */
-endif|#
-directive|endif
-comment|/* PCVT_USEKBDSEC */
 name|set_controller_command_byte
 argument_list|(
 operator|*
@@ -2298,14 +1258,6 @@ argument_list|,
 name|KBDINITCMD
 argument_list|)
 expr_stmt|;
-name|keyboard_type
-operator|=
-name|KB_MFII
-expr_stmt|;
-comment|/* force it .. */
-if|#
-directive|if
-name|PCVT_KEYBDID
 name|type
 operator|=
 name|KB_101
@@ -2361,9 +1313,6 @@ name|KB_UNKNOWN
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
-comment|/* PCVT_KEYBDID */
 name|update_led
 argument_list|()
 expr_stmt|;
@@ -2386,9 +1335,6 @@ name|lost_intr_timeout_queued
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
 block|}
 end_function
 
@@ -3035,7 +1981,7 @@ name|u_char
 modifier|*
 name|xlatkey2ascii
 parameter_list|(
-name|U_short
+name|int
 name|key
 parameter_list|)
 block|{
@@ -4014,39 +2960,6 @@ begin_comment
 comment|/*---------------------------------------------------------------------------*  *	get keystrokes from the keyboard.  *	if noblock = 0, wait until a key is pressed.  *	else return NULL if no characters present.  *---------------------------------------------------------------------------*/
 end_comment
 
-begin_if
-if|#
-directive|if
-name|PCVT_KBD_FIFO
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|u_char
-name|pcvt_kbd_fifo
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pcvt_kbd_rptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|short
-name|pcvt_kbd_count
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|u_char
 modifier|*
@@ -4073,16 +2986,35 @@ decl_stmt|;
 name|u_short
 name|type
 decl_stmt|;
+name|int
+name|c
+decl_stmt|;
 if|#
 directive|if
-name|PCVT_KBD_FIFO
-operator|&&
 name|PCVT_SLOW_INTERRUPT
 name|int
 name|s
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|XSERVER
+specifier|static
+name|char
+name|keybuf
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
+comment|/* the second 0 is a delimiter! */
+endif|#
+directive|endif
+comment|/* XSERVER */
 specifier|static
 name|u_char
 name|kbd_lastkey
@@ -4136,40 +3068,13 @@ block|{
 literal|0
 block|}
 struct|;
-ifdef|#
-directive|ifdef
-name|XSERVER
-specifier|static
-name|char
-name|keybuf
-index|[
-literal|2
-index|]
-init|=
-block|{
-literal|0
-block|}
-decl_stmt|;
-comment|/* the second 0 is a delimiter! */
-endif|#
-directive|endif
-comment|/* XSERVER */
-ifdef|#
-directive|ifdef
-name|_DEV_KBD_KBDREG_H_
-name|int
-name|c
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* _DEV_KBD_KBDREG_H_ */
 name|loop
 label|:
 if|if
 condition|(
 name|noblock
 operator|==
-literal|31337
+name|SCROLLBACK_COOKIE
 condition|)
 block|{
 name|vsp
@@ -4185,114 +3090,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|XSERVER
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-if|#
-directive|if
-name|PCVT_KBD_FIFO
-comment|/* see if there is data from the keyboard available either from */
-comment|/* the keyboard fifo or from the 8042 keyboard controller	*/
-if|if
-condition|(
-name|pcvt_kbd_count
-operator|||
-operator|(
-name|inb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|)
-operator|&
-name|STATUS_OUTPBF
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|pcvt_kbd_count
-condition|)
-comment|/* source = 8042 */
-block|{
-name|PCVT_KBD_DELAY
-argument_list|()
-expr_stmt|;
-comment|/* 7 us delay */
-name|dt
-operator|=
-name|inb
-argument_list|(
-name|CONTROLLER_DATA
-argument_list|)
-expr_stmt|;
-comment|/* get from obuf */
-block|}
-else|else
-comment|/* source = keyboard fifo */
-block|{
-name|dt
-operator|=
-name|pcvt_kbd_fifo
-index|[
-name|pcvt_kbd_rptr
-operator|++
-index|]
-expr_stmt|;
-name|PCVT_DISABLE_INTR
-argument_list|()
-expr_stmt|;
-name|pcvt_kbd_count
-operator|--
-expr_stmt|;
-name|PCVT_ENABLE_INTR
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|pcvt_kbd_rptr
-operator|>=
-name|PCVT_KBD_FIFO_SZ
-condition|)
-name|pcvt_kbd_rptr
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|#
-directive|else
-comment|/* !PCVT_KB_FIFO */
-comment|/* see if there is data from the keyboard available from the 8042 */
-if|if
-condition|(
-name|inb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|)
-operator|&
-name|STATUS_OUTPBF
-condition|)
-block|{
-name|PCVT_KBD_DELAY
-argument_list|()
-expr_stmt|;
-comment|/* 7 us delay */
-name|dt
-operator|=
-name|inb
-argument_list|(
-name|CONTROLLER_DATA
-argument_list|)
-expr_stmt|;
-comment|/* yes, get data */
-endif|#
-directive|endif
-comment|/* !PCVT_KBD_FIFO */
-else|#
-directive|else
-comment|/* _DEV_KBD_KBDREG_H_ */
-if|#
-directive|if
-name|PCVT_KBD_FIFO
 if|if
 condition|(
 name|pcvt_kbd_count
@@ -4327,9 +3124,6 @@ literal|0
 expr_stmt|;
 block|}
 elseif|else
-endif|#
-directive|endif
-comment|/* PCVT_KBD_FIFO */
 if|if
 condition|(
 operator|!
@@ -4404,12 +3198,7 @@ operator|=
 name|c
 expr_stmt|;
 block|}
-block|{
-endif|#
-directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
-comment|/* 		 * If x mode is active, only care for locking keys, then 		 * return the scan code instead of any key translation. 		 * Additionally, this prevents us from any attempts to 		 * execute pcvt internal functions caused by keys (such 		 * as screen flipping). 		 * XXX For now, only the default locking key definitions 		 * are recognized (i.e. if you have overloaded you "A" key 		 * as NUMLOCK, that wont effect X mode:-) 		 * Changing this would be nice, but would require modifi- 		 * cations to the X server. After having this, X will 		 * deal with the LEDs itself, so we are committed. 		 */
-comment|/* 		 * Iff PCVT_USL_VT_COMPAT is defined, the behaviour has 		 * been fixed. We need not care about any keys here, since 		 * there are ioctls that deal with the lock key / LED stuff. 		 */
+comment|/* 	 * If x mode is active, only care for locking keys, then 	 * return the scan code instead of any key translation. 	 * Additionally, this prevents us from any attempts to 	 * execute pcvt internal functions caused by keys (such 	 * as screen flipping). 	 */
 if|if
 condition|(
 name|pcvt_kbd_raw
@@ -4422,929 +3211,11 @@ index|]
 operator|=
 name|dt
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>
-literal|210
 name|add_keyboard_randomness
 argument_list|(
 name|dt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_FREEBSD> 210 */
-if|#
-directive|if
-operator|!
-name|PCVT_USL_VT_COMPAT
-if|if
-condition|(
-operator|(
-name|dt
-operator|&
-literal|0x80
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* key make */
-switch|switch
-condition|(
-name|dt
-condition|)
-block|{
-case|case
-literal|0x45
-case|:
-comment|/* XXX on which virt screen? */
-name|vsp
-operator|->
-name|num_lock
-operator|^=
-literal|1
-expr_stmt|;
-name|update_led
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-literal|0x3a
-case|:
-name|vsp
-operator|->
-name|caps_lock
-operator|^=
-literal|1
-expr_stmt|;
-name|update_led
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-literal|0x46
-case|:
-name|vsp
-operator|->
-name|scroll_lock
-operator|^=
-literal|1
-expr_stmt|;
-name|update_led
-argument_list|()
-expr_stmt|;
-break|break;
-block|}
-endif|#
-directive|endif
-comment|/* !PCVT_USL_VT_COMPAT */
-if|#
-directive|if
-name|PCVT_EMU_MOUSE
-comment|/* 			 * The (mouse systems) mouse emulator. The mouse 			 * device allocates the first device node that is 			 * not used by a virtual terminal. (E.g., you have 			 * eight vtys, /dev/ttyv0 thru /dev/ttyv7, so the 			 * mouse emulator were /dev/ttyv8.) 			 * Currently the emulator only works if the keyboard 			 * is in raw (PC scan code) mode. This is the typic- 			 * al case when running the X server. 			 * It is activated if the num locks LED is active 			 * for the current vty, and if the mouse device 			 * has been opened by at least one process. It 			 * grabs the numerical keypad events (but only 			 * the "non-extended", so the separate arrow keys 			 * continue to work), and three keys for the "mouse 			 * buttons", preferrably F1 thru F3. Any of the 			 * eight directions (N, NE, E, SE, S, SW, W, NW) 			 * is supported, and frequent key presses (less 			 * than e.g. half a second between key presses) 			 * cause the emulator to accelerate the pointer 			 * movement by 6, while single presses result in 			 * single moves, so each point can be reached. 			 */
-comment|/* 			 * NB: the following code is spagghetti. 			 * Only eat it with lotta tomato ketchup and 			 * Parmesan cheese:-) 			 */
-comment|/* 			 * look whether we will have to steal the keys 			 * and cook them into mouse events 			 */
-if|if
-condition|(
-name|vsp
-operator|->
-name|num_lock
-operator|&&
-name|mouse
-operator|.
-name|opened
-condition|)
-block|{
-name|int
-name|button
-decl_stmt|,
-name|accel
-decl_stmt|,
-name|i
-decl_stmt|;
-enum|enum
-name|mouse_dir
-block|{
-name|MOUSE_NW
-block|,
-name|MOUSE_N
-block|,
-name|MOUSE_NE
-block|,
-name|MOUSE_W
-block|,
-name|MOUSE_0
-block|,
-name|MOUSE_E
-block|,
-name|MOUSE_SW
-block|,
-name|MOUSE_S
-block|,
-name|MOUSE_SE
-block|}
-name|move
-enum|;
-name|struct
-name|timeval
-name|now
-decl_stmt|;
-name|dev_t
-name|dummy
-init|=
-name|makedev
-argument_list|(
-literal|0
-argument_list|,
-name|mouse
-operator|.
-name|minor
-argument_list|)
-decl_stmt|;
-name|struct
-name|tty
-modifier|*
-name|mousetty
-init|=
-name|get_pccons
-argument_list|(
-name|dummy
-argument_list|)
-decl_stmt|;
-comment|/* 				 * strings to send for each mouse event, 				 * indexed by the movement direction and 				 * the "accelerator" value (TRUE for frequent 				 * key presses); note that the first byte 				 * of each string is actually overwritten 				 * by the current button value before sending 				 * the string 				 */
-specifier|static
-name|u_char
-name|mousestrings
-index|[
-literal|2
-index|]
-index|[
-name|MOUSE_SE
-operator|+
-literal|1
-index|]
-index|[
-literal|5
-index|]
-init|=
-block|{
-block|{
-comment|/* first, the non-accelerated strings*/
-block|{
-literal|0x87
-block|,
-operator|-
-literal|1
-block|,
-literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* NW */
-block|{
-literal|0x87
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* N */
-block|{
-literal|0x87
-block|,
-literal|1
-block|,
-literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* NE */
-block|{
-literal|0x87
-block|,
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* W */
-block|{
-literal|0x87
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* 0 */
-block|{
-literal|0x87
-block|,
-literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* E */
-block|{
-literal|0x87
-block|,
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* SW */
-block|{
-literal|0x87
-block|,
-literal|0
-block|,
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* S */
-block|{
-literal|0x87
-block|,
-literal|1
-block|,
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|}
-comment|/* SE */
-block|}
-block|,
-block|{
-comment|/* now, 6 steps at once */
-block|{
-literal|0x87
-block|,
-operator|-
-literal|4
-block|,
-literal|4
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* NW */
-block|{
-literal|0x87
-block|,
-literal|0
-block|,
-literal|6
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* N */
-block|{
-literal|0x87
-block|,
-literal|4
-block|,
-literal|4
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* NE */
-block|{
-literal|0x87
-block|,
-operator|-
-literal|6
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* W */
-block|{
-literal|0x87
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* 0 */
-block|{
-literal|0x87
-block|,
-literal|6
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* E */
-block|{
-literal|0x87
-block|,
-operator|-
-literal|4
-block|,
-operator|-
-literal|4
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* SW */
-block|{
-literal|0x87
-block|,
-literal|0
-block|,
-operator|-
-literal|6
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-comment|/* S */
-block|{
-literal|0x87
-block|,
-literal|4
-block|,
-operator|-
-literal|4
-block|,
-literal|0
-block|,
-literal|0
-block|}
-comment|/* SE */
-block|}
-block|}
-decl_stmt|;
-if|if
-condition|(
-name|dt
-operator|==
-literal|0xe0
-condition|)
-block|{
-comment|/* ignore extended scan codes */
-name|mouse
-operator|.
-name|extendedseen
-operator|=
-literal|1
-expr_stmt|;
-goto|goto
-name|no_mouse_event
-goto|;
-block|}
-if|if
-condition|(
-name|mouse
-operator|.
-name|extendedseen
-condition|)
-block|{
-name|mouse
-operator|.
-name|extendedseen
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|no_mouse_event
-goto|;
-block|}
-name|mouse
-operator|.
-name|extendedseen
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 				 * Note that we cannot use a switch here 				 * since we want to have the keycodes in 				 * a variable 				 */
-if|if
-condition|(
-operator|(
-name|dt
-operator|&
-literal|0x7f
-operator|)
-operator|==
-name|mousedef
-operator|.
-name|leftbutton
-condition|)
-block|{
-name|button
-operator|=
-literal|4
-expr_stmt|;
-goto|goto
-name|do_button
-goto|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|dt
-operator|&
-literal|0x7f
-operator|)
-operator|==
-name|mousedef
-operator|.
-name|middlebutton
-condition|)
-block|{
-name|button
-operator|=
-literal|2
-expr_stmt|;
-goto|goto
-name|do_button
-goto|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|dt
-operator|&
-literal|0x7f
-operator|)
-operator|==
-name|mousedef
-operator|.
-name|rightbutton
-condition|)
-block|{
-name|button
-operator|=
-literal|1
-expr_stmt|;
-name|do_button
-label|:
-comment|/* 					 * i would really like to give 					 * some acustical support 					 * (pling/plong); i am not sure 					 * whether it is safe to call 					 * sysbeep from within an intr 					 * service, since it calls 					 * timeout in turn which mani- 					 * pulates the spl mask - jw 					 */
-define|#
-directive|define
-name|PLING
-value|sysbeep(PCVT_SYSBEEPF / 1500, 2)
-define|#
-directive|define
-name|PLONG
-value|sysbeep(PCVT_SYSBEEPF / 1200, 2)
-if|if
-condition|(
-name|mousedef
-operator|.
-name|stickybuttons
-condition|)
-block|{
-if|if
-condition|(
-name|dt
-operator|&
-literal|0x80
-condition|)
-block|{
-name|mouse
-operator|.
-name|breakseen
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-name|u_char
-operator|*
-operator|)
-literal|0
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|mouse
-operator|.
-name|buttons
-operator|==
-name|button
-operator|&&
-operator|!
-name|mouse
-operator|.
-name|breakseen
-condition|)
-block|{
-comment|/* ignore repeats */
-return|return
-operator|(
-name|u_char
-operator|*
-operator|)
-literal|0
-return|;
-block|}
-else|else
-name|mouse
-operator|.
-name|breakseen
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|mouse
-operator|.
-name|buttons
-operator|==
-name|button
-condition|)
-block|{
-comment|/* release it */
-name|mouse
-operator|.
-name|buttons
-operator|=
-literal|0
-expr_stmt|;
-name|PLONG
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 							 * eventually, release 							 * any other button, 							 * and stick this one 							 */
-name|mouse
-operator|.
-name|buttons
-operator|=
-name|button
-expr_stmt|;
-name|PLING
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|dt
-operator|&
-literal|0x80
-condition|)
-block|{
-name|mouse
-operator|.
-name|buttons
-operator|&=
-operator|~
-name|button
-expr_stmt|;
-name|PLONG
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|mouse
-operator|.
-name|buttons
-operator|&
-name|button
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|mouse
-operator|.
-name|buttons
-operator||=
-name|button
-expr_stmt|;
-name|PLING
-expr_stmt|;
-block|}
-comment|/*else: ignore same btn press*/
-block|}
-name|move
-operator|=
-name|MOUSE_0
-expr_stmt|;
-name|accel
-operator|=
-literal|0
-expr_stmt|;
-block|}
-undef|#
-directive|undef
-name|PLING
-undef|#
-directive|undef
-name|PLONG
-else|else
-switch|switch
-condition|(
-name|dt
-operator|&
-literal|0x7f
-condition|)
-block|{
-comment|/* the arrow keys - KP 1 thru KP 9 */
-case|case
-literal|0x47
-case|:
-name|move
-operator|=
-name|MOUSE_NW
-expr_stmt|;
-goto|goto
-name|do_move
-goto|;
-case|case
-literal|0x48
-case|:
-name|move
-operator|=
-name|MOUSE_N
-expr_stmt|;
-goto|goto
-name|do_move
-goto|;
-case|case
-literal|0x49
-case|:
-name|move
-operator|=
-name|MOUSE_NE
-expr_stmt|;
-goto|goto
-name|do_move
-goto|;
-case|case
-literal|0x4b
-case|:
-name|move
-operator|=
-name|MOUSE_W
-expr_stmt|;
-goto|goto
-name|do_move
-goto|;
-case|case
-literal|0x4c
-case|:
-name|move
-operator|=
-name|MOUSE_0
-expr_stmt|;
-goto|goto
-name|do_move
-goto|;
-case|case
-literal|0x4d
-case|:
-name|move
-operator|=
-name|MOUSE_E
-expr_stmt|;
-goto|goto
-name|do_move
-goto|;
-case|case
-literal|0x4f
-case|:
-name|move
-operator|=
-name|MOUSE_SW
-expr_stmt|;
-goto|goto
-name|do_move
-goto|;
-case|case
-literal|0x50
-case|:
-name|move
-operator|=
-name|MOUSE_S
-expr_stmt|;
-goto|goto
-name|do_move
-goto|;
-case|case
-literal|0x51
-case|:
-name|move
-operator|=
-name|MOUSE_SE
-expr_stmt|;
-name|do_move
-label|:
-if|if
-condition|(
-name|dt
-operator|&
-literal|0x80
-condition|)
-comment|/* 						 * arrow key break events are 						 * of no importance for us 						 */
-return|return
-operator|(
-name|u_char
-operator|*
-operator|)
-literal|0
-return|;
-comment|/* 					 * see whether the last move did 					 * happen "recently", i.e. before 					 * less than half a second 					 */
-name|getmicrotime
-argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
-name|timevalsub
-argument_list|(
-operator|&
-name|now
-argument_list|,
-operator|&
-name|mouse
-operator|.
-name|lastmove
-argument_list|)
-expr_stmt|;
-name|getmicrotime
-argument_list|(
-operator|&
-name|mouse
-operator|.
-name|lastmove
-argument_list|)
-expr_stmt|;
-name|accel
-operator|=
-operator|(
-name|now
-operator|.
-name|tv_sec
-operator|==
-literal|0
-operator|&&
-name|now
-operator|.
-name|tv_usec
-operator|<
-name|mousedef
-operator|.
-name|acceltime
-operator|)
-expr_stmt|;
-break|break;
-default|default:
-comment|/* not a mouse-emulating key */
-goto|goto
-name|no_mouse_event
-goto|;
-block|}
-name|mousestrings
-index|[
-name|accel
-index|]
-index|[
-name|move
-index|]
-index|[
-literal|0
-index|]
-operator|=
-literal|0x80
-operator|+
-operator|(
-operator|~
-name|mouse
-operator|.
-name|buttons
-operator|&
-literal|7
-operator|)
-expr_stmt|;
-comment|/* finally, send the string */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|5
-condition|;
-name|i
-operator|++
-control|)
-operator|(
-operator|*
-name|linesw
-index|[
-name|mousetty
-operator|->
-name|t_line
-index|]
-operator|.
-name|l_rint
-operator|)
-operator|(
-name|mousestrings
-index|[
-name|accel
-index|]
-index|[
-name|move
-index|]
-index|[
-name|i
-index|]
-operator|,
-name|mousetty
-operator|)
-expr_stmt|;
-return|return
-operator|(
-name|u_char
-operator|*
-operator|)
-literal|0
-return|;
-comment|/* not a kbd event */
-block|}
-name|no_mouse_event
-label|:
-endif|#
-directive|endif
-comment|/* PCVT_EMU_MOUSE */
 return|return
 operator|(
 operator|(
@@ -5355,122 +3226,9 @@ name|keybuf
 operator|)
 return|;
 block|}
-block|}
 else|#
 directive|else
 comment|/* !XSERVER */
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-if|#
-directive|if
-name|PCVT_KBD_FIFO
-comment|/* see if there is data from the keyboard available either from */
-comment|/* the keyboard fifo or from the 8042 keyboard controller	*/
-if|if
-condition|(
-name|pcvt_kbd_count
-operator|||
-operator|(
-name|inb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|)
-operator|&
-name|STATUS_OUTPBF
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|noblock
-operator|||
-name|kbd_polling
-condition|)
-comment|/* source = 8042 */
-block|{
-name|PCVT_KBD_DELAY
-argument_list|()
-expr_stmt|;
-comment|/* 7 us delay */
-name|dt
-operator|=
-name|inb
-argument_list|(
-name|CONTROLLER_DATA
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-comment|/* source = keyboard fifo */
-block|{
-name|dt
-operator|=
-name|pcvt_kbd_fifo
-index|[
-name|pcvt_kbd_rptr
-operator|++
-index|]
-expr_stmt|;
-comment|/* yes, get it ! */
-name|PCVT_DISABLE_INTR
-argument_list|()
-expr_stmt|;
-name|pcvt_kbd_count
-operator|--
-expr_stmt|;
-name|PCVT_ENABLE_INTR
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|pcvt_kbd_rptr
-operator|>=
-name|PCVT_KBD_FIFO_SZ
-condition|)
-name|pcvt_kbd_rptr
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-else|#
-directive|else
-comment|/* !PCVT_KBD_FIFO */
-comment|/* see if there is data from the keyboard available from the 8042 */
-if|if
-condition|(
-name|inb
-argument_list|(
-name|CONTROLLER_CTRL
-argument_list|)
-operator|&
-name|STATUS_OUTPBF
-condition|)
-block|{
-name|PCVT_KBD_DELAY
-argument_list|()
-expr_stmt|;
-comment|/* 7 us delay */
-name|dt
-operator|=
-name|inb
-argument_list|(
-name|CONTROLLER_DATA
-argument_list|)
-expr_stmt|;
-comment|/* yes, get data ! */
-block|}
-endif|#
-directive|endif
-comment|/* !PCVT_KBD_FIFO */
-else|#
-directive|else
-comment|/* _DEV_KBD_KBDREG_H_ */
-if|#
-directive|if
-name|PCVT_KBD_FIFO
 if|if
 condition|(
 name|pcvt_kbd_count
@@ -5505,9 +3263,6 @@ literal|0
 expr_stmt|;
 block|}
 elseif|else
-endif|#
-directive|endif
-comment|/* PCVT_KBD_FIFO */
 if|if
 condition|(
 operator|!
@@ -5584,30 +3339,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
-endif|#
-directive|endif
 comment|/* !XSERVER */
-ifndef|#
-directive|ifndef
-name|_DEV_KBD_KBDREG_H_
-else|else
-block|{
-if|if
-condition|(
-name|noblock
-condition|)
-return|return
-name|NULL
-return|;
-else|else
-goto|goto
-name|loop
-goto|;
-block|}
-endif|#
-directive|endif
-comment|/* !_DEV_KBD_KBDREG_H_ */
 if|#
 directive|if
 name|PCVT_SHOWKEYS
@@ -5729,19 +3461,11 @@ goto|;
 comment|/* got a normal scan key */
 name|regular
 label|:
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>
-literal|210
 name|add_keyboard_randomness
 argument_list|(
 name|dt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_FREEBSD> 210 */
 if|#
 directive|if
 name|PCVT_SCANSET
@@ -6191,7 +3915,7 @@ if|if
 condition|(
 name|noblock
 operator|==
-literal|31337
+name|SCROLLBACK_COOKIE
 condition|)
 return|return
 name|NULL
@@ -6280,26 +4004,6 @@ directive|endif
 comment|/* PCVT_CTRL_ALT_DEL */
 if|#
 directive|if
-operator|!
-operator|(
-name|PCVT_NETBSD
-operator|||
-name|PCVT_FREEBSD
-operator|>=
-literal|200
-operator|)
-include|#
-directive|include
-file|"ddb.h"
-endif|#
-directive|endif
-comment|/* !(PCVT_NETBSD || PCVT_FREEBSD>= 200) */
-if|#
-directive|if
-name|NDDB
-operator|>
-literal|0
-operator|||
 name|defined
 argument_list|(
 name|DDB
@@ -6336,22 +4040,12 @@ name|in_Debugger
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_FREEBSD
 comment|/* the string is actually not used... */
 name|Debugger
 argument_list|(
 literal|"kbd"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|Debugger
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|in_Debugger
 operator|=
 literal|0
@@ -6371,7 +4065,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* NDDB> 0 || defined(DDB) */
+comment|/* defined(DDB) */
 comment|/* look for keys with special handling */
 if|if
 condition|(
@@ -6785,7 +4479,13 @@ return|return
 name|cp
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	reflect status of locking keys& set led's  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|setlockkeys
@@ -6834,7 +4534,13 @@ name|update_led
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	remove a key definition  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|rmkeydef
@@ -6942,7 +4648,13 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	overlay a key  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|setkeydef
@@ -7144,11 +4856,17 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	keyboard ioctl's entry  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 name|int
 name|kbdioctl
 parameter_list|(
-name|Dev_t
+name|dev_t
 name|dev
 parameter_list|,
 name|int
@@ -7437,75 +5155,19 @@ return|return
 literal|0
 return|;
 block|}
-if|#
-directive|if
-name|PCVT_EMU_MOUSE
-comment|/*--------------------------------------------------------------------------*  *	mouse emulator ioctl  *--------------------------------------------------------------------------*/
-name|int
-name|mouse_ioctl
-parameter_list|(
-name|Dev_t
-name|dev
-parameter_list|,
-name|int
-name|cmd
-parameter_list|,
-name|caddr_t
-name|data
-parameter_list|)
-block|{
-name|struct
-name|mousedefs
-modifier|*
-name|def
-init|=
-operator|(
-expr|struct
-name|mousedefs
-operator|*
-operator|)
-name|data
-decl_stmt|;
-switch|switch
-condition|(
-name|cmd
-condition|)
-block|{
-case|case
-name|KBDMOUSEGET
-case|:
-operator|*
-name|def
-operator|=
-name|mousedef
-expr_stmt|;
-break|break;
-case|case
-name|KBDMOUSESET
-case|:
-name|mousedef
-operator|=
-operator|*
-name|def
-expr_stmt|;
-break|break;
-default|default:
-return|return
-operator|-
-literal|1
-return|;
-block|}
-return|return
-literal|0
-return|;
-block|}
-endif|#
-directive|endif
-comment|/* PCVT_EMU_MOUSE */
-if|#
-directive|if
-name|PCVT_USL_VT_COMPAT
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XSERVER
+end_ifdef
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	convert ISO-8859 style keycode into IBM 437  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|__inline
 name|u_char
@@ -7533,7 +5195,13 @@ literal|0x80
 index|]
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	build up a USL style keyboard map  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 name|void
 name|get_usl_keymap
 parameter_list|(
@@ -7941,10 +5609,22 @@ break|break;
 block|}
 block|}
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
-comment|/* PCVT_USL_VT_COMPAT */
+end_endif
+
+begin_comment
+comment|/* XSERVER */
+end_comment
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	switch keypad to numeric mode  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 name|void
 name|vt_keynum
 parameter_list|(
@@ -7964,7 +5644,13 @@ name|update_led
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	switch keypad to application mode  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 name|void
 name|vt_keyappl
 parameter_list|(
@@ -7984,12 +5670,24 @@ name|update_led
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_if
 if|#
 directive|if
 operator|!
 name|PCVT_VT220KEYB
+end_if
+
+begin_comment
 comment|/* !PCVT_VT220KEYB, HP-like Keyboard layout */
+end_comment
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 1  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey1
@@ -8066,7 +5764,13 @@ expr_stmt|;
 comment|/* F14 */
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 2  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey2
@@ -8143,7 +5847,13 @@ expr_stmt|;
 comment|/* HELP */
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 3  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey3
@@ -8220,7 +5930,13 @@ expr_stmt|;
 comment|/* DO */
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 4  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey4
@@ -8330,7 +6046,13 @@ expr_stmt|;
 comment|/* F17 */
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 5  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey5
@@ -8407,7 +6129,13 @@ expr_stmt|;
 comment|/* F18 */
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 6  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey6
@@ -8484,7 +6212,13 @@ expr_stmt|;
 comment|/* F19 */
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 7  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey7
@@ -8561,7 +6295,13 @@ expr_stmt|;
 comment|/* F20 */
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 8  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey8
@@ -8638,7 +6378,13 @@ expr_stmt|;
 comment|/* F21 ? !! */
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 9  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey9
@@ -8688,7 +6434,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 10  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey10
@@ -8752,7 +6504,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 11  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey11
@@ -8806,7 +6564,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 12  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey12
@@ -8852,7 +6616,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 1  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey1
@@ -8941,7 +6711,13 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 2  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey2
@@ -9030,7 +6806,13 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 3  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey3
@@ -9119,7 +6901,13 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 4  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey4
@@ -9208,7 +6996,13 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 5  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey5
@@ -9297,7 +7091,13 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 6  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey6
@@ -9386,7 +7186,13 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 7  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey7
@@ -9475,7 +7281,13 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 8  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey8
@@ -9564,7 +7376,13 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 9  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey9
@@ -9572,7 +7390,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{ }
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 10  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey10
@@ -9580,7 +7404,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{ }
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 11  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey11
@@ -9588,7 +7418,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{ }
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 12  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey12
@@ -9596,7 +7432,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{ }
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 1  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey1
@@ -9614,7 +7456,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 2  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey2
@@ -9632,7 +7480,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 3  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey3
@@ -9650,7 +7504,13 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 4  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey4
@@ -9668,7 +7528,13 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 5  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey5
@@ -9686,7 +7552,13 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 6  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey6
@@ -9704,7 +7576,13 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 7  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey7
@@ -9722,7 +7600,13 @@ literal|6
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 8  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey8
@@ -9740,7 +7624,13 @@ literal|7
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 9  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey9
@@ -9758,7 +7648,13 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 10  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey10
@@ -9776,7 +7672,13 @@ literal|9
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 11  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey11
@@ -9794,7 +7696,13 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 12  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey12
@@ -9812,10 +7720,22 @@ literal|11
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_comment
 comment|/* PCVT_VT220  -  VT220-like Keyboard layout */
+end_comment
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 1  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey1
@@ -9843,7 +7763,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 2  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey2
@@ -9871,7 +7797,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 3  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey3
@@ -9899,7 +7831,13 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 4  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey4
@@ -9927,7 +7865,13 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 5  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey5
@@ -9977,7 +7921,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 6  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey6
@@ -10009,7 +7959,13 @@ literal|"\033[17~"
 expr_stmt|;
 comment|/* F6 */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 7  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey7
@@ -10041,7 +7997,13 @@ literal|"\033[18~"
 expr_stmt|;
 comment|/* F7 */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 8  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey8
@@ -10073,7 +8035,13 @@ literal|"\033[19~"
 expr_stmt|;
 comment|/* F8 */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 9  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey9
@@ -10105,7 +8073,13 @@ literal|"\033[20~"
 expr_stmt|;
 comment|/* F9 */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 10  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey10
@@ -10137,7 +8111,13 @@ literal|"\033[21~"
 expr_stmt|;
 comment|/* F10 */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 11  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey11
@@ -10169,7 +8149,13 @@ literal|"\033[23~"
 expr_stmt|;
 comment|/* F11 */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to function key 12  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|fkey12
@@ -10201,7 +8187,13 @@ literal|"\033[24~"
 expr_stmt|;
 comment|/* F12 */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 1  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey1
@@ -10269,7 +8261,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 2  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey2
@@ -10337,7 +8335,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 3  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey3
@@ -10405,7 +8409,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 4  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey4
@@ -10473,7 +8483,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 5  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey5
@@ -10557,7 +8573,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 6  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey6
@@ -10664,7 +8686,13 @@ literal|"\033[29~"
 expr_stmt|;
 comment|/* DO */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 7  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey7
@@ -10771,7 +8799,13 @@ literal|"\033[31~"
 expr_stmt|;
 comment|/* F17 */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 8  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey8
@@ -10878,7 +8912,13 @@ literal|"\033[32~"
 expr_stmt|;
 comment|/* F18 */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 9  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey9
@@ -10985,7 +9025,13 @@ literal|"\033[33~"
 expr_stmt|;
 comment|/* F19 */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 10  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey10
@@ -11092,7 +9138,13 @@ literal|"\033[34~"
 expr_stmt|;
 comment|/* F20 */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 11  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey11
@@ -11153,7 +9205,13 @@ expr_stmt|;
 comment|/* F11 */
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to SHIFTED function key 12  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|sfkey12
@@ -11214,7 +9272,13 @@ expr_stmt|;
 comment|/* F12 */
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 1  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey1
@@ -11236,7 +9300,13 @@ name|vsp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 2  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey2
@@ -11258,7 +9328,13 @@ name|vsp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 3  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey3
@@ -11280,7 +9356,13 @@ name|vsp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 4  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey4
@@ -11308,7 +9390,13 @@ endif|#
 directive|endif
 comment|/* PCVT_SHOWKEYS */
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 5  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey5
@@ -11330,7 +9418,13 @@ name|vsp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 6  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey6
@@ -11352,7 +9446,13 @@ name|vsp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 7  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey7
@@ -11374,7 +9474,13 @@ name|vsp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 8  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey8
@@ -11396,7 +9502,13 @@ name|vsp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 9  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey9
@@ -11423,7 +9535,13 @@ name|vsp
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 10  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey10
@@ -11468,7 +9586,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 11  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey11
@@ -11508,7 +9632,13 @@ name|M_PUREVT
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	function bound to control function key 12  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|cfkey12
@@ -11516,10 +9646,22 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{ }
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* PCVT_VT220KEYB */
+end_comment
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|scrollback_save_screen
@@ -11612,7 +9754,13 @@ name|x
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|scrollback_restore_screen

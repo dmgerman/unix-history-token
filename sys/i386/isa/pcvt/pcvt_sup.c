@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 Hellmuth Michaelis  *  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore, Joerg Wunsch, Scott Turner and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore, Joerg Wunsch, Scott Turner and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_sup.c	VT220 Driver Support Routines  *	---------------------------------------------  *  *	Last Edit-Date: [Thu Dec 30 17:01:03 1999]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_sup.c	VT220 Driver Support Routines  *	---------------------------------------------  *  *	Last Edit-Date: [Sun Mar 26 10:38:45 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -99,7 +99,7 @@ name|screeninfo
 modifier|*
 name|data
 parameter_list|,
-name|Dev_t
+name|dev_t
 name|dev
 parameter_list|)
 function_decl|;
@@ -115,7 +115,7 @@ name|screeninfo
 modifier|*
 name|data
 parameter_list|,
-name|Dev_t
+name|dev_t
 name|dev
 parameter_list|)
 function_decl|;
@@ -161,7 +161,7 @@ name|vgapel
 modifier|*
 name|data
 parameter_list|,
-name|Dev_t
+name|dev_t
 name|dev
 parameter_list|)
 function_decl|;
@@ -177,7 +177,7 @@ name|vgapel
 modifier|*
 name|data
 parameter_list|,
-name|Dev_t
+name|dev_t
 name|dev
 parameter_list|)
 function_decl|;
@@ -446,7 +446,7 @@ begin_function
 name|int
 name|vgaioctl
 parameter_list|(
-name|Dev_t
+name|dev_t
 name|dev
 parameter_list|,
 name|int
@@ -476,9 +476,6 @@ comment|/*  * Some of the commands are not applicable if the vt in question, or 
 ifdef|#
 directive|ifdef
 name|XSERVER
-if|#
-directive|if
-name|PCVT_USL_VT_COMPAT
 define|#
 directive|define
 name|is_dev_grafx
@@ -489,26 +486,11 @@ name|is_current_grafx
 value|vsp->vt_status& VT_GRAFX
 else|#
 directive|else
-comment|/* old X interface */
-define|#
-directive|define
-name|is_dev_grafx
-value|pcvt_xmode
-define|#
-directive|define
-name|is_current_grafx
-value|pcvt_xmode
-endif|#
-directive|endif
-comment|/* PCVT_USL_VT_COMPAT */
-else|#
-directive|else
 comment|/* !XSERVER */
 define|#
 directive|define
 name|is_dev_grafx
 value|0
-comment|/* not applicable */
 define|#
 directive|define
 name|is_current_grafx
@@ -657,24 +639,6 @@ break|break;
 case|case
 name|VGASETSCREEN
 case|:
-if|#
-directive|if
-name|defined
-name|XSERVER
-operator|&&
-operator|!
-name|PCVT_USL_VT_COMPAT
-comment|/* avoid screen switch if using old X mode */
-if|if
-condition|(
-name|is_dev_grafx
-condition|)
-return|return
-name|EAGAIN
-return|;
-endif|#
-directive|endif
-comment|/* XSERVER&& !PCVT_USL_VT_COMPAT */
 if|#
 directive|if
 name|PCVT_SCREENSAVER
@@ -1008,24 +972,6 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-if|#
-directive|if
-name|PCVT_NETBSD
-name|data
-operator|->
-name|opsys
-operator|=
-name|CONF_NETBSD
-expr_stmt|;
-name|data
-operator|->
-name|opsysrel
-operator|=
-name|PCVT_NETBSD
-expr_stmt|;
-elif|#
-directive|elif
-name|PCVT_FREEBSD
 name|data
 operator|->
 name|opsys
@@ -1036,24 +982,8 @@ name|data
 operator|->
 name|opsysrel
 operator|=
-name|PCVT_FREEBSD
+name|__FreeBSD__
 expr_stmt|;
-else|#
-directive|else
-name|data
-operator|->
-name|opsys
-operator|=
-name|CONF_UNKNOWNOPSYS
-expr_stmt|;
-name|data
-operator|->
-name|opsysrel
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|data
 operator|->
 name|nscreens
@@ -1084,48 +1014,18 @@ name|sysbeepf
 operator|=
 name|PCVT_SYSBEEPF
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_NETBSD
-operator|||
-name|PCVT_FREEBSD
-operator|>=
-literal|200
 name|data
 operator|->
 name|pcburst
 operator|=
 name|PCVT_PCBURST
 expr_stmt|;
-else|#
-directive|else
-name|data
-operator|->
-name|pcburst
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|PCVT_KBD_FIFO
 name|data
 operator|->
 name|kbd_fifo_sz
 operator|=
 name|PCVT_KBD_FIFO_SZ
 expr_stmt|;
-else|#
-directive|else
-name|data
-operator|->
-name|kbd_fifo_sz
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|data
 operator|->
 name|compile_opts
@@ -1176,13 +1076,6 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|PCVT_EMU_MOUSE
-operator||
-name|CONF_EMU_MOUSE
-endif|#
-directive|endif
-if|#
-directive|if
 name|PCVT_SHOWKEYS
 operator||
 name|CONF_SHOWKEYS
@@ -1190,38 +1083,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|PCVT_KEYBDID
-operator||
-name|CONF_KEYBDID
-endif|#
-directive|endif
-if|#
-directive|if
-name|PCVT_SIGWINCH
-operator||
-name|CONF_SIGWINCH
-endif|#
-directive|endif
-if|#
-directive|if
 name|PCVT_NULLCHARS
 operator||
 name|CONF_NULLCHARS
-endif|#
-directive|endif
-if|#
-directive|if
-name|PCVT_BACKUP_FONTS
-operator||
-name|CONF_BACKUP_FONTS
-endif|#
-directive|endif
-if|#
-directive|if
-name|PCVT_SW0CNOUTP
-comment|/* was FORCE8BIT */
-operator||
-name|CONF_SW0CNOUTP
 endif|#
 directive|endif
 if|#
@@ -1238,39 +1102,11 @@ operator||
 name|CONF_132GENERIC
 endif|#
 directive|endif
-if|#
-directive|if
-name|PCVT_PALFLICKER
-operator||
-name|CONF_PALFLICKER
-endif|#
-directive|endif
-if|#
-directive|if
-name|PCVT_WAITRETRACE
-operator||
-name|CONF_WAITRETRACE
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|XSERVER
 operator||
 name|CONF_XSERVER
-endif|#
-directive|endif
-if|#
-directive|if
-name|PCVT_USL_VT_COMPAT
-operator||
-name|CONF_USL_VT_COMPAT
-endif|#
-directive|endif
-if|#
-directive|if
-name|PCVT_PORTIO_DELAY
-operator||
-name|CONF_PORTIO_DELAY
 endif|#
 directive|endif
 if|#
@@ -1285,20 +1121,6 @@ directive|if
 name|PCVT_META_ESC
 operator||
 name|CONF_META_ESC
-endif|#
-directive|endif
-if|#
-directive|if
-name|PCVT_KBD_FIFO
-operator||
-name|CONF_KBD_FIFO
-endif|#
-directive|endif
-if|#
-directive|if
-name|PCVT_NOFASTSCROLL
-operator||
-name|CONF_NOFASTSCROLL
 endif|#
 directive|endif
 if|#
@@ -2029,17 +1851,9 @@ name|vga_character_set
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-operator|!
-name|PCVT_USL_VT_COMPAT
-name|vgapage
-argument_list|(
-name|current_video_screen
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+ifdef|#
+directive|ifdef
+name|XSERVER
 name|switch_screen
 argument_list|(
 name|current_video_screen
@@ -2049,9 +1863,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|vgapage
+argument_list|(
+name|current_video_screen
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-comment|/* !PCVT_USL_VT_COMPAT */
+comment|/* XSERVER */
 block|}
 end_function
 
@@ -2333,7 +2154,7 @@ name|screeninfo
 modifier|*
 name|data
 parameter_list|,
-name|Dev_t
+name|dev_t
 name|dev
 parameter_list|)
 block|{
@@ -2468,7 +2289,7 @@ name|screeninfo
 modifier|*
 name|data
 parameter_list|,
-name|Dev_t
+name|dev_t
 name|dev
 parameter_list|)
 block|{
@@ -2517,12 +2338,9 @@ argument_list|(
 name|screen
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
+ifdef|#
+directive|ifdef
 name|XSERVER
-operator|&&
-name|PCVT_USL_VT_COMPAT
 block|{
 name|int
 name|x
@@ -2585,7 +2403,7 @@ return|return;
 comment|/* XXX should say "EAGAIN" here */
 endif|#
 directive|endif
-comment|/* defined XSERVER&& PCVT_USL_VT_COMPAT */
+comment|/* XSERVER */
 if|if
 condition|(
 operator|(
@@ -3071,9 +2889,6 @@ name|scrr_len
 operator|-
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_SIGWINCH
 if|if
 condition|(
 name|svsp
@@ -3099,9 +2914,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_SIGWINCH */
 name|reallocate_scrollbuffer
 argument_list|(
 name|svsp
@@ -3353,7 +3165,7 @@ name|vgapel
 modifier|*
 name|data
 parameter_list|,
-name|Dev_t
+name|dev_t
 name|dev
 parameter_list|)
 block|{
@@ -3448,7 +3260,7 @@ name|vgapel
 modifier|*
 name|data
 parameter_list|,
-name|Dev_t
+name|dev_t
 name|dev
 parameter_list|)
 block|{
@@ -3574,15 +3386,6 @@ name|int
 name|writeit
 parameter_list|)
 block|{
-if|#
-directive|if
-name|PCVT_PALFLICKER
-name|vga_screen_off
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_PALFLICKER */
 if|if
 condition|(
 name|writeit
@@ -3597,15 +3400,6 @@ argument_list|,
 name|idx
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_WAITRETRACE
-name|wait_retrace
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_WAITRETRACE */
 name|outb
 argument_list|(
 name|VGA_DAC
@@ -3619,15 +3413,6 @@ operator|&
 name|VGA_PMSK
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_WAITRETRACE
-name|wait_retrace
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_WAITRETRACE */
 name|outb
 argument_list|(
 name|VGA_DAC
@@ -3641,15 +3426,6 @@ operator|&
 name|VGA_PMSK
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_WAITRETRACE
-name|wait_retrace
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_WAITRETRACE */
 name|outb
 argument_list|(
 name|VGA_DAC
@@ -3676,15 +3452,6 @@ argument_list|,
 name|idx
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_WAITRETRACE
-name|wait_retrace
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_WAITRETRACE */
 name|val
 operator|->
 name|r
@@ -3698,15 +3465,6 @@ argument_list|)
 operator|&
 name|VGA_PMSK
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_WAITRETRACE
-name|wait_retrace
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_WAITRETRACE */
 name|val
 operator|->
 name|g
@@ -3720,15 +3478,6 @@ argument_list|)
 operator|&
 name|VGA_PMSK
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_WAITRETRACE
-name|wait_retrace
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_WAITRETRACE */
 name|val
 operator|->
 name|b
@@ -3743,15 +3492,6 @@ operator|&
 name|VGA_PMSK
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|PCVT_PALFLICKER
-name|vga_screen_on
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_PALFLICKER */
 block|}
 end_function
 
@@ -3809,25 +3549,8 @@ comment|/* first check if update is possible */
 if|if
 condition|(
 name|chargen_access
-comment|/* does no-one load characters? */
-ifdef|#
-directive|ifdef
-name|XSERVER
-comment|/* is vt0 not in graphics mode? */
-if|#
-directive|if
-operator|!
-name|PCVT_USL_VT_COMPAT
-operator|||
-name|pcvt_xmode
-comment|/* XXX necessary ????? */
-endif|#
-directive|endif
-comment|/* PCVT_USL_VT_COMPAT */
-endif|#
-directive|endif
-comment|/* XSERVER */
 condition|)
+comment|/* does no-one load characters? */
 block|{
 goto|goto
 name|async_update_exit
@@ -4098,9 +3821,6 @@ name|i
 operator|=
 literal|18
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NEW_AVERUNNABLE
 name|tmp
 operator|=
 operator|(
@@ -4120,27 +3840,6 @@ operator|)
 operator|>>
 name|FSHIFT
 expr_stmt|;
-else|#
-directive|else
-name|tmp
-operator|=
-operator|(
-name|averunnable
-index|[
-literal|0
-index|]
-operator|*
-literal|100
-operator|+
-name|FSCALE
-operator|/
-literal|2
-operator|)
-operator|>>
-name|FSHIFT
-expr_stmt|;
-endif|#
-directive|endif
 name|buffer
 index|[
 name|i
@@ -4243,9 +3942,6 @@ name|i
 operator|+=
 literal|6
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NEW_AVERUNNABLE
 name|tmp
 operator|=
 operator|(
@@ -4265,27 +3961,6 @@ operator|)
 operator|>>
 name|FSHIFT
 expr_stmt|;
-else|#
-directive|else
-name|tmp
-operator|=
-operator|(
-name|averunnable
-index|[
-literal|1
-index|]
-operator|*
-literal|100
-operator|+
-name|FSCALE
-operator|/
-literal|2
-operator|)
-operator|>>
-name|FSHIFT
-expr_stmt|;
-endif|#
-directive|endif
 name|buffer
 index|[
 name|i
@@ -4388,9 +4063,6 @@ name|i
 operator|+=
 literal|7
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NEW_AVERUNNABLE
 name|tmp
 operator|=
 operator|(
@@ -4410,27 +4082,6 @@ operator|)
 operator|>>
 name|FSHIFT
 expr_stmt|;
-else|#
-directive|else
-name|tmp
-operator|=
-operator|(
-name|averunnable
-index|[
-literal|2
-index|]
-operator|*
-literal|100
-operator|+
-name|FSCALE
-operator|/
-literal|2
-operator|)
-operator|>>
-name|FSHIFT
-expr_stmt|;
-endif|#
-directive|endif
 name|buffer
 index|[
 name|i
@@ -6101,71 +5752,6 @@ comment|/* flag we are NOT accessing the chargen ram */
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|PCVT_WAITRETRACE
-end_if
-
-begin_comment
-comment|/*---------------------------------------------------------------------------*  *	wait for being in a retrace time window  *	NOTE: this is __VERY__ bad programming practice in this environment !!  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|wait_retrace
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|color
-condition|)
-block|{
-while|while
-condition|(
-operator|!
-operator|(
-name|inb
-argument_list|(
-name|GN_INPSTAT1C
-argument_list|)
-operator|&
-literal|0x01
-operator|)
-condition|)
-empty_stmt|;
-block|}
-else|else
-block|{
-while|while
-condition|(
-operator|!
-operator|(
-name|inb
-argument_list|(
-name|GN_INPSTAT1M
-argument_list|)
-operator|&
-literal|0x01
-operator|)
-condition|)
-empty_stmt|;
-block|}
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PCVT_WAITRETRACE */
-end_comment
-
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	switch screen off (VGA only)  *---------------------------------------------------------------------------*/
 end_comment
@@ -6533,17 +6119,11 @@ name|char
 modifier|*
 name|d
 decl_stmt|;
-if|#
-directive|if
-name|PCVT_BACKUP_FONTS
 name|unsigned
 name|char
 modifier|*
 name|bak
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_BACKUP_FONTS */
 name|int
 name|j
 decl_stmt|,
@@ -6662,9 +6242,6 @@ name|resetchargen
 argument_list|()
 expr_stmt|;
 comment|/* access video ram */
-if|#
-directive|if
-name|PCVT_BACKUP_FONTS
 if|if
 condition|(
 name|saved_charsets
@@ -6744,159 +6321,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DIAGNOSTIC */
-endif|#
-directive|endif
-comment|/* PCVT_BACKUP_FONTS */
 block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	save/restore character set n to addr b  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|PCVT_BACKUP_FONTS
-end_if
-
-begin_function
-name|void
-name|vga_move_charset
-parameter_list|(
-name|unsigned
-name|n
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-name|b
-parameter_list|,
-name|int
-name|save_it
-parameter_list|)
-block|{
-name|unsigned
-name|char
-modifier|*
-name|d
-init|=
-name|compute_charset_base
-argument_list|(
-name|n
-argument_list|)
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|d
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"vga_move_charset: wrong adaptor"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|vsp
-operator|->
-name|wd132col
-operator|&&
-operator|(
-name|n
-operator|==
-literal|1
-operator|||
-name|n
-operator|==
-literal|3
-operator|||
-name|n
-operator|==
-literal|5
-operator|||
-name|n
-operator|==
-literal|7
-operator|)
-condition|)
-block|{
-name|setchargen3
-argument_list|()
-expr_stmt|;
-name|d
-operator|-=
-literal|0x2000
-expr_stmt|;
-block|}
-else|else
-block|{
-name|setchargen
-argument_list|()
-expr_stmt|;
-block|}
-comment|/* PLEASE, leave the following alone using bcopyb, as several	*/
-comment|/* chipsets have problems if their memory is accessed with 32	*/
-comment|/* or 16 bits wide, don't change this to using bcopy for speed!	*/
-if|if
-condition|(
-name|save_it
-condition|)
-name|bcopyb
-argument_list|(
-name|d
-argument_list|,
-name|b
-argument_list|,
-literal|256
-comment|/* chars */
-operator|*
-literal|32
-comment|/* bytes per char */
-argument_list|)
-expr_stmt|;
-else|else
-name|bcopyb
-argument_list|(
-name|b
-argument_list|,
-name|d
-argument_list|,
-literal|256
-comment|/* chars */
-operator|*
-literal|32
-comment|/* bytes per char */
-argument_list|)
-expr_stmt|;
-name|resetchargen
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* PCVT_BACKUP_FONTS */
-end_comment
-
-begin_comment
-comment|/* since there are always backed up copies, we do not save anything here */
-end_comment
-
-begin_comment
-comment|/* parameter "b" is totally ignored */
+comment|/*---------------------------------------------------------------------------*  *	save/restore character set n to addr b  * 	since there are always backed up copies, we do not save anything here  *	parameter "b" is totally ignored  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -7032,21 +6461,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PCVT_BACKUP_FONTS */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|PCVT_USL_VT_COMPAT
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XSERVER
+end_ifndef
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	switch to virtual screen n (0 ... PCVT_NSCREENS-1)  *---------------------------------------------------------------------------*/
@@ -7060,16 +6479,6 @@ name|int
 name|n
 parameter_list|)
 block|{
-if|#
-directive|if
-operator|!
-name|PCVT_KBD_FIFO
-name|int
-name|x
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* !PCVT_KBD_FIFO */
 name|int
 name|cols
 init|=
@@ -7089,19 +6498,6 @@ operator|>=
 name|totalscreens
 condition|)
 return|return;
-if|#
-directive|if
-operator|!
-name|PCVT_KBD_FIFO
-name|x
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
-comment|/* protect us */
-endif|#
-directive|endif
-comment|/* !PCVT_KBD_FIFO */
 comment|/* video board memory -> kernel memory */
 name|bcopy
 argument_list|(
@@ -7139,21 +6535,6 @@ operator|=
 name|n
 expr_stmt|;
 comment|/* current screen no */
-if|#
-directive|if
-operator|!
-name|PCVT_NETBSD
-operator|&&
-operator|!
-operator|(
-name|PCVT_FREEBSD
-operator|>
-literal|110
-operator|&&
-name|PCVT_FREEBSD
-operator|<
-literal|200
-operator|)
 name|pcconsp
 operator|=
 operator|&
@@ -7163,35 +6544,6 @@ name|n
 index|]
 expr_stmt|;
 comment|/* current tty */
-elif|#
-directive|elif
-name|PCVT_FREEBSD
-operator|>
-literal|110
-operator|&&
-name|PCVT_FREEBSD
-operator|<
-literal|200
-name|pcconsp
-operator|=
-name|pccons
-index|[
-name|n
-index|]
-expr_stmt|;
-comment|/* current tty */
-else|#
-directive|else
-name|pcconsp
-operator|=
-name|pc_tty
-index|[
-name|n
-index|]
-expr_stmt|;
-comment|/* current tty */
-endif|#
-directive|endif
 name|vsp
 operator|=
 operator|&
@@ -7260,18 +6612,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|PCVT_KBD_FIFO
-name|splx
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !PCVT_KBD_FIFO */
 name|select_vga_charset
 argument_list|(
 name|vsp
@@ -7450,7 +6790,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !PCVT_USL_VT_COMPAT */
+comment|/* XSERVER */
 end_comment
 
 begin_comment
@@ -8255,80 +7595,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	force a vga card to behave like an ega for debugging  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_if
-if|#
-directive|if
-name|FORCE_EGA
-end_if
-
-begin_function
-name|void
-name|force_ega
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|unsigned
-name|char
-name|vgareg
-decl_stmt|;
-if|if
-condition|(
-name|adaptor_type
-operator|==
-name|VGA_ADAPTOR
-condition|)
-block|{
-name|adaptor_type
-operator|=
-name|EGA_ADAPTOR
-expr_stmt|;
-name|totalfonts
-operator|=
-literal|4
-expr_stmt|;
-name|vgareg
-operator|=
-name|inb
-argument_list|(
-name|GN_MISCOUTR
-argument_list|)
-expr_stmt|;
-comment|/* Miscellaneous Output Register */
-name|vgareg
-operator||=
-literal|128
-expr_stmt|;
-comment|/* Set 350 scanline mode */
-name|vgareg
-operator|&=
-operator|~
-literal|64
-expr_stmt|;
-name|outb
-argument_list|(
-name|GN_MISCOUTW
-argument_list|,
-name|vgareg
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FORCE_EGA */
-end_comment
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	disconnect attribute bit 3 from generating intensity  *	(and use it for a second character set !)  *---------------------------------------------------------------------------*/
 end_comment
 
@@ -8402,18 +7668,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-operator|!
-name|PCVT_FREEBSD
-specifier|extern
-name|struct
-name|timeval
-name|time
-decl_stmt|;
-comment|/* time-of-day register */
-endif|#
-directive|endif
 specifier|static
 name|unsigned
 name|long

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 Hellmuth Michaelis  *  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Joerg Wunsch and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Joerg Wunsch and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_ext.c	VT220 Driver Extended Support Routines  *	------------------------------------------------------  *  * 	Last Edit-Date: [Mon Dec 27 14:05:16 1999]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_ext.c	VT220 Driver Extended Support Routines  *	------------------------------------------------------  *  * 	Last Edit-Date: [Sun Mar 26 10:38:27 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -3895,22 +3895,6 @@ name|int
 name|cols
 parameter_list|)
 block|{
-if|#
-directive|if
-operator|!
-name|PCVT_BACKUP_FONTS
-specifier|static
-name|unsigned
-name|char
-modifier|*
-name|sv_fontwd
-index|[
-name|NVGAFONTS
-index|]
-decl_stmt|;
-endif|#
-directive|endif
-comment|/*  !PCVT_BACKUP_FONTS */
 name|u_char
 modifier|*
 name|sp
@@ -4022,93 +4006,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* save current fonts */
-if|#
-directive|if
-operator|!
-name|PCVT_BACKUP_FONTS
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|totalfonts
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|vgacs
-index|[
-name|i
-index|]
-operator|.
-name|loaded
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|sv_fontwd
-index|[
-name|i
-index|]
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-name|malloc
-argument_list|(
-literal|32
-operator|*
-literal|256
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_WAITOK
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|printf
-argument_list|(
-literal|"pcvt: no font buffer\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|vga_move_charset
-argument_list|(
-name|i
-argument_list|,
-name|sv_fontwd
-index|[
-name|i
-index|]
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|sv_fontwd
-index|[
-name|i
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* !PCVT_BACKUP_FONTS */
 name|sp
 operator|=
 name|savearea
@@ -4849,46 +4746,6 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* restore fonts */
-if|#
-directive|if
-operator|!
-name|PCVT_BACKUP_FONTS
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|totalfonts
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|sv_fontwd
-index|[
-name|i
-index|]
-condition|)
-name|vga_move_charset
-argument_list|(
-name|i
-argument_list|,
-name|sv_fontwd
-index|[
-name|i
-index|]
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-else|#
-directive|else
 for|for
 control|(
 name|i
@@ -4918,9 +4775,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !PCVT_BACKUP_FONTS */
 name|select_vga_charset
 argument_list|(
 name|vsp
@@ -9426,11 +9280,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|PCVT_USL_VT_COMPAT
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XSERVER
+end_ifdef
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	switch screen from text mode to X-mode and vice versa  *---------------------------------------------------------------------------*/
@@ -9462,16 +9316,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* PCVT_SCREENSAVER */
-if|#
-directive|if
-operator|!
-name|PCVT_KBD_FIFO
-name|int
-name|x
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* !PCVT_KBD_FIFO */
 name|int
 name|cols
 init|=
@@ -9491,19 +9335,6 @@ operator|>=
 name|totalscreens
 condition|)
 return|return;
-if|#
-directive|if
-operator|!
-name|PCVT_KBD_FIFO
-name|x
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
-comment|/* protect us */
-endif|#
-directive|endif
-comment|/* !PCVT_KBD_FIFO */
 if|if
 condition|(
 operator|!
@@ -9585,21 +9416,6 @@ operator|=
 name|n
 expr_stmt|;
 comment|/* current screen no */
-if|#
-directive|if
-operator|!
-name|PCVT_NETBSD
-operator|&&
-operator|!
-operator|(
-name|PCVT_FREEBSD
-operator|>
-literal|110
-operator|&&
-name|PCVT_FREEBSD
-operator|<
-literal|200
-operator|)
 name|pcconsp
 operator|=
 operator|&
@@ -9609,35 +9425,6 @@ name|n
 index|]
 expr_stmt|;
 comment|/* current tty */
-elif|#
-directive|elif
-name|PCVT_FREEBSD
-operator|>
-literal|110
-operator|&&
-name|PCVT_FREEBSD
-operator|<
-literal|200
-name|pcconsp
-operator|=
-name|pccons
-index|[
-name|n
-index|]
-expr_stmt|;
-comment|/* current tty */
-else|#
-directive|else
-name|pcconsp
-operator|=
-name|pc_tty
-index|[
-name|n
-index|]
-expr_stmt|;
-comment|/* current tty */
-endif|#
-directive|endif
 name|vsp
 operator|=
 operator|&
@@ -9895,18 +9682,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-operator|!
-name|PCVT_KBD_FIFO
-name|splx
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !PCVT_KBD_FIFO */
 name|select_vga_charset
 argument_list|(
 name|vsp
@@ -10730,11 +10505,6 @@ name|vt_switch_pending
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>
-literal|206
 comment|/* 			 * XXX: If pcvt is acting as the systems console, 			 * avoid panics going to the debugger while we are in 			 * process mode. 			 */
 if|if
 condition|(
@@ -10744,8 +10514,6 @@ name|cons_unavail
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 return|return
@@ -10762,7 +10530,7 @@ begin_function
 name|int
 name|usl_vt_ioctl
 parameter_list|(
-name|Dev_t
+name|dev_t
 name|dev
 parameter_list|,
 name|int
@@ -11010,11 +10778,6 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>
-literal|206
 comment|/* 		 * XXX: If pcvt is acting as the systems console, 		 * avoid panics going to the debugger while we are in 		 * process mode. 		 */
 if|if
 condition|(
@@ -11030,8 +10793,6 @@ operator|==
 name|VT_PROCESS
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
 name|splx
 argument_list|(
 name|opri
@@ -11311,11 +11072,6 @@ name|vt_switch_pending
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>
-literal|206
 comment|/* XXX */
 if|if
 condition|(
@@ -11325,8 +11081,6 @@ name|cons_unavail
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 return|return
 literal|0
@@ -11357,11 +11111,6 @@ operator|&=
 operator|~
 name|VT_WAIT_ACK
 expr_stmt|;
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>
-literal|206
 comment|/* XXX */
 if|if
 condition|(
@@ -11371,8 +11120,6 @@ name|cons_unavail
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -11602,15 +11349,6 @@ case|:
 comment|/* grant the process IO access; only allowed if euid == 0 */
 comment|/* and insecure */
 block|{
-if|#
-directive|if
-name|PCVT_NETBSD
-operator|>
-literal|9
-operator|||
-name|PCVT_FREEBSD
-operator|>=
-literal|200
 name|struct
 name|trapframe
 modifier|*
@@ -11622,49 +11360,6 @@ name|p_md
 operator|.
 name|md_regs
 decl_stmt|;
-elif|#
-directive|elif
-name|PCVT_NETBSD
-operator|||
-operator|(
-name|PCVT_FREEBSD
-operator|&&
-name|PCVT_FREEBSD
-operator|>
-literal|102
-operator|)
-name|struct
-name|trapframe
-modifier|*
-name|fp
-init|=
-operator|(
-expr|struct
-name|trapframe
-operator|*
-operator|)
-name|p
-operator|->
-name|p_regs
-decl_stmt|;
-else|#
-directive|else
-name|struct
-name|syscframe
-modifier|*
-name|fp
-init|=
-operator|(
-expr|struct
-name|syscframe
-operator|*
-operator|)
-name|p
-operator|->
-name|p_regs
-decl_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|suser
@@ -11694,33 +11389,12 @@ operator|(
 name|EPERM
 operator|)
 return|;
-if|#
-directive|if
-name|PCVT_NETBSD
-operator|||
-operator|(
-name|PCVT_FREEBSD
-operator|&&
-name|PCVT_FREEBSD
-operator|>
-literal|102
-operator|)
 name|fp
 operator|->
 name|tf_eflags
 operator||=
 name|PSL_IOPL
 expr_stmt|;
-else|#
-directive|else
-name|fp
-operator|->
-name|sf_eflags
-operator||=
-name|PSL_IOPL
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -11730,15 +11404,6 @@ name|KDDISABIO
 case|:
 comment|/* abandon IO access permission */
 block|{
-if|#
-directive|if
-name|PCVT_NETBSD
-operator|>
-literal|9
-operator|||
-name|PCVT_FREEBSD
-operator|>=
-literal|200
 name|struct
 name|trapframe
 modifier|*
@@ -11757,63 +11422,6 @@ operator|&=
 operator|~
 name|PSL_IOPL
 expr_stmt|;
-elif|#
-directive|elif
-name|PCVT_NETBSD
-operator|||
-operator|(
-name|PCVT_FREEBSD
-operator|&&
-name|PCVT_FREEBSD
-operator|>
-literal|102
-operator|)
-name|struct
-name|trapframe
-modifier|*
-name|fp
-init|=
-operator|(
-expr|struct
-name|trapframe
-operator|*
-operator|)
-name|p
-operator|->
-name|p_regs
-decl_stmt|;
-name|fp
-operator|->
-name|tf_eflags
-operator|&=
-operator|~
-name|PSL_IOPL
-expr_stmt|;
-else|#
-directive|else
-name|struct
-name|syscframe
-modifier|*
-name|fp
-init|=
-operator|(
-expr|struct
-name|syscframe
-operator|*
-operator|)
-name|p
-operator|->
-name|p_regs
-decl_stmt|;
-name|fp
-operator|->
-name|sf_eflags
-operator|&=
-operator|~
-name|PSL_IOPL
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -12082,33 +11690,6 @@ name|data
 operator|&
 literal|0xffff
 decl_stmt|;
-if|#
-directive|if
-name|PCVT_NETBSD
-if|if
-condition|(
-name|pitch
-operator|!=
-literal|0
-condition|)
-block|{
-name|sysbeep
-argument_list|(
-name|PCVT_SYSBEEPF
-operator|/
-name|pitch
-argument_list|,
-name|duration
-operator|*
-name|hz
-operator|/
-literal|1000
-argument_list|)
-expr_stmt|;
-block|}
-else|#
-directive|else
-comment|/* PCVT_NETBSD */
 name|sysbeep
 argument_list|(
 name|pitch
@@ -12120,9 +11701,6 @@ operator|/
 literal|3000
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCVT_NETBSD */
 block|}
 else|else
 block|{
@@ -12307,7 +11885,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PCVT_USL_VT_COMPAT */
+comment|/* XSERVER */
 end_comment
 
 begin_endif
