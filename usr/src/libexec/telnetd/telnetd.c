@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.11 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1567,6 +1567,29 @@ operator|&
 name|on
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|xxxSO_OOBINLINE
+argument_list|)
+name|setsockopt
+argument_list|(
+name|net
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_OOBINLINE
+argument_list|,
+name|on
+argument_list|,
+sizeof|sizeof
+name|on
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(xxxSO_OOBINLINE) */
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -1841,7 +1864,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|IOCTL_TO_DO_UNIX_OOB_IN_TCP_WAY
+name|xxxSO_OOBINLINE
 argument_list|)
 comment|/* 			 * In 4.2 (and some early 4.3) systems, the 			 * OOB indication and data handling in the kernel 			 * is such that if two separate TCP Urgent requests 			 * come in, one byte of TCP data will be overlaid. 			 * This is fatal for Telnet, but we try to live 			 * with it. 			 * 			 * In addition, in 4.2 (and...), a special protocol 			 * is needed to pick up the TCP Urgent data in 			 * the correct sequence. 			 * 			 * What we do is:  if we think we are in urgent 			 * mode, we look to see if we are "at the mark". 			 * If we are, we do an OOB receive.  If we run 			 * this twice, we will do the OOB receive twice, 			 * but the second will fail, since the second 			 * time we were "at the mark", but there wasn't 			 * any data there (the kernel doesn't reset 			 * "at the mark" until we do a normal read). 			 * Once we've read the OOB data, we go ahead 			 * and do normal reads. 			 * 			 * There is also another problem, which is that 			 * since the OOB byte we read doesn't put us 			 * out of OOB state, and since that byte is most 			 * likely the TELNET DM (data mark), we would 			 * stay in the TELNET SYNCH (SYNCHing) state. 			 * So, clocks to the rescue.  If we've "just" 			 * received a DM, then we test for the 			 * presence of OOB data when the receive OOB 			 * fails (and AFTER we did the normal mode read 			 * to clear "at the mark"). 			 */
 if|if
@@ -1980,7 +2003,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !defined(IOCTL_TO_DO_UNIX_OOB_IN_TCP_WAY) */
+comment|/* !defined(xxxSO_OOBINLINE)) */
 name|ncc
 operator|=
 name|read
@@ -1997,7 +2020,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !defined(IOCTL_TO_DO_UNIX_OOB_IN_TCP_WAY) */
+comment|/* !defined(xxxSO_OOBINLINE)) */
 if|if
 condition|(
 name|ncc
@@ -2510,12 +2533,16 @@ condition|)
 block|{
 comment|/* 			 * Send the process on the pty side an 			 * interrupt.  Do this with a NULL or 			 * interrupt char; depending on the tty mode. 			 */
 case|case
-name|BREAK
-case|:
-case|case
 name|IP
 case|:
 name|interrupt
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|BREAK
+case|:
+name|sendbrk
 argument_list|()
 expr_stmt|;
 break|break;
@@ -3346,6 +3373,81 @@ else|:
 name|tchars
 operator|.
 name|t_intrc
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Send quit to process on other side of pty.  * If it is in raw mode, just write NULL;  * otherwise, write quit char.  */
+end_comment
+
+begin_macro
+name|sendbrk
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|struct
+name|sgttyb
+name|b
+decl_stmt|;
+name|struct
+name|tchars
+name|tchars
+decl_stmt|;
+name|ptyflush
+argument_list|()
+expr_stmt|;
+comment|/* half-hearted */
+name|ioctl
+argument_list|(
+name|pty
+argument_list|,
+name|TIOCGETP
+argument_list|,
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|b
+operator|.
+name|sg_flags
+operator|&
+name|RAW
+condition|)
+block|{
+operator|*
+name|pfrontp
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return;
+block|}
+operator|*
+name|pfrontp
+operator|++
+operator|=
+name|ioctl
+argument_list|(
+name|pty
+argument_list|,
+name|TIOCGETC
+argument_list|,
+operator|&
+name|tchars
+argument_list|)
+operator|<
+literal|0
+condition|?
+literal|'\034'
+else|:
+name|tchars
+operator|.
+name|t_quitc
 expr_stmt|;
 block|}
 end_block
