@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.16 %G%"
+literal|"@(#)csh.c 4.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3477,12 +3477,35 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PROF
+end_ifdef
+
+begin_macro
+name|done
+argument_list|(
+argument|i
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|exit
 argument_list|(
 argument|i
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -3498,9 +3521,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PROF
-name|IEH3exit
+name|monitor
 argument_list|(
-name|i
+literal|0
 argument_list|)
 expr_stmt|;
 else|#
@@ -3529,6 +3552,7 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|whyles
 condition|)
 block|{
