@@ -892,7 +892,7 @@ begin_define
 define|#
 directive|define
 name|GDT_IOCTL_DRVERS
-value|_IOR('J', 1, int)
+value|_IOWR('J', 1, int)
 end_define
 
 begin_comment
@@ -903,7 +903,7 @@ begin_define
 define|#
 directive|define
 name|GDT_IOCTL_CTRTYPE
-value|_IOWR('J', 2, gdt_ctrt_t)
+value|_IOR('J', 2, gdt_ctrt_t)
 end_define
 
 begin_comment
