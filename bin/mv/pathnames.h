@@ -10,12 +10,5 @@ name|_PATH_RM
 value|"/bin/rm"
 end_define
 
-begin_define
-define|#
-directive|define
-name|_PATH_CP
-value|"/bin/cp"
-end_define
-
 end_unit
 
