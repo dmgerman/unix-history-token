@@ -1202,6 +1202,98 @@ value|(RXCON_EARLY | \ 				 RXCON_RECEIVE_MULTICAST_FRAMES | \ 				 RXCON_RECEIV
 end_define
 
 begin_comment
+comment|/*  * EEPROM structure  * SMC9432* eeprom is organized by words and only first 8 words  * have distinctive meaning (according to datasheet)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_MAC0
+value|0x0000
+end_define
+
+begin_comment
+comment|/* Byte 0 / Byte 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_MAC1
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Byte 2 / Byte 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_MAC2
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Byte 4 / Byte 5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_BID_CSUM
+value|0x0003
+end_define
+
+begin_comment
+comment|/* Board Id / Check Sum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_NVCTL
+value|0x0004
+end_define
+
+begin_comment
+comment|/* NVCTL (bits 0-5) / nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_PCI_MGD_MLD
+value|0x0005
+end_define
+
+begin_comment
+comment|/* PCI MinGrant / MaxLatency. Desired */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SSVENDID
+value|0x0006
+end_define
+
+begin_comment
+comment|/* Subsystem Vendor Id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SSID
+value|0x0006
+end_define
+
+begin_comment
+comment|/* Subsystem Id */
+end_comment
+
+begin_comment
 comment|/*  * Structures definition and Functions prototypes  */
 end_comment
 
