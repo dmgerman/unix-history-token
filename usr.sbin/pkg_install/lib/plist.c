@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: plist.c,v 1.17.2.3 1997/07/01 06:14:15 jkh Exp $"
+literal|"$Id: plist.c,v 1.17.2.4 1997/08/20 10:29:52 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -1101,9 +1101,16 @@ name|cmd
 operator|==
 name|FAIL
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Bad command '%s'"
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"bad command '%s'"
 argument_list|,
 name|pline
 argument_list|)
@@ -1463,9 +1470,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|barf
+name|cleanup
 argument_list|(
-literal|"Unknown command type %d (%s)\n"
+literal|0
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"unknown command type %d (%s)"
 argument_list|,
 name|plist
 operator|->
@@ -1656,9 +1670,9 @@ name|tmp
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"unexec command for `%s' failed."
+literal|"unexec command for `%s' failed"
 argument_list|,
 name|tmp
 argument_list|)
@@ -1699,10 +1713,10 @@ name|tmp
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Attempting to delete directory `%s' as a file\n"
-literal|"This packing list is incorrect - ignoring delete request.\n"
+literal|"attempting to delete directory `%s' as a file\n"
+literal|"this packing list is incorrect - ignoring delete request"
 argument_list|,
 name|tmp
 argument_list|)
@@ -1889,15 +1903,13 @@ argument_list|,
 name|tmp
 argument_list|)
 condition|)
-name|whinge
+name|warn
 argument_list|(
-literal|"preserve:  Unable to restore %s as %s, errno = %d"
+literal|"preserve: unable to restore %s as %s"
 argument_list|,
 name|tmp2
 argument_list|,
 name|tmp
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 block|}
@@ -1931,10 +1943,10 @@ name|tmp
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Attempting to delete file `%s' as a directory\n"
-literal|"This packing list is incorrect - ignoring delete request.\n"
+literal|"attempting to delete file `%s' as a directory\n"
+literal|"this packing list is incorrect - ignoring delete request"
 argument_list|,
 name|tmp
 argument_list|)
@@ -1968,9 +1980,9 @@ name|FALSE
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Unable to completely remove directory '%s'"
+literal|"unable to completely remove directory '%s'"
 argument_list|,
 name|tmp
 argument_list|)
@@ -2099,18 +2111,18 @@ condition|(
 operator|!
 name|ign_err
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"%s `%s' doesn't really exist."
+literal|"%s `%s' doesn't really exist"
 argument_list|,
 name|isdir
 argument_list|(
 name|dir
 argument_list|)
 condition|?
-literal|"Directory"
+literal|"directory"
 else|:
-literal|"File"
+literal|"file"
 argument_list|,
 name|dir
 argument_list|)
@@ -2249,9 +2261,9 @@ argument_list|(
 name|dir
 argument_list|)
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Directory `%s' doesn't really exist."
+literal|"directory `%s' doesn't really exist"
 argument_list|,
 name|dir
 argument_list|)

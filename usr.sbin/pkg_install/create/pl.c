@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: pl.c,v 1.7 1995/05/30 03:49:56 rgrimes Exp $"
+literal|"$Id: pl.c,v 1.8 1996/07/30 10:48:13 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -359,7 +365,7 @@ name|PUSHOUT
 parameter_list|()
 comment|/* push out string */
 define|\
-value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xpf -"); \ 		    if (system(where_args)) \ 			barf("can't invoke tar pipeline"); \ 		    memset(where_args, 0, maxargs); \  		    last_chdir = NULL; \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	}
+value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xpf -"); \ 		    if (system(where_args)) \ 			cleanup(0), errx(2, "can't invoke tar pipeline"); \ 		    memset(where_args, 0, maxargs); \  		    last_chdir = NULL; \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	}
 end_define
 
 begin_comment
@@ -453,8 +459,15 @@ condition|(
 operator|!
 name|where_args
 condition|)
-name|barf
+name|cleanup
 argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
 literal|"can't get argument list space"
 argument_list|)
 expr_stmt|;
@@ -781,8 +794,15 @@ name|maxargs
 operator|-
 name|where_count
 condition|)
-name|barf
+name|cleanup
 argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
 literal|"oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
@@ -964,8 +984,15 @@ name|maxargs
 operator|-
 name|where_count
 condition|)
-name|barf
+name|cleanup
 argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
 literal|"oops, miscounted strings!"
 argument_list|)
 expr_stmt|;

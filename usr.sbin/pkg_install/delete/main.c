@@ -7,11 +7,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: main.c,v 1.6 1996/07/30 10:48:15 jkh Exp $"
+literal|"$Id: main.c,v 1.6.2.1 1997/08/29 05:15:40 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lib.h"
 end_include
 
@@ -34,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|"delete.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_decl_stmt
@@ -77,6 +78,19 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -103,15 +117,6 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|start
-decl_stmt|;
-name|char
-modifier|*
-name|prog_name
-init|=
-name|argv
-index|[
-literal|0
-index|]
 decl_stmt|;
 name|pkgs
 operator|=
@@ -202,11 +207,7 @@ literal|'?'
 case|:
 default|default:
 name|usage
-argument_list|(
-name|prog_name
-argument_list|,
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -240,12 +241,13 @@ name|pkgs
 operator|==
 name|start
 condition|)
-name|usage
+name|warnx
 argument_list|(
-name|prog_name
-argument_list|,
-literal|"Missing package name(s)"
+literal|"missing package name(s)"
 argument_list|)
+operator|,
+name|usage
+argument_list|()
 expr_stmt|;
 operator|*
 name|pkgs
@@ -266,7 +268,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"You must be root to delete packages."
+literal|"you must be root to delete packages"
 argument_list|)
 expr_stmt|;
 if|if
@@ -280,18 +282,16 @@ name|start
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
 condition|(
 name|Verbose
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%d package deletion(s) failed.\n"
+literal|"%d package deletion(s) failed"
 argument_list|,
 name|error
 argument_list|)
@@ -308,131 +308,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|args
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fmt
-condition|)
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: "
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|args
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: %s [args] pkg [ .. pkg ]\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Where args are one or more of:\n\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-v         verbose\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-p arg     override prefix with arg\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-d         delete empty directories when deinstalling\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-f         force delete even if dependencies exist\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"           or deinstall/requirement checks fail\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-D         don't execute pkg de-install script, if any\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-n         don't actually de-install, just show steps\n"
+literal|"usage: pkg_delete [-vDdnf] [-p prefix] pkg-name ...\n"
 argument_list|)
 expr_stmt|;
 name|exit

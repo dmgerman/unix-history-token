@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 

@@ -7,11 +7,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: main.c,v 1.11 1996/07/30 10:48:09 jkh Exp $"
+literal|"$Id: main.c,v 1.11.2.1 1997/08/29 05:15:38 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +24,12 @@ end_endif
 begin_comment
 comment|/*  *  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the add module.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -168,6 +175,19 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -192,14 +212,6 @@ modifier|*
 name|start
 decl_stmt|;
 name|char
-modifier|*
-name|prog_name
-init|=
-name|argv
-index|[
-literal|0
-index|]
-decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
@@ -318,11 +330,7 @@ literal|'?'
 case|:
 default|default:
 name|usage
-argument_list|(
-name|prog_name
-argument_list|,
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -342,9 +350,9 @@ operator|>
 name|MAX_PKGS
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Too many packages (max %d)."
+literal|"too many packages (max %d)"
 argument_list|,
 name|MAX_PKGS
 argument_list|)
@@ -489,9 +497,9 @@ name|argv
 argument_list|)
 operator|)
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Can't find package '%s'."
+literal|"can't find package '%s'"
 argument_list|,
 operator|*
 name|argv
@@ -524,12 +532,13 @@ condition|(
 operator|!
 name|ch
 condition|)
-name|usage
+name|warnx
 argument_list|(
-name|prog_name
-argument_list|,
-literal|"Missing package name(s)"
+literal|"missing package name(s)"
 argument_list|)
+operator|,
+name|usage
+argument_list|()
 expr_stmt|;
 elseif|else
 if|if
@@ -542,12 +551,13 @@ name|AddMode
 operator|==
 name|MASTER
 condition|)
-name|usage
+name|warnx
 argument_list|(
-name|prog_name
-argument_list|,
-literal|"Only one package name may be specified with master mode"
+literal|"only one package name may be specified with master mode"
 argument_list|)
+operator|,
+name|usage
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -560,18 +570,16 @@ name|pkgs
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
 condition|(
 name|Verbose
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%d package addition(s) failed.\n"
+literal|"%d package addition(s) failed"
 argument_list|,
 name|err
 argument_list|)
@@ -588,138 +596,20 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|args
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fmt
-condition|)
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: "
+literal|"%s\n%s\n"
 argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|stderr
+literal|"usage: pkg_add [-vInfRMS] [-t template] [-p prefix]"
 argument_list|,
-name|fmt
-argument_list|,
-name|args
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: %s [args] pkg [ .. pkg ]\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Where args are one or more of:\n\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-v         verbose\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-p arg     override prefix with arg\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-I         don't execute pkg install script, if any\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-R         don't record installation (can't delete!)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-n         don't actually install, just show steps\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-t temp    use temp as template for mktemp()\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-S         run in SLAVE mode\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-M         run in MASTER mode\n"
+literal|"               pkg-name [pkg-name ...]"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: main.c,v 1.12.2.1 1997/06/06 12:18:49 jkh Exp $"
+literal|"$Id: main.c,v 1.12.2.2 1997/08/29 05:15:39 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ end_endif
 begin_comment
 comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the create module.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -180,6 +186,19 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -204,15 +223,6 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|start
-decl_stmt|;
-name|char
-modifier|*
-name|prog_name
-init|=
-name|argv
-index|[
-literal|0
-index|]
 decl_stmt|;
 name|pkgs
 operator|=
@@ -395,11 +405,7 @@ literal|'?'
 case|:
 default|default:
 name|usage
-argument_list|(
-name|prog_name
-argument_list|,
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -432,12 +438,13 @@ name|pkgs
 operator|==
 name|start
 condition|)
-name|usage
+name|warnx
 argument_list|(
-name|prog_name
-argument_list|,
-literal|"Missing package name"
+literal|"missing package name"
 argument_list|)
+operator|,
+name|usage
+argument_list|()
 expr_stmt|;
 operator|*
 name|pkgs
@@ -451,17 +458,18 @@ index|[
 literal|1
 index|]
 condition|)
-name|usage
+name|warnx
 argument_list|(
-name|prog_name
-argument_list|,
-literal|"Only one package name allowed\n\t('%s' extraneous)"
+literal|"only one package name allowed ('%s' extraneous)"
 argument_list|,
 name|start
 index|[
 literal|1
 index|]
 argument_list|)
+operator|,
+name|usage
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -476,11 +484,9 @@ if|if
 condition|(
 name|Verbose
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Package creation failed.\n"
+literal|"package creation failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -495,201 +501,24 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|args
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fmt
-condition|)
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: "
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|stderr
+literal|"usage: pkg_create [-YNOhv] [-P pkgs] [-p prefix] [-f contents] [-i iscript]"
 argument_list|,
-name|fmt
+literal|"                  [-k dscript] [-r rscript] [-t template] [-X excludefile]"
 argument_list|,
-name|args
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"                  [-D displayfile] [-m mtreefile] -c comment -d description"
 argument_list|,
-literal|"\n\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: %s [args] pkg\n\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Where args are one or more of:\n\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-c [-]file Get one-line comment from file (-or arg)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-d [-]file Get description from file (-or arg)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-f file    get list of files from file (- for stdin)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-h         follow symbolic links\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-i script  install script\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-k script  de-install script\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-D file    install notice\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-m file    mtree spec for directories\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-P pkgs    set package dependency list to pkgs\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-p prefix  install prefix will be arg\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-r script  pre/post requirements script\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-t temp    use temp as template for mktemp()\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-X file    exclude files listed in file\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-v         verbose\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-Y         assume `yes' answer to all questions\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-N         assume `no' answer to all questions\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-O         print a revised packing list and exit\n"
+literal|"                  -f packlist pkg-name"
 argument_list|)
 expr_stmt|;
 name|exit

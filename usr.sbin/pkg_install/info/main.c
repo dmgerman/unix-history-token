@@ -7,11 +7,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: main.c,v 1.10 1995/10/25 15:38:29 jkh Exp $"
+literal|"$Id: main.c,v 1.10.2.1 1997/08/29 05:15:41 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +24,12 @@ end_endif
 begin_comment
 comment|/*  *  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the add module.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -97,6 +104,19 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -121,15 +141,6 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|start
-decl_stmt|;
-name|char
-modifier|*
-name|prog_name
-init|=
-name|argv
-index|[
-literal|0
-index|]
 decl_stmt|;
 name|pkgs
 operator|=
@@ -334,11 +345,7 @@ literal|'?'
 case|:
 default|default:
 name|usage
-argument_list|(
-name|prog_name
-argument_list|,
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -391,12 +398,13 @@ operator|&&
 operator|!
 name|CheckPkg
 condition|)
-name|usage
+name|warnx
 argument_list|(
-name|prog_name
-argument_list|,
-literal|"Missing package name(s)"
+literal|"missing package name(s)"
 argument_list|)
+operator|,
+name|usage
+argument_list|()
 expr_stmt|;
 operator|*
 name|pkgs
@@ -413,208 +421,22 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|args
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fmt
-condition|)
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: "
+literal|"%s\n%s\n%s\n"
 argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|stderr
+literal|"usage: pkg_info [-cdDikrRpLqImv] [-e package] [-l prefix]"
 argument_list|,
-name|fmt
+literal|"                pkg-name [pkg-name ...]"
 argument_list|,
-name|args
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: %s [args] pkg [ .. pkg ]\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Where args are one or more of:\n\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-a         show all installed packages (if any)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-I         print 'index' of packages\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-c         print `one line comment'\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-d         print description\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-D         print install notice\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-f         show packing list\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-i         show install script\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-k         show deinstall script\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-r         show requirements script\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-R         show packages depending on this package\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-p         show prefix\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-l<str>   Prefix each info catagory with<str>\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-L         show intalled files\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-q         minimal output (``quiet'' mode)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-v         show all information\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-t temp    use temp as template for mktemp()\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-e pkg     returns 0 if pkg is installed, 1 otherwise\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n[no args = -c -d -R]\n"
+literal|"       pkg_info -a [flags]"
 argument_list|)
 expr_stmt|;
 name|exit

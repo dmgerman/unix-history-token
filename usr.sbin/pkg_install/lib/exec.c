@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: exec.c,v 1.2 1993/09/03 23:01:12 jkh Exp $"
+literal|"$Id: exec.c,v 1.3 1994/12/06 00:51:47 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ end_endif
 begin_comment
 comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * Miscellaneous system routines.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -84,7 +90,7 @@ operator|!
 name|cmd
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
 literal|"vsystem can't alloc arg space"
 argument_list|)
@@ -116,7 +122,7 @@ operator|>
 name|maxargs
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
 literal|"vsystem args are too long"
 argument_list|)
