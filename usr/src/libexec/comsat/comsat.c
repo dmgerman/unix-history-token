@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.16 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -923,6 +923,10 @@ name|struct
 name|sgttyb
 name|gttybuf
 decl_stmt|;
+name|struct
+name|stat
+name|stb
+decl_stmt|;
 name|FILE
 modifier|*
 name|tp
@@ -943,10 +947,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|struct
-name|stat
-name|stb
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -954,7 +954,12 @@ name|strncpy
 argument_list|(
 name|tty
 operator|+
-literal|5
+sizeof|sizeof
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|utp
 operator|->
