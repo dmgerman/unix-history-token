@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	4.28 (Berkeley) %G%"
+literal|"@(#)date.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -648,6 +648,12 @@ condition|)
 name|badformat
 argument_list|()
 expr_stmt|;
+operator|--
+name|lt
+operator|->
+name|tm_mon
+expr_stmt|;
+comment|/* time struct is 0 - 11 */
 comment|/* FALLTHROUGH */
 case|case
 literal|6
