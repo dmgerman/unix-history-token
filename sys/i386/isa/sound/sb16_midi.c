@@ -27,7 +27,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_SB16
+name|EXCLUDE_SB16MIDI
 argument_list|)
 operator|&&
 operator|!
@@ -718,7 +718,7 @@ directive|ifdef
 name|__FreeBSD__
 name|printk
 argument_list|(
-literal|"snd7:<SoundBlaster MPU-401>"
+literal|"sbmidi:<SoundBlaster MPU-401>"
 argument_list|)
 expr_stmt|;
 else|#

@@ -255,17 +255,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|sb_dsp_command
-parameter_list|(
-name|unsigned
-name|char
-name|val
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_if
 if|#
 directive|if
@@ -2468,7 +2457,7 @@ directive|ifdef
 name|__FreeBSD__
 name|printk
 argument_list|(
-literal|"snd2:<%s>"
+literal|"sb0:<%s>"
 argument_list|,
 name|sb_dsp_operations
 operator|.

@@ -1063,6 +1063,9 @@ name|count
 argument_list|)
 return|;
 break|break;
+ifndef|#
+directive|ifndef
+name|EXCLUDE_SEQUENCER
 case|case
 name|SND_DEV_SEQ
 case|:
@@ -1082,6 +1085,8 @@ name|count
 argument_list|)
 return|;
 break|break;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|EXCLUDE_MIDI
@@ -1179,6 +1184,9 @@ operator|&
 literal|0x0f
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|EXCLUDE_SEQUENCER
 case|case
 name|SND_DEV_SEQ
 case|:
@@ -1198,6 +1206,8 @@ name|count
 argument_list|)
 return|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|SND_DEV_DSP
 case|:
@@ -1400,6 +1410,9 @@ return|return
 literal|0
 return|;
 break|break;
+ifndef|#
+directive|ifndef
+name|EXCLUDE_SEQUENCER
 case|case
 name|SND_DEV_SEQ
 case|:
@@ -1425,6 +1438,8 @@ return|return
 name|retval
 return|;
 break|break;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|EXCLUDE_MIDI
@@ -1594,6 +1609,9 @@ case|case
 name|SND_DEV_CTL
 case|:
 break|break;
+ifndef|#
+directive|ifndef
+name|EXCLUDE_SEQUENCER
 case|case
 name|SND_DEV_SEQ
 case|:
@@ -1608,6 +1626,8 @@ name|file
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|EXCLUDE_MIDI
@@ -1812,6 +1832,9 @@ name|arg
 argument_list|)
 return|;
 break|break;
+ifndef|#
+directive|ifndef
+name|EXCLUDE_SEQUENCER
 case|case
 name|SND_DEV_SEQ
 case|:
@@ -1831,6 +1854,8 @@ name|arg
 argument_list|)
 return|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|SND_DEV_DSP
 case|:

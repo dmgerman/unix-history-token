@@ -4905,7 +4905,7 @@ directive|ifdef
 name|__FreeBSD__
 name|printk
 argument_list|(
-literal|"snd1:<Yamaha OPL-3 FM>"
+literal|"opl0:<Yamaha OPL-3 FM>"
 argument_list|)
 expr_stmt|;
 else|#
@@ -5026,7 +5026,7 @@ directive|ifdef
 name|__FreeBSD__
 name|printk
 argument_list|(
-literal|"snd1:<Yamaha 2-OP FM>"
+literal|"opl0:<Yamaha 2-OP FM>"
 argument_list|)
 expr_stmt|;
 else|#

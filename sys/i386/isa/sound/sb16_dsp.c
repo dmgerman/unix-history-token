@@ -1959,7 +1959,7 @@ directive|ifdef
 name|__FreeBSD__
 name|printk
 argument_list|(
-literal|"snd6:<%s>"
+literal|"sbxvi0:<%s>"
 argument_list|,
 name|sb16_dsp_operations
 operator|.

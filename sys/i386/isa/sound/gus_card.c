@@ -30,15 +30,6 @@ directive|include
 file|"gus_hw.h"
 end_include
 
-begin_function_decl
-name|void
-name|gusintr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
 name|gus_base
@@ -527,7 +518,7 @@ literal|90
 expr_stmt|;
 name|ad1848_init
 argument_list|(
-literal|"GUS 16 bit sampling"
+literal|"gusxvi0:<GUS 16 bit sampling>"
 argument_list|,
 name|hw_config
 operator|->

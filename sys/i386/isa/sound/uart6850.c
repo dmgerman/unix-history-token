@@ -835,11 +835,23 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|printk
+argument_list|(
+literal|"uart0:<6850 Midi Interface>"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printk
 argument_list|(
 literal|"<6850 Midi Interface>"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|std_midi_synth
 operator|.
 name|midi_dev

@@ -1131,7 +1131,7 @@ directive|ifdef
 name|__FreeBSD__
 name|printk
 argument_list|(
-literal|"snd3:<%s rev %d>"
+literal|"pas0:<%s rev %d>"
 argument_list|,
 name|pas_model_names
 index|[

@@ -4107,7 +4107,7 @@ expr_stmt|;
 comment|/* Write IRQ+DMA setup */
 name|ad1848_init
 argument_list|(
-literal|"MS Sound System"
+literal|"mss0:<MS Sound System>"
 argument_list|,
 name|hw_config
 operator|->

@@ -4267,7 +4267,7 @@ directive|ifdef
 name|__FreeBSD__
 name|printk
 argument_list|(
-literal|"snd5:<MQX-%d%c MIDI Interface>"
+literal|"mpu0:<MQX-%d%c MIDI Interface>"
 argument_list|,
 else|#
 directive|else
@@ -4300,7 +4300,7 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 argument|printk (
-literal|"snd5:<MPU-401 MIDI Interface %d.%d%c>"
+literal|"mpu0:<MPU-401 MIDI Interface %d.%d%c>"
 argument|,
 else|#
 directive|else

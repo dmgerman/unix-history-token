@@ -12019,7 +12019,7 @@ literal|1
 expr_stmt|;
 name|ad1848_init
 argument_list|(
-literal|"GUS MAX"
+literal|"gusmax0:<GUS MAX>"
 argument_list|,
 name|gus_base
 operator|+
