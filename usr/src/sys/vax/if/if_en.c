@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.76	83/05/10	*/
+comment|/*	if_en.c	4.77	83/05/10	*/
 end_comment
 
 begin_include
@@ -1919,6 +1919,17 @@ operator|.
 name|ifrw_addr
 operator|)
 expr_stmt|;
+name|en
+operator|->
+name|en_type
+operator|=
+name|ntohs
+argument_list|(
+name|en
+operator|->
+name|en_type
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|endataaddr
@@ -1936,15 +1947,15 @@ name|en
 operator|->
 name|en_type
 operator|>=
-name|ENPUP_TRAIL
+name|ENTYPE_TRAIL
 operator|&&
 name|en
 operator|->
 name|en_type
 operator|<
-name|ENPUP_TRAIL
+name|ENTYPE_TRAIL
 operator|+
-name|ENPUP_NTRAILER
+name|ENTYPE_NTRAILER
 condition|)
 block|{
 name|off
@@ -1954,7 +1965,7 @@ name|en
 operator|->
 name|en_type
 operator|-
-name|ENPUP_TRAIL
+name|ENTYPE_TRAIL
 operator|)
 operator|*
 literal|512
@@ -1973,6 +1984,8 @@ name|en
 operator|->
 name|en_type
 operator|=
+name|ntohs
+argument_list|(
 operator|*
 name|endataaddr
 argument_list|(
@@ -1983,9 +1996,12 @@ argument_list|,
 name|u_short
 operator|*
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|resid
 operator|=
+name|ntohs
+argument_list|(
 operator|*
 operator|(
 name|endataaddr
@@ -2000,6 +2016,7 @@ name|u_short
 operator|*
 argument_list|)
 operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2097,7 +2114,7 @@ ifdef|#
 directive|ifdef
 name|INET
 case|case
-name|ENPUP_IPTYPE
+name|ENTYPE_IP
 case|:
 name|schednetisr
 argument_list|(
@@ -2116,7 +2133,7 @@ ifdef|#
 directive|ifdef
 name|PUP
 case|case
-name|ENPUP_PUPTYPE
+name|ENTYPE_PUP
 case|:
 block|{
 name|struct
@@ -2454,7 +2471,7 @@ condition|)
 block|{
 name|type
 operator|=
-name|ENPUP_TRAIL
+name|ENTYPE_TRAIL
 operator|+
 operator|(
 name|off
@@ -2493,7 +2510,13 @@ name|u_short
 operator|*
 argument_list|)
 operator|=
-name|ENPUP_IPTYPE
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
+name|ENTYPE_IP
+argument_list|)
 expr_stmt|;
 operator|*
 operator|(
@@ -2508,9 +2531,15 @@ operator|+
 literal|1
 operator|)
 operator|=
+name|ntohs
+argument_list|(
+operator|(
+name|u_short
+operator|)
 name|m
 operator|->
 name|m_len
+argument_list|)
 expr_stmt|;
 goto|goto
 name|gottrailertype
@@ -2518,7 +2547,7 @@ goto|;
 block|}
 name|type
 operator|=
-name|ENPUP_IPTYPE
+name|ENTYPE_IP
 expr_stmt|;
 name|off
 operator|=
@@ -2552,7 +2581,7 @@ name|pp_host
 expr_stmt|;
 name|type
 operator|=
-name|ENPUP_PUPTYPE
+name|ENTYPE_PUP
 expr_stmt|;
 name|off
 operator|=
@@ -2748,7 +2777,13 @@ name|en
 operator|->
 name|en_type
 operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
 name|type
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Queue message on interface, and start output if interface 	 * not yet active. 	 */
 name|s

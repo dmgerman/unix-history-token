@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.h	4.3	81/12/03	*/
+comment|/*	if_en.h	4.4	83/05/10	*/
 end_comment
 
 begin_comment
@@ -27,8 +27,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|ENPUP_PUPTYPE
-value|0x0400
+name|ENTYPE_PUP
+value|0x0200
 end_define
 
 begin_comment
@@ -38,8 +38,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ENPUP_IPTYPE
-value|0x0800
+name|ENTYPE_IP
+value|0x0201
 end_define
 
 begin_comment
@@ -47,24 +47,24 @@ comment|/* IP protocol */
 end_comment
 
 begin_comment
-comment|/*  * The ENPUP_NTRAILER packet types starting at ENPUP_TRAIL have  * (type-ENPUP_TRAIL)*512 bytes of data followed  * by a PUP type (as given above) and then the (variable-length) header.  */
+comment|/*  * The ENTYPE_NTRAILER packet types starting at  * ENTYPE_TRAIL have (type-ENTYPE_TRAIL)*512 bytes  * of data followed by an Ethernet type (as given above)  * and then the (variable-length) header.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ENPUP_TRAIL
+name|ENTYPE_TRAIL
 value|0x1000
 end_define
 
 begin_comment
-comment|/* Trailer PUP */
+comment|/* Trailer type */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ENPUP_NTRAILER
+name|ENTYPE_NTRAILER
 value|16
 end_define
 
