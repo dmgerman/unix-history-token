@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.59 1999/07/09 11:46:45 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.61 1999/07/15 17:01:43 green Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2903,7 +2903,7 @@ name|pid
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		     * Fork for any service except a non-forking builtin, 		     * which might twist (hosts_options(5)). 		     */
+comment|/* 		     * Fork for all external services, builtins which need to 		     * fork and anything we're wrapping (as wrapping might 		     * block or use hosts_options(5) twist). 		     */
 name|dofork
 operator|=
 operator|!
