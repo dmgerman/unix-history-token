@@ -2651,7 +2651,7 @@ name|dysize
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) % 4 ? 365 : ((x % 400) ? 365 :366))
+value|(((x) % 4) ? 365 : \                                     (((x) % 100) ? : 366 \                                                     (((x) % 400) ? 365 : 366)))
 end_define
 
 begin_function
@@ -2858,7 +2858,7 @@ condition|(
 name|clock
 operator|->
 name|month
-operator|>=
+operator|<
 literal|3
 operator|&&
 name|dysize
@@ -2871,7 +2871,7 @@ operator|==
 literal|366
 condition|)
 name|t
-operator|++
+operator|--
 expr_stmt|;
 for|for
 control|(
