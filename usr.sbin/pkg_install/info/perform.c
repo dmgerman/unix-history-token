@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.3 1993/08/26 08:47:06 jkh Exp $"
+literal|"$Id: perform.c,v 1.4 1993/09/04 05:06:43 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -456,8 +456,9 @@ block|{
 comment|/* Start showing the package contents */
 name|printf
 argument_list|(
-literal|"
-literal|Information for %s:\n\n"
+literal|"%sInformation for %s:\n\n"
+argument_list|,
+name|InfoPrefix
 argument_list|,
 name|pkg
 argument_list|)
@@ -470,8 +471,7 @@ name|SHOW_COMMENT
 condition|)
 name|show_file
 argument_list|(
-literal|"
-literal|Comment:\n"
+literal|"Comment:\n"
 argument_list|,
 name|COMMENT_FNAME
 argument_list|)
@@ -484,8 +484,7 @@ name|SHOW_DESC
 condition|)
 name|show_file
 argument_list|(
-literal|"
-literal|Description:\n"
+literal|"Description:\n"
 argument_list|,
 name|DESC_FNAME
 argument_list|)
@@ -498,8 +497,7 @@ name|SHOW_PLIST
 condition|)
 name|show_plist
 argument_list|(
-literal|"
-literal|Packing list:\n"
+literal|"Packing list:\n"
 argument_list|,
 operator|&
 name|plist
@@ -526,8 +524,7 @@ argument_list|)
 condition|)
 name|show_file
 argument_list|(
-literal|"
-literal|Install script:\n"
+literal|"Install script:\n"
 argument_list|,
 name|INSTALL_FNAME
 argument_list|)
@@ -547,8 +544,7 @@ argument_list|)
 condition|)
 name|show_file
 argument_list|(
-literal|"
-literal|De-Install script:\n"
+literal|"De-Install script:\n"
 argument_list|,
 name|DEINSTALL_FNAME
 argument_list|)
@@ -561,8 +557,7 @@ name|SHOW_PREFIX
 condition|)
 name|show_plist
 argument_list|(
-literal|"
-literal|Prefix(s):\n"
+literal|"Prefix(s):\n"
 argument_list|,
 operator|&
 name|plist

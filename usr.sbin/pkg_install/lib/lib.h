@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.4 1993/08/24 09:24:07 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.5 1993/09/04 05:06:49 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -634,6 +634,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|Boolean
+name|in_plist
+parameter_list|(
+name|Package
+modifier|*
+parameter_list|,
+name|plist_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|free_plist
 parameter_list|(
@@ -672,7 +684,22 @@ parameter_list|(
 name|Package
 modifier|*
 parameter_list|,
-name|int
+name|plist_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|add_plist_top
+parameter_list|(
+name|Package
+modifier|*
+parameter_list|,
+name|plist_t
 parameter_list|,
 name|char
 modifier|*

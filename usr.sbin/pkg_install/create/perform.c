@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.4 1993/08/26 08:12:52 jkh Exp $"
+literal|"$Id: perform.c,v 1.5 1993/09/04 05:06:33 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,17 +222,6 @@ name|suffix
 operator|=
 literal|"tgz"
 expr_stmt|;
-comment|/* Register the package name (base part) */
-name|add_plist
-argument_list|(
-operator|&
-name|plist
-argument_list|,
-name|PLIST_NAME
-argument_list|,
-name|pkg
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|Prefix
@@ -254,6 +243,28 @@ operator|&
 name|plist
 argument_list|,
 name|pkg_in
+argument_list|)
+expr_stmt|;
+comment|/*      * Run down the list and see if we've named it, if not stick in a name      * at the top.      */
+if|if
+condition|(
+operator|!
+name|in_plist
+argument_list|(
+operator|&
+name|plist
+argument_list|,
+name|PLIST_NAME
+argument_list|)
+condition|)
+name|add_plist_top
+argument_list|(
+operator|&
+name|plist
+argument_list|,
+name|PLIST_NAME
+argument_list|,
+name|pkg
 argument_list|)
 expr_stmt|;
 comment|/* Make a directory to stomp around in */

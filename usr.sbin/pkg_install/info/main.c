@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Header: /usr1/cvs/jkh/pkg_install/info/main.c,v 1.4 1993/08/26 08:47:05 jkh Exp $"
+literal|"$Header: /usr1/cvs/jkh/pkg_install/info/main.c,v 1.5 1993/09/04 05:06:41 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdfikrpIvh"
+literal|"acdfikrpIvhl:"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,15 @@ name|Boolean
 name|AllInstalled
 init|=
 name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|InfoPrefix
+init|=
+literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -217,6 +226,14 @@ case|:
 name|Flags
 operator||=
 name|SHOW_REQUIRE
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|InfoPrefix
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -440,6 +457,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-p         show prefix\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-l<str>   Prefix each info catagory with<str>\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

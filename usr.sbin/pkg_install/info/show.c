@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: show.c,v 1.3 1993/08/26 08:47:07 jkh Exp $"
+literal|"$Id: show.c,v 1.4 1993/09/04 05:06:44 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,10 @@ name|n
 decl_stmt|;
 name|printf
 argument_list|(
+literal|"%s%s"
+argument_list|,
+name|InfoPrefix
+argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
@@ -162,6 +166,10 @@ name|FALSE
 decl_stmt|;
 name|printf
 argument_list|(
+literal|"%s%s"
+argument_list|,
+name|InfoPrefix
+argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
