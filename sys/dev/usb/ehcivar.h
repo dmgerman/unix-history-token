@@ -427,10 +427,23 @@ decl_stmt|;
 name|usb_callout_t
 name|sc_tmo_pcd
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 name|device_ptr_t
 name|sc_child
 decl_stmt|;
 comment|/* /dev/usb# device */
+endif|#
+directive|endif
 name|char
 name|sc_dying
 decl_stmt|;

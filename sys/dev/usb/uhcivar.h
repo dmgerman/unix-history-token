@@ -469,10 +469,23 @@ decl_stmt|;
 comment|/* cookie from shutdown hook */
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 name|device_ptr_t
 name|sc_child
 decl_stmt|;
 comment|/* /dev/usb# device */
+endif|#
+directive|endif
 block|}
 name|uhci_softc_t
 typedef|;
