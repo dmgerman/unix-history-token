@@ -1527,6 +1527,16 @@ argument_list|,
 literal|"v"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|v_level
+operator|>
+literal|2
+condition|)
+name|fetchDebug
+operator|=
+literal|1
+expr_stmt|;
 switch|switch
 condition|(
 name|family
