@@ -4476,6 +4476,11 @@ operator|->
 name|size
 argument_list|)
 expr_stmt|;
+name|driver
+operator|->
+name|refs
+operator|++
+expr_stmt|;
 block|}
 else|else
 name|kobj_init
