@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vacation.c	5.14 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,7 +107,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<paths.h>
 end_include
 
 begin_comment
