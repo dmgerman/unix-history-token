@@ -826,8 +826,8 @@ modifier|*
 name|speed_map
 decl_stmt|;
 name|struct
-name|callout_handle
-name|tlhandle
+name|callout
+name|busprobe_callout
 decl_stmt|;
 name|struct
 name|callout_handle
