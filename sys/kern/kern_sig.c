@@ -1430,7 +1430,7 @@ name|ps
 operator|->
 name|ps_usertramp
 argument_list|,
-name|seg
+name|sig
 argument_list|)
 expr_stmt|;
 endif|#
