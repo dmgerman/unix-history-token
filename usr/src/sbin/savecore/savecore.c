@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.11 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -483,6 +483,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|clear
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|errno
@@ -568,6 +574,13 @@ case|case
 literal|'v'
 case|:
 name|Verbose
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|clear
 operator|++
 expr_stmt|;
 break|break;
@@ -1111,7 +1124,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"/vmunix: %s not in namelist"
+literal|"/vmunix: %s not in namelist\n"
 argument_list|,
 name|current_nl
 index|[
@@ -1166,7 +1179,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s not in namelist"
+literal|"%s: %s not in namelist\n"
 argument_list|,
 name|dump_sys
 argument_list|,
@@ -1331,7 +1344,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Couldn't fdopen kmem"
+literal|"Couldn't fdopen kmem\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1484,17 +1497,33 @@ name|system
 operator|==
 literal|0
 condition|)
+block|{
 name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"Warning: vmunix version mismatch:\n\t%sand\n\t%s"
+literal|"Warning: vmunix version mismatch:\n"
+argument_list|)
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"\t%s\n"
 argument_list|,
 name|vers
+argument_list|)
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"and\t%s\n"
 argument_list|,
 name|core_vers
 argument_list|)
 expr_stmt|;
+block|}
 name|fp
 operator|=
 name|fopen
@@ -1939,7 +1968,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"Dump omitted, not enough space on device"
+literal|"Dump omitted, not enough space on device\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1966,7 +1995,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"Dump performed, but free space threshold crossed"
+literal|"Dump performed, but free space threshold crossed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2324,7 +2353,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"WARNING: vmcore may be incomplete"
+literal|"WARNING: vmcore may be incomplete\n"
 argument_list|)
 expr_stmt|;
 break|break;
