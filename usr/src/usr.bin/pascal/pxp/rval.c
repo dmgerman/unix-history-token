@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rval.c	2.1 (Berkeley) %G%"
+literal|"@(#)rval.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,6 +239,7 @@ case|:
 case|case
 name|T_MINUS
 case|:
+comment|/* 			 * if child is relational (bogus) or adding operator, 			 * parenthesize child. 			 * this has the unaesthetic property that 			 * --i prints as -(-i), but is needed to catch 			 * -(a+b) which must print as -(a+b), not as -a+b. 			 * otherwise child has higher precedence 			 * and need not be parenthesized. 			 */
 name|ppop
 argument_list|(
 name|r
@@ -271,7 +272,7 @@ name|prec
 argument_list|(
 name|al
 argument_list|)
-operator|>
+operator|<=
 name|prec
 argument_list|(
 name|r
@@ -284,6 +285,7 @@ break|break;
 case|case
 name|T_NOT
 case|:
+comment|/* 			 * if child is of lesser precedence 			 * (i.e. not another not operator) 			 * parenthesize it. 			 * nested not operators need not be parenthesized 			 * because it's a prefix operator. 			 */
 name|ppkw
 argument_list|(
 name|opname
@@ -292,6 +294,13 @@ expr_stmt|;
 name|ppspac
 argument_list|()
 expr_stmt|;
+name|al
+operator|=
+name|r
+index|[
+literal|2
+index|]
+expr_stmt|;
 name|rvalue
 argument_list|(
 name|r
@@ -299,7 +308,17 @@ index|[
 literal|2
 index|]
 argument_list|,
-literal|1
+name|prec
+argument_list|(
+name|al
+argument_list|)
+operator|<
+name|prec
+argument_list|(
+name|r
+argument_list|)
+operator|||
+name|full
 argument_list|)
 expr_stmt|;
 break|break;
@@ -321,6 +340,7 @@ case|:
 case|case
 name|T_LT
 case|:
+comment|/* 			 * make the aesthetic choice to 			 * fully parenthesize relational expressions, 			 * in spite of left to right associativity. 			 * note: there are no operators with lower precedence. 			 */
 name|al
 operator|=
 name|r
@@ -375,6 +395,7 @@ case|:
 case|case
 name|T_IN
 case|:
+comment|/* 			 * need not parenthesize left child 			 * if it has equal precedence, 			 * due to left to right associativity. 			 * right child needs to be parenthesized 			 * if it has equal (or lesser) precedence. 			 */
 name|al
 operator|=
 name|r
