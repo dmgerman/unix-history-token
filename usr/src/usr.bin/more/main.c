@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.9 (Berkeley) %G%"
+literal|"@(#)main.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -802,7 +802,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Copy a file directly to standard output.  * Used if standard output is not a tty.  */
+comment|/*  * copy a file directly to standard output; used if stdout is not a tty.  * the only processing is to squeeze multiple blank input lines.  */
 end_comment
 
 begin_expr_stmt
@@ -810,10 +810,77 @@ specifier|static
 name|cat_file
 argument_list|()
 block|{
+specifier|extern
+name|int
+name|squeeze
+block|;
 specifier|register
 name|int
 name|c
+block|,
+name|empty
 block|;
+if|if
+condition|(
+name|squeeze
+condition|)
+block|{
+name|empty
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|ch_forw_get
+argument_list|()
+operator|)
+operator|!=
+name|EOI
+condition|)
+if|if
+condition|(
+name|c
+operator|!=
+literal|'\n'
+condition|)
+block|{
+name|putchr
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|empty
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_elseif
+elseif|else
+if|if
+condition|(
+name|empty
+operator|<
+literal|2
+condition|)
+block|{
+name|putchr
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+operator|++
+name|empty
+expr_stmt|;
+block|}
+end_elseif
+
+begin_while
+unit|} 	else
 while|while
 condition|(
 operator|(
@@ -830,6 +897,9 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+end_while
+
+begin_expr_stmt
 name|flush
 argument_list|()
 expr_stmt|;
