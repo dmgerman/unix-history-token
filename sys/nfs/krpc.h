@@ -4,7 +4,7 @@ comment|/*	$NetBSD: krpc.h,v 1.4 1995/12/19 23:07:11 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: krpc.h,v 1.3 1997/06/12 14:03:16 tegge Exp $	*/
+comment|/*	$Id: krpc.h,v 1.4 1997/08/16 19:15:52 wollman Exp $	*/
 end_comment
 
 begin_include
@@ -12,6 +12,30 @@ include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr_in
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 name|int
@@ -22,7 +46,7 @@ operator|(
 expr|struct
 name|sockaddr_in
 operator|*
-name|sin
+name|_sin
 operator|,
 name|u_int
 name|prog
@@ -63,7 +87,7 @@ operator|(
 expr|struct
 name|sockaddr_in
 operator|*
-name|sin
+name|_sin
 operator|,
 name|u_int
 name|prog
