@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/ed.h,v 3.31 2001/02/19 23:30:44 kim Exp $ */
+comment|/* $Header: /src/pub/tcsh/ed.h,v 3.33 2002/07/06 22:28:13 christos Exp $ */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * ed.h: Editor declarations and globals  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -1104,113 +1104,6 @@ parameter_list|)
 value|(((x)>(y))?(x):(y))
 end_define
 
-begin_comment
-comment|/*  * Terminal dependend data structures  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-ifdef|#
-directive|ifdef
-name|WINNT_NATIVE
-name|int
-name|dummy
-decl_stmt|;
-else|#
-directive|else
-comment|/* !WINNT_NATIVE */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|POSIX
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|TERMIO
-argument_list|)
-ifdef|#
-directive|ifdef
-name|POSIX
-name|struct
-name|termios
-name|d_t
-decl_stmt|;
-else|#
-directive|else
-name|struct
-name|termio
-name|d_t
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* POSIX */
-else|#
-directive|else
-comment|/* SGTTY */
-ifdef|#
-directive|ifdef
-name|TIOCGETP
-name|struct
-name|sgttyb
-name|d_t
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* TIOCGETP */
-ifdef|#
-directive|ifdef
-name|TIOCGETC
-name|struct
-name|tchars
-name|d_tc
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* TIOCGETC */
-ifdef|#
-directive|ifdef
-name|TIOCGPAGE
-name|struct
-name|ttypagestat
-name|d_pc
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* TIOCGPAGE */
-ifdef|#
-directive|ifdef
-name|TIOCLGET
-name|int
-name|d_lb
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* TIOCLGET */
-endif|#
-directive|endif
-comment|/* POSIX || TERMIO */
-ifdef|#
-directive|ifdef
-name|TIOCGLTC
-name|struct
-name|ltchars
-name|d_ltc
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* TIOCGLTC */
-endif|#
-directive|endif
-comment|/* WINNT_NATIVE */
-block|}
-name|ttydata_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -1420,6 +1313,12 @@ name|ttyperm_t
 name|ttylist
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|"ed.term.h"
+end_include
 
 begin_include
 include|#
