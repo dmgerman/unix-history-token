@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-1.6.4-20000701"
+value|"sym-1.6.5-20000902"
 end_define
 
 begin_comment
@@ -8299,7 +8299,7 @@ name|FE_PFEN
 operator||
 name|FE_NOPM
 operator||
-name|FE_64BIT
+name|FE_DAC
 operator|)
 operator|)
 condition|)
@@ -11518,14 +11518,14 @@ literal|62
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 *  64 bit (53C895A or 53C896) ? 	 */
+comment|/* 	 *  64 bit addressing  (895A/896/1010) ? 	 */
 if|if
 condition|(
 name|np
 operator|->
 name|features
 operator|&
-name|FE_64BIT
+name|FE_DAC
 condition|)
 if|#
 directive|if
@@ -14189,14 +14189,18 @@ name|rv_ccntl0
 operator||=
 name|DPR
 expr_stmt|;
-comment|/* 	 *  If 64 bit (895A/896/1010) write CCNTL1 to enable 40 bit  	 *  address table indirect addressing for MOVE. 	 *  Also write CCNTL0 if 64 bit chip, since this register seems  	 *  to only be used by 64 bit cores. 	 */
+comment|/* 	 *  Write CCNTL0/CCNTL1 for chips capable of 64 bit addressing  	 *  and/or hardware phase mismatch, since only such chips  	 *  seem to support those IO registers. 	 */
 if|if
 condition|(
 name|np
 operator|->
 name|features
 operator|&
-name|FE_64BIT
+operator|(
+name|FE_DAC
+operator||
+name|FE_NOPM
+operator|)
 condition|)
 block|{
 name|OUTB
@@ -24046,7 +24050,7 @@ name|wide
 operator|>
 name|np
 operator|->
-name|maxoffs
+name|maxwide
 condition|)
 block|{
 name|chg
@@ -24057,7 +24061,7 @@ name|wide
 operator|=
 name|np
 operator|->
-name|maxoffs
+name|maxwide
 expr_stmt|;
 block|}
 if|if
@@ -27202,6 +27206,8 @@ decl_stmt|,
 name|host_wr
 decl_stmt|,
 name|pc
+decl_stmt|,
+name|dstat
 decl_stmt|;
 name|int
 name|i
@@ -27231,6 +27237,22 @@ operator|)
 return|;
 endif|#
 directive|endif
+name|restart_test
+label|:
+comment|/* 	 *  Enable Master Parity Checking as we intend  	 *  to enable it for normal operations. 	 */
+name|OUTB
+argument_list|(
+name|nc_ctest4
+argument_list|,
+operator|(
+name|np
+operator|->
+name|rv_ctest4
+operator|&
+name|MPEE
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  init 	 */
 name|pc
 operator|=
@@ -27311,6 +27333,104 @@ name|DIP
 operator|)
 condition|)
 break|break;
+if|if
+condition|(
+name|i
+operator|>=
+name|SYM_SNOOP_TIMEOUT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"CACHE TEST FAILED: timeout.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0x20
+operator|)
+return|;
+block|}
+empty_stmt|;
+comment|/* 	 *  Check for fatal DMA errors. 	 */
+name|dstat
+operator|=
+name|INB
+argument_list|(
+name|nc_dstat
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|1
+comment|/* Band aiding for broken hardwares that fail PCI parity */
+if|if
+condition|(
+operator|(
+name|dstat
+operator|&
+name|MDPE
+operator|)
+operator|&&
+operator|(
+name|np
+operator|->
+name|rv_ctest4
+operator|&
+name|MPEE
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: PCI DATA PARITY ERROR DETECTED - "
+literal|"DISABLING MASTER DATA PARITY CHECKING.\n"
+argument_list|,
+name|sym_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|rv_ctest4
+operator|&=
+operator|~
+name|MPEE
+expr_stmt|;
+goto|goto
+name|restart_test
+goto|;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|dstat
+operator|&
+operator|(
+name|MDPE
+operator||
+name|BF
+operator||
+name|IID
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"CACHE TEST FAILED: DMA error (dstat=0x%02x)."
+argument_list|,
+name|dstat
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0x80
+operator|)
+return|;
+block|}
 comment|/* 	 *  Save termination position. 	 */
 name|pc
 operator|=
@@ -27343,26 +27463,6 @@ argument_list|(
 name|nc_temp
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  check for timeout 	 */
-if|if
-condition|(
-name|i
-operator|>=
-name|SYM_SNOOP_TIMEOUT
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"CACHE TEST FAILED: timeout.\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0x20
-operator|)
-return|;
-block|}
-empty_stmt|;
 comment|/* 	 *  Check termination position. 	 */
 if|if
 condition|(
@@ -34533,6 +34633,8 @@ name|FE_RAM8K
 operator||
 name|FE_64BIT
 operator||
+name|FE_DAC
+operator||
 name|FE_IO256
 operator||
 name|FE_NOPM
@@ -34577,7 +34679,7 @@ name|FE_RAM
 operator||
 name|FE_RAM8K
 operator||
-name|FE_64BIT
+name|FE_DAC
 operator||
 name|FE_IO256
 operator||
@@ -34625,13 +34727,13 @@ name|FE_RAM8K
 operator||
 name|FE_64BIT
 operator||
+name|FE_DAC
+operator||
 name|FE_IO256
 operator||
 name|FE_NOPM
 operator||
 name|FE_LEDC
-operator||
-name|FE_PCI66
 operator||
 name|FE_CRC
 operator||
@@ -34674,6 +34776,8 @@ operator||
 name|FE_RAM8K
 operator||
 name|FE_64BIT
+operator||
+name|FE_DAC
 operator||
 name|FE_IO256
 operator||
@@ -34725,13 +34829,15 @@ name|FE_RAM8K
 operator||
 name|FE_64BIT
 operator||
+name|FE_DAC
+operator||
 name|FE_IO256
 operator||
 name|FE_NOPM
 operator||
 name|FE_LEDC
 operator||
-name|FE_PCI66
+name|FE_66MHZ
 operator||
 name|FE_CRC
 operator||

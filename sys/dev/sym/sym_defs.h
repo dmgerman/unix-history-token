@@ -262,7 +262,7 @@ define|#
 directive|define
 name|FE_64BIT
 value|(1<<17)
-comment|/* Supports 64-bit addressing */
+comment|/* 64-bit PCI BUS interface */
 define|#
 directive|define
 name|FE_IO256
@@ -285,7 +285,7 @@ value|(1<<21)
 comment|/* Ultra 3 - 80 Mtrans/sec DT */
 define|#
 directive|define
-name|FE_PCI66
+name|FE_66MHZ
 value|(1<<22)
 comment|/* 66MHz PCI support */
 define|#
@@ -318,6 +318,11 @@ directive|define
 name|FE_U3EN
 value|(1<<28)
 comment|/* U3EN bit usable */
+define|#
+directive|define
+name|FE_DAC
+value|(1<<29)
+comment|/* Support PCI DAC (64 bit addressing) */
 define|#
 directive|define
 name|FE_CACHE_SET
