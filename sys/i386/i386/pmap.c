@@ -9304,6 +9304,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 comment|/* 	 * This code maps large physical mmap regions into the 	 * processor address space.  Note that some shortcuts 	 * are taken, but the code works. 	 */
 if|if
 condition|(
@@ -9380,7 +9385,9 @@ name|PDRSHIFT
 operator|)
 index|]
 condition|)
-return|return;
+goto|goto
+name|unlock_return
+goto|;
 name|retry
 label|:
 name|p
@@ -9436,7 +9443,9 @@ name|p
 operator|==
 name|NULL
 condition|)
-return|return;
+goto|goto
+name|unlock_return
+goto|;
 name|m
 index|[
 literal|0
@@ -9471,7 +9480,9 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-return|return;
+goto|goto
+name|unlock_return
+goto|;
 block|}
 name|p
 operator|=
@@ -9512,7 +9523,9 @@ literal|1
 operator|)
 condition|)
 block|{
-return|return;
+goto|goto
+name|unlock_return
+goto|;
 block|}
 name|p
 operator|->
@@ -9585,7 +9598,9 @@ argument_list|(
 name|kernel_pmap
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|unlock_return
+goto|;
 block|}
 name|psize
 operator|=
@@ -9627,7 +9642,9 @@ operator|)
 operator|)
 condition|)
 block|{
-return|return;
+goto|goto
+name|unlock_return
+goto|;
 block|}
 if|if
 condition|(
@@ -9648,7 +9665,9 @@ name|size
 operator|<
 name|pindex
 condition|)
-return|return;
+goto|goto
+name|unlock_return
+goto|;
 name|psize
 operator|=
 name|object
@@ -9839,6 +9858,11 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|mpte
 operator|=
 name|pmap_enter_quick
@@ -9857,6 +9881,11 @@ argument_list|,
 name|mpte
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -9870,7 +9899,13 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
-return|return;
+name|unlock_return
+label|:
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
