@@ -442,6 +442,30 @@ name|iobus
 operator|=
 literal|"apecs"
 expr_stmt|;
+break|break;
+default|default:
+name|platform
+operator|.
+name|iobus
+operator|=
+literal|"cia"
+expr_stmt|;
+break|break;
+block|}
+name|platform
+operator|.
+name|cons_init
+operator|=
+name|dec_1000a_cons_init
+expr_stmt|;
+switch|switch
+condition|(
+name|cputype
+condition|)
+block|{
+case|case
+name|ST_DEC_1000
+case|:
 name|platform
 operator|.
 name|pci_intr_map
@@ -470,12 +494,6 @@ break|break;
 default|default:
 name|platform
 operator|.
-name|iobus
-operator|=
-literal|"cia"
-expr_stmt|;
-name|platform
-operator|.
 name|pci_intr_map
 operator|=
 name|dec_1000a_intr_map
@@ -500,12 +518,6 @@ name|dec_1000a_intr_init
 expr_stmt|;
 break|break;
 block|}
-name|platform
-operator|.
-name|cons_init
-operator|=
-name|dec_1000a_cons_init
-expr_stmt|;
 block|}
 end_function
 
@@ -1363,7 +1375,7 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|/*  * Enable cascade interrupt.  */
-name|dec_1000_intr_enable
+name|dec_1000a_intr_enable
 argument_list|(
 literal|2
 argument_list|)
