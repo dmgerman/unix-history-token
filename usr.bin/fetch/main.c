@@ -240,7 +240,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ac:D:f:h:HilLmMnNo:pPqrT:vV:"
+literal|"ac:D:f:h:HilLmMnNo:pPqRrT:vV:"
 argument_list|)
 operator|)
 operator|!=
@@ -1202,6 +1202,10 @@ name|off_t
 name|bytes
 decl_stmt|;
 specifier|static
+name|off_t
+name|bytestart
+decl_stmt|;
+specifier|static
 name|int
 name|pr
 decl_stmt|,
@@ -1336,6 +1340,8 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+name|bytestart
+operator|=
 name|bytes
 operator|=
 name|n
@@ -1386,6 +1392,10 @@ name|bytes
 operator|/
 literal|1024
 argument_list|)
+expr_stmt|;
+name|bytes
+operator|-=
+name|bytestart
 expr_stmt|;
 name|d
 operator|=
