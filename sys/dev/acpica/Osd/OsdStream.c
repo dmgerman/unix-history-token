@@ -14,7 +14,7 @@ file|"acpi.h"
 end_include
 
 begin_function
-name|INT32
+name|void
 name|AcpiOsPrintf
 parameter_list|(
 specifier|const
@@ -28,9 +28,6 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|int
-name|retval
-decl_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -38,8 +35,6 @@ argument_list|,
 name|Format
 argument_list|)
 expr_stmt|;
-name|retval
-operator|=
 name|vprintf
 argument_list|(
 name|Format
@@ -52,16 +47,11 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|retval
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
-name|INT32
+name|void
 name|AcpiOsVprintf
 parameter_list|(
 specifier|const
@@ -73,16 +63,13 @@ name|va_list
 name|Args
 parameter_list|)
 block|{
-return|return
-operator|(
 name|vprintf
 argument_list|(
 name|Format
 argument_list|,
 name|Args
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
