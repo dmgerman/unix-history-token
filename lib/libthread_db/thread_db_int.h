@@ -365,6 +365,26 @@ name|td_thrhandle_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|td_err_e
+function_decl|(
+modifier|*
+name|to_thr_tls_get_addr
+function_decl|)
+parameter_list|(
+specifier|const
+name|td_thrhandle_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* FreeBSD specific extensions. */
 name|td_err_e
 function_decl|(

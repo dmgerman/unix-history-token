@@ -928,6 +928,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|td_err_e
+name|td_thr_tls_get_addr
+parameter_list|(
+specifier|const
+name|td_thrhandle_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* FreeBSD specific extensions. */
 end_comment
