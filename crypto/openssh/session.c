@@ -4550,6 +4550,8 @@ name|char
 modifier|*
 modifier|*
 name|env
+init|=
+name|NULL
 decl_stmt|;
 specifier|extern
 name|char
