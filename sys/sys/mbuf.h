@@ -890,6 +890,17 @@ end_endif
 begin_define
 define|#
 directive|define
+name|MT_TAG
+value|13
+end_define
+
+begin_comment
+comment|/* volatile metadata associated to pkts */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MT_CONTROL
 value|14
 end_define
@@ -1344,7 +1355,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Some packet tags to identify different mbuf annotations.  *  * Eventually, these annotations will end up in an appropriate chain  * (struct m_tag or similar, e.g. as in NetBSD) properly managed by  * the mbuf handling routines.  *  * As a temporary and low impact solution to replace the even uglier  * approach used so far in some parts of the network stack (which relies  * on global variables), these annotations are stored in MT_CONTROL  * mbufs (or lookalikes) prepended to the actual mbuf chain.  *  *	m_type	= MT_CONTROL  *	m_flags = m_tag_id  *	m_next	= next buffer in chain.  *  * BE VERY CAREFUL not to pass these blocks to the mbuf handling routines.  *  */
+comment|/*  * Some packet tags to identify different mbuf annotations.  *  * Eventually, these annotations will end up in an appropriate chain  * (struct m_tag or similar, e.g. as in NetBSD) properly managed by  * the mbuf handling routines.  *  * As a temporary and low impact solution to replace the even uglier  * approach used so far in some parts of the network stack (which relies  * on global variables), these annotations are stored in MT_TAG  * mbufs (or lookalikes) prepended to the actual mbuf chain.  *  *	m_type	= MT_TAG  *	m_flags = m_tag_id  *	m_next	= next buffer in chain.  *  * BE VERY CAREFUL not to pass these blocks to the mbuf handling routines.  *  */
 end_comment
 
 begin_define
