@@ -1961,7 +1961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize a PCCARD function.  May be called as long as the function is  * disabled.  */
+comment|/*  * Initialize a PCCARD function.  May be called as long as the function is  * disabled.  *  * Note: pccard_function_init should not keep resources allocated.  It should  * only set them up ala isa pnp, set the values in the rl lists, and return.  * Any resource held after pccard_function_init is called is a bug.  However,  * the bus routines to get the resources also assume that pccard_function_init  * does this, so they need to be fixed too.  */
 end_comment
 
 begin_function
@@ -2569,7 +2569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free resources allocated by pccard_function_init(), May be called as long  * as the function is disabled.  */
+comment|/*  * Free resources allocated by pccard_function_init(), May be called as long  * as the function is disabled.  *  * NOTE: This function should be unnecessary.  pccard_function_init should  * never keep resources initialized.  */
 end_comment
 
 begin_function
