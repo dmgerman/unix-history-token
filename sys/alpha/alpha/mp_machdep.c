@@ -1190,6 +1190,10 @@ operator|<
 name|hwrpb
 operator|->
 name|rpb_pcs_cnt
+operator|&&
+name|i
+operator|<
+name|MAXCPU
 condition|;
 name|i
 operator|++
@@ -1219,18 +1223,14 @@ argument_list|)
 argument_list|)
 condition|)
 continue|continue;
-if|if
-condition|(
-name|i
-operator|>
-name|MAXCPU
-condition|)
-continue|continue;
 name|mp_maxid
 operator|=
 name|i
 expr_stmt|;
 block|}
+name|mp_maxid
+operator|++
+expr_stmt|;
 block|}
 end_function
 
