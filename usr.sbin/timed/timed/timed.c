@@ -60,7 +60,7 @@ name|sgi
 end_ifdef
 
 begin_empty
-empty|#ident "$Revision: 1.25 $"
+empty|#ident "$Revision: 1.1.1.1 $"
 end_empty
 
 begin_endif
@@ -1276,6 +1276,18 @@ operator|=
 name|srvp
 operator|->
 name|s_port
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|server
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|server
 operator|.
