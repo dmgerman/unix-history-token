@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_usrreq.c  *  * $Id: ipx_usrreq.c,v 1.12 1997/04/05 20:05:09 jhay Exp $  */
+comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_usrreq.c  *  * $Id: ipx_usrreq.c,v 1.13 1997/05/01 06:21:30 jhay Exp $  */
 end_comment
 
 begin_include
@@ -138,12 +138,6 @@ end_include
 begin_comment
 comment|/*  * IPX protocol implementation.  */
 end_comment
-
-begin_decl_stmt
-name|int
-name|noipxRoute
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -379,6 +373,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|ipx_output
+parameter_list|(
+name|struct
+name|ipxpcb
+modifier|*
+name|ipxp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|pr_usrreqs
@@ -418,6 +430,12 @@ block|,
 name|ipx_shutdown
 block|,
 name|ipx_sockaddr
+block|,
+name|sosend
+block|,
+name|soreceive
+block|,
+name|soselect
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -461,6 +479,12 @@ block|,
 name|ipx_shutdown
 block|,
 name|ipx_sockaddr
+block|,
+name|sosend
+block|,
+name|soreceive
+block|,
+name|soselect
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -523,7 +547,7 @@ if|if
 condition|(
 name|ipxp
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -586,6 +610,8 @@ name|ipx_zeronet
 argument_list|)
 operator|&&
 name|ifp
+operator|!=
+name|NULL
 condition|)
 block|{
 specifier|register
@@ -605,6 +631,8 @@ operator|.
 name|tqh_first
 init|;
 name|ifa
+operator|!=
+name|NULL
 condition|;
 name|ifa
 operator|=
@@ -724,7 +752,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 operator|==
 literal|0
@@ -788,10 +816,6 @@ begin_comment
 comment|/*  * Drop connection, reporting  * the specified error.  */
 end_comment
 
-begin_comment
-comment|/* struct ipxpcb * DELETE THIS */
-end_comment
-
 begin_function
 name|void
 name|ipx_drop
@@ -819,8 +843,8 @@ name|ipxp
 operator|->
 name|ipxp_socket
 decl_stmt|;
-comment|/* 	 * someday, in the xerox world 	 * we will generate error protocol packets 	 * announcing that the socket has gone away. 	 */
-comment|/*if (TCPS_HAVERCVDSYN(tp->t_state)) { 		tp->t_state = TCPS_CLOSED; 		(void) tcp_output(tp); 	}*/
+comment|/* 	 * someday, in the IPX world 	 * we will generate error protocol packets 	 * announcing that the socket has gone away. 	 * 	 * XXX Probably never. IPX does not have error packets. 	 */
+comment|/*if (TCPS_HAVERCVDSYN(tp->t_state)) { 		tp->t_state = TCPS_CLOSED; 		tcp_output(tp); 	}*/
 name|so
 operator|->
 name|so_error
@@ -841,6 +865,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ipx_output
 parameter_list|(
@@ -904,6 +929,8 @@ operator|=
 name|m0
 init|;
 name|m
+operator|!=
+name|NULL
 condition|;
 name|m
 operator|=
@@ -990,7 +1017,7 @@ if|if
 condition|(
 name|m1
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|m_freem
@@ -1081,7 +1108,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1220,7 +1247,7 @@ expr|struct
 name|route
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
 name|so
@@ -1251,6 +1278,8 @@ condition|(
 name|ro
 operator|->
 name|ro_rt
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1354,12 +1383,7 @@ name|ro
 operator|->
 name|ro_rt
 operator|=
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -1374,14 +1398,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ancient_history */
-if|if
-condition|(
-name|noipxRoute
-condition|)
-name|ro
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 name|ipx_outputfl
@@ -1400,10 +1416,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -1469,9 +1481,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/*extern long ipx_pexseq;*/
-comment|/*XXX*/
-comment|/*JRE*/
 if|if
 condition|(
 name|ipxp
@@ -2429,6 +2438,8 @@ decl_stmt|;
 if|if
 condition|(
 name|nam
+operator|!=
+name|NULL
 condition|)
 block|{
 name|laddr
@@ -2525,6 +2536,8 @@ expr_stmt|;
 if|if
 condition|(
 name|nam
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ipx_pcbdisconnect
@@ -2695,6 +2708,8 @@ decl_stmt|;
 if|if
 condition|(
 name|p
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|error

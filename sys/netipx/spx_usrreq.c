@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spx_usrreq.h  *  * $Id: spx_usrreq.c,v 1.11 1997/04/05 20:05:11 jhay Exp $  */
+comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spx_usrreq.h  *  * $Id: spx_usrreq.c,v 1.12 1997/05/01 06:21:31 jhay Exp $  */
 end_comment
 
 begin_include
@@ -134,17 +134,17 @@ comment|/*  * SPX protocol implementation.  */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|spx
-name|spx_savesi
+name|u_short
+name|spx_iss
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|traceallspxs
-init|=
-literal|0
+name|u_short
+name|spx_newchecks
+index|[
+literal|50
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -163,11 +163,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_short
-name|spx_newchecks
-index|[
-literal|50
-index|]
+name|int
+name|traceallspxs
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|spx
+name|spx_savesi
 decl_stmt|;
 end_decl_stmt
 
@@ -178,11 +184,235 @@ name|spx_istat
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Following was struct spxstat spxstat; */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|spxstat
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|spxstat
+value|spx_istat.newstats
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
-name|u_short
-name|spx_iss
+name|int
+name|spx_backoff
+index|[
+name|SPX_MAXRXTSHIFT
+operator|+
+literal|1
+index|]
+init|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|4
+block|,
+literal|8
+block|,
+literal|16
+block|,
+literal|32
+block|,
+literal|64
+block|,
+literal|64
+block|,
+literal|64
+block|,
+literal|64
+block|,
+literal|64
+block|,
+literal|64
+block|,
+literal|64
+block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|spx_abort
+parameter_list|(
+name|struct
+name|ipxpcb
+modifier|*
+name|ipxp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|spxpcb
+modifier|*
+name|spx_close
+parameter_list|(
+name|struct
+name|spxpcb
+modifier|*
+name|cb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|spxpcb
+modifier|*
+name|spx_disconnect
+parameter_list|(
+name|struct
+name|spxpcb
+modifier|*
+name|cb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|spxpcb
+modifier|*
+name|spx_drop
+parameter_list|(
+name|struct
+name|spxpcb
+modifier|*
+name|cb
+parameter_list|,
+name|int
+name|errno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|spx_output
+parameter_list|(
+name|struct
+name|spxpcb
+modifier|*
+name|cb
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|spx_quench
+parameter_list|(
+name|struct
+name|ipxpcb
+modifier|*
+name|ipxp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|spx_reass
+parameter_list|(
+name|struct
+name|spxpcb
+modifier|*
+name|cb
+parameter_list|,
+name|struct
+name|spx
+modifier|*
+name|si
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|spx_setpersist
+parameter_list|(
+name|struct
+name|spxpcb
+modifier|*
+name|cb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|spx_template
+parameter_list|(
+name|struct
+name|spxpcb
+modifier|*
+name|cb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|spxpcb
+modifier|*
+name|spx_timers
+parameter_list|(
+name|struct
+name|spxpcb
+modifier|*
+name|cb
+parameter_list|,
+name|int
+name|timer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|spxpcb
+modifier|*
+name|spx_usrclosed
+parameter_list|(
+name|struct
+name|spxpcb
+modifier|*
+name|cb
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -472,6 +702,12 @@ block|,
 name|spx_shutdown
 block|,
 name|ipx_sockaddr
+block|,
+name|sosend
+block|,
+name|soreceive
+block|,
+name|soselect
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -515,6 +751,12 @@ block|,
 name|spx_shutdown
 block|,
 name|ipx_sockaddr
+block|,
+name|sosend
+block|,
+name|soreceive
+block|,
+name|soselect
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -531,10 +773,6 @@ expr_stmt|;
 comment|/* WRONG !! should fish it out of TODR */
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 name|void
@@ -603,7 +841,7 @@ if|if
 condition|(
 name|ipxp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|panic
@@ -624,7 +862,7 @@ if|if
 condition|(
 name|cb
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|bad
@@ -659,7 +897,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|spxstat
@@ -772,7 +1010,7 @@ if|if
 condition|(
 name|so
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 goto|goto
@@ -1017,9 +1255,6 @@ name|ipxp_laddr
 operator|=
 name|laddr
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|m_free
 argument_list|(
 name|am
@@ -1034,9 +1269,6 @@ goto|goto
 name|drop
 goto|;
 block|}
-operator|(
-name|void
-operator|)
 name|m_free
 argument_list|(
 name|am
@@ -1406,9 +1638,6 @@ name|si
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|m_freem
 argument_list|(
 name|m
@@ -1435,9 +1664,6 @@ name|SF_RXT
 operator|)
 operator|)
 condition|)
-operator|(
-name|void
-operator|)
 name|spx_output
 argument_list|(
 name|cb
@@ -1447,7 +1673,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|cb
@@ -1468,9 +1694,6 @@ if|if
 condition|(
 name|dropsocket
 condition|)
-operator|(
-name|void
-operator|)
 name|soabort
 argument_list|(
 name|so
@@ -1509,6 +1732,9 @@ operator|->
 name|si_alo
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPXERRORMSGS
 name|ipx_error
 argument_list|(
 name|dtom
@@ -1521,6 +1747,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|m_freem
+argument_list|(
+name|dtom
+argument_list|(
+name|si
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cb
@@ -1613,6 +1851,7 @@ comment|/*  * This is structurally similar to the tcp reassembly routine  * but 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spx_reass
 parameter_list|(
@@ -1840,9 +2079,6 @@ literal|1
 operator|+
 name|SPXT_REXMT
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|spx_output
 argument_list|(
 name|cb
@@ -1852,7 +2088,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|cb
@@ -2554,6 +2790,9 @@ literal|60
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|IPXERRORMSGS
 name|ipx_error
 argument_list|(
 name|dtom
@@ -2566,6 +2805,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|m_freem
+argument_list|(
+name|dtom
+argument_list|(
+name|si
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -2576,12 +2827,15 @@ comment|/* else queue this packet; */
 block|}
 else|else
 block|{
-comment|/*register struct socket *so = cb->s_ipxpcb->ipxp_socket; 			if (so->so_state&& SS_NOFDREF) { 				ipx_error(dtom(si), IPX_ERR_NOSOCK, 0); 				(void)spx_close(cb); 			} else 				       would crash system*/
+comment|/*register struct socket *so = cb->s_ipxpcb->ipxp_socket; 			if (so->so_state&& SS_NOFDREF) { 				ipx_error(dtom(si), IPX_ERR_NOSOCK, 0); 				spx_close(cb); 			} else 				       would crash system*/
 name|spx_istat
 operator|.
 name|notyet
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPXERRORMSGS
 name|ipx_error
 argument_list|(
 name|dtom
@@ -2594,6 +2848,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|m_freem
+argument_list|(
+name|dtom
+argument_list|(
+name|si
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3291,6 +3557,19 @@ modifier|*
 name|na
 decl_stmt|;
 name|struct
+name|sockaddr_ipx
+modifier|*
+name|sipx
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPXERRORMSGS
+name|struct
+name|ipxpcb
+modifier|*
+name|ipxp
+decl_stmt|;
+name|struct
 name|ipx_errp
 modifier|*
 name|errp
@@ -3302,19 +3581,11 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|struct
-name|ipxpcb
-modifier|*
-name|ipxp
-decl_stmt|;
-name|struct
-name|sockaddr_ipx
-modifier|*
-name|sipx
-decl_stmt|;
 name|int
 name|type
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cmd
@@ -3326,10 +3597,15 @@ operator|>
 name|PRC_NCMDS
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|IPXERRORMSGS
 name|type
 operator|=
 name|IPX_ERR_UNREACH_HOST
 expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|cmd
@@ -3375,6 +3651,9 @@ name|sipx_addr
 expr_stmt|;
 break|break;
 default|default:
+ifdef|#
+directive|ifdef
+name|IPXERRORMSGS
 name|errp
 operator|=
 operator|(
@@ -3409,8 +3688,13 @@ operator|)
 name|type
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|IPXERRORMSGS
 switch|switch
 condition|(
 name|type
@@ -3466,6 +3750,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ipxp
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -3473,10 +3759,9 @@ condition|(
 name|ipxp
 operator|->
 name|ipxp_pcb
+operator|!=
+name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|spx_drop
 argument_list|(
 operator|(
@@ -3498,9 +3783,6 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|ipx_drop
 argument_list|(
 name|ipxp
@@ -3535,6 +3817,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3543,6 +3827,7 @@ comment|/*  * When a source quench is received, close congestion window  * to on
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|spx_quench
 parameter_list|(
@@ -3567,6 +3852,8 @@ decl_stmt|;
 if|if
 condition|(
 name|cb
+operator|!=
+name|NULL
 condition|)
 name|cb
 operator|->
@@ -3651,6 +3938,8 @@ decl_stmt|;
 if|if
 condition|(
 name|cb
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/*  		 * The notification that we have sent 		 * too much is bad news -- we will 		 * have to go through queued up so far 		 * splitting ones which are too big and 		 * reassigning sequence numbers and checksums. 		 * we should then retransmit all packets from 		 * one above the offending packet to the last one 		 * we had sent (or our allocation) 		 * then the offending one so that the any queued 		 * data at our destination will be discarded. 		 */
@@ -3703,6 +3992,8 @@ operator|->
 name|sb_mb
 init|;
 name|m
+operator|!=
+name|NULL
 condition|;
 name|m
 operator|=
@@ -3736,7 +4027,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|firstbad
@@ -3756,6 +4047,8 @@ operator|=
 literal|0
 init|;
 name|m
+operator|!=
+name|NULL
 condition|;
 name|m
 operator|=
@@ -3789,6 +4082,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|int
 name|spx_output
 parameter_list|(
@@ -3836,7 +4130,7 @@ expr|struct
 name|spx
 operator|*
 operator|)
-literal|0
+name|NULL
 decl_stmt|;
 specifier|register
 name|struct
@@ -3893,6 +4187,8 @@ decl_stmt|;
 if|if
 condition|(
 name|m0
+operator|!=
+name|NULL
 condition|)
 block|{
 name|int
@@ -3913,6 +4209,8 @@ operator|=
 name|m0
 init|;
 name|m
+operator|!=
+name|NULL
 condition|;
 name|m
 operator|=
@@ -4055,6 +4353,8 @@ expr_stmt|;
 while|while
 condition|(
 name|mm
+operator|!=
+name|NULL
 condition|)
 block|{
 name|mm
@@ -4167,7 +4467,7 @@ if|if
 condition|(
 name|m1
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|m_freem
@@ -4221,7 +4521,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|m_freem
@@ -4349,9 +4649,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|m_free
 argument_list|(
 name|m
@@ -4952,6 +5249,8 @@ operator|->
 name|sb_mb
 init|;
 name|m
+operator|!=
+name|NULL
 condition|;
 name|m
 operator|=
@@ -4991,6 +5290,8 @@ label|:
 if|if
 condition|(
 name|si
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -5072,6 +5373,8 @@ expr_stmt|;
 if|if
 condition|(
 name|si
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 		 * must make a copy of this packet for 		 * ipx_output to monkey with 		 */
@@ -5193,7 +5496,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -5708,7 +6011,7 @@ expr|struct
 name|route
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 name|IPX_ROUTETOIF
 argument_list|)
@@ -5812,6 +6115,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|spx_setpersist
 parameter_list|(
@@ -5898,10 +6202,6 @@ operator|++
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 name|int
@@ -7131,7 +7431,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 name|p
 argument_list|)
@@ -7224,7 +7524,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|spx_connect_end
@@ -7467,7 +7767,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 name|p
 argument_list|)
@@ -7561,7 +7861,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|cb
@@ -7812,6 +8112,8 @@ block|}
 if|if
 condition|(
 name|controlp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|u_short
@@ -7843,12 +8145,14 @@ operator|==
 literal|5
 operator|)
 operator|&&
+operator|(
 name|p
 index|[
 literal|1
 index|]
 operator|==
 literal|1
+operator|)
 condition|)
 block|{
 comment|/* XXXX, for testing */
@@ -8005,6 +8309,8 @@ expr_stmt|;
 if|if
 condition|(
 name|cb
+operator|!=
+name|NULL
 condition|)
 name|error
 operator|=
@@ -8017,7 +8323,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|splx
@@ -8065,11 +8371,6 @@ name|struct
 name|ipxpcb
 modifier|*
 name|ipxp
-decl_stmt|;
-name|struct
-name|spxpcb
-modifier|*
-name|cb
 decl_stmt|;
 name|error
 operator|=
@@ -8131,6 +8432,7 @@ comment|/*  * Create template to be used to send spx packets on a connection.  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|spx_template
 parameter_list|(
@@ -8294,6 +8596,7 @@ comment|/*  * Close a SPIP control block:  *	discard spx control block itself  *
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|spxpcb
 modifier|*
@@ -8386,9 +8689,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|m_free
 argument_list|(
 name|dtom
@@ -8399,9 +8699,6 @@ name|s_ipx
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|m_free
 argument_list|(
 name|dtom
@@ -8438,7 +8735,7 @@ expr|struct
 name|spxpcb
 operator|*
 operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -8449,6 +8746,7 @@ comment|/*  *	Someday we may do level 3 handshaking  *	to close a connection or 
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|spxpcb
 modifier|*
@@ -8475,6 +8773,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|spxpcb
 modifier|*
@@ -8505,6 +8804,7 @@ comment|/*  * Drop connection, reporting  * the specified error.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|spxpcb
 modifier|*
@@ -8557,7 +8857,7 @@ name|s_state
 operator|=
 name|TCPS_CLOSED
 expr_stmt|;
-comment|/*(void) tcp_output(cb);*/
+comment|/*tcp_output(cb);*/
 block|}
 else|else
 name|spxstat
@@ -8583,6 +8883,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|spx_abort
 parameter_list|(
@@ -8594,9 +8895,6 @@ modifier|*
 name|ipxp
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
 name|spx_close
 argument_list|(
 operator|(
@@ -8611,45 +8909,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-name|int
-name|spx_backoff
-index|[
-name|SPX_MAXRXTSHIFT
-operator|+
-literal|1
-index|]
-init|=
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|4
-block|,
-literal|8
-block|,
-literal|16
-block|,
-literal|32
-block|,
-literal|64
-block|,
-literal|64
-block|,
-literal|64
-block|,
-literal|64
-block|,
-literal|64
-block|,
-literal|64
-block|,
-literal|64
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Fast timeout routine for processing delayed acks  */
@@ -8687,6 +8946,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ipxp
+operator|!=
+name|NULL
 condition|)
 for|for
 control|(
@@ -8716,6 +8977,8 @@ name|ipxp
 operator|->
 name|ipxp_pcb
 operator|)
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|cb
@@ -8744,9 +9007,6 @@ operator|.
 name|spxs_delack
 operator|++
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|spx_output
 argument_list|(
 name|cb
@@ -8756,7 +9016,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -8813,7 +9073,7 @@ if|if
 condition|(
 name|ip
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|splx
@@ -8848,7 +9108,7 @@ if|if
 condition|(
 name|cb
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|tpgone
@@ -8950,6 +9210,7 @@ comment|/*  * SPX timer processing.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|spxpcb
 modifier|*
@@ -9189,9 +9450,6 @@ name|win
 operator|*
 name|CUNIT
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|spx_output
 argument_list|(
 name|cb
@@ -9201,7 +9459,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9219,9 +9477,6 @@ argument_list|(
 name|cb
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|spx_output
 argument_list|(
 name|cb
@@ -9231,7 +9486,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9284,9 +9539,6 @@ operator|.
 name|spxs_keepprobe
 operator|++
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|spx_output
 argument_list|(
 name|cb
@@ -9296,7 +9548,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
