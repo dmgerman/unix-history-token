@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotaon.c	5.8 (Berkeley) %G%"
+literal|"@(#)quotaon.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,9 +442,9 @@ name|argv
 argument_list|,
 name|argc
 argument_list|)
+operator|)
 operator|>=
 literal|0
-operator|)
 operator|||
 operator|(
 name|argnum
