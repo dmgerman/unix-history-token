@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acfreebsd.h - OS specific defines, etc.  *       $Revision: 4 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acfreebsd.h - OS specific defines, etc.  *       $Revision: 6 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -51,10 +51,6 @@ include|#
 directive|include
 file|"opt_acpi.h"
 end_include
-
-begin_comment
-comment|/* collect build-time options here */
-end_comment
 
 begin_include
 include|#
@@ -200,6 +196,20 @@ begin_define
 define|#
 directive|define
 name|ACPI_USE_STANDARD_HEADERS
+end_define
+
+begin_define
+define|#
+directive|define
+name|__cli
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|__sti
+parameter_list|()
 end_define
 
 begin_endif

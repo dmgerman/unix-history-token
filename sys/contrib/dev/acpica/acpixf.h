@@ -107,6 +107,43 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * ACPI Memory manager  */
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|AcpiAllocate
+parameter_list|(
+name|UINT32
+name|Size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|AcpiCallocate
+parameter_list|(
+name|UINT32
+name|Size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiFree
+parameter_list|(
+name|void
+modifier|*
+name|Address
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * ACPI table manipulation interfaces  */
 end_comment
 
@@ -203,7 +240,7 @@ parameter_list|,
 name|UINT32
 name|MaxDepth
 parameter_list|,
-name|WALK_CALLBACK
+name|ACPI_WALK_CALLBACK
 name|UserFunction
 parameter_list|,
 name|void
@@ -226,7 +263,7 @@ name|NATIVE_CHAR
 modifier|*
 name|HID
 parameter_list|,
-name|WALK_CALLBACK
+name|ACPI_WALK_CALLBACK
 name|UserFunction
 parameter_list|,
 name|void
@@ -363,7 +400,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * AcpiEvent handler interfaces  */
+comment|/*  * Event handler interfaces  */
 end_comment
 
 begin_function_decl
@@ -373,7 +410,7 @@ parameter_list|(
 name|UINT32
 name|AcpiEvent
 parameter_list|,
-name|FIXED_EVENT_HANDLER
+name|ACPI_EVENT_HANDLER
 name|Handler
 parameter_list|,
 name|void
@@ -390,7 +427,7 @@ parameter_list|(
 name|UINT32
 name|AcpiEvent
 parameter_list|,
-name|FIXED_EVENT_HANDLER
+name|ACPI_EVENT_HANDLER
 name|Handler
 parameter_list|)
 function_decl|;
@@ -406,7 +443,7 @@ parameter_list|,
 name|UINT32
 name|HandlerType
 parameter_list|,
-name|NOTIFY_HANDLER
+name|ACPI_NOTIFY_HANDLER
 name|Handler
 parameter_list|,
 name|void
@@ -426,7 +463,7 @@ parameter_list|,
 name|UINT32
 name|HandlerType
 parameter_list|,
-name|NOTIFY_HANDLER
+name|ACPI_NOTIFY_HANDLER
 name|Handler
 parameter_list|)
 function_decl|;
@@ -439,13 +476,13 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Device
 parameter_list|,
-name|ACPI_ADDRESS_SPACE_TYPE
+name|ACPI_ADR_SPACE_TYPE
 name|SpaceId
 parameter_list|,
-name|ADDRESS_SPACE_HANDLER
+name|ACPI_ADR_SPACE_HANDLER
 name|Handler
 parameter_list|,
-name|ADDRESS_SPACE_SETUP
+name|ACPI_ADR_SPACE_SETUP
 name|Setup
 parameter_list|,
 name|void
@@ -462,10 +499,10 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Device
 parameter_list|,
-name|ACPI_ADDRESS_SPACE_TYPE
+name|ACPI_ADR_SPACE_TYPE
 name|SpaceId
 parameter_list|,
-name|ADDRESS_SPACE_HANDLER
+name|ACPI_ADR_SPACE_HANDLER
 name|Handler
 parameter_list|)
 function_decl|;
@@ -481,7 +518,7 @@ parameter_list|,
 name|UINT32
 name|Type
 parameter_list|,
-name|GPE_HANDLER
+name|ACPI_GPE_HANDLER
 name|Handler
 parameter_list|,
 name|void
@@ -516,7 +553,7 @@ parameter_list|(
 name|UINT32
 name|GpeNumber
 parameter_list|,
-name|GPE_HANDLER
+name|ACPI_GPE_HANDLER
 name|Handler
 parameter_list|)
 function_decl|;
