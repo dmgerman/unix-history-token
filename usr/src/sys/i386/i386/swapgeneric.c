@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)swapgeneric.c	5.4 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*	swapgeneric.c	1.5	86/11/25	*/
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)swapgeneric.c	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -62,19 +58,6 @@ argument_list|(
 literal|0
 argument_list|,
 literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dev_t
-name|argdev
-init|=
-name|makedev
-argument_list|(
-literal|0
-argument_list|,
-literal|1
 argument_list|)
 decl_stmt|;
 end_decl_stmt
