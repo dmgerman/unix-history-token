@@ -1294,6 +1294,9 @@ case|:
 case|case
 name|DFOUND
 case|:
+case|case
+name|DZLINK
+case|:
 name|newcg
 operator|->
 name|cg_cs
@@ -1307,6 +1310,9 @@ name|FSTATE
 case|:
 case|case
 name|FCLEAR
+case|:
+case|case
+name|FZLINK
 case|:
 name|newcg
 operator|->
