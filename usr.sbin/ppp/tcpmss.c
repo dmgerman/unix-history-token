@@ -12,6 +12,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_systm.h>
 end_include
 
@@ -151,6 +163,12 @@ begin_include
 include|#
 directive|include
 file|"mp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"iface.h"
 end_include
 
 begin_ifndef
@@ -361,6 +379,8 @@ argument_list|,
 name|MAXMSS
 argument_list|(
 name|bundle
+operator|->
+name|iface
 operator|->
 name|mtu
 argument_list|)

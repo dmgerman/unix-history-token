@@ -156,7 +156,7 @@ end_define
 
 begin_function
 specifier|static
-name|void
+name|int
 name|DeflateResetOutput
 parameter_list|(
 name|void
@@ -203,6 +203,10 @@ argument_list|,
 literal|"Deflate: Output channel reset\n"
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+comment|/* Ask FSM to ACK */
 block|}
 end_function
 
@@ -2294,6 +2298,12 @@ name|struct
 name|lcp_opt
 modifier|*
 name|o
+parameter_list|,
+specifier|const
+name|struct
+name|ccp_config
+modifier|*
+name|cfg
 parameter_list|)
 block|{
 if|if
@@ -2896,7 +2906,9 @@ name|CCP_NEG_DEFLATE24
 block|,
 name|DeflateDispOpts
 block|,
-name|ccp_IsUsable
+name|ccp_DefaultUsable
+block|,
+name|ccp_DefaultRequired
 block|,
 block|{
 name|DeflateSetOptsInput
@@ -2913,6 +2925,8 @@ name|DeflateDictSetup
 block|}
 block|,
 block|{
+literal|0
+block|,
 name|DeflateInitOptsOutput
 block|,
 name|DeflateSetOptsOutput
@@ -2943,7 +2957,9 @@ name|CCP_NEG_DEFLATE
 block|,
 name|DeflateDispOpts
 block|,
-name|ccp_IsUsable
+name|ccp_DefaultUsable
+block|,
+name|ccp_DefaultRequired
 block|,
 block|{
 name|DeflateSetOptsInput
@@ -2960,6 +2976,8 @@ name|DeflateDictSetup
 block|}
 block|,
 block|{
+literal|0
+block|,
 name|DeflateInitOptsOutput
 block|,
 name|DeflateSetOptsOutput

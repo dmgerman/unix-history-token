@@ -418,6 +418,8 @@ name|TCP_DEVICE
 block|,
 literal|"tcp"
 block|,
+literal|0
+block|,
 block|{
 name|CD_NOTREQUIRED
 block|,

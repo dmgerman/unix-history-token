@@ -5451,6 +5451,8 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+if|if
+condition|(
 call|(
 modifier|*
 name|fp
@@ -5462,8 +5464,9 @@ call|)
 argument_list|(
 name|fp
 argument_list|)
-expr_stmt|;
-comment|/*    * All sendable compressed packets are queued in the first (lowest    * priority) modem output queue.... dump 'em to the priority queue    * so that they arrive at the peer before our ResetAck.    */
+condition|)
+block|{
+comment|/*      * All sendable compressed packets are queued in the first (lowest      * priority) modem output queue.... dump 'em to the priority queue      * so that they arrive at the peer before our ResetAck.      */
 name|link_SequenceQueue
 argument_list|(
 name|fp
@@ -5488,6 +5491,7 @@ argument_list|,
 name|MB_CCPOUT
 argument_list|)
 expr_stmt|;
+block|}
 name|m_freem
 argument_list|(
 name|bp
@@ -5887,7 +5891,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|fsm_NullRecvResetReq
 parameter_list|(
 name|struct
@@ -5911,6 +5915,9 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 

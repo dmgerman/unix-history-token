@@ -264,10 +264,6 @@ name|u_long
 name|bandwidth
 decl_stmt|;
 comment|/* struct tuninfo speed */
-name|int
-name|mtu
-decl_stmt|;
-comment|/* struct tuninfo MTU */
 name|struct
 name|iface
 modifier|*
@@ -367,10 +363,6 @@ literal|50
 index|]
 decl_stmt|;
 comment|/* last thing `load'ed */
-name|u_short
-name|mtu
-decl_stmt|;
-comment|/* Required interface MTU */
 name|u_short
 name|ifqueue
 decl_stmt|;

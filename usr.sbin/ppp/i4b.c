@@ -1424,6 +1424,8 @@ name|I4B_DEVICE
 block|,
 literal|"i4b"
 block|,
+literal|0
+block|,
 block|{
 name|CD_REQUIRED
 block|,

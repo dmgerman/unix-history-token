@@ -1731,6 +1731,8 @@ name|TTY_DEVICE
 block|,
 literal|"tty"
 block|,
+literal|0
+block|,
 block|{
 name|CD_VARIABLE
 block|,

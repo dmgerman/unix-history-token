@@ -339,7 +339,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Deal with incoming data */
-name|void
+name|int
 function_decl|(
 modifier|*
 name|RecvResetReq
@@ -859,7 +859,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|fsm_NullRecvResetReq
 parameter_list|(
 name|struct

@@ -250,6 +250,18 @@ name|u_short
 name|mru
 decl_stmt|;
 comment|/* Preferred MRU value */
+name|u_short
+name|max_mru
+decl_stmt|;
+comment|/* Preferred MRU value */
+name|u_short
+name|mtu
+decl_stmt|;
+comment|/* Preferred MTU */
+name|u_short
+name|max_mtu
+decl_stmt|;
+comment|/* Preferred MTU */
 name|u_int32_t
 name|accmap
 decl_stmt|;

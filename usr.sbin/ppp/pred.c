@@ -589,7 +589,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|Pred1ResetOutput
 parameter_list|(
 name|void
@@ -636,6 +636,10 @@ argument_list|,
 literal|"Predictor1: Output channel reset\n"
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+comment|/* Ask FSM to ACK */
 block|}
 end_function
 
@@ -1620,6 +1624,12 @@ name|struct
 name|lcp_opt
 modifier|*
 name|o
+parameter_list|,
+specifier|const
+name|struct
+name|ccp_config
+modifier|*
+name|cfg
 parameter_list|)
 block|{
 if|if
@@ -1664,11 +1674,27 @@ modifier|*
 name|cfg
 parameter_list|)
 block|{
-return|return
-name|Pred1SetOptsOutput
-argument_list|(
+if|if
+condition|(
 name|o
-argument_list|)
+operator|->
+name|len
+operator|!=
+literal|2
+condition|)
+block|{
+name|o
+operator|->
+name|len
+operator|=
+literal|2
+expr_stmt|;
+return|return
+name|MODE_NAK
+return|;
+block|}
+return|return
+name|MODE_ACK
 return|;
 block|}
 end_function
@@ -1686,7 +1712,9 @@ name|CCP_NEG_PRED1
 block|,
 name|Pred1DispOpts
 block|,
-name|ccp_IsUsable
+name|ccp_DefaultUsable
+block|,
+name|ccp_DefaultRequired
 block|,
 block|{
 name|Pred1SetOptsInput
@@ -1703,6 +1731,8 @@ name|Pred1DictSetup
 block|}
 block|,
 block|{
+literal|0
+block|,
 name|Pred1InitOptsOutput
 block|,
 name|Pred1SetOptsOutput
