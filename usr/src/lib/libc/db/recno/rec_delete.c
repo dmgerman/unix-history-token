@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_delete.c	5.7 (Berkeley) %G%"
+literal|"@(#)rec_delete.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,7 +197,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_SEQINIT
+name|B_SEQINIT
 argument_list|)
 condition|)
 goto|goto
@@ -264,7 +264,9 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_MODIFIED
+name|B_MODIFIED
+operator||
+name|R_MODIFIED
 argument_list|)
 expr_stmt|;
 return|return
