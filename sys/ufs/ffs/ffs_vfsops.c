@@ -582,14 +582,19 @@ operator|&
 name|rootvp
 argument_list|)
 operator|)
-operator|!=
-literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ffs_mountroot: can't find rootvp\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(

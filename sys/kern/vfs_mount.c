@@ -368,26 +368,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|mount_root_delay
-init|=
-literal|5
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.root.mountdelay"
-argument_list|,
-operator|&
-name|mount_root_delay
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -5721,63 +5701,19 @@ modifier|*
 name|cp
 decl_stmt|;
 name|int
-name|asked
-decl_stmt|,
 name|error
 decl_stmt|,
 name|i
 decl_stmt|,
-name|nrootdevs
-decl_stmt|;
 name|asked
-operator|=
+init|=
 literal|0
-expr_stmt|;
-name|error
-operator|=
-name|EDOOFUS
-expr_stmt|;
-name|nrootdevs
-operator|=
-sizeof|sizeof
-argument_list|(
-name|rootdevnames
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|rootdevnames
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mount_root_delay
-operator|<=
-literal|0
-condition|)
-name|mount_root_delay
-operator|=
-literal|1
-expr_stmt|;
-for|for
-control|(
-init|;
-name|mount_root_delay
-operator|>
-literal|0
-condition|;
-name|mount_root_delay
-operator|--
-control|)
-block|{
-comment|/* 		 * Wait for GEOM to settle down 		 */
+decl_stmt|;
+comment|/* 	 * Wait for GEOM to settle down 	 */
 name|g_waitidle
 argument_list|()
 expr_stmt|;
-comment|/* 		 * We are booted with instructions to prompt for the root filesystem. 		 */
+comment|/* 	 * We are booted with instructions to prompt for the root filesystem. 	 */
 if|if
 condition|(
 name|boothowto
@@ -5797,7 +5733,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 		 * The root filesystem information is compiled in, and we are 		 * booted with instructions to use it. 		 */
+comment|/* 	 * The root filesystem information is compiled in, and we are 	 * booted with instructions to use it. 	 */
 if|if
 condition|(
 name|ctrootdevname
@@ -5813,16 +5749,11 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|error
-operator|=
+operator|!
 name|vfs_mountroot_try
 argument_list|(
 name|ctrootdevname
 argument_list|)
-operator|)
-operator|==
-literal|0
 condition|)
 return|return;
 name|ctrootdevname
@@ -5830,7 +5761,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 		 * We've been given the generic "use CDROM as root" flag.  This is 		 * necessary because one media may be used in many different 		 * devices, so we need to search for them. 		 */
+comment|/* 	 * We've been given the generic "use CDROM as root" flag.  This is 	 * necessary because one media may be used in many different 	 * devices, so we need to search for them. 	 */
 if|if
 condition|(
 name|boothowto
@@ -5855,8 +5786,9 @@ name|i
 operator|++
 control|)
 block|{
-name|error
-operator|=
+if|if
+condition|(
+operator|!
 name|vfs_mountroot_try
 argument_list|(
 name|cdrom_rootdevnames
@@ -5864,17 +5796,11 @@ index|[
 name|i
 index|]
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
 condition|)
 return|return;
 block|}
 block|}
-comment|/* 		 * Try to use the value read by the loader from /etc/fstab, or 		 * supplied via some other means.  This is the preferred 		 * mechanism. 		 */
+comment|/* 	 * Try to use the value read by the loader from /etc/fstab, or 	 * supplied via some other means.  This is the preferred 	 * mechanism. 	 */
 name|cp
 operator|=
 name|getenv
@@ -5903,80 +5829,52 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|error
-operator|==
-literal|0
 condition|)
 return|return;
 block|}
-comment|/* 		 * Try values that may have been computed by code during boot 		 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nrootdevs
-condition|;
-name|i
-operator|++
-control|)
-block|{
+comment|/* 	 * Try values that may have been computed by code during boot 	 */
 if|if
 condition|(
-operator|(
-name|error
-operator|=
+operator|!
 name|vfs_mountroot_try
 argument_list|(
 name|rootdevnames
 index|[
-name|i
+literal|0
 index|]
 argument_list|)
-operator|)
-operator|==
-literal|0
 condition|)
 return|return;
-block|}
-comment|/* 		 * If we (still) have a compiled-in default, try it. 		 */
 if|if
 condition|(
-operator|(
-name|error
-operator|=
+operator|!
+name|vfs_mountroot_try
+argument_list|(
+name|rootdevnames
+index|[
+literal|1
+index|]
+argument_list|)
+condition|)
+return|return;
+comment|/* 	 * If we (still) have a compiled-in default, try it. 	 */
+if|if
+condition|(
+name|ctrootdevname
+operator|!=
+name|NULL
+condition|)
+if|if
+condition|(
+operator|!
 name|vfs_mountroot_try
 argument_list|(
 name|ctrootdevname
 argument_list|)
-operator|)
-operator|==
-literal|0
 condition|)
 return|return;
-name|tsleep
-argument_list|(
-operator|&
-name|mount_root_delay
-argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"mroot"
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"Root mount failed: %d.\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Everything so far has failed, prompt on the console if we haven't 	 * already tried that. 	 */
 if|if
 condition|(
@@ -6039,6 +5937,9 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|vfsname
 operator|=
 name|NULL
@@ -6067,14 +5968,6 @@ name|error
 operator|)
 return|;
 comment|/* don't complain */
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|int
-name|s
-decl_stmt|;
 name|s
 operator|=
 name|splcam
@@ -6083,7 +5976,7 @@ expr_stmt|;
 comment|/* Overkill, but annoying without it */
 name|printf
 argument_list|(
-literal|"Trying to mount root from %s\n"
+literal|"Mounting root from %s\n"
 argument_list|,
 name|mountfrom
 argument_list|)
@@ -6093,7 +5986,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* parse vfs name and path */
 name|vfsname
 operator|=
@@ -6233,6 +6125,12 @@ name|rootdev
 operator|=
 name|diskdev
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"setrootbyname failed\n"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* If the root device is a type "memory disk", mount RW */
 if|if
@@ -6340,6 +6238,13 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Root mount failed: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6392,19 +6297,6 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"Mounted root from %s.\n"
-argument_list|,
-name|mountfrom
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -6431,9 +6323,6 @@ name|name
 index|[
 literal|128
 index|]
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 for|for
 control|(
@@ -6532,30 +6421,17 @@ continue|continue;
 block|}
 if|if
 condition|(
-operator|(
-name|error
-operator|=
+operator|!
 name|vfs_mountroot_try
 argument_list|(
 name|name
 argument_list|)
-operator|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-else|else
-name|printf
-argument_list|(
-literal|"Root mount failed: %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
