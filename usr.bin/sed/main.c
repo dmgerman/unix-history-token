@@ -394,7 +394,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\tsed script [-an] [file ...]\n\tsed [-an] [-e script] ... [-f scipt_file] ... [file ...]\n"
+literal|"usage:\tsed script [-an] [file ...]\n\tsed [-an] [-e script] ... [-f script_file] ... [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
