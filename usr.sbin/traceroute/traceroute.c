@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"@(#)$Header: /home/ncvs/src/usr.sbin/traceroute/traceroute.c,v 1.6 1996/08/09 06:00:53 fenner Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/usr.sbin/traceroute/traceroute.c,v 1.7 1996/08/13 16:28:59 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2408,6 +2408,26 @@ operator|&
 name|tz
 argument_list|)
 expr_stmt|;
+comment|/* 				 * Since we'll be receiving all ICMP 				 * messages to this host above, we may 				 * never end up with cc=0, so we need 				 * an additional termination check. 				 */
+if|if
+condition|(
+name|t2
+operator|.
+name|tv_sec
+operator|-
+name|t1
+operator|.
+name|tv_sec
+operator|>
+name|waittime
+condition|)
+block|{
+name|cc
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 operator|(
@@ -2427,6 +2447,12 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|double
+name|T
+decl_stmt|;
+name|int
+name|precis
+decl_stmt|;
 if|if
 condition|(
 name|from
@@ -2457,10 +2483,8 @@ operator|.
 name|s_addr
 expr_stmt|;
 block|}
-name|Printf
-argument_list|(
-literal|"  %.3f ms"
-argument_list|,
+name|T
+operator|=
 name|deltaT
 argument_list|(
 operator|&
@@ -2469,6 +2493,56 @@ argument_list|,
 operator|&
 name|t2
 argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SANE_PRECISION
+if|if
+condition|(
+name|T
+operator|>=
+literal|1000.0
+condition|)
+name|precis
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|T
+operator|>=
+literal|100.0
+condition|)
+name|precis
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|T
+operator|>=
+literal|10.0
+condition|)
+name|precis
+operator|=
+literal|2
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|precis
+operator|=
+literal|3
+expr_stmt|;
+name|Printf
+argument_list|(
+literal|"  %.*f ms"
+argument_list|,
+name|precis
+argument_list|,
+name|T
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2570,6 +2644,30 @@ expr_stmt|;
 name|Printf
 argument_list|(
 literal|" !S"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ICMP_UNREACH_NET_PROHIB
+case|:
+operator|++
+name|unreachable
+expr_stmt|;
+name|Printf
+argument_list|(
+literal|" !A"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ICMP_UNREACH_HOST_PROHIB
+case|:
+operator|++
+name|unreachable
+expr_stmt|;
+name|Printf
+argument_list|(
+literal|" !C"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3375,7 +3473,7 @@ name|icmp_ip
 decl_stmt|;
 name|Printf
 argument_list|(
-literal|"\n%d bytes from %s to %s"
+literal|"\n%d bytes from %s"
 argument_list|,
 name|cc
 argument_list|,
@@ -3385,6 +3483,11 @@ name|from
 operator|->
 name|sin_addr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|Printf
+argument_list|(
+literal|" to %s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
