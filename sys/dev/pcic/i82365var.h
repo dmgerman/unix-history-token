@@ -381,18 +381,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static __inline int pcic_read(struct pcic_handle *, int); static __inline int pcic_read(h, idx) 	struct pcic_handle *h; 	int idx; { 	if (idx != -1) 		bus_space_write_1(h->sc->iot, h->sc->ioh, PCIC_REG_INDEX, 		    h->sock + idx); 	return (bus_space_read_1(h->sc->iot, h->sc->ioh, PCIC_REG_DATA)); }  static __inline void pcic_write(struct pcic_handle *, int, int); static __inline void pcic_write(h, idx, data) 	struct pcic_handle *h; 	int idx; 	int data; { 	if (idx != -1) 		bus_space_write_1(h->sc->iot, h->sc->ioh, PCIC_REG_INDEX, 		    h->sock + idx); 	bus_space_write_1(h->sc->iot, h->sc->ioh, PCIC_REG_DATA, (data)); }
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -402,7 +390,6 @@ name|h
 parameter_list|,
 name|idx
 parameter_list|)
-define|\
 value|(*(h)->ph_read)((h), (idx))
 end_define
 
@@ -417,14 +404,8 @@ name|idx
 parameter_list|,
 name|data
 parameter_list|)
-define|\
 value|(*(h)->ph_write)((h), (idx), (data))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * bus/device/etc routines  */

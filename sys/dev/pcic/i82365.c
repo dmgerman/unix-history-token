@@ -220,13 +220,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DETACH_FORCE
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
 name|PCIC_VENDOR_UNKNOWN
 value|0
 end_define
