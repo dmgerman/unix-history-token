@@ -1566,36 +1566,13 @@ directive|endif
 comment|/* IPFIREWALL_FORWARD */
 name|forwardlocal
 label|:
-comment|/* for ip_input */
+comment|/* 			 * Return packet for processing by ip_input(). 			 * Keep host byte order as expected at ip_input's 			 * "ours"-label. 			 */
 name|m
 operator|->
 name|m_flags
 operator||=
 name|M_FASTFWD_OURS
 expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Return packet for processing by ip_input() 			 */
 if|if
 condition|(
 name|ro
