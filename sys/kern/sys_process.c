@@ -878,6 +878,8 @@ name|int
 name|error
 decl_stmt|,
 name|write
+decl_stmt|,
+name|tmp
 decl_stmt|;
 name|int
 name|proctree_locked
@@ -1841,6 +1843,10 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|tmp
+operator|=
+literal|0
+expr_stmt|;
 comment|/* write = 0 set above */
 name|iov
 operator|.
@@ -1859,9 +1865,8 @@ else|:
 operator|(
 name|caddr_t
 operator|)
-name|td
-operator|->
-name|td_retval
+operator|&
+name|tmp
 expr_stmt|;
 name|iov
 operator|.
@@ -1971,6 +1976,20 @@ name|EINVAL
 expr_stmt|;
 comment|/* EOF */
 block|}
+if|if
+condition|(
+operator|!
+name|write
+condition|)
+name|td
+operator|->
+name|td_retval
+index|[
+literal|0
+index|]
+operator|=
+name|tmp
+expr_stmt|;
 return|return
 operator|(
 name|error
