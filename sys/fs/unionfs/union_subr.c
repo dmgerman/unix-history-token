@@ -1111,7 +1111,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|UNION_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"union: %s size now %ld\n"
@@ -2982,7 +2982,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|UNION_DIAGNOSTIC
+name|DEBUG
 if|if
 condition|(
 name|error

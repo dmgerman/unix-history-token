@@ -464,11 +464,15 @@ name|size
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|UNION_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"union_mount(mp = %x)\n"
+literal|"union_mount(mp = %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|)
 expr_stmt|;
@@ -1084,7 +1088,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UNION_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"union_mount: from %s, on %s\n"
@@ -1251,11 +1255,15 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|UNION_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"union_unmount(mp = %x)\n"
+literal|"union_unmount(mp = %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|)
 expr_stmt|;
@@ -1387,7 +1395,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|UNION_DIAGNOSTIC
+name|DEBUG
 name|vprint
 argument_list|(
 literal|"union root"
@@ -1798,17 +1806,29 @@ name|lbsize
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|UNION_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"union_statfs(mp = %x, lvp = %x, uvp = %x)\n"
+literal|"union_statfs(mp = %p, lvp = %p, uvp = %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|um
 operator|->
 name|um_lowervp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|um
 operator|->
 name|um_uppervp
