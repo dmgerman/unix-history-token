@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	8.2 (Berkeley) %G%"
+literal|"@(#)dbtest.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3167,6 +3167,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOT_PORTABLE
 if|if
 condition|(
 name|sb
@@ -3190,6 +3193,8 @@ name|E2BIG
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
