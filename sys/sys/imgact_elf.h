@@ -93,14 +93,15 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|char
-modifier|*
+name|int
 name|brand
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|emul_path
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|interp_path

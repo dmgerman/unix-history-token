@@ -46,7 +46,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Indexes into the e_ident array. */
+comment|/* Indexes into the e_ident array.  Keep synced with     http://www.sco.com/developer/gabi/ch4.eheader.html */
 end_comment
 
 begin_define
@@ -129,23 +129,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EI_PAD
+name|EI_OSABI
 value|7
 end_define
 
 begin_comment
-comment|/* Start of padding (per SVR4 ABI). */
+comment|/* Operating system / ABI identification */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EI_BRAND
+name|EI_ABIVERSION
+value|8
+end_define
+
+begin_comment
+comment|/* ABI version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OLD_EI_BRAND
 value|8
 end_define
 
 begin_comment
 comment|/* Start of architecture identification. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EI_PAD
+value|9
+end_define
+
+begin_comment
+comment|/* Start of padding (per SVR4 ABI). */
 end_comment
 
 begin_define
@@ -281,6 +303,153 @@ end_define
 
 begin_comment
 comment|/* 2's complement big-endian. */
+end_comment
+
+begin_comment
+comment|/* Values for e_ident[EI_OSABI]. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_SYSV
+value|0
+end_define
+
+begin_comment
+comment|/* UNIX System V ABI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_HPUX
+value|1
+end_define
+
+begin_comment
+comment|/* HP-UX operating system */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_NETBSD
+value|2
+end_define
+
+begin_comment
+comment|/* NetBSD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_LINUX
+value|3
+end_define
+
+begin_comment
+comment|/* GNU/Linux */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_HURD
+value|4
+end_define
+
+begin_comment
+comment|/* GNU/Hurd */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_86OPEN
+value|5
+end_define
+
+begin_comment
+comment|/* 86Open common IA32 ABI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_SOLARIS
+value|6
+end_define
+
+begin_comment
+comment|/* Solaris */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_MONTEREY
+value|7
+end_define
+
+begin_comment
+comment|/* Monterey */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_IRIX
+value|8
+end_define
+
+begin_comment
+comment|/* IRIX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_FREEBSD
+value|9
+end_define
+
+begin_comment
+comment|/* FreeBSD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_TRU64
+value|10
+end_define
+
+begin_comment
+comment|/* TRU64 UNIX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_ARM
+value|97
+end_define
+
+begin_comment
+comment|/* ARM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_STANDALONE
+value|255
+end_define
+
+begin_comment
+comment|/* Standalone (embedded) application */
 end_comment
 
 begin_comment

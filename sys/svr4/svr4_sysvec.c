@@ -384,7 +384,7 @@ specifier|static
 name|int
 name|svr4_fixup
 parameter_list|(
-name|long
+name|register_t
 modifier|*
 modifier|*
 name|stack_base
@@ -479,9 +479,10 @@ name|Elf32_Brandinfo
 name|svr4_brand
 init|=
 block|{
-literal|"SVR4"
+name|ELFOSABI_SOLARIS
 block|,
-literal|"/compat/svr4"
+comment|/* XXX  Or should we use ELFOSABI_SYSV here?  */
+name|svr4_emul_path
 block|,
 literal|"/lib/libc.so.1"
 block|,
@@ -506,7 +507,7 @@ specifier|static
 name|int
 name|svr4_fixup
 parameter_list|(
-name|long
+name|register_t
 modifier|*
 modifier|*
 name|stack_base
@@ -529,7 +530,7 @@ name|imgp
 operator|->
 name|auxargs
 decl_stmt|;
-name|long
+name|register_t
 modifier|*
 name|pos
 decl_stmt|;

@@ -2249,7 +2249,7 @@ name|Elf32_Brandinfo
 name|linux_brand
 init|=
 block|{
-literal|"Linux"
+name|ELFOSABI_LINUX
 block|,
 literal|"/compat/linux"
 block|,
@@ -2267,7 +2267,7 @@ name|Elf32_Brandinfo
 name|linux_glibc2brand
 init|=
 block|{
-literal|"Linux"
+name|ELFOSABI_LINUX
 block|,
 literal|"/compat/linux"
 block|,

@@ -195,6 +195,13 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|OLD_EI_BRAND
+value|8
+end_define
+
 begin_expr_stmt
 name|__ElfType
 argument_list|(
@@ -364,17 +371,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * XXX Maximum length of an ELF brand (sysctl wants a statically-allocated  * buffer).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXBRANDLEN
-value|16
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -422,7 +418,7 @@ name|Elf_Brandinfo
 name|freebsd_brand_info
 init|=
 block|{
-literal|"FreeBSD"
+name|ELFOSABI_FREEBSD
 block|,
 literal|""
 block|,
@@ -1758,22 +1754,15 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|char
+name|int
 name|fallback_elf_brand
-index|[
-name|MAXBRANDLEN
-operator|+
-literal|1
-index|]
 init|=
-block|{
-literal|"none"
-block|}
+name|ELFOSABI_FREEBSD
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_STRING
+name|SYSCTL_INT
 argument_list|(
 name|_kern
 argument_list|,
@@ -1783,12 +1772,10 @@ name|fallback_elf_brand
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
+operator|&
 name|fallback_elf_brand
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fallback_elf_brand
-argument_list|)
+name|ELFOSABI_FREEBSD
 argument_list|,
 literal|"ELF brand of last resort"
 argument_list|)
@@ -1883,11 +1870,6 @@ decl_stmt|;
 name|Elf_Brandinfo
 modifier|*
 name|brand_info
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|brand
 decl_stmt|;
 name|char
 name|path
@@ -2371,13 +2353,17 @@ name|entry_addr
 operator|=
 name|entry
 expr_stmt|;
-comment|/* If the executable has a brand, search for it in the brand list. */
 name|brand_info
 operator|=
 name|NULL
 expr_stmt|;
-name|brand
-operator|=
+comment|/* XXX  For now we look for the magic "FreeBSD" that we used to put 	 * into the ELF header at the EI_ABIVERSION location.  If found use 	 * that information rather than figuring out the ABI from proper 	 * branding.  This should be removed for 5.0-RELEASE. The Linux caes 	 * can be figured out from the `interp_path' field. 	 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+literal|"FreeBSD"
+argument_list|,
 operator|(
 specifier|const
 name|char
@@ -2388,17 +2374,23 @@ name|hdr
 operator|->
 name|e_ident
 index|[
-name|EI_BRAND
+name|OLD_EI_BRAND
 index|]
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|brand_info
+operator|=
+operator|&
+name|freebsd_brand_info
 expr_stmt|;
+comment|/* If the executable has a brand, search for it in the brand list. */
 if|if
 condition|(
-name|brand
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
+name|brand_info
+operator|==
+name|NULL
 condition|)
 block|{
 for|for
@@ -2430,16 +2422,16 @@ name|bi
 operator|!=
 name|NULL
 operator|&&
-name|strcmp
-argument_list|(
-name|brand
-argument_list|,
+name|hdr
+operator|->
+name|e_ident
+index|[
+name|EI_OSABI
+index|]
+operator|==
 name|bi
 operator|->
 name|brand
-argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|brand_info
@@ -2517,13 +2509,6 @@ condition|(
 name|brand_info
 operator|==
 name|NULL
-operator|&&
-name|fallback_elf_brand
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
 condition|)
 block|{
 for|for
@@ -2555,16 +2540,11 @@ name|bi
 operator|!=
 name|NULL
 operator|&&
-name|strcmp
-argument_list|(
 name|fallback_elf_brand
-argument_list|,
+operator|==
 name|bi
 operator|->
 name|brand
-argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|brand_info
@@ -2575,10 +2555,7 @@ break|break;
 block|}
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|__alpha__
-comment|/* XXX - Assume FreeBSD on the alpha. */
+comment|/* XXX - Assume FreeBSD after the branding method change. */
 if|if
 condition|(
 name|brand_info
@@ -2590,8 +2567,6 @@ operator|=
 operator|&
 name|freebsd_brand_info
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|brand_info
@@ -2599,31 +2574,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|brand
+name|uprintf
+argument_list|(
+literal|"ELF binary type \"%u\" not known.\n"
+argument_list|,
+name|hdr
+operator|->
+name|e_ident
 index|[
-literal|0
+name|EI_OSABI
 index|]
-operator|==
-literal|0
-condition|)
-name|uprintf
-argument_list|(
-literal|"ELF binary type not known."
-literal|"  Use \"brandelf\" to brand it.\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|uprintf
-argument_list|(
-literal|"ELF binary type \"%.*s\" not known.\n"
-argument_list|,
-name|EI_NIDENT
-operator|-
-name|EI_BRAND
-argument_list|,
-name|brand
 argument_list|)
 expr_stmt|;
 name|error
@@ -4484,25 +4444,28 @@ name|ehdr
 operator|->
 name|e_ident
 index|[
-name|EI_PAD
+name|EI_OSABI
+index|]
+operator|=
+name|ELFOSABI_FREEBSD
+expr_stmt|;
+name|ehdr
+operator|->
+name|e_ident
+index|[
+name|EI_ABIVERSION
 index|]
 operator|=
 literal|0
 expr_stmt|;
-name|strncpy
-argument_list|(
 name|ehdr
 operator|->
 name|e_ident
-operator|+
-name|EI_BRAND
-argument_list|,
-literal|"FreeBSD"
-argument_list|,
-name|EI_NIDENT
-operator|-
-name|EI_BRAND
-argument_list|)
+index|[
+name|EI_PAD
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|ehdr
 operator|->
