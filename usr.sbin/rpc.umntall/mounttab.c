@@ -160,6 +160,9 @@ name|mtabfile
 argument_list|,
 literal|"%ld\t%s\t%s\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|time
 argument_list|(
 name|now
@@ -677,6 +680,9 @@ name|mtabfile
 argument_list|,
 literal|"%ld\t%s\t%s\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|mtabp
 operator|->
 name|mtab_time
