@@ -416,6 +416,8 @@ condition|(
 name|td
 operator|->
 name|td_upcall
+operator|!=
+name|NULL
 condition|)
 block|{
 name|td
@@ -437,7 +439,7 @@ name|td
 operator|->
 name|td_upcall
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -2808,7 +2810,7 @@ name|EPROCLIM
 operator|)
 return|;
 block|}
-comment|/* 	 * If we are the first time, and a normal thread, 	 * then trnasfer all the signals back to the 'process'. 	 * SA threading will make a special thread to handle them. 	 */
+comment|/* 	 * If we are the first time, and a normal thread, 	 * then transfer all the signals back to the 'process'. 	 * SA threading will make a special thread to handle them. 	 */
 if|if
 condition|(
 name|first
@@ -2849,7 +2851,7 @@ name|td_sigmask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Make the new upcall available to the ksegrp,. 	 *  It may or may not use it, but its available. 	 */
+comment|/* 	 * Make the new upcall available to the ksegrp. 	 * It may or may not use it, but it's available. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&

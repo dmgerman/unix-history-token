@@ -3786,18 +3786,16 @@ name|ru
 parameter_list|,
 name|ru2
 parameter_list|)
-specifier|register
 name|struct
 name|rusage
 modifier|*
 name|ru
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|struct
+name|rusage
+modifier|*
 name|ru2
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 specifier|register
 name|long
@@ -3899,7 +3897,7 @@ name|ip2
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Allocate a new resource limits structure and initialize its  * reference count and mutex pointer.  */

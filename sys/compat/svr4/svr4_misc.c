@@ -5969,7 +5969,7 @@ name|q
 operator|->
 name|p_ru
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* 			 * Decrement the count of procs running with this uid. 			 */
 operator|(

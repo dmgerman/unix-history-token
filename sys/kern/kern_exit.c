@@ -1920,7 +1920,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * hopefully no one will try to deliver a signal to the process this 	 * late in the game. 	 */
+comment|/* 	 * Hopefully no one will try to deliver a signal to the process this 	 * late in the game. 	 */
 name|knlist_destroy
 argument_list|(
 operator|&
