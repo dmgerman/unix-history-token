@@ -1045,6 +1045,12 @@ condition|(
 name|vp
 operator|->
 name|v_mount
+operator|!=
+name|NULL
+operator|&&
+name|vp
+operator|->
+name|v_mount
 operator|->
 name|mnt_flag
 operator|&
