@@ -49,7 +49,7 @@ value|int		pc_inside_intr;					\ 	struct pmap	*pc_curpmap;
 comment|/* current pmap */
 value|\         struct thread   *pc_fputhread;
 comment|/* current fpu user */
-value|\ 	register_t	pc_tempsave[CPUSAVE_LEN];			\ 	register_t	pc_disisave[CPUSAVE_LEN];			\ 	register_t	pc_ddbsave[CPUSAVE_LEN];
+value|\ 	register_t	pc_tempsave[CPUSAVE_LEN];			\ 	register_t	pc_disisave[CPUSAVE_LEN];			\ 	register_t	pc_dbsave[CPUSAVE_LEN];
 end_define
 
 begin_comment
