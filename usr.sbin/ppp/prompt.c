@@ -1605,6 +1605,8 @@ operator|=
 operator|*
 name|s
 operator|->
+name|cfg
+operator|.
 name|passwd
 condition|?
 name|LOCAL_NO_AUTH
@@ -2551,6 +2553,8 @@ name|prompt
 operator|->
 name|owner
 operator|->
+name|cfg
+operator|.
 name|passwd
 argument_list|,
 name|pass

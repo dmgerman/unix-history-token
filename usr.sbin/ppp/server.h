@@ -20,29 +20,53 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+struct|struct
+block|{
 name|char
 name|passwd
 index|[
 literal|50
 index|]
 decl_stmt|;
-name|struct
-name|sockaddr_un
-name|ifsun
-decl_stmt|;
-comment|/* local socket */
 name|char
-modifier|*
-name|rm
+name|sockname
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 comment|/* Points to local socket path */
+name|mode_t
+name|mask
+decl_stmt|;
 name|u_short
 name|port
 decl_stmt|;
 comment|/* tcp socket */
 block|}
+name|cfg
+struct|;
+block|}
 struct|;
 end_struct
+
+begin_enum
+enum|enum
+name|server_stat
+block|{
+name|SERVER_OK
+block|,
+comment|/* Diagnostic socket available */
+name|SERVER_INVALID
+block|,
+comment|/* Bad args, can't be set up */
+name|SERVER_FAILED
+block|,
+comment|/* Failed - lack of resources */
+name|SERVER_UNSET
+comment|/* Not already set up */
+block|}
+enum|;
+end_enum
 
 begin_define
 define|#
@@ -65,7 +89,8 @@ end_decl_stmt
 
 begin_function_decl
 specifier|extern
-name|int
+name|enum
+name|server_stat
 name|server_LocalOpen
 parameter_list|(
 name|struct
@@ -83,14 +108,28 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|enum
+name|server_stat
 name|server_TcpOpen
 parameter_list|(
 name|struct
 name|bundle
 modifier|*
 parameter_list|,
-name|int
+name|u_short
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|enum
+name|server_stat
+name|server_Reopen
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -99,6 +138,18 @@ begin_function_decl
 specifier|extern
 name|int
 name|server_Close
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|server_Clear
 parameter_list|(
 name|struct
 name|bundle

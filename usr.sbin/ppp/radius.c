@@ -3665,7 +3665,7 @@ name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|" Radius config: %s"
+literal|" Radius config:     %s"
 argument_list|,
 operator|*
 name|r
@@ -3694,7 +3694,7 @@ name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|"\n            IP: %s\n"
+literal|"\n                IP: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3708,7 +3708,7 @@ name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|"       Netmask: %s\n"
+literal|"           Netmask: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3722,7 +3722,7 @@ name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|"           MTU: %lu\n"
+literal|"               MTU: %lu\n"
 argument_list|,
 name|r
 operator|->
@@ -3733,7 +3733,7 @@ name|prompt_Printf
 argument_list|(
 name|p
 argument_list|,
-literal|"            VJ: %sabled\n"
+literal|"                VJ: %sabled\n"
 argument_list|,
 name|r
 operator|->
@@ -3758,7 +3758,7 @@ name|r
 operator|->
 name|routes
 argument_list|,
-literal|"        Routes"
+literal|"            Routes"
 argument_list|,
 literal|16
 argument_list|)

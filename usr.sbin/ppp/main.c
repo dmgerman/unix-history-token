@@ -680,7 +680,34 @@ name|signo
 parameter_list|)
 block|{
 comment|/* Drops all child prompts too ! */
+if|if
+condition|(
 name|server_Close
+argument_list|(
+name|SignalBundle
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"Closed server socket\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|RestartServer
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
+block|{
+comment|/* Drops all child prompts and re-opens the socket */
+name|server_Reopen
 argument_list|(
 name|SignalBundle
 argument_list|)
@@ -1741,6 +1768,13 @@ argument_list|(
 name|SIGTSTP
 argument_list|,
 name|TerminalStop
+argument_list|)
+expr_stmt|;
+name|sig_signal
+argument_list|(
+name|SIGUSR1
+argument_list|,
+name|RestartServer
 argument_list|)
 expr_stmt|;
 name|sig_signal

@@ -419,6 +419,12 @@ directive|include
 file|"iface.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"server.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -6430,7 +6436,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Label:         %s\n"
+literal|" Label:             %s\n"
 argument_list|,
 name|arg
 operator|->
@@ -6447,7 +6453,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Auth name:     %s\n"
+literal|" Auth name:         %s\n"
 argument_list|,
 name|arg
 operator|->
@@ -6466,7 +6472,109 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Choked Timer:  %ds\n"
+literal|" Diagnostic socket: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|server
+operator|.
+name|cfg
+operator|.
+name|sockname
+operator|!=
+literal|'\0'
+condition|)
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|"%s, mask 0%03o%s\n"
+argument_list|,
+name|server
+operator|.
+name|cfg
+operator|.
+name|sockname
+argument_list|,
+operator|(
+name|int
+operator|)
+name|server
+operator|.
+name|cfg
+operator|.
+name|mask
+argument_list|,
+name|server
+operator|.
+name|fd
+operator|==
+operator|-
+literal|1
+condition|?
+literal|" (not open)"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|server
+operator|.
+name|cfg
+operator|.
+name|port
+operator|!=
+literal|0
+condition|)
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|"TCP port %d%s\n"
+argument_list|,
+name|server
+operator|.
+name|cfg
+operator|.
+name|port
+argument_list|,
+name|server
+operator|.
+name|fd
+operator|==
+operator|-
+literal|1
+condition|?
+literal|" (not open)"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+else|else
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|"none\n"
+argument_list|)
+expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|" Choked Timer:      %ds\n"
 argument_list|,
 name|arg
 operator|->
@@ -6504,7 +6612,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Idle Timer:    "
+literal|" Idle Timer:        "
 argument_list|)
 expr_stmt|;
 if|if
@@ -6623,7 +6731,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" MTU:           "
+literal|" MTU:               "
 argument_list|)
 expr_stmt|;
 if|if
@@ -6669,7 +6777,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" sendpipe:      "
+literal|" sendpipe:          "
 argument_list|)
 expr_stmt|;
 if|if
@@ -6781,7 +6889,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Sticky Routes: %-20.20s"
+literal|" Sticky Routes:     %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6799,7 +6907,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Filter Decap:  %s\n"
+literal|" Filter Decap:      %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6817,7 +6925,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" ID check:      %-20.20s"
+literal|" ID check:          %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6835,7 +6943,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Keep-Session:  %s\n"
+literal|" Keep-Session:      %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6853,7 +6961,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Loopback:      %-20.20s"
+literal|" Loopback:          %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6871,7 +6979,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" PasswdAuth:    %s\n"
+literal|" PasswdAuth:        %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6889,7 +6997,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Proxy:         %-20.20s"
+literal|" Proxy:             %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6907,7 +7015,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Proxyall:      %s\n"
+literal|" Proxyall:          %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6925,7 +7033,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" TCPMSS Fixup:  %-20.20s"
+literal|" TCPMSS Fixup:      %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6943,7 +7051,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Throughput:    %s\n"
+literal|" Throughput:        %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6961,7 +7069,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Utmp Logging:  %-20.20s"
+literal|" Utmp Logging:      %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -6979,7 +7087,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Iface-Alias:   %s\n"
+literal|" Iface-Alias:       %s\n"
 argument_list|,
 name|optval
 argument_list|(
