@@ -984,7 +984,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Go through the rigmarole of shutting down..  * this used to be in machdep.c but I'll be dammned if I could see  * anything machine dependant in it.  */
+comment|/*  * Shutdown the system cleanly to prepare for reboot, halt, or power off.  */
 end_comment
 
 begin_function
@@ -1020,7 +1020,7 @@ argument_list|(
 name|__amd64__
 argument_list|)
 operator|)
-comment|/* Do all shutdown processing on cpu0 */
+comment|/* 	 * Bind us to CPU 0 so that all shutdown code runs there.  Some 	 * systems don't shutdown properly (i.e., ACPI power off) if we 	 * run on another processor. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1527,6 +1527,7 @@ argument_list|,
 name|howto
 argument_list|)
 expr_stmt|;
+comment|/* XXX This doesn't disable interrupts any more.  Reconsider? */
 name|splhigh
 argument_list|()
 expr_stmt|;
