@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	biz22.c	4.1	81/11/29	*/
+comment|/*	biz22.c	4.2	83/06/15	*/
 end_comment
 
 begin_include
@@ -25,6 +25,16 @@ end_define
 begin_comment
 comment|/* disconnection string */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)biz22.c	4.2 %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -628,6 +638,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	biz31.c	4.4	81/11/29	*/
+comment|/*	biz31.c	4.5	83/06/15	*/
 end_comment
 
 begin_include
@@ -36,6 +36,16 @@ end_define
 begin_comment
 comment|/* disconnection string */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)biz31.c	4.5 %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static

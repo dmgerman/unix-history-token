@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acutab.c	4.5	81/11/29	*/
+comment|/*	acutab.c	4.6	83/06/15	*/
 end_comment
 
 begin_include
@@ -55,6 +55,24 @@ name|ven_disconnect
 argument_list|()
 decl_stmt|,
 name|ven_abort
+argument_list|()
+decl_stmt|,
+name|vadic_dialer
+argument_list|()
+decl_stmt|,
+name|vadic_disconnect
+argument_list|()
+decl_stmt|,
+name|vadic_abort
+argument_list|()
+decl_stmt|,
+name|v831_dialer
+argument_list|()
+decl_stmt|,
+name|v831_disconnect
+argument_list|()
+decl_stmt|,
+name|v831_abort
 argument_list|()
 decl_stmt|,
 name|dn_dialer
@@ -165,6 +183,32 @@ block|,
 name|ven_disconnect
 block|,
 name|ven_abort
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|VADIC
+literal|"vadic"
+block|,
+name|vadic_dialer
+block|,
+name|vadic_disconnect
+block|,
+name|vadic_abort
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|V831
+literal|"v831"
+block|,
+name|v831_dialer
+block|,
+name|v831_disconnect
+block|,
+name|v831_abort
 block|,
 endif|#
 directive|endif
