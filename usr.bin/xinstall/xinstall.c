@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.29 1998/01/11 11:43:36 peter Exp $"
+literal|"$Id: xinstall.c,v 1.30 1998/01/13 02:12:43 alex Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,9 +225,9 @@ name|dopreserve
 decl_stmt|,
 name|dostrip
 decl_stmt|,
-name|verbose
-decl_stmt|,
 name|nommap
+decl_stmt|,
+name|verbose
 decl_stmt|;
 end_decl_stmt
 
@@ -3332,6 +3332,10 @@ name|int
 name|fd
 decl_stmt|;
 block|{
+comment|/*  * The ifdef is for bootstrapping - f_fstypename doesn't exist in  * pre-Lite2-merge systems.  */
+ifdef|#
+directive|ifdef
+name|MFSNAMELEN
 name|struct
 name|statfs
 name|stfs
@@ -3347,37 +3351,14 @@ argument_list|,
 operator|&
 name|stfs
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-comment|/* NetBSD MOUNT_XXX defines are strings, but doesn't have a MOUNT_NONE. */
-ifdef|#
-directive|ifdef
-name|MOUNT_NONE
-switch|switch
-condition|(
-name|stfs
-operator|.
-name|f_type
-condition|)
-block|{
-case|case
-name|MOUNT_UFS
-case|:
-comment|/* should be safe.. */
-case|case
-name|MOUNT_CD9660
-case|:
-comment|/* should be safe.. */
-return|return
-literal|1
-return|;
-block|}
-else|#
-directive|else
 if|if
 condition|(
 name|strcmp
@@ -3386,7 +3367,7 @@ name|stfs
 operator|.
 name|f_fstypename
 argument_list|,
-name|MOUNT_UFS
+literal|"ufs"
 argument_list|)
 operator|==
 literal|0
@@ -3397,18 +3378,22 @@ name|stfs
 operator|.
 name|f_fstypename
 argument_list|,
-name|MOUNT_CD9660
+literal|"cd9660"
 argument_list|)
 operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
