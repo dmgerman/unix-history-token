@@ -1298,7 +1298,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -1360,7 +1362,9 @@ name|P_KSES
 operator|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 comment|/* must be a bound thread */
 if|if
@@ -1372,7 +1376,9 @@ operator|&
 name|TDF_UNBOUND
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|kg
 operator|=
@@ -1496,7 +1502,9 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1720,7 +1728,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -1759,7 +1769,9 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ESRCH
+operator|)
 return|;
 block|}
 name|found
@@ -1796,7 +1808,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
