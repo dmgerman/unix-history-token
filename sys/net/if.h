@@ -72,7 +72,7 @@ name|if_mtu
 decl_stmt|;
 comment|/* maximum transmission unit */
 name|short
-name|if_oflags
+name|if_flags
 decl_stmt|;
 comment|/* up/down, broadcast, etc. */
 name|short
@@ -253,11 +253,6 @@ name|int
 name|if_pcount
 decl_stmt|;
 comment|/* number of promiscuous listeners */
-comment|/* new longer if_flags here for alignment; recompile netstat anyway */
-name|u_int
-name|if_flags
-decl_stmt|;
-comment|/* flags defined below */
 block|}
 struct|;
 end_struct
@@ -350,6 +345,10 @@ begin_comment
 comment|/* no address resolution protocol */
 end_comment
 
+begin_comment
+comment|/* next two not supported now, but reserved: */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -402,7 +401,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* IEEE 802.2 LLC class 0 in use */
+comment|/* interface driver control/status */
 end_comment
 
 begin_define
@@ -413,7 +412,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* IEEE 802.2 LLC class 1 in use */
+comment|/* interface driver control/status */
 end_comment
 
 begin_define
@@ -424,63 +423,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* IEEE 802.2 LLC class 2 in use */
-end_comment
-
-begin_comment
-comment|/* note IEEE 802.2 == ISO 8802-2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFF_MULTICAST
-value|0x8000
-end_define
-
-begin_comment
-comment|/* driver supports IP multicast */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFF_VIRTUAL
-value|0x10000
-end_define
-
-begin_comment
-comment|/* this interface is a VIF */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFF_ALTPHYS
-value|0x20000
-end_define
-
-begin_comment
-comment|/* use alternative physical if in */
-end_comment
-
-begin_comment
-comment|/* driver (e.g., AUI vs BNC vs UTP) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFF_ALTPHYS2
-value|0x40000
-end_define
-
-begin_comment
-comment|/* same as above, in case you have */
-end_comment
-
-begin_comment
-comment|/* more than just two phys types */
+comment|/* interface driver control/status */
 end_comment
 
 begin_comment
@@ -492,7 +435,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_RUNNING|IFF_OACTIVE|IFF_SIMPLEX \ 	|IFF_MULTICAST|IFF_VIRTUAL)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_RUNNING|IFF_OACTIVE|IFF_SIMPLEX)
 end_define
 
 begin_comment
