@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dd.c	4.5 (Berkeley) %G%"
+literal|"@(#)dd.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3095,7 +3095,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"dd: argument %D out of range\n"
+literal|"dd: argument %ld out of range\n"
 argument_list|,
 name|n
 argument_list|)

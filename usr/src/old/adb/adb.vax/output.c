@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	4.6 %G%"
+literal|"@(#)output.c	4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1925,7 +1925,7 @@ literal|16
 condition|?
 literal|"%x"
 else|:
-literal|"%D"
+literal|"%ld"
 argument_list|,
 name|lxy
 argument_list|)
