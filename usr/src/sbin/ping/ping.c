@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	4.11 (Berkeley) %G%"
+literal|"@(#)ping.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -913,15 +913,17 @@ argument_list|)
 decl_stmt|;
 name|int
 name|fromlen
-init|=
-sizeof|sizeof
-argument_list|(
-name|from
-argument_list|)
 decl_stmt|;
 name|int
 name|cc
 decl_stmt|;
+name|fromlen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|from
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
