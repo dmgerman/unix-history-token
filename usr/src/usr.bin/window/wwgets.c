@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwgets.c	3.6 84/04/08"
+literal|"@(#)wwgets.c	3.7 84/04/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,6 +344,9 @@ operator|>=
 literal|0
 condition|;
 control|)
+operator|(
+name|void
+operator|)
 name|wwwrite
 argument_list|(
 name|w

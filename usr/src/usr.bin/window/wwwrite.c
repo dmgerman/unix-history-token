@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwwrite.c	3.19 84/04/08"
+literal|"@(#)wwwrite.c	3.20 84/04/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,16 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|s
+operator|=
+literal|0
+expr_stmt|;
+comment|/* define it before possible use */
+endif|#
+directive|endif
 if|if
 condition|(
 name|hascursor
