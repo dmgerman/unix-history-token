@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	8.1 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6929,26 +6929,6 @@ operator|(
 name|ENOTCONN
 operator|)
 return|;
-name|m
-operator|=
-name|m_getclr
-argument_list|(
-name|M_WAIT
-argument_list|,
-name|MT_SONAME
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOBUFS
-operator|)
-return|;
 if|if
 condition|(
 name|error
@@ -6977,6 +6957,26 @@ condition|)
 return|return
 operator|(
 name|error
+operator|)
+return|;
+name|m
+operator|=
+name|m_getclr
+argument_list|(
+name|M_WAIT
+argument_list|,
+name|MT_SONAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOBUFS
 operator|)
 return|;
 if|if
