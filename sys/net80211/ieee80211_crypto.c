@@ -1935,6 +1935,7 @@ name|ieee80211_cipher
 modifier|*
 name|cip
 decl_stmt|;
+specifier|const
 name|u_int8_t
 modifier|*
 name|ivp
@@ -2011,6 +2012,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
+specifier|const
 name|u_int8_t
 operator|*
 argument_list|)
