@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.52 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.51		%G%"
+literal|"@(#)sendmail.h	8.52		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,14 +267,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Data structure for bit maps. ** **	Each bit in this map can be referenced by an ascii character. **	This is 128 possible bits, or 12 8-bit bytes. */
+comment|/* **  Data structure for bit maps. ** **	Each bit in this map can be referenced by an ascii character. **	This is 256 possible bits, or 32 8-bit bytes. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BITMAPBYTES
-value|16
+value|32
 end_define
 
 begin_comment
