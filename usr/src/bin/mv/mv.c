@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mv.c	4.7 (Berkeley) 83/01/01"
+literal|"@(#)mv.c	4.8 (Berkeley) 83/01/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -284,16 +284,6 @@ condition|)
 goto|goto
 name|usage
 goto|;
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|r
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -336,6 +326,10 @@ condition|)
 goto|goto
 name|usage
 goto|;
+name|r
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -371,7 +365,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|argv
 index|[
@@ -396,7 +390,7 @@ name|s1
 decl_stmt|;
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|argv
 index|[
