@@ -151,7 +151,7 @@ define|#
 directive|define
 name|CorrectTerminalCursor
 parameter_list|()
-value|((TransparentClock == OutputClock)? \ 		terminalCursorAddress:UnLocked? CursorAddress: HighestScreen())
+value|((TransparentClock == OutputClock)? \ 		CursorAddress:UnLocked? CursorAddress: HighestScreen())
 end_define
 
 begin_decl_stmt
