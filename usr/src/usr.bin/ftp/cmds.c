@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.9 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3321,12 +3321,14 @@ argument_list|)
 condition|)
 if|if
 condition|(
+operator|!
 name|globulize
 argument_list|(
 operator|&
 name|dest
 argument_list|)
-operator|&&
+operator|||
+operator|!
 name|confirm
 argument_list|(
 literal|"local-file"
