@@ -458,13 +458,6 @@ name|ctx
 argument_list|)
 expr_stmt|;
 comment|/* The password first, since that is what is most unknown */
-name|SHA_Init
-argument_list|(
-operator|&
-name|ctx
-argument_list|)
-expr_stmt|;
-comment|/* The password first, since that is what is most unknown */
 name|SHA_Update
 argument_list|(
 operator|&
