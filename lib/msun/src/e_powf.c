@@ -1557,7 +1557,7 @@ name|t
 argument_list|,
 name|is
 operator|&
-literal|0xfffff000
+literal|0xffff8000
 argument_list|)
 expr_stmt|;
 name|u
