@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.4 82/12/24"
+literal|"@(#)main.c	4.5 83/02/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -1095,27 +1095,38 @@ name|kflag
 condition|)
 block|{
 comment|/* get kernel pte */
+ifdef|#
+directive|ifdef
+name|vax
 name|base
 operator|&=
 literal|0x7fffffff
 expr_stmt|;
+endif|#
+directive|endif
 name|base
 operator|=
+name|ctob
+argument_list|(
 name|Sysmap
 index|[
+name|btoc
+argument_list|(
 name|base
-operator|>>
-literal|9
+argument_list|)
 index|]
 operator|.
 name|pg_pfnum
-operator|*
-literal|512
+argument_list|)
 operator|+
 operator|(
 name|base
 operator|&
-literal|0x1ff
+operator|(
+name|NBPG
+operator|-
+literal|1
+operator|)
 operator|)
 expr_stmt|;
 block|}

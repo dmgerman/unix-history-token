@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	4.5 83/01/30"
+literal|"@(#)rsh.c	4.6 83/02/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -299,6 +299,10 @@ name|another
 label|:
 if|if
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -336,6 +340,10 @@ goto|;
 block|}
 if|if
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -376,6 +384,10 @@ goto|;
 block|}
 if|if
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -403,6 +415,10 @@ block|}
 comment|/* 	 * Ignore the -e flag to allow aliases with rlogin 	 * to work 	 */
 if|if
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strncmp
 argument_list|(

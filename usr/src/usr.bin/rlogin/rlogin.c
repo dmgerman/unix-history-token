@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	4.8 83/01/18"
+literal|"@(#)rlogin.c	4.9 83/02/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,6 +301,10 @@ name|another
 label|:
 if|if
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -327,6 +331,10 @@ goto|;
 block|}
 if|if
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -367,6 +375,10 @@ goto|;
 block|}
 if|if
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strncmp
 argument_list|(
@@ -401,6 +413,10 @@ goto|;
 block|}
 if|if
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -1329,6 +1345,8 @@ init|=
 literal|1
 operator|+
 literal|1
+decl_stmt|,
+name|atmark
 decl_stmt|;
 name|char
 name|waste
@@ -1374,7 +1392,7 @@ argument_list|,
 name|SIOCATMARK
 argument_list|,
 operator|&
-name|mark
+name|atmark
 argument_list|)
 operator|<
 literal|0
@@ -1389,7 +1407,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|mark
+name|atmark
 condition|)
 break|break;
 operator|(
