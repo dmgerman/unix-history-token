@@ -1916,13 +1916,11 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|strlcpy
+name|strcpy
 argument_list|(
 name|libbuf
 argument_list|,
 name|ibcs2_emul_path
-argument_list|,
-name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
 for|for
@@ -2013,7 +2011,7 @@ name|libname
 operator|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 operator|&
 name|libbuf
@@ -2022,6 +2020,8 @@ name|emul_path_len
 index|]
 argument_list|,
 name|libname
+argument_list|,
+name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE only 1:1 in coff */
