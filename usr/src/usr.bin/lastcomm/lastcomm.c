@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lastcomm.c	5.1 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,7 +419,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*s %s %-*s %-*s %6.2f secs %.16s\n"
+literal|"%-*.*s %s %-*s %-*s %6.2f secs %.16s\n"
+argument_list|,
+name|fldsiz
+argument_list|(
+name|acct
+argument_list|,
+name|ac_comm
+argument_list|)
 argument_list|,
 name|fldsiz
 argument_list|(
