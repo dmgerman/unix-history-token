@@ -4,7 +4,7 @@ comment|/* #define OLD_BSD if you're running< 4.2 bsd */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trpfpe_.c	5.3	%G%  *  *  *	Fortran floating-point error handler  *  *	Synopsis:  *		call trpfpe (n, retval)  *			causes floating point faults to be trapped, with the  *			first 'n' errors getting a message printed.  *			'retval' is put in place of the bad result.  *		k = fpecnt()  *			causes 'k' to get the number of errors since the  *			last call to trpfpe().  *  *		common /fpeflt/ fpflag  *		logical fpflag  *			fpflag will become .true. on faults  *  *	David Wasley, UCBerkeley, June 1983.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trpfpe_.c	5.4	%G%  *  *  *	Fortran floating-point error handler  *  *	Synopsis:  *		call trpfpe (n, retval)  *			causes floating point faults to be trapped, with the  *			first 'n' errors getting a message printed.  *			'retval' is put in place of the bad result.  *		k = fpecnt()  *			causes 'k' to get the number of errors since the  *			last call to trpfpe().  *  *		common /fpeflt/ fpflag  *		logical fpflag  *			fpflag will become .true. on faults  *  *	David Wasley, UCBerkeley, June 1983.  */
 end_comment
 
 begin_include

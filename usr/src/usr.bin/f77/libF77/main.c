@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)main.c	5.2	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)main.c	5.3	%G%  */
 end_comment
 
 begin_include
@@ -20,6 +20,21 @@ include|#
 directive|include
 file|"../libI77/fiodefs.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -278,6 +293,91 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|tahoe
+end_ifdef
+
+begin_comment
+comment|/* The following arrays are defined& used assuming that signal codes are     1 to 5 for SIGFPE, and 0 to 3 for SIGILL.     Actually ILL_ALIGN_FAULT=14, and is mapped to 3. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_ACT_ILL
+value|4
+end_define
+
+begin_comment
+comment|/* number of entries in act_ill[] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_ACT_FPE
+value|5
+end_define
+
+begin_comment
+comment|/* number of entries in act_fpe[] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILL_ALIGN_FAULT
+value|14
+end_define
+
+begin_decl_stmt
+name|struct
+name|action
+name|act_fpe
+index|[]
+init|=
+block|{
+block|{
+literal|"Integer overflow"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Integer divide by 0"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Floating divide by zero"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Floating point overflow"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Floating point underflow"
+block|,
+literal|1
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+else|vax || pdp11
+end_else
+
 begin_decl_stmt
 name|struct
 name|action
@@ -348,6 +448,12 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+endif|vax || pdp11
+end_endif
+
 begin_decl_stmt
 name|struct
 name|action
@@ -372,14 +478,37 @@ literal|"operand"
 block|,
 literal|0
 block|}
-block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|tahoe
+block|{
+literal|"alignment"
+block|,
+literal|1
+block|}
+block|,
+endif|#
+directive|endif
+endif|tahoe
+block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_if
 if|#
 directive|if
+operator|(
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+operator|)
 end_if
 
 begin_macro
@@ -451,6 +580,7 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
+endif|pdp11
 end_endif
 
 begin_block
@@ -536,6 +666,9 @@ operator|==
 name|SIGFPE
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|tahoe
 if|if
 condition|(
 name|t
@@ -546,6 +679,26 @@ name|t
 operator|<=
 literal|10
 condition|)
+else|#
+directive|else
+else|tahoe
+if|if
+condition|(
+operator|(
+name|t
+operator|-
+literal|1
+operator|)
+operator|>=
+literal|0
+operator|&&
+name|t
+operator|<
+name|N_ACT_FPE
+condition|)
+endif|#
+directive|endif
+endif|tahoe
 name|fprintf
 argument_list|(
 name|units
@@ -591,6 +744,9 @@ operator|==
 name|SIGILL
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|tahoe
 if|if
 condition|(
 name|t
@@ -612,6 +768,29 @@ name|t
 operator|<=
 literal|2
 condition|)
+else|#
+directive|else
+else|tahoe
+if|if
+condition|(
+name|t
+operator|==
+name|ILL_ALIGN_FAULT
+condition|)
+comment|/* ILL_ALIGN_FAULT maps to last 			t = N_ACT_ILL-1;   	   entry in act_ill[] */
+if|if
+condition|(
+name|t
+operator|>=
+literal|0
+operator|&&
+name|t
+operator|<
+name|N_ACT_ILL
+condition|)
+endif|#
+directive|endif
+endif|tahoe
 name|fprintf
 argument_list|(
 name|units
