@@ -538,6 +538,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|BIO_FORMAT
+value|BIO_CMD2
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
@@ -714,6 +721,17 @@ value|25
 end_define
 
 begin_comment
+comment|/*  * Timeout value for the PIO loops to wait until the FDC main status  * register matches our expectations (request for master, direction  * bit).  This is supposed to be a number of microseconds, although  * timing might actually not be very accurate.  *  * Timeouts of 100 msec are believed to be required for some broken  * (old) hardware.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDSTS_TIMEOUT
+value|100000
+end_define
+
+begin_comment
 comment|/*  * Number of subdevices that can be used for different density types.  * By now, the lower 6 bit of the minor number are reserved for this,  * allowing for up to 64 subdevices, but we only use 16 out of this.  * Density #0 is used for automatic format detection, the other  * densities are available as programmable densities (for assignment  * by fdcontrol(8)).  * The upper 2 bits of the minor number are reserved for the subunit  * (drive #) per controller.  */
 end_comment
 
@@ -752,13 +770,6 @@ define|#
 directive|define
 name|BIO_RDSECTID
 value|BIO_CMD1
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIO_FORMAT
-value|BIO_CMD2
 end_define
 
 begin_comment
@@ -2515,15 +2526,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|static
-name|u_int8_t
-name|fdin_rd
-parameter_list|(
-name|fdc_p
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static u_int8_t fdin_rd(fdc_p);
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -3824,7 +3837,7 @@ return|;
 comment|/* If command is invalid, return */
 name|j
 operator|=
-literal|100000
+name|FDSTS_TIMEOUT
 expr_stmt|;
 while|while
 condition|(
@@ -3850,6 +3863,7 @@ operator|--
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|i
@@ -3869,6 +3883,12 @@ expr_stmt|;
 return|return
 name|FD_FAILED
 return|;
+block|}
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -9468,7 +9488,7 @@ name|i
 decl_stmt|,
 name|j
 init|=
-literal|100000
+name|FDSTS_TIMEOUT
 decl_stmt|;
 while|while
 condition|(
@@ -9498,6 +9518,7 @@ operator|--
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|i
@@ -9505,13 +9526,42 @@ operator|==
 name|NE7_RQM
 condition|)
 return|return
+operator|(
 name|fdc_err
 argument_list|(
 name|fdc
 argument_list|,
 literal|"ready for output in input\n"
 argument_list|)
+operator|)
 return|;
+comment|/* 		 * After (maybe) 1 msec of waiting, back off to larger 		 * stepping to get the timing more accurate. 		 */
+if|if
+condition|(
+name|FDSTS_TIMEOUT
+operator|-
+name|j
+operator|>
+literal|1000
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+name|j
+operator|-=
+literal|999
+expr_stmt|;
+block|}
+else|else
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|j
@@ -9519,6 +9569,7 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 name|fdc_err
 argument_list|(
 name|fdc
@@ -9529,6 +9580,7 @@ literal|"input ready timeout\n"
 else|:
 literal|0
 argument_list|)
+operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -9557,7 +9609,9 @@ operator|=
 name|i
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 else|#
 directive|else
@@ -9579,7 +9633,9 @@ operator|=
 name|i
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 endif|#
 directive|endif
@@ -9606,7 +9662,7 @@ decl_stmt|;
 comment|/* Check that the direction bit is set */
 name|i
 operator|=
-literal|100000
+name|FDSTS_TIMEOUT
 expr_stmt|;
 while|while
 condition|(
@@ -9624,7 +9680,32 @@ operator|--
 operator|>
 literal|0
 condition|)
-empty_stmt|;
+comment|/* 		 * After (maybe) 1 msec of waiting, back off to larger 		 * stepping to get the timing more accurate. 		 */
+if|if
+condition|(
+name|FDSTS_TIMEOUT
+operator|-
+name|i
+operator|>
+literal|1000
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+name|i
+operator|-=
+literal|999
+expr_stmt|;
+block|}
+else|else
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -9632,17 +9713,19 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 name|fdc_err
 argument_list|(
 name|fdc
 argument_list|,
 literal|"direction bit not set\n"
 argument_list|)
+operator|)
 return|;
 comment|/* Check that the floppy controller is ready for a command */
 name|i
 operator|=
-literal|100000
+name|FDSTS_TIMEOUT
 expr_stmt|;
 while|while
 condition|(
@@ -9662,7 +9745,32 @@ operator|--
 operator|>
 literal|0
 condition|)
-empty_stmt|;
+comment|/* 		 * After (maybe) 1 msec of waiting, back off to larger 		 * stepping to get the timing more accurate. 		 */
+if|if
+condition|(
+name|FDSTS_TIMEOUT
+operator|-
+name|i
+operator|>
+literal|1000
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+name|i
+operator|-=
+literal|999
+expr_stmt|;
+block|}
+else|else
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -9670,6 +9778,7 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 name|fdc_err
 argument_list|(
 name|fdc
@@ -9680,6 +9789,7 @@ literal|"output ready timeout\n"
 else|:
 literal|0
 argument_list|)
+operator|)
 return|;
 comment|/* Send the command and return */
 name|fddata_wr
@@ -11242,6 +11352,10 @@ operator|==
 name|n
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|fd
@@ -11265,6 +11379,10 @@ return|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|fd
