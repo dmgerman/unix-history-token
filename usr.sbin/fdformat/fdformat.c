@@ -112,6 +112,8 @@ name|int
 name|il
 index|[
 name|FD_MAX_NSEC
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|memset
