@@ -305,6 +305,12 @@ argument_list|(
 name|idlethread
 argument_list|)
 expr_stmt|;
+name|ke
+operator|=
+name|td
+operator|->
+name|td_kse
+expr_stmt|;
 name|CTR1
 argument_list|(
 name|KTR_RUNQ
@@ -315,6 +321,12 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+name|ke
+operator|->
+name|ke_flags
+operator||=
+name|KEF_DIDRUN
+expr_stmt|;
 if|if
 condition|(
 name|panicstr

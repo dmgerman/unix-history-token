@@ -877,10 +877,6 @@ name|u_char
 name|ke_oncpu
 decl_stmt|;
 comment|/* (j) Which cpu we are on. */
-name|u_int
-name|ke_slptime
-decl_stmt|;
-comment|/* (j) Time since last idle. */
 name|char
 name|ke_rqindex
 decl_stmt|;
@@ -1035,6 +1031,17 @@ end_define
 
 begin_comment
 comment|/* Process needs to yield. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_DIDRUN
+value|0x02000
+end_define
+
+begin_comment
+comment|/* KSE actually ran. */
 end_comment
 
 begin_comment
