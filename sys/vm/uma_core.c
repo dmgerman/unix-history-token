@@ -2582,6 +2582,12 @@ name|tmps
 operator|->
 name|us_data
 expr_stmt|;
+name|flags
+operator|=
+name|tmps
+operator|->
+name|us_flags
+expr_stmt|;
 block|}
 comment|/* Point the slab into the allocated memory */
 if|if
