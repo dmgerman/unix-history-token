@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1982 Regents of the University of California */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +15,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c 1.7 %G%"
+literal|"@(#)start.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
 comment|/*  * Begin execution.  *  * For px, pstart does a traced exec to read in px and then stop.  But we  * want control after px has read in the obj file and before it starts  * executing.  The zeroth argument to px tells it to give us control  * by sending itself a signal just prior to interpreting.  *  * We set a "END_BP" breakpoint at the end of the code so that the  * process data doesn't disappear after the program terminates.  */

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1982 Regents of the University of California */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,69 +15,59 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printdecl.c 1.2 %G%"
+literal|"@(#)printdecl.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Print out the type of a symbol.  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
-begin_include
+begin_expr_stmt
+operator|*
+operator|*
+name|Print
+name|out
+name|the
+name|type
+name|of
+name|a
+name|symbol
+operator|.
+modifier|*
+expr|/
 include|#
 directive|include
 file|"defs.h"
-end_include
-
-begin_include
 include|#
 directive|include
 file|"sym.h"
-end_include
-
-begin_include
 include|#
 directive|include
 file|"symtab.h"
-end_include
-
-begin_include
 include|#
 directive|include
 file|"tree.h"
-end_include
-
-begin_include
 include|#
 directive|include
 file|"btypes.h"
-end_include
-
-begin_include
 include|#
 directive|include
 file|"classes.h"
-end_include
-
-begin_include
 include|#
 directive|include
 file|"sym.rep"
-end_include
-
-begin_macro
 name|printdecl
 argument_list|(
 argument|s
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|SYM
-modifier|*
+operator|*
 name|s
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
