@@ -138,6 +138,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|Fflag
+decl_stmt|,
 name|fflag
 decl_stmt|,
 name|rflag

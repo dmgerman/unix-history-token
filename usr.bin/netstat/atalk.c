@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: atalk.c,v 1.6 1996/10/28 18:56:31 wollman Exp $"
+literal|"$Id: atalk.c,v 1.6.2.1 1997/07/30 06:52:04 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1092,14 +1092,14 @@ name|Aflag
 condition|)
 name|printf
 argument_list|(
-literal|"%8x "
+literal|"%8lx "
 argument_list|,
 name|ppcb
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-5.5s %6d %6d "
+literal|"%-5.5s %6lu %6lu "
 argument_list|,
 name|name
 argument_list|,
@@ -1185,7 +1185,7 @@ parameter_list|,
 name|z
 parameter_list|)
 define|\
-value|((x) ? printf("\t%d %s%s%s\n",x,y,plural(x),z) : 0)
+value|((x) ? printf("\t%lu %s%s%s\n",x,y,plural(x),z) : 0)
 end_define
 
 begin_comment
@@ -1355,12 +1355,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|ANY
-end_undef
 
 end_unit
 

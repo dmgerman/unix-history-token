@@ -64,11 +64,16 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|cmd
 argument_list|,
-literal|"-more %s"
+sizeof|sizeof
+argument_list|(
+name|cmd
+argument_list|)
+argument_list|,
+literal|"-more -e %s"
 argument_list|,
 name|_PATH_HELPFILE
 argument_list|)

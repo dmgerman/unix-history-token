@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: size.c,v 1.1.1.1.8.2 1997/08/29 05:29:54 imp Exp $"
+literal|"$Id: size.c,v 1.1.1.1.8.3 1998/03/08 12:18:47 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,14 +408,23 @@ name|printf
 argument_list|(
 literal|"%lu\t%lu\t%lu\t%lu\t%lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|head
 operator|.
 name|a_text
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|head
 operator|.
 name|a_data
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|head
 operator|.
 name|a_bss

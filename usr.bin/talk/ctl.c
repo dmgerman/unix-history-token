@@ -406,6 +406,9 @@ name|printf
 argument_list|(
 literal|"addr = %lx, port = %o, family = %o zero = "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|addr
 operator|.
 name|sin_addr

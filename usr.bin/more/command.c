@@ -161,6 +161,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+modifier|*
+name|av
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|quitting
 decl_stmt|;
@@ -771,9 +780,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pbuf
+argument_list|)
 argument_list|,
 literal|" file %d/%d"
 argument_list|,
@@ -798,9 +812,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pbuf
+argument_list|)
 argument_list|,
 literal|" line %d"
 argument_list|,
@@ -833,9 +852,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pbuf
+argument_list|)
 argument_list|,
 literal|" byte %qd"
 argument_list|,
@@ -863,9 +887,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pbuf
+argument_list|)
 argument_list|,
 literal|"/%qd pct %qd%%"
 argument_list|,
@@ -966,9 +995,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pbuf
+argument_list|)
 argument_list|,
 literal|" (%qd%%)"
 argument_list|,
@@ -1980,6 +2014,31 @@ case|case
 name|A_HELP
 case|:
 comment|/* help */
+if|if
+condition|(
+name|ac
+operator|>
+literal|0
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|_PATH_HELPFILE
+argument_list|,
+name|av
+index|[
+name|curr_ac
+index|]
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Already viewing help."
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|lower_left
 argument_list|()
 expr_stmt|;
@@ -2410,9 +2469,14 @@ condition|)
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s +%d %s"
 argument_list|,
@@ -2427,9 +2491,14 @@ else|else
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s %s"
 argument_list|,
@@ -2456,12 +2525,6 @@ block|{
 specifier|extern
 name|int
 name|sc_width
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|av
 decl_stmt|;
 specifier|register
 name|int

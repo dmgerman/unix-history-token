@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rwall.c,v 1.2 1995/05/30 06:33:30 rgrimes Exp $"
+literal|"$Id: rwall.c,v 1.2.6.1 1997/08/11 07:13:00 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,6 +223,10 @@ name|CLIENT
 modifier|*
 name|cl
 decl_stmt|;
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -290,6 +294,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|tv
+operator|.
+name|tv_sec
+operator|=
+literal|15
+expr_stmt|;
+comment|/* XXX ?? */
+name|tv
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|clnt_call
@@ -308,7 +325,7 @@ argument_list|,
 operator|&
 name|res
 argument_list|,
-name|NULL
+name|tv
 argument_list|)
 operator|!=
 name|RPC_SUCCESS

@@ -240,7 +240,7 @@ begin_struct
 struct|struct
 name|ttytab
 block|{
-name|long
+name|time_t
 name|logout
 decl_stmt|;
 comment|/* log out time */
@@ -764,7 +764,8 @@ decl_stmt|;
 comment|/* stat of file for size */
 name|long
 name|bl
-decl_stmt|,
+decl_stmt|;
+name|time_t
 name|delta
 decl_stmt|;
 comment|/* time difference */
@@ -1734,20 +1735,14 @@ argument_list|(
 name|ct
 argument_list|)
 argument_list|,
-literal|"%c"
+literal|"\nwtmp begins %c\n"
 argument_list|,
 name|tm
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nwtmp begins %10.10s %5.5s \n"
-argument_list|,
 name|ct
-argument_list|,
-name|ct
-operator|+
-literal|11
 argument_list|)
 expr_stmt|;
 block|}

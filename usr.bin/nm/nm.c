@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nm.c,v 1.9.2.2 1997/08/29 05:29:40 imp Exp $"
+literal|"$Id: nm.c,v 1.9.2.3 1997/09/15 09:20:57 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1327,10 +1327,10 @@ name|fseek
 argument_list|(
 name|fp
 argument_list|,
+operator|-
 operator|(
 name|long
 operator|)
-operator|-
 sizeof|sizeof
 argument_list|(
 name|exec_head
@@ -1479,7 +1479,7 @@ name|struct
 name|exec
 name|head
 decl_stmt|;
-name|long
+name|int32_t
 name|stabsize
 decl_stmt|;
 name|char
@@ -1534,10 +1534,10 @@ name|fseek
 argument_list|(
 name|fp
 argument_list|,
+operator|-
 operator|(
 name|long
 operator|)
-operator|-
 sizeof|sizeof
 argument_list|(
 name|head
@@ -2115,6 +2115,9 @@ name|printf
 argument_list|(
 literal|"%08lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sym
 operator|->
 name|n_value
@@ -2277,6 +2280,9 @@ name|printf
 argument_list|(
 literal|"%08lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sym
 operator|->
 name|n_value

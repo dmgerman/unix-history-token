@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.14.2.7 1998/05/26 06:28:30 danny Exp $"
+literal|"$Id: su.c,v 1.14.2.8 1998/06/04 22:30:53 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -689,6 +689,8 @@ name|user
 argument_list|)
 operator|>
 name|MAXLOGNAME
+operator|-
+literal|1
 condition|)
 block|{
 operator|(

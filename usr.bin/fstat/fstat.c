@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fstat.c,v 1.7.2.4 1997/09/18 23:19:00 dima Exp $"
+literal|"$Id: fstat.c,v 1.7.2.5 1998/03/08 09:14:38 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_include
@@ -1334,8 +1340,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read filedesc at %x for pid %d\n"
+literal|"can't read filedesc at %p for pid %d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 operator|->
 name|p_fd
@@ -1463,8 +1473,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read file structures at %x for pid %d\n"
+literal|"can't read file structures at %p for pid %d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|filed
 operator|.
 name|fd_ofiles
@@ -1546,10 +1560,14 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read file %d at %x for pid %d\n"
+literal|"can't read file %d at %p for pid %d\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ofiles
 index|[
 name|i
@@ -1761,8 +1779,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read vnode at %x for pid %d\n"
+literal|"can't read vnode at %p for pid %d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vp
 argument_list|,
 name|Pid
@@ -2081,7 +2103,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %6d %10s"
+literal|" %6ld %10s"
 argument_list|,
 name|fst
 operator|.
@@ -2286,8 +2308,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read inode at %x for pid %d\n"
+literal|"can't read inode at %p for pid %d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|VTOI
 argument_list|(
 name|vp
@@ -2408,8 +2434,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read nfsnode at %x for pid %d\n"
+literal|"can't read nfsnode at %p for pid %d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|VTONFS
 argument_list|(
 name|vp
@@ -2649,8 +2679,12 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"can't read mount table at %x"
+literal|"can't read mount table at %p"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 argument_list|)
 expr_stmt|;
@@ -2793,8 +2827,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read pipe at %x\n"
+literal|"can't read pipe at %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pi
 argument_list|)
 expr_stmt|;
@@ -2997,8 +3035,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read sock at %x\n"
+literal|"can't read sock at %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sock
 argument_list|)
 expr_stmt|;
@@ -3031,8 +3073,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read protosw at %x"
+literal|"can't read protosw at %p"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|so
 operator|.
 name|so_proto
@@ -3067,8 +3113,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read domain at %x\n"
+literal|"can't read domain at %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|proto
 operator|.
 name|pr_domain
@@ -3112,8 +3162,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read domain name at %x\n"
+literal|"can't read domain name at %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|dom
 operator|.
 name|dom_name
@@ -3244,8 +3298,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read inpcb at %x\n"
+literal|"can't read inpcb at %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|so
 operator|.
 name|so_pcb
@@ -3350,8 +3408,12 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't read unpcb at %x\n"
+literal|"can't read unpcb at %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|so
 operator|.
 name|so_pcb

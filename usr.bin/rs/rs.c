@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rs.c,v 1.2.2.1 1997/08/08 07:51:52 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_decl_stmt

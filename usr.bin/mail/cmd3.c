@@ -1492,7 +1492,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d: %d/%ld\n"
+literal|"%d: %ld/%ld\n"
 argument_list|,
 name|mesg
 argument_list|,

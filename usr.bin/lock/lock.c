@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lock.c,v 1.2.2.2 1997/08/29 05:29:29 imp Exp $"
+literal|"$Id: lock.c,v 1.2.2.3 1997/09/15 08:32:17 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,6 +248,9 @@ decl_stmt|;
 name|struct
 name|timeval
 name|timval
+decl_stmt|;
+name|time_t
+name|timval_sec
 decl_stmt|;
 name|struct
 name|itimerval
@@ -523,14 +526,18 @@ operator|*
 literal|60
 operator|)
 expr_stmt|;
+name|timval_sec
+operator|=
+name|timval
+operator|.
+name|tv_sec
+expr_stmt|;
 name|timp
 operator|=
 name|localtime
 argument_list|(
 operator|&
-name|timval
-operator|.
-name|tv_sec
+name|timval_sec
 argument_list|)
 expr_stmt|;
 name|ap

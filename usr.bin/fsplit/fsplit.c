@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fsplit.c,v 1.2.6.1 1997/07/10 06:34:54 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include

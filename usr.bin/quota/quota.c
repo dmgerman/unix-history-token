@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: quota.c,v 1.5.2.2 1997/08/29 05:29:44 imp Exp $"
+literal|"$Id: quota.c,v 1.5.2.3 1997/09/15 10:19:35 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3547,9 +3547,19 @@ name|server_addr
 operator|.
 name|sin_addr
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|server_addr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|server_addr

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mt.c,v 1.9.2.3 1997/08/29 05:29:38 imp Exp $"
+literal|"$Id: mt.c,v 1.9.2.4 1997/09/15 09:20:54 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2024,7 +2024,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Present Mode:   Density = %-12s Blocksize %s\n"
+literal|"Present Mode:   Density = %-12s Blocksize %s Comp %d\n"
 argument_list|,
 name|denstostring
 argument_list|(
@@ -2039,6 +2039,13 @@ name|bp
 operator|->
 name|mt_blksiz
 argument_list|)
+argument_list|,
+operator|(
+name|int
+operator|)
+name|bp
+operator|->
+name|mt_comp
 argument_list|)
 expr_stmt|;
 name|printf
