@@ -387,8 +387,6 @@ name|uap
 decl_stmt|;
 block|{
 comment|/* Not yet implemented */
-comment|/* mtx_lock(&Giant); */
-comment|/* mtx_unlock(&Giant); */
 return|return
 operator|(
 name|EOPNOTSUPP
@@ -447,8 +445,6 @@ name|uap
 decl_stmt|;
 block|{
 comment|/* Not yet implemented */
-comment|/* mtx_lock(&Giant); */
-comment|/* mtx_unlock(&Giant); */
 return|return
 operator|(
 name|EOPNOTSUPP
