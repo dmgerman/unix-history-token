@@ -317,13 +317,17 @@ name|inetdomain
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|pr_usrreqs
-name|nousrreqs
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* Spacer for loadable protocols. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTOSPACER
+define|\
+value|{ 0,&inetdomain,	PROTO_SPACER,	0,	\   NULL,		NULL,		NULL,		NULL,	\   NULL,							\   NULL,		NULL,		NULL,		NULL,	\&nousrreqs						\ }
+end_define
 
 begin_decl_stmt
 name|struct
@@ -1108,6 +1112,23 @@ block|,
 endif|#
 directive|endif
 comment|/* DEV_PFSYNC */
+comment|/* Spacer n-times for loadable protocols. */
+name|IPPROTOSPACER
+block|,
+name|IPPROTOSPACER
+block|,
+name|IPPROTOSPACER
+block|,
+name|IPPROTOSPACER
+block|,
+name|IPPROTOSPACER
+block|,
+name|IPPROTOSPACER
+block|,
+name|IPPROTOSPACER
+block|,
+name|IPPROTOSPACER
+block|,
 comment|/* raw wildcard */
 block|{
 name|SOCK_RAW
