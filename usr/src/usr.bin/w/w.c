@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.14 (Berkeley) %G%"
+literal|"@(#)w.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2955,34 +2955,12 @@ name|kp
 operator|++
 control|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kp->kp_pgid %d\n"
-argument_list|,
-name|kp
-operator|->
-name|kp_pgid
-argument_list|)
-expr_stmt|;
 name|p
 operator|=
 operator|&
 name|kp
 operator|->
 name|kp_proc
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"p->p_pid %d\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|)
 expr_stmt|;
 comment|/* decide if it's an interesting process */
 if|if
@@ -3319,6 +3297,8 @@ if|if
 condition|(
 name|kp
 operator|->
+name|kp_eproc
+operator|.
 name|kp_tdev
 operator|==
 name|NODEV
@@ -3329,10 +3309,14 @@ if|if
 condition|(
 name|kp
 operator|->
+name|kp_eproc
+operator|.
 name|kp_pgid
 operator|!=
 name|kp
 operator|->
+name|kp_eproc
+operator|.
 name|kp_tpgid
 condition|)
 continue|continue;
@@ -3500,6 +3484,8 @@ name|w_tty
 operator|=
 name|kp
 operator|->
+name|kp_eproc
+operator|.
 name|kp_tdev
 expr_stmt|;
 name|pr
@@ -4314,7 +4300,7 @@ name|dbp
 operator|->
 name|db_size
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|vssize
 argument_list|,
@@ -4366,31 +4352,6 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* printf("%s\n", cp); */
-block|}
-end_block
-
-begin_macro
-name|min
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_block
-block|{
-return|return
-operator|(
-name|a
-operator|<
-name|b
-condition|?
-name|a
-else|:
-name|b
-operator|)
-return|;
 block|}
 end_block
 
@@ -4472,17 +4433,6 @@ operator|+
 name|PROCSLOP
 expr_stmt|;
 comment|/* XXX PROCSLOP should be in header ? */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kinfo: estimated %d, using %d\n"
-argument_list|,
-name|ret
-argument_list|,
-name|copysize
-argument_list|)
-expr_stmt|;
 name|buff
 operator|=
 operator|(
@@ -4549,17 +4499,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kinfo: wanted: %d copied: %d\n"
-argument_list|,
-name|ret
-argument_list|,
-name|copysize
-argument_list|)
-expr_stmt|;
 operator|*
 name|bp
 operator|=
