@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.9	81/12/01	*/
+comment|/*	conf.c	4.10	82/05/27	*/
 end_comment
 
 begin_include
@@ -201,6 +201,20 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
+end_if
+
 begin_decl_stmt
 name|int
 name|hpstrategy
@@ -223,6 +237,11 @@ name|htclose
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -260,6 +279,20 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
+end_if
+
 begin_decl_stmt
 name|int
 name|mtstrategy
@@ -272,6 +305,11 @@ name|mtclose
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -307,12 +345,33 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|idcstrategy
+argument_list|()
+decl_stmt|,
+name|idcopen
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|devsw
 name|devsw
 index|[]
 init|=
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
 literal|"hp"
 block|,
 name|hpstrategy
@@ -329,6 +388,8 @@ name|htopen
 block|,
 name|htclose
 block|,
+endif|#
+directive|endif
 literal|"up"
 block|,
 name|upstrategy
@@ -361,6 +422,17 @@ name|tsopen
 block|,
 name|tsclose
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
 literal|"mt"
 block|,
 name|mtstrategy
@@ -369,6 +441,8 @@ name|mtopen
 block|,
 name|mtclose
 block|,
+endif|#
+directive|endif
 literal|"ra"
 block|,
 name|udstrategy
@@ -382,8 +456,15 @@ block|,
 name|utstrategy
 block|,
 name|utopen
-block|,
 name|utclose
+block|,
+literal|"rb"
+block|,
+name|idcstrategy
+block|,
+name|idcopen
+block|,
+name|nullsys
 block|,
 literal|0
 block|,
