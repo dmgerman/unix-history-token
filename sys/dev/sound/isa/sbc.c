@@ -1182,6 +1182,13 @@ block|}
 block|,
 comment|/* @@@2001 - ViBRA16X clone */
 block|{
+literal|0x81167316
+block|,
+literal|"ESS ES1681"
+block|}
+block|,
+comment|/* ESS1681 */
+block|{
 literal|0x02017316
 block|,
 literal|"ESS ES1688"
