@@ -1642,11 +1642,14 @@ begin_comment
 comment|/*-  * Deal with _ANSI_SOURCE:  * If it is defined, and no other compilation environment is explicitly  * requested, then define our internal feature-test macros to zero.  This  * makes no difference to the preprocessor (undefined symbols in preprocessing  * expressions are defined to have value zero), but makes it more convenient for  * a test program to print out the values.  *  * If a program mistakenly defines _ANSI_SOURCE and some other macro such as  * _POSIX_C_SOURCE, we will assume that it wants the broader compilation  * environment (and in fact we will never get here).  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_ANSI_SOURCE
-end_ifdef
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Hide almost everything. */
@@ -1678,6 +1681,47 @@ define|#
 directive|define
 name|__ISO_C_VISIBLE
 value|1990
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_C99_SOURCE
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* Localism to specify strict C99 env. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__POSIX_VISIBLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|__XSI_VISIBLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|__BSD_VISIBLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ISO_C_VISIBLE
+value|1999
 end_define
 
 begin_else
