@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kdump.c	1.7 (Berkeley) %G%"
+literal|"@(#)kdump.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -458,16 +458,15 @@ name|ktr_header
 operator|.
 name|ktr_len
 operator|)
-operator|>
-literal|80000
+operator|<
+literal|0
 condition|)
 block|{
-comment|/* XXX */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"kdump: bogus length %d\n"
+literal|"kdump: bogus length 0x%x\n"
 argument_list|,
 name|ktrlen
 argument_list|)
