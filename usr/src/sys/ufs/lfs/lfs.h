@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -811,7 +811,7 @@ name|F
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	if (bread((F)->lfs_ivnode, (daddr_t)0, (F)->lfs_bsize, NOCRED,&BP)) \ 		panic("lfs: ifile read"); \ 	(CP) = (CLEANERINFO *)BP->b_un.b_addr; \ }
+value|{ \ 	if (bread((F)->lfs_ivnode, (daddr_t)0, (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(CP) = (CLEANERINFO *)(BP)->b_un.b_addr; \ }
 end_define
 
 begin_comment
@@ -831,7 +831,7 @@ name|IN
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	if (bread((F)->lfs_ivnode, \ 	    (IN) / (F)->lfs_ifpb + (F)->lfs_cleansz + (F)->lfs_segtabsz, \ 	    (F)->lfs_bsize, NOCRED,&BP)) \ 		panic("lfs: ifile read"); \ 	(IP) = (IFILE *)BP->b_un.b_addr + IN % (F)->lfs_ifpb; \ }
+value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (bread((F)->lfs_ivnode, \ 	    (IN) / (F)->lfs_ifpb + (F)->lfs_cleansz + (F)->lfs_segtabsz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(IP) = (IFILE *)(BP)->b_un.b_addr + (IN) % (F)->lfs_ifpb; \ }
 end_define
 
 begin_comment
@@ -851,7 +851,39 @@ name|IN
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	if (bread((F)->lfs_ivnode, (IN) / (F)->lfs_sepb + (F)->lfs_cleansz, \ 	    (F)->lfs_bsize, NOCRED,&BP)) \ 		panic("lfs: ifile read"); \ 	(SP) = (SEGUSE *)BP->b_un.b_addr + IN % (F)->lfs_sepb; \ }
+value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (bread((F)->lfs_ivnode, (IN) / (F)->lfs_sepb + (F)->lfs_cleansz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(SP) = (SEGUSE *)(BP)->b_un.b_addr + (IN) % (F)->lfs_sepb; \ }
+end_define
+
+begin_comment
+comment|/* Release the ifile block, updating the access time. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFS_IRELEASE
+parameter_list|(
+name|F
+parameter_list|,
+name|BP
+parameter_list|)
+value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	brelse((BP)); \ }
+end_define
+
+begin_comment
+comment|/* Release the ifile block, scheduling it for writing. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFS_IWRITE
+parameter_list|(
+name|F
+parameter_list|,
+name|BP
+parameter_list|)
+value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= ICHG | IUPD; \ 	lfs_bwrite((BP)); \ }
 end_define
 
 begin_comment
