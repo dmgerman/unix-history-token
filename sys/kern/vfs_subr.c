@@ -2390,6 +2390,13 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+if|if
+condition|(
+name|mp
+operator|==
+name|NULL
+condition|)
+return|return;
 name|mtx_lock
 argument_list|(
 operator|&
