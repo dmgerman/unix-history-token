@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pigs.c	5.14 (Berkeley) %G%"
+literal|"@(#)pigs.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,13 +71,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kinfo_proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
+file|<curses.h>
 end_include
 
 begin_include
@@ -89,25 +83,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nlist.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systat.h"
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"extern.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systat.h"
 end_include
 
 begin_decl_stmt
