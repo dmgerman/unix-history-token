@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_subr.c 4.3 81/11/26 */
+comment|/* tcp_subr.c 4.4 81/11/29 */
 end_comment
 
 begin_include
@@ -120,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"/usr/include/errno.h"
+file|"../errno.h"
 end_include
 
 begin_comment
@@ -630,6 +630,9 @@ name|ip_ttl
 operator|=
 name|TCP_TTL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ip_output
 argument_list|(
 name|m
@@ -1004,40 +1007,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_macro
-name|tcp_sense
-argument_list|(
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|COUNT
-argument_list|(
-name|TCP_SENSE
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-end_block
-
 begin_macro
 name|tcp_drain
 argument_list|()
@@ -1045,12 +1014,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|inpcb
-modifier|*
-name|ip
-decl_stmt|;
 name|COUNT
 argument_list|(
 name|TCP_DRAIN

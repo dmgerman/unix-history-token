@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.3 81/11/26 */
+comment|/* tcp_timer.c 4.4 81/11/29 */
 end_comment
 
 begin_include
@@ -114,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"/usr/include/errno.h"
+file|"../errno.h"
 end_include
 
 begin_comment
@@ -164,11 +164,6 @@ name|s
 init|=
 name|splnet
 argument_list|()
-decl_stmt|;
-specifier|register
-name|short
-modifier|*
-name|tmp
 decl_stmt|;
 specifier|register
 name|int
@@ -265,9 +260,6 @@ name|caddr_t
 operator|)
 name|i
 argument_list|)
-expr_stmt|;
-name|tmp
-operator|++
 expr_stmt|;
 block|}
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.19 81/11/26 */
+comment|/* ip_input.c 1.20 81/11/29 */
 end_comment
 
 begin_include
@@ -596,6 +596,9 @@ goto|goto
 name|next
 goto|;
 block|}
+operator|(
+name|void
+operator|)
 name|ip_output
 argument_list|(
 name|dtom

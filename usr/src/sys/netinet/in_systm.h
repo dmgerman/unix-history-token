@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_systm.h 4.6 81/11/26 */
+comment|/* in_systm.h 4.7 81/11/29 */
 end_comment
 
 begin_comment
@@ -61,6 +61,14 @@ directive|define
 name|setipintr
 parameter_list|()
 value|mtpr(SIRR, 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|setrawintr
+parameter_list|()
+value|mtpr(SIRR, 13)
 end_define
 
 begin_comment

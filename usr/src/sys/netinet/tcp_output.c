@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.19	81/11/26	*/
+comment|/*	tcp_output.c	4.20	81/11/29	*/
 end_comment
 
 begin_include
@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"/usr/include/errno.h"
+file|"../errno.h"
 end_include
 
 begin_comment
@@ -325,7 +325,11 @@ goto|goto
 name|send
 goto|;
 comment|/* 	 * No reason to send a segment, just return. 	 */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|send
 label|:
 comment|/* 	 * Grab a header mbuf, attaching a copy of data to 	 * be transmitted, and initialize the header from 	 * the template for sends on this connection. 	 */
@@ -437,6 +441,9 @@ name|tp
 operator|->
 name|t_template
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|ti
 argument_list|,
 sizeof|sizeof
@@ -476,6 +483,12 @@ operator|->
 name|t_tcpopt
 condition|)
 block|{
+name|m0
+operator|=
+name|m
+operator|->
+name|m_next
+expr_stmt|;
 name|m
 operator|->
 name|m_next
@@ -498,6 +511,11 @@ operator|(
 name|void
 operator|)
 name|m_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|m_freem
 argument_list|(
 name|m
 argument_list|)
@@ -550,6 +568,9 @@ argument_list|,
 name|caddr_t
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|tp
 operator|->
 name|t_tcpopt
@@ -606,6 +627,9 @@ name|ti_win
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|win
 argument_list|)
 expr_stmt|;

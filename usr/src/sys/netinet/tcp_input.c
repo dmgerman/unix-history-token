@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.32	81/11/26	*/
+comment|/*	tcp_input.c	1.33	81/11/29	*/
 end_comment
 
 begin_include
@@ -114,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"/usr/include/errno.h"
+file|"../errno.h"
 end_include
 
 begin_decl_stmt
@@ -122,17 +122,6 @@ name|int
 name|tcpcksum
 init|=
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|sockaddr_in
-name|tcp_sockaddr
-init|=
-block|{
-name|AF_INET
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -197,9 +186,6 @@ modifier|*
 name|so
 decl_stmt|;
 name|int
-name|acceptable
-decl_stmt|;
-name|tcp_seq
 name|todrop
 decl_stmt|,
 name|acked
@@ -548,6 +534,12 @@ condition|)
 goto|goto
 name|dropwithreset
 goto|;
+name|so
+operator|=
+name|inp
+operator|->
+name|inp_socket
+expr_stmt|;
 comment|/* 	 * Calculate amount of space in receive window, 	 * and then do TCP input processing. 	 */
 name|tp
 operator|->
@@ -1843,6 +1835,9 @@ name|tcp_respond
 argument_list|(
 name|ti
 argument_list|,
+operator|(
+name|tcp_seq
+operator|)
 literal|0
 argument_list|,
 name|ti
@@ -1877,6 +1872,9 @@ name|ti
 operator|->
 name|ti_len
 argument_list|,
+operator|(
+name|tcp_seq
+operator|)
 literal|0
 argument_list|,
 name|TH_RST
@@ -1909,8 +1907,6 @@ argument_list|(
 name|tp
 argument_list|,
 name|ti
-argument_list|,
-name|endp
 argument_list|)
 specifier|register
 expr|struct
@@ -1926,13 +1922,6 @@ name|struct
 name|tcpiphdr
 modifier|*
 name|ti
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-modifier|*
-name|endp
 decl_stmt|;
 end_decl_stmt
 

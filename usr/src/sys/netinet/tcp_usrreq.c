@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.36 81/11/26 */
+comment|/* tcp_usrreq.c 1.37 81/11/29 */
 end_comment
 
 begin_include
@@ -114,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"/usr/include/errno.h"
+file|"../errno.h"
 end_include
 
 begin_function_decl
@@ -200,10 +200,6 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|struct
-name|tcpiphdr
-name|ti
 decl_stmt|;
 name|COUNT
 argument_list|(
@@ -447,6 +443,9 @@ name|t_state
 operator|=
 name|TCPS_SYN_SENT
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tcp_output
 argument_list|(
 name|tp
@@ -485,6 +484,9 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tcp_output
 argument_list|(
 name|tp
@@ -532,6 +534,9 @@ name|t_state
 operator|=
 name|TCPS_FIN_WAIT_1
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tcp_output
 argument_list|(
 name|tp
@@ -547,6 +552,9 @@ name|t_state
 operator|=
 name|TCPS_LAST_ACK
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tcp_output
 argument_list|(
 name|tp
@@ -558,6 +566,9 @@ break|break;
 case|case
 name|PRU_RCVD
 case|:
+operator|(
+name|void
+operator|)
 name|tcp_output
 argument_list|(
 name|tp
@@ -602,6 +613,9 @@ name|sb_cc
 operator|+
 literal|1
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tcp_output
 argument_list|(
 name|tp
@@ -621,6 +635,30 @@ expr_stmt|;
 break|break;
 case|case
 name|PRU_CONTROL
+case|:
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+break|break;
+case|case
+name|PRU_SENSE
+case|:
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+break|break;
+case|case
+name|PRU_RCVOOB
+case|:
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+break|break;
+case|case
+name|PRU_SENDOOB
 case|:
 name|error
 operator|=

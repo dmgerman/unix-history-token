@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.9	81/11/26	*/
+comment|/*	tcp_var.h	4.10	81/11/29	*/
 end_comment
 
 begin_comment
@@ -171,20 +171,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|tcp_finisacked
-parameter_list|(
-name|tp
-parameter_list|)
-value|0
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|intotcpcb
 parameter_list|(
 name|ip
@@ -201,17 +187,6 @@ name|so
 parameter_list|)
 value|(intotcpcb(sotoinpcb(so)))
 end_define
-
-begin_define
-define|#
-directive|define
-name|TCP_ISSINCR
-value|128
-end_define
-
-begin_comment
-comment|/* increment for iss each second */
-end_comment
 
 begin_struct
 struct|struct
