@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.21 (Berkeley) %G%"
+literal|"@(#)stty.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,6 +160,8 @@ name|optarg
 decl_stmt|;
 specifier|extern
 name|int
+name|opterr
+decl_stmt|,
 name|optind
 decl_stmt|;
 specifier|extern
@@ -226,6 +228,10 @@ expr_stmt|;
 name|fmt
 operator|=
 name|NOTSET
+expr_stmt|;
+name|opterr
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -303,13 +309,7 @@ break|break;
 case|case
 literal|'?'
 case|:
-name|usage
-argument_list|()
-expr_stmt|;
 default|default:
-operator|--
-name|optind
-expr_stmt|;
 goto|goto
 name|args
 goto|;
