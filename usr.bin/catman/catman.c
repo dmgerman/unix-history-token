@@ -3358,10 +3358,6 @@ block|{
 name|int
 name|opt
 decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 if|if
 condition|(
 operator|(
