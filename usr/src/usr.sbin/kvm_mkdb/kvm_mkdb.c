@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.4 (Berkeley) %G%"
+literal|"@(#)kvm_mkdb.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,10 +135,6 @@ directive|define
 name|USAGE
 value|"kvm_mkdb"
 end_define
-
-begin_extern
-extern|extern errno;
-end_extern
 
 begin_decl_stmt
 name|char
@@ -1132,7 +1128,7 @@ decl_stmt|;
 name|char
 name|versbuf
 index|[
-name|LINE_MAX
+name|_BSD_LINE_MAX
 index|]
 decl_stmt|;
 name|long
@@ -1242,7 +1238,7 @@ name|fgets
 argument_list|(
 name|versbuf
 argument_list|,
-name|LINE_MAX
+name|_BSD_LINE_MAX
 argument_list|,
 name|fstr
 argument_list|)
