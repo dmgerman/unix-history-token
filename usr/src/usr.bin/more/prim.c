@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prim.c	5.1 (Berkeley) %G%"
+literal|"@(#)prim.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,23 +157,12 @@ name|first_cmd
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|TAGS
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|int
 name|tagoption
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Sound the bell to indicate he is trying to move past end of file.  */
@@ -508,14 +497,9 @@ operator|&&
 operator|!
 name|top_scroll
 operator|&&
-if|#
-directive|if
-name|TAGS
 operator|!
 name|tagoption
 operator|&&
-endif|#
-directive|endif
 operator|!
 name|plusoption
 condition|)
