@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.11	81/11/21	*/
+comment|/*	uipc_socket.c	4.12	81/11/22	*/
 end_comment
 
 begin_include
@@ -1353,13 +1353,8 @@ goto|goto
 name|release
 goto|;
 block|}
-if|if
-condition|(
-name|sosendallatonce
-argument_list|(
-name|so
-argument_list|)
-operator|&&
+name|space
+operator|=
 name|sbspace
 argument_list|(
 operator|&
@@ -1367,6 +1362,19 @@ name|so
 operator|->
 name|so_snd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|space
+operator|==
+literal|0
+operator|||
+name|sosendallatonce
+argument_list|(
+name|so
+argument_list|)
+operator|&&
+name|space
 operator|<
 name|u
 operator|.
@@ -1422,17 +1430,7 @@ name|u
 operator|.
 name|u_count
 operator|&&
-operator|(
 name|space
-operator|=
-name|sbspace
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_snd
-argument_list|)
-operator|)
 operator|>
 literal|0
 condition|)
@@ -1571,6 +1569,16 @@ operator|&
 name|m
 operator|->
 name|m_next
+expr_stmt|;
+name|space
+operator|=
+name|sbspace
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
 expr_stmt|;
 block|}
 name|s
@@ -1798,16 +1806,6 @@ name|PR_ADDR
 operator|)
 condition|)
 block|{
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mb
-operator|=
-name|m
-operator|->
-name|m_next
-expr_stmt|;
 if|if
 condition|(
 name|asa
@@ -1873,11 +1871,10 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|=
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_mb
+name|m_free
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1889,6 +1886,14 @@ name|panic
 argument_list|(
 literal|"receive 2"
 argument_list|)
+expr_stmt|;
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_mb
+operator|=
+name|m
 expr_stmt|;
 block|}
 name|eor
