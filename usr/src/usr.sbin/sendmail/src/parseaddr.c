@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.41.1.1
+literal|3.42
 operator|%
 name|G
 operator|%

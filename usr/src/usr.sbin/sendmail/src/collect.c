@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.38.1.1
+literal|3.39
 operator|%
 name|G
 operator|%
@@ -163,7 +163,9 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
-name|InFileName
+name|CurEnv
+operator|->
+name|e_df
 operator|=
 name|tempfname
 expr_stmt|;
@@ -714,7 +716,9 @@ name|void
 operator|)
 name|freopen
 argument_list|(
-name|InFileName
+name|CurEnv
+operator|->
+name|e_df
 argument_list|,
 literal|"w"
 argument_list|,
@@ -739,7 +743,9 @@ name|syserr
 argument_list|(
 literal|"collect: Cannot write %s"
 argument_list|,
-name|InFileName
+name|CurEnv
+operator|->
+name|e_df
 argument_list|)
 expr_stmt|;
 operator|(
@@ -992,7 +998,9 @@ name|TempFile
 operator|=
 name|fopen
 argument_list|(
-name|InFileName
+name|CurEnv
+operator|->
+name|e_df
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1004,7 +1012,9 @@ name|syserr
 argument_list|(
 literal|"Cannot reopen %s"
 argument_list|,
-name|InFileName
+name|CurEnv
+operator|->
+name|e_df
 argument_list|)
 expr_stmt|;
 ifdef|#

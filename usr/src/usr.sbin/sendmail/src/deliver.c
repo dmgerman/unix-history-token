@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.79.1.1
+literal|3.80
 operator|%
 name|G
 operator|%
@@ -1237,6 +1237,13 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|SMTP
+name|define
+argument_list|(
+literal|'g'
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1419,6 +1426,13 @@ endif|QUEUE
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+name|define
+argument_list|(
+literal|'g'
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

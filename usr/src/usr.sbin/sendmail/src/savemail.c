@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.29.1.1
+literal|3.30
 operator|%
 name|G
 operator|%
@@ -184,7 +184,7 @@ name|e_to
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	**  If called from Eric Schmidt's network, do special mailback. 	**	Fundamentally, this is the mailback case except that 	**	it returns an OK exit status (assuming the return 	**	worked). 	*/
+comment|/* 	**  If called from Eric Schmidt's network, do special mailback. 	**	Fundamentally, this is the mailback case except that 	**	it returns an OK exit status (assuming the return 	**	worked). 	**  Also, if the from address is not local, mail it back. 	*/
 if|if
 condition|(
 name|BerkNet
@@ -195,9 +195,30 @@ operator|=
 name|EX_OK
 expr_stmt|;
 name|MailBack
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|M_LOCAL
+argument_list|,
+name|CurEnv
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|MailBack
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* 	**  If writing back, do it. 	**	If the user is still logged in on the same terminal, 	**	then write the error messages back to hir (sic). 	**	If not, set the MailBack flag so that it will get 	**	mailed back instead. 	*/
 if|if
 condition|(
@@ -228,7 +249,8 @@ name|NULL
 condition|)
 block|{
 name|MailBack
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 name|errno
 operator|=
@@ -676,7 +698,8 @@ end_decl_stmt
 
 begin_expr_stmt
 name|NoAlias
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 end_expr_stmt
 

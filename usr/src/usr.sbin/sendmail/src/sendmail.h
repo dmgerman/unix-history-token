@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.69		%G%"
+literal|"@(#)sendmail.h	3.70		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1922,18 +1922,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* name of this host for SMTP messages */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|InFileName
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* input file name */
 end_comment
 
 begin_decl_stmt

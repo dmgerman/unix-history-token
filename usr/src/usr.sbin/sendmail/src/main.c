@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.75
+literal|3.76
 operator|%
 name|G
 operator|%
@@ -2385,7 +2385,9 @@ name|syserr
 argument_list|(
 literal|"finis: trying to queue %s"
 argument_list|,
-name|InFileName
+name|CurEnv
+operator|->
+name|e_df
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2398,7 +2400,9 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|InFileName
+name|CurEnv
+operator|->
+name|e_df
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3470,6 +3474,11 @@ name|e_df
 operator|=
 name|NULL
 expr_stmt|;
+return|return
+operator|(
+name|e
+operator|)
+return|;
 block|}
 end_function
 

@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.13.1.1
+literal|3.14
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.13.1.1
+literal|3.14
 operator|%
 name|G
 operator|%
@@ -1663,6 +1663,10 @@ name|QueueRun
 operator|=
 name|TRUE
 expr_stmt|;
+name|MailBack
+operator|=
+name|TRUE
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2021,7 +2025,9 @@ case|case
 literal|'D'
 case|:
 comment|/* data file name */
-name|InFileName
+name|CurEnv
+operator|->
+name|e_df
 operator|=
 name|newstr
 argument_list|(
@@ -2036,7 +2042,9 @@ name|TempFile
 operator|=
 name|fopen
 argument_list|(
-name|InFileName
+name|CurEnv
+operator|->
+name|e_df
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2051,7 +2059,9 @@ name|syserr
 argument_list|(
 literal|"readqf: cannot open %s"
 argument_list|,
-name|InFileName
+name|CurEnv
+operator|->
+name|e_df
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2212,6 +2222,13 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"Message has timed out"
+argument_list|)
+expr_stmt|;
 comment|/* return message to sender */
 operator|(
 name|void
