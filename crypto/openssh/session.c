@@ -1824,13 +1824,6 @@ argument_list|(
 literal|"do_exec_no_pty: no session"
 argument_list|)
 expr_stmt|;
-name|signal
-argument_list|(
-name|SIGPIPE
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
 name|session_proctitle
 argument_list|(
 name|s
@@ -5726,6 +5719,14 @@ control|)
 name|close
 argument_list|(
 name|i
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Restore any signal handlers set by sshd previously that should 	 * be restored to their initial state. 	 */
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 comment|/* Change current directory to the user\'s home directory. */
