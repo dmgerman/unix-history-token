@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.33 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,13 +201,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/quota.h>
+file|<ufs/ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/inode.h>
+file|<ufs/ufs/inode.h>
 end_include
 
 begin_include
