@@ -81,17 +81,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|safepri
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* safe ipl when cold or panicing */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|char
 name|version
 index|[]
