@@ -968,11 +968,12 @@ name|rdp
 operator|->
 name|lun
 argument_list|,
-operator|(
+call|(
 name|unsigned
 name|long
 name|long
-operator|)
+call|)
+argument_list|(
 name|rdp
 operator|->
 name|total_sectors
@@ -986,6 +987,7 @@ operator|)
 operator|/
 name|DEV_BSIZE
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
