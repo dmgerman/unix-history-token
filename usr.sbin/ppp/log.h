@@ -218,7 +218,7 @@ begin_define
 define|#
 directive|define
 name|LogMAX
-value|(24)
+value|(23)
 end_define
 
 begin_struct_decl
