@@ -6215,6 +6215,9 @@ name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Decrement the count of procs running with this uid. 			 */
+error|#
+directive|error
+literal|"FIXME"
 operator|(
 name|void
 operator|)
