@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uulog.c	5.3 (Berkeley) %G%"
+literal|"@(#)uulog.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,11 +196,11 @@ argument_list|(
 name|sys
 argument_list|)
 operator|>
-literal|7
+name|MAXBASENAME
 condition|)
 name|sys
 index|[
-literal|7
+name|MAXBASENAME
 index|]
 operator|=
 literal|'\0'

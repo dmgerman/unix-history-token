@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uupoll.c	5.3 (Berkeley) %G%"
+literal|"@(#)uupoll.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +74,7 @@ decl_stmt|;
 name|char
 name|grade
 init|=
-literal|'z'
+literal|'A'
 decl_stmt|;
 name|int
 name|nocall
@@ -258,9 +258,11 @@ name|sprintf
 argument_list|(
 name|wrkpre
 argument_list|,
-literal|"%s/LCK..%.7s"
+literal|"%s/LCK..%.*s"
 argument_list|,
 name|LOCKDIR
+argument_list|,
+name|MAXBASENAME
 argument_list|,
 name|argv
 index|[
@@ -291,9 +293,11 @@ name|sprintf
 argument_list|(
 name|wrkpre
 argument_list|,
-literal|"%c.%.7s"
+literal|"%c.%.*s"
 argument_list|,
 name|CMDPRE
+argument_list|,
+name|SYSNSIZE
 argument_list|,
 name|argv
 index|[
@@ -320,7 +324,7 @@ name|sprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"%s/%c.%.7s%cPOLL"
+literal|"%s/%c.%.*s%cPOLL"
 argument_list|,
 name|subdir
 argument_list|(
@@ -330,6 +334,8 @@ name|CMDPRE
 argument_list|)
 argument_list|,
 name|CMDPRE
+argument_list|,
+name|SYSNSIZE
 argument_list|,
 name|argv
 index|[
