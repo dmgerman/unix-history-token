@@ -69,7 +69,9 @@ name|devsw
 index|[]
 init|=
 block|{
-comment|/*&efi_disk, */
+operator|&
+name|efifs_dev
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -83,6 +85,9 @@ name|file_system
 index|[]
 init|=
 block|{
+operator|&
+name|efi_fsops
+block|,
 operator|&
 name|ufs_fsops
 block|,
