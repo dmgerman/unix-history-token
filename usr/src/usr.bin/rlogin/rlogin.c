@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.36 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -491,8 +491,14 @@ index|]
 decl_stmt|;
 name|void
 name|lostpeer
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+name|copytochild
+argument_list|()
+decl_stmt|,
+name|writeroob
+argument_list|()
+decl_stmt|;
 name|u_char
 name|getescape
 parameter_list|()
@@ -1002,6 +1008,27 @@ name|SIGUSR1
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We set SIGURG and SIGUSR1 below so that an 	 * incoming signal will be held pending rather than being 	 * discarded. Note that these routines will be ready to get 	 * a signal by the time that they are unblocked below. 	 */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGURG
+argument_list|,
+name|copytochild
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGUSR1
+argument_list|,
+name|writeroob
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KERBEROS
@@ -1434,13 +1461,7 @@ name|void
 name|catch_child
 argument_list|()
 decl_stmt|,
-name|copytochild
-argument_list|()
-decl_stmt|,
 name|exit
-argument_list|()
-decl_stmt|,
-name|writeroob
 argument_list|()
 decl_stmt|;
 operator|(
@@ -1664,27 +1685,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We may still own the socket, and may have a pending SIGURG (or might 	 * receive one soon) that we really want to send to the reader.  Set a 	 * trap that simply copies such signals to the child. 	 */
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGURG
-argument_list|,
-name|copytochild
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGUSR1
-argument_list|,
-name|writeroob
-argument_list|)
-expr_stmt|;
+comment|/* 	 * We may still own the socket, and may have a pending SIGURG (or might 	 * receive one soon) that we really want to send to the reader.  When 	 * one of these comes in, the trap copytochild simply copies such 	 * signals to the child. We can now unblock SIGURG and SIGUSR1 	 * that were set above. 	 */
 operator|(
 name|void
 operator|)
