@@ -87,11 +87,11 @@ name|int
 name|fd_nfiles
 decl_stmt|;
 comment|/* number of open files allocated */
-name|u_short
+name|u_int
 name|fd_lastfile
 decl_stmt|;
 comment|/* high-water mark of fd_ofiles */
-name|u_short
+name|u_int
 name|fd_freefile
 decl_stmt|;
 comment|/* approx. next free file */
