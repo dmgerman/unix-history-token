@@ -256,7 +256,8 @@ literal|"sqf:b:r:w:h:t:"
 argument_list|)
 operator|)
 operator|!=
-name|FAIL
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
