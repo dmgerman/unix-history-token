@@ -121,13 +121,6 @@ begin_struct
 struct|struct
 name|pmap
 block|{
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pv_entry
-argument_list|)
-name|pm_pvlist
-expr_stmt|;
 name|struct
 name|tte
 modifier|*
