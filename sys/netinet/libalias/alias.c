@@ -121,6 +121,13 @@ name|IRC_CONTROL_PORT_NUMBER_2
 value|6668
 end_define
 
+begin_define
+define|#
+directive|define
+name|CUSEEME_PORT_NUMBER
+value|7648
+end_define
+
 begin_comment
 comment|/*    The following macro is used to update an    internet checksum.  "delta" is a 32-bit    accumulation of all the changes to the    checksum (adding in new 16-bit words and    subtracting out old words), and "cksum"    is the checksum value to be updated. */
 end_comment
@@ -2120,6 +2127,24 @@ name|uh_dport
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ntohs
+argument_list|(
+name|ud
+operator|->
+name|uh_dport
+argument_list|)
+operator|==
+name|CUSEEME_PORT_NUMBER
+condition|)
+name|AliasHandleCUSeeMeIn
+argument_list|(
+name|pip
+argument_list|,
+name|original_address
+argument_list|)
+expr_stmt|;
 comment|/* If UDP checksum is not zero, then adjust since destination port */
 comment|/* is being unaliased and destination port is being altered.       */
 if|if
@@ -2327,6 +2352,24 @@ name|alias_port
 operator|=
 name|GetAliasPort
 argument_list|(
+name|link
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ntohs
+argument_list|(
+name|ud
+operator|->
+name|uh_dport
+argument_list|)
+operator|==
+name|CUSEEME_PORT_NUMBER
+condition|)
+name|AliasHandleCUSeeMeOut
+argument_list|(
+name|pip
+argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
