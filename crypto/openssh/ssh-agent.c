@@ -888,6 +888,8 @@ name|NULL
 condition|)
 block|{
 comment|/* Decrypt the challenge using the private key. */
+if|if
+condition|(
 name|rsa_private_decrypt
 argument_list|(
 name|challenge
@@ -898,7 +900,12 @@ name|private
 operator|->
 name|rsa
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|failure
+goto|;
 comment|/* The response is MD5 of decrypted challenge plus session id. */
 name|len
 operator|=

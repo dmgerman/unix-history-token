@@ -542,6 +542,9 @@ decl_stmt|,
 name|len
 decl_stmt|;
 comment|/* Decrypt the challenge using the private key. */
+comment|/* XXX think about Bleichenbacher, too */
+if|if
+condition|(
 name|rsa_private_decrypt
 argument_list|(
 name|challenge
@@ -549,6 +552,13 @@ argument_list|,
 name|challenge
 argument_list|,
 name|prv
+argument_list|)
+operator|<=
+literal|0
+condition|)
+name|packet_disconnect
+argument_list|(
+literal|"respond_to_rsa_challenge: rsa_private_decrypt failed"
 argument_list|)
 expr_stmt|;
 comment|/* Compute the response. */
