@@ -1772,6 +1772,24 @@ begin_comment
 comment|/* Find process group by id. */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|zpfind
+name|__P
+argument_list|(
+operator|(
+name|pid_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Find zombie process by id. */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|vm_zone
