@@ -4037,18 +4037,24 @@ name|peer
 argument_list|)
 expr_stmt|;
 comment|/* Give it a surprise */
-block|}
-name|ng_disconnect_hook
+name|NG_HOOK_UNREF
 argument_list|(
-name|hook
+name|peer
 argument_list|)
 expr_stmt|;
+comment|/* account for peer link */
 name|NG_HOOK_UNREF
 argument_list|(
 name|hook
 argument_list|)
 expr_stmt|;
 comment|/* account for peer link */
+block|}
+name|ng_disconnect_hook
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -11406,102 +11412,22 @@ block|}
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|sysctl_debug_ng_dump_items
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-block|{
-specifier|static
-name|int
-name|count
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|int
-name|val
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|val
-operator|=
-name|allocated
-expr_stmt|;
-name|i
-operator|=
-literal|1
-expr_stmt|;
-name|error
-operator|=
-name|sysctl_handle_int
-argument_list|(
-name|oidp
-argument_list|,
-operator|&
-name|val
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-argument_list|,
-name|req
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|count
-operator|++
-operator|&
-literal|1
-condition|)
-block|{
-comment|/* for some reason sysctl calls it twice */
-name|ng_dumpitems
-argument_list|()
-expr_stmt|;
-name|ng_dumpnodes
-argument_list|()
-expr_stmt|;
-name|ng_dumphooks
-argument_list|()
-expr_stmt|;
-block|}
-return|return
-name|error
-return|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_expr_stmt
-name|SYSCTL_PROC
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ng_dump_items
-argument_list|,
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|sysctl_debug_ng_dump_items
-argument_list|,
-literal|"I"
-argument_list|,
-literal|"Number of allocated items"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+unit|static int sysctl_debug_ng_dump_items(SYSCTL_HANDLER_ARGS) { 	static int count; 	int error; 	int val; 	int i;  	val = allocated; 	i = 1; 	error = sysctl_handle_int(oidp,&val, sizeof(int), req); 	if(count++& 1) {
+comment|/* for some reason sysctl calls it twice */
+end_comment
+
+begin_endif
+unit|ng_dumpitems(); 		ng_dumpnodes(); 		ng_dumphooks(); 	} 	return error; }  SYSCTL_PROC(_debug, OID_AUTO, ng_dump_items, CTLTYPE_INT | CTLFLAG_RD,     0, 0, sysctl_debug_ng_dump_items, "I", "Number of allocated items");
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
