@@ -2698,7 +2698,8 @@ name|array
 argument_list|)
 operator|)
 operator|==
-name|STATE_NULL
+operator|-
+literal|1
 condition|)
 block|{
 if|if
