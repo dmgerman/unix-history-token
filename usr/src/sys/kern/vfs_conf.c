@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -572,6 +572,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNION
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vfsops
+name|union_vfsops
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|UNION_VFSOPS
+value|&union_vfsops
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UNION_VFSOPS
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|vfsops
@@ -625,6 +663,9 @@ comment|/* 13 = MOUNT_AFS */
 name|CD9660_VFSOPS
 block|,
 comment|/* 14 = MOUNT_CD9660 */
+name|UNION_VFSOPS
+block|,
+comment|/* 15 = MOUNT_UNION */
 literal|0
 block|}
 decl_stmt|;
@@ -819,6 +860,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|vnodeopv_desc
+name|union_vnodeop_opv_desc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|vnodeopv_desc
 modifier|*
@@ -973,6 +1022,14 @@ name|cd9660_fifoop_opv_desc
 block|,
 endif|#
 directive|endif
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|UNION
+operator|&
+name|union_vnodeop_opv_desc
+block|,
 endif|#
 directive|endif
 name|NULL
