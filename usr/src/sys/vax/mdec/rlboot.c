@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rlboot.c	4.2	83/02/20	*/
+comment|/*	rlboot.c	4.3	83/06/16	*/
 end_comment
 
 begin_comment
@@ -346,7 +346,7 @@ name|HL_da
 argument_list|(
 name|r10
 argument_list|)
-comment|/* seek to sector 1 */
+comment|/* seek to cylinder 0 */
 name|movw
 name|$HL_SEEK
 decl|+
@@ -376,8 +376,9 @@ decl_stmt|,
 name|r0
 decl_stmt|,
 name|hlerr
+comment|/* Rl has 256 byte sectors */
 name|movw
-name|$1
+name|$2
 decl_stmt|,
 name|HL_da
 argument_list|(
@@ -478,7 +479,7 @@ decl_stmt|,
 name|clrcor
 comment|/* run loaded program */
 name|movl
-name|$8
+name|$14
 decl_stmt|,
 name|r10
 comment|/* major("/dev/hl0a") */
