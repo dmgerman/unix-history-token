@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: btxv86.h,v 1.2 1998/09/17 23:52:05 msmith Exp $  */
+comment|/*  *	$Id: btxv86.h,v 1.3 1998/10/02 16:22:54 msmith Exp $  */
 end_comment
 
 begin_ifndef
@@ -178,7 +178,7 @@ name|PTOV
 parameter_list|(
 name|pa
 parameter_list|)
-value|(caddr_t)((pa) - __base)
+value|((caddr_t)(pa) - __base)
 end_define
 
 begin_define
@@ -188,7 +188,7 @@ name|VTOP
 parameter_list|(
 name|va
 parameter_list|)
-value|(vm_offset_t)((va) + __base)
+value|((vm_offset_t)(va) + __base)
 end_define
 
 begin_define
@@ -198,7 +198,7 @@ name|VTOPSEG
 parameter_list|(
 name|va
 parameter_list|)
-value|(u_int16_t)(VTOP(va)>> 4)
+value|(u_int16_t)(VTOP((caddr_t)va)>> 4)
 end_define
 
 begin_define
@@ -208,7 +208,7 @@ name|VTOPOFF
 parameter_list|(
 name|va
 parameter_list|)
-value|(u_int16_t)(VTOP(va)& 0xf)
+value|(u_int16_t)(VTOP((caddr_t)va)& 0xf)
 end_define
 
 begin_function_decl
