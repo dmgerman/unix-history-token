@@ -732,9 +732,28 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: bad block size"
+literal|"%s: block size too small, min is %d"
 argument_list|,
 name|optarg
+argument_list|,
+name|MINBSIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bsize
+operator|>
+name|MAXBSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: block size too large, max is %d"
+argument_list|,
+name|optarg
+argument_list|,
+name|MAXBSIZE
 argument_list|)
 expr_stmt|;
 break|break;
