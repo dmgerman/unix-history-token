@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.24 (Berkeley) %G%"
+literal|"@(#)su.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,7 +109,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<paths.h>
 end_include
 
 begin_ifdef
@@ -983,7 +983,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|_PATH_SEARCHPATH
+name|_PATH_DEFPATH
 expr_stmt|;
 name|cleanenv
 index|[
