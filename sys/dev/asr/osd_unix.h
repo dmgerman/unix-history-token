@@ -1864,7 +1864,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// SNI_MIPS
+comment|/* SNI_MIPS */
 end_comment
 
 begin_comment
@@ -2311,7 +2311,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// SNI_MIPS
+comment|/* SNI_MIPS */
 end_comment
 
 begin_ifdef

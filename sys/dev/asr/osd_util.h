@@ -891,7 +891,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// !osdSwap2
+comment|/* !osdSwap2 */
 comment|/* Reverses the byte ordering of a 4 byte variable and shifts left 8 bits */
 if|#
 directive|if
@@ -912,7 +912,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// !osdSwap3
+comment|/* !osdSwap3 */
 ifdef|#
 directive|ifdef
 name|_DPT_NETWARE
@@ -955,7 +955,7 @@ parameter_list|)
 value|DPT_Bswapl(inLong)
 endif|#
 directive|endif
-comment|// cplusplus
+comment|/* cplusplus */
 else|#
 directive|else
 comment|/* Reverses the byte ordering of a 4 byte variable */
@@ -978,7 +978,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// !osdSwap4
+comment|/* !osdSwap4 */
 comment|/* The following functions ALWAYS swap regardless of the *    * presence of DPT_BIG_ENDIAN                            */
 name|uSHORT
 name|trueSwap2
@@ -998,7 +998,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// netware
+comment|/* netware */
 comment|/*-------------------------------------*  * Network order swap functions        *  *                                     *  * These functions/macros will be used *  * by the structure insert()/extract() *  * functions.                          *  *  * We will enclose all structure       *  * portability modifications inside    *  * #ifdefs.  When we are ready, we     *  * will #define DPT_PORTABLE to begin  *  * using the modifications.            *  *-------------------------------------*/
 name|uLONG
 name|netSwap4
@@ -1013,7 +1013,7 @@ name|defined
 argument_list|(
 name|_DPT_BIG_ENDIAN
 argument_list|)
-comment|// for big-endian we need to swap
+comment|/* for big-endian we need to swap */
 ifndef|#
 directive|ifndef
 name|NET_SWAP_2
@@ -1026,7 +1026,7 @@ parameter_list|)
 value|(((x)>> 8) | ((x)<< 8))
 endif|#
 directive|endif
-comment|// NET_SWAP_2
+comment|/* NET_SWAP_2 */
 ifndef|#
 directive|ifndef
 name|NET_SWAP_4
@@ -1039,7 +1039,7 @@ parameter_list|)
 value|netSwap4((x))
 endif|#
 directive|endif
-comment|// NET_SWAP_4
+comment|/* NET_SWAP_4 */
 else|#
 directive|else
 comment|/* for little-endian we don't need to do anything */
@@ -1055,7 +1055,7 @@ parameter_list|)
 value|(x)
 endif|#
 directive|endif
-comment|// NET_SWAP_2
+comment|/* NET_SWAP_2 */
 ifndef|#
 directive|ifndef
 name|NET_SWAP_4
@@ -1068,10 +1068,10 @@ parameter_list|)
 value|(x)
 endif|#
 directive|endif
-comment|// NET_SWAP_4
+comment|/* NET_SWAP_4 */
 endif|#
 directive|endif
-comment|// big endian
+comment|/* big endian */
 comment|/*----------------------------------- */
 comment|/* Run-time loadable module functions */
 comment|/*----------------------------------- */

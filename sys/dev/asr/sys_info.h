@@ -173,7 +173,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// no unpack
+comment|/* no unpack */
 end_comment
 
 begin_comment
@@ -234,7 +234,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// DPT PORTABLE
+comment|/* DPT PORTABLE */
 comment|//--------------------------------------------
 block|}
 empty_stmt|;
@@ -519,7 +519,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// DPT PORTABLE
+comment|/* DPT PORTABLE */
 comment|//--------------------------------------------
 block|}
 empty_stmt|;
@@ -625,7 +625,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// DPT PORTABLE
+comment|/* DPT PORTABLE */
 comment|//--------------------------------------------
 block|}
 empty_stmt|;
@@ -743,7 +743,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// DPT PORTABLE
+comment|/* DPT PORTABLE */
 comment|//--------------------------------------------
 block|}
 empty_stmt|;
@@ -812,7 +812,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// DPT PORTABLE
+comment|/* DPT PORTABLE */
 comment|//--------------------------------------------
 block|}
 empty_stmt|;
@@ -881,7 +881,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// DPT PORTABLE
+comment|/* DPT PORTABLE */
 comment|//--------------------------------------------
 block|}
 empty_stmt|;
@@ -950,7 +950,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// DPT PORTABLE
+comment|/* DPT PORTABLE */
 comment|//--------------------------------------------
 block|}
 empty_stmt|;
@@ -1019,7 +1019,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|// DPT PORTABLE
+comment|/* DPT PORTABLE */
 comment|//--------------------------------------------
 block|}
 empty_stmt|;
@@ -1113,7 +1113,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// no unpack
+comment|/* no unpack */
 end_comment
 
 begin_ifdef
@@ -1319,7 +1319,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// __SYS_INFO_H
+comment|/* __SYS_INFO_H */
 end_comment
 
 end_unit
