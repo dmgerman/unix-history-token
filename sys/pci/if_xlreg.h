@@ -3405,6 +3405,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TC_DEVICEID_TORNADO_10_100BT_920B_WNM
+value|0x9202
+end_define
+
+begin_define
+define|#
+directive|define
 name|TC_DEVICEID_HURRICANE_10_100BT_SERV
 value|0x9800
 end_define

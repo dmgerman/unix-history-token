@@ -401,6 +401,14 @@ block|,
 block|{
 name|TC_VENDORID
 block|,
+name|TC_DEVICEID_TORNADO_10_100BT_920B_WNM
+block|,
+literal|"3Com 3c920B-EMB-WNM Integrated Fast Etherlink XL"
+block|}
+block|,
+block|{
+name|TC_VENDORID
+block|,
 name|TC_DEVICEID_HURRICANE_10_100BT_SERV
 block|,
 literal|"3Com 3c980 Fast Etherlink XL"
@@ -4937,6 +4945,10 @@ case|case
 name|TC_DEVICEID_TORNADO_10_100BT_920B
 case|:
 comment|/* 3c920B-EMB */
+case|case
+name|TC_DEVICEID_TORNADO_10_100BT_920B_WNM
+case|:
+comment|/* 3c920B-EMB-WNM */
 name|sc
 operator|->
 name|xl_media
@@ -5404,6 +5416,10 @@ condition|(
 name|did
 operator|==
 name|TC_DEVICEID_TORNADO_10_100BT_920B
+operator|||
+name|did
+operator|==
+name|TC_DEVICEID_TORNADO_10_100BT_920B_WNM
 condition|)
 name|sc
 operator|->
