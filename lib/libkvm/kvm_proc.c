@@ -794,14 +794,6 @@ name|proc
 operator|.
 name|p_vmspace
 expr_stmt|;
-comment|/* 		 * The pending signal list is private to the kernel, as the 		 * queue cannot be exported, and the interfaces used are 		 * not exposed to userland.  For compatability, just install 		 * an empty signal set. 		 */
-name|SIGEMPTYSET
-argument_list|(
-name|kp
-operator|->
-name|ki_siglist
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|proc
@@ -1798,6 +1790,14 @@ operator|=
 name|proc
 operator|.
 name|p_pid
+expr_stmt|;
+name|kp
+operator|->
+name|ki_siglist
+operator|=
+name|proc
+operator|.
+name|p_siglist
 expr_stmt|;
 name|kp
 operator|->
