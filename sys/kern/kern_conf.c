@@ -1974,6 +1974,17 @@ operator|-
 literal|'0'
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|u
+operator|>
+literal|0xffffff
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 operator|*
 name|unit
 operator|=
