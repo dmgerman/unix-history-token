@@ -265,12 +265,11 @@ begin_comment
 comment|/* post GCC 2.95 */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__GNUC__
-end_if
+end_ifdef
 
 begin_typedef
 typedef|typedef
