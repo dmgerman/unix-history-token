@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttgeneric.c	3.40 (Berkeley) %G%"
+literal|"@(#)ttgeneric.c	3.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1235,13 +1235,13 @@ name|tt_scroll_bot
 condition|)
 name|gen_setscroll
 argument_list|(
+literal|0
+argument_list|,
 name|tt
 operator|.
 name|tt_nrow
 operator|-
 literal|1
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
