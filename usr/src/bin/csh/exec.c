@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exec.c 4.7 %G%"
+literal|"@(#)exec.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_comment
