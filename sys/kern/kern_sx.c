@@ -291,7 +291,7 @@ argument_list|,
 operator|(
 literal|"%s (%s): holders or waiters\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sx
 operator|->
@@ -370,7 +370,7 @@ argument_list|,
 operator|(
 literal|"%s (%s): slock while xlock is held @ %s:%d\n"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sx
 operator|->
@@ -622,7 +622,7 @@ argument_list|,
 operator|(
 literal|"%s (%s): xlock already held @ %s:%d"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|,
 name|sx
 operator|->

@@ -416,7 +416,7 @@ name|assert_sbuf_integrity
 parameter_list|(
 name|s
 parameter_list|)
-value|_assert_sbuf_integrity(__FUNCTION__, (s))
+value|_assert_sbuf_integrity(__func__, (s))
 end_define
 
 begin_define
@@ -428,7 +428,7 @@ name|s
 parameter_list|,
 name|i
 parameter_list|)
-value|_assert_sbuf_state(__FUNCTION__, (s), (i))
+value|_assert_sbuf_state(__func__, (s), (i))
 end_define
 
 begin_else
@@ -517,8 +517,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|" called with non-zero flags"
+literal|"%s called with non-zero flags"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -701,8 +702,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|" called with NULL uio pointer"
+literal|"%s called with NULL uio pointer"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -713,8 +715,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|" called with NULL error pointer"
+literal|"%s called with NULL error pointer"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1587,8 +1590,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-name|__FUNCTION__
-literal|" called with a NULL format string"
+literal|"%s called with a NULL format string"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;

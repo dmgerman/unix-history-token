@@ -141,7 +141,7 @@ name|PDEBUG
 parameter_list|(
 name|a
 parameter_list|)
-value|if (bus_debug) {printf(__FUNCTION__ ":%d: ", __LINE__), printf a, printf("\n");}
+value|if (bus_debug) {printf("%s:%d: ", __func__, __LINE__), printf a, printf("\n");}
 end_define
 
 begin_define

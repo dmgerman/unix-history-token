@@ -107,7 +107,7 @@ name|mp
 parameter_list|,
 name|td
 parameter_list|)
-value|do {					\ 	KASSERT((td) != NULL, ("%s: curthread NULL", __FUNCTION__));	\ 	KASSERT((td)->td_proc->p_stat == SRUN, ("%s: not SRUN", __FUNCTION__));	\ 	KASSERT((cvp) != NULL, ("%s: cvp NULL", __FUNCTION__));		\ 	KASSERT((mp) != NULL, ("%s: mp NULL", __FUNCTION__));		\ 	mtx_assert((mp), MA_OWNED | MA_NOTRECURSED);			\ } while (0)
+value|do {					\ 	KASSERT((td) != NULL, ("%s: curthread NULL", __func__));	\ 	KASSERT((td)->td_proc->p_stat == SRUN, ("%s: not SRUN", __func__));	\ 	KASSERT((cvp) != NULL, ("%s: cvp NULL", __func__));		\ 	KASSERT((mp) != NULL, ("%s: mp NULL", __func__));		\ 	mtx_assert((mp), MA_OWNED | MA_NOTRECURSED);			\ } while (0)
 end_define
 
 begin_ifdef
@@ -129,7 +129,7 @@ value|do {					\ 	if (TAILQ_EMPTY(&(cvp)->cv_waitq)) {				\
 comment|/* Only waiter. */
 value|\ 		(cvp)->cv_mtx = (mp);					\ 	} else {							\
 comment|/*							\ 		 * Other waiter; assert that we're using the		\ 		 * same mutex.						\ 		 */
-value|\ 		KASSERT((cvp)->cv_mtx == (mp),				\ 		    ("%s: Multiple mutexes", __FUNCTION__));		\ 	}								\ } while (0)
+value|\ 		KASSERT((cvp)->cv_mtx == (mp),				\ 		    ("%s: Multiple mutexes", __func__));		\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -139,7 +139,7 @@ name|CV_SIGNAL_VALIDATE
 parameter_list|(
 name|cvp
 parameter_list|)
-value|do {					\ 	if (!TAILQ_EMPTY(&(cvp)->cv_waitq)) {				\ 		KASSERT(mtx_owned((cvp)->cv_mtx),			\ 		    ("%s: Mutex not owned", __FUNCTION__));		\ 	}								\ } while (0)
+value|do {					\ 	if (!TAILQ_EMPTY(&(cvp)->cv_waitq)) {				\ 		KASSERT(mtx_owned((cvp)->cv_mtx),			\ 		    ("%s: Mutex not owned", __func__));		\ 	}								\ } while (0)
 end_define
 
 begin_else
@@ -250,7 +250,7 @@ argument_list|,
 operator|(
 literal|"%s: cv_waitq non-empty"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1801,7 +1801,7 @@ argument_list|,
 operator|(
 literal|"%s: bogus wchan"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1816,7 +1816,7 @@ argument_list|,
 operator|(
 literal|"%s: not on waitq"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1988,7 +1988,7 @@ argument_list|,
 operator|(
 literal|"%s: cvp NULL"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2053,7 +2053,7 @@ argument_list|,
 operator|(
 literal|"%s: cvp NULL"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;

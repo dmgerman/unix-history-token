@@ -1518,7 +1518,7 @@ argument_list|,
 operator|(
 literal|"%s: !PKTHDR"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1779,7 +1779,7 @@ argument_list|,
 operator|(
 literal|"%s: bogus m_pkthdr.len"
 operator|,
-name|__FUNCTION__
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
