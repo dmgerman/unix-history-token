@@ -548,6 +548,17 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+name|PCMCIA_CARD2
+argument_list|(
+name|ELSA
+argument_list|,
+name|XI300_IEEE
+argument_list|,
+name|YIS_YWL11B
+argument_list|,
+literal|0
+argument_list|)
+block|,
 name|PCMCIA_CARD
 argument_list|(
 name|ELSA
