@@ -132,16 +132,6 @@ specifier|static
 name|void
 modifier|*
 name|last_stack
-init|=
-operator|(
-name|void
-operator|*
-operator|)
-name|USRSTACK
-operator|-
-name|PTHREAD_STACK_INITIAL
-operator|-
-name|PTHREAD_GUARD_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
@@ -358,6 +348,20 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|last_stack
+operator|==
+name|NULL
+condition|)
+name|last_stack
+operator|=
+name|_usrstack
+operator|-
+name|PTHREAD_STACK_INITIAL
+operator|-
+name|PTHREAD_GUARD_DEFAULT
+expr_stmt|;
 comment|/* Allocate a new stack. */
 name|stack
 operator|=
