@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -666,18 +672,18 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|char
-name|path
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
 name|exists
 decl_stmt|,
 name|first
+decl_stmt|;
+name|char
+name|path
+index|[
+name|PATH_MAX
+index|]
 decl_stmt|;
 if|if
 condition|(
