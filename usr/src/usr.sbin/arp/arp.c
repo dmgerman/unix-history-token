@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arp.c	8.1 (Berkeley) %G%"
+literal|"@(#)arp.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2507,6 +2507,7 @@ name|RTF_HOST
 expr_stmt|;
 block|}
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|RTM_GET
 case|:
