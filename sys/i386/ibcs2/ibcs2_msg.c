@@ -364,7 +364,7 @@ operator|||
 name|conv
 operator|.
 name|fd
-operator|>
+operator|>=
 name|FD_SETSIZE
 condition|)
 continue|continue;
