@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * getvfsent.c - get a listing of installed filesystems  * Written September 1994 by Garrett A. Wollman  * This file is in the public domain.  */
+comment|/*  * getvfsent.c - get a listing of installed filesystems  * Written September 1994 by Garrett A. Wollman  * This file is in the public domain.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -61,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
