@@ -419,6 +419,14 @@ literal|"Accton EN1217 10/100BaseTX"
 block|}
 block|,
 block|{
+name|DC_VENDORID_ACCTON
+block|,
+name|DC_DEVICEID_EN2242
+block|,
+literal|"Accton EN2242 MiniPCI 10/100BaseTX"
+block|}
+block|,
+block|{
 name|DC_VENDORID_XIRCOM
 block|,
 name|DC_DEVICEID_X3201
@@ -8944,6 +8952,9 @@ name|DC_DEVICEID_AN985
 case|:
 case|case
 name|DC_DEVICEID_FE2500
+case|:
+case|case
+name|DC_DEVICEID_EN2242
 case|:
 name|sc
 operator|->
