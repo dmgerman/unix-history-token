@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)patch.c	5.2 (Berkeley) %G%"
+literal|"@(#)patch.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7799,6 +7799,13 @@ operator|<
 name|p_max
 condition|)
 block|{
+name|line_beginning
+operator|=
+name|ftell
+argument_list|(
+name|pfp
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|pgets
@@ -7903,12 +7910,22 @@ name|fillcnt
 operator|=
 name|p_max
 operator|-
-name|p_end
+name|repl_beginning
 expr_stmt|;
 name|p_end
 operator|=
 name|p_max
 expr_stmt|;
+name|Fseek
+argument_list|(
+name|pfp
+argument_list|,
+name|line_beginning
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* backup the diff input */
 break|break;
 block|}
 if|if
