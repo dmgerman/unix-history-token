@@ -745,6 +745,11 @@ break|break;
 case|case
 literal|'k'
 case|:
+if|if
+condition|(
+operator|!
+name|hflag
+condition|)
 name|putenv
 argument_list|(
 literal|"BLOCKSIZE=1024"
