@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rmpproto.c,v 1.4 1997/11/24 07:33:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1812,30 +1812,6 @@ argument_list|,
 name|RMP_ADDRLEN
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/* BPF (incorrectly) wants this in host order. */
-name|rconn
-operator|->
-name|rmp
-operator|.
-name|hp_hdr
-operator|.
-name|len
-operator|=
-name|rconn
-operator|->
-name|rmplen
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|hp_hdr
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|rconn
 operator|->
 name|rmp
@@ -1857,8 +1833,6 @@ name|hp_hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 *  Reverse 802.2/HP Extended Source& Destination Access Pts. 	 */
 name|rconn
 operator|->
