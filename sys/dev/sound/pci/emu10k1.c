@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gnu/dev/sound/pci/emu10k1-alsa%diked.h>
+file|"emu10k1-alsa%diked.h"
 end_include
 
 begin_include
