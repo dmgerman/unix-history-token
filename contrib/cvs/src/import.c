@@ -959,6 +959,7 @@ expr_stmt|;
 block|}
 name|do_verify
 argument_list|(
+operator|&
 name|message
 argument_list|,
 name|repository

@@ -3612,7 +3612,8 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|message
+operator|*
+name|messagep
 operator|,
 name|char
 operator|*

@@ -2256,6 +2256,7 @@ expr_stmt|;
 comment|/* Run the user-defined script to verify/check information in 	 *the log message 	 */
 name|do_verify
 argument_list|(
+operator|&
 name|message
 argument_list|,
 operator|(
@@ -4971,6 +4972,7 @@ argument_list|)
 expr_stmt|;
 name|do_verify
 argument_list|(
+operator|&
 name|message
 argument_list|,
 name|finfo
@@ -6265,6 +6267,7 @@ argument_list|)
 expr_stmt|;
 name|do_verify
 argument_list|(
+operator|&
 name|message
 argument_list|,
 name|real_repos
