@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.33 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2568,6 +2568,18 @@ condition|(
 name|ErrMsgFile
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_SENDRECEIPT
+argument_list|,
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 block|{
 if|if
