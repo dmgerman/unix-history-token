@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)misc.c 4.1 %G%"
+literal|"@(#)misc.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1262,6 +1262,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|copy
+end_ifndef
+
 begin_expr_stmt
 name|copy
 argument_list|(
@@ -1313,6 +1319,11 @@ condition|)
 do|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Left shift a command argument list, discarding  * the first c arguments.  Used in "shift" commands  * as well as by commands like "repeat".  */
