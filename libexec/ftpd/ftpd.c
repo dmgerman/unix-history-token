@@ -5650,9 +5650,6 @@ name|void
 operator|)
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -5687,9 +5684,6 @@ argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-operator|(
-name|uid_t
-operator|)
 literal|0
 argument_list|,
 name|LOGIN_SETPRIORITY
@@ -6937,9 +6931,6 @@ name|lc
 argument_list|,
 name|pw
 argument_list|,
-operator|(
-name|uid_t
-operator|)
 literal|0
 argument_list|,
 name|LOGIN_SETLOGIN
@@ -7357,9 +7348,6 @@ if|if
 condition|(
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 name|pw
 operator|->
 name|pw_uid
@@ -8848,9 +8836,6 @@ name|void
 operator|)
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -8912,9 +8897,6 @@ name|void
 operator|)
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 name|pw
 operator|->
 name|pw_uid
@@ -9060,9 +9042,6 @@ name|void
 operator|)
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 name|pw
 operator|->
 name|pw_uid
@@ -12639,9 +12618,6 @@ name|void
 operator|)
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -12924,9 +12900,6 @@ name|void
 operator|)
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -13063,9 +13036,6 @@ name|void
 operator|)
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 name|pw
 operator|->
 name|pw_uid
@@ -13258,9 +13228,6 @@ name|void
 operator|)
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 name|pw
 operator|->
 name|pw_uid
@@ -13480,9 +13447,6 @@ name|void
 operator|)
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -13623,9 +13587,6 @@ name|void
 operator|)
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 name|pw
 operator|->
 name|pw_uid
@@ -14051,9 +14012,6 @@ name|void
 operator|)
 name|seteuid
 argument_list|(
-operator|(
-name|uid_t
-operator|)
 name|pw
 operator|->
 name|pw_uid
