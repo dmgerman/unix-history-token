@@ -168,13 +168,6 @@ name|char
 modifier|*
 name|suf
 decl_stmt|;
-name|enum
-name|zipper
-name|Zipper
-init|=
-name|GZIP
-decl_stmt|;
-comment|/* default is to compress packages */
 comment|/* Preliminary setup */
 if|if
 condition|(
