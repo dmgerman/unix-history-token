@@ -69,7 +69,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.1.1.1 $"
+empty|#ident "$Revision: 1.18 $"
 end_empty
 
 begin_include
@@ -442,7 +442,7 @@ name|fd_set
 name|ibits
 decl_stmt|;
 name|naddr
-name|p_addr
+name|p_net
 decl_stmt|,
 name|p_mask
 decl_stmt|;
@@ -461,6 +461,14 @@ name|tracename
 init|=
 literal|0
 decl_stmt|;
+comment|/* Some shells are badly broken and send SIGHUP to backgrounded 	 * processes. 	 */
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 name|openlog
 argument_list|(
 literal|"routed"
@@ -565,7 +573,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sqdghmAtT:F:P:"
+literal|"sqdghmpAtT:F:P:"
 argument_list|)
 operator|)
 operator|!=
@@ -705,9 +713,7 @@ case|:
 comment|/* minimal routes for SLIP */
 name|n
 operator|=
-name|HOPCNT_INFINITY
-operator|-
-literal|2
+name|FAKE_METRIC
 expr_stmt|;
 name|p
 operator|=
@@ -776,7 +782,7 @@ argument_list|(
 name|optarg
 argument_list|,
 operator|&
-name|p_addr
+name|p_net
 argument_list|,
 operator|&
 name|p_mask
@@ -805,12 +811,9 @@ argument_list|)
 expr_stmt|;
 name|parm
 operator|.
-name|parm_addr_h
+name|parm_net
 operator|=
-name|ntohl
-argument_list|(
-name|p_addr
-argument_list|)
+name|p_net
 expr_stmt|;
 name|parm
 operator|.
@@ -1091,14 +1094,6 @@ name|sigterm
 argument_list|)
 expr_stmt|;
 comment|/* SIGHUP fatal during debugging */
-else|else
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
 name|signal
 argument_list|(
 name|SIGTERM
@@ -1342,6 +1337,11 @@ literal|1
 expr_stmt|;
 block|}
 name|set_tracelevel
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|bufinit
 argument_list|()
 expr_stmt|;
 comment|/* initialize radix tree */
@@ -1405,11 +1405,6 @@ comment|/* Ask for routes */
 name|rip_query
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|supplier
-condition|)
 name|rdisc_sol
 argument_list|()
 expr_stmt|;
@@ -1484,7 +1479,7 @@ name|tv_sec
 expr_stmt|;
 name|trace_act
 argument_list|(
-literal|"time changed by %d sec\n"
+literal|"time changed by %d sec"
 argument_list|,
 name|dt
 argument_list|)
@@ -1534,18 +1529,15 @@ name|GARBAGE_TIME
 expr_stmt|;
 comment|/* deal with interrupts that should affect tracing */
 name|set_tracelevel
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|stopint
 operator|!=
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|supplier
 condition|)
 block|{
 name|rip_bcast
@@ -1556,7 +1548,6 @@ expr_stmt|;
 name|rdisc_adv
 argument_list|()
 expr_stmt|;
-block|}
 name|trace_off
 argument_list|(
 literal|"exiting with signal %d\n"
@@ -2105,7 +2096,7 @@ name|tv_sec
 expr_stmt|;
 name|trace_act
 argument_list|(
-literal|"SIGALRM\n"
+literal|"SIGALRM"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2384,6 +2375,48 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_PASSIFNAME
+name|on
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|sock
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_PASSIFNAME
+argument_list|,
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|msglog
+argument_list|(
+literal|"setsockopt(%s,SO_PASSIFNAME): %s"
+argument_list|,
+name|name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|rbuf
@@ -2467,7 +2500,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"RCVBUF=%d\n"
+literal|"RCVBUF=%d"
 argument_list|,
 name|rbuf
 argument_list|)
@@ -2721,7 +2754,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"turn off RIP\n"
+literal|"turn off RIP"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2759,18 +2792,18 @@ if|if
 condition|(
 name|ifp
 operator|->
+name|int_state
+operator|&
+name|IS_REMOTE
+condition|)
+continue|continue;
+if|if
+condition|(
+name|ifp
+operator|->
 name|int_rip_sock
 operator|<
 literal|0
-operator|&&
-operator|!
-operator|(
-name|ifp
-operator|->
-name|int_state
-operator|&
-name|IS_ALIAS
-operator|)
 condition|)
 block|{
 name|addr
@@ -2979,7 +3012,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* If the main RIP socket is off, and it makes sense to turn it on, 	 * turn it on for all of the interfaces. 	 */
+comment|/* If the main RIP socket is off and it makes sense to turn it on, 	 * then turn it on for all of the interfaces. 	 */
 if|if
 condition|(
 name|rip_interfaces
@@ -2992,7 +3025,7 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"turn on RIP\n"
+literal|"turn on RIP"
 argument_list|)
 expr_stmt|;
 comment|/* Close all of the query sockets so that we can open 		 * the main socket.  SO_REUSEPORT is not a solution, 		 * since that would let two daemons bind to the broadcast 		 * socket. 		 */
@@ -3094,22 +3127,11 @@ operator|->
 name|int_next
 control|)
 block|{
-if|if
-condition|(
-operator|!
-name|IS_RIP_IN_OFF
-argument_list|(
 name|ifp
 operator|->
-name|int_state
-argument_list|)
-condition|)
-name|ifp
-operator|->
-name|int_state
-operator|&=
-operator|~
-name|IS_RIP_QUERIED
+name|int_query_time
+operator|=
+name|NEVER
 expr_stmt|;
 name|rip_mcast_on
 argument_list|(
@@ -3125,9 +3147,6 @@ name|now
 operator|.
 name|tv_sec
 expr_stmt|;
-name|fix_select
-argument_list|()
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -3136,20 +3155,20 @@ name|ifp
 operator|!=
 literal|0
 operator|&&
-name|ifp
-operator|->
-name|int_rip_sock
-operator|<
-literal|0
-operator|&&
 operator|!
 operator|(
 name|ifp
 operator|->
 name|int_state
 operator|&
-name|IS_ALIAS
+name|IS_REMOTE
 operator|)
+operator|&&
+name|ifp
+operator|->
+name|int_rip_sock
+operator|<
+literal|0
 condition|)
 block|{
 comment|/* RIP is off, so ensure there are sockets on which 		 * to listen for queries. 		 */
@@ -3166,10 +3185,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|fix_select
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3409,6 +3428,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* put a message into the system log  */
+end_comment
+
 begin_function
 name|void
 name|msglog
@@ -3465,6 +3488,139 @@ argument_list|,
 name|ftrace
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vfprintf
+argument_list|(
+name|ftrace
+argument_list|,
+name|p
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|ftrace
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Put a message about a bad router into the system log if  * we have not complained about it recently.  */
+end_comment
+
+begin_function
+name|void
+name|msglim
+parameter_list|(
+name|struct
+name|msg_limit
+modifier|*
+name|lim
+parameter_list|,
+name|naddr
+name|addr
+parameter_list|,
+name|char
+modifier|*
+name|p
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|args
+decl_stmt|;
+name|char
+modifier|*
+name|p1
+decl_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lim
+operator|->
+name|addr
+operator|!=
+name|addr
+operator|||
+name|lim
+operator|->
+name|until
+operator|<=
+name|now
+operator|.
+name|tv_sec
+condition|)
+block|{
+name|lim
+operator|->
+name|addr
+operator|=
+name|addr
+expr_stmt|;
+name|lim
+operator|->
+name|until
+operator|=
+name|now
+operator|.
+name|tv_sec
+operator|+
+literal|60
+operator|*
+literal|60
+expr_stmt|;
+name|trace_flush
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|p1
+operator|=
+name|p
+init|;
+operator|*
+name|p1
+operator|==
+literal|' '
+condition|;
+name|p1
+operator|++
+control|)
+continue|continue;
+name|vsyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|p1
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ftrace
+operator|!=
+literal|0
+condition|)
+block|{
 operator|(
 name|void
 operator|)
