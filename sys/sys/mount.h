@@ -1186,12 +1186,6 @@ begin_comment
 comment|/*  * Filesystem configuration information. One of these exists for each  * type of filesystem supported by the kernel. These are searched at  * mount time to identify the requested filesystem.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_struct
 struct|struct
 name|vfsconf
@@ -1236,15 +1230,6 @@ comment|/* next in list */
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
 
 begin_comment
 comment|/* Userland version of the struct vfsconf. */
