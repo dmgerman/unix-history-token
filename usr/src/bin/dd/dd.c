@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dd.c	4.8 (Berkeley) %G%"
+literal|"@(#)dd.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1932,6 +1932,10 @@ name|unblock
 argument_list|()
 decl_stmt|;
 name|int
+name|stats
+parameter_list|()
+function_decl|;
+name|int
 name|a
 decl_stmt|;
 name|conv
@@ -2586,6 +2590,13 @@ argument_list|(
 name|SIGINT
 argument_list|,
 name|term
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINFO
+argument_list|,
+name|stats
 argument_list|)
 expr_stmt|;
 if|if
