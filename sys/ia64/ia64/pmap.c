@@ -2037,7 +2037,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* 	 * Reserve some memory for allocating pvs while bootstrapping 	 * the pv allocator. We need to have enough to cover mapping 	 * the kmem_alloc region used to allocate the initial_pvs in 	 * pmap_init. In general, the size of this region is 	 * appoximately (# physical pages) * (size of pv entry). 	 */
+comment|/* 	 * Reserve some memory for allocating pvs while bootstrapping 	 * the pv allocator. We need to have enough to cover mapping 	 * the kmem_alloc region used to allocate the initial_pvs in 	 * pmap_init. In general, the size of this region is 	 * approximately (# physical pages) * (size of pv entry). 	 */
 end_comment
 
 begin_expr_stmt
