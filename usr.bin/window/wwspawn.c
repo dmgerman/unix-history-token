@@ -41,7 +41,7 @@ file|<signal.h>
 end_include
 
 begin_comment
-comment|/*  * There is a dead lock with vfork and closing of pseudo-ports.  * So we have to be sneaky about error reporting.  */
+comment|/*  * There is a dead lock with fork and closing of pseudo-ports.  * So we have to be sneaky about error reporting.  */
 end_comment
 
 begin_expr_stmt
@@ -106,7 +106,7 @@ switch|switch
 condition|(
 name|pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 condition|)
 block|{
