@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	8.6 (Berkeley) %G%"
+literal|"@(#)newfs.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,6 +195,8 @@ index|[]
 init|=
 block|{
 name|MOPT_STDOPTS
+block|,
+name|MOPT_ASYNC
 block|,
 block|{
 name|NULL
@@ -695,6 +697,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|mntflags
+init|=
+name|MNT_ASYNC
 decl_stmt|;
 end_decl_stmt
 
@@ -896,7 +900,7 @@ name|opstring
 operator|=
 name|mfs
 condition|?
-literal|"Na:b:c:d:e:f:i:m:o:s:"
+literal|"NT:a:b:c:d:e:f:i:m:o:s:"
 else|:
 literal|"NOS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:x:"
 expr_stmt|;
