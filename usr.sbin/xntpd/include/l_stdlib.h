@@ -261,25 +261,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|bcopy
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|dup2
 name|P
@@ -414,6 +395,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|bcopy
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -449,6 +449,25 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|bcmp
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|bcopy
 name|P
 argument_list|(
 operator|(
@@ -978,6 +997,16 @@ begin_comment
 comment|/* these are builtins */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NTP_NEED_BOPS
+end_ifndef
+
+begin_comment
+comment|/* but may be emulated by bops */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|char
@@ -1003,6 +1032,11 @@ name|memcmp
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1981,25 +2015,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|bcopy
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
 name|bzero
 name|P
 argument_list|(
@@ -2298,6 +2313,36 @@ end_endif
 
 begin_comment
 comment|/* VAX */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_DOMAINOS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|getpass
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYS_DOMAINOS */
 end_comment
 
 begin_endif

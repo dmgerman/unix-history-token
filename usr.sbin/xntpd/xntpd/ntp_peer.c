@@ -1543,13 +1543,15 @@ name|peer_free_count
 operator|--
 expr_stmt|;
 comment|/* 	 * Initialize the structure.  This stuff is sort of part of 	 * the receive procedure and part of the clear procedure rolled 	 * into one. 	 * 	 * Zero the whole thing for now.  We might be pickier later. 	 */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|peer
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

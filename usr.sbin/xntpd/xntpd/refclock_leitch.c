@@ -124,7 +124,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|STREAM
+name|HAVE_TERMIOS
 argument_list|)
 end_if
 
@@ -133,6 +133,17 @@ include|#
 directive|include
 file|<termios.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STREAM
+end_ifdef
 
 begin_include
 include|#
@@ -692,7 +703,7 @@ name|void
 name|leitch_init
 parameter_list|()
 block|{
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -700,19 +711,23 @@ operator|*
 operator|)
 name|leitchunits
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|leitchunits
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|unitinuse
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1178,13 +1193,15 @@ index|[
 name|unit
 index|]
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|leitch
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1319,9 +1336,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|STREAM
+name|HAVE_TERMIOS
 argument_list|)
-comment|/* 	 * POSIX/STREAMS serial line parameters (termios interface) 	 * 	 * The LEITCHCLK option provides timestamping at the driver level.  	 * It requires the tty_clk streams module. 	 * 	 * The LEITCHPPS option provides timestamping at the driver level. 	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the ppsclock streams module and SunOS 4.1.1 or 	 * later. 	 */
+comment|/* 	 * POSIX serial line parameters (termios interface) 	 * 	 * The LEITCHCLK option provides timestamping at the driver level.  	 * It requires the tty_clk streams module. 	 * 	 * The LEITCHPPS option provides timestamping at the driver level. 	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the ppsclock streams module and SunOS 4.1.1 or 	 * later. 	 */
 block|{
 name|struct
 name|termios
@@ -1462,6 +1479,13 @@ goto|goto
 name|screwed
 goto|;
 block|}
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_TERMIOS */
+ifdef|#
+directive|ifdef
+name|STREAM
 if|#
 directive|if
 name|defined
@@ -1551,7 +1575,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LEITCHPPS */
-block|}
 endif|#
 directive|endif
 comment|/* STREAM */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/kernel/parsetest.c,v 3.4 1993/03/17 17:16:57 kardel Exp  *  * parsetest.c,v 3.4 1993/03/17 17:16:57 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * parsetest.c,v  * Revision 3.4  1993/03/17  17:16:57  kardel  * DEC OSF/1 ALPHA Integration - 930314  *  * Revision 3.3  1993/01/18  09:24:33  kardel  * updated copyright conditions in conjunction with  * conditions set up in the COPYRIGHT file  *  * Revision 3.2  1993/01/17  13:43:00  kardel  * 1993 initial update  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/kernel/parsetest.c,v 3.4 1993/03/17 17:16:57 kardel Exp  *  * parsetest.c,v 3.10 1994/01/23 17:22:18 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * parsetest.c,v  * Revision 3.4  1993/03/17  17:16:57  kardel  * DEC OSF/1 ALPHA Integration - 930314  *  * Revision 3.3  1993/01/18  09:24:33  kardel  * updated copyright conditions in conjunction with  * conditions set up in the COPYRIGHT file  *  * Revision 3.2  1993/01/17  13:43:00  kardel  * 1993 initial update  *  */
 end_comment
 
 begin_ifndef
@@ -673,7 +673,7 @@ name|strioc
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"parsetest.c,v 3.9 1993/10/10 21:18:49 kardel Exp\n"
+literal|"parsetest.c,v 3.10 1994/01/23 17:22:18 kardel Exp\n"
 argument_list|)
 expr_stmt|;
 while|while

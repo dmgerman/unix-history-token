@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* getopt.c,v 3.1 1993/07/06 01:08:18 jbj Exp  * getopt - get option letter from argv  *  * This is a version of the public domain getopt() implementation by  * Henry Spencer, changed for 4.3BSD compatibility (in addition to System V).  * It allows rescanning of an option list by setting optind to 0 before  * calling.  Thanks to Dennis Ferguson for the appropriate modifications.  *  * This file is in the Public Domain.  */
+comment|/* getopt.c,v 3.1 1993/07/06 01:08:18 jbj Exp  * getopt - get option letter from argv  *  * This is a version of the public domain getopt() implementation by  * Henry Spencer, changed for 4.3BSD compatibility (in addition to System V).  * It allows rescanning of an option list by setting optind to 0 before  * calling, which is why we use it even if the system has its own (in fact,  * this one has a unique name so as not to conflict with the system's).  * Thanks to Dennis Ferguson for the appropriate modifications.  *  * This file is in the Public Domain.  */
 end_comment
 
 begin_comment
@@ -50,7 +50,7 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|optarg
+name|ntp_optarg
 decl_stmt|;
 end_decl_stmt
 
@@ -58,15 +58,9 @@ begin_comment
 comment|/* Global argument pointer. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__convex__
-end_ifndef
-
 begin_decl_stmt
 name|int
-name|optind
+name|ntp_optind
 init|=
 literal|0
 decl_stmt|;
@@ -76,48 +70,9 @@ begin_comment
 comment|/* Global argv index. */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __convex__ */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Global argv index. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __convex__ */
-end_comment
-
-begin_comment
-comment|/*  * N.B. use following at own risk  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__convex__
-end_ifndef
-
 begin_decl_stmt
 name|int
-name|opterr
+name|ntp_opterr
 init|=
 literal|1
 decl_stmt|;
@@ -127,38 +82,9 @@ begin_comment
 comment|/* for compatibility, should error be printed? */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __convex__ */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|opterr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* for compatibility, should error be printed? */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __convex__ */
-end_comment
-
 begin_decl_stmt
 name|int
-name|optopt
+name|ntp_optopt
 decl_stmt|;
 end_decl_stmt
 
@@ -180,25 +106,88 @@ begin_comment
 comment|/* Private scan pointer. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|prog
+init|=
+literal|"amnesia"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Print message about a bad option.  Watch this definition, it's  * not a single statement.  */
+comment|/*  * Print message about a bad option.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BADOPT
+begin_function
+specifier|static
+name|int
+name|badopt
 parameter_list|(
 name|mess
 parameter_list|,
 name|ch
 parameter_list|)
-value|if (opterr) { \ 					fputs(argv[0], stderr); \ 					fputs(mess, stderr); \ 					(void) putc(ch, stderr); \ 					(void) putc('\n', stderr); \ 				} \ 				return('?')
-end_define
+name|char
+modifier|*
+name|mess
+decl_stmt|;
+name|int
+name|ch
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|ntp_opterr
+condition|)
+block|{
+name|fputs
+argument_list|(
+name|prog
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+name|mess
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+name|ch
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|'?'
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|int
-name|getopt_l
+name|ntp_getopt
 parameter_list|(
 name|argc
 parameter_list|,
@@ -228,13 +217,20 @@ name|char
 modifier|*
 name|place
 decl_stmt|;
-name|optarg
+name|prog
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|ntp_optarg
 operator|=
 name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|optind
+name|ntp_optind
 operator|==
 literal|0
 condition|)
@@ -243,7 +239,7 @@ name|scan
 operator|=
 name|NULL
 expr_stmt|;
-name|optind
+name|ntp_optind
 operator|++
 expr_stmt|;
 block|}
@@ -261,13 +257,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|optind
+name|ntp_optind
 operator|>=
 name|argc
 operator|||
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 index|[
 literal|0
@@ -277,7 +273,7 @@ literal|'-'
 operator|||
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 index|[
 literal|1
@@ -285,14 +281,18 @@ index|]
 operator|==
 literal|'\0'
 condition|)
+block|{
 return|return
+operator|(
 name|EOF
+operator|)
 return|;
+block|}
 if|if
 condition|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 index|[
 literal|1
@@ -302,7 +302,7 @@ literal|'-'
 operator|&&
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 index|[
 literal|2
@@ -311,24 +311,24 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|optind
+name|ntp_optind
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|EOF
+operator|)
 return|;
 block|}
 name|scan
 operator|=
 name|argv
 index|[
-name|optind
+name|ntp_optind
+operator|++
 index|]
 operator|+
 literal|1
-expr_stmt|;
-name|optind
-operator|++
 expr_stmt|;
 block|}
 name|c
@@ -337,7 +337,7 @@ operator|*
 name|scan
 operator|++
 expr_stmt|;
-name|optopt
+name|ntp_optopt
 operator|=
 name|c
 operator|&
@@ -389,13 +389,16 @@ operator|==
 literal|'?'
 condition|)
 block|{
-name|BADOPT
+return|return
+operator|(
+name|badopt
 argument_list|(
 literal|": unknown option -"
 argument_list|,
 name|c
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|place
 operator|++
@@ -416,7 +419,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|optarg
+name|ntp_optarg
 operator|=
 name|scan
 expr_stmt|;
@@ -428,37 +431,40 @@ block|}
 elseif|else
 if|if
 condition|(
-name|optind
+name|ntp_optind
 operator|>=
 name|argc
 condition|)
 block|{
-name|BADOPT
+return|return
+operator|(
+name|badopt
 argument_list|(
 literal|": option requires argument -"
 argument_list|,
 name|c
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 else|else
 block|{
-name|optarg
+name|ntp_optarg
 operator|=
 name|argv
 index|[
-name|optind
-index|]
-expr_stmt|;
-name|optind
+name|ntp_optind
 operator|++
+index|]
 expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|c
 operator|&
 literal|0377
+operator|)
 return|;
 block|}
 end_function

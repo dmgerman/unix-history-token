@@ -21,7 +21,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/parse.c,v 3.17 1993/11/11 11:20:29 kardel Exp  *    * parse.c,v 3.17 1993/11/11 11:20:29 kardel Exp  *  * Parser module for reference clock  *  * PARSEKERNEL define switches between two personalities of the module  * if PARSEKERNEL is defined this module can be used with dcf77sync.c as  * a PARSEKERNEL kernel module. In this case the time stamps will be  * a struct timeval.  * when PARSEKERNEL is not defined NTP time stamps will be used.  *  * Copyright (c) 1992,1993  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/parse.c,v 3.19 1994/01/25 19:05:20 kardel Exp  *    * parse.c,v 3.19 1994/01/25 19:05:20 kardel Exp  *  * Parser module for reference clock  *  * PARSEKERNEL define switches between two personalities of the module  * if PARSEKERNEL is defined this module can be used with dcf77sync.c as  * a PARSEKERNEL kernel module. In this case the time stamps will be  * a struct timeval.  * when PARSEKERNEL is not defined NTP time stamps will be used.  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_if
@@ -47,7 +47,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"parse.c,v 3.17 1993/11/11 11:20:29 kardel Exp"
+literal|"parse.c,v 3.19 1994/01/25 19:05:20 kardel Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,25 +77,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_fp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_unixtime.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_calendar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"parse.h"
+file|"ntp_machine.h"
 end_include
 
 begin_if
@@ -125,35 +107,107 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Sorry, but in SunOS 4.x kernels there are no  * mem* operations. I don't want them - bcopy, bzero  * are fine in the kernel  */
+comment|/*  * Sorry, but in SunOS 4.x AND Solaris 2.x kernels there are no  * mem* operations. I don't want them - bcopy, bzero  * are fine in the kernel  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NTP_NEED_BOPS
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ntp_string_h
+name|NTP_NEED_BOPS
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|bcopy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|bzero
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NTP_NEED_BOPS
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|bzero
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|bzero
+parameter_list|(
+name|_X_
+parameter_list|,
+name|_Y_
+parameter_list|)
+value|memset(_X_, 0, _Y_)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bcopy
+parameter_list|(
+name|_X_
+parameter_list|,
+name|_Y_
+parameter_list|,
+name|_Z_
+parameter_list|)
+value|memmove(_Y_, _X_, _Z_)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"ntp_fp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_unixtime.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_calendar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"parse.h"
+end_include
 
 begin_include
 include|#
@@ -4777,7 +4831,7 @@ comment|/* defined(REFCLOCK)&& defined(PARSE) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * parse.c,v  * Revision 3.17  1993/11/11  11:20:29  kardel  * declaration fixes  *  * Revision 3.16  1993/11/06  22:26:07  duwe  * Linux cleanup after config change  *  * Revision 3.15  1993/11/04  11:14:18  kardel  * ansi/K&R traps  *  * Revision 3.14  1993/11/04  10:03:28  kardel  * disarmed ansiism  *  * Revision 3.13  1993/11/01  20:14:13  kardel  * useless comparision removed  *  * Revision 3.12  1993/11/01  20:00:22  kardel  * parse Solaris support (initial version)  *  * Revision 3.11  1993/10/30  09:41:25  kardel  * minor optimizations  *  * Revision 3.10  1993/10/22  14:27:51  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.9  1993/10/05  23:15:09  kardel  * more STREAM protection  *  * Revision 3.8  1993/09/27  21:08:00  kardel  * utcoffset now in seconds  *  * Revision 3.7  1993/09/26  23:40:16  kardel  * new parse driver logic  *  * Revision 3.6  1993/09/07  10:12:46  kardel  * September 7th reconcilation - 3.2 (alpha)  *  * Revision 3.5  1993/09/01  21:44:48  kardel  * conditional cleanup  *  * Revision 3.4  1993/08/27  00:29:39  kardel  * compilation cleanup  *  * Revision 3.3  1993/08/24  22:27:13  kardel  * cleaned up AUTOCONF DCF77 mess 8-) - wasn't too bad  *  * Revision 3.2  1993/07/09  11:37:11  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:08  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * parse.c,v  * Revision 3.19  1994/01/25  19:05:20  kardel  * 94/01/23 reconcilation  *  * Revision 3.18  1994/01/23  17:21:59  kardel  * 1994 reconcilation  *  * Revision 3.17  1993/11/11  11:20:29  kardel  * declaration fixes  *  * Revision 3.16  1993/11/06  22:26:07  duwe  * Linux cleanup after config change  *  * Revision 3.15  1993/11/04  11:14:18  kardel  * ansi/K&R traps  *  * Revision 3.14  1993/11/04  10:03:28  kardel  * disarmed ansiism  *  * Revision 3.13  1993/11/01  20:14:13  kardel  * useless comparision removed  *  * Revision 3.12  1993/11/01  20:00:22  kardel  * parse Solaris support (initial version)  *  * Revision 3.11  1993/10/30  09:41:25  kardel  * minor optimizations  *  * Revision 3.10  1993/10/22  14:27:51  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.9  1993/10/05  23:15:09  kardel  * more STREAM protection  *  * Revision 3.8  1993/09/27  21:08:00  kardel  * utcoffset now in seconds  *  * Revision 3.7  1993/09/26  23:40:16  kardel  * new parse driver logic  *  * Revision 3.6  1993/09/07  10:12:46  kardel  * September 7th reconcilation - 3.2 (alpha)  *  * Revision 3.5  1993/09/01  21:44:48  kardel  * conditional cleanup  *  * Revision 3.4  1993/08/27  00:29:39  kardel  * compilation cleanup  *  * Revision 3.3  1993/08/24  22:27:13  kardel  * cleaned up AUTOCONF DCF77 mess 8-) - wasn't too bad  *  * Revision 3.2  1993/07/09  11:37:11  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:08  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

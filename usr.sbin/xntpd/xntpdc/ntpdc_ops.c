@@ -3384,8 +3384,10 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|junk
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -3394,8 +3396,6 @@ operator|&
 name|pp
 operator|->
 name|refid
-argument_list|,
-name|junk
 argument_list|,
 literal|4
 argument_list|)
@@ -5719,8 +5719,10 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|junk
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -5729,8 +5731,6 @@ operator|&
 name|is
 operator|->
 name|refid
-argument_list|,
-name|junk
 argument_list|,
 literal|4
 argument_list|)
@@ -12615,7 +12615,7 @@ name|err
 operator|=
 literal|0
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -12623,6 +12623,8 @@ operator|*
 operator|)
 operator|&
 name|fudgedata
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|fudgedata

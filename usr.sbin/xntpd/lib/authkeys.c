@@ -427,13 +427,15 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* 	 * Initialize hash table and free list 	 */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|key_hash
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|key_hash

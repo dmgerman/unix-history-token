@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_dcf7000.c,v 3.8 1993/10/30 09:44:35 kardel Exp  *    * clk_dcf7000.c,v 3.8 1993/10/30 09:44:35 kardel Exp  *  * ELV DCF7000 module  *  * Copyright (c) 1992,1993  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_dcf7000.c,v 3.10 1994/01/25 19:05:07 kardel Exp  *    * clk_dcf7000.c,v 3.10 1994/01/25 19:05:07 kardel Exp  *  * ELV DCF7000 module  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_include

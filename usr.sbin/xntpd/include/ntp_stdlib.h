@@ -498,7 +498,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|getopt_l
+name|ntp_getopt
 name|P
 argument_list|(
 operator|(

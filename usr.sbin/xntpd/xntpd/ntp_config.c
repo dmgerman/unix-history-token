@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_config.c,v 3.1 1993/07/06 01:11:12 jbj Exp  * ntp_config.c - read and apply configuration information  */
+comment|/*  * ntp_config.c - read and apply configuration information  */
 end_comment
 
 begin_define
@@ -347,6 +347,13 @@ define|#
 directive|define
 name|CONFIG_LOGFILE
 value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONFIG_SETVAR
+value|27
 end_define
 
 begin_define
@@ -817,6 +824,12 @@ block|{
 literal|"logfile"
 block|,
 name|CONFIG_LOGFILE
+block|}
+block|,
+block|{
+literal|"setvar"
+block|,
+name|CONFIG_SETVAR
 block|}
 block|,
 block|{
@@ -1442,7 +1455,7 @@ name|char
 modifier|*
 name|xntp_options
 init|=
-literal|"abc:de:f:k:l:p:r:s:t:"
+literal|"abc:de:f:k:l:p:r:s:t:v:V:"
 decl_stmt|;
 end_decl_stmt
 
@@ -1639,14 +1652,14 @@ name|c
 decl_stmt|;
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 decl_stmt|;
 name|debug
 operator|=
 literal|0
 expr_stmt|;
 comment|/* no debugging by default */
-comment|/* 	 * This is a big hack.  We don't really want to read command line 	 * configuration until everything else is initialized, since 	 * the ability to configure the system may depend on storage 	 * and the like having been initialized.  Except that we also 	 * don't want to initialize anything until after detaching from 	 * the terminal, but we won't know to do that until we've 	 * parsed the command line.  Do that now, crudely, and do it 	 * again later.  Our getopt_l() is explicitly reusable, by the 	 * way.  Your own mileage may vary. 	 */
+comment|/* 	 * This is a big hack.  We don't really want to read command line 	 * configuration until everything else is initialized, since 	 * the ability to configure the system may depend on storage 	 * and the like having been initialized.  Except that we also 	 * don't want to initialize anything until after detaching from 	 * the terminal, but we won't know to do that until we've 	 * parsed the command line.  Do that now, crudely, and do it 	 * again later.  Our ntp_getopt() is explicitly reusable, by the 	 * way.  Your own mileage may vary. 	 */
 name|errflg
 operator|=
 literal|0
@@ -1664,7 +1677,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getopt_l
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -1702,7 +1715,7 @@ if|if
 condition|(
 name|errflg
 operator|||
-name|optind
+name|ntp_optind
 operator|!=
 name|argc
 condition|)
@@ -1714,9 +1727,39 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [ -bd ] [ -c config_file ]\n"
+literal|"usage: %s [ -abd ] [ -c config_file ] [ -e encryption delay ]\n"
 argument_list|,
 name|progname
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t\t[ -f frequency file ] [ -k key file ] [ -l log file ]\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t\t[ -p pid file ] [ -r broadcast delay ] [ -s status directory ]\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t\t[ -t trusted key ] [ -v sys variable ] [ -V default sys variable ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1725,11 +1768,11 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-name|optind
+name|ntp_optind
 operator|=
 literal|0
 expr_stmt|;
-comment|/* reset optind to restart getopt_l */
+comment|/* reset ntp_optind to restart ntp_getopt */
 if|if
 condition|(
 name|debug
@@ -1895,12 +1938,17 @@ index|]
 argument_list|;
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 argument_list|;
 specifier|extern
 name|char
 operator|*
-name|optarg
+name|ntp_optarg
+argument_list|;
+specifier|extern
+name|char
+operator|*
+name|Version
 argument_list|;
 specifier|extern
 name|U_LONG
@@ -1946,6 +1994,33 @@ name|have_keyfile
 operator|=
 literal|0
 argument_list|;
+comment|/* 	 * install a non default variable with this daemon version 	 */
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"daemon_version=\"%s\""
+argument_list|,
+name|Version
+argument_list|)
+argument_list|;
+name|set_sys_var
+argument_list|(
+name|line
+argument_list|,
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|RO
+argument_list|)
+argument_list|;
 ifdef|#
 directive|ifdef
 name|RESOLVE_INTERNAL
@@ -1961,7 +2036,7 @@ operator|(
 operator|(
 name|c
 operator|=
-name|getopt_l
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -2012,7 +2087,7 @@ literal|'c'
 case|:
 name|config_file
 operator|=
-name|optarg
+name|ntp_optarg
 expr_stmt|;
 break|break;
 case|case
@@ -2046,7 +2121,7 @@ condition|(
 operator|!
 name|atolfp
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|,
 operator|&
 name|tmp
@@ -2059,7 +2134,7 @@ name|LOG_ERR
 argument_list|,
 literal|"command line encryption delay value %s undecodable"
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 name|errflg
@@ -2082,7 +2157,7 @@ name|LOG_ERR
 argument_list|,
 literal|"command line encryption delay value %s is unlikely"
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 name|errflg
@@ -2127,7 +2202,7 @@ name|stats_config
 argument_list|(
 name|STATS_FREQ_FILE
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2145,7 +2220,7 @@ end_case
 begin_expr_stmt
 name|getauthkeys
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2158,7 +2233,7 @@ name|int
 operator|)
 name|strlen
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|)
 operator|>=
 name|MAXFILENAME
@@ -2187,7 +2262,7 @@ name|strcpy
 argument_list|(
 name|keyfile
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 block|}
@@ -2208,7 +2283,7 @@ name|stats_config
 argument_list|(
 name|STATS_PID_FILE
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2234,7 +2309,7 @@ condition|(
 operator|!
 name|atolfp
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|,
 operator|&
 name|tmp
@@ -2247,7 +2322,7 @@ name|LOG_ERR
 argument_list|,
 literal|"command line broadcast delay value %s undecodable"
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 block|}
@@ -2267,7 +2342,7 @@ name|LOG_ERR
 argument_list|,
 literal|"command line broadcast delay value %s is unlikely"
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 block|}
@@ -2306,7 +2381,7 @@ name|stats_config
 argument_list|(
 name|STATS_STATSDIR
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2331,7 +2406,7 @@ name|tkey
 operator|=
 name|atoi
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 if|if
@@ -2351,7 +2426,7 @@ name|LOG_ERR
 argument_list|,
 literal|"command line trusted key %s is unlikely"
 argument_list|,
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 block|}
@@ -2380,6 +2455,51 @@ begin_break
 break|break;
 end_break
 
+begin_case
+case|case
+literal|'v'
+case|:
+end_case
+
+begin_case
+case|case
+literal|'V'
+case|:
+end_case
+
+begin_expr_stmt
+name|set_sys_var
+argument_list|(
+name|ntp_optarg
+argument_list|,
+name|strlen
+argument_list|(
+name|ntp_optarg
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|RW
+operator||
+operator|(
+operator|(
+name|c
+operator|==
+literal|'V'
+operator|)
+condition|?
+name|DEF
+else|:
+literal|0
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_break
+break|break;
+end_break
+
 begin_default
 default|default:
 end_default
@@ -2400,7 +2520,7 @@ if|if
 condition|(
 name|errflg
 operator|||
-name|optind
+name|ntp_optind
 operator|!=
 name|argc
 condition|)
@@ -4716,7 +4836,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -4724,6 +4844,8 @@ operator|*
 operator|)
 operator|&
 name|clock
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|clock
@@ -5713,6 +5835,75 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|CONFIG_SETVAR
+case|:
+if|if
+condition|(
+name|ntokens
+operator|<
+literal|2
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"no value for setvar command - line ignored"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|set_sys_var
+argument_list|(
+name|tokens
+index|[
+literal|1
+index|]
+argument_list|,
+name|strlen
+argument_list|(
+name|tokens
+index|[
+literal|1
+index|]
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|RW
+operator||
+operator|(
+operator|(
+operator|(
+operator|(
+name|ntokens
+operator|>
+literal|2
+operator|)
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|tokens
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"default"
+argument_list|)
+operator|)
+operator|)
+condition|?
+name|DEF
+else|:
+literal|0
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 block|}
 block|}
 end_while
@@ -5883,6 +6074,12 @@ specifier|register
 name|int
 name|ntok
 decl_stmt|;
+specifier|register
+name|int
+name|quoted
+init|=
+literal|0
+decl_stmt|;
 comment|/* 	 * Find start of first token 	 */
 name|again
 label|:
@@ -5979,15 +6176,26 @@ operator|*
 name|cp
 argument_list|)
 operator|&&
+operator|(
 operator|!
 name|ISSPACE
 argument_list|(
 operator|*
 name|cp
 argument_list|)
+operator|||
+name|quoted
+operator|)
 condition|)
+name|quoted
+operator|^=
+operator|(
+operator|*
 name|cp
 operator|++
+operator|==
+literal|'"'
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -6390,13 +6598,15 @@ literal|0
 return|;
 block|}
 comment|/* 	 * make up socket address.  Clear it out for neatness. 	 */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|addr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

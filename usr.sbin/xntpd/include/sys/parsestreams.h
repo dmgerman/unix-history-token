@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/include/sys/parsestreams.h,v 3.9 1993/11/01 19:59:57 kardel Exp  *  * parsestreams.h,v 3.9 1993/11/01 19:59:57 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                     * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/include/sys/parsestreams.h,v 3.11 1994/01/25 19:04:30 kardel Exp  *  * parsestreams.h,v 3.11 1994/01/25 19:04:30 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                     * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_if
@@ -26,7 +26,7 @@ name|char
 name|parse77hrcsid
 index|[]
 init|=
-literal|"parsestreams.h,v 3.9 1993/11/01 19:59:57 kardel Exp"
+literal|"parsestreams.h,v 3.11 1994/01/25 19:04:30 kardel Exp"
 decl_stmt|;
 end_decl_stmt
 

@@ -884,7 +884,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CS_VERSION
+name|CS_VARLIST
 value|20
 end_define
 
@@ -892,7 +892,7 @@ begin_define
 define|#
 directive|define
 name|CS_MAXCODE
-value|CS_VERSION
+value|CS_VARLIST
 end_define
 
 begin_comment
@@ -1147,8 +1147,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|CP_VARLIST
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
 name|CP_MAXCODE
-value|CP_DISP
+value|CP_VARLIST
 end_define
 
 begin_comment
@@ -1242,8 +1249,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|CC_VARLIST
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
 name|CC_MAXCODE
-value|CC_DEVICE
+value|CC_VARLIST
 end_define
 
 begin_comment

@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_rawdcf.c,v 3.7 1993/10/30 09:44:41 kardel Exp  *    * clk_rawdcf.c,v 3.7 1993/10/30 09:44:41 kardel Exp  *  * Raw DCF77 pulse clock support  *  * Copyright (c) 1992,1993  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_rawdcf.c,v 3.9 1994/01/25 19:05:12 kardel Exp  *    * clk_rawdcf.c,v 3.9 1994/01/25 19:05:12 kardel Exp  *  * Raw DCF77 pulse clock support  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_include
@@ -2032,9 +2032,8 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+operator|!
 name|status
-operator|==
-name|SYNC_ONE
 condition|)
 block|{
 name|parseio
@@ -2299,7 +2298,7 @@ comment|/* defined(PARSE)&& defined(CLOCK_RAWDCF) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_rawdcf.c,v  * Revision 3.7  1993/10/30  09:44:41  kardel  * conditional compilation flag cleanup  *  * Revision 3.6  1993/10/03  19:10:45  kardel  * restructured I/O handling  *  * Revision 3.5  1993/09/27  21:08:07  kardel  * utcoffset now in seconds  *  * Revision 3.4  1993/09/26  23:40:25  kardel  * new parse driver logic  *  * Revision 3.3  1993/09/01  21:44:54  kardel  * conditional cleanup  *  * Revision 3.2  1993/07/09  11:37:18  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:19  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * clk_rawdcf.c,v  * Revision 3.9  1994/01/25  19:05:12  kardel  * 94/01/23 reconcilation  *  * Revision 3.8  1994/01/22  11:24:11  kardel  * fixed PPS handling  *  * Revision 3.7  1993/10/30  09:44:41  kardel  * conditional compilation flag cleanup  *  * Revision 3.6  1993/10/03  19:10:45  kardel  * restructured I/O handling  *  * Revision 3.5  1993/09/27  21:08:07  kardel  * utcoffset now in seconds  *  * Revision 3.4  1993/09/26  23:40:25  kardel  * new parse driver logic  *  * Revision 3.3  1993/09/01  21:44:54  kardel  * conditional cleanup  *  * Revision 3.2  1993/07/09  11:37:18  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:19  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

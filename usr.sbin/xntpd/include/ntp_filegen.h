@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntp_filegen.h,v 3.6 1993/09/01 21:51:24 kardel Exp  *  * definitions for NTP file generations support  *  *  * Copyright (c) 1992  * Rainer Pruy Friedrich-Alexander Unuiversitaet Erlangen-Nuernberg  *  * This code may be modified and used freely  * provided the credits remain intact.  */
+comment|/*  * ntp_filegen.h,v 3.7 1994/01/25 19:04:16 kardel Exp  *  * definitions for NTP file generations support  *  *  * Copyright (c) 1992  * Rainer Pruy Friedrich-Alexander Unuiversitaet Erlangen-Nuernberg  *  * This code may be modified and used freely  * provided the credits remain intact.  */
 end_comment
 
 begin_include

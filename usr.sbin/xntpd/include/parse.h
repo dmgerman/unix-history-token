@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/include/parse.h,v 3.11 1993/11/11 11:20:18 kardel Exp  *  * parse.h,v 3.11 1993/11/11 11:20:18 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/include/parse.h,v 3.13 1994/01/25 19:04:21 kardel Exp  *  * parse.h,v 3.13 1994/01/25 19:04:21 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifndef
@@ -38,7 +38,7 @@ name|char
 name|parsehrcsid
 index|[]
 init|=
-literal|"parse.h,v 3.11 1993/11/11 11:20:18 kardel Exp FAU"
+literal|"parse.h,v 3.13 1994/01/25 19:04:21 kardel Exp FAU"
 decl_stmt|;
 end_decl_stmt
 
@@ -1871,7 +1871,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * History:  *  * parse.h,v  * Revision 3.11  1993/11/11  11:20:18  kardel  * declaration fixes  *  * Revision 3.10  1993/11/01  19:59:48  kardel  * parse Solaris support (initial version)  *  * Revision 3.9  1993/10/06  00:14:57  kardel  * include fixes  *  * Revision 3.8  1993/10/05  23:15:41  kardel  * more STREAM protection  *  * Revision 3.7  1993/10/05  22:56:10  kardel  * STREAM must be defined for PARSESTREAMS  *  * Revision 3.6  1993/10/03  19:10:28  kardel  * restructured I/O handling  *  * Revision 3.5  1993/09/26  23:41:13  kardel  * new parse driver logic  *  * Revision 3.4  1993/09/01  21:46:31  kardel  * conditional cleanup  *  * Revision 3.3  1993/08/27  00:29:29  kardel  * compilation cleanup  *  * Revision 3.2  1993/07/09  11:37:05  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  09:59:12  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * parse.h,v  * Revision 3.13  1994/01/25  19:04:21  kardel  * 94/01/23 reconcilation  *  * Revision 3.12  1994/01/23  17:23:05  kardel  * 1994 reconcilation  *  * Revision 3.11  1993/11/11  11:20:18  kardel  * declaration fixes  *  * Revision 3.10  1993/11/01  19:59:48  kardel  * parse Solaris support (initial version)  *  * Revision 3.9  1993/10/06  00:14:57  kardel  * include fixes  *  * Revision 3.8  1993/10/05  23:15:41  kardel  * more STREAM protection  *  * Revision 3.7  1993/10/05  22:56:10  kardel  * STREAM must be defined for PARSESTREAMS  *  * Revision 3.6  1993/10/03  19:10:28  kardel  * restructured I/O handling  *  * Revision 3.5  1993/09/26  23:41:13  kardel  * new parse driver logic  *  * Revision 3.4  1993/09/01  21:46:31  kardel  * conditional cleanup  *  * Revision 3.3  1993/08/27  00:29:29  kardel  * compilation cleanup  *  * Revision 3.2  1993/07/09  11:37:05  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  09:59:12  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

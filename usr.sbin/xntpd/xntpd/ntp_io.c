@@ -220,40 +220,6 @@ comment|/*  * We do asynchronous input using the SIGIO facility.  A number of  *
 end_comment
 
 begin_comment
-comment|/*  * select network interfacing  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SYS_SVR4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SYS_PTX
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SYS_SINIXM
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|STREAMS_TLI
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Block the interrupt, for critical sections.  */
 end_comment
 
@@ -2537,6 +2503,9 @@ name|INADDR_ANY
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|SYS_DOMAINOS
 name|inter_list
 index|[
 name|i
@@ -2566,6 +2535,8 @@ name|flags
 operator||=
 name|INT_BCASTOPEN
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 comment|/*  * io_unsetbclient - close the broadcast client sockets  */
