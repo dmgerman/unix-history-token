@@ -227,10 +227,7 @@ name|mem_retry
 label|:
 name|buf
 operator|=
-operator|(
-name|caddr_t
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 name|buf_len
 argument_list|)
@@ -286,7 +283,7 @@ condition|(
 name|rc
 condition|)
 block|{
-name|UM_FREE
+name|free
 argument_list|(
 name|buf
 argument_list|)
@@ -385,7 +382,7 @@ name|air_opcode
 operator|=
 name|AIOCS_INF_VCC
 expr_stmt|;
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|air
 operator|.
@@ -544,7 +541,7 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * Set up and issue the IOCTL 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|req
@@ -707,7 +704,7 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * Set up and issue the IOCTL 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|req
@@ -856,12 +853,7 @@ block|}
 comment|/* 	 * Get memory for returned information 	 */
 name|nif_info
 operator|=
-operator|(
-expr|struct
-name|air_netif_rsp
-operator|*
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -914,7 +906,7 @@ expr|struct
 name|air_netif_rsp
 argument_list|)
 expr_stmt|;
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|air
 operator|.
@@ -953,7 +945,7 @@ operator|&
 name|air
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|nif_info
 argument_list|)
@@ -1030,7 +1022,7 @@ name|air_opcode
 operator|=
 name|AIOCS_INF_CFG
 expr_stmt|;
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|air
 operator|.
@@ -1142,7 +1134,7 @@ name|air_opcode
 operator|=
 name|AIOCS_INF_INT
 expr_stmt|;
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|air
 operator|.
@@ -1254,7 +1246,7 @@ name|air_opcode
 operator|=
 name|AIOCS_INF_NIF
 expr_stmt|;
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|air
 operator|.

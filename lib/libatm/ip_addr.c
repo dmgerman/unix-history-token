@@ -139,7 +139,7 @@ name|sockaddr_in
 name|sin
 decl_stmt|;
 comment|/* 	 * Get IP address of specified host name 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|sin
@@ -300,7 +300,7 @@ modifier|*
 name|ip_host
 decl_stmt|;
 comment|/* 	 * Initialize 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|host_name
 argument_list|,

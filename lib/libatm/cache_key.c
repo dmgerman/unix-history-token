@@ -158,7 +158,7 @@ name|MD5_CTX
 name|context
 decl_stmt|;
 comment|/* 	 * Initialize 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|buff
 argument_list|,
@@ -197,7 +197,7 @@ argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|ip
 argument_list|,
@@ -210,7 +210,7 @@ name|in_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|ap
 operator|->
@@ -261,7 +261,7 @@ name|context
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fold the 16-byte digest to the required length 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|(
 name|caddr_t

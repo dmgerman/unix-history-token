@@ -774,7 +774,7 @@ init|=
 literal|"0x%02x.%02x%02x%02x%02x%02x%02x%02x%02x.%02x%02x.%02x%02x.%02x%02x%02x%02x%02x%02x.%02x"
 decl_stmt|;
 comment|/* 	 * Clear the returned string 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|str
 argument_list|,
