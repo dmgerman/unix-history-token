@@ -1412,6 +1412,7 @@ operator|(
 name|XDR
 operator|*
 operator|,
+specifier|const
 name|long
 operator|*
 operator|)
@@ -1429,7 +1430,8 @@ operator|(
 name|XDR
 operator|*
 operator|,
-name|caddr_t
+name|char
+operator|*
 operator|,
 name|u_int
 operator|)
@@ -1447,7 +1449,9 @@ operator|(
 name|XDR
 operator|*
 operator|,
-name|caddr_t
+specifier|const
+name|char
+operator|*
 operator|,
 name|u_int
 operator|)
@@ -1760,14 +1764,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Advance the data stream 	 */
+operator|(
+operator|(
+name|long
+operator|*
+operator|)
 name|xdrs
 operator|->
 name|x_private
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
+operator|)
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -1791,6 +1797,7 @@ name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
+specifier|const
 name|long
 modifier|*
 name|lp
@@ -1965,14 +1972,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Advance the data stream 	 */
+operator|(
+operator|(
+name|long
+operator|*
+operator|)
 name|xdrs
 operator|->
 name|x_private
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
+operator|)
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -2128,9 +2137,15 @@ name|copy
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Update data stream controls 		 */
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|xdrs
 operator|->
 name|x_private
+operator|)
 operator|+=
 name|copy
 expr_stmt|;
@@ -2173,7 +2188,9 @@ name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
-name|caddr_t
+specifier|const
+name|char
+modifier|*
 name|addr
 decl_stmt|;
 specifier|register
@@ -2303,11 +2320,16 @@ name|copy
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Update data stream controls 		 */
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|xdrs
 operator|->
 name|x_private
-operator|+=
-name|copy
+operator|)
+operator|++
 expr_stmt|;
 name|xdrs
 operator|->

@@ -220,7 +220,7 @@ name|to
 parameter_list|,
 name|len
 parameter_list|)
-value|bcopy((void *)(from), (void *)(to),\ 						(len))
+value|bcopy((const void *)(from), (void *)(to),\ 						(len))
 end_define
 
 begin_define
