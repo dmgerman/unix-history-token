@@ -8,7 +8,7 @@ comment|/* Written by Julian Elischer (julian@dialix.oz.au)*/
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: devfsext.h,v 1.15 1997/02/22 09:44:59 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -21,76 +21,78 @@ begin_define
 define|#
 directive|define
 name|_SYS_DEVFSECT_H_
-value|1
 end_define
 
-begin_function_decl
+begin_decl_stmt
 name|void
 modifier|*
 name|devfs_add_devswf
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|void
-modifier|*
+operator|*
 name|devsw
-parameter_list|,
+operator|,
 name|int
 name|minor
-parameter_list|,
+operator|,
 name|int
 name|chrblk
-parameter_list|,
+operator|,
 name|uid_t
 name|uid
-parameter_list|,
+operator|,
 name|gid_t
 name|gid
-parameter_list|,
+operator|,
 name|int
 name|perms
-parameter_list|,
+operator|,
 name|char
-modifier|*
+operator|*
 name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 modifier|*
 name|devfs_link
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|void
-modifier|*
+operator|*
 name|original
-parameter_list|,
-comment|/* the result of a previous dev_link */
+operator|,
 name|char
-modifier|*
+operator|*
 name|fmt
-parameter_list|,
-comment|/*		or dev_add operation */
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/* remove the device the cookie represents */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 name|void
 name|devfs_remove_dev
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|void
-modifier|*
+operator|*
 name|devnmp
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -183,7 +185,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_SYS_DEVFSECT_H_*/
+comment|/* !_SYS_DEVFSECT_H_ */
 end_comment
 
 end_unit
