@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_emit.c	7.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_emit.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -573,6 +573,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* must be zero */
+case|case
+name|CC_TPDU_type
+case|:
 if|if
 condition|(
 operator|!
@@ -606,9 +609,7 @@ argument_list|(
 name|tpcb
 argument_list|)
 expr_stmt|;
-case|case
-name|CC_TPDU_type
-case|:
+comment|/* Case CC_TPDU_type used to be here */
 block|{
 name|u_char
 name|x
@@ -634,18 +635,6 @@ operator|>
 name|TP_CLASS_1
 condition|)
 block|{
-comment|/* ifdef CE_BIT, we did this in tp_input when the CR came in */
-if|if
-condition|(
-name|tpcb
-operator|->
-name|tp_cebit_off
-condition|)
-name|LOCAL_CREDIT
-argument_list|(
-name|tpcb
-argument_list|)
-expr_stmt|;
 name|tpcb
 operator|->
 name|tp_sent_uwe
