@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)xdr_subs.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)xdr_subs.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -214,7 +214,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|*(t) = *((struct timespec *)(f))
+value|*(t) = *((struct nqnfs_time *)(f))
 end_define
 
 begin_define
