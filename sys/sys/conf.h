@@ -1260,6 +1260,7 @@ operator|,
 name|int
 name|perms
 operator|,
+specifier|const
 name|char
 operator|*
 name|fmt
