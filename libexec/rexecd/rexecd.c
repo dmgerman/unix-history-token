@@ -546,7 +546,7 @@ name|char
 modifier|*
 name|pwdbuf
 decl_stmt|;
-name|int
+name|size_t
 name|pwdbuflen
 decl_stmt|;
 name|int
