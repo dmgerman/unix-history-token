@@ -1278,17 +1278,6 @@ name|bpf_d
 modifier|*
 name|d
 decl_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|p_prison
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
 name|mtx_lock
 argument_list|(
 operator|&
