@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.45	83/01/16	*/
+comment|/*	init_main.c	4.46	83/01/23	*/
 end_comment
 
 begin_include
@@ -134,28 +134,17 @@ directive|include
 file|"../h/quota.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"../sun/reg.h"
+file|"../machine/reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sun/cpu.h"
+file|"../machine/cpu.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
