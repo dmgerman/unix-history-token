@@ -770,6 +770,9 @@ name|pagesperblock
 decl_stmt|,
 name|blocksperpage
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
@@ -900,10 +903,13 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
 name|err
@@ -924,10 +930,9 @@ argument_list|,
 name|before
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK
@@ -1360,8 +1365,6 @@ decl_stmt|;
 name|int
 name|voffset
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|address
@@ -1536,8 +1539,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|vp
 operator|=
 name|object
@@ -2351,6 +2352,9 @@ name|count
 operator|*
 name|PAGE_SIZE
 decl_stmt|;
+name|int
+name|vfslocked
+decl_stmt|;
 name|vp
 operator|=
 name|object
@@ -2362,10 +2366,13 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|vfslocked
+operator|=
+name|VFS_LOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 expr_stmt|;
 name|rtval
@@ -2394,10 +2401,9 @@ literal|"vnode_pager: FS getpages not implemented\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|VFS_UNLOCK_GIANT
 argument_list|(
-operator|&
-name|Giant
+name|vfslocked
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK
@@ -2493,8 +2499,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|object
 operator|=
 name|vp
@@ -3719,8 +3723,6 @@ name|count
 operator|*
 name|PAGE_SIZE
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Force synchronous operation if we are extremely low on memory 	 * to prevent a low-memory deadlock.  VOP operations often need to 	 * allocate more memory to initiate the I/O ( i.e. do a BMAP  	 * operation ).  The swapper handles the case by limiting the amount 	 * of asynchronous I/O, but that sort of solution doesn't scale well 	 * for the vnode pager without a lot of work. 	 * 	 * Also, the backing vnode's iodone routine may not wake the pageout 	 * daemon up.  This should be probably be addressed XXX. 	 */
 if|if
 condition|(
@@ -3889,8 +3891,6 @@ decl_stmt|;
 name|int
 name|ioflags
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|object
 operator|=
 name|vp
