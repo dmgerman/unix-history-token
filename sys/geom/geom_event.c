@@ -1342,7 +1342,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* g_topology_assert_not(); */
+name|g_topology_assert_not
+argument_list|()
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|flag
