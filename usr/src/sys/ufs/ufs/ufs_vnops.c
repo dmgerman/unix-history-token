@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.48 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2132,13 +2132,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|ip
-operator|->
-name|i_mode
-operator|&=
-operator|~
-literal|07777
-expr_stmt|;
 if|if
 condition|(
 name|cred
@@ -2153,12 +2146,16 @@ operator|->
 name|v_type
 operator|!=
 name|VDIR
-condition|)
+operator|&&
 name|mode
-operator|&=
-operator|~
+operator|&
 name|ISVTX
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|EFTYPE
+operator|)
+return|;
 if|if
 condition|(
 operator|!
@@ -2170,13 +2167,24 @@ name|i_gid
 argument_list|,
 name|cred
 argument_list|)
-condition|)
+operator|&&
 name|mode
+operator|&
+name|ISGID
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+block|}
+name|ip
+operator|->
+name|i_mode
 operator|&=
 operator|~
-name|ISGID
+literal|07777
 expr_stmt|;
-block|}
 name|ip
 operator|->
 name|i_mode
