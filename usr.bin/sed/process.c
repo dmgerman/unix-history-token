@@ -2865,7 +2865,9 @@ parameter_list|(
 name|reqlen
 parameter_list|)
 define|\
-value|if (sp->len>= sp->blen - (reqlen) - 1) {			\ 		sp->blen += (reqlen) + 1024;				\ 		if ((sp->space = sp->back = realloc(sp->back, sp->blen)) \ 		    == NULL)						\ 			err(1, "realloc");				\ 		dst = sp->space + sp->len;				\ 	}
+comment|/* XXX What is the +1 for? */
+define|\
+value|if (sp->len + (reqlen) + 1>= sp->blen) {			\ 		sp->blen += (reqlen) + 1024;				\ 		if ((sp->space = sp->back = realloc(sp->back, sp->blen)) \ 		    == NULL)						\ 			err(1, "realloc");				\ 		dst = sp->space + sp->len;				\ 	}
 name|dst
 operator|=
 name|sp
