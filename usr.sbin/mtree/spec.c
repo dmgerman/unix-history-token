@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: spec.c,v 1.7 1997/10/01 06:30:02 charnier Exp $"
+literal|"$Id: spec.c,v 1.8 1998/12/16 04:54:08 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vis.h>
 end_include
 
 begin_include
@@ -590,18 +596,6 @@ name|centry
 operator|=
 name|ginfo
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|centry
-operator|->
-name|name
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|MAGIC
@@ -621,6 +615,38 @@ name|flags
 operator||=
 name|F_MAGIC
 expr_stmt|;
+if|if
+condition|(
+name|strunvis
+argument_list|(
+name|centry
+operator|->
+name|name
+argument_list|,
+name|p
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"filename %s is ill-encoded and literally used"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|centry
+operator|->
+name|name
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 name|set
 argument_list|(
 name|NULL
