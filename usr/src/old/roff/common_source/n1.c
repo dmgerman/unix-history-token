@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n1.c	4.7 %G%"
+literal|"@(#)n1.c	4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4086,7 +4086,7 @@ name|eibuf
 operator|)
 operator|&&
 operator|(
-name|ibufp
+name|eibuf
 operator|!=
 operator|(
 name|char
