@@ -25,23 +25,11 @@ directive|include
 file|"config.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|V6
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<varargs.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|V6
-end_endif
 
 begin_comment
 comment|/* global variables */
@@ -1744,20 +1732,6 @@ case|:
 name|i
 operator|=
 name|configP
-index|[
-name|chtoinx
-argument_list|(
-name|to
-argument_list|)
-index|]
-expr_stmt|;
-break|break;
-case|case
-literal|'q'
-case|:
-name|i
-operator|=
-name|configQ
 index|[
 name|chtoinx
 argument_list|(
