@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/print-ip.c,v 1.1.1.1 1993/06/12 14:42:08 rgrimes Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/print-ip.c,v 1.2 1994/09/08 02:29:12 wollman Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,6 +232,21 @@ if|if
 condition|(
 name|igmp
 operator|->
+name|igmp_code
+condition|)
+name|printf
+argument_list|(
+literal|" max delay %d"
+argument_list|,
+name|igmp
+operator|->
+name|igmp_code
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|igmp
+operator|->
 name|igmp_group
 operator|.
 name|s_addr
@@ -250,21 +265,6 @@ name|igmp
 operator|->
 name|igmp_group
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|igmp
-operator|->
-name|igmp_code
-condition|)
-name|printf
-argument_list|(
-literal|" [code %d]"
-argument_list|,
-name|igmp
-operator|->
-name|igmp_code
 argument_list|)
 expr_stmt|;
 if|if
