@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.5 (Berkeley) %G%"
+literal|"@(#)main.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,9 @@ name|init_telnet
 argument_list|()
 expr_stmt|;
 name|init_sys
+argument_list|()
+expr_stmt|;
+name|init_3270
 argument_list|()
 expr_stmt|;
 block|}
