@@ -642,6 +642,17 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* Minolta */
+block|{
+block|{
+name|USB_VENDOR_MINOLTA
+block|,
+name|USB_PRODUCT_MINOLTA_5400
+block|}
+block|,
+literal|0
+block|}
+block|,
 comment|/* Microtek */
 block|{
 block|{
