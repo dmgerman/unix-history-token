@@ -803,17 +803,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_CAN_UNBIND
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* Only temporarily bound. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TDF_SINTR
 value|0x00000008
 end_define
@@ -1214,12 +1203,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED11
+name|TDP_CAN_UNBIND
 value|0x00000800
 end_define
 
 begin_comment
-comment|/* -- available-- */
+comment|/* Only temporarily bound. */
 end_comment
 
 begin_define
@@ -1370,7 +1359,7 @@ parameter_list|(
 name|td
 parameter_list|)
 define|\
-value|(((td)->td_flags& TDF_CAN_UNBIND) == TDF_CAN_UNBIND&&	\      ((td)->td_upcall != NULL))
+value|(((td)->td_pflags& TDP_CAN_UNBIND)&&	\      ((td)->td_upcall != NULL))
 end_define
 
 begin_define
