@@ -97,12 +97,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * This is the number of hash-buckets.  Experiements with 'real-life'  * udev_t's show that a prime halfway between two powers of two works  * best.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DEVT_HASH
 value|83
 end_define
+
+begin_comment
+comment|/* The number of dev_t's we can create before malloc(9) kick in.  */
+end_comment
 
 begin_define
 define|#
