@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pps.c,v 1.1 1998/02/13 12:59:56 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -99,13 +99,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ppps.h"
+file|"pps.h"
 end_include
 
 begin_define
 define|#
 directive|define
-name|PPPPS_NAME
+name|PPS_NAME
 value|"pps"
 end_define
 
@@ -145,7 +145,7 @@ block|}
 modifier|*
 name|softc
 index|[
-name|NPPPPS
+name|NPPS
 index|]
 struct|;
 end_struct
@@ -230,7 +230,7 @@ name|pppsprobe
 block|,
 name|pppsattach
 block|,
-name|PPPPS_NAME
+name|PPS_NAME
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -309,7 +309,7 @@ name|nommap
 block|,
 name|nostrat
 block|,
-name|PPPPS_NAME
+name|PPS_NAME
 block|,
 name|NULL
 block|,
@@ -365,7 +365,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-name|PPPPS_NAME
+name|PPS_NAME
 literal|": cannot malloc!\n"
 argument_list|)
 expr_stmt|;
@@ -451,7 +451,7 @@ block|{
 comment|/* 	 * Report ourselves 	 */
 name|printf
 argument_list|(
-name|PPPPS_NAME
+name|PPS_NAME
 literal|"%d:<Pulse per second Timing Interface> on ppbus %d\n"
 argument_list|,
 name|dev
@@ -491,7 +491,7 @@ name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
-name|PPPPS_NAME
+name|PPS_NAME
 literal|"%d"
 argument_list|,
 name|dev
@@ -522,7 +522,7 @@ name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
-name|PPPPS_NAME
+name|PPS_NAME
 literal|"%d.ctl"
 argument_list|,
 name|dev
