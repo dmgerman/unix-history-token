@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1994, 1995 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *  * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: in_rmx.c,v 1.19 1995/11/14 20:34:06 phk Exp $  */
+comment|/*  * Copyright 1994, 1995 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *  * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: in_rmx.c,v 1.20 1995/12/02 19:37:56 bde Exp $  */
 end_comment
 
 begin_comment
@@ -127,11 +127,11 @@ directive|include
 file|<netinet/tcp_var.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MTUDISC
-end_ifndef
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_include
 include|#
@@ -143,10 +143,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not MTUDISC */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -346,13 +342,12 @@ name|rmx_recvpipe
 operator|=
 name|tcp_recvspace
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MTUDISC
+if|#
+directive|if
+literal|0
 comment|/* 	 * Finally, set an MTU, again duplicating logic in TCP. 	 * The in_localaddr() business will go away when we have 	 * proper PMTU discovery. 	 */
 endif|#
 directive|endif
-comment|/* not MTUDISC */
 if|if
 condition|(
 operator|!
@@ -377,41 +372,12 @@ name|rt
 operator|->
 name|rt_ifp
 condition|)
-ifndef|#
-directive|ifndef
-name|MTUDISC
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
-operator|=
-operator|(
-name|in_localaddr
-argument_list|(
-name|sin
-operator|->
-name|sin_addr
-argument_list|)
-condition|?
-name|rt
-operator|->
-name|rt_ifp
-operator|->
-name|if_mtu
-else|:
-name|tcp_mssdflt
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tcpiphdr
-argument_list|)
-operator|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+then|rt->rt_rmx.rmx_mtu = (in_localaddr(sin->sin_addr) 				      ? rt->rt_ifp->if_mtu 				      : tcp_mssdflt + sizeof(struct tcpiphdr));
 else|#
 directive|else
-comment|/* MTUDISC */
 name|rt
 operator|->
 name|rt_rmx
@@ -426,7 +392,6 @@ name|if_mtu
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* MTUDISC */
 return|return
 name|rn_addroute
 argument_list|(

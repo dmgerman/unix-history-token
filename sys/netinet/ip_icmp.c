@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_icmp.c	8.2 (Berkeley) 1/4/94  * $Id: ip_icmp.c,v 1.11 1995/11/14 20:34:12 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_icmp.c	8.2 (Berkeley) 1/4/94  * $Id: ip_icmp.c,v 1.12 1995/11/18 13:25:41 bde Exp $  */
 end_comment
 
 begin_include
@@ -1376,9 +1376,9 @@ name|icmp_ip
 operator|.
 name|ip_dst
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MTUDISC
+if|#
+directive|if
+literal|1
 comment|/* 		 * MTU discovery: 		 * If we got a needfrag and there is a host route to the 		 * original destination, and the MTU is not locked, then 		 * set the MTU in the route to the suggested new value 		 * (if given) and then notify as usual.  The ULPs will 		 * notice that the MTU has changed and adapt accordingly. 		 * If no new MTU was suggested, then we guess a new one 		 * less than the current value.  If the new MTU is  		 * unreasonably small (arbitrarily set at 296), then 		 * we reset the MTU to the interface value and enable the 		 * lock bit, indicating that we are no longer doing MTU 		 * discovery. 		 */
 if|if
 condition|(
@@ -1475,18 +1475,7 @@ operator|<
 literal|296
 condition|)
 block|{
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
-operator|=
-name|rt
-operator|->
-name|rt_ifp
-operator|->
-name|if_mtu
-expr_stmt|;
+comment|/* rt->rt_rmx.rmx_mtu = 						rt->rt_ifp->if_mtu; */
 name|rt
 operator|->
 name|rt_rmx
@@ -1530,7 +1519,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* MTUDISC */
 name|ctlfunc
 operator|=
 name|inetsw
@@ -2954,11 +2942,11 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MTUDISC
-end_ifdef
+begin_if
+if|#
+directive|if
+literal|1
+end_if
 
 begin_comment
 comment|/*  * Return the next larger or smaller MTU plateau (table from RFC 1191)  * given current value MTU.  If DIR is less than zero, a larger plateau  * is returned; otherwise, a smaller value is returned.  */
@@ -3132,10 +3120,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* MTUDISC */
-end_comment
 
 end_unit
 
