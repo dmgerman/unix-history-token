@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.30 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2205,12 +2205,27 @@ operator|&
 name|GFORMAT
 operator|)
 condition|)
+block|{
 operator|*
 name|startp
 operator|++
 operator|=
 literal|'.'
 expr_stmt|;
+while|while
+condition|(
+name|prec
+operator|--
+operator|>
+literal|0
+condition|)
+operator|*
+name|startp
+operator|++
+operator|=
+literal|'0'
+expr_stmt|;
+block|}
 operator|*
 name|startp
 operator|=
