@@ -10566,13 +10566,6 @@ block|{
 ifndef|#
 directive|ifndef
 name|DBX_FUNCTION_FIRST
-name|dbxout_really_begin_function
-argument_list|(
-name|decl
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 ifdef|#
 directive|ifdef
 name|DBX_CHECK_FUNCTION_FIRST
@@ -10583,6 +10576,13 @@ operator|(
 name|DBX_CHECK_FUNCTION_FIRST
 operator|)
 condition|)
+name|dbxout_really_begin_function
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|dbxout_really_begin_function
 argument_list|(
 name|decl
