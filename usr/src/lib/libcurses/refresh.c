@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.23 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,35 +165,6 @@ specifier|register
 name|short
 name|wy
 decl_stmt|;
-comment|/* Make sure were in visual state. */
-if|if
-condition|(
-name|__endwin
-condition|)
-block|{
-name|tputs
-argument_list|(
-name|VS
-argument_list|,
-literal|0
-argument_list|,
-name|__cputchar
-argument_list|)
-expr_stmt|;
-name|tputs
-argument_list|(
-name|TI
-argument_list|,
-literal|0
-argument_list|,
-name|__cputchar
-argument_list|)
-expr_stmt|;
-name|__endwin
-operator|=
-literal|0
-expr_stmt|;
-block|}
 comment|/* Initialize loop parameters. */
 name|ly
 operator|=
