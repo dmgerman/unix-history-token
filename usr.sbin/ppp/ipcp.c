@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.75 1999/04/26 08:54:34 brian Exp $  *  *	TODO:  *		o More RFC1772 backward compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.68.2.4 1999/05/02 08:59:44 brian Exp $  *  *	TODO:  *		o More RFC1772 backward compatibility  */
 end_comment
 
 begin_include
@@ -4526,6 +4526,10 @@ name|fp
 parameter_list|)
 block|{
 comment|/* About to come down */
+specifier|static
+name|int
+name|recursing
+decl_stmt|;
 name|struct
 name|ipcp
 modifier|*
@@ -4541,6 +4545,13 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|recursing
+operator|++
+condition|)
+block|{
 if|if
 condition|(
 name|ipcp
@@ -4593,7 +4604,7 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-comment|/*    * XXX this stuff should really live in the FSM.  Our config should    * associate executable sections in files with events.    */
+comment|/*      * XXX this stuff should really live in the FSM.  Our config should      * associate executable sections in files with events.      */
 if|if
 condition|(
 name|system_Select
@@ -4687,6 +4698,10 @@ name|ipcp
 argument_list|,
 name|INADDR_NONE
 argument_list|)
+expr_stmt|;
+block|}
+name|recursing
+operator|--
 expr_stmt|;
 block|}
 end_function
