@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_timer.c	7.6 (Berkeley) %G%  */
+comment|/*   * Copyright (c) Computing Centre, University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1992  * Copyright (c) 1990, 1992   Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_timer.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -162,20 +162,10 @@ name|lcns_jammed
 decl_stmt|,
 name|cant_restart
 decl_stmt|;
-for|for
-control|(
-name|pkp
-operator|=
-name|pkcbhead
-init|;
-name|pkp
-condition|;
-name|pkp
-operator|=
-name|pkp
-operator|->
-name|pk_next
-control|)
+name|FOR_ALL_PKCBS
+argument_list|(
+argument|pkp
+argument_list|)
 block|{
 switch|switch
 condition|(
@@ -210,6 +200,7 @@ name|lcd_timer
 operator|==
 literal|0
 condition|)
+block|{
 name|pk_message
 argument_list|(
 literal|0
@@ -221,6 +212,13 @@ argument_list|,
 literal|"packet level restart failed"
 argument_list|)
 expr_stmt|;
+name|pkp
+operator|->
+name|pk_state
+operator|=
+name|DTE_WAITING
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|DTE_READY
@@ -356,6 +354,16 @@ case|:
 comment|/* lcn active */
 name|cant_restart
 operator|++
+expr_stmt|;
+break|break;
+case|case
+name|LCN_ZOMBIE
+case|:
+comment|/* zombie state */
+name|pk_freelcd
+argument_list|(
+name|lcp
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

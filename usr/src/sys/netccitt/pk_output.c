@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_output.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1992  * Copyright (c) 1991, 1992  The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_output.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -288,14 +288,14 @@ name|DATA
 operator|+
 name|DATA_TRANSFER
 case|:
-name|PS
+name|SPS
 argument_list|(
 name|xp
-argument_list|)
-operator|=
+argument_list|,
 name|lcp
 operator|->
 name|lcd_ssn
+argument_list|)
 expr_stmt|;
 name|lcp
 operator|->
@@ -311,14 +311,14 @@ operator|)
 operator|%
 name|MODULUS
 expr_stmt|;
-name|PR
+name|SPR
 argument_list|(
 name|xp
-argument_list|)
-operator|=
+argument_list|,
 name|lcp
 operator|->
 name|lcd_input_window
+argument_list|)
 expr_stmt|;
 name|lcp
 operator|->
@@ -422,14 +422,14 @@ operator|)
 operator|%
 name|MODULUS
 expr_stmt|;
-name|PR
+name|SPR
 argument_list|(
 name|xp
-argument_list|)
-operator|=
+argument_list|,
 name|lcp
 operator|->
 name|lcd_input_window
+argument_list|)
 expr_stmt|;
 name|lcp
 operator|->
@@ -543,6 +543,10 @@ operator|->
 name|pk_llnext
 argument_list|,
 name|m
+argument_list|,
+name|pkp
+operator|->
+name|pk_rt
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_usrreq.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1992  * Copyright (c) 1991, 1992  The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_usrreq.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -86,6 +86,20 @@ include|#
 directive|include
 file|<netccitt/pk_var.h>
 end_include
+
+begin_expr_stmt
+specifier|static
+name|old_to_new
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|new_to_old
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  *   *  X.25 Packet level protocol interface to socket abstraction.  *  *  Process an X.25 user request on a logical channel.  If this is a send  *  request then m is the mbuf chain of the send data. If this is a timer  *  expiration (called from the software clock routine) them timertype is  *  the particular timer.  *  */
@@ -1047,10 +1061,14 @@ literal|0
 index|]
 argument_list|)
 block|,
+comment|/* x25_len */
 literal|0
 block|,
+comment|/* x25_family */
 operator|-
 literal|1
+block|,
+comment|/* x25_net id */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1433,7 +1451,16 @@ operator|.
 name|x25_len
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|ISISO8802
+argument_list|(
+name|ifp
+argument_list|)
+operator|==
+literal|0
+condition|)
 block|{
 name|rtinit
 argument_list|(
@@ -1496,20 +1523,10 @@ name|pkcb
 modifier|*
 name|pkp
 decl_stmt|;
-for|for
-control|(
-name|pkp
-operator|=
-name|pkcbhead
-init|;
-name|pkp
-condition|;
-name|pkp
-operator|=
-name|pkp
-operator|->
-name|pk_next
-control|)
+name|FOR_ALL_PKCBS
+argument_list|(
+argument|pkp
+argument_list|)
 if|if
 condition|(
 name|pkp
@@ -1524,7 +1541,7 @@ name|pkp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Give the interface a chance to initialize if this 		 * is its first address, and to validate the address. 		 */
+comment|/* 		 * Give the interface a chance to initialize if this p		 * is its first address, and to validate the address. 		 */
 name|ia
 operator|->
 name|ia_start
@@ -1555,6 +1572,9 @@ name|ifp
 argument_list|,
 name|SIOCSIFCONF_X25
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|ifa
 argument_list|)
 expr_stmt|;
@@ -1569,7 +1589,16 @@ operator|&=
 operator|~
 name|IFF_UP
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|ISISO8802
+argument_list|(
+name|ifp
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|error
 operator|=
 name|rtinit
@@ -2655,11 +2684,16 @@ name|x25_packet
 operator|*
 argument_list|)
 expr_stmt|;
+name|X25SBITS
+argument_list|(
 name|xp
 operator|->
+name|bits
+argument_list|,
 name|fmt_identifier
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|xp
 operator|->
