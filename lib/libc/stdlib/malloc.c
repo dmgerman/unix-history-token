@@ -4643,6 +4643,9 @@ expr_stmt|;
 name|malloc_active
 operator|--
 expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -4713,6 +4716,9 @@ argument_list|)
 expr_stmt|;
 name|malloc_active
 operator|--
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
