@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)error.c	1.1 83/07/28"
+literal|"@(#)error.c	1.2 83/07/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -336,9 +336,29 @@ end_decl_stmt
 
 begin_block
 block|{
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
 name|filename
 operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
 name|fn
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|filename
+argument_list|,
+name|fn
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -375,6 +395,11 @@ block|}
 name|baderror
 operator|=
 literal|0
+expr_stmt|;
+name|free
+argument_list|(
+name|filename
+argument_list|)
 expr_stmt|;
 name|filename
 operator|=
