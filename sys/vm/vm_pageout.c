@@ -2801,6 +2801,12 @@ argument_list|,
 name|pageq
 argument_list|)
 expr_stmt|;
+name|object
+operator|=
+name|m
+operator|->
+name|object
+expr_stmt|;
 comment|/* 		 * skip marker pages 		 */
 if|if
 condition|(
@@ -2832,6 +2838,20 @@ block|}
 comment|/* 		 * Don't mess with busy pages, keep in the front of the 		 * queue, most likely are being paged out. 		 */
 if|if
 condition|(
+operator|!
+name|VM_OBJECT_TRYLOCK
+argument_list|(
+name|object
+argument_list|)
+condition|)
+block|{
+name|addl_page_shortage
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 name|m
 operator|->
 name|busy
@@ -2845,6 +2865,11 @@ name|PG_BUSY
 operator|)
 condition|)
 block|{
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|addl_page_shortage
 operator|++
 expr_stmt|;
@@ -2853,8 +2878,6 @@ block|}
 comment|/* 		 * If the object is not being used, we ignore previous  		 * references. 		 */
 if|if
 condition|(
-name|m
-operator|->
 name|object
 operator|->
 name|ref_count
@@ -2906,6 +2929,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|act_count
@@ -2949,6 +2977,11 @@ expr_stmt|;
 name|vm_page_activate
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 name|m
@@ -3008,21 +3041,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|object
-operator|=
-name|m
-operator|->
-name|object
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|VM_OBJECT_TRYLOCK
-argument_list|(
-name|object
-argument_list|)
-condition|)
-continue|continue;
 if|if
 condition|(
 name|m
