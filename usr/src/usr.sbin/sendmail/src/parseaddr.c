@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.52 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -758,13 +758,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|savedelim
-operator|!=
-literal|'\0'
-operator|&&
 name|delimptr
 operator|!=
 name|NULL
+operator|&&
+name|savedelim
+operator|!=
+literal|'\0'
 condition|)
 operator|*
 name|delimptr
