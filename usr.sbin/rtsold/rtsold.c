@@ -290,6 +290,12 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -311,6 +317,17 @@ begin_comment
 comment|/* XXX: should be configurable */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -324,6 +341,11 @@ end_decl_stmt
 begin_comment
 comment|/* should be configurable */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -367,6 +389,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -379,6 +407,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -790,6 +823,9 @@ literal|"kernel is configured as a router, not a host"
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|SMALL
 comment|/* initialization to dump internal status to a file */
 name|signal
 argument_list|(
@@ -798,6 +834,8 @@ argument_list|,
 name|rtsold_set_dump_file
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1109,6 +1147,9 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
+if|#
+directive|if
+literal|1
 comment|/* dump the current pid */
 if|if
 condition|(
@@ -1175,6 +1216,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|HAVE_POLL_H
@@ -1226,6 +1269,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|do_dump
@@ -1242,6 +1288,8 @@ name|dumpfilename
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|timeout
 operator|=
 name|rtsol_check_timer
@@ -2938,6 +2986,12 @@ name|MILLION
 value|1000000
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -2953,6 +3007,11 @@ literal|1
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
