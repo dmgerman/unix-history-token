@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) UNIX System Laboratories, Inc.  All or some portions
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.105 1995/11/06 00:35:44 bde Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.106 1995/11/11 05:10:48 bde Exp $  */
 end_comment
 
 begin_include
@@ -55,41 +55,77 @@ directive|include
 file|<sys/conf.h>
 end_include
 
-begin_comment
-comment|/* Bogus defines for compatibility. */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JREMOD
+end_ifdef
 
 begin_define
+define|#
+directive|define
+name|NUMCDEV
+value|96
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUMBDEV
+value|32
+end_define
+
+begin_decl_stmt
+name|struct
+name|bdevsw
+name|bdevsw
+index|[
+name|NUMBDEV
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nblkdev
+init|=
+name|NUMBDEV
+expr|struct
+name|cdevsw
+name|cdevsw
+index|[
+name|NUMCDEV
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nchrdev
+init|=
+name|NUMCDEV
+else|#
+directive|else
+comment|/*JREMOD*/
+comment|/* Bogus defines for compatibility. */
 define|#
 directive|define
 name|noioc
 value|noioctl
-end_define
-
-begin_define
 define|#
 directive|define
 name|nostrat
 value|nostrategy
-end_define
-
-begin_define
 define|#
 directive|define
 name|zerosize
 value|nopsize
-end_define
-
-begin_comment
 comment|/* Lots of bogus defines for shorthand purposes */
-end_comment
-
-begin_function_decl
 name|int
 name|lkmenodev
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -5553,6 +5589,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*JREMOD*/
+end_comment
+
+begin_comment
+comment|/*  * The routines below are total "BULLSHIT" and will be trashed  * When I have 'proved' the JREMOD changes above..  */
+end_comment
+
 begin_comment
 comment|/*  * Swapdev is a fake device implemented  * in sw.c used only internally to get to swstrategy.  * It cannot be provided to the users, because the  * swstrategy routine munches the b_dev and b_blkno entries  * before calling the appropriate driver.  This would horribly  * confuse, e.g. the hashing routines. Instead, /dev/drum is  * provided as a character (raw) device.  */
 end_comment
@@ -6123,6 +6172,30 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|JREMOD
+if|if
+condition|(
+operator|(
+name|dst_cdp
+operator|->
+name|d_open
+operator|!=
+name|nxopen
+operator|)
+operator|&&
+operator|(
+name|dst_cdp
+operator|->
+name|d_open
+operator|!=
+name|NULL
+operator|)
+condition|)
+else|#
+directive|else
+comment|/*JREMOD*/
 if|if
 condition|(
 name|dst_cdp
@@ -6131,6 +6204,9 @@ name|d_open
 operator|!=
 name|nxopen
 condition|)
+endif|#
+directive|endif
+comment|/*JREMOD*/
 return|return
 operator|(
 name|EBUSY
