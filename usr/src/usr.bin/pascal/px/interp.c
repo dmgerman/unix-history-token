@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.23 %G%"
+literal|"@(#)interp.c 1.24 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8213,6 +8213,60 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
+name|O_NEW
+case|:
+name|tl
+operator|=
+operator|*
+name|pc
+operator|.
+name|cp
+operator|++
+expr_stmt|;
+comment|/* tl = size being new'ed */
+if|if
+condition|(
+name|tl
+operator|==
+literal|0
+condition|)
+name|tl
+operator|=
+operator|*
+name|pc
+operator|.
+name|usp
+operator|++
+expr_stmt|;
+name|tcp
+operator|=
+name|popaddr
+argument_list|()
+expr_stmt|;
+comment|/* ptr to ptr being new'ed */
+if|if
+condition|(
+name|_runtst
+condition|)
+block|{
+name|NEWZ
+argument_list|(
+name|tcp
+argument_list|,
+name|tl
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|NEW
+argument_list|(
+name|tcp
+argument_list|,
+name|tl
+argument_list|)
+expr_stmt|;
+continue|continue;
+case|case
 name|O_DISPOSE
 case|:
 name|tl
@@ -8267,7 +8321,7 @@ literal|0
 expr_stmt|;
 continue|continue;
 case|case
-name|O_NEW
+name|O_DFDISP
 case|:
 name|tl
 operator|=
@@ -8277,7 +8331,7 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-comment|/* tl = size being new'ed */
+comment|/* tl = size being disposed */
 if|if
 condition|(
 name|tl
@@ -8297,27 +8351,27 @@ operator|=
 name|popaddr
 argument_list|()
 expr_stmt|;
-comment|/* ptr to ptr being new'ed */
-if|if
-condition|(
-name|_runtst
-condition|)
-block|{
-name|NEWZ
+comment|/* ptr to ptr being disposed */
+name|DFDISPOSE
 argument_list|(
 name|tcp
 argument_list|,
 name|tl
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
-name|NEW
-argument_list|(
+operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|tcp
-argument_list|,
-name|tl
-argument_list|)
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 expr_stmt|;
 continue|continue;
 case|case
