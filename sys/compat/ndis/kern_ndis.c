@@ -146,12 +146,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/uma.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -507,13 +501,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|static
-name|uma_zone_t
-name|ndis_buffer_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mtx
 name|ndis_thr_mtx
@@ -669,42 +656,6 @@ name|patch
 operator|++
 expr_stmt|;
 block|}
-comment|/* Initialize TX buffer UMA zone. */
-name|ndis_buffer_zone
-operator|=
-name|uma_zcreate
-argument_list|(
-literal|"NDIS buffer"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mdl
-argument_list|)
-operator|+
-operator|(
-sizeof|sizeof
-argument_list|(
-name|vm_offset_t
-operator|*
-argument_list|)
-operator|*
-literal|16
-operator|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|UMA_ALIGN_PTR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|ndis_create_kthreads
 argument_list|()
 expr_stmt|;
@@ -773,12 +724,6 @@ name|patch
 operator|++
 expr_stmt|;
 block|}
-comment|/* Remove zones */
-name|uma_zdestroy
-argument_list|(
-name|ndis_buffer_zone
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 case|case
@@ -828,12 +773,6 @@ name|patch
 operator|++
 expr_stmt|;
 block|}
-comment|/* Remove zones */
-name|uma_zdestroy
-argument_list|(
-name|ndis_buffer_zone
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|error
@@ -2900,7 +2839,7 @@ argument|void			*arg; { 	ndis_packet		*p;  	if (arg == NULL) 		return;  	p = arg
 comment|/* Decrement refcount. */
 argument|p->np_refcnt--;
 comment|/* Release packet when refcount hits zero, otherwise return. */
-argument|if (p->np_refcnt) 		return;  	ndis_sched(ndis_return, p, NDIS_SWI);  	return; }  void ndis_free_bufs(b0) 	ndis_buffer		*b0; { 	ndis_buffer		*next;  	if (b0 == NULL) 		return;  	while(b0 != NULL) { 		next = b0->mdl_next; 		uma_zfree (ndis_buffer_zone, b0); 		b0 = next; 	}  	return; }  void ndis_free_packet(p) 	ndis_packet		*p; { 	if (p == NULL) 		return;  	ndis_free_bufs(p->np_private.npp_head); 	NdisFreePacket(p);  	return; }  int ndis_convert_res(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_resource_list	*rl = NULL; 	cm_partial_resource_desc	*prd = NULL; 	ndis_miniport_block	*block; 	device_t		dev; 	struct resource_list	*brl; 	struct resource_list	brl_rev; 	struct resource_list_entry	*brle, *n; 	int 			error =
+argument|if (p->np_refcnt) 		return;  	ndis_sched(ndis_return, p, NDIS_SWI);  	return; }  void ndis_free_bufs(b0) 	ndis_buffer		*b0; { 	ndis_buffer		*next;  	if (b0 == NULL) 		return;  	while(b0 != NULL) { 		next = b0->mdl_next; 		IoFreeMdl(b0); 		b0 = next; 	}  	return; }  void ndis_free_packet(p) 	ndis_packet		*p; { 	if (p == NULL) 		return;  	ndis_free_bufs(p->np_private.npp_head); 	NdisFreePacket(p);  	return; }  int ndis_convert_res(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_resource_list	*rl = NULL; 	cm_partial_resource_desc	*prd = NULL; 	ndis_miniport_block	*block; 	device_t		dev; 	struct resource_list	*brl; 	struct resource_list	brl_rev; 	struct resource_list_entry	*brle, *n; 	int 			error =
 literal|0
 argument|;  	sc = arg; 	block = sc->ndis_block; 	dev = sc->ndis_dev;  	SLIST_INIT(&brl_rev);  	rl = malloc(sizeof(ndis_resource_list) + 	    (sizeof(cm_partial_resource_desc) * (sc->ndis_rescnt -
 literal|1
@@ -2928,7 +2867,7 @@ argument|); }
 comment|/*  * Create an mbuf chain from an NDIS packet chain.  * This is used mainly when transmitting packets, where we need  * to turn an mbuf off an interface's send queue and transform it  * into an NDIS packet which will be fed into the NDIS driver's  * send routine.  *  * NDIS packets consist of two parts: an ndis_packet structure,  * which is vaguely analagous to the pkthdr portion of an mbuf,  * and one or more ndis_buffer structures, which define the  * actual memory segments in which the packet data resides.  * We need to allocate one ndis_buffer for each mbuf in a chain,  * plus one ndis_packet as the header.  */
 argument|int ndis_mtop(m0, p) 	struct mbuf		*m0; 	ndis_packet		**p; { 	struct mbuf		*m; 	ndis_buffer		*buf = NULL, *prev = NULL; 	ndis_packet_private	*priv;  	if (p == NULL || *p == NULL || m0 == NULL) 		return(EINVAL);  	priv =&(*p)->np_private; 	priv->npp_totlen = m0->m_pkthdr.len;  	for (m = m0; m != NULL; m = m->m_next) { 		if (m->m_len ==
 literal|0
-argument|) 			continue; 		buf = uma_zalloc(ndis_buffer_zone, M_NOWAIT | M_ZERO); 		if (buf == NULL) { 			ndis_free_packet(*p); 			*p = NULL; 			return(ENOMEM); 		}  		MmInitializeMdl(buf, m->m_data, m->m_len); 		if (priv->npp_head == NULL) 			priv->npp_head = buf; 		else 			prev->mdl_next = buf; 		prev = buf; 	}  	priv->npp_tail = buf; 	priv->npp_totlen = m0->m_pkthdr.len;  	return(
+argument|) 			continue; 		buf = IoAllocateMdl(m->m_data, m->m_len, FALSE, FALSE, NULL); 		if (buf == NULL) { 			ndis_free_packet(*p); 			*p = NULL; 			return(ENOMEM); 		}  		MmInitializeMdl(buf, m->m_data, m->m_len); 		if (priv->npp_head == NULL) 			priv->npp_head = buf; 		else 			prev->mdl_next = buf; 		prev = buf; 	}  	priv->npp_tail = buf; 	priv->npp_totlen = m0->m_pkthdr.len;  	return(
 literal|0
 argument|); }  int ndis_get_supported_oids(arg, oids, oidcnt) 	void			*arg; 	ndis_oid		**oids; 	int			*oidcnt; { 	int			len, rval; 	ndis_oid		*o;  	if (arg == NULL || oids == NULL || oidcnt == NULL) 		return(EINVAL); 	len =
 literal|0

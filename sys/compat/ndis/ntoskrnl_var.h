@@ -198,6 +198,31 @@ name|MDL_ALLOCATED_MUST_SUCCEED
 value|0x4000
 end_define
 
+begin_define
+define|#
+directive|define
+name|MDL_ZONE_ALLOCED
+value|0x8000
+end_define
+
+begin_comment
+comment|/* BSD private */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDL_ZONE_PAGES
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDL_ZONE_SIZE
+value|(sizeof(mdl) + (sizeof(vm_offset_t) * MDL_ZONE_PAGES))
+end_define
+
 begin_comment
 comment|/* Note: assumes x86 page size of 4K. */
 end_comment
