@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	1.6	86/07/16	*/
+comment|/*	autoconf.c	1.7	86/11/25	*/
 end_comment
 
 begin_comment
@@ -1990,9 +1990,6 @@ name|ui_vbanum
 operator|==
 name|adaptor
 operator|&&
-ifdef|#
-directive|ifdef
-name|notdef
 name|vbap
 operator|->
 name|ui_driver
@@ -2027,13 +2024,6 @@ index|[
 literal|1
 index|]
 condition|)
-else|#
-directive|else
-literal|1
-block|)
-comment|/* can't match names 'cuz of driver bogosity */
-endif|#
-directive|endif
 break|break;
 if|if
 condition|(
@@ -2051,9 +2041,6 @@ operator|->
 name|ui_unit
 expr_stmt|;
 block|}
-end_block
-
-begin_expr_stmt
 name|mindev
 operator|=
 operator|(
@@ -2064,16 +2051,10 @@ operator|)
 operator|+
 name|part
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|orootdev
 operator|=
 name|rootdev
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|rootdev
 operator|=
 name|makedev
@@ -2083,13 +2064,7 @@ argument_list|,
 name|mindev
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * If the original rootdev is the same as the one 	 * just calculated, don't need to adjust the swap configuration. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|rootdev
@@ -2097,9 +2072,6 @@ operator|==
 name|orootdev
 condition|)
 return|return;
-end_if
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"changing root device to %c%c%d%c\n"
@@ -2129,23 +2101,14 @@ operator|+
 literal|'a'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DOSWAP
-end_ifdef
-
-begin_expr_stmt
 name|mindev
 operator|&=
 operator|~
 name|PARTITIONMASK
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|swp
@@ -2215,9 +2178,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_for
-
-begin_if
 if|if
 condition|(
 name|swp
@@ -2227,13 +2187,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-end_if
-
-begin_comment
 comment|/* 	 * If argdev and dumpdev were the same as the old primary swap 	 * device, move them to the new primary swap device. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|temp
@@ -2249,9 +2203,6 @@ index|]
 operator|.
 name|sw_dev
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|temp
@@ -2267,13 +2218,10 @@ index|]
 operator|.
 name|sw_dev
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_block
 
-unit|}
 end_unit
 
