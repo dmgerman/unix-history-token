@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.10	82/05/24	*/
+comment|/*	if_ec.c	4.11	82/05/25	*/
 end_comment
 
 begin_include
@@ -3838,6 +3838,8 @@ argument_list|,
 name|RTF_UP
 operator||
 name|RTF_DIRECT
+operator||
+name|RTF_HOST
 argument_list|)
 expr_stmt|;
 block|}
