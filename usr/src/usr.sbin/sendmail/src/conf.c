@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	5.11 (Berkeley) %G%"
+literal|"@(#)conf.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,11 +92,21 @@ name|H_FROM
 operator||
 name|H_RESENT
 block|,
+literal|"resent-reply-to"
+block|,
+name|H_FROM
+operator||
+name|H_RESENT
+block|,
 literal|"sender"
 block|,
 name|H_FROM
 block|,
 literal|"from"
+block|,
+name|H_FROM
+block|,
+literal|"reply-to"
 block|,
 name|H_FROM
 block|,

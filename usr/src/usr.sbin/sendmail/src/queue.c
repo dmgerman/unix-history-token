@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.18 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.19 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.18 (Berkeley) %G%"
+literal|"@(#)queue.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,7 +393,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* 	**  Output future work requests. 	**	Priority should be first, since it is read by orderq. 	*/
+comment|/* 	**  Output future work requests. 	**	Priority and creation time should be first, since 	**	they are required by orderq. 	*/
 end_comment
 
 begin_comment
@@ -623,6 +623,44 @@ endif|#
 directive|endif
 endif|DEBUG
 block|}
+block|}
+end_for
+
+begin_comment
+comment|/* output list of error recipients */
+end_comment
+
+begin_for
+for|for
+control|(
+name|q
+operator|=
+name|e
+operator|->
+name|e_errorqueue
+init|;
+name|q
+operator|!=
+name|NULL
+condition|;
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"E%s\n"
+argument_list|,
+name|q
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
 block|}
 end_for
 
@@ -1366,13 +1404,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WLSIZE
-value|120
+name|NEED_P
+value|001
 end_define
 
-begin_comment
-comment|/* max size of worklist per sort */
-end_comment
+begin_define
+define|#
+directive|define
+name|NEED_T
+value|002
+end_define
 
 begin_ifndef
 ifndef|#
@@ -1475,7 +1516,7 @@ decl_stmt|;
 name|WORK
 name|wlist
 index|[
-name|WLSIZE
+name|QUEUESIZE
 operator|+
 literal|1
 index|]
@@ -1674,7 +1715,7 @@ condition|(
 operator|++
 name|wn
 operator|>=
-name|WLSIZE
+name|QUEUESIZE
 condition|)
 continue|continue;
 name|cf
@@ -1732,11 +1773,16 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
+name|w
+operator|=
+operator|&
 name|wlist
 index|[
 name|wn
 index|]
-operator|.
+expr_stmt|;
+name|w
+operator|->
 name|w_name
 operator|=
 name|newstr
@@ -1747,27 +1793,31 @@ name|d_name
 argument_list|)
 expr_stmt|;
 comment|/* make sure jobs in creation don't clog queue */
-name|wlist
-index|[
-name|wn
-index|]
-operator|.
+name|w
+operator|->
 name|w_pri
 operator|=
 literal|0x7fffffff
 expr_stmt|;
-name|wlist
-index|[
-name|wn
-index|]
-operator|.
+name|w
+operator|->
 name|w_ctime
 operator|=
 literal|0
 expr_stmt|;
 comment|/* extract useful information */
+name|i
+operator|=
+name|NEED_P
+operator||
+name|NEED_T
+expr_stmt|;
 while|while
 condition|(
+name|i
+operator|!=
+literal|0
+operator|&&
 name|fgets
 argument_list|(
 name|lbuf
@@ -1797,11 +1847,8 @@ block|{
 case|case
 literal|'P'
 case|:
-name|wlist
-index|[
-name|wn
-index|]
-operator|.
+name|w
+operator|->
 name|w_pri
 operator|=
 name|atol
@@ -1813,15 +1860,17 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|i
+operator|&=
+operator|~
+name|NEED_P
+expr_stmt|;
 break|break;
 case|case
 literal|'T'
 case|:
-name|wlist
-index|[
-name|wn
-index|]
-operator|.
+name|w
+operator|->
 name|w_ctime
 operator|=
 name|atol
@@ -1832,6 +1881,11 @@ index|[
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+name|i
+operator|&=
+operator|~
+name|NEED_T
 expr_stmt|;
 break|break;
 block|}
@@ -1851,11 +1905,8 @@ name|doall
 operator|&&
 name|shouldqueue
 argument_list|(
-name|wlist
-index|[
-name|wn
-index|]
-operator|.
+name|w
+operator|->
 name|w_pri
 argument_list|)
 condition|)
@@ -1902,7 +1953,7 @@ name|min
 argument_list|(
 name|wn
 argument_list|,
-name|WLSIZE
+name|QUEUESIZE
 argument_list|)
 argument_list|,
 sizeof|sizeof
@@ -1934,7 +1985,7 @@ name|min
 argument_list|(
 name|wn
 argument_list|,
-name|WLSIZE
+name|QUEUESIZE
 argument_list|)
 init|;
 operator|--
@@ -2652,6 +2703,31 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'E'
+case|:
+comment|/* specify error recipient */
+name|sendtolist
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|&
+name|e
+operator|->
+name|e_errorqueue
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'H'
 case|:
 comment|/* header */
@@ -2936,13 +3012,13 @@ if|if
 condition|(
 name|nrequests
 operator|>
-name|WLSIZE
+name|QUEUESIZE
 condition|)
 name|printf
 argument_list|(
 literal|", only %d printed"
 argument_list|,
-name|WLSIZE
+name|QUEUESIZE
 argument_list|)
 expr_stmt|;
 if|if
