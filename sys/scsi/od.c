@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Shunsuke Akiyama.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shunsuke Akiyama.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Shunsuke Akiyama AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: od.c,v 1.12 1996/01/27 04:18:00 bde Exp $  */
+comment|/*  * Copyright (c) 1995 Shunsuke Akiyama.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shunsuke Akiyama.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Shunsuke Akiyama AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: od.c,v 1.13 1996/03/02 18:24:12 peter Exp $  */
 end_comment
 
 begin_comment
@@ -187,7 +187,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|u_int32
+name|u_int32_t
 name|odstrats
 decl_stmt|,
 name|odqueues
@@ -267,7 +267,7 @@ begin_struct
 struct|struct
 name|scsi_data
 block|{
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 define|#
@@ -282,7 +282,7 @@ name|u_char
 name|heads
 decl_stmt|;
 comment|/* Number of heads */
-name|u_int16
+name|u_int16_t
 name|cyls
 decl_stmt|;
 comment|/* Number of cylinders */
@@ -291,11 +291,11 @@ name|sectors
 decl_stmt|;
 comment|/* dubious */
 comment|/* Number of sectors/track */
-name|u_int16
+name|u_int16_t
 name|secsiz
 decl_stmt|;
 comment|/* Number of bytes/sector */
-name|u_int32
+name|u_int32_t
 name|disksize
 decl_stmt|;
 comment|/* total number sectors */
@@ -371,7 +371,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int32
+name|u_int32_t
 name|od_size
 name|__P
 argument_list|(
@@ -408,9 +408,9 @@ name|odstart
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -996,7 +996,7 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|struct
@@ -1313,7 +1313,7 @@ name|errcode
 init|=
 literal|0
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|struct
@@ -1912,7 +1912,7 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int32
+name|u_int32_t
 name|opri
 decl_stmt|;
 name|struct
@@ -1920,7 +1920,7 @@ name|scsi_data
 modifier|*
 name|od
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|odstrats
@@ -2118,10 +2118,10 @@ specifier|static
 name|void
 name|odstart
 parameter_list|(
-name|u_int32
+name|u_int32_t
 name|unit
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|flags
 parameter_list|)
 block|{
@@ -2160,7 +2160,7 @@ name|struct
 name|scsi_rw_big
 name|cmd
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|blkno
 decl_stmt|,
 name|nblk
@@ -2686,7 +2686,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int32
+name|u_int32_t
 name|od_size
 parameter_list|(
 name|unit
@@ -2707,7 +2707,7 @@ name|struct
 name|scsi_read_capacity
 name|scsi_cmd
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|size
 decl_stmt|;
 name|struct
@@ -3114,7 +3114,7 @@ name|od
 operator|->
 name|params
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|sectors
 decl_stmt|;
 name|errval

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.64 1996/02/02 20:43:11 ache Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.66 1996/02/13 03:46:48 ache Exp $  */
 end_comment
 
 begin_include
@@ -191,7 +191,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int32
+name|u_int32_t
 name|cd_size
 name|__P
 argument_list|(
@@ -213,13 +213,13 @@ name|cd_get_mode
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
 expr|struct
 name|cd_mode_data
 operator|*
 operator|,
-name|u_int32
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -232,7 +232,7 @@ name|cd_set_mode
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
 expr|struct
@@ -250,17 +250,17 @@ name|cd_read_toc
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
 expr|struct
 name|cd_toc_entry
 operator|*
 operator|,
-name|u_int32
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -273,9 +273,9 @@ name|cd_pause
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -288,7 +288,7 @@ name|cd_reset
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -301,19 +301,19 @@ name|cd_play_msf
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -326,11 +326,11 @@ name|cd_play
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -343,13 +343,13 @@ name|cd_play_big
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
-name|u_int32
+name|u_int32_t
 name|blk
 operator|,
-name|u_int32
+name|u_int32_t
 name|len
 operator|)
 argument_list|)
@@ -363,15 +363,15 @@ name|cd_play_tracks
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -384,11 +384,11 @@ name|cd_read_subchannel
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
 name|int
 operator|,
@@ -396,7 +396,7 @@ expr|struct
 name|cd_sub_channel_info
 operator|*
 operator|,
-name|u_int32
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -409,7 +409,7 @@ name|cd_getdisklabel
 name|__P
 argument_list|(
 operator|(
-name|u_int8
+name|u_int8_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -542,7 +542,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int32
+name|int32_t
 name|cdstrats
 decl_stmt|,
 name|cdqueues
@@ -644,10 +644,10 @@ specifier|static
 name|void
 name|cdstart
 parameter_list|(
-name|u_int32
+name|u_int32_t
 name|unit
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -657,7 +657,7 @@ begin_struct
 struct|struct
 name|scsi_data
 block|{
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 define|#
@@ -668,7 +668,7 @@ comment|/* device has been init'd */
 struct|struct
 name|cd_parms
 block|{
-name|u_int32
+name|u_int32_t
 name|blksize
 decl_stmt|;
 name|u_long
@@ -682,7 +682,7 @@ name|struct
 name|disklabel
 name|disklabel
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|partflags
 index|[
 name|MAXPARTITIONS
@@ -693,11 +693,11 @@ define|#
 directive|define
 name|CDOPEN
 value|0x01
-name|u_int32
+name|u_int32_t
 name|openparts
 decl_stmt|;
 comment|/* one bit for each open partition */
-name|u_int32
+name|u_int32_t
 name|xfer_block_wait
 decl_stmt|;
 name|struct
@@ -1186,7 +1186,7 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|struct
@@ -1524,7 +1524,7 @@ name|errcode
 init|=
 literal|0
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|part
@@ -1946,7 +1946,7 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int8
+name|u_int8_t
 name|unit
 decl_stmt|,
 name|part
@@ -2068,10 +2068,10 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int32
+name|u_int32_t
 name|opri
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|unit
 init|=
 name|CDUNIT
@@ -2286,10 +2286,10 @@ name|unit
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
@@ -2305,7 +2305,7 @@ name|struct
 name|scsi_rw_big
 name|cmd
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|blkno
 decl_stmt|,
 name|nblk
@@ -2757,7 +2757,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|u_int8
+name|u_int8_t
 name|unit
 decl_stmt|,
 name|part
@@ -3265,7 +3265,7 @@ name|struct
 name|cd_sub_channel_info
 name|data
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|len
 init|=
 name|args
@@ -3491,7 +3491,7 @@ name|ioc_toc_header
 modifier|*
 name|th
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|len
 decl_stmt|,
 name|readlen
@@ -3500,7 +3500,7 @@ name|idx
 decl_stmt|,
 name|num
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|starting_track
 init|=
 name|te
@@ -4969,7 +4969,7 @@ name|cd_getdisklabel
 parameter_list|(
 name|unit
 parameter_list|)
-name|u_int8
+name|u_int8_t
 name|unit
 decl_stmt|;
 block|{
@@ -5230,7 +5230,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int32
+name|u_int32_t
 name|cd_size
 parameter_list|(
 name|unit
@@ -5252,10 +5252,10 @@ name|struct
 name|scsi_read_cd_capacity
 name|scsi_cmd
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|size
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|blksize
 decl_stmt|;
 name|struct
@@ -5494,7 +5494,7 @@ name|data
 parameter_list|,
 name|page
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|struct
@@ -5502,7 +5502,7 @@ name|cd_mode_data
 modifier|*
 name|data
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|page
 decl_stmt|;
 block|{
@@ -5627,7 +5627,7 @@ name|unit
 parameter_list|,
 name|data
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|struct
@@ -5758,7 +5758,7 @@ name|blk
 parameter_list|,
 name|len
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|blk
@@ -5927,7 +5927,7 @@ name|blk
 parameter_list|,
 name|len
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|blk
@@ -6130,7 +6130,7 @@ name|etrack
 parameter_list|,
 name|eindex
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|strack
@@ -6253,7 +6253,7 @@ name|ends
 parameter_list|,
 name|endf
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|startm
@@ -6381,7 +6381,7 @@ name|unit
 parameter_list|,
 name|go
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|go
@@ -6467,7 +6467,7 @@ name|cd_reset
 parameter_list|(
 name|unit
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 block|{
@@ -6507,7 +6507,7 @@ name|data
 parameter_list|,
 name|len
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|mode
@@ -6522,7 +6522,7 @@ name|cd_sub_channel_info
 modifier|*
 name|data
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|len
 decl_stmt|;
 block|{
@@ -6669,7 +6669,7 @@ name|data
 parameter_list|,
 name|len
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|mode
@@ -6681,7 +6681,7 @@ name|cd_toc_entry
 modifier|*
 name|data
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|len
 decl_stmt|;
 block|{
@@ -6689,7 +6689,7 @@ name|struct
 name|scsi_read_toc
 name|scsi_cmd
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|ntoc
 decl_stmt|;
 name|bzero

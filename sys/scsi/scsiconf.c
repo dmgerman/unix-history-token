@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.55 1996/02/19 09:26:07 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.56 1996/03/09 07:13:57 peter Exp $  */
 end_comment
 
 begin_include
@@ -677,10 +677,10 @@ begin_struct
 struct|struct
 name|scsidevs
 block|{
-name|u_int32
+name|u_int32_t
 name|type
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|driver
 decl_stmt|;
 comment|/* normally the same as type */
@@ -707,7 +707,7 @@ name|char
 name|flags
 decl_stmt|;
 comment|/* 1 show my comparisons during boot(debug) */
-name|u_int16
+name|u_int16_t
 name|quirks
 decl_stmt|;
 name|void
@@ -1641,10 +1641,10 @@ name|scsi_selectdev
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|qualifier
 operator|,
-name|u_int32
+name|u_int32_t
 name|type
 operator|,
 name|boolean
@@ -3093,7 +3093,7 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|struct
@@ -3826,7 +3826,7 @@ name|scsi_link
 modifier|*
 name|sc_link_proto
 decl_stmt|;
-name|u_int8
+name|u_int8_t
 name|scsi_addr
 decl_stmt|;
 name|struct
@@ -4475,14 +4475,14 @@ modifier|*
 name|type_p
 decl_stmt|;
 block|{
-name|u_int8
+name|u_int8_t
 name|target
 init|=
 name|sc_link
 operator|->
 name|target
 decl_stmt|;
-name|u_int8
+name|u_int8_t
 name|lu
 init|=
 name|sc_link
@@ -4519,7 +4519,7 @@ name|scsi_inquiry_data
 modifier|*
 name|inqbuf
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|len
 decl_stmt|,
 name|qualifier
@@ -5354,7 +5354,7 @@ name|model
 parameter_list|,
 name|rev
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|qualifier
 decl_stmt|,
 name|type

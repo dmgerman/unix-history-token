@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.28 1995/12/14 09:54:21 phk Exp $  */
+comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.29 1995/12/14 19:51:12 bde Exp $  */
 end_comment
 
 begin_include
@@ -174,42 +174,42 @@ begin_struct
 struct|struct
 name|scsi_data
 block|{
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
-name|u_int16
+name|u_int16_t
 name|chmo
 decl_stmt|;
 comment|/* Offset of first CHM */
-name|u_int16
+name|u_int16_t
 name|chms
 decl_stmt|;
 comment|/* No. of CHM */
-name|u_int16
+name|u_int16_t
 name|slots
 decl_stmt|;
 comment|/* No. of Storage Elements */
-name|u_int16
+name|u_int16_t
 name|sloto
 decl_stmt|;
 comment|/* Offset of first SE */
-name|u_int16
+name|u_int16_t
 name|imexs
 decl_stmt|;
 comment|/* No. of Import/Export Slots */
-name|u_int16
+name|u_int16_t
 name|imexo
 decl_stmt|;
 comment|/* Offset of first IM/EX */
-name|u_int16
+name|u_int16_t
 name|drives
 decl_stmt|;
 comment|/* No. of CTS */
-name|u_int16
+name|u_int16_t
 name|driveo
 decl_stmt|;
 comment|/* Offset of first CTS */
-name|u_int16
+name|u_int16_t
 name|rot
 decl_stmt|;
 comment|/* CHM can rotate */
@@ -217,7 +217,7 @@ name|u_long
 name|op_matrix
 decl_stmt|;
 comment|/* possible opertaions */
-name|u_int16
+name|u_int16_t
 name|lsterr
 decl_stmt|;
 comment|/* details of lasterror */
@@ -245,7 +245,7 @@ name|ch_getelem
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
 name|short
@@ -255,14 +255,14 @@ operator|,
 name|int
 name|type
 operator|,
-name|u_int32
+name|u_int32_t
 name|from
 operator|,
 name|void
 operator|*
 name|data
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -276,23 +276,23 @@ name|ch_move
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
 name|short
 operator|*
 name|stat
 operator|,
-name|u_int32
+name|u_int32_t
 name|chm
 operator|,
-name|u_int32
+name|u_int32_t
 name|from
 operator|,
-name|u_int32
+name|u_int32_t
 name|to
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -306,10 +306,10 @@ name|ch_mode_sense
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -323,20 +323,20 @@ name|ch_position
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
 name|short
 operator|*
 name|stat
 operator|,
-name|u_int32
+name|u_int32_t
 name|chm
 operator|,
-name|u_int32
+name|u_int32_t
 name|to
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -765,7 +765,7 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|char
@@ -920,7 +920,7 @@ name|errcode
 init|=
 literal|0
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|mode
@@ -1160,7 +1160,7 @@ name|unsigned
 name|char
 name|unit
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 name|errval
@@ -1528,7 +1528,7 @@ name|data
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|from
@@ -1756,7 +1756,7 @@ name|to
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|chm
@@ -1985,7 +1985,7 @@ name|to
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|chm
@@ -2224,7 +2224,7 @@ name|unit
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|flags
@@ -2472,7 +2472,7 @@ name|l
 condition|;
 control|)
 block|{
-name|u_int32
+name|u_int32_t
 name|pc
 init|=
 operator|(
@@ -2483,7 +2483,7 @@ operator|)
 operator|&
 literal|0x3f
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|pl
 init|=
 operator|*

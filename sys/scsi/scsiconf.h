@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.38 1996/01/20 15:05:53 joerg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.39 1996/02/03 13:31:12 joerg Exp $  */
 end_comment
 
 begin_ifndef
@@ -27,55 +27,6 @@ begin_typedef
 typedef|typedef
 name|int
 name|errval
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|long
-name|int
-name|int32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|short
-name|int
-name|int16
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|char
-name|int8
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|int
-name|u_int32
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|int
-name|u_int16
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|u_int8
 typedef|;
 end_typedef
 
@@ -122,7 +73,7 @@ struct|struct
 name|scsi_adapter
 block|{
 comment|/* 04*/
-name|int32
+name|int32_t
 argument_list|(
 argument|*scsi_cmd
 argument_list|)
@@ -152,7 +103,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 12*/
-name|int32
+name|int32_t
 argument_list|(
 argument|*open_target_lu
 argument_list|)
@@ -164,7 +115,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 16*/
-name|int32
+name|int32_t
 argument_list|(
 argument|*close_target_lu
 argument_list|)
@@ -176,7 +127,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 20*/
-name|u_int32
+name|u_int32_t
 argument_list|(
 argument|*adapter_info
 argument_list|)
@@ -355,15 +306,15 @@ modifier|*
 name|start
 function_decl|)
 parameter_list|(
-name|u_int32
+name|u_int32_t
 name|unit
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|flags
 parameter_list|)
 function_decl|;
 comment|/* 12*/
-name|int32
+name|int32_t
 argument_list|(
 argument|*async
 argument_list|)
@@ -375,7 +326,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 16*/
-name|int32
+name|int32_t
 argument_list|(
 argument|*done
 argument_list|)
@@ -397,19 +348,19 @@ name|name
 decl_stmt|;
 comment|/* name of device type */
 comment|/* 24*/
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 comment|/* device type dependent flags */
 comment|/* 32*/
-name|int32
+name|int32_t
 name|spare
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* 36*/
-name|int32
+name|int32_t
 name|link_flags
 decl_stmt|;
 comment|/* Flags OR'd into sc_link at attach time */
@@ -764,11 +715,11 @@ struct|struct
 name|st_mode
 block|{
 comment|/*  4*/
-name|u_int32
+name|u_int32_t
 name|blksiz
 decl_stmt|;
 comment|/*  6*/
-name|u_int16
+name|u_int16_t
 name|quirks
 decl_stmt|;
 comment|/* same definitions as in XXX */
@@ -975,47 +926,47 @@ begin_struct
 struct|struct
 name|scsi_link
 block|{
-name|u_int8
+name|u_int8_t
 name|target
 decl_stmt|;
 comment|/* targ of this dev */
-name|u_int8
+name|u_int8_t
 name|lun
 decl_stmt|;
 comment|/* lun of this dev */
-name|u_int8
+name|u_int8_t
 name|adapter_targ
 decl_stmt|;
 comment|/* what are we on the scsi bus */
-name|u_int8
+name|u_int8_t
 name|adapter_unit
 decl_stmt|;
 comment|/* e.g. the 0 in aha0 */
-name|u_int8
+name|u_int8_t
 name|adapter_bus
 decl_stmt|;
 comment|/* e.g. the 0 in bus0 */
-name|u_int8
+name|u_int8_t
 name|scsibus
 decl_stmt|;
 comment|/* the Nth scsibus	*/
-name|u_int8
+name|u_int8_t
 name|dev_unit
 decl_stmt|;
 comment|/* e.g. the 0 in sd0 */
-name|u_int8
+name|u_int8_t
 name|opennings
 decl_stmt|;
 comment|/* available operations */
-name|u_int8
+name|u_int8_t
 name|active
 decl_stmt|;
 comment|/* operations in progress */
-name|u_int16
+name|u_int16_t
 name|flags
 decl_stmt|;
 comment|/* flags that all devices have */
-name|u_int16
+name|u_int16_t
 name|quirks
 decl_stmt|;
 comment|/* device specific quirks */
@@ -1246,7 +1197,7 @@ name|next
 decl_stmt|;
 comment|/* when free */
 comment|/*08*/
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 comment|/*12*/
@@ -1257,19 +1208,19 @@ name|sc_link
 decl_stmt|;
 comment|/* all about our device and adapter */
 comment|/*13*/
-name|u_int8
+name|u_int8_t
 name|retries
 decl_stmt|;
 comment|/* the number of times to retry */
 comment|/*16*/
-name|u_int8
+name|u_int8_t
 name|spare
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/*20*/
-name|int32
+name|int32_t
 name|timeout
 decl_stmt|;
 comment|/* in milliseconds */
@@ -1281,7 +1232,7 @@ name|cmd
 decl_stmt|;
 comment|/* The scsi command to execute */
 comment|/*28*/
-name|int32
+name|int32_t
 name|cmdlen
 decl_stmt|;
 comment|/* how long it is */
@@ -1292,17 +1243,17 @@ name|data
 decl_stmt|;
 comment|/* dma address OR a uio address */
 comment|/*36*/
-name|int32
+name|int32_t
 name|datalen
 decl_stmt|;
 comment|/* data len (blank if uio)    */
 comment|/*40*/
-name|int32
+name|int32_t
 name|resid
 decl_stmt|;
 comment|/* how much buffer was not touched */
 comment|/*44*/
-name|int32
+name|int32_t
 name|error
 decl_stmt|;
 comment|/* an error value	*/
@@ -1321,12 +1272,12 @@ decl_stmt|;
 comment|/* 32 bytes*/
 comment|/* 	 * Believe it or not, Some targets fall on the ground with 	 * anything but a certain sense length. 	 */
 comment|/*84*/
-name|int32
+name|int32_t
 name|req_sense_length
 decl_stmt|;
 comment|/* Explicit request sense length */
 comment|/*88*/
-name|int32
+name|int32_t
 name|status
 decl_stmt|;
 comment|/* SCSI status */
@@ -1686,7 +1637,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32
+name|u_int32_t
 name|scsi_read_capacity
 name|__P
 argument_list|(
@@ -1696,11 +1647,11 @@ name|scsi_link
 operator|*
 name|sc_link
 operator|,
-name|u_int32
+name|u_int32_t
 operator|*
 name|blk_size
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -1718,7 +1669,7 @@ name|scsi_link
 operator|*
 name|sc_link
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -1769,7 +1720,7 @@ name|scsi_inquiry_data
 modifier|*
 name|inqbuf
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -1784,10 +1735,10 @@ name|scsi_link
 modifier|*
 name|sc_link
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|type
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -1848,7 +1799,7 @@ name|scsi_link
 modifier|*
 name|sc_link
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -1863,10 +1814,10 @@ name|scsi_link
 modifier|*
 name|sc_link
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|eject
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -1910,22 +1861,22 @@ expr|struct
 name|scsi_generic
 operator|*
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
 name|u_char
 operator|*
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
-name|u_int32
+name|u_int32_t
 operator|,
 expr|struct
 name|buf
 operator|*
 operator|,
-name|u_int32
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2103,7 +2054,7 @@ name|scsi_uto3b
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
 name|u_char
 operator|*
@@ -2113,7 +2064,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32
+name|u_int32_t
 name|scsi_3btou
 name|__P
 argument_list|(
@@ -2126,7 +2077,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int32
+name|int32_t
 name|scsi_3btoi
 name|__P
 argument_list|(
@@ -2144,7 +2095,7 @@ name|scsi_uto4b
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
 name|u_char
 operator|*
@@ -2154,7 +2105,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32
+name|u_int32_t
 name|scsi_4btou
 name|__P
 argument_list|(
@@ -2172,7 +2123,7 @@ name|scsi_uto2b
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 operator|,
 name|u_char
 operator|*
@@ -2182,7 +2133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32
+name|u_int32_t
 name|scsi_2btou
 name|__P
 argument_list|(
@@ -2330,7 +2281,7 @@ name|scsi_link
 modifier|*
 name|sc_link
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|flags
 parameter_list|)
 function_decl|;

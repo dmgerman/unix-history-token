@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.61 1996/02/08 06:23:49 pst Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.62 1996/02/19 09:36:23 julian Exp $  */
 end_comment
 
 begin_comment
@@ -244,16 +244,16 @@ name|st_space
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
-name|int32
+name|int32_t
 name|number
 operator|,
-name|u_int32
+name|u_int32_t
 name|what
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -267,13 +267,13 @@ name|st_rewind
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
 name|boolean
 name|immed
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -287,13 +287,13 @@ name|st_erase
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
 name|boolean
 name|immed
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -307,10 +307,10 @@ name|st_mode_sense
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|,
 expr|\ 	struct
@@ -318,10 +318,10 @@ name|tape_pages
 operator|*
 name|page
 operator|,
-name|u_int32
+name|u_int32_t
 name|pagelen
 operator|,
-name|u_int32
+name|u_int32_t
 name|pagecode
 operator|)
 argument_list|)
@@ -335,7 +335,7 @@ name|st_decide_mode
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
 name|boolean
@@ -352,17 +352,17 @@ name|st_read
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
 name|char
 operator|*
 name|buf
 operator|,
-name|u_int32
+name|u_int32_t
 name|size
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -376,10 +376,10 @@ name|st_rd_blk_lim
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -393,7 +393,7 @@ name|st_touch_tape
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|)
 argument_list|)
@@ -407,13 +407,13 @@ name|st_write_filemarks
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
-name|int32
+name|int32_t
 name|number
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -427,13 +427,13 @@ name|st_load
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
-name|u_int32
+name|u_int32_t
 name|type
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -447,10 +447,10 @@ name|st_mode_select
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|,
 expr|\ 	struct
@@ -458,7 +458,7 @@ name|tape_pages
 operator|*
 name|page
 operator|,
-name|u_int32
+name|u_int32_t
 name|pagelen
 operator|)
 argument_list|)
@@ -472,10 +472,10 @@ name|st_comp
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
-name|u_int32
+name|u_int32_t
 name|mode
 operator|)
 argument_list|)
@@ -484,22 +484,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int32
+name|int32_t
 name|st_chkeod
 name|__P
 argument_list|(
 operator|(
-name|u_int32
+name|u_int32_t
 name|unit
 operator|,
 name|boolean
 name|position
 operator|,
-name|int32
+name|int32_t
 operator|*
 name|nmarks
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -511,10 +511,10 @@ specifier|static
 name|void
 name|ststart
 parameter_list|(
-name|u_int32
+name|u_int32_t
 name|unit
 parameter_list|,
-name|u_int32
+name|u_int32_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -547,7 +547,7 @@ operator|(
 name|dev_t
 name|dev
 operator|,
-name|u_int32
+name|u_int32_t
 name|flags
 operator|)
 argument_list|)
@@ -612,54 +612,54 @@ struct|struct
 name|scsi_data
 block|{
 comment|/*--------------------present operating parameters, flags etc.----------------*/
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 comment|/* see below                          */
-name|u_int32
+name|u_int32_t
 name|blksiz
 decl_stmt|;
 comment|/* blksiz we are using                */
-name|u_int32
+name|u_int32_t
 name|density
 decl_stmt|;
 comment|/* present density                    */
-name|u_int32
+name|u_int32_t
 name|comp
 decl_stmt|;
 comment|/* present compression mode           */
-name|u_int32
+name|u_int32_t
 name|quirks
 decl_stmt|;
 comment|/* quirks for the open mode           */
-name|u_int32
+name|u_int32_t
 name|last_dsty
 decl_stmt|;
 comment|/* last density openned               */
 comment|/*--------------------parameters reported by the device ----------------------*/
-name|u_int32
+name|u_int32_t
 name|blkmin
 decl_stmt|;
 comment|/* min blk size                       */
-name|u_int32
+name|u_int32_t
 name|blkmax
 decl_stmt|;
 comment|/* max blk size                       */
 comment|/*--------------------parameters reported by the device for this media--------*/
-name|u_int32
+name|u_int32_t
 name|numblks
 decl_stmt|;
 comment|/* nominal blocks capacity            */
-name|u_int32
+name|u_int32_t
 name|media_blksiz
 decl_stmt|;
 comment|/* 0 if not ST_FIXEDBLOCKS            */
-name|u_int32
+name|u_int32_t
 name|media_density
 decl_stmt|;
 comment|/* this is what it said when asked    */
 comment|/*--------------------quirks for the whole drive------------------------------*/
-name|u_int32
+name|u_int32_t
 name|drive_quirks
 decl_stmt|;
 comment|/* quirks of this drive               */
@@ -668,7 +668,7 @@ name|st_modes
 name|modes
 decl_stmt|;
 comment|/* plus more for each mode            */
-name|u_int8
+name|u_int8_t
 name|modeflags
 index|[
 literal|4
@@ -717,7 +717,7 @@ name|scsi_xfer
 name|scsi_xfer
 decl_stmt|;
 comment|/* scsi xfer struct for this drive */
-name|u_int32
+name|u_int32_t
 name|xfer_block_wait
 decl_stmt|;
 comment|/* is a process waiting? */
@@ -1467,7 +1467,7 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 ifdef|#
@@ -2643,7 +2643,7 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|mode
@@ -2926,7 +2926,7 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|mode
@@ -3087,11 +3087,11 @@ parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|mode
@@ -3501,7 +3501,7 @@ name|sc_link
 operator|->
 name|sd
 decl_stmt|;
-name|int32
+name|int32_t
 name|nmarks
 decl_stmt|;
 if|if
@@ -3597,7 +3597,7 @@ name|unit
 parameter_list|,
 name|first_read
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|boolean
@@ -4148,10 +4148,10 @@ modifier|*
 name|sc_link
 parameter_list|)
 block|{
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|opri
 decl_stmt|;
 name|struct
@@ -4415,10 +4415,10 @@ name|unit
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
@@ -4936,10 +4936,10 @@ name|errcode
 init|=
 literal|0
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|number
 decl_stmt|,
 name|flags
@@ -4951,13 +4951,13 @@ name|scsi_data
 modifier|*
 name|st
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|hold_blksiz
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|hold_density
 decl_stmt|;
-name|int32
+name|int32_t
 name|nmarks
 decl_stmt|;
 name|struct
@@ -5854,7 +5854,7 @@ name|size
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|size
@@ -6068,7 +6068,7 @@ name|unit
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|flags
@@ -6258,7 +6258,7 @@ name|pagelen
 parameter_list|,
 name|pagecode
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|flags
@@ -6268,13 +6268,13 @@ name|tape_pages
 modifier|*
 name|page
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|pagelen
 decl_stmt|,
 name|pagecode
 decl_stmt|;
 block|{
-name|u_int32
+name|u_int32_t
 name|dat_len
 decl_stmt|;
 name|errval
@@ -6630,7 +6630,7 @@ name|page
 parameter_list|,
 name|pagelen
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|flags
@@ -6640,11 +6640,11 @@ name|tape_pages
 modifier|*
 name|page
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|pagelen
 decl_stmt|;
 block|{
-name|u_int32
+name|u_int32_t
 name|dat_len
 decl_stmt|;
 name|struct
@@ -6917,7 +6917,7 @@ name|unit
 parameter_list|,
 name|mode
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|mode
@@ -7153,14 +7153,14 @@ name|what
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|what
 decl_stmt|,
 name|flags
 decl_stmt|;
-name|int32
+name|int32_t
 name|number
 decl_stmt|;
 block|{
@@ -7541,12 +7541,12 @@ name|number
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|flags
 decl_stmt|;
-name|int32
+name|int32_t
 name|number
 decl_stmt|;
 block|{
@@ -7720,7 +7720,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int32
+name|int32_t
 name|st_chkeod
 parameter_list|(
 name|unit
@@ -7731,17 +7731,17 @@ name|nmarks
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 name|boolean
 name|position
 decl_stmt|;
-name|int32
+name|int32_t
 modifier|*
 name|nmarks
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|{
@@ -7879,7 +7879,7 @@ name|type
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|type
@@ -7934,7 +7934,7 @@ block|{
 name|errval
 name|error
 decl_stmt|;
-name|int32
+name|int32_t
 name|nmarks
 decl_stmt|;
 name|error
@@ -8047,7 +8047,7 @@ name|immed
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|flags
@@ -8085,7 +8085,7 @@ decl_stmt|;
 name|errval
 name|error
 decl_stmt|;
-name|int32
+name|int32_t
 name|nmarks
 decl_stmt|;
 name|error
@@ -8203,7 +8203,7 @@ name|immed
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|,
 name|flags
@@ -8241,7 +8241,7 @@ decl_stmt|;
 name|errval
 name|error
 decl_stmt|;
-name|int32
+name|int32_t
 name|nmarks
 decl_stmt|;
 name|error
@@ -8422,7 +8422,7 @@ name|flags
 operator|&
 name|SCSI_SILENT
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|unit
 init|=
 name|sc_link
@@ -8442,10 +8442,10 @@ argument_list|,
 name|unit
 argument_list|)
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|key
 decl_stmt|;
-name|int32
+name|int32_t
 name|info
 decl_stmt|;
 comment|/* 	 * Get the sense fields and work out what code 	 */
@@ -8465,7 +8465,7 @@ argument_list|(
 operator|*
 operator|(
 operator|(
-name|int32
+name|int32_t
 operator|*
 operator|)
 name|sense
@@ -8979,7 +8979,7 @@ name|st_touch_tape
 parameter_list|(
 name|unit
 parameter_list|)
-name|u_int32
+name|u_int32_t
 name|unit
 decl_stmt|;
 block|{
@@ -9000,7 +9000,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|u_int32
+name|u_int32_t
 name|readsiz
 decl_stmt|;
 name|errval
