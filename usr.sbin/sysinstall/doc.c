@@ -319,7 +319,7 @@ name|strcpy
 argument_list|(
 name|target
 argument_list|,
-literal|"http://www.freebsd.org/FAQ"
+literal|"http://www.freebsd.org/doc/en_US.ISO8859-1/books/faq"
 argument_list|)
 expr_stmt|;
 block|}
@@ -357,7 +357,7 @@ name|strcpy
 argument_list|(
 name|target
 argument_list|,
-literal|"http://www.freebsd.org/handbook"
+literal|"http://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook"
 argument_list|)
 expr_stmt|;
 block|}
