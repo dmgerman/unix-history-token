@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	1.6 %G%"
+literal|"@(#)cmd3.c	1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2495,38 +2495,8 @@ operator|==
 name|NOSTR
 condition|)
 block|{
-if|if
-condition|(
-name|edit
-condition|)
-name|printf
-argument_list|(
-literal|"Reading \"%s\""
-argument_list|,
-name|editfile
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"Reading %s's mail"
-argument_list|,
-name|rindex
-argument_list|(
-name|mailname
-argument_list|,
-literal|'/'
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"; %d message(s)\n"
-argument_list|,
-name|msgCount
-argument_list|)
+name|newfileinfo
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
