@@ -555,6 +555,27 @@ name|vm_kmem_size
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|kmem_size
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|vm_kmem_size
+argument_list|,
+literal|0
+argument_list|,
+literal|"Size of kernel memory"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * The malloc_mtx protects the kmemstatistics linked list.  */
 end_comment
@@ -1849,9 +1870,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Allow final override from the kernel environment */
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+if|if
+condition|(
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"kern.vm.kmem.size"
+argument_list|,
+operator|&
+name|vm_kmem_size
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"kern.vm.kmem.size is now called vm.kmem_size!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"vm.kmem_size"
 argument_list|,
 operator|&
 name|vm_kmem_size
