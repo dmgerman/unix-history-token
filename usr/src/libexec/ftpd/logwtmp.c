@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logwtmp.c	5.4 (Berkeley) %G%"
+literal|"@(#)logwtmp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,13 +57,6 @@ include|#
 directive|include
 file|<utmp.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|WTMPFILE
-value|"/usr/adm/wtmp"
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -133,7 +126,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|WTMPFILE
+name|_PATH_WTMP
 argument_list|,
 name|O_WRONLY
 operator||
