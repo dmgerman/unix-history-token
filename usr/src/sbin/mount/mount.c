@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.30 (Berkeley) %G%"
+literal|"@(#)mount.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1968,7 +1968,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount [-afurw]\nor mount [-furw] special | node\nor mount [-furw] special node\n"
+literal|"usage:\n  mount %s %s\n  mount %s\n  mount %s\n"
+argument_list|,
+literal|"[ -frwu ] [ -t nfs | ufs | external_type ]"
+argument_list|,
+literal|"[ -o options ] special node"
+argument_list|,
+literal|"[ -afrwu ] [ -t nfs | ufs | external_type ]"
+argument_list|,
+literal|"[ -frwu ] special | node"
 argument_list|)
 expr_stmt|;
 name|exit
