@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_conf.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_conf.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -120,44 +120,6 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|"bk.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NBK
-operator|>
-literal|0
-end_if
-
-begin_decl_stmt
-name|int
-name|bkopen
-argument_list|()
-decl_stmt|,
-name|bkclose
-argument_list|()
-decl_stmt|,
-name|bkread
-argument_list|()
-decl_stmt|,
-name|bkinput
-argument_list|()
-decl_stmt|,
-name|bkioctl
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|"tb.h"
 end_include
 
@@ -259,34 +221,6 @@ block|,
 name|ttymodem
 block|,
 comment|/* 0- termios */
-if|#
-directive|if
-name|NBK
-operator|>
-literal|0
-name|bkopen
-block|,
-name|bkclose
-block|,
-name|bkread
-block|,
-name|ttwrite
-block|,
-name|bkioctl
-block|,
-name|bkinput
-block|,
-name|nodev
-block|,
-name|nulldev
-block|,
-name|ttstart
-block|,
-name|nullmodem
-block|,
-comment|/* 1- NETLDISC */
-else|#
-directive|else
 name|nodev
 block|,
 name|nodev
@@ -297,6 +231,7 @@ name|nodev
 block|,
 name|nodev
 block|,
+comment|/* 1- defunct */
 name|nodev
 block|,
 name|nodev
@@ -307,8 +242,6 @@ name|nodev
 block|,
 name|nodev
 block|,
-endif|#
-directive|endif
 name|nodev
 block|,
 name|nodev
