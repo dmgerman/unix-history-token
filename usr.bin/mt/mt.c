@@ -1914,7 +1914,6 @@ name|tapes
 index|[]
 init|=
 block|{
-comment|/* 	 * XXX This is weird.  The st driver reports the tape drive 	 * as 0x7 (MT_ISAR - Sun/Archive compatible). 	 */
 block|{
 name|MT_ISAR
 block|,
