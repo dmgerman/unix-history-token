@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983, 1993, 1994  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: ruptime.c,v 1.5 1995/08/07 19:17:40 wollman Exp $ */
+comment|/* $Id: ruptime.c,v 1.6 1995/09/08 20:33:21 jkh Exp $ */
 end_comment
 
 begin_ifndef
@@ -147,6 +147,16 @@ name|whod
 name|awhod
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|LEFTEARTH
+parameter_list|(
+name|h
+parameter_list|)
+value|(now - (h)->hs_wd->wd_recvtime> 4*24*60*60)
+end_define
 
 begin_define
 define|#
@@ -853,6 +863,14 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|LEFTEARTH
+argument_list|(
+name|hsp
+argument_list|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|ISDOWN
