@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	5.5 (Berkeley) %G%"
+literal|"@(#)af.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -507,8 +507,9 @@ argument_list|)
 operator|.
 name|x_net
 expr_stmt|;
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|sendto
 argument_list|(
 name|s
@@ -526,22 +527,14 @@ argument_list|(
 operator|*
 name|sns
 argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 block|}
 return|return;
 block|}
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|sendto
 argument_list|(
 name|s
@@ -559,15 +552,6 @@ argument_list|(
 operator|*
 name|sns
 argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 block|}
