@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)rlogind.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1543,7 +1543,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|execl
+name|execle
 argument_list|(
 name|_PATH_LOGIN
 argument_list|,
@@ -1557,18 +1557,18 @@ name|hostname
 argument_list|,
 literal|"-f"
 argument_list|,
+literal|"--"
+argument_list|,
 name|lusername
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
+argument_list|,
+name|env
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|execl
+name|execle
 argument_list|(
 name|_PATH_LOGIN
 argument_list|,
@@ -1580,13 +1580,13 @@ literal|"-h"
 argument_list|,
 name|hostname
 argument_list|,
+literal|"--"
+argument_list|,
 name|lusername
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
+argument_list|,
+name|env
 argument_list|)
 expr_stmt|;
 name|fatal
@@ -1769,18 +1769,14 @@ operator|~
 name|TIOCPKT_WINDOW
 expr_stmt|;
 comment|/* we know he heard */
-name|bcopy
+name|memmove
 argument_list|(
+operator|&
+name|w
+argument_list|,
 name|cp
 operator|+
 literal|4
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|w
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3114,15 +3110,6 @@ do|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|setup_term
@@ -3321,10 +3308,6 @@ literal|1
 index|]
 operator|=
 literal|0
-expr_stmt|;
-name|environ
-operator|=
-name|env
 expr_stmt|;
 block|}
 end_function

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	8.4 (Berkeley) 4/16/94"
+literal|"@(#)ftpd.c	8.5 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -2449,7 +2449,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|p
+name|line
 argument_list|,
 name|name
 argument_list|)

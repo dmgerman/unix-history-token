@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slc.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)slc.c	8.2 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1179,7 +1179,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		* It is not possible for us to support this 		* request as he asks. 		* 		* If our level is DEFAULT, then just ack whatever was 		* sent.  		* 		* If he can't change and we can't change, 		* then degenerate to NOSUPPORT. 		* 		* Otherwise we send our level back to him, (CANTCHANGE 		* or NOSUPPORT) and if CANTCHANGE, send 		* our value as well. 		*/
+comment|/* 		* It is not possible for us to support this 		* request as he asks. 		* 		* If our level is DEFAULT, then just ack whatever was 		* sent. 		* 		* If he can't change and we can't change, 		* then degenerate to NOSUPPORT. 		* 		* Otherwise we send our level back to him, (CANTCHANGE 		* or NOSUPPORT) and if CANTCHANGE, send 		* our value as well. 		*/
 if|if
 condition|(
 name|mylevel
@@ -1715,11 +1715,11 @@ literal|0
 condition|)
 return|return;
 comment|/* too bad */
-name|bcopy
+name|memmove
 argument_list|(
-name|ptr
-argument_list|,
 name|def_slcbuf
+argument_list|,
+name|ptr
 argument_list|,
 name|len
 argument_list|)

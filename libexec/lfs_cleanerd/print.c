@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)print.c	8.2 (Berkeley) 5/24/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,6 +138,20 @@ if|if
 condition|(
 name|sp
 operator|->
+name|ss_magic
+operator|!=
+name|SS_MAGIC
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+name|sp
+operator|->
 name|ss_sumsum
 operator|!=
 operator|(
@@ -167,6 +181,61 @@ operator|-
 literal|1
 operator|)
 return|;
+name|numblocks
+operator|=
+operator|(
+name|sp
+operator|->
+name|ss_ninos
+operator|+
+name|INOPB
+argument_list|(
+name|lfsp
+argument_list|)
+operator|-
+literal|1
+operator|)
+operator|/
+name|INOPB
+argument_list|(
+name|lfsp
+argument_list|)
+expr_stmt|;
+comment|/* Do some basic sanity checking. */
+if|if
+condition|(
+name|sp
+operator|->
+name|ss_nfinfo
+operator|>
+name|LFS_SUMMARY_SIZE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|FINFO
+argument_list|)
+operator|||
+name|numblocks
+operator|>
+name|lfsp
+operator|->
+name|lfs_ssize
+operator|||
+name|numblocks
+operator|>
+name|LFS_SUMMARY_SIZE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|daddr_t
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|flags
@@ -179,7 +248,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    %s0x%X\t%s%d\t%s%d\n    %s0x%X\t%s0x%X"
+literal|"  %s0x%X\t%s%d\t%s%d\n  %s0x%X\t%s0x%X\t%s0x%X\n"
 argument_list|,
 literal|"next     "
 argument_list|,
@@ -210,6 +279,12 @@ argument_list|,
 name|sp
 operator|->
 name|ss_datasum
+argument_list|,
+literal|"magic    "
+argument_list|,
+name|sp
+operator|->
+name|ss_magic
 argument_list|)
 expr_stmt|;
 operator|(
@@ -217,7 +292,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\tcreate   %s"
+literal|"  create   %s"
 argument_list|,
 name|ctime
 argument_list|(
@@ -233,26 +308,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|numblocks
-operator|=
-operator|(
-name|sp
-operator|->
-name|ss_ninos
-operator|+
-name|INOPB
-argument_list|(
-name|lfsp
-argument_list|)
-operator|-
-literal|1
-operator|)
-operator|/
-name|INOPB
-argument_list|(
-name|lfsp
-argument_list|)
-expr_stmt|;
 comment|/* Dump out inode disk addresses */
 if|if
 condition|(
@@ -736,7 +791,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s0x%X\t%s%d\t%s0x%X\t%s%d\n"
+literal|"%s0x%X\t%s%d\t%s0x%qX\t%s%d\n"
 argument_list|,
 literal|"segmask  "
 argument_list|,
@@ -768,7 +823,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s0x%X\t\t%s%d\t%s0x%X\t%s%d\n"
+literal|"%s0x%qX\t\t%s%d\t%s0x%qX\t%s%d\n"
 argument_list|,
 literal|"ffmask   "
 argument_list|,

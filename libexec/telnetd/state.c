@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)state.c	8.2 (Berkeley) 12/15/93"
+literal|"@(#)state.c	8.5 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1224,11 +1224,11 @@ name|opfrontp
 decl_stmt|,
 name|oc
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|opfrontp
-argument_list|,
 name|xptyobuf
+argument_list|,
+name|opfrontp
 argument_list|,
 name|n
 argument_list|)
@@ -1304,7 +1304,7 @@ comment|/* end of telrcv */
 end_comment
 
 begin_comment
-comment|/*  * The will/wont/do/dont state machines are based on Dave Borman's  * Telnet option processing state machine.  *  * These correspond to the following states:  *	my_state = the last negotiated state  *	want_state = what I want the state to go to  *	want_resp = how many requests I have sent  * All state defaults are negative, and resp defaults to 0.  *  * When initiating a request to change state to new_state:  *   * if ((want_resp == 0&& new_state == my_state) || want_state == new_state) {  *	do nothing;  * } else {  *	want_state = new_state;  *	send new_state;  *	want_resp++;  * }  *  * When receiving new_state:  *  * if (want_resp) {  *	want_resp--;  *	if (want_resp&& (new_state == my_state))  *		want_resp--;  * }  * if ((want_resp == 0)&& (new_state != want_state)) {  *	if (ok_to_switch_to new_state)  *		want_state = new_state;  *	else  *		want_resp++;  *	send want_state;  * }  * my_state = new_state;  *  * Note that new_state is implied in these functions by the function itself.  * will and do imply positive new_state, wont and dont imply negative.  *  * Finally, there is one catch.  If we send a negative response to a  * positive request, my_state will be the positive while want_state will  * remain negative.  my_state will revert to negative when the negative  * acknowlegment arrives from the peer.  Thus, my_state generally tells  * us not only the last negotiated state, but also tells us what the peer  * wants to be doing as well.  It is important to understand this difference  * as we may wish to be processing data streams based on our desired state  * (want_state) or based on what the peer thinks the state is (my_state).  *  * This all works fine because if the peer sends a positive request, the data  * that we receive prior to negative acknowlegment will probably be affected  * by the positive state, and we can process it as such (if we can; if we  * can't then it really doesn't matter).  If it is that important, then the  * peer probably should be buffering until this option state negotiation  * is complete.  *  */
+comment|/*  * The will/wont/do/dont state machines are based on Dave Borman's  * Telnet option processing state machine.  *  * These correspond to the following states:  *	my_state = the last negotiated state  *	want_state = what I want the state to go to  *	want_resp = how many requests I have sent  * All state defaults are negative, and resp defaults to 0.  *  * When initiating a request to change state to new_state:  *  * if ((want_resp == 0&& new_state == my_state) || want_state == new_state) {  *	do nothing;  * } else {  *	want_state = new_state;  *	send new_state;  *	want_resp++;  * }  *  * When receiving new_state:  *  * if (want_resp) {  *	want_resp--;  *	if (want_resp&& (new_state == my_state))  *		want_resp--;  * }  * if ((want_resp == 0)&& (new_state != want_state)) {  *	if (ok_to_switch_to new_state)  *		want_state = new_state;  *	else  *		want_resp++;  *	send want_state;  * }  * my_state = new_state;  *  * Note that new_state is implied in these functions by the function itself.  * will and do imply positive new_state, wont and dont imply negative.  *  * Finally, there is one catch.  If we send a negative response to a  * positive request, my_state will be the positive while want_state will  * remain negative.  my_state will revert to negative when the negative  * acknowlegment arrives from the peer.  Thus, my_state generally tells  * us not only the last negotiated state, but also tells us what the peer  * wants to be doing as well.  It is important to understand this difference  * as we may wish to be processing data streams based on our desired state  * (want_state) or based on what the peer thinks the state is (my_state).  *  * This all works fine because if the peer sends a positive request, the data  * that we receive prior to negative acknowlegment will probably be affected  * by the positive state, and we can process it as such (if we can; if we  * can't then it really doesn't matter).  If it is that important, then the  * peer probably should be buffering until this option state negotiation  * is complete.  *  */
 end_comment
 
 begin_function
@@ -2156,10 +2156,6 @@ operator|!=
 name|REAL_LINEMODE
 condition|)
 break|break;
-name|lmodetype
-operator|=
-name|KLUDGE_LINEMODE
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* KLUDGELINEMODE */
@@ -4680,7 +4676,7 @@ name|ADD
 parameter_list|(
 name|c
 parameter_list|)
-value|*ncp++ = c;
+value|*ncp++ = c
 end_define
 
 begin_define
@@ -4690,7 +4686,7 @@ name|ADD_DATA
 parameter_list|(
 name|c
 parameter_list|)
-value|{ *ncp++ = c; if (c == SE) *ncp++ = c; }
+value|{ *ncp++ = c; if (c == SE || c == IAC) *ncp++ = c; }
 end_define
 
 begin_function
@@ -4781,17 +4777,6 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-name|IAC
-condition|)
-name|ADD
-argument_list|(
-name|IAC
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4809,17 +4794,6 @@ expr_stmt|;
 name|ADD_DATA
 argument_list|(
 name|i
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-name|IAC
-condition|)
-name|ADD
-argument_list|(
-name|IAC
 argument_list|)
 expr_stmt|;
 block|}
@@ -4875,8 +4849,9 @@ condition|)
 block|{
 name|ADD
 argument_list|(
-argument|SB
+name|SB
 argument_list|)
+expr_stmt|;
 name|ADD
 argument_list|(
 name|TELOPT_LFLOW
@@ -4903,11 +4878,7 @@ expr_stmt|;
 block|}
 name|ADD
 argument_list|(
-argument|SE
-argument_list|)
-name|ADD
-argument_list|(
-name|SB
+name|SE
 argument_list|)
 expr_stmt|;
 block|}
@@ -4952,17 +4923,6 @@ expr_stmt|;
 name|ADD_DATA
 argument_list|(
 name|editmode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|editmode
-operator|==
-name|IAC
-condition|)
-name|ADD
-argument_list|(
-name|IAC
 argument_list|)
 expr_stmt|;
 name|ADD

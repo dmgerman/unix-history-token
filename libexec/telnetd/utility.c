@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utility.c	8.2 (Berkeley) 12/15/93"
+literal|"@(#)utility.c	8.4 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -676,11 +676,11 @@ name|next
 operator|-
 name|thisitem
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|thisitem
-argument_list|,
 name|good
+argument_list|,
+name|thisitem
 argument_list|,
 name|length
 argument_list|)
@@ -1033,11 +1033,11 @@ name|netflush
 argument_list|()
 expr_stmt|;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
-name|ptr
-argument_list|,
 name|nfrontp
+argument_list|,
+name|ptr
 argument_list|,
 name|len
 argument_list|)
@@ -1175,7 +1175,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s: %s\r\n"
+literal|"%s: %s"
 argument_list|,
 name|msg
 argument_list|,
@@ -1472,7 +1472,7 @@ name|STREAMSPTY
 specifier|extern
 name|char
 modifier|*
-name|index
+name|strchr
 parameter_list|()
 function_decl|;
 else|#
@@ -1480,7 +1480,7 @@ directive|else
 specifier|extern
 name|char
 modifier|*
-name|rindex
+name|strrchr
 parameter_list|()
 function_decl|;
 endif|#
@@ -1528,7 +1528,7 @@ name|STREAMSPTY
 comment|/* names are like /dev/pts/2 -- we want pts/2 */
 name|slash
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 operator|+
@@ -1541,7 +1541,7 @@ else|#
 directive|else
 name|slash
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|line
 argument_list|,

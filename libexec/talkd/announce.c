@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)announce.c	8.2 (Berkeley) 1/7/94"
+literal|"@(#)announce.c	8.3 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vis.h>
 end_include
 
 begin_include
@@ -257,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|N_CHARS
-value|120
+value|256
 end_define
 
 begin_comment
@@ -361,8 +367,7 @@ modifier|*
 name|lptr
 decl_stmt|,
 modifier|*
-name|ttymsg
-argument_list|()
+name|vis_user
 decl_stmt|;
 name|int
 name|i
@@ -490,6 +495,37 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
+name|vis_user
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|request
+operator|->
+name|l_name
+argument_list|)
+operator|*
+literal|4
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strvis
+argument_list|(
+name|vis_user
+argument_list|,
+name|request
+operator|->
+name|l_name
+argument_list|,
+name|VIS_CSTYLE
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -502,9 +538,7 @@ index|]
 argument_list|,
 literal|"talk: connection requested by %s@%s"
 argument_list|,
-name|request
-operator|->
-name|l_name
+name|vis_user
 argument_list|,
 name|remote_machine
 argument_list|)
@@ -549,9 +583,7 @@ index|]
 argument_list|,
 literal|"talk: respond with:  talk %s@%s"
 argument_list|,
-name|request
-operator|->
-name|l_name
+name|vis_user
 argument_list|,
 name|remote_machine
 argument_list|)

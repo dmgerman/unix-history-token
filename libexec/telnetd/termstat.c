@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termstat.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)termstat.c	8.2 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1449,7 +1449,7 @@ name|LINEMODE
 end_ifdef
 
 begin_comment
-comment|/*  * defer_terminit  *  * Some things should not be done until after the login process has started  * and all the pty modes are set to what they are supposed to be.  This  * function is called when the pty state has been processed for the first time.   * It calls other functions that do things that were deferred in each module.  */
+comment|/*  * defer_terminit  *  * Some things should not be done until after the login process has started  * and all the pty modes are set to what they are supposed to be.  This  * function is called when the pty state has been processed for the first time.  * It calls other functions that do things that were deferred in each module.  */
 end_comment
 
 begin_function
@@ -1496,7 +1496,7 @@ name|struct
 name|winsize
 name|ws
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1504,6 +1504,8 @@ operator|*
 operator|)
 operator|&
 name|ws
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
