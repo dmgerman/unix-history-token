@@ -16,9 +16,13 @@ init|=
 literal|1
 block|,
 comment|/* must start> 0 */
+name|N_AMIN
+block|,
 name|N_ATIME
 block|,
 name|N_CLOSEPAREN
+block|,
+name|N_CMIN
 block|,
 name|N_CTIME
 block|,
@@ -41,6 +45,8 @@ block|,
 name|N_LINKS
 block|,
 name|N_LS
+block|,
+name|N_MMIN
 block|,
 name|N_MTIME
 block|,
