@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setvbuf.c	5.3 (Berkeley) %G%"
+literal|"@(#)setvbuf.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,16 +100,12 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|buf
-operator|==
-name|NULL
-condition|)
-name|size
-operator|=
-literal|0
-expr_stmt|;
+specifier|register
+name|int
+name|ret
+decl_stmt|,
+name|flags
+decl_stmt|;
 comment|/* 	 * Verify arguments.  The `int' limit on `size' is due to this 	 * particular implementation. 	 */
 if|if
 condition|(
@@ -139,7 +135,11 @@ operator|(
 name|EOF
 operator|)
 return|;
-comment|/* 	 * Write current buffer, if any; drop read count, if any. 	 * Make sure putc() will not think fp is line buffered. 	 * Free old buffer if it was from malloc().  Clear line and 	 * non buffer flags, and clear malloc flag. 	 */
+comment|/* 	 * OK so far.  Write current buffer, if any; drop read count, if 	 * any.  Make sure putc() will not think fp is line buffered.  Free 	 * old buffer if it was from malloc().  Clear line and non-buffer 	 * flags, and clear malloc flag. 	 */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -160,11 +160,15 @@ name|_lbfsize
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
+name|flags
+operator|=
 name|fp
 operator|->
 name|_flags
+expr_stmt|;
+if|if
+condition|(
+name|flags
 operator|&
 name|__SMBF
 condition|)
@@ -181,9 +185,7 @@ operator|.
 name|_base
 argument_list|)
 expr_stmt|;
-name|fp
-operator|->
-name|_flags
+name|flags
 operator|&=
 operator|~
 operator|(
@@ -194,7 +196,56 @@ operator||
 name|__SMBF
 operator|)
 expr_stmt|;
-comment|/* 	 * Now put back whichever flag is needed, and fix _lbfsize 	 * if line buffered.  Ensure output flush on exit if the 	 * stream will be buffered at all. 	 */
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+condition|)
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* we will make a real one later */
+elseif|else
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Caller wants specific buffering mode and size but did 		 * not provide a buffer.  Produce one of the given size. 		 * If that fails, set the size to 0 and continue, so that 		 * we will try again later with a system-supplied size 		 * (failure here is probably from someone with the bogus 		 * idea that larger is always better, asking for many MB), 		 * but return EOF to indicate failure. 		 */
+if|if
+condition|(
+operator|(
+name|buf
+operator|=
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|ret
+operator|=
+name|EOF
+expr_stmt|;
+name|size
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|flags
+operator||=
+name|__SMBF
+expr_stmt|;
+block|}
+comment|/* 	 * Now put back whichever flag is needed, and fix _lbfsize if line 	 * buffered.  Ensure output flush on exit if the stream will be 	 * buffered at all. 	 */
 switch|switch
 condition|(
 name|mode
@@ -203,9 +254,7 @@ block|{
 case|case
 name|_IONBF
 case|:
-name|fp
-operator|->
-name|_flags
+name|flags
 operator||=
 name|__SNBF
 expr_stmt|;
@@ -235,9 +284,7 @@ break|break;
 case|case
 name|_IOLBF
 case|:
-name|fp
-operator|->
-name|_flags
+name|flags
 operator||=
 name|__SLBF
 expr_stmt|;
@@ -287,9 +334,7 @@ block|}
 comment|/* 	 * Patch up write count if necessary. 	 */
 if|if
 condition|(
-name|fp
-operator|->
-name|_flags
+name|flags
 operator|&
 name|__SWR
 condition|)
@@ -297,9 +342,7 @@ name|fp
 operator|->
 name|_w
 operator|=
-name|fp
-operator|->
-name|_flags
+name|flags
 operator|&
 operator|(
 name|__SLBF
@@ -311,9 +354,15 @@ literal|0
 else|:
 name|size
 expr_stmt|;
+name|fp
+operator|->
+name|_flags
+operator|=
+name|flags
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ret
 operator|)
 return|;
 block|}
