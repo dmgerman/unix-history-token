@@ -11682,7 +11682,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * this code makes some *MAJOR* assumptions:  * 1. Current pmap& pmap exists.  * 2. Not wired.  * 3. Read access.  * 4. No page table pages.  * 5. Tlbflush is deferred to calling procedure.  * 6. Page IS managed.  * but is *MUCH* faster than pmap_enter...  */
+comment|/*  * this code makes some *MAJOR* assumptions:  * 1. Current pmap& pmap exists.  * 2. Not wired.  * 3. Read access.  * 4. No page table pages.  * 6. Page IS managed.  * but is *MUCH* faster than pmap_enter...  */
 end_comment
 
 begin_function
@@ -11702,9 +11702,6 @@ name|vm_page_t
 name|mpte
 parameter_list|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|m
@@ -11767,9 +11764,6 @@ name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

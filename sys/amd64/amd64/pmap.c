@@ -8116,7 +8116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * this code makes some *MAJOR* assumptions:  * 1. Current pmap& pmap exists.  * 2. Not wired.  * 3. Read access.  * 4. No page table pages.  * 5. Tlbflush is deferred to calling procedure.  * 6. Page IS managed.  * but is *MUCH* faster than pmap_enter...  */
+comment|/*  * this code makes some *MAJOR* assumptions:  * 1. Current pmap& pmap exists.  * 2. Not wired.  * 3. Read access.  * 4. No page table pages.  * 6. Page IS managed.  * but is *MUCH* faster than pmap_enter...  */
 end_comment
 
 begin_function
@@ -8143,8 +8143,22 @@ decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -8446,9 +8460,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
