@@ -1499,6 +1499,22 @@ goto|;
 block|}
 if|if
 condition|(
+name|us
+operator|.
+name|size
+operator|==
+operator|-
+literal|1
+condition|)
+name|warnx
+argument_list|(
+literal|"%s: size of remote file is not known"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|v_level
 operator|>
 literal|1
@@ -1528,6 +1544,15 @@ operator|.
 name|st_mtime
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|us
+operator|.
+name|size
+operator|!=
+operator|-
+literal|1
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1592,6 +1617,23 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+comment|/* if precious, warn the user and give up */
+if|if
+condition|(
+name|R_flag
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: local modification time does not match remote"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure_keep
+goto|;
+block|}
 name|url
 operator|->
 name|offset
