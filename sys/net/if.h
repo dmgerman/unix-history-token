@@ -15,6 +15,12 @@ directive|define
 name|_NET_IF_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_comment
 comment|/*  *<net/if.h> does not depend on<sys/time.h> on most other systems.  This  * helps userland compatability.  (struct timeval ifi_lastchange)  */
 end_comment
@@ -35,6 +41,124 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/*  * Length of interface external name, including terminating '\0'.  * Note: this is the same size as a generic device's external name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFNAMSIZ
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_NAMESIZE
+value|IFNAMSIZ
+end_define
+
+begin_comment
+comment|/*  * Structure describing a `cloning' interface.  */
+end_comment
+
+begin_struct
+struct|struct
+name|if_clone
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|if_clone
+argument_list|)
+name|ifc_list
+expr_stmt|;
+comment|/* on list of cloners */
+specifier|const
+name|char
+modifier|*
+name|ifc_name
+decl_stmt|;
+comment|/* name of device, e.g. `gif' */
+name|size_t
+name|ifc_namelen
+decl_stmt|;
+comment|/* length of name */
+name|int
+function_decl|(
+modifier|*
+name|ifc_create
+function_decl|)
+parameter_list|(
+name|struct
+name|if_clone
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ifc_destroy
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IF_CLONE_INITIALIZER
+parameter_list|(
+name|name
+parameter_list|,
+name|create
+parameter_list|,
+name|destroy
+parameter_list|)
+define|\
+value|{ { 0 }, name, sizeof(name) - 1, create, destroy }
+end_define
+
+begin_comment
+comment|/*  * Structure used to query names of interface cloners.  */
+end_comment
+
+begin_struct
+struct|struct
+name|if_clonereq
+block|{
+name|int
+name|ifcr_total
+decl_stmt|;
+comment|/* total cloners (out) */
+name|int
+name|ifcr_count
+decl_stmt|;
+comment|/* room for this many in user buffer */
+name|char
+modifier|*
+name|ifcr_buffer
+decl_stmt|;
+comment|/* buffer for cloner names */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Structure describing information about an interface  * which may be of interest to management entities.  */
@@ -485,14 +609,6 @@ begin_struct
 struct|struct
 name|ifreq
 block|{
-define|#
-directive|define
-name|IFNAMSIZ
-value|16
-define|#
-directive|define
-name|IF_NAMESIZE
-value|IFNAMSIZ
 name|char
 name|ifr_name
 index|[

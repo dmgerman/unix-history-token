@@ -597,6 +597,39 @@ begin_comment
 comment|/* set link level addr */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SIOCIFCREATE
+value|_IOWR('i', 122, struct ifreq)
+end_define
+
+begin_comment
+comment|/* create clone if */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCIFDESTROY
+value|_IOW('i', 121, struct ifreq)
+end_define
+
+begin_comment
+comment|/* destroy clone if */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCIFGCLONERS
+value|_IOWR('i', 120, struct if_clonereq)
+end_define
+
+begin_comment
+comment|/* get cloners */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
