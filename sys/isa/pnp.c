@@ -3483,6 +3483,15 @@ name|num_pnp_devs
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"PNP Identify complete\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
