@@ -12884,7 +12884,9 @@ expr_stmt|;
 endif|#
 directive|endif
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_block
