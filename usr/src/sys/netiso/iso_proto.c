@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: iso_proto.c,v 4.4 88/09/08 08:38:42 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso_proto.c,v $   *	@(#)iso_proto.c	7.3 (Berkeley) %G% *  *  * iso_proto.c : protocol switch tables in the ISO domain  *  * ISO protocol family includes TP, CLTP, CLNP, 8208  * TP and CLNP are implemented here.  */
+comment|/* $Header: iso_proto.c,v 4.4 88/09/08 08:38:42 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso_proto.c,v $   *	@(#)iso_proto.c	7.4 (Berkeley) %G% *  *  * iso_proto.c : protocol switch tables in the ISO domain  *  * ISO protocol family includes TP, CLTP, CLNP, 8208  * TP and CLNP are implemented here.  */
 end_comment
 
 begin_ifndef
@@ -121,13 +121,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|iso_usrreq
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|tp_ctloutput
 parameter_list|()
 function_decl|;
@@ -184,6 +177,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|cltp_input
+argument_list|()
+decl_stmt|,
+name|cltp_ctlinput
+argument_list|()
+decl_stmt|,
+name|cltp_init
+argument_list|()
+decl_stmt|,
+name|cltp_usrreq
+argument_list|()
+decl_stmt|,
+name|cltp_output
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|protosw
 name|isosw
@@ -197,7 +209,7 @@ block|,
 operator|&
 name|isodomain
 block|,
-literal|0
+name|ISOPROTO_CLTP
 block|,
 name|PR_ATOMIC
 operator||
@@ -205,15 +217,15 @@ name|PR_ADDR
 block|,
 literal|0
 block|,
-literal|0
+name|cltp_output
 block|,
 literal|0
 block|,
 literal|0
 block|,
-name|iso_usrreq
+name|cltp_usrreq
 block|,
-literal|0
+name|cltp_init
 block|,
 literal|0
 block|,
@@ -233,7 +245,7 @@ name|ISOPROTO_CLNP
 block|,
 literal|0
 block|,
-name|clnp_usrreq
+literal|0
 block|,
 name|clnp_output
 block|,
@@ -241,7 +253,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|clnp_usrreq
 block|,
 name|clnp_init
 block|,
