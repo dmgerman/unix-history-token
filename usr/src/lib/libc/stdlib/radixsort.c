@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)radixsort.c	5.9 (Berkeley) %G%"
+literal|"@(#)radixsort.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -268,10 +268,9 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * T1 is the constant part of the equation, the number of elements 	 * represented on the stack between the top and bottom entries. 	 * It doesn't get rounded as the divide by 2 rounds down (correct 	 * for a value being subtracted).  T2, the nelem value, has to be 	 * rounded up before each divide because we want an upper bound; 	 * this could overflow if nmemb is the maximum int. 	 */
+comment|/* 	 * T1 is the constant part of the equation, the number of elements 	 * on the stack other than the two largest, worst-case buckets. 	 */
 name|t1
 operator|=
-operator|(
 operator|(
 name|__rspartition
 operator|+
@@ -283,9 +282,6 @@ name|NBUCKETS
 operator|-
 literal|2
 operator|)
-operator|)
-operator|>>
-literal|1
 expr_stmt|;
 for|for
 control|(
@@ -310,16 +306,12 @@ control|)
 name|t2
 operator|=
 operator|(
-operator|(
 name|t2
-operator|+
-literal|1
+operator|-
+name|t1
 operator|)
 operator|>>
 literal|1
-operator|)
-operator|-
-name|t1
 expr_stmt|;
 if|if
 condition|(
