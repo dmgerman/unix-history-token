@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -452,15 +452,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|startrtclock
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 name|defined
 argument_list|(
 name|vax
 argument_list|)
-name|startrtclock
-argument_list|()
-expr_stmt|;
 include|#
 directive|include
 file|"kg.h"
@@ -674,6 +674,10 @@ name|u_smap
 operator|=
 name|zdmap
 expr_stmt|;
+name|enablertclock
+argument_list|()
+expr_stmt|;
+comment|/* enable realtime clock interrupts */
 if|#
 directive|if
 name|defined
