@@ -1680,7 +1680,12 @@ block|}
 comment|/* Handle ng_ether(4) processing, if any */
 if|if
 condition|(
-name|ng_ether_output_p
+name|IFP2AC
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|ac_netgraph
 operator|!=
 name|NULL
 condition|)
@@ -2646,7 +2651,12 @@ expr_stmt|;
 comment|/* Handle ng_ether(4) processing, if any */
 if|if
 condition|(
-name|ng_ether_input_p
+name|IFP2AC
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|ac_netgraph
 operator|!=
 name|NULL
 condition|)
@@ -3520,7 +3530,12 @@ label|:
 comment|/* 	 * Packet is to be discarded.  If netgraph is present, 	 * hand the packet to it for last chance processing; 	 * otherwise dispose of it. 	 */
 if|if
 condition|(
-name|ng_ether_input_orphan_p
+name|IFP2AC
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|ac_netgraph
 operator|!=
 name|NULL
 condition|)
@@ -3908,7 +3923,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|ng_ether_detach_p
+name|IFP2AC
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|ac_netgraph
 operator|!=
 name|NULL
 condition|)
