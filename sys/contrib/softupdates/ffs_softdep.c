@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  *	from: @(#)ffs_softdep.c	9.14 (McKusick) 1/15/98  */
+comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.14 (McKusick) 1/15/98  */
 end_comment
 
 begin_comment
@@ -95,11 +95,9 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/pcpu.h>
-end_include
+begin_comment
+comment|/*#include<machine/pcpu.h>*/
+end_comment
 
 begin_include
 include|#
@@ -792,17 +790,318 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Names of malloc types.  */
+comment|/*  * malloc types defined for the softdep system.  */
+end_comment
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_PAGEDEP
+argument_list|,
+literal|"pagedep"
+argument_list|,
+literal|"File page dependencies"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_INODEDEP
+argument_list|,
+literal|"inodedep"
+argument_list|,
+literal|"Inode dependencies"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWBLK
+argument_list|,
+literal|"newblk"
+argument_list|,
+literal|"New block allocation"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_BMSAFEMAP
+argument_list|,
+literal|"bmsafemap"
+argument_list|,
+literal|"Block or frag allocated from cyl group map"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_ALLOCDIRECT
+argument_list|,
+literal|"allocdirect"
+argument_list|,
+literal|"Block or frag dependency for an inode"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_INDIRDEP
+argument_list|,
+literal|"indirdep"
+argument_list|,
+literal|"Indirect block dependencies"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_ALLOCINDIR
+argument_list|,
+literal|"allocindir"
+argument_list|,
+literal|"Block dependency for an indirect block"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_FREEFRAG
+argument_list|,
+literal|"freefrag"
+argument_list|,
+literal|"Previously used frag for an inode"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_FREEBLKS
+argument_list|,
+literal|"freeblks"
+argument_list|,
+literal|"Blocks freed from an inode"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_FREEFILE
+argument_list|,
+literal|"freefile"
+argument_list|,
+literal|"Inode deallocated"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_DIRADD
+argument_list|,
+literal|"diradd"
+argument_list|,
+literal|"New directory entry"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_MKDIR
+argument_list|,
+literal|"mkdir"
+argument_list|,
+literal|"New directory"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_DIRREM
+argument_list|,
+literal|"dirrem"
+argument_list|,
+literal|"Directory entry deleted"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|D_PAGEDEP
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_INODEDEP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_NEWBLK
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_BMSAFEMAP
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_ALLOCDIRECT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_INDIRDEP
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_ALLOCINDIR
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_FREEFRAG
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_FREEBLKS
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_FREEFILE
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_DIRADD
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_MKDIR
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_DIRREM
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_LAST
+value|D_DIRREM
+end_define
+
+begin_comment
+comment|/*   * translate from workitem type to memory type  * MUST match the defines above, such that memtype[D_XXX] == M_XXX  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|char
+specifier|static
+name|struct
+name|malloc_type
 modifier|*
-name|memname
+name|memtype
 index|[]
+init|=
+block|{
+name|M_PAGEDEP
+block|,
+name|M_INODEDEP
+block|,
+name|M_NEWBLK
+block|,
+name|M_BMSAFEMAP
+block|,
+name|M_ALLOCDIRECT
+block|,
+name|M_INDIRDEP
+block|,
+name|M_ALLOCINDIR
+block|,
+name|M_FREEFRAG
+block|,
+name|M_FREEBLKS
+block|,
+name|M_FREEFILE
+block|,
+name|M_DIRADD
+block|,
+name|M_MKDIR
+block|,
+name|M_DIRREM
+block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DtoM
+parameter_list|(
+name|type
+parameter_list|)
+value|(memtype[type])
+end_define
+
+begin_comment
+comment|/*  * Names of malloc types.  */
+end_comment
 
 begin_define
 define|#
@@ -811,7 +1110,7 @@ name|TYPENAME
 parameter_list|(
 name|type
 parameter_list|)
-value|((unsigned)(type)< M_LAST ? memname[type] : "???")
+value|((unsigned)(type)< D_LAST ? memtype[type]->ks_shortdesc : "???")
 end_define
 
 begin_comment
@@ -1604,7 +1903,7 @@ name|item
 parameter_list|,
 name|type
 parameter_list|)
-value|FREE(item, type)
+value|FREE(item, DtoM(type))
 end_define
 
 begin_else
@@ -1875,7 +2174,10 @@ name|FREE
 argument_list|(
 name|item
 argument_list|,
+name|DtoM
+argument_list|(
 name|type
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1961,6 +2263,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -1971,7 +2274,9 @@ argument_list|,
 name|wk_list
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|LIST_INSERT_AFTER
 argument_list|(
 name|worklist_tail
@@ -1981,6 +2286,7 @@ argument_list|,
 name|wk_list
 argument_list|)
 expr_stmt|;
+block|}
 name|worklist_tail
 operator|=
 name|wk
@@ -2095,7 +2401,7 @@ name|wk_type
 condition|)
 block|{
 case|case
-name|M_DIRREM
+name|D_DIRREM
 case|:
 comment|/* removal of a directory entry */
 if|if
@@ -2123,7 +2429,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|M_FREEBLKS
+name|D_FREEBLKS
 case|:
 comment|/* releasing blocks and/or fragments from a file */
 if|if
@@ -2151,7 +2457,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|M_FREEFRAG
+name|D_FREEFRAG
 case|:
 comment|/* releasing a fragment when replaced as a file grows */
 if|if
@@ -2179,7 +2485,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|M_FREEFILE
+name|D_FREEFILE
 case|:
 comment|/* releasing an inode when its link count drops to 0 */
 if|if
@@ -2301,12 +2607,16 @@ while|while
 condition|(
 name|softdep_worklist_busy
 condition|)
-name|sleep
+name|tsleep
 argument_list|(
 operator|&
 name|lbolt
 argument_list|,
 name|PRIBIO
+argument_list|,
+literal|"sdflsh"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|softdep_worklist_busy
@@ -2425,7 +2735,7 @@ name|devvp
 argument_list|,
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
@@ -2463,9 +2773,9 @@ if|if
 condition|(
 name|oldmnt
 operator|->
-name|mnt_flag
+name|mnt_kern_flag
 operator|&
-name|MNT_UNMOUNT
+name|MNTK_UNMOUNT
 condition|)
 name|panic
 argument_list|(
@@ -2786,7 +3096,7 @@ name|pd_list
 operator|.
 name|wk_type
 operator|=
-name|M_PAGEDEP
+name|D_PAGEDEP
 expr_stmt|;
 name|pagedep
 operator|->
@@ -3126,7 +3436,7 @@ name|id_list
 operator|.
 name|wk_type
 operator|=
-name|M_INODEDEP
+name|D_INODEDEP
 expr_stmt|;
 name|inodedep
 operator|->
@@ -4153,7 +4463,7 @@ name|wk
 operator|->
 name|wk_type
 operator|==
-name|M_BMSAFEMAP
+name|D_BMSAFEMAP
 condition|)
 return|return
 operator|(
@@ -4194,7 +4504,7 @@ name|sm_list
 operator|.
 name|wk_type
 operator|=
-name|M_BMSAFEMAP
+name|D_BMSAFEMAP
 expr_stmt|;
 name|bmsafemap
 operator|->
@@ -4393,7 +4703,7 @@ name|ad_list
 operator|.
 name|wk_type
 operator|=
-name|M_ALLOCDIRECT
+name|D_ALLOCDIRECT
 expr_stmt|;
 name|adp
 operator|->
@@ -5078,7 +5388,7 @@ name|ff_list
 operator|.
 name|wk_type
 operator|=
-name|M_FREEFRAG
+name|D_FREEFRAG
 expr_stmt|;
 name|freefrag
 operator|->
@@ -5308,7 +5618,7 @@ name|ai_list
 operator|.
 name|wk_type
 operator|=
-name|M_ALLOCINDIR
+name|D_ALLOCINDIR
 expr_stmt|;
 name|aip
 operator|->
@@ -5745,7 +6055,7 @@ name|wk
 operator|->
 name|wk_type
 operator|!=
-name|M_INDIRDEP
+name|D_INDIRDEP
 condition|)
 continue|continue;
 name|indirdep
@@ -6081,7 +6391,7 @@ name|caddr_t
 operator|)
 name|newindirdep
 argument_list|,
-name|M_INDIRDEP
+name|D_INDIRDEP
 argument_list|)
 expr_stmt|;
 block|}
@@ -6115,7 +6425,7 @@ name|ir_list
 operator|.
 name|wk_type
 operator|=
-name|M_INDIRDEP
+name|D_INDIRDEP
 expr_stmt|;
 name|newindirdep
 operator|->
@@ -6309,7 +6619,7 @@ name|fb_list
 operator|.
 name|wk_type
 operator|=
-name|M_FREEBLKS
+name|D_FREEBLKS
 expr_stmt|;
 name|freeblks
 operator|->
@@ -6646,7 +6956,7 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -6659,6 +6969,10 @@ argument_list|,
 name|PRIBIO
 operator|+
 literal|1
+argument_list|,
+literal|"sdsetf"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK_INTERLOCKED
@@ -6857,7 +7171,7 @@ name|wk_type
 condition|)
 block|{
 case|case
-name|M_INDIRDEP
+name|D_INDIRDEP
 case|:
 name|indirdep
 operator|=
@@ -6999,7 +7313,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_PAGEDEP
+name|D_PAGEDEP
 case|:
 name|pagedep
 operator|=
@@ -7151,12 +7465,12 @@ name|WORKITEM_FREE
 argument_list|(
 name|pagedep
 argument_list|,
-name|M_PAGEDEP
+name|D_PAGEDEP
 argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_ALLOCINDIR
+name|D_ALLOCINDIR
 case|:
 name|free_allocindir
 argument_list|(
@@ -7170,10 +7484,10 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_ALLOCDIRECT
+name|D_ALLOCDIRECT
 case|:
 case|case
-name|M_INODEDEP
+name|D_INODEDEP
 case|:
 name|panic
 argument_list|(
@@ -7349,7 +7663,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|adp
 argument_list|,
-name|M_ALLOCDIRECT
+name|D_ALLOCDIRECT
 argument_list|)
 expr_stmt|;
 block|}
@@ -7363,13 +7677,22 @@ begin_function
 name|void
 name|softdep_freefile
 parameter_list|(
-name|ap
+name|pvp
+parameter_list|,
+name|ino
+parameter_list|,
+name|mode
 parameter_list|)
 name|struct
-name|vop_vfree_args
-comment|/* { 		struct vnode *a_pvp; 		ino_t a_ino; 		int a_mode; 	} */
+name|vnode
 modifier|*
-name|ap
+name|pvp
+decl_stmt|;
+name|ino_t
+name|ino
+decl_stmt|;
+name|int
+name|mode
 decl_stmt|;
 block|{
 name|struct
@@ -7379,9 +7702,7 @@ name|ip
 init|=
 name|VTOI
 argument_list|(
-name|ap
-operator|->
-name|a_pvp
+name|pvp
 argument_list|)
 decl_stmt|;
 name|struct
@@ -7420,7 +7741,7 @@ name|fx_list
 operator|.
 name|wk_type
 operator|=
-name|M_FREEFILE
+name|D_FREEFILE
 expr_stmt|;
 name|freefile
 operator|->
@@ -7434,17 +7755,13 @@ name|freefile
 operator|->
 name|fx_mode
 operator|=
-name|ap
-operator|->
-name|a_mode
+name|mode
 expr_stmt|;
 name|freefile
 operator|->
 name|fx_oldinum
 operator|=
-name|ap
-operator|->
-name|a_ino
+name|ino
 expr_stmt|;
 name|freefile
 operator|->
@@ -7477,9 +7794,7 @@ name|ip
 operator|->
 name|i_fs
 argument_list|,
-name|ap
-operator|->
-name|a_ino
+name|ino
 argument_list|,
 literal|0
 argument_list|,
@@ -7688,7 +8003,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|inodedep
 argument_list|,
-name|M_INODEDEP
+name|D_INODEDEP
 argument_list|)
 expr_stmt|;
 return|return
@@ -8059,7 +8374,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|freeblks
 argument_list|,
-name|M_FREEBLKS
+name|D_FREEBLKS
 argument_list|)
 expr_stmt|;
 block|}
@@ -8219,7 +8534,7 @@ name|wk
 operator|->
 name|wk_type
 operator|!=
-name|M_INDIRDEP
+name|D_INDIRDEP
 operator|||
 operator|(
 name|indirdep
@@ -8258,7 +8573,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|indirdep
 argument_list|,
-name|M_INDIRDEP
+name|D_INDIRDEP
 argument_list|)
 expr_stmt|;
 if|if
@@ -8597,7 +8912,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|aip
 argument_list|,
-name|M_ALLOCINDIR
+name|D_ALLOCINDIR
 argument_list|)
 expr_stmt|;
 block|}
@@ -8769,7 +9084,7 @@ name|da_list
 operator|.
 name|wk_type
 operator|=
-name|M_DIRADD
+name|D_DIRADD
 expr_stmt|;
 name|dap
 operator|->
@@ -8801,6 +9116,12 @@ operator|->
 name|da_state
 operator||=
 name|DEPCOMPLETE
+expr_stmt|;
+name|ACQUIRE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -8838,7 +9159,7 @@ name|md_list
 operator|.
 name|wk_type
 operator|=
-name|M_MKDIR
+name|D_MKDIR
 expr_stmt|;
 name|mkdir1
 operator|->
@@ -8877,7 +9198,7 @@ name|md_list
 operator|.
 name|wk_type
 operator|=
-name|M_MKDIR
+name|D_MKDIR
 expr_stmt|;
 name|mkdir2
 operator|->
@@ -8891,22 +9212,13 @@ name|md_diradd
 operator|=
 name|dap
 expr_stmt|;
-block|}
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this directory entry references a new directory, create 	 * its two additional dependencies: its "." and ".." being written 	 * to disk and the link count increase for its parent directory. 	 */
-if|if
-condition|(
-name|newdirbp
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 		 * Dependency on "." and ".." being written to disk 		 */
+comment|/* 		 * If this directory entry references a new directory, create 		 * its two additional dependencies: its "." and ".." being 		 * written to disk and the link count increase for its 		 * parent directory. 		 */
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -8978,7 +9290,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|mkdir2
 argument_list|,
-name|M_MKDIR
+name|D_MKDIR
 argument_list|)
 expr_stmt|;
 block|}
@@ -9592,7 +9904,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|mkdir
 argument_list|,
-name|M_MKDIR
+name|D_MKDIR
 argument_list|)
 expr_stmt|;
 block|}
@@ -9622,7 +9934,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|dap
 argument_list|,
-name|M_DIRADD
+name|D_DIRADD
 argument_list|)
 expr_stmt|;
 block|}
@@ -9859,7 +10171,7 @@ name|dm_list
 operator|.
 name|wk_type
 operator|=
-name|M_DIRREM
+name|D_DIRREM
 expr_stmt|;
 name|dirrem
 operator|->
@@ -10190,7 +10502,7 @@ name|da_list
 operator|.
 name|wk_type
 operator|=
-name|M_DIRADD
+name|D_DIRADD
 expr_stmt|;
 name|dap
 operator|->
@@ -10263,7 +10575,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|dap
 argument_list|,
-name|M_DIRADD
+name|D_DIRADD
 argument_list|)
 expr_stmt|;
 name|dap
@@ -10579,7 +10891,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|dirrem
 argument_list|,
-name|M_DIRREM
+name|D_DIRREM
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10617,7 +10929,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VOP_TRUNCATE
+name|UFS_TRUNCATE
 argument_list|(
 name|vp
 argument_list|,
@@ -10630,7 +10942,7 @@ literal|0
 argument_list|,
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 argument_list|,
 name|p
 argument_list|)
@@ -10741,10 +11053,6 @@ name|inodedep
 modifier|*
 name|idp
 decl_stmt|;
-name|struct
-name|vop_vfree_args
-name|args
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -10821,29 +11129,6 @@ operator|=
 operator|&
 name|tip
 expr_stmt|;
-name|args
-operator|.
-name|a_pvp
-operator|=
-operator|&
-name|vp
-expr_stmt|;
-name|args
-operator|.
-name|a_ino
-operator|=
-name|freefile
-operator|->
-name|fx_oldinum
-expr_stmt|;
-name|args
-operator|.
-name|a_mode
-operator|=
-name|freefile
-operator|->
-name|fx_mode
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -10852,7 +11137,15 @@ operator|=
 name|ffs_freefile
 argument_list|(
 operator|&
-name|args
+name|vp
+argument_list|,
+name|freefile
+operator|->
+name|fx_oldinum
+argument_list|,
+name|freefile
+operator|->
+name|fx_mode
 argument_list|)
 operator|)
 operator|!=
@@ -10869,7 +11162,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|freefile
 argument_list|,
-name|M_FREEFILE
+name|D_FREEFILE
 argument_list|)
 expr_stmt|;
 block|}
@@ -10956,7 +11249,7 @@ name|wk_type
 condition|)
 block|{
 case|case
-name|M_PAGEDEP
+name|D_PAGEDEP
 case|:
 name|initiate_write_filepage
 argument_list|(
@@ -10970,7 +11263,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_INODEDEP
+name|D_INODEDEP
 case|:
 name|initiate_write_inodeblock
 argument_list|(
@@ -10984,7 +11277,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_INDIRDEP
+name|D_INDIRDEP
 case|:
 name|indirdep
 operator|=
@@ -11046,7 +11339,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|indirdep
 argument_list|,
-name|M_INDIRDEP
+name|D_INDIRDEP
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -11089,16 +11382,16 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_MKDIR
+name|D_MKDIR
 case|:
 case|case
-name|M_BMSAFEMAP
+name|D_BMSAFEMAP
 case|:
 case|case
-name|M_ALLOCDIRECT
+name|D_ALLOCDIRECT
 case|:
 case|case
-name|M_ALLOCINDIR
+name|D_ALLOCINDIR
 case|:
 continue|continue;
 default|default:
@@ -11367,6 +11660,8 @@ name|fs
 decl_stmt|;
 name|ufs_lbn_t
 name|prevlbn
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i
@@ -12157,7 +12452,7 @@ name|wk_type
 condition|)
 block|{
 case|case
-name|M_PAGEDEP
+name|D_PAGEDEP
 case|:
 if|if
 condition|(
@@ -12181,7 +12476,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_INODEDEP
+name|D_INODEDEP
 case|:
 if|if
 condition|(
@@ -12205,7 +12500,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_BMSAFEMAP
+name|D_BMSAFEMAP
 case|:
 name|bmsafemap
 operator|=
@@ -12364,12 +12659,12 @@ name|WORKITEM_FREE
 argument_list|(
 name|bmsafemap
 argument_list|,
-name|M_BMSAFEMAP
+name|D_BMSAFEMAP
 argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_MKDIR
+name|D_MKDIR
 case|:
 name|handle_written_mkdir
 argument_list|(
@@ -12383,7 +12678,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_ALLOCDIRECT
+name|D_ALLOCDIRECT
 case|:
 name|adp
 operator|=
@@ -12405,7 +12700,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_ALLOCINDIR
+name|D_ALLOCINDIR
 case|:
 name|aip
 operator|=
@@ -12427,7 +12722,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_INDIRDEP
+name|D_INDIRDEP
 case|:
 name|indirdep
 operator|=
@@ -12959,7 +13254,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|aip
 argument_list|,
-name|M_ALLOCINDIR
+name|D_ALLOCINDIR
 argument_list|)
 expr_stmt|;
 block|}
@@ -13420,7 +13715,7 @@ name|wk_type
 condition|)
 block|{
 case|case
-name|M_FREEFILE
+name|D_FREEFILE
 case|:
 comment|/* 			 * We defer adding filefree to the worklist until 			 * all other additions have been made to ensure 			 * that it will be done after all the old blocks 			 * have been freed. 			 */
 if|if
@@ -13440,7 +13735,7 @@ name|wk
 expr_stmt|;
 continue|continue;
 case|case
-name|M_MKDIR
+name|D_MKDIR
 case|:
 name|handle_written_mkdir
 argument_list|(
@@ -13454,7 +13749,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_DIRADD
+name|D_DIRADD
 case|:
 name|dap
 operator|=
@@ -13537,13 +13832,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-name|M_FREEBLKS
+name|D_FREEBLKS
 case|:
 case|case
-name|M_FREEFRAG
+name|D_FREEFRAG
 case|:
 case|case
-name|M_DIRREM
+name|D_DIRREM
 case|:
 name|add_to_worklist
 argument_list|(
@@ -13756,7 +14051,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|mkdir
 argument_list|,
-name|M_MKDIR
+name|D_MKDIR
 argument_list|)
 expr_stmt|;
 block|}
@@ -14114,7 +14409,7 @@ name|WORKITEM_FREE
 argument_list|(
 name|pagedep
 argument_list|,
-name|M_PAGEDEP
+name|D_PAGEDEP
 argument_list|)
 expr_stmt|;
 return|return
@@ -14936,7 +15231,7 @@ name|wk
 operator|->
 name|wk_type
 operator|!=
-name|M_DIRADD
+name|D_DIRADD
 condition|)
 name|panic
 argument_list|(
@@ -15130,7 +15425,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_UPDATE
+name|UFS_UPDATE
 argument_list|(
 name|pvp
 argument_list|,
@@ -15469,7 +15764,7 @@ name|wk_type
 condition|)
 block|{
 case|case
-name|M_ALLOCDIRECT
+name|D_ALLOCDIRECT
 case|:
 name|adp
 operator|=
@@ -15559,7 +15854,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|M_ALLOCINDIR
+name|D_ALLOCINDIR
 case|:
 name|aip
 operator|=
@@ -15649,7 +15944,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|M_INDIRDEP
+name|D_INDIRDEP
 case|:
 name|restart
 label|:
@@ -15753,7 +16048,7 @@ goto|;
 block|}
 break|break;
 case|case
-name|M_INODEDEP
+name|D_INODEDEP
 case|:
 if|if
 condition|(
@@ -15800,7 +16095,7 @@ return|;
 block|}
 break|break;
 case|case
-name|M_PAGEDEP
+name|D_PAGEDEP
 case|:
 comment|/* 			 * We are trying to sync a directory that may 			 * have dependencies on both its own metadata 			 * and/or dependencies on the inodes of any 			 * recently allocated files. We walk its diradd 			 * lists pushing out the associated inode. 			 */
 name|pagedep
@@ -15974,7 +16269,7 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -15987,6 +16282,10 @@ argument_list|,
 name|PRIBIO
 operator|+
 literal|1
+argument_list|,
+literal|"sdsynm"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK_INTERLOCKED
@@ -16535,6 +16834,8 @@ name|int
 name|gotit
 decl_stmt|,
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|buf
@@ -16589,7 +16890,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_UPDATE
+name|UFS_UPDATE
 argument_list|(
 name|pvp
 argument_list|,
@@ -16877,7 +17178,7 @@ name|vp
 argument_list|,
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 argument_list|,
 name|MNT_NOWAIT
 argument_list|,
@@ -16917,7 +17218,7 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -16930,6 +17231,10 @@ argument_list|,
 name|PRIBIO
 operator|+
 literal|1
+argument_list|,
+literal|"sdflpd"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK_INTERLOCKED
@@ -16952,7 +17257,7 @@ name|time
 expr_stmt|;
 name|error
 operator|=
-name|VOP_UPDATE
+name|UFS_UPDATE
 argument_list|(
 name|vp
 argument_list|,
@@ -17101,7 +17406,7 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -17111,6 +17416,10 @@ argument_list|,
 name|PRIBIO
 operator|+
 literal|1
+argument_list|,
+literal|"sdsdty"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK_INTERLOCKED
@@ -17254,25 +17563,25 @@ condition|)
 block|{
 comment|/* 		 * XXX - should really clean up, but for now we will 		 * just leak memory and not worry about it. Also should 		 * mark the filesystem permanently dirty so that it will 		 * force fsck to be run (though this would best be done 		 * in the mainline code). 		 */
 case|case
-name|M_PAGEDEP
+name|D_PAGEDEP
 case|:
 case|case
-name|M_INODEDEP
+name|D_INODEDEP
 case|:
 case|case
-name|M_BMSAFEMAP
+name|D_BMSAFEMAP
 case|:
 case|case
-name|M_ALLOCDIRECT
+name|D_ALLOCDIRECT
 case|:
 case|case
-name|M_INDIRDEP
+name|D_INDIRDEP
 case|:
 case|case
-name|M_ALLOCINDIR
+name|D_ALLOCINDIR
 case|:
 case|case
-name|M_MKDIR
+name|D_MKDIR
 case|:
 ifdef|#
 directive|ifdef
