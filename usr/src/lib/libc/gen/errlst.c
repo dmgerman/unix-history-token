@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)errlst.c	5.4 (Berkeley) %G%"
+literal|"@(#)errlst.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,42 +44,43 @@ name|sys_errlist
 index|[]
 init|=
 block|{
-literal|"Error 0"
+literal|"Undefined error: 0"
 block|,
-literal|"Not owner"
+comment|/*  0 - ENOERROR */
+literal|"Operation not permitted"
 block|,
-comment|/* 1 - EPERM */
+comment|/*  1 - EPERM */
 literal|"No such file or directory"
 block|,
-comment|/* 2 - ENOENT */
+comment|/*  2 - ENOENT */
 literal|"No such process"
 block|,
-comment|/* 3 - ESRCH */
+comment|/*  3 - ESRCH */
 literal|"Interrupted system call"
 block|,
-comment|/* 4 - EINTR */
-literal|"I/O error"
+comment|/*  4 - EINTR */
+literal|"Input/output error"
 block|,
-comment|/* 5 - EIO */
-literal|"No such device or address"
+comment|/*  5 - EIO */
+literal|"Device not configured"
 block|,
-comment|/* 6 - ENXIO */
-literal|"Arg list too long"
+comment|/*  6 - ENXIO */
+literal|"Argument list too long"
 block|,
-comment|/* 7 - E2BIG */
+comment|/*  7 - E2BIG */
 literal|"Exec format error"
 block|,
-comment|/* 8 - ENOEXEC */
-literal|"Bad file number"
+comment|/*  8 - ENOEXEC */
+literal|"Bad file descriptor"
 block|,
-comment|/* 9 - EBADF */
-literal|"No children"
+comment|/*  9 - EBADF */
+literal|"No child processes"
 block|,
 comment|/* 10 - ECHILD */
-literal|"No more processes"
+literal|"Resource deadlock avoided"
 block|,
-comment|/* 11 - EAGAIN */
-literal|"Not enough memory"
+comment|/* 11 - EDEADLK */
+literal|"Cannot allocate memory"
 block|,
 comment|/* 12 - ENOMEM */
 literal|"Permission denied"
@@ -100,7 +101,7 @@ comment|/* 17 - EEXIST */
 literal|"Cross-device link"
 block|,
 comment|/* 18 - EXDEV */
-literal|"No such device"
+literal|"Operation not supported by device"
 block|,
 comment|/* 19 - ENODEV */
 literal|"Not a directory"
@@ -112,7 +113,7 @@ comment|/* 21 - EISDIR */
 literal|"Invalid argument"
 block|,
 comment|/* 22 - EINVAL */
-literal|"File table overflow"
+literal|"Too many open files in system"
 block|,
 comment|/* 23 - ENFILE */
 literal|"Too many open files"
@@ -143,15 +144,16 @@ literal|"Broken pipe"
 block|,
 comment|/* 32 - EPIPE */
 comment|/* math software */
-literal|"Argument too large"
+literal|"Numerical argument out of domain"
 block|,
 comment|/* 33 - EDOM */
-literal|"Result too large"
+literal|"Numerical result out of range"
 block|,
 comment|/* 34 - ERANGE */
 comment|/* non-blocking and interrupt i/o */
-literal|"Operation would block"
+literal|"Resource temporarily unavailable"
 block|,
+comment|/* 35 - EAGAIN */
 comment|/* 35 - EWOULDBLOCK */
 literal|"Operation now in progress"
 block|,
@@ -159,8 +161,7 @@ comment|/* 36 - EINPROGRESS */
 literal|"Operation already in progress"
 block|,
 comment|/* 37 - EALREADY */
-comment|/* ipc/network software */
-comment|/* argument errors */
+comment|/* ipc/network software -- argument errors */
 literal|"Socket operation on non-socket"
 block|,
 comment|/* 38 - ENOTSOCK */
@@ -173,7 +174,7 @@ comment|/* 40 - EMSGSIZE */
 literal|"Protocol wrong type for socket"
 block|,
 comment|/* 41 - EPROTOTYPE */
-literal|"Option not supported by protocol"
+literal|"Protocol not available"
 block|,
 comment|/* 42 - ENOPROTOOPT */
 literal|"Protocol not supported"
@@ -188,16 +189,16 @@ comment|/* 45 - EOPNOTSUPP */
 literal|"Protocol family not supported"
 block|,
 comment|/* 46 - EPFNOSUPPORT */
+comment|/* 47 - EAFNOSUPPORT */
 literal|"Address family not supported by protocol family"
 block|,
-comment|/* 47 - EAFNOSUPPORT */
 literal|"Address already in use"
 block|,
 comment|/* 48 - EADDRINUSE */
 literal|"Can't assign requested address"
 block|,
 comment|/* 49 - EADDRNOTAVAIL */
-comment|/* operational errors */
+comment|/* ipc/network software -- operational errors */
 literal|"Network is down"
 block|,
 comment|/* 50 - ENETDOWN */
@@ -225,9 +226,9 @@ comment|/* 57 - ENOTCONN */
 literal|"Can't send after socket shutdown"
 block|,
 comment|/* 58 - ESHUTDOWN */
-literal|"Error 59"
+literal|"Too many references: can't splice"
 block|,
-comment|/* 59 - unused */
+comment|/* 59 - ETOOMANYREFS */
 literal|"Connection timed out"
 block|,
 comment|/* 60 - ETIMEDOUT */
@@ -240,15 +241,17 @@ comment|/* 62 - ELOOP */
 literal|"File name too long"
 block|,
 comment|/* 63 - ENAMETOOLONG */
+comment|/* should be rearranged */
 literal|"Host is down"
 block|,
 comment|/* 64 - EHOSTDOWN */
-literal|"Host is unreachable"
+literal|"No route to host"
 block|,
 comment|/* 65 - EHOSTUNREACH */
 literal|"Directory not empty"
 block|,
 comment|/* 66 - ENOTEMPTY */
+comment|/* quotas& mush */
 literal|"Too many processes"
 block|,
 comment|/* 67 - EPROCLIM */
@@ -258,7 +261,41 @@ comment|/* 68 - EUSERS */
 literal|"Disc quota exceeded"
 block|,
 comment|/* 69 - EDQUOT */
+comment|/* Network File System */
+literal|"Stale NFS file handle"
+block|,
+comment|/* 70 - ESTALE */
+literal|"Too many levels of remote in path"
+block|,
+comment|/* 71 - EREMOTE */
+literal|"RPC struct is bad"
+block|,
+comment|/* 72 - EBADRPC */
+literal|"RPC version wrong"
+block|,
+comment|/* 73 - ERPCMISMATCH */
+literal|"RPC prog. not avail"
+block|,
+comment|/* 74 - EPROGUNAVAIL */
+literal|"Program version wrong"
+block|,
+comment|/* 75 - EPROGMISMATCH */
+literal|"Bad procedure for program"
+block|,
+comment|/* 76 - EPROCUNAVAIL */
+literal|"No locks available"
+block|,
+comment|/* 77 - ENOLCK */
+literal|"Function not implemented"
+block|,
+comment|/* 78 - ENOSYS */
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|errno
 decl_stmt|;
 end_decl_stmt
 
@@ -276,12 +313,6 @@ index|[
 literal|0
 index|]
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|errno
 decl_stmt|;
 end_decl_stmt
 
