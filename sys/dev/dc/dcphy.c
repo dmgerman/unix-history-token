@@ -1202,7 +1202,7 @@ operator|++
 name|sc
 operator|->
 name|mii_ticks
-operator|!=
+operator|<=
 literal|50
 condition|)
 break|break;

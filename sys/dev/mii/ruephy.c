@@ -779,14 +779,10 @@ operator|++
 name|sc
 operator|->
 name|mii_ticks
-operator|!=
+operator|<=
 literal|5
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 name|sc
 operator|->
 name|mii_ticks
