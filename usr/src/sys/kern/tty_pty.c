@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_pty.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_pty.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -649,6 +649,9 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 name|tp
 operator|=
 operator|&
@@ -660,6 +663,8 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
+name|err
+operator|=
 operator|(
 operator|*
 name|linesw
@@ -677,6 +682,8 @@ operator|,
 name|flag
 operator|)
 expr_stmt|;
+name|err
+operator||=
 name|ttyclose
 argument_list|(
 name|tp
@@ -691,6 +698,11 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
 return|return
 operator|(
 literal|0
@@ -1632,6 +1644,11 @@ name|t_session
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 literal|0
