@@ -1,9 +1,54 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_decl_stmt
+name|int
+name|trc
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|trcw
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
-name|UTRACE
+name|D
+parameter_list|(
+name|i
+parameter_list|)
+value|if (trc&(1<<i)) { if (trcw&(1<<i)) DELAY(1000); } else
 end_define
+
+begin_decl_stmt
+name|int
+name|csdel0
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|csdel1
+init|=
+literal|1000
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|csdel2
+init|=
+literal|2000
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -22,7 +67,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	%H%	3.5	%G%	*/
+comment|/*	%H%	3.6	%G%	*/
 end_comment
 
 begin_comment
@@ -982,9 +1027,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|1
+argument_list|)
 name|ttime
 argument_list|()
 expr_stmt|;
+name|D
+argument_list|(
+literal|2
+argument_list|)
 name|trace
 argument_list|(
 literal|"upstrat bn %d unit %d\n"
@@ -1103,9 +1156,17 @@ goto|;
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|3
+argument_list|)
 name|ttime
 argument_list|()
 expr_stmt|;
+name|D
+argument_list|(
+literal|4
+argument_list|)
 name|trace
 argument_list|(
 literal|"upustart %d active %d"
@@ -1216,6 +1277,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|5
+argument_list|)
 name|trace
 argument_list|(
 literal|" not VV"
@@ -1392,6 +1457,10 @@ label|:
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|6
+argument_list|)
 name|trace
 argument_list|(
 literal|" search %d@%d to %d@%d"
@@ -1466,6 +1535,15 @@ index|]
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|csdel0
+condition|)
+name|DELAY
+argument_list|(
+name|csdel0
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -1475,6 +1553,10 @@ comment|/* 	 * This unit is ready to go.  Make active == 2 so 	 * we won't get c
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|7
+argument_list|)
 name|trace
 argument_list|(
 literal|" done"
@@ -1525,9 +1607,22 @@ name|dp
 expr_stmt|;
 name|out
 label|:
+if|if
+condition|(
+name|csdel1
+condition|)
+name|DELAY
+argument_list|(
+name|csdel1
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|8
+argument_list|)
 name|trace
 argument_list|(
 literal|"\n"
@@ -1588,12 +1683,29 @@ name|cmd
 decl_stmt|;
 name|loop
 label|:
+if|if
+condition|(
+name|csdel2
+condition|)
+name|DELAY
+argument_list|(
+name|csdel2
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|9
+argument_list|)
 name|ttime
 argument_list|()
 expr_stmt|;
+name|D
+argument_list|(
+literal|10
+argument_list|)
 name|trace
 argument_list|(
 literal|"upstart"
@@ -1618,6 +1730,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|11
+argument_list|)
 name|trace
 argument_list|(
 literal|"\n"
@@ -1735,6 +1851,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|12
+argument_list|)
 name|trace
 argument_list|(
 literal|" unit %d"
@@ -1760,6 +1880,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|13
+argument_list|)
 name|trace
 argument_list|(
 literal|" select"
@@ -1821,6 +1945,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|14
+argument_list|)
 name|trace
 argument_list|(
 literal|" !(DPR&& MOL)"
@@ -1892,6 +2020,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|15
+argument_list|)
 name|trace
 argument_list|(
 literal|" offset"
@@ -1947,6 +2079,10 @@ comment|/* 	 * Now set up the transfer, retrieving the high 	 * 2 bits of the UN
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|16
+argument_list|)
 name|trace
 argument_list|(
 literal|" %s %d.%d@%d cnt %d ba %x\n"
@@ -2181,9 +2317,17 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|17
+argument_list|)
 name|ttime
 argument_list|()
 expr_stmt|;
+name|D
+argument_list|(
+literal|18
+argument_list|)
 name|trace
 argument_list|(
 literal|"upintr as %d act %d %d %d;"
@@ -2235,6 +2379,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|19
+argument_list|)
 name|trace
 argument_list|(
 literal|" !RDY"
@@ -2352,6 +2500,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|20
+argument_list|)
 name|trace
 argument_list|(
 literal|" TRE"
@@ -2561,6 +2713,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|21
+argument_list|)
 name|trace
 argument_list|(
 literal|" unit %d"
@@ -2586,6 +2742,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|22
+argument_list|)
 name|trace
 argument_list|(
 literal|" select"
@@ -2624,6 +2784,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|23
+argument_list|)
 name|trace
 argument_list|(
 literal|" rtc"
@@ -2779,6 +2943,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|24
+argument_list|)
 name|trace
 argument_list|(
 literal|" TRE"
@@ -2805,6 +2973,10 @@ comment|/* 	 * If we have a unit with an outstanding SEARCH, 	 * and the hardwar
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|25
+argument_list|)
 name|trace
 argument_list|(
 literal|"\n"
@@ -2858,6 +3030,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|26
+argument_list|)
 name|trace
 argument_list|(
 literal|"as clear %d\n"
@@ -2901,6 +3077,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|27
+argument_list|)
 name|trace
 argument_list|(
 literal|"spurious as clear %d\n"
@@ -2947,6 +3127,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|UTRACE
+name|D
+argument_list|(
+literal|28
+argument_list|)
 name|trace
 argument_list|(
 literal|"upintr set IE\n"
