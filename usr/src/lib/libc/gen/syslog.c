@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.33 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +203,19 @@ begin_comment
 comment|/* default facility code */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|LogMask
+init|=
+literal|0xff
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mask of priorities to be logged */
+end_comment
+
 begin_comment
 comment|/*  * syslog, vsyslog --  *	print message on log file; output is intended for syslogd(8).  */
 end_comment
@@ -363,6 +376,16 @@ name|LOG_PRIMASK
 operator||
 name|LOG_FACMASK
 operator|)
+operator|)
+operator|||
+operator|!
+operator|(
+name|LOG_MASK
+argument_list|(
+name|pri
+argument_list|)
+operator|&
+name|LogMask
 operator|)
 condition|)
 return|return;
@@ -1015,19 +1038,6 @@ literal|0
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|int
-name|LogMask
-init|=
-literal|0xff
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mask of priorities to be logged */
-end_comment
 
 begin_comment
 comment|/* setlogmask -- set the log mask level */
