@@ -223,6 +223,14 @@ literal|"VIA 82C691 (Apollo Pro) host to PCI bridge"
 operator|)
 return|;
 case|case
+literal|0x06051106
+case|:
+return|return
+operator|(
+literal|"VIA 82C694X (Apollo Pro 133A) host to PCI bridge"
+operator|)
+return|;
+case|case
 literal|0x03051106
 case|:
 return|return
