@@ -4162,12 +4162,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * XXXRW: Temporary debugging printf. 		 */
-name|printf
-argument_list|(
-literal|"unp_connect(): lost race to another thread\n"
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EINVAL
