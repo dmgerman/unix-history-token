@@ -3711,7 +3711,20 @@ name|i
 decl_stmt|,
 name|asleep
 decl_stmt|;
-comment|/* Look up our CPU id and to get our softc. */
+comment|/* If disabled, return immediately. */
+if|if
+condition|(
+name|cpu_cx_count
+operator|==
+literal|0
+condition|)
+block|{
+name|ACPI_ENABLE_IRQS
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+comment|/*      * Look up our CPU id to get our softc.  If it's NULL, we'll use C1      * since there is no ACPI processor object for this CPU.  This occurs      * for logical CPUs in the HTT case.      */
 name|sc
 operator|=
 name|cpu_softc
@@ -3722,31 +3735,14 @@ name|cpuid
 argument_list|)
 index|]
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|sc
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"NULL softc for %d"
-operator|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* If disabled, return immediately. */
 if|if
 condition|(
-name|cpu_cx_count
+name|sc
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
-name|ACPI_ENABLE_IRQS
+name|acpi_cpu_c1
 argument_list|()
 expr_stmt|;
 return|return;
