@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)genassym.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)genassym.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -624,6 +624,25 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tNKMEMCLUSTERS %d\n"
+argument_list|,
+name|NKMEMCLUSTERS
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYSVSHM
+name|printf
+argument_list|(
+literal|"#define\tSHMMAXPGS %d\n"
+argument_list|,
+name|SHMMAXPGS
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|printf
+argument_list|(
 literal|"#define\tU_PROCP %d\n"
 argument_list|,
 operator|&
@@ -675,16 +694,6 @@ argument_list|,
 name|up
 operator|->
 name|u_arg
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"asm(\".set\tU_QSAVE,%d\");\n"
-argument_list|,
-operator|&
-name|up
-operator|->
-name|u_qsave
 argument_list|)
 expr_stmt|;
 name|printf
