@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -247,6 +247,10 @@ name|caddr_t
 operator|)
 name|malloc
 argument_list|(
+call|(
+name|u_long
+call|)
+argument_list|(
 operator|(
 name|nr
 operator|+
@@ -254,6 +258,7 @@ name|nw
 operator|)
 operator|*
 name|nclbytes
+argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
