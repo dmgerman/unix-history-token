@@ -6250,7 +6250,11 @@ expr_stmt|;
 comment|/* Address of the inside PPTP machine */
 name|pptpAliasFlag
 operator|=
-literal|1
+name|src_addr
+operator|.
+name|s_addr
+operator|!=
+name|INADDR_NONE
 expr_stmt|;
 return|return
 literal|1
