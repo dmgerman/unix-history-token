@@ -1404,12 +1404,12 @@ literal|0
 end_if
 
 begin_comment
-unit|static void pcic_dump_attributes (unsigned char *scratch, int maxlen) { 	int i,j,k;  	i = 0; 	while (scratch[i] != 0xff&& i< maxlen) { 		unsigned char link = scratch[i+2];
+unit|static void pcic_dump_attributes(unsigned char *scratch, int maxlen) { 	int i,j,k;  	i = 0; 	while (scratch[i] != 0xff&& i< maxlen) { 		unsigned char link = scratch[i+2];
 comment|/* 		 *	Dump attribute memory 		 */
 end_comment
 
 begin_endif
-unit|if (scratch[i]) { 			printf ("[%02x] ", i); 			for (j = 0; j< 2 * link + 4&& j< 128; j += 2) 				printf ("%02x ", scratch[j + i]); 			printf ("\n"); 		} 		i += 4 + 2 * link; 	} }
+unit|if (scratch[i]) { 			printf("[%02x] ", i); 			for (j = 0; j< 2 * link + 4&& j< 128; j += 2) 				printf("%02x ", scratch[j + i]); 			printf("\n"); 		} 		i += 4 + 2 * link; 	} }
 endif|#
 directive|endif
 end_endif
