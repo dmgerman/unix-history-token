@@ -233,6 +233,25 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|addalias
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|,
+name|dev_t
+name|nvp_rdev
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|insmntque
 name|__P
 argument_list|(
@@ -6024,6 +6043,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|addalias
 parameter_list|(
