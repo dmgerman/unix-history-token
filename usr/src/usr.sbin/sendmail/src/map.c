@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.34 (Berkeley) %G%"
+literal|"@(#)map.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -607,7 +607,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAP_REWRITE -- rewrite a database key, interpolating %n indications. ** **	It also adds the map_app string.  It can be used as a utility **	in the map_lookup method. ** **	Parameters: **		map -- the map that causes this. **		s -- the string to rewrite, NOT necessarily null terminated. **		slen -- the length of s. **		av -- arguments to interpolate into buf. ** **	Returns: **		Pointer to rewritten result. ** **	Side Effects: **		none. */
+comment|/* **  MAP_REWRITE -- rewrite a database key, interpolating %n indications. ** **	It also adds the map_app string.  It can be used as a utility **	in the map_lookup method. ** **	Parameters: **		map -- the map that causes this. **		s -- the string to rewrite, NOT necessarily null terminated. **		slen -- the length of s. **		av -- arguments to interpolate into buf. ** **	Returns: **		Pointer to rewritten result.  This is static data that **		should be copied if it is to be saved! ** **	Side Effects: **		none. */
 end_comment
 
 begin_struct
