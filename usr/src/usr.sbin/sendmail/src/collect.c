@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
@@ -1381,7 +1381,7 @@ name|e_msgsize
 argument_list|,
 name|CurEnv
 operator|->
-name|e_msgpriority
+name|e_class
 argument_list|)
 expr_stmt|;
 endif|#
