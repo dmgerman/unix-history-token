@@ -1083,6 +1083,9 @@ index|[
 name|category
 index|]
 decl_stmt|;
+name|int
+name|saverr
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1233,7 +1236,7 @@ parameter_list|(
 name|FUNC
 parameter_list|)
 define|\
-value|{                                                     \ 		if (strcmp(new, old) == 0)                    \ 			return (old);                         \ 		ret = FUNC(new) != 0 ? NULL : new;            \ 		if (ret == NULL) {                            \ 			if (FUNC(old) != 0&& FUNC("C") == 0) \ 				(void)strcpy(old, "C");       \ 		} else                                        \ 			(void)strcpy(old, new);               \ 		return (ret);                                 \ 	}
+value|{                                                     \ 		if (strcmp(new, old) == 0)                    \ 			return (old);                         \ 		ret = FUNC(new) != 0 ? NULL : new;            \ 		if (ret == NULL) {                            \ 			saverr = errno;                       \ 			if (FUNC(old) != 0&& FUNC("C") == 0) \ 				(void)strcpy(old, "C");       \ 			errno = saverr;                       \ 		} else                                        \ 			(void)strcpy(old, new);               \ 		return (ret);                                 \ 	}
 switch|switch
 condition|(
 name|category
