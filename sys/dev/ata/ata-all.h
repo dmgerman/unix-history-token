@@ -1320,6 +1320,11 @@ modifier|*
 name|r_irq
 decl_stmt|;
 comment|/* interrupt of this channel */
+name|void
+modifier|*
+name|ih
+decl_stmt|;
+comment|/* interrupt handle */
 name|int32_t
 name|ioaddr
 decl_stmt|;
