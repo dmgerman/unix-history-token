@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.24.2.19 1997/06/11 03:59:31 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.24.2.20 1997/06/13 00:11:04 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -1482,7 +1482,7 @@ name|LOCAL_AUTH
 block|,
 literal|"delete route"
 block|,
-literal|"delete ALL | dest gateway [mask]"
+literal|"delete ALL | dest [gateway [mask]]"
 block|}
 block|,
 block|{
@@ -6578,8 +6578,36 @@ decl_stmt|;
 if|if
 condition|(
 name|argc
-operator|>=
-literal|2
+operator|==
+literal|1
+operator|&&
+name|strcasecmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"all"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|DeleteIfRoutes
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
+name|argc
+operator|<
+literal|4
 condition|)
 block|{
 name|dest
@@ -6592,6 +6620,19 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|netmask
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
 if|if
 condition|(
 name|strcasecmp
@@ -6622,12 +6663,6 @@ index|[
 literal|1
 index|]
 argument_list|)
-expr_stmt|;
-name|netmask
-operator|.
-name|s_addr
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -6665,6 +6700,14 @@ literal|1
 return|;
 block|}
 block|}
+block|}
+else|else
+name|gateway
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
 name|OsSetRoute
 argument_list|(
 name|RTM_DELETE
@@ -6674,32 +6717,6 @@ argument_list|,
 name|gateway
 argument_list|,
 name|netmask
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|argc
-operator|==
-literal|1
-operator|&&
-name|strcasecmp
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|"all"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|DeleteIfRoutes
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
