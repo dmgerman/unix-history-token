@@ -174,7 +174,7 @@ end_include
 begin_function_decl
 specifier|static
 name|void
-name|sched_setup
+name|synch_setup
 parameter_list|(
 name|void
 modifier|*
@@ -186,13 +186,13 @@ end_function_decl
 begin_macro
 name|SYSINIT
 argument_list|(
-argument|sched_setup
+argument|synch_setup
 argument_list|,
 argument|SI_SUB_KICK_SCHEDULER
 argument_list|,
 argument|SI_ORDER_FIRST
 argument_list|,
-argument|sched_setup
+argument|synch_setup
 argument_list|,
 argument|NULL
 argument_list|)
@@ -2543,7 +2543,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|sched_setup
+name|synch_setup
 parameter_list|(
 name|dummy
 parameter_list|)
