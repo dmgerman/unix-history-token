@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rich $alz of BBN Inc.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rich $alz of BBN Inc.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -10,11 +10,12 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
 name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1990 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1990, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c	5.7 (Berkeley) %G%"
+literal|"@(#)clri.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
