@@ -679,34 +679,12 @@ operator|>
 literal|4
 operator|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bus %d pin %d device %d, returning 255\n"
-argument_list|,
-name|bus
-argument_list|,
-name|pin
-argument_list|,
-name|device
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|255
 operator|)
 return|;
-block|}
 comment|/*      * Scan the entry table for a contender      */
-name|printf
-argument_list|(
-literal|"bus %d device %d\n"
-argument_list|,
-name|bus
-argument_list|,
-name|device
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -728,19 +706,6 @@ name|pe
 operator|++
 control|)
 block|{
-name|printf
-argument_list|(
-literal|"pe_bus %d pe_device %d\n"
-argument_list|,
-name|pe
-operator|->
-name|pe_bus
-argument_list|,
-name|pe
-operator|->
-name|pe_device
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
