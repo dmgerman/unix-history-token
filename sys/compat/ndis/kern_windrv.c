@@ -813,7 +813,7 @@ decl_stmt|;
 name|struct
 name|driver_object
 modifier|*
-name|dobj
+name|drv
 decl_stmt|;
 name|int
 name|status
@@ -982,13 +982,13 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|dobj
+name|drv
 operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|device_object
+name|driver_object
 argument_list|)
 argument_list|,
 name|M_DEVBUF
@@ -1000,7 +1000,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dobj
+name|drv
 operator|==
 name|NULL
 condition|)
@@ -1019,7 +1019,7 @@ operator|)
 return|;
 block|}
 comment|/* Allocate a driver extension structure too. */
-name|dobj
+name|drv
 operator|->
 name|dro_driverext
 operator|=
@@ -1039,7 +1039,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dobj
+name|drv
 operator|->
 name|dro_driverext
 operator|==
@@ -1055,7 +1055,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|dobj
+name|drv
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -1070,7 +1070,7 @@ name|INIT_LIST_HEAD
 argument_list|(
 operator|(
 operator|&
-name|dobj
+name|drv
 operator|->
 name|dro_driverext
 operator|->
@@ -1078,7 +1078,7 @@ name|dre_usrext
 operator|)
 argument_list|)
 expr_stmt|;
-name|dobj
+name|drv
 operator|->
 name|dro_driverstart
 operator|=
@@ -1088,13 +1088,13 @@ operator|*
 operator|)
 name|img
 expr_stmt|;
-name|dobj
+name|drv
 operator|->
 name|dro_driversize
 operator|=
 name|len
 expr_stmt|;
-name|dobj
+name|drv
 operator|->
 name|dro_drivername
 operator|.
@@ -1107,7 +1107,7 @@ argument_list|)
 operator|*
 literal|2
 expr_stmt|;
-name|dobj
+name|drv
 operator|->
 name|dro_drivername
 operator|.
@@ -1120,7 +1120,7 @@ argument_list|)
 operator|*
 literal|2
 expr_stmt|;
-name|dobj
+name|drv
 operator|->
 name|dro_drivername
 operator|.
@@ -1133,7 +1133,7 @@ argument_list|(
 name|DUMMY_REGISTRY_PATH
 argument_list|,
 operator|&
-name|dobj
+name|drv
 operator|->
 name|dro_drivername
 operator|.
@@ -1144,7 +1144,7 @@ name|new
 operator|->
 name|windrv_object
 operator|=
-name|dobj
+name|drv
 expr_stmt|;
 comment|/* Now call the DriverEntry() function. */
 name|status
@@ -1153,10 +1153,10 @@ name|MSCALL2
 argument_list|(
 name|entry
 argument_list|,
-name|dobj
+name|drv
 argument_list|,
 operator|&
-name|dobj
+name|drv
 operator|->
 name|dro_drivername
 argument_list|)
@@ -1170,7 +1170,7 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|dobj
+name|drv
 operator|->
 name|dro_drivername
 operator|.
@@ -1181,7 +1181,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|dobj
+name|drv
 argument_list|,
 name|M_DEVBUF
 argument_list|)
