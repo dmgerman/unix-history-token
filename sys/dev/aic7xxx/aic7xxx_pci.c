@@ -8471,9 +8471,6 @@ name|dev_softc
 argument_list|,
 name|DEVCONFIG
 argument_list|,
-comment|/*bytes*/
-literal|4
-argument_list|,
 name|ahc
 operator|->
 name|bus_softc
@@ -8481,6 +8478,9 @@ operator|.
 name|pci_softc
 operator|.
 name|devconfig
+argument_list|,
+comment|/*bytes*/
+literal|4
 argument_list|)
 expr_stmt|;
 name|aic_pci_write_config
@@ -8491,9 +8491,6 @@ name|dev_softc
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
-comment|/*bytes*/
-literal|1
-argument_list|,
 name|ahc
 operator|->
 name|bus_softc
@@ -8501,6 +8498,9 @@ operator|.
 name|pci_softc
 operator|.
 name|command
+argument_list|,
+comment|/*bytes*/
+literal|1
 argument_list|)
 expr_stmt|;
 name|aic_pci_write_config
@@ -8511,9 +8511,6 @@ name|dev_softc
 argument_list|,
 name|CSIZE_LATTIME
 argument_list|,
-comment|/*bytes*/
-literal|1
-argument_list|,
 name|ahc
 operator|->
 name|bus_softc
@@ -8521,6 +8518,9 @@ operator|.
 name|pci_softc
 operator|.
 name|csize_lattime
+argument_list|,
+comment|/*bytes*/
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
