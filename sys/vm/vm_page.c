@@ -1236,6 +1236,23 @@ literal|"vm_page_dirty: page in cache!"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|queue
+operator|-
+name|m
+operator|->
+name|pc
+operator|!=
+name|PQ_FREE
+argument_list|,
+operator|(
+literal|"vm_page_dirty: page is free!"
+operator|)
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|dirty
