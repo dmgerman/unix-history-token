@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.77 1998/10/31 15:31:24 peter Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.78 1998/11/21 00:20:24 dt Exp $ */
 end_comment
 
 begin_comment
@@ -3079,17 +3079,6 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|isadir
-condition|)
-name|dep
-operator|->
-name|de_flag
-operator||=
-name|DE_ACCESS
-expr_stmt|;
 name|brelse
 argument_list|(
 name|bp
@@ -3113,6 +3102,28 @@ operator|!=
 literal|0
 condition|)
 do|;
+if|if
+condition|(
+operator|!
+name|isadir
+operator|&&
+operator|!
+operator|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_NOATIME
+operator|)
+condition|)
+name|dep
+operator|->
+name|de_flag
+operator||=
+name|DE_ACCESS
+expr_stmt|;
 return|return
 operator|(
 name|error
