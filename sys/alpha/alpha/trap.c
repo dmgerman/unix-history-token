@@ -1555,7 +1555,7 @@ operator|)
 condition|?
 name|VM_FAULT_DIRTY
 else|:
-literal|0
+name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 operator|--
@@ -1577,7 +1577,7 @@ name|va
 argument_list|,
 name|ftype
 argument_list|,
-name|FALSE
+name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 block|}

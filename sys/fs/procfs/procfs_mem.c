@@ -488,7 +488,7 @@ name|pageno
 argument_list|,
 name|reqprot
 argument_list|,
-name|FALSE
+name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 if|if
