@@ -654,11 +654,6 @@ name|limit
 decl_stmt|;
 name|char
 modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
 name|decr
 parameter_list|()
 function_decl|;
