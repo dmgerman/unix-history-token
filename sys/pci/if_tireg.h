@@ -107,6 +107,13 @@ name|ALT_DEVICEID_ACENIC
 value|0x0001
 end_define
 
+begin_define
+define|#
+directive|define
+name|ALT_DEVICEID_ACENIC_COPPER
+value|0x0002
+end_define
+
 begin_comment
 comment|/*  * 3Com 3c985 PCI vendor/device ID.  */
 end_comment
@@ -410,14 +417,14 @@ begin_define
 define|#
 directive|define
 name|TI_FIRMWARE_MINOR
-value|0x3
+value|0x4
 end_define
 
 begin_define
 define|#
 directive|define
 name|TI_FIRMWARE_FIX
-value|0x15
+value|0xd
 end_define
 
 begin_comment
@@ -4071,7 +4078,7 @@ begin_define
 define|#
 directive|define
 name|TI_JSLOTS
-value|256
+value|384
 end_define
 
 begin_define
@@ -4410,6 +4417,10 @@ name|u_int8_t
 name|ti_hwrev
 decl_stmt|;
 comment|/* Tigon rev (1 or 2) */
+name|u_int8_t
+name|ti_copper
+decl_stmt|;
+comment|/* 1000baseTX card */
 name|u_int8_t
 name|ti_linkstat
 decl_stmt|;
