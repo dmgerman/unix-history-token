@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.8 (Berkeley) %G%"
+literal|"@(#)scan.c	2.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3201,8 +3201,6 @@ directive|endif
 argument|return; 			}  		lxget(
 literal|' '
 argument|, LEXWS ); 		c = getchar(); 		if( c ==
-literal|'\n'
-argument|) 			continue; 		if( c ==
 literal|'i'
 argument|){
 comment|/* #ident -- currently a no-op */
@@ -3273,11 +3271,23 @@ argument|case
 literal|'\n'
 argument|: 			case EOF: 				continue; 				} 			while( (c = getchar()) !=
 literal|'\n'
-argument|&& c != EOF ) 				; 			continue; 			} 		if( !isdigit(c) ){ 			if( isalpha(c) ){ 				lxget( c, LEXLET ); 				werror(
+argument|&& c != EOF ) 				; 			continue; 			} 		if( c ==
+literal|'l'
+argument|){
+comment|/* #line -- just like # */
+argument|lxget( c, LEXLET ); 			if( strcmp( yytext,
+literal|"line"
+argument|) ){ 				werror(
 literal|"%s: undefined control"
-argument|, yytext ); 				} 			while( (c = getchar()) !=
+argument|, yytext ); 				while( (c = getchar()) !=
 literal|'\n'
-argument|&& c != EOF ) 				; 			continue; 			} 			 		val =
+argument|&& c != EOF ) 					; 				continue; 				} 			lxget(
+literal|' '
+argument|, LEXWS ); 			c = getchar(); 			} 		if( !isdigit(c) ){ 			if( isalpha(c) ){ 				lxget( c, LEXLET ); 				werror(
+literal|"%s: undefined control"
+argument|, yytext ); 				} 			while( c !=
+literal|'\n'
+argument|&& c != EOF ) 				c = getchar(); 			continue; 			} 			 		val =
 literal|0
 argument|; 		do { 			val = val*
 literal|10
