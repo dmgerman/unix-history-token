@@ -135,7 +135,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_DES
+name|DIST_CRYPTO
 value|0x04000
 end_define
 
@@ -188,27 +188,27 @@ value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT )
 end_define
 
 begin_comment
-comment|/* Subtypes for DES distribution */
+comment|/* Subtypes for CRYPTO distribution */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DIST_DES_DES
+name|DIST_CRYPTO_CRYPTO
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_DES_SCRYPTO
+name|DIST_CRYPTO_SCRYPTO
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_DES_SSECURE
+name|DIST_CRYPTO_SSECURE
 value|0x0004
 end_define
 
@@ -216,14 +216,14 @@ begin_if
 if|#
 directive|if
 name|__FreeBSD__
-operator|>
+operator|<=
 literal|3
 end_if
 
 begin_define
 define|#
 directive|define
-name|DIST_DES_KERBEROS4
+name|DIST_CRYPTO_KERBEROS
 value|0x0008
 end_define
 
@@ -235,8 +235,29 @@ end_else
 begin_define
 define|#
 directive|define
-name|DIST_DES_KERBEROS
+name|DIST_CRYPTO_KERBEROS4
 value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_CRYPTO_KERBEROS5
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_CRYPTO_SKERBEROS4
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_CRYPTO_SKERBEROS5
+value|0x0040
 end_define
 
 begin_endif
@@ -247,15 +268,8 @@ end_endif
 begin_define
 define|#
 directive|define
-name|DIST_DES_SKERBEROS
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_DES_ALL
-value|0x001F
+name|DIST_CRYPTO_ALL
+value|0x007F
 end_define
 
 begin_comment

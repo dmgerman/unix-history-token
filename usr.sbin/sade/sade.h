@@ -296,8 +296,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_DIST_DES
-value|"distDES"
+name|VAR_DIST_CRYPTO
+value|"distCRYPTO"
 end_define
 
 begin_define
@@ -1718,7 +1718,7 @@ begin_decl_stmt
 specifier|extern
 name|unsigned
 name|int
-name|DESDists
+name|CRYPTODists
 decl_stmt|;
 end_decl_stmt
 
@@ -2129,12 +2129,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
-name|MenuDESDistributions
+name|MenuCRYPTODistributions
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* DES distribution menu			*/
+comment|/* Encryption distribution menu			*/
 end_comment
 
 begin_decl_stmt
@@ -3248,7 +3248,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|distSetDES
+name|distSetCRYPTO
 parameter_list|(
 name|dialogMenuItem
 modifier|*

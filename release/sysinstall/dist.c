@@ -37,7 +37,7 @@ end_decl_stmt
 begin_decl_stmt
 name|unsigned
 name|int
-name|DESDists
+name|CRYPTODists
 decl_stmt|;
 end_decl_stmt
 
@@ -112,7 +112,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|Distribution
-name|DESDistTable
+name|CRYPTODistTable
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -285,9 +285,9 @@ block|,
 operator|&
 name|Dists
 block|,
-name|DIST_DES
+name|DIST_CRYPTO
 block|,
-name|DESDistTable
+name|CRYPTODistTable
 block|}
 block|,
 ifdef|#
@@ -345,11 +345,6 @@ block|,
 name|NULL
 block|}
 block|,
-if|#
-directive|if
-name|__FreeBSD__
-operator|>
-literal|3
 block|{
 literal|"compat3x"
 block|,
@@ -363,8 +358,6 @@ block|,
 name|NULL
 block|}
 block|,
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|{
@@ -414,73 +407,64 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The DES distribution (not for export!) */
+comment|/* The CRYPTO distribution */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|Distribution
-name|DESDistTable
+name|CRYPTODistTable
 index|[]
 init|=
 block|{
 block|{
-literal|"des"
+literal|"crypto"
 block|,
 literal|"/"
 block|,
 operator|&
-name|DESDists
+name|CRYPTODists
 block|,
-name|DIST_DES_DES
+name|DIST_CRYPTO_CRYPTO
 block|,
 name|NULL
 block|}
 block|,
-if|#
-directive|if
-name|__FreeBSD__
-operator|>
-literal|3
 block|{
 literal|"krb4"
 block|,
 literal|"/"
 block|,
 operator|&
-name|DESDists
+name|CRYPTODists
 block|,
-name|DIST_DES_KERBEROS4
+name|DIST_CRYPTO_KERBEROS4
 block|,
 name|NULL
 block|}
 block|,
-else|#
-directive|else
 block|{
-literal|"krb"
+literal|"krb5"
 block|,
 literal|"/"
 block|,
 operator|&
-name|DESDists
+name|CRYPTODists
 block|,
-name|DIST_DES_KERBEROS
+name|DIST_CRYPTO_KERBEROS5
 block|,
 name|NULL
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"ssecure"
 block|,
 literal|"/usr/src"
 block|,
 operator|&
-name|DESDists
+name|CRYPTODists
 block|,
-name|DIST_DES_SSECURE
+name|DIST_CRYPTO_SSECURE
 block|,
 name|NULL
 block|}
@@ -491,22 +475,35 @@ block|,
 literal|"/usr/src"
 block|,
 operator|&
-name|DESDists
+name|CRYPTODists
 block|,
-name|DIST_DES_SCRYPTO
+name|DIST_CRYPTO_SCRYPTO
 block|,
 name|NULL
 block|}
 block|,
 block|{
-literal|"skerbero"
+literal|"skrb4"
 block|,
 literal|"/usr/src"
 block|,
 operator|&
-name|DESDists
+name|CRYPTODists
 block|,
-name|DIST_DES_SKERBEROS
+name|DIST_CRYPTO_SKERBEROS4
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"skrb5"
+block|,
+literal|"/usr/src"
+block|,
+operator|&
+name|CRYPTODists
+block|,
+name|DIST_CRYPTO_SKERBEROS5
 block|,
 name|NULL
 block|}
@@ -1448,7 +1445,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|int
-name|distMaybeSetDES
+name|distMaybeSetCRYPTO
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -1487,22 +1484,26 @@ name|DIST_SRC
 expr_stmt|;
 if|if
 condition|(
-name|DESDists
+name|CRYPTODists
 condition|)
 block|{
 if|if
 condition|(
-name|DESDists
+name|CRYPTODists
 operator|&
-name|DIST_DES_KERBEROS4
+operator|(
+name|DIST_CRYPTO_KERBEROS4
+operator||
+name|DIST_CRYPTO_KERBEROS5
+operator|)
 condition|)
-name|DESDists
+name|CRYPTODists
 operator||=
-name|DIST_DES_DES
+name|DIST_CRYPTO_CRYPTO
 expr_stmt|;
 name|Dists
 operator||=
-name|DIST_DES
+name|DIST_CRYPTO
 expr_stmt|;
 block|}
 if|if
@@ -1573,11 +1574,11 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"Dist Masks: Dists: %0x, DES: %0x, Srcs: %0x\nXServer: %0x, XFonts: %0x, XDists: %0x\n"
+literal|"Dist Masks: Dists: %0x, CRYPTO: %0x, Srcs: %0x\nXServer: %0x, XFonts: %0x, XDists: %0x\n"
 argument_list|,
 name|Dists
 argument_list|,
-name|DESDists
+name|CRYPTODists
 argument_list|,
 name|SrcDists
 argument_list|,
@@ -1604,7 +1605,7 @@ name|Dists
 operator|=
 literal|0
 expr_stmt|;
-name|DESDists
+name|CRYPTODists
 operator|=
 literal|0
 expr_stmt|;
@@ -1677,13 +1678,13 @@ name|cp
 operator|=
 name|variable_get
 argument_list|(
-name|VAR_DIST_DES
+name|VAR_DIST_CRYPTO
 argument_list|)
 operator|)
 operator|!=
 name|NULL
 condition|)
-name|DESDists
+name|CRYPTODists
 operator|=
 name|atoi
 argument_list|(
@@ -1865,7 +1866,7 @@ name|DIST_SRC_ALL
 expr_stmt|;
 name|i
 operator|=
-name|distMaybeSetDES
+name|distMaybeSetCRYPTO
 argument_list|(
 name|self
 argument_list|)
@@ -1944,7 +1945,7 @@ name|DIST_SRC_SYS
 expr_stmt|;
 name|i
 operator|=
-name|distMaybeSetDES
+name|distMaybeSetCRYPTO
 argument_list|(
 name|self
 argument_list|)
@@ -2019,7 +2020,7 @@ name|_DIST_USER
 expr_stmt|;
 name|i
 operator|=
-name|distMaybeSetDES
+name|distMaybeSetCRYPTO
 argument_list|(
 name|self
 argument_list|)
@@ -2133,7 +2134,7 @@ name|DIST_XF86_FONTS_ALL
 expr_stmt|;
 name|i
 operator|=
-name|distMaybeSetDES
+name|distMaybeSetCRYPTO
 argument_list|(
 name|self
 argument_list|)
@@ -2154,7 +2155,7 @@ end_function
 
 begin_function
 name|int
-name|distSetDES
+name|distSetCRYPTO
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -2173,7 +2174,7 @@ operator|!
 name|dmenuOpenSimple
 argument_list|(
 operator|&
-name|MenuDESDistributions
+name|MenuCRYPTODistributions
 argument_list|,
 name|FALSE
 argument_list|)
@@ -2203,7 +2204,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|distMaybeSetDES
+name|distMaybeSetCRYPTO
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -2228,13 +2229,13 @@ argument_list|(
 literal|"Do you wish to install cryptographic software?\n\n"
 literal|"If you choose No, FreeBSD will use an MD5 based password scheme which,\n"
 literal|"while perhaps more secure, is not interoperable with the traditional\n"
-literal|"UNIX DES passwords on other Unix systems.  There will also be some\n"
+literal|"DES-based passwords on other Unix systems.  There will also be some\n"
 literal|"differences in the type of RSA code you use.\n\n"
 literal|"Please do NOT choose Yes at this point if you are outside the\n"
-literal|"United States and Canada yet are installing from a U.S. FTP server.\n"
-literal|"Instead, install everything BUT the crypto bits from the U.S. site\n"
-literal|"and then switch to an international FTP server to install them on\n"
-literal|"a second pass using the Custom Installation option."
+literal|"United States and Canada and are installing from a U.S. FTP server.\n"
+literal|"Instead, install everything but the crypto bits from the U.S. site\n"
+literal|"and then switch to an international FTP server to install crypto on\n"
+literal|"a second pass with the Custom Installation option."
 argument_list|)
 condition|)
 block|{
@@ -2244,7 +2245,7 @@ operator|!
 name|dmenuOpenSimple
 argument_list|(
 operator|&
-name|MenuDESDistributions
+name|MenuCRYPTODistributions
 argument_list|,
 name|FALSE
 argument_list|)
@@ -4459,9 +4460,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Unable to transfer all components of the %s distribution.\n"
-literal|"If this is a CDROM install, it may be because export restrictions prohibit\n"
-literal|"DES code from being shipped from the U.S.  Try to get this code from a\n"
-literal|"local FTP site instead!"
+literal|"You may wish to switch media types and try again.\n"
 argument_list|,
 name|me
 index|[

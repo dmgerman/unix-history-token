@@ -239,9 +239,9 @@ name|distSetEverything
 block|}
 block|,
 block|{
-literal|"distSetDES"
+literal|"distSetCRYPTO"
 block|,
-name|distSetDES
+name|distSetCRYPTO
 block|}
 block|,
 block|{

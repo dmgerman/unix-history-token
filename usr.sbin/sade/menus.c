@@ -119,7 +119,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|setDES
+name|setCRYPTO
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -128,11 +128,11 @@ parameter_list|)
 block|{
 name|Dists
 operator||=
-name|DIST_DES
+name|DIST_CRYPTO
 expr_stmt|;
-name|DESDists
+name|CRYPTODists
 operator|=
-name|DIST_DES_ALL
+name|DIST_CRYPTO_ALL
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
@@ -145,7 +145,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|clearDES
+name|clearCRYPTO
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -155,9 +155,9 @@ block|{
 name|Dists
 operator|&=
 operator|~
-name|DIST_DES
+name|DIST_CRYPTO
 expr_stmt|;
-name|DESDists
+name|CRYPTODists
 operator|=
 literal|0
 expr_stmt|;
@@ -358,7 +358,7 @@ name|dist
 parameter_list|,
 name|extra
 parameter_list|)
-value|(_IS_SET(dist, _DIST_DEVELOPER | extra) || \ 	_IS_SET(dist, _DIST_DEVELOPER | DIST_DES | extra))
+value|(_IS_SET(dist, _DIST_DEVELOPER | extra) || \ 	_IS_SET(dist, _DIST_DEVELOPER | DIST_CRYPTO | extra))
 end_define
 
 begin_define
@@ -370,7 +370,7 @@ name|dist
 parameter_list|,
 name|extra
 parameter_list|)
-value|(_IS_SET(dist, _DIST_USER | extra) || \ 	_IS_SET(dist, _DIST_USER | DIST_DES | extra))
+value|(_IS_SET(dist, _DIST_USER | extra) || \ 	_IS_SET(dist, _DIST_USER | DIST_CRYPTO | extra))
 end_define
 
 begin_function
@@ -597,7 +597,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|DESFlagCheck
+name|CRYPTOFlagCheck
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -605,7 +605,7 @@ name|item
 parameter_list|)
 block|{
 return|return
-name|DESDists
+name|CRYPTODists
 return|;
 block|}
 end_function
@@ -802,9 +802,9 @@ name|MenuSubDistributions
 block|}
 block|,
 block|{
-literal|" Dists, DES"
+literal|" Dists, CRYPTO"
 block|,
-literal|"DES distribution menu."
+literal|"Encryption distribution menu."
 block|,
 name|NULL
 block|,
@@ -813,7 +813,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|MenuDESDistributions
+name|MenuCRYPTODistributions
 block|}
 block|,
 block|{
@@ -4589,7 +4589,8 @@ literal|"Select the distributions you wish to install."
 block|,
 literal|"Please check off the distributions you wish to install.  At the\n"
 literal|"very minimum, this should be \"bin\".  WARNING:  Do not export the\n"
-literal|"DES distribution out of the U.S.!  It is for U.S. customers only."
+literal|"Encryption distribution out of the U.S.!\n"
+literal|"It is for U.S. customers only."
 block|,
 name|NULL
 block|,
@@ -4807,13 +4808,13 @@ directive|endif
 endif|#
 directive|endif
 block|{
-literal|" DES"
+literal|" CRYPTO"
 block|,
-literal|"DES encryption code - NOT FOR EXPORT!"
+literal|"Encryption code - NOT FOR EXPORT!"
 block|,
-name|DESFlagCheck
+name|CRYPTOFlagCheck
 block|,
-name|distSetDES
+name|distSetCRYPTO
 block|}
 block|,
 block|{
@@ -4980,7 +4981,7 @@ block|,
 block|{
 literal|" src"
 block|,
-literal|"Sources for everything but DES"
+literal|"Sources for everything but encryption"
 block|,
 name|srcFlagCheck
 block|,
@@ -5078,7 +5079,7 @@ end_decl_stmt
 begin_decl_stmt
 unit|};
 name|DMenu
-name|MenuDESDistributions
+name|MenuCRYPTODistributions
 init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
@@ -5087,7 +5088,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select the encryption facilities you wish to install."
 block|,
-literal|"Please check off any special DES-based encryption distributions\n"
+literal|"Please check off any special encryption distributions\n"
 literal|"you would like to install.  Please note that these services are NOT FOR\n"
 literal|"EXPORT from the United States.  For information on non-U.S. FTP\n"
 literal|"distributions of this software, please consult the release notes."
@@ -5124,7 +5125,7 @@ literal|"Select all of the below"
 block|,
 name|NULL
 block|,
-name|setDES
+name|setCRYPTO
 block|,
 name|NULL
 block|,
@@ -5144,7 +5145,7 @@ literal|"Reset all of the below"
 block|,
 name|NULL
 block|,
-name|clearDES
+name|clearCRYPTO
 block|,
 name|NULL
 block|,
@@ -5158,9 +5159,9 @@ literal|' '
 block|}
 block|,
 block|{
-literal|" des"
+literal|" crypto"
 block|,
-literal|"Basic DES encryption services"
+literal|"Basic encryption services"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5169,7 +5170,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|DESDists
+name|CRYPTODists
 block|,
 literal|'['
 block|,
@@ -5177,39 +5178,14 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_DES_DES
+name|DIST_CRYPTO_CRYPTO
 block|, }
 block|,
 if|#
 directive|if
 name|__FreeBSD__
-operator|>
+operator|<=
 literal|3
-block|{
-literal|" krb4"
-block|,
-literal|"KerberosIV authentication services"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|DESDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_DES_KERBEROS4
-block|}
-block|,
-else|#
-directive|else
 block|{
 literal|" krb"
 block|,
@@ -5222,7 +5198,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|DESDists
+name|CRYPTODists
 block|,
 literal|'['
 block|,
@@ -5230,15 +5206,63 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_DES_KERBEROS
+name|DIST_CRYPTO_KERBEROS
+block|}
+block|,
+else|#
+directive|else
+block|{
+literal|" krb4"
+block|,
+literal|"KerberosIV authentication services"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CRYPTODists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_CRYPTO_KERBEROS4
+block|}
+block|,
+block|{
+literal|" krb5"
+block|,
+literal|"Kerberos5 authentication services"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CRYPTODists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_CRYPTO_KERBEROS5
 block|}
 block|,
 endif|#
 directive|endif
 block|{
-literal|" skerbero"
+literal|" skrb4"
 block|,
-literal|"Sources for Kerberos"
+literal|"Sources for KerberosIV"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5247,7 +5271,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|DESDists
+name|CRYPTODists
 block|,
 literal|'['
 block|,
@@ -5255,13 +5279,36 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_DES_SKERBEROS
+name|DIST_CRYPTO_SKERBEROS4
+block|}
+block|,
+block|{
+literal|" skrb5"
+block|,
+literal|"Sources for Kerberos5"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CRYPTODists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_CRYPTO_SKERBEROS5
 block|}
 block|,
 block|{
 literal|" ssecure"
 block|,
-literal|"Sources for DES"
+literal|"BSD encryption sources"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5270,7 +5317,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|DESDists
+name|CRYPTODists
 block|,
 literal|'['
 block|,
@@ -5278,13 +5325,13 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_DES_SSECURE
+name|DIST_CRYPTO_SSECURE
 block|}
 block|,
 block|{
 literal|" scrypto"
 block|,
-literal|"Export controlled crypto sources"
+literal|"Contributed encryption sources"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5293,7 +5340,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|DESDists
+name|CRYPTODists
 block|,
 literal|'['
 block|,
@@ -5301,7 +5348,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_DES_SCRYPTO
+name|DIST_CRYPTO_SCRYPTO
 block|}
 block|,
 block|{
