@@ -99,6 +99,32 @@ directive|include
 file|"pw_scan.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|big_uids
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Used for legacy max uid_t warning */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|big_gids
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Used for legacy max gid_t warning */
+end_comment
+
 begin_function
 name|int
 name|pw_scan
@@ -302,19 +328,24 @@ condition|(
 name|id
 operator|>
 name|USHRT_MAX
+operator|&&
+operator|!
+operator|(
+name|big_uids
+operator|++
+operator|)
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s> max uid value (%d)"
+literal|"%s> legacy max uid value (%d): "
+literal|"no more such warnings"
 argument_list|,
 name|p
 argument_list|,
 name|USHRT_MAX
 argument_list|)
 expr_stmt|;
-comment|/*return (0);*/
-comment|/* THIS SHOULD NOT BE FATAL! */
 block|}
 name|pw
 operator|->
@@ -366,18 +397,24 @@ condition|(
 name|id
 operator|>
 name|USHRT_MAX
+operator|&&
+operator|!
+operator|(
+name|big_gids
+operator|++
+operator|)
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s> max gid value (%d)"
+literal|"%s> max gid value (%d): "
+literal|"no more such warnings"
 argument_list|,
 name|p
 argument_list|,
 name|USHRT_MAX
 argument_list|)
 expr_stmt|;
-comment|/* return (0); This should not be fatal! */
 block|}
 name|pw
 operator|->
