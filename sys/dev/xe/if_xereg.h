@@ -1381,6 +1381,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|XE_IMR0_TX_RESGRANT
+value|0x08
+end_define
+
+begin_comment
+comment|/* Tx reservation granted (CE2) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|XE_IMR0_RX_EARLY
 value|0x10
 end_define
@@ -1404,6 +1415,17 @@ define|#
 directive|define
 name|XE_IMR0_FORCE_INTR
 value|0x80
+end_define
+
+begin_comment
+comment|/* XE_IMR1 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XE_IMR1_TX_UNDERRUN
+value|0x01
 end_define
 
 begin_comment
@@ -1882,7 +1904,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Value wirtten to GP2 line */
+comment|/* Value written to GP2 line */
 end_comment
 
 begin_define
@@ -1941,7 +1963,18 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Power down analog section (down to 20mA load) */
+comment|/* 0 = Power down analog section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XE_GPR1_AIC
+value|0x04
+end_define
+
+begin_comment
+comment|/* AIC bit (CE2 only) */
 end_comment
 
 begin_comment
@@ -2607,6 +2640,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|XE_RX0M_MP
+value|0x01
+end_define
+
+begin_comment
+comment|/* Multicast packet? (CE2 only) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|XE_RX0M_LONG_PACKET
 value|0x02
 end_define
@@ -2816,6 +2860,17 @@ end_define
 
 begin_comment
 comment|/* Accept otherwise OK packets that are too short */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XE_SWC0_NO_SRC_INSERT
+value|0x20
+end_define
+
+begin_comment
+comment|/* Disable source insertion (CE2) */
 end_comment
 
 begin_define

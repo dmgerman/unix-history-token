@@ -91,6 +91,14 @@ decl_stmt|;
 name|int
 name|port_rid
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|ce2_port_res
+decl_stmt|;
+name|int
+name|ce2_port_rid
+decl_stmt|;
 name|int
 name|srev
 decl_stmt|;
@@ -104,13 +112,17 @@ name|tx_tpr
 decl_stmt|;
 comment|/* Last value of TPR reg on card */
 name|int
-name|tx_collisions
-decl_stmt|;
-comment|/* Collisions since last successful send */
-name|int
 name|tx_timeouts
 decl_stmt|;
 comment|/* Count of transmit timeouts */
+name|u_int16_t
+name|tx_min
+decl_stmt|;
+comment|/* Smallest packet we can send without padding */
+name|u_int16_t
+name|tx_thres
+decl_stmt|;
+comment|/* Threshold bytes for early transmit */
 name|int
 name|autoneg_status
 decl_stmt|;

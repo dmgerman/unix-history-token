@@ -135,6 +135,17 @@ directive|include
 file|"card_if.h"
 end_include
 
+begin_comment
+comment|/*  * Set XE_DEBUG to enable debug messages  * Larger values increase verbosity  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XE_DEBUG
+value|0
+end_define
+
 begin_define
 define|#
 directive|define
@@ -204,6 +215,7 @@ block|,
 literal|"Compaq"
 block|}
 block|,
+comment|/* Maybe Paralon Techologies, Inc */
 block|{
 name|XE_VENDOR_ID_INTEL
 block|,
@@ -251,84 +263,91 @@ begin_define
 define|#
 directive|define
 name|XE_PROD_UMASK
-value|0x100f
+value|0x11000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|XE_PROD_ETHER_UMASK
+value|0x010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|XE_PROD_MODEM_UMASK
-value|0x1000
+value|0x100000
 end_define
 
 begin_define
 define|#
 directive|define
 name|XE_PROD_SINGLE_ID1
-value|0x1
+value|0x010001
 end_define
 
 begin_define
 define|#
 directive|define
 name|XE_PROD_SINGLE_ID2
-value|0x2
+value|0x010002
 end_define
 
 begin_define
 define|#
 directive|define
 name|XE_PROD_SINGLE_ID3
-value|0x3
+value|0x010003
 end_define
 
 begin_define
 define|#
 directive|define
 name|XE_PROD_MULTI_ID1
-value|0x1001
+value|0x110001
 end_define
 
 begin_define
 define|#
 directive|define
 name|XE_PROD_MULTI_ID2
-value|0x1002
+value|0x110002
 end_define
 
 begin_define
 define|#
 directive|define
 name|XE_PROD_MULTI_ID3
-value|0x1003
+value|0x110003
 end_define
 
 begin_define
 define|#
 directive|define
 name|XE_PROD_MULTI_ID4
-value|0x1004
+value|0x110004
 end_define
 
 begin_define
 define|#
 directive|define
 name|XE_PROD_MULTI_ID5
-value|0x1005
+value|0x110005
 end_define
 
 begin_define
 define|#
 directive|define
 name|XE_PROD_MULTI_ID6
-value|0x1006
+value|0x110006
 end_define
 
 begin_define
 define|#
 directive|define
 name|XE_PROD_MULTI_ID7
-value|0x1007
+value|0x110007
 end_define
 
 begin_struct
@@ -453,7 +472,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|xe_cem56fix
+name|xe_cemfix
 parameter_list|(
 name|device_t
 name|dev
@@ -498,13 +517,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Fixing for RealPort cards - they need a little furtling to get the  * ethernet working. But this codes don't work well in NEWCARD.  */
+comment|/*  * Fixing for CEM2, CEM3 and CEM56/REM56 cards.  These need some magic to  * enable the Ethernet function, which isn't mentioned anywhere in the CIS.  * Despite the register names, most of this isn't Dingo-specific.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|xe_cem56fix
+name|xe_cemfix
 parameter_list|(
 name|device_t
 name|dev
@@ -542,11 +561,25 @@ decl_stmt|;
 name|int
 name|ioport
 decl_stmt|;
+if|#
+directive|if
+name|XE_DEBUG
+operator|>
+literal|1
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Realport port 0x%0lx, size 0x%0lx\n"
+literal|"cemfix\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"CEM I/O port 0x%0lx, size 0x%0lx\n"
 argument_list|,
 name|bus_get_resource_start
 argument_list|(
@@ -708,6 +741,13 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|dingo
+condition|)
+block|{
 name|bus_space_write_1
 argument_list|(
 name|bst
@@ -765,6 +805,7 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
+block|}
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -943,6 +984,157 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|#
+directive|if
+name|XE_DEBUG
+operator|>
+literal|1
+name|char
+modifier|*
+name|vendor_str
+init|=
+name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|product_str
+init|=
+name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|cis4_str
+init|=
+name|NULL
+decl_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"pccard_probe\n"
+argument_list|)
+expr_stmt|;
+name|pccard_get_vendor
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|vendor
+argument_list|)
+expr_stmt|;
+name|pccard_get_product
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|prodid
+argument_list|)
+expr_stmt|;
+name|pccard_get_prodext
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|prodext
+argument_list|)
+expr_stmt|;
+name|pccard_get_vendor_str
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|vendor_str
+argument_list|)
+expr_stmt|;
+name|pccard_get_product_str
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|product_str
+argument_list|)
+expr_stmt|;
+name|pccard_get_cis3_str
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|cis3_str
+argument_list|)
+expr_stmt|;
+name|pccard_get_cis4_str
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|cis4_str
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"vendor = 0x%04x\n"
+argument_list|,
+name|vendor
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"product = 0x%04x\n"
+argument_list|,
+name|prodid
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"prodext = 0x%02x\n"
+argument_list|,
+name|prodext
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"vendor_str = %s\n"
+argument_list|,
+name|vendor_str
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"product_str = %s\n"
+argument_list|,
+name|product_str
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"cis3_str = %s\n"
+argument_list|,
+name|cis3_str
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"cis4_str = %s\n"
+argument_list|,
+name|cis4_str
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * PCCARD_CISTPL_MANFID = 0x20 	 */
 name|pccard_get_vendor
 argument_list|(
@@ -1139,11 +1331,15 @@ literal|0
 condition|)
 if|if
 condition|(
+name|cis3_str
+operator|!=
+name|NULL
+operator|&&
 name|strcmp
 argument_list|(
 name|cis3_str
 argument_list|,
-literal|"CE2"
+literal|"PS-CE2-10"
 argument_list|)
 operator|==
 literal|0
@@ -1245,6 +1441,20 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+if|#
+directive|if
+name|XE_DEBUG
+operator|>
+literal|1
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"pccard_attach\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -1268,9 +1478,9 @@ if|if
 condition|(
 name|scp
 operator|->
-name|dingo
+name|modem
 operator|&&
-name|xe_cem56fix
+name|xe_cemfix
 argument_list|(
 name|dev
 argument_list|)
@@ -1282,7 +1492,11 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Unable to fix your RealPort\n"
+literal|"Unable to fix your %s combo card\n"
+argument_list|,
+name|scp
+operator|->
+name|card_type
 argument_list|)
 expr_stmt|;
 name|xe_deactivate
@@ -1354,6 +1568,20 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+if|#
+directive|if
+name|XE_DEBUG
+operator|>
+literal|1
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"pccard_detach\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|arpcom
@@ -1415,7 +1643,6 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* Maybe Paralon Techologies, Inc */
 name|PCMCIA_CARD
 argument_list|(
 name|INTEL
@@ -1519,6 +1746,20 @@ name|pccard_product
 modifier|*
 name|pp
 decl_stmt|;
+if|#
+directive|if
+name|XE_DEBUG
+operator|>
+literal|1
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"pccard_match\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
