@@ -2597,6 +2597,12 @@ case|:
 case|case
 name|TOR
 case|:
+name|synexpect
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 case|case
 name|TNL
 case|:
