@@ -657,6 +657,10 @@ name|pwdb
 argument_list|(
 literal|"-C"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 operator|==
@@ -851,6 +855,10 @@ literal|"-u"
 argument_list|,
 name|user
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
