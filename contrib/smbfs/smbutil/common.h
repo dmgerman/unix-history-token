@@ -13,7 +13,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do { printf("%-" # ident "s", ""); \ 				printf(# args);}while(0)
+value|do { printf("%-" # ident "s", ""); \ 				printf(args);}while(0)
 end_define
 
 begin_decl_stmt
