@@ -4051,9 +4051,15 @@ if|if
 condition|(
 name|air
 operator|->
-name|acp_vendor
+name|acp_vendapi
 operator|==
-name|VENDOR_FORE
+name|VENDAPI_FORE_1
+operator|&&
+name|air
+operator|->
+name|acp_ram
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 			 * Create /dev name 			 */
