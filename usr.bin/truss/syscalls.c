@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -103,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -2579,12 +2579,18 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%d.%0.9d "
+literal|"%ld.%09ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|timediff
 operator|.
 name|tv_sec
 argument_list|,
+operator|(
+name|long
+operator|)
 name|timediff
 operator|.
 name|tv_nsec
@@ -2624,12 +2630,18 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%d.%0.9d "
+literal|"%ld.%09ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|timediff
 operator|.
 name|tv_sec
 argument_list|,
+operator|(
+name|long
+operator|)
 name|timediff
 operator|.
 name|tv_nsec
