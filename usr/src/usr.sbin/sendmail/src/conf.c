@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.6 (Berkeley) %G%"
+literal|"@(#)conf.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1390,27 +1390,32 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and FALSE should **	be returned. ** **	'NoReturn' can be set to suppress the return-to-sender **	function; this should be done on huge messages. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		TRUE -- ok to send. **		FALSE -- not ok. ** **	Side Effects: **		none (unless you include the usrerr stuff) */
+comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and 0 should **	be returned. ** **	'NoReturn' can be set to suppress the return-to-sender **	function; this should be done on huge messages. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		+1 -- ok to send. **		0 -- not ok. **		-1 -- return TEMPFAIL. ** **	Side Effects: **		none (unless you include the usrerr stuff) */
 end_comment
 
-begin_function
-name|bool
+begin_expr_stmt
 name|checkcompat
-parameter_list|(
+argument_list|(
 name|to
-parameter_list|,
+argument_list|,
 name|e
-parameter_list|)
+argument_list|)
 specifier|register
 name|ADDRESS
-modifier|*
+operator|*
 name|to
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -1491,7 +1496,7 @@ name|TRUE
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_escape
 end_escape

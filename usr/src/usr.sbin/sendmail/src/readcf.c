@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.2 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2387,6 +2387,12 @@ operator|->
 name|s_mailer
 operator|=
 name|m
+expr_stmt|;
+name|m
+operator|->
+name|m_mno
+operator|=
+name|i
 expr_stmt|;
 block|}
 end_block
