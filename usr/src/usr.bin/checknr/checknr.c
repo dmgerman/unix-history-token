@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)checknr.c	4.3 (Berkeley) %G%"
+literal|"@(#)checknr.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -456,6 +456,8 @@ block|,
 literal|"DL"
 block|,
 literal|"DS"
+block|,
+literal|"DT"
 block|,
 literal|"EC"
 block|,
