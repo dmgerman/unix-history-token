@@ -15,22 +15,16 @@ directive|define
 name|_SYS_SX_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
 begin_include
 include|#
 directive|include
-file|<sys/_lock.h>
+file|<sys/queue.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/_mutex.h>
+file|<sys/_lock.h>
 end_include
 
 begin_include
@@ -490,10 +484,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* INVARIANTS || INVARIANT_SUPPORT */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -517,10 +507,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* INVARIANTS */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -537,10 +523,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* INVARIANTS */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -556,16 +538,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !LOCORE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _SYS_SX_H_ */
+comment|/* !_SYS_SX_H_ */
 end_comment
 
 end_unit
