@@ -579,13 +579,6 @@ argument_list|(
 name|ACPI_BITREG_SLEEP_ENABLE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|SleepState
-operator|!=
-name|ACPI_STATE_S5
-condition|)
-block|{
 comment|/* Clear wake status */
 name|Status
 operator|=
@@ -633,6 +626,13 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|SleepState
+operator|!=
+name|ACPI_STATE_S5
+condition|)
+block|{
 comment|/* Disable BM arbitration */
 name|Status
 operator|=
