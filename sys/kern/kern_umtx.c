@@ -739,7 +739,7 @@ if|if
 condition|(
 name|owner
 operator|==
-name|MTX_CONTESTED
+name|UMTX_CONTESTED
 condition|)
 return|return
 operator|(
