@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: udp6_usrreq.c,v 1.11 2000/06/18 06:23:06 jinmei Exp $	*/
+comment|/*	$KAME: udp6_usrreq.c,v 1.17 2000/10/13 17:46:21 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -1720,6 +1720,23 @@ operator|->
 name|if_index
 argument_list|)
 expr_stmt|;
+comment|/* check if we can safely examine src and dst ports */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<
+name|off
+operator|+
+sizeof|sizeof
+argument_list|(
+name|uh
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|m
