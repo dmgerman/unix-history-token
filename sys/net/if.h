@@ -455,6 +455,21 @@ comment|/* supports multicast */
 end_comment
 
 begin_comment
+comment|/*  * The following flag(s) ought to go in if_flags, but we cannot change  * struct ifnet because of binary compatibility, so we store them in  * if_ipending, which is not used so far.  * If possible, make sure the value is not conflicting with other  * IFF flags, so we have an easier time when we want to merge them.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_POLLING
+value|0x10000
+end_define
+
+begin_comment
+comment|/* Interface is in polling mode. */
+end_comment
+
+begin_comment
 comment|/* flags set internally only: */
 end_comment
 
