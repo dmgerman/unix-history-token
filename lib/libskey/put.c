@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"skey.h"
+file|<skey.h>
 end_include
 
 begin_decl_stmt
@@ -34,7 +34,7 @@ specifier|static
 name|unsigned
 name|long
 name|extract
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -55,7 +55,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|standard
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -70,7 +70,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|insert
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -94,7 +94,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|wsrch
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char

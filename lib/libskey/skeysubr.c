@@ -64,13 +64,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"md4.h"
+file|<skey.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"skey.h"
+file|"md4.h"
 end_include
 
 begin_if

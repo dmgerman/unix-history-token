@@ -1,43 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__ARGS
-parameter_list|(
-name|X
-parameter_list|)
-value|X
-end_define
-
-begin_comment
-comment|/* For ANSI C */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__ARGS
-parameter_list|(
-name|X
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_comment
 comment|/*   *  * md4.h -- Header file for implementation of MD4 Message Digest Algorithm  * Updated: 2/13/90 by Ronald L. Rivest  * (C) 1990 RSA Data Security, Inc.  * Reformatted and de-linted - 2/12/91 Phil Karn  */
@@ -88,7 +54,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|MDbegin
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|MDptr
@@ -106,7 +72,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|MDupdate
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|MDptr
@@ -133,7 +99,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|MDprint
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|MDptr

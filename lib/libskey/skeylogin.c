@@ -83,7 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"skey.h"
+file|<skey.h>
 end_include
 
 begin_define
@@ -104,7 +104,7 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|skeylookup
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 expr|struct
