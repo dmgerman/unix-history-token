@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.13 (Berkeley) %G%"
+literal|"@(#)table.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1531,8 +1531,6 @@ literal|"	ZA\n"
 block|,
 name|ASSIGN
 block|,
-name|INAREG
-operator||
 name|FOREFF
 block|,
 name|SFLD
@@ -1547,9 +1545,29 @@ name|TWORD
 block|,
 literal|0
 block|,
-name|RRIGHT
+name|RNOP
 block|,
 literal|"	insv	AR,$H,$S,AL\n"
+block|,
+name|ASSIGN
+block|,
+name|INAREG
+block|,
+name|SFLD
+block|,
+name|TANY
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TWORD
+block|,
+name|NAREG
+block|,
+name|RESC1
+block|,
+literal|"	insv	AR,$H,$S,AL\n	extv	$H,$S,AL,A1\n"
 block|,
 name|ASSIGN
 block|,
