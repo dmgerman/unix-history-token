@@ -12038,6 +12038,9 @@ name|fs
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get buffer of block pointers to be freed. This routine is not 	 * called until the zero'ed inode has been written, so it is safe 	 * to free blocks as they are encountered. Because the inode has 	 * been zero'ed, calls to bmap on these blocks will fail. So, we 	 * have to use the on-disk address and the block device for the 	 * filesystem to look them up. If the file was deleted before its 	 * indirect blocks were all written to disk, the routine that set 	 * us up (deallocate_dependencies) will have arranged to leave 	 * a complete copy of the indirect block in memory for our use. 	 * Otherwise we have to read the blocks in from the disk. 	 */
+ifdef|#
+directive|ifdef
+name|notyet
 name|bp
 operator|=
 name|getblk
@@ -12062,6 +12065,21 @@ argument_list|,
 name|GB_NOCREAT
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|bp
+operator|=
+name|incore
+argument_list|(
+name|freeblks
+operator|->
+name|fb_devvp
+argument_list|,
+name|dbn
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -12190,6 +12208,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 name|bp
@@ -12199,6 +12220,8 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|FREE_LOCK
 argument_list|(
 operator|&
