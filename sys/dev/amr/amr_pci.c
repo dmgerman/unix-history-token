@@ -473,6 +473,22 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x1000
+block|,
+literal|0x0408
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x1000
+block|,
+literal|0x0409
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x1028
 block|,
 literal|0x000e
@@ -623,7 +639,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"LSILogic MegaRAID"
+name|LSI_DESC_PCI
 argument_list|)
 expr_stmt|;
 return|return
@@ -697,6 +713,20 @@ name|amr_dev
 operator|=
 name|dev
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|amr_io_lock
+argument_list|,
+literal|"AMR IO Lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* assume failure is 'not configured' */
 name|error
 operator|=
@@ -732,6 +762,24 @@ name|dev
 argument_list|)
 operator|==
 literal|0x0407
+operator|)
+operator|||
+operator|(
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x0408
+operator|)
+operator|||
+operator|(
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x0409
 operator|)
 operator|||
 operator|(
@@ -993,6 +1041,8 @@ argument_list|,
 name|INTR_TYPE_BIO
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|amr_pci_intr
 argument_list|,
@@ -1128,7 +1178,9 @@ comment|/* flags */
 name|busdma_lock_mutex
 argument_list|,
 operator|&
-name|Giant
+name|sc
+operator|->
+name|amr_io_lock
 argument_list|,
 comment|/* lockfunc, lockarg */
 operator|&
@@ -1603,9 +1655,25 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* collect finished commands, queue anything waiting */
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|amr_io_lock
+argument_list|)
+expr_stmt|;
 name|amr_done
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|amr_io_lock
 argument_list|)
 expr_stmt|;
 block|}
