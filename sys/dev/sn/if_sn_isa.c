@@ -134,22 +134,12 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|if
-condition|(
-name|sn_probe
-argument_list|(
-name|dev
-argument_list|,
+if|#
+directive|if
 literal|0
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+block|if (sn_probe(dev, 0) != 0) 		return (0);
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENXIO

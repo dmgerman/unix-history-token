@@ -837,7 +837,7 @@ name|if_snd
 operator|.
 name|ifq_maxlen
 operator|=
-literal|8
+name|IFQ_MAXLEN
 expr_stmt|;
 name|ifp
 operator|->
@@ -4129,7 +4129,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SN_DEBUG
-name|deivce_printf
+name|device_printf
 argument_list|(
 name|dev
 argument_list|,
