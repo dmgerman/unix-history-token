@@ -185,6 +185,7 @@ specifier|static
 name|void
 name|an_printwords
 parameter_list|(
+specifier|const
 name|u_int16_t
 modifier|*
 parameter_list|,
@@ -198,6 +199,7 @@ specifier|static
 name|void
 name|an_printspeeds
 parameter_list|(
+specifier|const
 name|u_int8_t
 modifier|*
 parameter_list|,
@@ -221,6 +223,7 @@ specifier|static
 name|void
 name|an_printhex
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -444,6 +447,7 @@ specifier|static
 name|void
 name|an_str2key
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -463,6 +467,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -480,6 +485,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -495,6 +501,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -518,20 +525,8 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
+specifier|const
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
@@ -801,20 +796,16 @@ specifier|static
 name|int
 name|an_getval
 parameter_list|(
-name|iface
-parameter_list|,
-name|areq
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|,
 name|struct
 name|an_req
 modifier|*
 name|areq
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifreq
@@ -926,7 +917,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|okay
+operator|)
 return|;
 block|}
 end_function
@@ -936,20 +929,16 @@ specifier|static
 name|void
 name|an_setval
 parameter_list|(
-name|iface
-parameter_list|,
-name|areq
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|,
 name|struct
 name|an_req
 modifier|*
 name|areq
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifreq
@@ -1059,17 +1048,13 @@ specifier|static
 name|void
 name|an_printstr
 parameter_list|(
-name|str
-parameter_list|,
-name|len
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1116,7 +1101,6 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1125,17 +1109,14 @@ specifier|static
 name|void
 name|an_printwords
 parameter_list|(
-name|w
-parameter_list|,
-name|len
-parameter_list|)
+specifier|const
 name|u_int16_t
 modifier|*
 name|w
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1160,7 +1141,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"%d "
+literal|"%u "
 argument_list|,
 name|w
 index|[
@@ -1173,7 +1154,6 @@ argument_list|(
 literal|"]"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1182,17 +1162,14 @@ specifier|static
 name|void
 name|an_printspeeds
 parameter_list|(
-name|w
-parameter_list|,
-name|len
-parameter_list|)
+specifier|const
 name|u_int8_t
 modifier|*
 name|w
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1237,7 +1214,6 @@ argument_list|(
 literal|"]"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1246,11 +1222,9 @@ specifier|static
 name|void
 name|an_printbool
 parameter_list|(
-name|val
-parameter_list|)
 name|int
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1267,7 +1241,6 @@ argument_list|(
 literal|"[ Off ]"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1276,17 +1249,14 @@ specifier|static
 name|void
 name|an_printhex
 parameter_list|(
-name|ptr
-parameter_list|,
-name|len
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1343,7 +1313,6 @@ argument_list|(
 literal|" ]"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1352,13 +1321,11 @@ specifier|static
 name|void
 name|an_dumpstatus
 parameter_list|(
-name|iface
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_ltv_status
@@ -1602,7 +1569,7 @@ name|rssimap_valid
 condition|)
 name|printf
 argument_list|(
-literal|"\nSignal strength:\t[ %d%% ]"
+literal|"\nSignal strength:\t[ %u%% ]"
 argument_list|,
 name|an_rssimap
 operator|.
@@ -1619,7 +1586,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\nSignal strength:\t[ %d%% ]"
+literal|"\nSignal strength:\t[ %u%% ]"
 argument_list|,
 name|sts
 operator|->
@@ -1628,7 +1595,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nAverage Noise:\t\t[ %d%% ]"
+literal|"\nAverage Noise:\t\t[ %u%% ]"
 argument_list|,
 name|sts
 operator|->
@@ -1641,7 +1608,7 @@ name|rssimap_valid
 condition|)
 name|printf
 argument_list|(
-literal|"\nSignal quality:\t\t[ %d%% ]"
+literal|"\nSignal quality:\t\t[ %u%% ]"
 argument_list|,
 name|an_rssimap
 operator|.
@@ -1658,7 +1625,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\nSignal quality:\t\t[ %d ]"
+literal|"\nSignal quality:\t\t[ %u ]"
 argument_list|,
 name|sts
 operator|->
@@ -1667,7 +1634,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nMax Noise:\t\t[ %d%% ]"
+literal|"\nMax Noise:\t\t[ %u%% ]"
 argument_list|,
 name|sts
 operator|->
@@ -1677,7 +1644,7 @@ expr_stmt|;
 comment|/* 	 * XXX: This uses the old definition of the rate field (units of 	 * 500kbps).  Technically the new definition is that this field 	 * contains arbitrary values, but no devices which need this 	 * support exist and the IEEE seems to intend to use the old 	 * definition until they get something big so we'll keep using 	 * it as well because this will work with new cards with 	 * rate<= 63.5Mbps. 	 */
 name|printf
 argument_list|(
-literal|"\nCurrent TX rate:\t[ %d%s ]"
+literal|"\nCurrent TX rate:\t[ %u%s ]"
 argument_list|,
 name|sts
 operator|->
@@ -1921,13 +1888,11 @@ specifier|static
 name|void
 name|an_dumpcaps
 parameter_list|(
-name|iface
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_ltv_caps
@@ -2500,13 +2465,11 @@ specifier|static
 name|void
 name|an_dumpstats
 parameter_list|(
-name|iface
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_ltv_stats
@@ -2566,7 +2529,7 @@ name|ptr
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX overruns:\t\t\t\t\t[ %d ]\n"
+literal|"RX overruns:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2575,7 +2538,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX PLCP CSUM errors:\t\t\t\t[ %d ]\n"
+literal|"RX PLCP CSUM errors:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2584,7 +2547,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX PLCP format errors:\t\t\t\t[ %d ]\n"
+literal|"RX PLCP format errors:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2593,7 +2556,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX PLCP length errors:\t\t\t\t[ %d ]\n"
+literal|"RX PLCP length errors:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2602,7 +2565,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX MAC CRC errors:\t\t\t\t[ %d ]\n"
+literal|"RX MAC CRC errors:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2611,7 +2574,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX MAC CRC OK:\t\t\t\t\t[ %d ]\n"
+literal|"RX MAC CRC OK:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2620,7 +2583,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX WEP errors:\t\t\t\t\t[ %d ]\n"
+literal|"RX WEP errors:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2629,7 +2592,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX WEP OK:\t\t\t\t\t[ %d ]\n"
+literal|"RX WEP OK:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2638,7 +2601,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Long retries:\t\t\t\t\t[ %d ]\n"
+literal|"Long retries:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2647,7 +2610,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Short retries:\t\t\t\t\t[ %d ]\n"
+literal|"Short retries:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2656,7 +2619,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Retries exhausted:\t\t\t\t[ %d ]\n"
+literal|"Retries exhausted:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2665,7 +2628,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Bad ACK:\t\t\t\t\t[ %d ]\n"
+literal|"Bad ACK:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2674,7 +2637,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Bad CTS:\t\t\t\t\t[ %d ]\n"
+literal|"Bad CTS:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2683,7 +2646,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX good ACKs:\t\t\t\t\t[ %d ]\n"
+literal|"RX good ACKs:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2692,7 +2655,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX good CTSs:\t\t\t\t\t[ %d ]\n"
+literal|"RX good CTSs:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2701,7 +2664,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"TX good ACKs:\t\t\t\t\t[ %d ]\n"
+literal|"TX good ACKs:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2710,7 +2673,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"TX good RTSs:\t\t\t\t\t[ %d ]\n"
+literal|"TX good RTSs:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2719,7 +2682,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"TX good CTSs:\t\t\t\t\t[ %d ]\n"
+literal|"TX good CTSs:\t\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2728,7 +2691,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LMAC multicasts transmitted:\t\t\t[ %d ]\n"
+literal|"LMAC multicasts transmitted:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2737,7 +2700,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LMAC broadcasts transmitted:\t\t\t[ %d ]\n"
+literal|"LMAC broadcasts transmitted:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2746,7 +2709,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LMAC unicast frags transmitted:\t\t\t[ %d ]\n"
+literal|"LMAC unicast frags transmitted:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2755,7 +2718,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LMAC unicasts transmitted:\t\t\t[ %d ]\n"
+literal|"LMAC unicasts transmitted:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2764,7 +2727,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Beacons transmitted:\t\t\t\t[ %d ]\n"
+literal|"Beacons transmitted:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2773,7 +2736,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Beacons received:\t\t\t\t[ %d ]\n"
+literal|"Beacons received:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2782,7 +2745,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Single transmit collisions:\t\t\t[ %d ]\n"
+literal|"Single transmit collisions:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2791,7 +2754,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Multiple transmit collisions:\t\t\t[ %d ]\n"
+literal|"Multiple transmit collisions:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2800,7 +2763,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Transmits without deferrals:\t\t\t[ %d ]\n"
+literal|"Transmits without deferrals:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2809,7 +2772,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Transmits deferred due to protocol:\t\t[ %d ]\n"
+literal|"Transmits deferred due to protocol:\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2818,7 +2781,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Transmits deferred due to energy detect:\t\t[ %d ]\n"
+literal|"Transmits deferred due to energy detect:\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2827,7 +2790,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX duplicate frames/frags:\t\t\t[ %d ]\n"
+literal|"RX duplicate frames/frags:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2836,7 +2799,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX partial frames:\t\t\t\t[ %d ]\n"
+literal|"RX partial frames:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2845,7 +2808,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"TX max lifetime exceeded:\t\t\t[ %d ]\n"
+literal|"TX max lifetime exceeded:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2854,7 +2817,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX max lifetime exceeded:\t\t\t[ %d ]\n"
+literal|"RX max lifetime exceeded:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2863,7 +2826,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Sync lost due to too many missed beacons:\t[ %d ]\n"
+literal|"Sync lost due to too many missed beacons:\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2872,7 +2835,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Sync lost due to ARL exceeded:\t\t\t[ %d ]\n"
+literal|"Sync lost due to ARL exceeded:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2881,7 +2844,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Sync lost due to deauthentication:\t\t[ %d ]\n"
+literal|"Sync lost due to deauthentication:\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2890,7 +2853,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Sync lost due to disassociation:\t\t[ %d ]\n"
+literal|"Sync lost due to disassociation:\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2899,7 +2862,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Sync lost due to excess change in TSF timing:\t[ %d ]\n"
+literal|"Sync lost due to excess change in TSF timing:\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2908,7 +2871,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Host transmitted multicasts:\t\t\t[ %d ]\n"
+literal|"Host transmitted multicasts:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2917,7 +2880,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Host transmitted broadcasts:\t\t\t[ %d ]\n"
+literal|"Host transmitted broadcasts:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2926,7 +2889,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Host transmitted unicasts:\t\t\t[ %d ]\n"
+literal|"Host transmitted unicasts:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2935,7 +2898,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Host transmission failures:\t\t\t[ %d ]\n"
+literal|"Host transmission failures:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2944,7 +2907,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Host received multicasts:\t\t\t[ %d ]\n"
+literal|"Host received multicasts:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2953,7 +2916,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Host received broadcasts:\t\t\t[ %d ]\n"
+literal|"Host received broadcasts:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2962,7 +2925,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Host received unicasts:\t\t\t\t[ %d ]\n"
+literal|"Host received unicasts:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2971,7 +2934,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Host receive discards:\t\t\t\t[ %d ]\n"
+literal|"Host receive discards:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2980,7 +2943,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"HMAC transmitted multicasts:\t\t\t[ %d ]\n"
+literal|"HMAC transmitted multicasts:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2989,7 +2952,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"HMAC transmitted broadcasts:\t\t\t[ %d ]\n"
+literal|"HMAC transmitted broadcasts:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -2998,7 +2961,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"HMAC transmitted unicasts:\t\t\t[ %d ]\n"
+literal|"HMAC transmitted unicasts:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3007,7 +2970,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"HMAC transmissions failed:\t\t\t[ %d ]\n"
+literal|"HMAC transmissions failed:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3016,7 +2979,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"HMAC received multicasts:\t\t\t[ %d ]\n"
+literal|"HMAC received multicasts:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3025,7 +2988,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"HMAC received broadcasts:\t\t\t[ %d ]\n"
+literal|"HMAC received broadcasts:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3034,7 +2997,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"HMAC received unicasts:\t\t\t\t[ %d ]\n"
+literal|"HMAC received unicasts:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3043,7 +3006,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"HMAC receive discards:\t\t\t\t[ %d ]\n"
+literal|"HMAC receive discards:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3052,7 +3015,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"HMAC transmits accepted:\t\t\t[ %d ]\n"
+literal|"HMAC transmits accepted:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3061,7 +3024,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"SSID mismatches:\t\t\t\t[ %d ]\n"
+literal|"SSID mismatches:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3070,7 +3033,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Access point mismatches:\t\t\t[ %d ]\n"
+literal|"Access point mismatches:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3079,7 +3042,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Speed mismatches:\t\t\t\t[ %d ]\n"
+literal|"Speed mismatches:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3088,7 +3051,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Authentication rejects:\t\t\t\t[ %d ]\n"
+literal|"Authentication rejects:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3097,7 +3060,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Authentication timeouts:\t\t\t[ %d ]\n"
+literal|"Authentication timeouts:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3106,7 +3069,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Association rejects:\t\t\t\t[ %d ]\n"
+literal|"Association rejects:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3115,7 +3078,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Association timeouts:\t\t\t\t[ %d ]\n"
+literal|"Association timeouts:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3124,7 +3087,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Management frames received:\t\t\t[ %d ]\n"
+literal|"Management frames received:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3133,7 +3096,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Management frames transmitted:\t\t\t[ %d ]\n"
+literal|"Management frames transmitted:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3142,7 +3105,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Refresh frames received:\t\t\t[ %d ]\n"
+literal|"Refresh frames received:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3151,7 +3114,7 @@ argument_list|)
 operator|,
 name|printf
 argument_list|(
-literal|"Refresh frames transmitted:\t\t\t[ %d ]\n"
+literal|"Refresh frames transmitted:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3160,7 +3123,7 @@ argument_list|)
 operator|,
 name|printf
 argument_list|(
-literal|"Poll frames received:\t\t\t\t[ %d ]\n"
+literal|"Poll frames received:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3169,7 +3132,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Poll frames transmitted:\t\t\t[ %d ]\n"
+literal|"Poll frames transmitted:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3178,7 +3141,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Host requested sync losses:\t\t\t[ %d ]\n"
+literal|"Host requested sync losses:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3187,7 +3150,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Host transmitted bytes:\t\t\t\t[ %d ]\n"
+literal|"Host transmitted bytes:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3196,7 +3159,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Host received bytes:\t\t\t\t[ %d ]\n"
+literal|"Host received bytes:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3205,7 +3168,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Uptime in microseconds:\t\t\t\t[ %d ]\n"
+literal|"Uptime in microseconds:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3214,7 +3177,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Uptime in seconds:\t\t\t\t[ %d ]\n"
+literal|"Uptime in seconds:\t\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
@@ -3223,14 +3186,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Sync lost due to better AP:\t\t\t[ %d ]\n"
+literal|"Sync lost due to better AP:\t\t\t[ %u ]\n"
 argument_list|,
 name|stats
 operator|->
 name|an_lostsync_better_ap
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3239,13 +3201,11 @@ specifier|static
 name|void
 name|an_dumpap
 parameter_list|(
-name|iface
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_ltv_aplist
@@ -3379,13 +3339,11 @@ specifier|static
 name|void
 name|an_dumpssid
 parameter_list|(
-name|iface
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_ltv_ssidlist_new
@@ -3449,7 +3407,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"To many SSIDs only printing %d of %d\n"
+literal|"Too many SSIDs only printing %d of %d\n"
 argument_list|,
 name|MAX_SSIDS
 argument_list|,
@@ -3520,13 +3478,11 @@ specifier|static
 name|void
 name|an_dumpconfig
 parameter_list|(
-name|iface
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_ltv_genconfig
@@ -4849,7 +4805,6 @@ argument_list|(
 name|iface
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4858,13 +4813,11 @@ specifier|static
 name|void
 name|an_dumprssimap
 parameter_list|(
-name|iface
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_ltv_rssi_map
@@ -4958,7 +4911,6 @@ name|an_rss_dbm
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4967,12 +4919,11 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|p
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -5254,24 +5205,18 @@ specifier|static
 name|void
 name|an_setconfig
 parameter_list|(
-name|iface
-parameter_list|,
-name|act
-parameter_list|,
-name|arg
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|,
 name|int
 name|act
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_ltv_genconfig
@@ -5478,7 +5423,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"bad diversity setting: %d"
+literal|"bad diversity setting: %u"
 argument_list|,
 name|diversity
 argument_list|)
@@ -5896,25 +5841,19 @@ specifier|static
 name|void
 name|an_setspeed
 parameter_list|(
-name|iface
-parameter_list|,
-name|act
-parameter_list|,
-name|arg
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|,
 name|int
 name|act
 name|__unused
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_req
@@ -6097,24 +6036,18 @@ specifier|static
 name|void
 name|an_setap
 parameter_list|(
-name|iface
-parameter_list|,
-name|act
-parameter_list|,
-name|arg
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|,
 name|int
 name|act
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_ltv_aplist
@@ -6355,24 +6288,18 @@ specifier|static
 name|void
 name|an_setssid
 parameter_list|(
-name|iface
-parameter_list|,
-name|act
-parameter_list|,
-name|arg
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|,
 name|int
 name|act
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_ltv_ssidlist_new
@@ -6444,7 +6371,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"To many SSIDs only printing %d of %d\n"
+literal|"Too many SSIDs only printing %d of %d\n"
 argument_list|,
 name|MAX_SSIDS
 argument_list|,
@@ -6595,13 +6522,11 @@ specifier|static
 name|void
 name|an_zerocache
 parameter_list|(
-name|iface
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_req
@@ -6642,7 +6567,6 @@ operator|&
 name|areq
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6651,13 +6575,11 @@ specifier|static
 name|void
 name|an_readcache
 parameter_list|(
-name|iface
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_req
@@ -6927,7 +6849,6 @@ name|sc
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6941,11 +6862,9 @@ specifier|static
 name|int
 name|an_hex2int
 parameter_list|(
-name|c
-parameter_list|)
 name|char
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7015,19 +6934,16 @@ specifier|static
 name|void
 name|an_str2key
 parameter_list|(
-name|s
-parameter_list|,
-name|k
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|an_ltv_key
 modifier|*
 name|k
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|n
@@ -7200,24 +7116,19 @@ specifier|static
 name|void
 name|an_setkeys
 parameter_list|(
-name|iface
-parameter_list|,
-name|key
-parameter_list|,
-name|keytype
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|,
 name|int
 name|keytype
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_req
@@ -7438,7 +7349,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7615,7 +7525,7 @@ literal|0
 case|:
 name|printf
 argument_list|(
-literal|"\tKey %d is unset\n"
+literal|"\tKey %u is unset\n"
 argument_list|,
 name|k
 operator|->
@@ -7628,7 +7538,7 @@ literal|5
 case|:
 name|printf
 argument_list|(
-literal|"\tKey %d is set  40 bits\n"
+literal|"\tKey %u is set  40 bits\n"
 argument_list|,
 name|k
 operator|->
@@ -7641,7 +7551,7 @@ literal|13
 case|:
 name|printf
 argument_list|(
-literal|"\tKey %d is set 128 bits\n"
+literal|"\tKey %u is set 128 bits\n"
 argument_list|,
 name|k
 operator|->
@@ -7652,7 +7562,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"\tWEP Key %d has an unknown size %d\n"
+literal|"\tWEP Key %d has an unknown size %u\n"
 argument_list|,
 name|i
 argument_list|,
@@ -7719,19 +7629,16 @@ specifier|static
 name|void
 name|an_enable_tx_key
 parameter_list|(
-name|iface
-parameter_list|,
-name|arg
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_req
@@ -7951,7 +7858,6 @@ operator|&
 name|areq
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7960,19 +7866,16 @@ specifier|static
 name|void
 name|an_enable_leap_mode
 parameter_list|(
-name|iface
-parameter_list|,
-name|username
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|iface
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|username
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|an_req
@@ -8485,18 +8388,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ch
