@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.24 1999/01/28 01:56:34 brian Exp $  *  *  TODO:  */
+comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.25 1999/02/06 02:54:47 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -213,6 +213,11 @@ decl_stmt|;
 name|u_short
 name|proto
 decl_stmt|;
+name|struct
+name|ip
+modifier|*
+name|pip
+decl_stmt|;
 name|u_short
 name|cproto
 init|=
@@ -241,9 +246,15 @@ operator|.
 name|peer_compproto
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
+name|bp
+operator|=
+name|mbuf_Contiguous
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|pip
+operator|=
 operator|(
 expr|struct
 name|ip
@@ -253,7 +264,10 @@ name|MBUF_CTOP
 argument_list|(
 name|bp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|pip
 operator|->
 name|ip_p
 operator|==
@@ -270,15 +284,7 @@ name|sl_compress_tcp
 argument_list|(
 name|bp
 argument_list|,
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-name|MBUF_CTOP
-argument_list|(
-name|bp
-argument_list|)
+name|pip
 argument_list|,
 operator|&
 name|bundle
@@ -453,6 +459,13 @@ name|MAX_VJHEADER
 index|]
 decl_stmt|;
 comment|/* enough to hold TCP/IP header */
+name|bp
+operator|=
+name|mbuf_Contiguous
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|olen
 operator|=
 name|len
