@@ -407,6 +407,12 @@ operator|->
 name|n_un
 operator|.
 name|n_name
+operator|&&
+name|p
+operator|->
+name|n_un
+operator|.
+name|n_name
 index|[
 literal|0
 index|]
