@@ -944,6 +944,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|sesinit
 parameter_list|(
@@ -7760,6 +7761,7 @@ value|if (r>= x) { \ 		SES_LOG(ssc, safte_2little, x, __LINE__);\ 		SES_FREE(k, 
 end_define
 
 begin_function
+specifier|static
 name|int
 name|safte_softc_init
 parameter_list|(
@@ -8259,6 +8261,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|safte_init_enc
 parameter_list|(
@@ -8338,6 +8341,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|safte_get_encstat
 parameter_list|(
@@ -8363,6 +8367,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|safte_set_encstat
 parameter_list|(
@@ -8503,6 +8508,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|safte_get_objstat
 parameter_list|(
@@ -8659,6 +8665,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|safte_set_objstat
 parameter_list|(

@@ -10573,6 +10573,7 @@ operator|)
 return|;
 block|}
 comment|/*  * common ioctls  */
+specifier|static
 name|int
 name|common_ioctl
 parameter_list|(
@@ -11864,6 +11865,7 @@ define|#
 directive|define
 name|BKTR_TEST_RISC_STATUS_BIT3
 value|(1<< 31)
+specifier|static
 name|bool_t
 name|notclipped
 parameter_list|(
@@ -12021,6 +12023,7 @@ return|return
 name|TRUE
 return|;
 block|}
+specifier|static
 name|bool_t
 name|getline
 parameter_list|(

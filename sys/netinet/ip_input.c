@@ -6472,6 +6472,7 @@ comment|/*  * Save incoming source route for use in replies,  * to be picked up 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|save_rte
 parameter_list|(

@@ -1404,6 +1404,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|amr_open
 parameter_list|(
@@ -1469,6 +1470,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|amr_close
 parameter_list|(
@@ -1535,6 +1537,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|amr_ioctl
 parameter_list|(
@@ -5709,6 +5712,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|amr_alloccmd_cluster
 parameter_list|(
@@ -5861,6 +5865,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|amr_freecmd_cluster
 parameter_list|(

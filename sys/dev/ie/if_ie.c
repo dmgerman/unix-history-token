@@ -1202,6 +1202,7 @@ value|ie_softc[unit].iomem
 end_define
 
 begin_function
+specifier|static
 name|int
 name|ieprobe
 parameter_list|(
@@ -2096,6 +2097,7 @@ comment|/* Taken almost exactly from Rod's if_ix.c. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ee16_probe
 parameter_list|(
@@ -3089,6 +3091,7 @@ comment|/*  * Taken almost exactly from Bill's if_is.c, then modified beyond rec
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ieattach
 parameter_list|(
@@ -7091,6 +7094,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|el_reset_586
 parameter_list|(
@@ -7130,6 +7134,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sl_reset_586
 parameter_list|(
@@ -7150,6 +7155,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ee16_reset_586
 parameter_list|(
@@ -7189,6 +7195,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|el_chan_attn
 parameter_list|(
@@ -7209,6 +7216,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sl_chan_attn
 parameter_list|(
@@ -7229,6 +7237,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ee16_chan_attn
 parameter_list|(
@@ -7249,6 +7258,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_short
 name|ee16_read_eeprom
 parameter_list|(
@@ -7375,6 +7385,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ee16_eeprom_outbits
 parameter_list|(
@@ -7506,6 +7517,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ee16_eeprom_inbits
 parameter_list|(
@@ -7609,6 +7621,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ee16_eeprom_clock
 parameter_list|(
@@ -7715,6 +7728,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sl_read_ether
 parameter_list|(

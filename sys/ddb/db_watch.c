@@ -250,6 +250,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|db_watchpoint_t
 name|db_watchpoint_alloc
 parameter_list|()
@@ -319,6 +320,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|db_watchpoint_free
 parameter_list|(

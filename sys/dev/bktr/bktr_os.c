@@ -2518,6 +2518,7 @@ comment|/*  *   */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bktr_open
 parameter_list|(
@@ -2881,6 +2882,7 @@ comment|/*  *   */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bktr_close
 parameter_list|(
@@ -3022,6 +3024,7 @@ comment|/*  *   */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bktr_read
 parameter_list|(
@@ -3139,6 +3142,7 @@ comment|/*  *   */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bktr_write
 parameter_list|(
@@ -3168,6 +3172,7 @@ comment|/*  *   */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bktr_ioctl
 parameter_list|(
@@ -3311,6 +3316,7 @@ comment|/*  *   */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bktr_mmap
 parameter_list|(
@@ -3447,6 +3453,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bktr_poll
 parameter_list|(

@@ -4965,6 +4965,7 @@ comment|/*  * Common code for kill process group/broadcast kill.  * cp is callin
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|killpg1
 parameter_list|(

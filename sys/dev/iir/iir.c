@@ -9679,6 +9679,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|gdt_async_event
 parameter_list|(
@@ -10108,6 +10109,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|gdt_sync_event
 parameter_list|(

@@ -2683,6 +2683,7 @@ comment|/*  * Get filesystem statistics.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_statfs
 parameter_list|(
@@ -2861,6 +2862,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_fhtovp
 parameter_list|(
@@ -3014,6 +3016,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cd9660_vget
 parameter_list|(
@@ -3943,6 +3946,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_vptofh
 parameter_list|(

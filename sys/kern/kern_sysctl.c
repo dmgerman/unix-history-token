@@ -4890,6 +4890,7 @@ comment|/*  * Traverse our tree, and find the right node, execute whatever it po
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sysctl_root
 parameter_list|(

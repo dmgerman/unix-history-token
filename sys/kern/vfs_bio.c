@@ -12951,6 +12951,7 @@ comment|/* Return pages associated with this buf to the vm system */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vm_hold_free_pages
 parameter_list|(

@@ -4429,6 +4429,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|digiopen
 parameter_list|(
@@ -5335,6 +5336,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|digiclose
 parameter_list|(
@@ -5788,6 +5790,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|digiread
 parameter_list|(
@@ -5934,6 +5937,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|digiwrite
 parameter_list|(

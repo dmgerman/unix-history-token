@@ -3742,6 +3742,7 @@ comment|/*  * Support for select() and poll() system calls  *  * Return true iff
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bpfpoll
 parameter_list|(

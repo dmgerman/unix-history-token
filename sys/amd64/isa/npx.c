@@ -1694,6 +1694,7 @@ comment|/*  * Attach routine - announce which it is, and wire into system  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|npx_attach
 parameter_list|(

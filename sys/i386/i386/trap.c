@@ -2269,6 +2269,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|trap_pfault
 parameter_list|(

@@ -214,6 +214,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|void
 name|db_putstring
 parameter_list|(
@@ -247,6 +248,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|db_putnchars
 parameter_list|(
@@ -295,6 +297,7 @@ value|1
 end_define
 
 begin_function
+specifier|static
 name|void
 name|db_delete
 parameter_list|(
@@ -392,6 +395,7 @@ comment|/* returns TRUE at end-of-line */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|db_inputchar
 parameter_list|(
@@ -1109,6 +1113,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cnmaygetc
 parameter_list|()

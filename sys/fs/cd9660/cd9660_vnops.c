@@ -277,6 +277,7 @@ comment|/*  * Setattr call. Only allowed for block and character special devices
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_setattr
 parameter_list|(
@@ -1512,6 +1513,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|iso_uiodir
 parameter_list|(
@@ -1671,6 +1673,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iso_shipdir
 parameter_list|(

@@ -4901,6 +4901,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|adv_run_doneq
 parameter_list|(

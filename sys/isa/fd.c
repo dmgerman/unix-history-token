@@ -6943,6 +6943,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|out_fdc
 parameter_list|(
@@ -7082,6 +7083,7 @@ comment|/*  * Block device driver interface functions (interspersed with even mo
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|Fdopen
 parameter_list|(
@@ -7420,6 +7422,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fdclose
 parameter_list|(
@@ -7496,6 +7499,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fdstrategy
 parameter_list|(

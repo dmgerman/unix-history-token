@@ -683,6 +683,7 @@ comment|/*  * Function for the debugger to set a breakpoint on to gain control. 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|r_debug_state
 parameter_list|(
@@ -4762,6 +4763,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|link_elf_lookup_symbol
 parameter_list|(

@@ -841,6 +841,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rlphy_status
 parameter_list|(

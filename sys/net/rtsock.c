@@ -4584,6 +4584,7 @@ comment|/*  * This is used in dumping the kernel table via sysctl().  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sysctl_dumpentry
 parameter_list|(
@@ -4870,6 +4871,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sysctl_iflist
 parameter_list|(

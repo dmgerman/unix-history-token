@@ -706,6 +706,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|chinit
 parameter_list|(

@@ -20498,6 +20498,7 @@ comment|/**********************************************************  * TAG opera
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|scsi_low_alloc_qtag
 parameter_list|(
@@ -20686,6 +20687,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|scsi_low_dealloc_qtag
 parameter_list|(
@@ -20815,6 +20817,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|slccb
 modifier|*
@@ -21080,6 +21083,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|scsi_low_reset_nexus_lun
 parameter_list|(

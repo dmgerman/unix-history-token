@@ -2506,6 +2506,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|scopen
 parameter_list|(
@@ -2900,6 +2901,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|scclose
 parameter_list|(
@@ -3223,6 +3225,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|scread
 parameter_list|(
@@ -3675,6 +3678,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|scioctl
 parameter_list|(
@@ -17963,6 +17967,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|scmmap
 parameter_list|(

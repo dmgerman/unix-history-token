@@ -1122,6 +1122,7 @@ comment|/*  * Allocate and zero fill the next sized hash table from the appropri
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|hash_alloc
 parameter_list|(

@@ -893,6 +893,7 @@ comment|/*  * Allow the U area for a process to be prejudicially paged out.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vm_proc_swapout
 parameter_list|(
@@ -982,6 +983,7 @@ comment|/*  * Bring the U area for a specified process back in.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vm_proc_swapin
 parameter_list|(

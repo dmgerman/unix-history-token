@@ -1818,6 +1818,7 @@ comment|/*  * Initialize BBL_CR_CTL3 (Control register 3: used to configure the 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|init_mendocino
 parameter_list|(

@@ -4662,6 +4662,7 @@ comment|/*  * Start output on interface.  * We make two assumptions here:  *  1)
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|fe_start
 parameter_list|(

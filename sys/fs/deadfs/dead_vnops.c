@@ -890,6 +890,7 @@ comment|/*  * We have to wait during times when the vnode is  * in a state of ch
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|chkvnlock
 parameter_list|(

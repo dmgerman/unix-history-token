@@ -1768,6 +1768,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mbr_extended
 parameter_list|(

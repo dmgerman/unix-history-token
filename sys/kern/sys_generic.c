@@ -598,6 +598,7 @@ comment|/*  * Code common for read and pread  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dofileread
 parameter_list|(

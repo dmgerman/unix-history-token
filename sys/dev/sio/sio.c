@@ -7483,6 +7483,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|siointr
 parameter_list|(
@@ -14630,6 +14631,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|siocngetc
 parameter_list|(
@@ -14746,6 +14748,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|siocnputc
 parameter_list|(

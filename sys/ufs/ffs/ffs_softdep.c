@@ -24838,6 +24838,7 @@ comment|/*  * Awaken processes pausing in request_cleanup and clear proc_waiting
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pause_timer
 parameter_list|(
@@ -26203,6 +26204,7 @@ comment|/*  * Function to handle asynchronous write errors in the filesystem.  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|softdep_error
 parameter_list|(

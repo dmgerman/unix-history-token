@@ -5738,6 +5738,7 @@ comment|/*  *	getchainbuf:  *  *	Obtain a physical buffer and chain it to its pa
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|buf
 modifier|*
@@ -5884,6 +5885,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|flushchainbuf
 parameter_list|(

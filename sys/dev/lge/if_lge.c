@@ -4704,6 +4704,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lge_rxeoc
 parameter_list|(

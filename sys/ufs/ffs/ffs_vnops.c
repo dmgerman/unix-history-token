@@ -1438,6 +1438,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_read
 parameter_list|(
@@ -2598,6 +2599,7 @@ comment|/*  * Vnode op for writing.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_write
 parameter_list|(
@@ -3705,6 +3707,7 @@ comment|/*  * get page routine  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_getpages
 parameter_list|(
@@ -6416,6 +6419,7 @@ comment|/*  * Vnode extattr transaction commit/abort  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_openextattr
 parameter_list|(
@@ -6498,6 +6502,7 @@ comment|/*  * Vnode extattr transaction commit/abort  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_closeextattr
 parameter_list|(
@@ -6584,6 +6589,7 @@ comment|/*  * Vnode operation to retrieve a named extended attribute.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_getextattr
 parameter_list|(
@@ -7039,6 +7045,7 @@ comment|/*  * Vnode operation to set a named attribute.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_setextattr
 parameter_list|(

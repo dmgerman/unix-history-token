@@ -273,6 +273,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|vnode_pager_init
 parameter_list|(

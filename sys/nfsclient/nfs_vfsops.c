@@ -1178,6 +1178,7 @@ comment|/*  * nfs statfs call  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfs_statfs
 parameter_list|(

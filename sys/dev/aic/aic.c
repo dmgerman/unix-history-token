@@ -2753,6 +2753,7 @@ comment|/*  * Reestablish a disconnected nexus.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aic_reconnect
 parameter_list|(

@@ -1015,6 +1015,7 @@ comment|/*  * Create a regular file  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_create
 parameter_list|(
@@ -1097,6 +1098,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_mknod
 parameter_list|(
@@ -1302,6 +1304,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_open
 parameter_list|(
@@ -1366,6 +1369,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_close
 parameter_list|(
@@ -1482,6 +1486,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ufs_access
 parameter_list|(
@@ -1847,6 +1852,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_getattr
 parameter_list|(
@@ -2278,6 +2284,7 @@ comment|/*  * Set attribute vnode op. called from several syscalls  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_setattr
 parameter_list|(
@@ -4189,6 +4196,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ufs_remove
 parameter_list|(
@@ -4330,6 +4338,7 @@ comment|/*  * link vnode call  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_link
 parameter_list|(
@@ -4636,6 +4645,7 @@ comment|/*  * whiteout vnode call  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_whiteout
 parameter_list|(
@@ -4871,6 +4881,7 @@ comment|/*  * Rename system call.  * 	rename("foo", "bar");  * is essentially  *
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_rename
 parameter_list|(
@@ -6571,6 +6582,7 @@ comment|/*  * Mkdir system call  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_mkdir
 parameter_list|(
@@ -7947,6 +7959,7 @@ comment|/*  * Rmdir system call.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_rmdir
 parameter_list|(
@@ -8351,6 +8364,7 @@ comment|/*  * symlink -- make a symbolic link  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_symlink
 parameter_list|(
@@ -9231,6 +9245,7 @@ comment|/*  * Return target name of a symbolic link  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_readlink
 parameter_list|(
@@ -9340,6 +9355,7 @@ comment|/*  * Calculate the logical to physical mapping if not done already,  * 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_strategy
 parameter_list|(
@@ -9548,6 +9564,7 @@ comment|/*  * Print out the contents of an inode.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_print
 parameter_list|(
@@ -9643,6 +9660,7 @@ comment|/*  * Read wrapper for special devices.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufsspec_read
 parameter_list|(
@@ -9749,6 +9767,7 @@ comment|/*  * Write wrapper for special devices.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufsspec_write
 parameter_list|(
@@ -9861,6 +9880,7 @@ comment|/*  * Close wrapper for special devices.  *  * Update the times on the i
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufsspec_close
 parameter_list|(
@@ -9928,6 +9948,7 @@ comment|/*  * Read wrapper for fifos.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufsfifo_read
 parameter_list|(
@@ -10052,6 +10073,7 @@ comment|/*  * Write wrapper for fifos.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufsfifo_write
 parameter_list|(
@@ -10164,6 +10186,7 @@ comment|/*  * Close wrapper for fifos.  *  * Update the times on the inode then 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufsfifo_close
 parameter_list|(
@@ -10231,6 +10254,7 @@ comment|/*  * Kqfilter wrapper for fifos.  *  * Fall through to ufs kqfilter rou
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufsfifo_kqfilter
 parameter_list|(
@@ -10283,6 +10307,7 @@ comment|/*  * Return POSIX pathconf information applicable to ufs filesystems.  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_pathconf
 parameter_list|(
@@ -10408,6 +10433,7 @@ comment|/*  * Advisory record locking support  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_advlock
 parameter_list|(
@@ -10648,6 +10674,7 @@ comment|/*  * Allocate a new inode.  * Vnode dvp must be locked.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ufs_makeinode
 parameter_list|(

@@ -5546,6 +5546,7 @@ comment|/*  * HP PC Lan+ : Set the physical link to use AUI or TP/TL.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ed_hpp_set_physical_link
 parameter_list|(
@@ -11142,6 +11143,7 @@ comment|/*  * HP PC Lan+: Write to NIC memory, using either PIO or memory mapped
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ed_hpp_writemem
 parameter_list|(

@@ -2312,6 +2312,7 @@ comment|/*  * This is the main code for interrupt threads.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ithread_loop
 parameter_list|(

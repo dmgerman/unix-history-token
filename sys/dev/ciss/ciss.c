@@ -10571,6 +10571,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ciss_name_device
 parameter_list|(

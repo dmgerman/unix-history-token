@@ -3409,6 +3409,7 @@ comment|/*  * We abuse the stats updater to check the current NIC status. This  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|an_stats_update
 parameter_list|(

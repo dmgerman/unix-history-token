@@ -2934,6 +2934,7 @@ comment|/*  * Return POSIX pathconf information applicable to fifo's.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_pathconf
 parameter_list|(

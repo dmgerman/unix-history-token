@@ -6990,6 +6990,7 @@ comment|/*  * Called when we have an active connection to a target on the bus,  
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ahc_syncrate
 modifier|*

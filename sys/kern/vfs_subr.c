@@ -7475,6 +7475,7 @@ comment|/*  * System filesystem synchronizer daemon.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sched_sync
 parameter_list|(

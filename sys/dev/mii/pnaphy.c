@@ -560,6 +560,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pnaphy_service
 parameter_list|(

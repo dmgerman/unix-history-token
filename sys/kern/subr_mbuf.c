@@ -1124,6 +1124,7 @@ argument_list|)
 end_macro
 
 begin_function
+specifier|static
 name|void
 name|mbuf_init
 parameter_list|(

@@ -1370,6 +1370,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|void
 name|cdinit
 parameter_list|(

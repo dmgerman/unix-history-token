@@ -4851,6 +4851,7 @@ comment|/*  * we implement a very minimal set of ioctls for compatibility with s
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pipe_ioctl
 parameter_list|(
@@ -5145,6 +5146,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pipe_poll
 parameter_list|(
