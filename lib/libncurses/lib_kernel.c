@@ -191,7 +191,7 @@ operator|&=
 operator|~
 operator|(
 name|at
-operator||
+operator|&
 operator|~
 name|A_COLOR
 operator|)
@@ -225,7 +225,7 @@ operator|&=
 operator|~
 operator|(
 name|at
-operator||
+operator|&
 operator|~
 name|A_COLOR
 operator|)
