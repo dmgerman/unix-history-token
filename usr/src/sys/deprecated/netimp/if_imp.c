@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.37	82/06/20	*/
+comment|/*	if_imp.c	4.38	82/10/05	*/
 end_comment
 
 begin_include
@@ -1917,12 +1917,6 @@ name|m0
 expr_stmt|;
 name|m
 operator|->
-name|m_off
-operator|=
-name|MMINOFF
-expr_stmt|;
-name|m
-operator|->
 name|m_len
 operator|=
 sizeof|sizeof
@@ -2487,12 +2481,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|m
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
-expr_stmt|;
 name|m
 operator|->
 name|m_len

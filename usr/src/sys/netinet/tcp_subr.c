@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.28	82/06/26	*/
+comment|/*	tcp_subr.c	4.29	82/10/05	*/
 end_comment
 
 begin_include
@@ -508,12 +508,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|m
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
-expr_stmt|;
 name|m
 operator|->
 name|m_len

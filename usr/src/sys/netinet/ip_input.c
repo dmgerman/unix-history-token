@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.49	82/09/12	*/
+comment|/*	ip_input.c	1.50	82/10/05	*/
 end_comment
 
 begin_include
@@ -1091,12 +1091,6 @@ condition|)
 goto|goto
 name|dropfrag
 goto|;
-name|t
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
-expr_stmt|;
 name|fp
 operator|=
 name|mtod

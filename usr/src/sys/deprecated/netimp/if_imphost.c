@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	4.13	82/06/20	*/
+comment|/*	if_imphost.c	4.14	82/10/05	*/
 end_comment
 
 begin_include
@@ -371,12 +371,6 @@ operator|*
 name|mprev
 operator|=
 name|m
-expr_stmt|;
-name|m
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
 expr_stmt|;
 name|hp0
 operator|=
