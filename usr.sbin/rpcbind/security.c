@@ -501,6 +501,7 @@ case|case
 name|RPCBPROC_GETSTAT
 case|:
 default|default:
+empty_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -737,6 +738,7 @@ return|return
 literal|1
 return|;
 default|default:
+empty_stmt|;
 block|}
 return|return
 literal|0
@@ -1169,8 +1171,10 @@ goto|goto
 name|deny
 goto|;
 default|default:
+empty_stmt|;
 block|}
 default|default:
+empty_stmt|;
 block|}
 return|return
 literal|1
