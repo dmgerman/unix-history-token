@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.61 1995/10/27 03:59:33 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.63 1995/10/27 17:00:21 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1210,6 +1210,102 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+if|if
+condition|(
+name|diskPartitionEditor
+argument_list|(
+literal|"express"
+argument_list|)
+operator|==
+name|RET_FAIL
+condition|)
+return|return
+name|RET_FAIL
+return|;
+if|if
+condition|(
+name|diskLabelEditor
+argument_list|(
+literal|"express"
+argument_list|)
+operator|==
+name|RET_FAIL
+condition|)
+return|return
+name|RET_FAIL
+return|;
+if|if
+condition|(
+operator|!
+name|Dists
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuDistributions
+argument_list|)
+condition|)
+return|return
+name|RET_FAIL
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|mediaDevice
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuMedia
+argument_list|)
+operator|||
+operator|!
+name|mediaDevice
+condition|)
+return|return
+name|RET_FAIL
+return|;
+block|}
+if|if
+condition|(
+name|installCommit
+argument_list|(
+literal|"express"
+argument_list|)
+operator|==
+name|RET_FAIL
+condition|)
+return|return
+name|RET_FAIL
+return|;
+return|return
+name|RET_DONE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Novice mode installation */
+end_comment
+
+begin_function
+name|int
+name|installNovice
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -1227,7 +1323,7 @@ if|if
 condition|(
 name|diskPartitionEditor
 argument_list|(
-literal|"express"
+literal|"novice"
 argument_list|)
 operator|==
 name|RET_FAIL
@@ -1252,7 +1348,7 @@ if|if
 condition|(
 name|diskLabelEditor
 argument_list|(
-literal|"express"
+literal|"novice"
 argument_list|)
 operator|==
 name|RET_FAIL
@@ -1341,7 +1437,7 @@ if|if
 condition|(
 name|installCommit
 argument_list|(
-literal|"express"
+literal|"novice"
 argument_list|)
 operator|==
 name|RET_FAIL
@@ -1370,6 +1466,10 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|;
+specifier|extern
+name|Boolean
+name|cdromMounted
 decl_stmt|;
 if|if
 condition|(
@@ -1462,34 +1562,42 @@ name|i
 operator|!=
 name|RET_FAIL
 operator|&&
-name|str
-operator|&&
 operator|!
 name|strcmp
 argument_list|(
 name|str
 argument_list|,
-literal|"express"
+literal|"novice"
 argument_list|)
 condition|)
 block|{
 name|dialog_clear
 argument_list|()
 expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Since you're running the novice installation, a few post-configuration\n"
+literal|"questions will be asked at this point.  For any option you do not wish\n"
+literal|"to configure, select Cancel."
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
+name|cdromMounted
+operator|&&
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Since you're running the express installation, a few post-configuration\n"
-literal|"questions will be asked at this point.\n\n"
-literal|"The FreeBSD package collection is a collection of over 300 ready-to-run\n"
-literal|"applications, from text editors to games to WEB servers.  If you've never\n"
-literal|"done so, it's definitely worth browsing through.\n\n"
-literal|"Would you like to do so now?"
+literal|"Would you like to link to the ports tree on your CDROM?\n\n"
+literal|"This will require that you have your FreeBSD CD in the CDROM\n"
+literal|"drive to use the ports collection, but at substantial savings\n"
+literal|"in disk space."
 argument_list|)
 condition|)
-name|configPackages
+name|configPorts
 argument_list|(
 name|NULL
 argument_list|)
@@ -1502,10 +1610,82 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Would you like to configure any additional network devices or services?"
+literal|"Would you like to configure Samba for connecting NETBUI clients to this\n"
+literal|"machine?  (that is Windows 95, Windows NT or Windows for Workgroups\n"
+literal|"machines or others using compatible protocols)."
 argument_list|)
 condition|)
-name|configNetworking
+name|configSamba
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Will this machine be an IP gateway (e.g. will it forward packets\n"
+literal|"between interfaces)?"
+argument_list|)
+condition|)
+name|variable_set2
+argument_list|(
+literal|"gateway"
+argument_list|,
+literal|"YES"
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Do you want to allow anonymous FTP connections to this machine?"
+argument_list|)
+condition|)
+name|configNFSServer
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Do you wish to install a WEB server on this machine?"
+argument_list|)
+condition|)
+name|configApache
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"The FreeBSD package collection is a collection of over 300 ready-to-run\n"
+literal|"applications, from text editors to games to WEB servers.  If you've never\n"
+literal|"done so, it's definitely worth browsing through.\n\n"
+literal|"Would you like to do so now?"
+argument_list|)
+condition|)
+name|configPackages
 argument_list|(
 name|NULL
 argument_list|)
@@ -1521,7 +1701,7 @@ operator|!
 name|msgYesNo
 argument_list|(
 literal|"Would you like to go to the general configuration menu for any last\n"
-literal|"additional configuration options?"
+literal|"configuration options (some of which you may have already answered)?"
 argument_list|)
 condition|)
 name|dmenuOpenSimple
@@ -1551,10 +1731,7 @@ else|:
 literal|"installed"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-comment|/* Don't print this if we're express installing */
+comment|/* Don't print this if we're express or novice installing */
 if|if
 condition|(
 name|strcmp
@@ -1562,6 +1739,13 @@ argument_list|(
 name|str
 argument_list|,
 literal|"express"
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"novice"
 argument_list|)
 condition|)
 block|{
@@ -1643,7 +1827,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"ln -f /kernel.GENERIC /kernel"
+literal|"cp -p /kernel.GENERIC /kernel"
 argument_list|)
 condition|)
 block|{
@@ -1962,7 +2146,7 @@ decl_stmt|;
 name|char
 name|dname
 index|[
-literal|40
+literal|80
 index|]
 decl_stmt|;
 specifier|extern
@@ -2039,14 +2223,16 @@ argument_list|,
 literal|"upgrade"
 argument_list|)
 expr_stmt|;
-comment|/* First, create and mount the root device */
+comment|/* First, create and/or mount the root device */
 name|sprintf
 argument_list|(
 name|dname
 argument_list|,
-literal|"/dev/%s"
+literal|"/dev/r%sa"
 argument_list|,
 name|rootdev
+operator|->
+name|disk
 operator|->
 name|name
 argument_list|)
@@ -2076,9 +2262,7 @@ argument_list|(
 literal|"Unable to make device node for %s in /dev!\n"
 literal|"The writing of filesystems will be aborted."
 argument_list|,
-name|rootdev
-operator|->
-name|name
+name|dname
 argument_list|)
 expr_stmt|;
 return|return
@@ -2128,24 +2312,20 @@ name|msgNotify
 argument_list|(
 literal|"Making a new root filesystem on %s"
 argument_list|,
-name|rootdev
-operator|->
-name|name
+name|dname
 argument_list|)
 expr_stmt|;
 name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"%s /dev/r%s"
+literal|"%s %s"
 argument_list|,
 name|root
 operator|->
 name|newfs_cmd
 argument_list|,
-name|rootdev
-operator|->
-name|name
+name|dname
 argument_list|)
 expr_stmt|;
 if|if
@@ -2158,12 +2338,10 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Unable to make new root filesystem on /dev/r%s!\n"
+literal|"Unable to make new root filesystem on %s!\n"
 literal|"Command returned status %d"
 argument_list|,
-name|rootdev
-operator|->
-name|name
+name|dname
 argument_list|,
 name|i
 argument_list|)
@@ -2195,20 +2373,16 @@ name|msgNotify
 argument_list|(
 literal|"Checking integrity of existing %s filesystem."
 argument_list|,
-name|rootdev
-operator|->
-name|name
+name|dname
 argument_list|)
 expr_stmt|;
 name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"fsck -y /dev/r%s"
+literal|"fsck -y %s"
 argument_list|,
-name|rootdev
-operator|->
-name|name
+name|dname
 argument_list|)
 expr_stmt|;
 if|if
@@ -2221,14 +2395,12 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Warning: fsck returned status of %d for /dev/r%s.\n"
+literal|"Warning: fsck returned status of %d for %s.\n"
 literal|"This partition may be unsafe to use."
 argument_list|,
 name|i
 argument_list|,
-name|rootdev
-operator|->
-name|name
+name|dname
 argument_list|)
 expr_stmt|;
 block|}
@@ -2746,6 +2918,13 @@ argument_list|(
 name|VAR_FTP_ONERROR
 argument_list|,
 literal|"abort"
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|VAR_FTP_RETRIES
+argument_list|,
+name|MAX_FTP_RETRIES
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.37 1995/10/27 02:12:52 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.38 1995/10/30 08:04:48 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -84,9 +84,24 @@ literal|0
 block|}
 block|,
 block|{
+literal|"Novice"
+block|,
+literal|"Begin a novice installation (for beginners)"
+block|,
+comment|/* N */
+name|DMENU_CALL
+block|,
+name|installNovice
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"Express"
 block|,
-literal|"Begin a quick installation"
+literal|"Begin a quick installation (for the impatient)"
 block|,
 comment|/* E */
 name|DMENU_CALL
@@ -101,7 +116,7 @@ block|,
 block|{
 literal|"Custom"
 block|,
-literal|"Begin a custom installation"
+literal|"Begin a custom installation (for experts)"
 block|,
 comment|/* C */
 name|DMENU_SUBMENU
@@ -772,12 +787,12 @@ block|,
 block|{
 literal|"Japan"
 block|,
-literal|"ftp.sra.co.jp"
+literal|"ftp.tokyonet.ad.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.sra.co.jp/pub/os/FreeBSD/"
+literal|"=ftp://ftp.tokyonet.ad.jp/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -787,12 +802,12 @@ block|,
 block|{
 literal|"Japan #2"
 block|,
-literal|"ftp.mei.co.jp"
+literal|"ftp.nisiq.net"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.mei.co.jp/free/PC-UNIX/FreeBSD/"
+literal|"=ftp://ftp.nisiq.net/pub/os/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -802,12 +817,12 @@ block|,
 block|{
 literal|"Japan #3"
 block|,
-literal|"ftp.waseda.ac.jp"
+literal|"ftp.iij.ad.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.waseda.ac.jp/pub/FreeBSD/"
+literal|"=ftp://ftp.iij.ad.jp/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -817,12 +832,12 @@ block|,
 block|{
 literal|"Japan #4"
 block|,
-literal|"ftp.pu-toyama.ac.jp"
+literal|"ftp.kuis.kyoto-u.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.pu-toyama.ac.jp/pub/FreeBSD/"
+literal|"=ftp://ftp.kuis.kyoto-u.ac.jp/BSD/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -831,35 +846,6 @@ block|}
 block|,
 block|{
 literal|"Japan #5"
-block|,
-literal|"ftpsv1.u-aizu.ac.jp"
-block|,
-name|DMENU_SET_VARIABLE
-block|,
-name|VAR_FTP_PATH
-literal|"=ftp://ftpsv1.u-aizu.ac.jp/pub/os/FreeBSD/"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Japan #6"
-block|,
-literal|"ftp.tut.ac.jp"
-block|,
-name|DMENU_SET_VARIABLE
-block|,
-literal|"ftp://ftp.tut.ac.jp/FreeBSD/"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Japan #7"
 block|,
 literal|"ftp.ee.uec.ac.jp"
 block|,
@@ -874,13 +860,14 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Japan #8"
+literal|"Japan #6"
 block|,
-literal|"ftp.tokyonet.ad.jp"
+literal|"ftp.u-aizu.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp://ftp.tokyonet.ad.jp/pub/FreeBSD/"
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.u-aizu.ac.jp/pub/os/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -3400,9 +3387,10 @@ literal|"Networking"
 block|,
 literal|"Configure additional network services"
 block|,
-name|DMENU_CALL
+name|DMENU_SUBMENU
 block|,
-name|configNetworking
+operator|&
+name|MenuNetworking
 block|,
 literal|0
 block|,
@@ -3520,9 +3508,7 @@ name|DMenu
 name|MenuNetworking
 init|=
 block|{
-name|DMENU_MULTIPLE_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
+name|DMENU_NORMAL_TYPE
 block|,
 literal|"Network Services Menu"
 block|,
@@ -3560,7 +3546,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|dmenuVarCheck
+literal|0
 block|}
 block|,
 block|{
@@ -3568,15 +3554,15 @@ literal|"NFS server"
 block|,
 literal|"This machine will be an NFS server"
 block|,
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
-literal|"nfs_server=YES"
+name|configNFSServer
+block|,
+literal|0
 block|,
 literal|0
 block|,
 literal|0
-block|,
-name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -3592,7 +3578,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|dmenuVarCheck
+literal|0
 block|}
 block|,
 block|{
@@ -3608,7 +3594,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|dmenuVarCheck
+literal|0
 block|}
 block|,
 block|{
@@ -3671,15 +3657,15 @@ literal|"Anon FTP"
 block|,
 literal|"This machine wishes to allow anonymous FTP."
 block|,
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
-literal|"anon_ftp=YES"
+name|configAnonFTP
+block|,
+literal|0
 block|,
 literal|0
 block|,
 literal|0
-block|,
-name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -3687,15 +3673,15 @@ literal|"WEB Server"
 block|,
 literal|"This machine wishes to be a WWW server."
 block|,
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
-literal|"apache_httpd=YES"
+name|configApache
+block|,
+literal|0
 block|,
 literal|0
 block|,
 literal|0
-block|,
-name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -3703,15 +3689,15 @@ literal|"Samba"
 block|,
 literal|"Install Samba for LanManager (NETBUI) access."
 block|,
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
-literal|"samba=YES"
+name|configSamba
+block|,
+literal|0
 block|,
 literal|0
 block|,
 literal|0
-block|,
-name|dmenuVarCheck
 block|}
 block|,
 block|{
@@ -3727,7 +3713,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|dmenuVarCheck
+literal|0
 block|}
 block|,
 block|{
