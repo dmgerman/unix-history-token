@@ -145,7 +145,10 @@ block|,
 literal|0
 block|,
 literal|0
-block|,     }
+block|,
+operator|&
+name|ddp_usrreqs
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
