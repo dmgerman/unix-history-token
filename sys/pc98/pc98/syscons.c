@@ -3239,6 +3239,11 @@ name|int
 name|flag
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|sc_saver_keyb_only
+condition|)
 name|sc_touch_scrn_saver
 argument_list|()
 expr_stmt|;
