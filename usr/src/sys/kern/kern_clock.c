@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.31	82/06/26	*/
+comment|/*	kern_clock.c	4.32	82/06/27	*/
 end_comment
 
 begin_include
@@ -479,10 +479,22 @@ if|if
 condition|(
 name|noproc
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ps
+operator|&
+name|PSL_IPL
+operator|)
+operator|!=
+literal|0
+condition|)
 name|cpstate
 operator|=
 name|CP_IDLE
 expr_stmt|;
+block|}
 else|else
 name|u
 operator|.
@@ -993,6 +1005,11 @@ argument_list|)
 condition|)
 return|return;
 comment|/* 		 * If we didn't run a few times because of 		 * long blockage at high ipl, we don't 		 * really want to run this code several times, 		 * so squish out all multiples of hz here. 		 */
+name|s
+operator|=
+name|spl6
+argument_list|()
+expr_stmt|;
 name|time
 operator|+=
 name|lbolt
@@ -1002,6 +1019,11 @@ expr_stmt|;
 name|lbolt
 operator|%=
 name|hz
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Wakeup lightning bolt sleepers. 		 * Processes sleep on lbolt to wait 		 * for short amounts of time (e.g. 1 second). 		 */
 name|wakeup
