@@ -129,6 +129,10 @@ name|selinfo
 name|snp_sel
 decl_stmt|;
 comment|/* Selection info	       */
+name|int
+name|snp_olddisc
+decl_stmt|;
+comment|/* Old line discipline	       */
 block|}
 struct|;
 end_struct
