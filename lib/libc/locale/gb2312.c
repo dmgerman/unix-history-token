@@ -184,7 +184,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|_GB2312_check
 parameter_list|(
