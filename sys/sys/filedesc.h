@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priority.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -46,65 +52,14 @@ file|<machine/_limits.h>
 end_include
 
 begin_comment
-comment|/*  * This structure is used for the management of descriptors.  It may be  * shared by multiple processes.  *  * A process is initially started out with NDFILE descriptors stored within  * this structure, selected to be enough for typical applications based on  * the historical limit of 20 open files (and the usage of descriptors by  * shells).  If these descriptors are exhausted, a larger descriptor table  * may be allocated, up to a process' resource limit; the internal arrays  * are then unused.  */
+comment|/*  * This structure is used for the management of descriptors.  It may be  * shared by multiple processes.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NDFILE
-value|20
-end_define
 
 begin_define
 define|#
 directive|define
 name|NDSLOTTYPE
 value|u_long
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDSLOTSIZE
-value|sizeof(NDSLOTTYPE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDENTRIES
-value|(NDSLOTSIZE * __CHAR_BIT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDSLOT
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) / NDENTRIES)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDBIT
-parameter_list|(
-name|x
-parameter_list|)
-value|((NDSLOTTYPE)1<< ((x) % NDENTRIES))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDSLOTS
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x) + NDENTRIES - 1) / NDENTRIES)
 end_define
 
 begin_struct
@@ -165,12 +120,24 @@ comment|/* mask for file creation */
 name|u_short
 name|fd_refcnt
 decl_stmt|;
-comment|/* reference count */
+comment|/* thread reference count */
+name|u_short
+name|fd_holdcnt
+decl_stmt|;
+comment|/* hold count on structure + mutex */
 name|struct
 name|mtx
 name|fd_mtx
 decl_stmt|;
 comment|/* protects members of this struct */
+name|int
+name|fd_locked
+decl_stmt|;
+comment|/* long lock flag */
+name|int
+name|fd_wanted
+decl_stmt|;
+comment|/* "" */
 name|struct
 name|kqlist
 name|fd_kqlist
@@ -184,46 +151,6 @@ name|int
 name|fd_holdleaderswakeup
 decl_stmt|;
 comment|/* fdfree() needs wakeup */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Basic allocation of descriptors:  * one of the above, plus arrays for NDFILE descriptors.  */
-end_comment
-
-begin_struct
-struct|struct
-name|filedesc0
-block|{
-name|struct
-name|filedesc
-name|fd_fd
-decl_stmt|;
-comment|/* 	 * These arrays are used when the number of open files is 	 *<= NDFILE, and are then pointed to by the pointers above. 	 */
-name|struct
-name|file
-modifier|*
-name|fd_dfiles
-index|[
-name|NDFILE
-index|]
-decl_stmt|;
-name|char
-name|fd_dfileflags
-index|[
-name|NDFILE
-index|]
-decl_stmt|;
-name|NDSLOTTYPE
-name|fd_dmap
-index|[
-name|NDSLOTS
-argument_list|(
-name|NDFILE
-argument_list|)
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -284,17 +211,6 @@ begin_comment
 comment|/* auto-close on exec */
 end_comment
 
-begin_comment
-comment|/*  * Storage required per open file descriptor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OFILESIZE
-value|(sizeof(struct file *) + sizeof(char))
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -312,7 +228,8 @@ name|FILEDESC_LOCK
 parameter_list|(
 name|fd
 parameter_list|)
-value|mtx_lock(&(fd)->fd_mtx)
+define|\
+value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		(fd)->fd_wanted++;							\ 		while ((fd)->fd_locked)							\ 			msleep(&(fd)->fd_locked,&(fd)->fd_mtx, PLOCK, "fdesc", 0);	\ 		(fd)->fd_locked = 2;							\ 		(fd)->fd_wanted--;							\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0);
 end_define
 
 begin_define
@@ -322,18 +239,37 @@ name|FILEDESC_UNLOCK
 parameter_list|(
 name|fd
 parameter_list|)
-value|mtx_unlock(&(fd)->fd_mtx)
+define|\
+value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		KASSERT((fd)->fd_locked == 2,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 2));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0);
 end_define
 
 begin_define
 define|#
 directive|define
-name|FILEDESC_LOCKED
+name|FILEDESC_LOCK_FAST
 parameter_list|(
 name|fd
 parameter_list|)
-value|mtx_owned(&(fd)->fd_mtx)
+define|\
+value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		(fd)->fd_wanted++;							\ 		while ((fd)->fd_locked)							\ 			msleep(&(fd)->fd_locked,&(fd)->fd_mtx, PLOCK, "fdesc", 0);	\ 		(fd)->fd_locked = 1;							\ 		(fd)->fd_wanted--;							\ 	} while (0);
 end_define
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_UNLOCK_FAST
+parameter_list|(
+name|fd
+parameter_list|)
+define|\
+value|do {										\ 		KASSERT((fd)->fd_locked == 1,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 1));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0);
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANT_SUPPORT
+end_ifdef
 
 begin_define
 define|#
@@ -342,10 +278,32 @@ name|FILEDESC_LOCK_ASSERT
 parameter_list|(
 name|fd
 parameter_list|,
-name|type
+name|arg
 parameter_list|)
-value|mtx_assert(&(fd)->fd_mtx, (type))
+define|\
+value|do {										\ 		if ((arg) == MA_OWNED)							\ 			KASSERT((fd)->fd_locked != 0, ("fdesc locking mistake"));	\ 		else									\ 			KASSERT((fd)->fd_locked == 0, ("fdesc locking mistake"));	\ 	} while (0);
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK_ASSERT
+parameter_list|(
+name|fd
+parameter_list|,
+name|arg
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -476,6 +434,31 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|fdclose
+parameter_list|(
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|,
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|,
+name|int
+name|idx
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|fdcloseexec
 parameter_list|(
 name|struct
@@ -496,6 +479,23 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fdunshare
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -541,48 +541,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|fdunused
-parameter_list|(
-name|struct
-name|filedesc
-modifier|*
-name|fdp
-parameter_list|,
-name|int
-name|fd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|fdused
-parameter_list|(
-name|struct
-name|filedesc
-modifier|*
-name|fdp
-parameter_list|,
-name|int
-name|fd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ffree
-parameter_list|(
-name|struct
-name|file
-modifier|*
-name|fp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|filedesc_to_leader
 modifier|*
@@ -623,6 +581,23 @@ name|file
 modifier|*
 modifier|*
 name|fpp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mountcheckdirs
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|olddp
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|newdp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -676,14 +651,6 @@ operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|fdesc_mtx
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
