@@ -87,17 +87,17 @@ name|SUBTYPE_FAT
 value|6
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|SUBTYPE_EFI
 value|239
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Where we start displaying chunk information on the screen */
