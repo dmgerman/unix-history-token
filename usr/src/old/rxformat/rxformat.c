@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rxformat.c	4.2	83/04/28	*/
+comment|/*	rxformat.c	4.3	83/05/08	*/
 end_comment
 
 begin_include
@@ -26,6 +26,15 @@ include|#
 directive|include
 file|"/sys/vaxuba/rxreg.h"
 end_include
+
+begin_decl_stmt
+name|char
+name|devname
+index|[]
+init|=
+literal|"/dev/rrx?a"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * format floppy disks on RX02  */
@@ -97,10 +106,22 @@ name|idens
 operator|++
 expr_stmt|;
 name|filarg
-operator|=
-literal|2
+operator|++
 expr_stmt|;
 block|}
+name|devname
+index|[
+literal|8
+index|]
+operator|=
+name|argv
+index|[
+name|filarg
+index|]
+index|[
+literal|7
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -108,14 +129,11 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|argv
-index|[
-name|filarg
-index|]
+name|devname
 argument_list|,
 name|FRDWR
 argument_list|,
-literal|0666
+literal|0600
 argument_list|)
 operator|)
 operator|<
@@ -124,10 +142,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|argv
-index|[
-name|filarg
-index|]
+name|devname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -140,13 +155,10 @@ name|printf
 argument_list|(
 literal|"Format %s to"
 argument_list|,
-operator|*
-operator|(
 name|argv
 index|[
 name|filarg
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -176,6 +188,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/*  	 * change the ioctl command when dkio.h has 	 * been finished 	 */
 if|if
 condition|(
 name|ioctl
@@ -192,10 +205,7 @@ name|NULL
 condition|)
 name|perror
 argument_list|(
-name|argv
-index|[
-literal|2
-index|]
+name|devname
 argument_list|)
 expr_stmt|;
 name|close
