@@ -12,7 +12,7 @@ comment|/* Copyright (C) 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991 b
 end_comment
 
 begin_comment
-comment|/* $Log: rlog.c,v $  * Revision 1.2  1993/08/06  16:47:16  nate  * Have rlog output be much easier to parse.  (Added one line which is not  * used by any CVS/RCS commands)  *  * Revision 1.1.1.1  1993/06/18  04:22:17  jkh  * Updated GNU utilities  *  * Revision 5.9  1991/09/17  19:07:40  eggert  * Getscript() didn't uncache partial lines.  *  * Revision 5.8  1991/08/19  03:13:55  eggert  * Revision separator is `:', not `-'.  * Check for missing and duplicate logs.  Tune.  * Permit log messages that do not end in newline (including empty logs).  *  * Revision 5.7  1991/04/21  11:58:31  eggert  * Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.6  1991/02/26  17:07:17  eggert  * Survive RCS files with missing logs.  * strsave -> str_save (DG/UX name clash)  *  * Revision 5.5  1990/11/01  05:03:55  eggert  * Permit arbitrary data in logs and comment leaders.  *  * Revision 5.4  1990/10/04  06:30:22  eggert  * Accumulate exit status across files.  *  * Revision 5.3  1990/09/11  02:41:16  eggert  * Plug memory leak.  *  * Revision 5.2  1990/09/04  08:02:33  eggert  * Count RCS lines better.  *  * Revision 5.0  1990/08/22  08:13:48  eggert  * Remove compile-time limits; use malloc instead.  Add setuid support.  * Switch to GMT.  * Report dates in long form, to warn about dates past 1999/12/31.  * Change "added/del" message to make room for the longer dates.  * Don't generate trailing white space.  Add -V.  Ansify and Posixate.  *  * Revision 4.7  89/05/01  15:13:48  narten  * changed copyright header to reflect current distribution rules  *   * Revision 4.6  88/08/09  19:13:28  eggert  * Check for memory exhaustion; don't access freed storage.  * Shrink stdio code size; remove lint.  *   * Revision 4.5  87/12/18  11:46:38  narten  * more lint cleanups (Guy Harris)  *   * Revision 4.4  87/10/18  10:41:12  narten  * Updating version numbers  * Changes relative to 1.1 actually relative to 4.2  *   * Revision 1.3  87/09/24  14:01:10  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf   * warnings)  *   * Revision 1.2  87/03/27  14:22:45  jenkins  * Port to suns  *   * Revision 4.2  83/12/05  09:18:09  wft  * changed rewriteflag to external.  *   * Revision 4.1  83/05/11  16:16:55  wft  * Added -b, updated getnumericrev() accordingly.  * Replaced getpwuid() with getcaller().  *   * Revision 3.7  83/05/11  14:24:13  wft  * Added options -L and -R;  * Fixed selection bug with -l on multiple files.  * Fixed error on dates of the form -d'>date' (rewrote getdatepair()).  *   * Revision 3.6  82/12/24  15:57:53  wft  * shortened output format.  *  * Revision 3.5  82/12/08  21:45:26  wft  * removed call to checkaccesslist(); used DATEFORM to format all dates;  * removed unused variables.  *  * Revision 3.4  82/12/04  13:26:25  wft  * Replaced getdelta() with gettree(); removed updating of field lockedby.  *  * Revision 3.3  82/12/03  14:08:20  wft  * Replaced getlogin with getpwuid(), %02d with %.2d, fancydate with PRINTDATE.  * Fixed printing of nil, removed printing of Suffix,  * added shortcut if no revisions are printed, disambiguated struct members.  *  * Revision 3.2  82/10/18  21:09:06  wft  * call to curdir replaced with getfullRCSname(),  * fixed call to getlogin(), cosmetic changes on output,  * changed conflicting long identifiers.  *  * Revision 3.1  82/10/13  16:07:56  wft  * fixed type of variables receiving from getc() (char -> int).  */
+comment|/* $Log: rlog.c,v $  * Revision 1.3  1994/05/11  22:39:44  phk  * Added -v option to rlog.  This gives a quick way to get a list of versions.  *  * Revision 1.2  1993/08/06  16:47:16  nate  * Have rlog output be much easier to parse.  (Added one line which is not  * used by any CVS/RCS commands)  *  * Revision 1.1.1.1  1993/06/18  04:22:17  jkh  * Updated GNU utilities  *  * Revision 5.9  1991/09/17  19:07:40  eggert  * Getscript() didn't uncache partial lines.  *  * Revision 5.8  1991/08/19  03:13:55  eggert  * Revision separator is `:', not `-'.  * Check for missing and duplicate logs.  Tune.  * Permit log messages that do not end in newline (including empty logs).  *  * Revision 5.7  1991/04/21  11:58:31  eggert  * Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.6  1991/02/26  17:07:17  eggert  * Survive RCS files with missing logs.  * strsave -> str_save (DG/UX name clash)  *  * Revision 5.5  1990/11/01  05:03:55  eggert  * Permit arbitrary data in logs and comment leaders.  *  * Revision 5.4  1990/10/04  06:30:22  eggert  * Accumulate exit status across files.  *  * Revision 5.3  1990/09/11  02:41:16  eggert  * Plug memory leak.  *  * Revision 5.2  1990/09/04  08:02:33  eggert  * Count RCS lines better.  *  * Revision 5.0  1990/08/22  08:13:48  eggert  * Remove compile-time limits; use malloc instead.  Add setuid support.  * Switch to GMT.  * Report dates in long form, to warn about dates past 1999/12/31.  * Change "added/del" message to make room for the longer dates.  * Don't generate trailing white space.  Add -V.  Ansify and Posixate.  *  * Revision 4.7  89/05/01  15:13:48  narten  * changed copyright header to reflect current distribution rules  *   * Revision 4.6  88/08/09  19:13:28  eggert  * Check for memory exhaustion; don't access freed storage.  * Shrink stdio code size; remove lint.  *   * Revision 4.5  87/12/18  11:46:38  narten  * more lint cleanups (Guy Harris)  *   * Revision 4.4  87/10/18  10:41:12  narten  * Updating version numbers  * Changes relative to 1.1 actually relative to 4.2  *   * Revision 1.3  87/09/24  14:01:10  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf   * warnings)  *   * Revision 1.2  87/03/27  14:22:45  jenkins  * Port to suns  *   * Revision 4.2  83/12/05  09:18:09  wft  * changed rewriteflag to external.  *   * Revision 4.1  83/05/11  16:16:55  wft  * Added -b, updated getnumericrev() accordingly.  * Replaced getpwuid() with getcaller().  *   * Revision 3.7  83/05/11  14:24:13  wft  * Added options -L and -R;  * Fixed selection bug with -l on multiple files.  * Fixed error on dates of the form -d'>date' (rewrote getdatepair()).  *   * Revision 3.6  82/12/24  15:57:53  wft  * shortened output format.  *  * Revision 3.5  82/12/08  21:45:26  wft  * removed call to checkaccesslist(); used DATEFORM to format all dates;  * removed unused variables.  *  * Revision 3.4  82/12/04  13:26:25  wft  * Replaced getdelta() with gettree(); removed updating of field lockedby.  *  * Revision 3.3  82/12/03  14:08:20  wft  * Replaced getlogin with getpwuid(), %02d with %.2d, fancydate with PRINTDATE.  * Fixed printing of nil, removed printing of Suffix,  * added shortcut if no revisions are printed, disambiguated struct members.  *  * Revision 3.2  82/10/18  21:09:06  wft  * call to curdir replaced with getfullRCSname(),  * fixed call to getlogin(), cosmetic changes on output,  * changed conflicting long identifiers.  *  * Revision 3.1  82/10/13  16:07:56  wft  * fixed type of variables receiving from getc() (char -> int).  */
 end_comment
 
 begin_include
@@ -537,7 +537,7 @@ argument|rlogId
 argument_list|,
 literal|"rlog"
 argument_list|,
-literal|"$Id: rlog.c,v 1.2 1993/08/06 16:47:16 nate Exp $"
+literal|"$Id: rlog.c,v 1.3 1994/05/11 22:39:44 phk Exp $"
 argument_list|)
 end_macro
 
@@ -989,6 +989,9 @@ condition|(
 name|versionlist
 condition|)
 block|{
+name|gettree
+argument_list|()
+name|l
 name|aprintf
 argument_list|(
 name|out
@@ -999,11 +1002,10 @@ name|vstring
 argument_list|,
 name|workfilename
 argument_list|,
-name|Head
-operator|->
-name|num
+name|tiprev
+argument_list|()
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 continue|continue;
 block|}
 if|if
