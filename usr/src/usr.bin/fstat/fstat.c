@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.19 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1530,9 +1530,15 @@ decl_stmt|;
 comment|/* set by devmatch() on a match */
 if|if
 condition|(
+name|ftype
+operator|==
+name|DTYPE_VNODE
+operator|&&
+operator|(
 name|g
 operator|||
 name|fflg
+operator|)
 condition|)
 block|{
 operator|(
