@@ -476,6 +476,24 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+comment|/*      * The process may have run away before we could start -- this      * happens with SUGID programs.  So we need to see if it still      * exists before we complain bitterly.      */
+if|if
+condition|(
+name|kill
+argument_list|(
+name|pid
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|err
 argument_list|(
 literal|8
@@ -485,6 +503,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ioctl

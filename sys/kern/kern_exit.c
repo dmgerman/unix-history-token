@@ -485,6 +485,15 @@ argument_list|,
 name|rv
 argument_list|)
 expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_stype
+argument_list|)
+expr_stmt|;
+comment|/* Wakeup anyone in procfs' PIOCWAIT */
 comment|/*  	 * Check if any loadable modules need anything done at process exit. 	 * e.g. SYSV IPC stuff 	 * XXX what if one of these generates an error? 	 */
 name|TAILQ_FOREACH
 argument_list|(
