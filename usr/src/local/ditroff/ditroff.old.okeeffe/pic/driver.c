@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* driver.c	(Berkeley)	1.2	83/08/09	*/
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -10,42 +14,6 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|DEV202
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVAPS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVCAT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEV450
-value|4
-end_define
-
-begin_decl_stmt
-name|int
-name|devtype
-init|=
-name|DEV202
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|float
@@ -79,12 +47,12 @@ begin_decl_stmt
 name|int
 name|res
 init|=
-literal|972
+literal|200
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 202 is default */
+comment|/* versatec/varian is default */
 end_comment
 
 begin_decl_stmt
@@ -334,10 +302,6 @@ name|res
 operator|=
 literal|720
 expr_stmt|;
-name|devtype
-operator|=
-name|DEVAPS
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -362,10 +326,6 @@ block|{
 name|res
 operator|=
 literal|432
-expr_stmt|;
-name|devtype
-operator|=
-name|DEVCAT
 expr_stmt|;
 block|}
 break|break;

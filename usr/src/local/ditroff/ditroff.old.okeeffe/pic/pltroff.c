@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	This version has code generators to drive the old-style troff  *	that produces output for the Graphic Systems C/A/T.    *	Very few people actually have a C/A/T; they instead typically  *	use some other typesetter that simulates it.  This is slow and  *	rather silly, but compatibility with the past is important.  *	Or so they say.  Anyway ...   *	The code generator can be turned on to old-style troff by setting  *	the constant OLDTROFF with a #define statement;  this will also  *	have the effect of setting the default typesetter to the C/A/T  *	in a consistent manner.  */
+comment|/* pltroff.c	(Berkeley)	1.2	83/08/09  *	This version has code generators to drive the old-style troff  *	that produces output for the Graphic Systems C/A/T.    *	Very few people actually have a C/A/T; they instead typically  *	use some other typesetter that simulates it.  This is slow and  *	rather silly, but compatibility with the past is important.  *	Or so they say.  Anyway ...   *	The code generator can be turned on to old-style troff by setting  *	the constant OLDTROFF with a #define statement;  this will also  *	have the effect of setting the default typesetter to the C/A/T  *	in a consistent manner.  */
 end_comment
 
 begin_include
@@ -120,41 +120,6 @@ end_decl_stmt
 begin_comment
 comment|/* step size in y */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DEV202
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVAPS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVCAT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEV450
-value|4
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|devtype
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1652,20 +1617,6 @@ name|minline
 condition|)
 block|{
 comment|/* vertical */
-if|if
-condition|(
-name|devtype
-operator|==
-name|DEV202
-condition|)
-name|printf
-argument_list|(
-literal|"\\L'%du\\(vr'\n"
-argument_list|,
-name|dv
-argument_list|)
-expr_stmt|;
-else|else
 name|printf
 argument_list|(
 literal|"\\v'-.25m'\\L'%du\\(br'\\v'.25m'\n"
@@ -2670,31 +2621,6 @@ block|{
 name|hvflush
 argument_list|()
 expr_stmt|;
-comment|/* what character to draw here depends on what's available. */
-comment|/* on the 202, l. is good but small. */
-comment|/* on other typesetters, use a period and hope */
-if|if
-condition|(
-name|OLDSTYLE
-condition|)
-name|printf
-argument_list|(
-literal|"\\&.\n"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|devtype
-operator|==
-name|DEV202
-condition|)
-name|printf
-argument_list|(
-literal|"\\z\\(l.\\(l.\\z\\(l.\\(l.\n"
-argument_list|)
-expr_stmt|;
-else|else
 name|printf
 argument_list|(
 literal|"\\&.\n"
