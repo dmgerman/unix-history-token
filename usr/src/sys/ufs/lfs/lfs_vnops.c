@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.85 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.86 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -438,14 +438,6 @@ block|,
 comment|/* blkatoff */
 block|{
 operator|&
-name|vop_vget_desc
-block|,
-name|lfs_vget
-block|}
-block|,
-comment|/* vget */
-block|{
-operator|&
 name|vop_valloc_desc
 block|,
 name|lfs_valloc
@@ -816,14 +808,6 @@ name|spec_blkatoff
 block|}
 block|,
 comment|/* blkatoff */
-block|{
-operator|&
-name|vop_vget_desc
-block|,
-name|spec_vget
-block|}
-block|,
-comment|/* vget */
 block|{
 operator|&
 name|vop_valloc_desc
@@ -1204,14 +1188,6 @@ block|,
 comment|/* blkatoff */
 block|{
 operator|&
-name|vop_vget_desc
-block|,
-name|fifo_vget
-block|}
-block|,
-comment|/* vget */
-block|{
-operator|&
 name|vop_valloc_desc
 block|,
 name|fifo_valloc
@@ -1312,6 +1288,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_read_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1761,6 +1738,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_write_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1768,10 +1746,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_TRUNCATE
-expr_stmt|;
-name|USES_VOP_UPDATE
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -2322,6 +2296,10 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
+argument_list|,
+name|uio
+operator|->
+name|uio_procp
 argument_list|)
 expr_stmt|;
 name|uio
@@ -2393,6 +2371,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_fsync_args
+comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2400,13 +2379,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_UPDATE
-expr_stmt|;
-name|struct
-name|inode
-modifier|*
-name|ip
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|VERBOSE
@@ -2417,29 +2389,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ip
-operator|=
-name|VTOI
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ap
-operator|->
-name|a_fflags
-operator|&
-name|FWRITE
-condition|)
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|ICHG
-expr_stmt|;
 return|return
 operator|(
 name|VOP_UPDATE
@@ -2477,16 +2426,11 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_TRUNCATE
-expr_stmt|;
-name|USES_VOP_UPDATE
-expr_stmt|;
-name|USES_VOP_VFREE
-expr_stmt|;
 specifier|extern
 name|int
 name|prtactive
@@ -2651,6 +2595,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NOCRED
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|mode
@@ -2801,6 +2747,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_symlink_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 		struct vattr *a_vap; 		char *a_target; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2862,6 +2809,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_mknod_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 		struct vattr *a_vap; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2923,6 +2871,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_create_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 		struct vattr *a_vap; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2984,6 +2933,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_mkdir_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 		struct vattr *a_vap; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3045,6 +2995,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_remove_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode *a_vp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3113,6 +3064,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_rmdir_args
+comment|/* { 		struct vnodeop_desc *a_desc; 		struct vnode *a_dvp; 		struct vnode *a_vp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3181,6 +3133,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_link_args
+comment|/* { 		struct vnode *a_vp; 		struct vnode *a_tdvp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3242,6 +3195,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_rename_args
+comment|/* { 		struct vnode *a_fdvp; 		struct vnode *a_fvp; 		struct componentname *a_fcnp; 		struct vnode *a_tdvp; 		struct vnode *a_tvp; 		struct componentname *a_tcnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
