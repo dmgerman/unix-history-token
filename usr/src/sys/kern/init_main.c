@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	6.8	85/03/08	*/
+comment|/*	init_main.c	6.9	85/05/27	*/
 end_comment
 
 begin_include
@@ -155,7 +155,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Initialization code.  * Called from cold start routine as  * soon as a stack and segmentation  * have been established.  * Functions:  *	clear and free user core  *	turn on clock  *	hand craft 0th process  *	call all initialization routines  *	fork - process 0 to schedule  *	     - process 2 to page out  *	     - process 1 execute bootstrap  *  * loop at loc 13 (0xd) in user mode -- /etc/init  *	cannot be executed.  */
+comment|/*  * Initialization code.  * Called from cold start routine as  * soon as a stack and segmentation  * have been established.  * Functions:  *	clear and free user core  *	turn on clock  *	hand craft 0th process  *	call all initialization routines  *	fork - process 0 to schedule  *	     - process 1 execute bootstrap  *	     - process 2 to page out  */
 end_comment
 
 begin_function
@@ -310,6 +310,13 @@ name|u_cmask
 operator|=
 name|cmask
 expr_stmt|;
+name|u
+operator|.
+name|u_lastfile
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -435,7 +442,6 @@ expr_stmt|;
 name|cinit
 argument_list|()
 expr_stmt|;
-comment|/* needed by dmc-11 driver */
 ifdef|#
 directive|ifdef
 name|INET
