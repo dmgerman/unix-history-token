@@ -33,6 +33,12 @@ directive|include
 file|"radlib.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"radlib_vs.h"
+end_include
+
 begin_comment
 comment|/* Handle types */
 end_comment
@@ -355,6 +361,29 @@ name|int
 name|type
 decl_stmt|;
 comment|/* Handle type */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vendor_attribute
+block|{
+name|u_int32_t
+name|vendor_value
+decl_stmt|;
+name|u_char
+name|attrib_type
+decl_stmt|;
+name|u_char
+name|attrib_len
+decl_stmt|;
+name|u_char
+name|attrib_data
+index|[
+literal|1
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
