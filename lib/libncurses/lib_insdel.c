@@ -68,11 +68,6 @@ name|OK
 return|;
 if|if
 condition|(
-name|n
-operator|==
-operator|-
-literal|1
-operator|&&
 name|win
 operator|->
 name|_cury
@@ -80,6 +75,13 @@ operator|==
 name|win
 operator|->
 name|_maxy
+operator|&&
+name|abs
+argument_list|(
+name|n
+argument_list|)
+operator|==
+literal|1
 condition|)
 return|return
 name|wclrtoeol
