@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dead_vnops.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dead_vnops.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -467,6 +467,55 @@ name|dead_advlock
 value|((int (*) __P(( \ 		struct vnode *vp, \ 		caddr_t id, \ 		int op, \ 		struct flock *fl, \ 		int flags))) dead_ebadf)
 end_define
 
+begin_define
+define|#
+directive|define
+name|dead_blkatoff
+value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t offset, \ 		char **res, \ 		struct buf **bpp))) dead_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_vget
+value|((int (*) __P(( \ 		struct mount *mp, \ 		ino_t ino, \ 		struct vnode **vpp))) dead_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_valloc
+value|((int (*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) dead_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_vfree
+value|((void (*) __P(( \ 		struct vnode *pvp, \ 		ino_t ino, \ 		int mode))) dead_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_truncate
+value|((int (*) __P(( \ 		struct vnode *vp, \ 		u_long length, \ 		int flags))) nullop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_update
+value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct timeval *ta, \ 		struct timeval *tm, \ 		int waitfor))) nullop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dead_bwrite
+value|((int (*) __P(( \ 		struct buf *bp))) nullop)
+end_define
+
 begin_decl_stmt
 name|struct
 name|vnodeops
@@ -572,6 +621,27 @@ comment|/* islocked */
 name|dead_advlock
 block|,
 comment|/* advlock */
+name|dead_blkatoff
+block|,
+comment|/* blkatoff */
+name|dead_vget
+block|,
+comment|/* vget */
+name|dead_valloc
+block|,
+comment|/* valloc */
+name|dead_vfree
+block|,
+comment|/* vfree */
+name|dead_truncate
+block|,
+comment|/* truncate */
+name|dead_update
+block|,
+comment|/* update */
+name|dead_bwrite
+block|,
+comment|/* bwrite */
 block|}
 decl_stmt|;
 end_decl_stmt

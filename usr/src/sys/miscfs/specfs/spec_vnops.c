@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.40 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -265,6 +265,27 @@ comment|/* islocked */
 name|spec_advlock
 block|,
 comment|/* advlock */
+name|spec_blkatoff
+block|,
+comment|/* blkatoff */
+name|spec_vget
+block|,
+comment|/* vget */
+name|spec_valloc
+block|,
+comment|/* valloc */
+name|spec_vfree
+block|,
+comment|/* vfree */
+name|spec_truncate
+block|,
+comment|/* truncate */
+name|spec_update
+block|,
+comment|/* update */
+name|spec_bwrite
+block|,
+comment|/* bwrite */
 block|}
 decl_stmt|;
 end_decl_stmt
