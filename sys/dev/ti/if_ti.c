@@ -3185,7 +3185,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ti_bcopy_swap: length %d isn't 32-bit aligned\n"
+literal|"ti_bcopy_swap: length %zd isn't 32-bit aligned\n"
 argument_list|,
 name|len
 argument_list|)
