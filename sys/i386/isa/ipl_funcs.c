@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Bruce Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.20 1999/05/09 23:40:29 peter Exp $  */
+comment|/*-  * Copyright (c) 1997 Bruce Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.21 1999/06/30 03:39:29 alc Exp $  */
 end_comment
 
 begin_include
@@ -114,17 +114,6 @@ end_endif
 begin_comment
 comment|/* !SMP */
 end_comment
-
-begin_macro
-name|DO_SETBITS
-argument_list|(
-argument|setsoftast
-argument_list|,
-argument|&ipending
-argument_list|,
-argument|SWI_AST_PENDING
-argument_list|)
-end_macro
 
 begin_macro
 name|DO_SETBITS
@@ -427,14 +416,11 @@ parameter_list|)
 block|{
 name|cpl
 operator|=
-name|SWI_AST_MASK
+literal|0
 expr_stmt|;
 if|if
 condition|(
 name|ipending
-operator|&
-operator|~
-name|SWI_AST_MASK
 condition|)
 name|splz
 argument_list|()
@@ -1124,30 +1110,19 @@ argument_list|(
 literal|0xc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cil
-operator|&
-name|SWI_AST_MASK
-condition|)
-block|{
+comment|/* 		 * XXX SWI_AST_MASK in ipending has moved to 1 in astpending, 		 * so the following code is dead, but just removing it may 		 * not be right. 		 */
+if|#
+directive|if
+literal|0
+block|if (cil& SWI_AST_MASK) {
 comment|/* not now */
-name|IFCPL_UNLOCK
-argument_list|()
-expr_stmt|;
+block|IFCPL_UNLOCK();
 comment|/* allow cil to change */
-name|SPIN_RESET
-expr_stmt|;
-while|while
-condition|(
-name|cil
-operator|&
-name|SWI_AST_MASK
-condition|)
-name|SPIN_SPL
-continue|continue;
+block|SPIN_RESET; 			while (cil& SWI_AST_MASK) 				SPIN_SPL 			continue;
 comment|/* try again */
 block|}
+endif|#
+directive|endif
 break|break;
 block|}
 else|#
@@ -1161,14 +1136,11 @@ directive|endif
 comment|/* INTR_SPL */
 name|cpl
 operator|=
-name|SWI_AST_MASK
+literal|0
 expr_stmt|;
 name|unpend
 operator|=
 name|ipending
-operator|&
-operator|~
-name|SWI_AST_MASK
 expr_stmt|;
 name|IFCPL_UNLOCK
 argument_list|()
