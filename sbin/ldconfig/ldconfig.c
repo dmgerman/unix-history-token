@@ -528,6 +528,17 @@ name|_PATH_LD_HINTS
 else|:
 name|_PATH_ELF_HINTS
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+name|rescan
+operator|=
+literal|1
+expr_stmt|;
+else|else
 while|while
 condition|(
 operator|(
