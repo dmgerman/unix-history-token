@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfsm_subs.h	8.1 (Berkeley) 6/16/93  * $Id$  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfsm_subs.h	8.1 (Berkeley) 6/16/93  * $Id: nfsm_subs.h,v 1.2 1994/08/02 07:52:20 davidg Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NFS_NFSM_SUBS_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NFS_NFSM_SUBS_H_
+end_define
 
 begin_comment
 comment|/*  * These macros do strange and peculiar things to mbuf chains for  * the assistance of the nfs code. To attempt to use them for any  * other purpose will be dangerous. (they make weird assumptions)  */
@@ -318,6 +330,11 @@ name|nfsm_srvfillattr
 define|\
 value|fp->fa_type = vtonfs_type(vap->va_type); \ 	fp->fa_mode = vtonfs_mode(vap->va_type, vap->va_mode); \ 	fp->fa_nlink = txdr_unsigned(vap->va_nlink); \ 	fp->fa_uid = txdr_unsigned(vap->va_uid); \ 	fp->fa_gid = txdr_unsigned(vap->va_gid); \ 	if (nfsd->nd_nqlflag == NQL_NOVAL) { \ 		fp->fa_nfsblocksize = txdr_unsigned(vap->va_blocksize); \ 		if (vap->va_type == VFIFO) \ 			fp->fa_nfsrdev = 0xffffffff; \ 		else \ 			fp->fa_nfsrdev = txdr_unsigned(vap->va_rdev); \ 		fp->fa_nfsfsid = txdr_unsigned(vap->va_fsid); \ 		fp->fa_nfsfileid = txdr_unsigned(vap->va_fileid); \ 		fp->fa_nfssize = txdr_unsigned(vap->va_size); \ 		fp->fa_nfsblocks = txdr_unsigned(vap->va_bytes / NFS_FABLKSIZE); \ 		txdr_nfstime(&vap->va_atime,&fp->fa_nfsatime); \ 		txdr_nfstime(&vap->va_mtime,&fp->fa_nfsmtime); \ 		fp->fa_nfsctime.nfs_sec = txdr_unsigned(vap->va_ctime.ts_sec); \ 		fp->fa_nfsctime.nfs_usec = txdr_unsigned(vap->va_gen); \ 	} else { \ 		fp->fa_nqblocksize = txdr_unsigned(vap->va_blocksize); \ 		if (vap->va_type == VFIFO) \ 			fp->fa_nqrdev = 0xffffffff; \ 		else \ 			fp->fa_nqrdev = txdr_unsigned(vap->va_rdev); \ 		fp->fa_nqfsid = txdr_unsigned(vap->va_fsid); \ 		fp->fa_nqfileid = txdr_unsigned(vap->va_fileid); \ 		txdr_hyper(&vap->va_size,&fp->fa_nqsize); \ 		txdr_hyper(&vap->va_bytes,&fp->fa_nqbytes); \ 		txdr_nqtime(&vap->va_atime,&fp->fa_nqatime); \ 		txdr_nqtime(&vap->va_mtime,&fp->fa_nqmtime); \ 		txdr_nqtime(&vap->va_ctime,&fp->fa_nqctime); \ 		fp->fa_nqflags = txdr_unsigned(vap->va_flags); \ 		fp->fa_nqgen = txdr_unsigned(vap->va_gen); \ 		txdr_hyper(&vap->va_filerev,&fp->fa_nqfilerev); \ 	}
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
