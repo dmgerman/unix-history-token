@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipsend.c,v 2.2 1999/12/04 03:37:05 darrenr Exp $"
+literal|"@(#)$Id: ipsend.c,v 2.2.2.1 2001/01/10 06:21:19 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1648,6 +1648,25 @@ operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ti
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"malloc failed\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 name|bcopy
 argument_list|(
 operator|(

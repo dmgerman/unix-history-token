@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_sfil.c,v 2.23.2.8 2000/10/19 15:42:10 darrenr Exp $"
+literal|"@(#)$Id: ip_sfil.c,v 2.23.2.9 2000/11/12 11:55:17 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,8 +397,6 @@ decl_stmt|,
 name|ipf_authmx
 decl_stmt|,
 name|ipf_rw
-decl_stmt|,
-name|ipf_hostmap
 decl_stmt|;
 end_decl_stmt
 
@@ -514,12 +512,6 @@ name|cv_destroy
 argument_list|(
 operator|&
 name|ipfauthwait
-argument_list|)
-expr_stmt|;
-name|mutex_destroy
-argument_list|(
-operator|&
-name|ipf_hostmap
 argument_list|)
 expr_stmt|;
 name|mutex_destroy
@@ -667,18 +659,6 @@ operator|&
 name|ipf_authmx
 argument_list|,
 literal|"ipf auth log mutex"
-argument_list|,
-name|MUTEX_DRIVER
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|mutex_init
-argument_list|(
-operator|&
-name|ipf_hostmap
-argument_list|,
-literal|"ipf hostmap mutex"
 argument_list|,
 name|MUTEX_DRIVER
 argument_list|,

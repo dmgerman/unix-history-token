@@ -345,7 +345,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipnat.c,v 2.16.2.4 2000/10/27 14:06:47 darrenr Exp $"
+literal|"@(#)$Id: ipnat.c,v 2.16.2.5 2000/12/02 00:15:04 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1547,7 +1547,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\trptr %p wptr %p seq %x junk %d\n"
+literal|"\t\trptr %p wptr %p seq %x len %d junk %d\n"
 argument_list|,
 name|ftp
 operator|.
@@ -1575,6 +1575,15 @@ literal|0
 index|]
 operator|.
 name|ftps_seq
+argument_list|,
+name|ftp
+operator|.
+name|ftp_side
+index|[
+literal|0
+index|]
+operator|.
+name|ftps_len
 argument_list|,
 name|ftp
 operator|.
@@ -1614,7 +1623,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\trptr %p wptr %p seq %x junk %d\n"
+literal|"\t\trptr %p wptr %p seq %x len %d junk %d\n"
 argument_list|,
 name|ftp
 operator|.
@@ -1642,6 +1651,15 @@ literal|1
 index|]
 operator|.
 name|ftps_seq
+argument_list|,
+name|ftp
+operator|.
+name|ftp_side
+index|[
+literal|1
+index|]
+operator|.
+name|ftps_len
 argument_list|,
 name|ftp
 operator|.
