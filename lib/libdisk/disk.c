@@ -4198,6 +4198,8 @@ operator|.
 name|p_fstype
 argument_list|,
 literal|0
+argument_list|,
+literal|""
 argument_list|)
 operator|&&
 name|j
