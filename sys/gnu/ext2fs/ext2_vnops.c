@@ -1912,6 +1912,7 @@ comment|/*  * Open called.  *  * Nothing to do.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2_open
 parameter_list|(
@@ -2492,6 +2493,7 @@ comment|/*  * Set attribute vnode op. called from several syscalls  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2_setattr
 parameter_list|(
@@ -7113,6 +7115,7 @@ comment|/*  * Calculate the logical to physical mapping if not done already,  * 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2_strategy
 parameter_list|(
@@ -7319,6 +7322,7 @@ comment|/*  * Print out the contents of an inode.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2_print
 parameter_list|(
@@ -7414,6 +7418,7 @@ comment|/*  * Read wrapper for special devices.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2spec_read
 parameter_list|(
@@ -7520,6 +7525,7 @@ comment|/*  * Write wrapper for special devices.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2spec_write
 parameter_list|(
@@ -7632,6 +7638,7 @@ comment|/*  * Close wrapper for special devices.  *  * Update the times on the i
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2spec_close
 parameter_list|(
@@ -7699,6 +7706,7 @@ comment|/*  * Read wrapper for fifos.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2fifo_read
 parameter_list|(
@@ -7823,6 +7831,7 @@ comment|/*  * Write wrapper for fifos.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2fifo_write
 parameter_list|(
@@ -7935,6 +7944,7 @@ comment|/*  * Close wrapper for fifos.  *  * Update the times on the inode then 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2fifo_close
 parameter_list|(
@@ -8002,6 +8012,7 @@ comment|/*  * Kqfilter wrapper for fifos.  *  * Fall through to ext2 kqfilter ro
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2fifo_kqfilter
 parameter_list|(
@@ -8054,6 +8065,7 @@ comment|/*  * Return POSIX pathconf information applicable to ext2 filesystems. 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2_pathconf
 parameter_list|(
