@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)type.c 2.1 %G%"
+literal|"@(#)type.c 1.8.1.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -279,6 +279,11 @@ name|nl
 modifier|*
 name|np
 decl_stmt|;
+name|struct
+name|nl
+modifier|*
+name|tnp
+decl_stmt|;
 name|np
 operator|=
 name|gtype
@@ -289,6 +294,19 @@ expr_stmt|;
 name|line
 operator|=
 name|tline
+expr_stmt|;
+name|tnp
+operator|=
+name|defnl
+argument_list|(
+name|tid
+argument_list|,
+name|TYPE
+argument_list|,
+name|np
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -360,7 +378,19 @@ name|stabgtype
 argument_list|(
 name|tid
 argument_list|,
+name|np
+argument_list|,
 name|line
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|stabltype
+argument_list|(
+name|tid
+argument_list|,
+name|np
 argument_list|)
 expr_stmt|;
 block|}
@@ -2133,6 +2163,16 @@ name|PtrTo
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PC
+name|fixfwdtype
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|p
