@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_qe.c	7.4 (Berkeley) %G% */
+comment|/*	@(#)if_qe.c	7.5 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -1211,9 +1211,9 @@ name|ui_unit
 argument_list|,
 name|ether_sprintf
 argument_list|(
-name|is
+name|c
 operator|->
-name|is_addr
+name|qe_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
