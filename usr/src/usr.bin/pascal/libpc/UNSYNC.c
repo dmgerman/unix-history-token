@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)UNSYNC.c 1.1 %G%"
+literal|"@(#)UNSYNC.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,26 @@ block|{
 name|ERROR
 argument_list|(
 name|EREADIT
+argument_list|,
+name|curfile
+operator|->
+name|pfname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|curfile
+operator|->
+name|funit
+operator|&
+name|EOFF
+condition|)
+block|{
+name|ERROR
+argument_list|(
+name|EPASTEOF
 argument_list|,
 name|curfile
 operator|->
