@@ -54,7 +54,7 @@ name|char
 modifier|*
 name|mib
 init|=
-literal|"machdep.msgbuf"
+literal|"kern.msgbuf"
 decl_stmt|;
 comment|/* We use sysctlbyname, because the oid is unknown (OID_AUTO) */
 comment|/* get the buffer size */
