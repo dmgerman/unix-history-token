@@ -83,6 +83,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__svr4__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"isp_solaris.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * General defines  */
 end_comment
@@ -97,6 +114,197 @@ end_define
 begin_comment
 comment|/*  * Local static data  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|warnlun
+init|=
+literal|"WARNING- cannot determine Expanded LUN capability- limiting to one LUN"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|portshift
+init|=
+literal|"Target %d Loop ID 0x%x (Port 0x%x) => Loop 0x%x (Port 0x%x)"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|portdup
+init|=
+literal|"Target %d duplicates Target %d- killing off both"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|retained
+init|=
+literal|"Retaining Loop ID 0x%x for Target %d (Port 0x%x)"
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP2100_FABRIC
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|lretained
+init|=
+literal|"Retained login of Target %d (Loop ID 0x%x) Port 0x%x"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|plogout
+init|=
+literal|"Logging out Target %d at Loop ID 0x%x (Port 0x%x)"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|plogierr
+init|=
+literal|"Command Error in PLOGI for Port 0x%x (0x%x)"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|nopdb
+init|=
+literal|"Could not get PDB for Device @ Port 0x%x"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|pdbmfail1
+init|=
+literal|"PDB Loop ID info for Device @ Port 0x%x does not match up (0x%x)"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|pdbmfail2
+init|=
+literal|"PDB Port info for Device @ Port 0x%x does not match up (0x%x)"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|ldumped
+init|=
+literal|"Target %d (Loop ID 0x%x) Port 0x%x dumped after login info mismatch"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|notresp
+init|=
+literal|"Not RESPONSE in RESPONSE Queue (type 0x%x) @ idx %d (next %d)"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|xact1
+init|=
+literal|"HBA attempted queued transaction with disconnect not set for %d.%d.%d"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|xact2
+init|=
+literal|"HBA attempted queued transaction to target routine %d on target %d bus %d"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|xact3
+init|=
+literal|"HBA attempted queued cmd for %d.%d.%d when queueing disabled"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|pskip
+init|=
+literal|"SCSI phase skipped for target %d.%d.%d"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|topology
+init|=
+literal|"Loop ID %d, AL_PA 0x%x, Port ID 0x%x, Loop State 0x%x, Topology '%s'"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|finmsg
+init|=
+literal|"(%d.%d.%d): FIN dl%d resid%d STS 0x%x SKEY %c XS_ERR=0x%x"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Local function prototypes.  */
@@ -154,7 +362,7 @@ operator|,
 name|ispstatusreq_t
 operator|*
 operator|,
-name|ISP_SCSI_XFER_T
+name|XS_T
 operator|*
 operator|)
 argument_list|)
@@ -298,6 +506,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|isp2100_fw_statename
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|isp_same_lportdb
 name|__P
@@ -376,25 +598,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|isp_dumpregs
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ispsoftc
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|isp_mboxcmd
 name|__P
 argument_list|(
@@ -405,6 +608,8 @@ operator|*
 operator|,
 name|mbreg_t
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -610,14 +815,7 @@ name|isp_state
 operator|=
 name|ISP_NILSTATE
 expr_stmt|;
-comment|/* 	 * Basic types (SCSI, FibreChannel and PCI or SBus) 	 * have been set in the MD code. We figure out more 	 * here. 	 */
-name|isp
-operator|->
-name|isp_dblev
-operator|=
-name|DFLT_DBLEVEL
-expr_stmt|;
-comment|/* 	 * After we've fired this chip up, zero out the conf1 register 	 * for SCSI adapters and other settings for the 2100. 	 */
+comment|/* 	 * Basic types (SCSI, FibreChannel and PCI or SBus) 	 * have been set in the MD code. We figure out more 	 * here. 	 * 	 * After we've fired this chip up, zero out the conf1 register 	 * for SCSI adapters and do other settings for the 2100. 	 */
 comment|/* 	 * Get the current running firmware revision out of the 	 * chip before we hit it over the head (if this is our 	 * first time through). Note that we store this as the 	 * 'ROM' firmware revision- which it may not be. In any 	 * case, we don't really use this yet, but we may in 	 * the future. 	 */
 if|if
 condition|(
@@ -632,7 +830,38 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Just in case it was paused... 		 */
+comment|/* 		 * First see whether or not we're sitting in the ISP PROM. 		 * If we've just been reset, we'll have the string "ISP   " 		 * spread through outgoing mailbox registers 1-3. 		 */
+if|if
+condition|(
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|OUTMAILBOX1
+argument_list|)
+operator|!=
+literal|0x4953
+operator|||
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|OUTMAILBOX2
+argument_list|)
+operator|!=
+literal|0x5020
+operator|||
+name|ISP_READ
+argument_list|(
+name|isp
+argument_list|,
+name|OUTMAILBOX3
+argument_list|)
+operator|!=
+literal|0x2020
+condition|)
+block|{
+comment|/* 			 * Just in case it was paused... 			 */
 name|ISP_WRITE
 argument_list|(
 name|isp
@@ -657,9 +886,11 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGNONE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If this fails, it probably means we're running 		 * an old prom, if anything at all... 		 */
+comment|/* 			 * This *shouldn't* fail..... 			 */
 if|if
 condition|(
 name|mbs
@@ -714,6 +945,7 @@ index|[
 literal|3
 index|]
 expr_stmt|;
+block|}
 block|}
 name|isp
 operator|->
@@ -840,7 +1072,7 @@ name|char
 modifier|*
 name|m
 init|=
-literal|"%s: bus %d is in %s Mode\n"
+literal|"bus %d is in %s Mode"
 decl_stmt|;
 name|u_int16_t
 name|l
@@ -924,13 +1156,13 @@ name|isp_lvdmode
 operator|=
 literal|1
 expr_stmt|;
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-name|m
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+name|m
 argument_list|,
 literal|0
 argument_list|,
@@ -947,13 +1179,13 @@ name|isp_diffmode
 operator|=
 literal|1
 expr_stmt|;
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-name|m
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+name|m
 argument_list|,
 literal|0
 argument_list|,
@@ -970,13 +1202,13 @@ name|isp_ultramode
 operator|=
 literal|1
 expr_stmt|;
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-name|m
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+name|m
 argument_list|,
 literal|0
 argument_list|,
@@ -985,13 +1217,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: unknown mode on bus %d (0x%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"unknown mode on bus %d (0x%x)"
 argument_list|,
 literal|0
 argument_list|,
@@ -1040,13 +1272,13 @@ name|isp_lvdmode
 operator|=
 literal|1
 expr_stmt|;
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-name|m
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+name|m
 argument_list|,
 literal|1
 argument_list|,
@@ -1063,13 +1295,13 @@ name|isp_diffmode
 operator|=
 literal|1
 expr_stmt|;
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-name|m
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+name|m
 argument_list|,
 literal|1
 argument_list|,
@@ -1086,13 +1318,13 @@ name|isp_ultramode
 operator|=
 literal|1
 expr_stmt|;
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-name|m
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+name|m
 argument_list|,
 literal|1
 argument_list|,
@@ -1101,13 +1333,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: unknown mode on bus %d (0x%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"unknown mode on bus %d (0x%x)"
 argument_list|,
 literal|1
 argument_list|,
@@ -1145,13 +1377,13 @@ name|i
 condition|)
 block|{
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: unknown chip rev. 0x%x- assuming a 1020\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGALL
+argument_list|,
+literal|"Unknown Chip Type 0x%x"
 argument_list|,
 name|i
 argument_list|)
@@ -1292,13 +1524,13 @@ operator|&
 name|SXP_PINS_DIFF_MODE
 condition|)
 block|{
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Differential Mode\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"Differential Mode"
 argument_list|)
 expr_stmt|;
 name|sdp
@@ -1354,13 +1586,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Ultra Mode Capable\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"Ultra Mode Capable"
 argument_list|)
 expr_stmt|;
 name|sdp
@@ -1450,17 +1682,11 @@ name|BIU_ICR_SOFT_RESET
 argument_list|)
 expr_stmt|;
 comment|/* 		 * A slight delay... 		 */
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|PRINTF("%s: mbox0-5: 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x\n", 		    isp->isp_name, ISP_READ(isp, OUTMAILBOX0), 		    ISP_READ(isp, OUTMAILBOX1), ISP_READ(isp, OUTMAILBOX2), 		    ISP_READ(isp, OUTMAILBOX3), ISP_READ(isp, OUTMAILBOX4), 		    ISP_READ(isp, OUTMAILBOX5));
-endif|#
-directive|endif
 comment|/* 		 * Clear data&& control DMA engines. 		 */
 name|ISP_WRITE
 argument_list|(
@@ -1497,7 +1723,7 @@ name|BIU2100_SOFT_RESET
 argument_list|)
 expr_stmt|;
 comment|/* 		 * A slight delay... 		 */
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|100
 argument_list|)
@@ -1590,7 +1816,7 @@ operator|)
 condition|)
 break|break;
 block|}
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|100
 argument_list|)
@@ -1603,7 +1829,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|isp_dumpregs
+name|ISP_DUMPREGS
 argument_list|(
 name|isp
 argument_list|,
@@ -1654,7 +1880,7 @@ argument_list|,
 name|HCCR_CMD_RESET
 argument_list|)
 expr_stmt|;
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|100
 argument_list|)
@@ -1857,7 +2083,7 @@ operator|==
 name|MBOX_BUSY
 condition|)
 block|{
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|100
 argument_list|)
@@ -1870,13 +2096,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: MBOX_BUSY never cleared on reset\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"MBOX_BUSY never cleared on reset"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1899,6 +2125,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1913,13 +2141,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|isp_dumpregs
-argument_list|(
-name|isp
-argument_list|,
-literal|"NOP test failed"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 if|if
@@ -1990,6 +2211,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2004,13 +2227,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|isp_dumpregs
-argument_list|(
-name|isp
-argument_list|,
-literal|"Mailbox Register test didn't complete"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 if|if
@@ -2061,11 +2277,48 @@ operator|!=
 literal|0xa5a5
 condition|)
 block|{
-name|isp_dumpregs
+name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-literal|"Register Test Failed"
+name|ISP_LOGERR
+argument_list|,
+literal|"Register Test Failed (0x%x 0x%x 0x%x 0x%x 0x%x)"
+argument_list|,
+name|mbs
+operator|.
+name|param
+index|[
+literal|1
+index|]
+argument_list|,
+name|mbs
+operator|.
+name|param
+index|[
+literal|2
+index|]
+argument_list|,
+name|mbs
+operator|.
+name|param
+index|[
+literal|3
+index|]
+argument_list|,
+name|mbs
+operator|.
+name|param
+index|[
+literal|4
+index|]
+argument_list|,
+name|mbs
+operator|.
+name|param
+index|[
+literal|5
+index|]
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2110,26 +2363,11 @@ name|isp
 operator|->
 name|isp_mdvec
 operator|->
-name|dv_fwlen
-decl_stmt|;
-if|if
-condition|(
-name|fwlen
-operator|==
-literal|0
-condition|)
-name|fwlen
-operator|=
-name|isp
-operator|->
-name|isp_mdvec
-operator|->
 name|dv_ispfw
 index|[
 literal|3
 index|]
-expr_stmt|;
-comment|/* usually here */
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -2160,11 +2398,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|isp
-operator|->
-name|isp_mdvec
-operator|->
-name|dv_codeorg
+name|ISP_CODE_ORG
 operator|+
 name|i
 expr_stmt|;
@@ -2190,6 +2424,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGNONE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2204,13 +2440,13 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: F/W download failed at word %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"F/W download failed at word %d"
 argument_list|,
 name|i
 argument_list|)
@@ -2241,11 +2477,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|isp
-operator|->
-name|isp_mdvec
-operator|->
-name|dv_codeorg
+name|ISP_CODE_ORG
 expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
@@ -2253,6 +2485,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGNONE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2267,11 +2501,13 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|isp_dumpregs
+name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-literal|"ram checksum failure"
+name|ISP_LOGERR
+argument_list|,
+literal|"Ram Checksum Failure"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2279,17 +2515,13 @@ block|}
 block|}
 else|else
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: skipping f/w download\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"skipping f/w download"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2303,14 +2535,6 @@ index|]
 operator|=
 name|MBOX_EXEC_FIRMWARE
 expr_stmt|;
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_mdvec
-operator|->
-name|dv_codeorg
-condition|)
 name|mbs
 operator|.
 name|param
@@ -2318,21 +2542,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|isp
-operator|->
-name|isp_mdvec
-operator|->
-name|dv_codeorg
-expr_stmt|;
-else|else
-name|mbs
-operator|.
-name|param
-index|[
-literal|1
-index|]
-operator|=
-literal|0x1000
+name|ISP_CODE_ORG
 expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
@@ -2340,10 +2550,12 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGNONE
 argument_list|)
 expr_stmt|;
 comment|/* give it a chance to start */
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|500
 argument_list|)
@@ -2390,34 +2602,11 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|!=
-name|MBOX_COMMAND_COMPLETE
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"failed to set clockrate (0x%x)\n"
 argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
-comment|/* but continue */
-block|}
+comment|/* we will try not to care if this fails */
 block|}
 block|}
 name|mbs
@@ -2435,6 +2624,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2449,27 +2640,15 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"could not get f/w started (0x%x)\n"
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Board Revision %s, %s F/W Revision %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"Board Revision %s, %s F/W Revision %d.%d.%d"
 argument_list|,
 name|revname
 argument_list|,
@@ -2521,13 +2700,13 @@ operator|&
 name|BIU2100_PCI64
 condition|)
 block|{
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: in 64-Bit PCI slot\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"Installed in 64-Bit PCI slot"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2598,13 +2777,13 @@ literal|2
 index|]
 condition|)
 block|{
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Last F/W revision was %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"Last F/W revision was %d.%d.%d"
 argument_list|,
 name|isp
 operator|->
@@ -2644,6 +2823,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2658,15 +2839,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: could not GET FIRMWARE STATUS\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|isp
@@ -2680,13 +2852,13 @@ index|[
 literal|2
 index|]
 expr_stmt|;
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: %d max I/O commands supported\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"%d max I/O commands supported"
 argument_list|,
 name|mbs
 operator|.
@@ -2712,13 +2884,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: can't setup dma mailboxes\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Cannot setup DMA"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2786,14 +2958,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: WARNING- cannot determine Expanded "
-literal|"LUN capability- limiting to one LUN\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGALL
+argument_list|,
+name|warnlun
 argument_list|)
 expr_stmt|;
 name|isp
@@ -2997,6 +3168,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3011,15 +3184,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: failed to set retry count and retry delay\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Set ASYNC DATA SETUP time. This is very important. 	 */
@@ -3060,6 +3224,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3074,15 +3240,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: failed to set asynchronous data setup time\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Set ACTIVE Negation State. 	 */
@@ -3147,6 +3304,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGNONE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3161,14 +3320,13 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: failed to set active negation state "
-literal|"(%d,%d),(%d,%d)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"failed to set active negation state (%d,%d), (%d,%d)"
 argument_list|,
 name|sdp_chan0
 operator|->
@@ -3227,6 +3385,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3241,13 +3401,13 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: failed to set tag age limit (%d,%d)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"failed to set tag age limit (%d,%d)"
 argument_list|,
 name|sdp_chan0
 operator|->
@@ -3298,6 +3458,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3312,15 +3474,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: failed to set selection timeout\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 comment|/* now do per-channel settings */
@@ -3363,6 +3516,9 @@ literal|1
 index|]
 operator|=
 name|RESULT_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 expr_stmt|;
 name|mbs
 operator|.
@@ -3416,6 +3572,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3430,15 +3588,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: set of response queue failed\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|isp
@@ -3464,6 +3613,9 @@ literal|1
 index|]
 operator|=
 name|RQUEST_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 expr_stmt|;
 name|mbs
 operator|.
@@ -3517,6 +3669,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3531,15 +3685,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: set of request queue failed\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|isp
@@ -3636,6 +3781,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3646,31 +3793,17 @@ name|param
 index|[
 literal|0
 index|]
-operator|!=
+operator|==
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: cannot enable FW features (0x%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
 argument_list|,
-name|sfeat
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|CFGPRINTF
-argument_list|(
-literal|"%s: enabled FW features (0x%x)\n"
+name|ISP_LOGINFO
 argument_list|,
-name|isp
-operator|->
-name|isp_name
+literal|"Enabled FW features (0x%x)"
 argument_list|,
 name|sfeat
 argument_list|)
@@ -3758,6 +3891,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3772,21 +3907,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: cannot set initiator id on bus %d to %d\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|channel
-argument_list|,
-name|sdp
-operator|->
-name|isp_initiator_id
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Set current per-target parameters to a safe minimum. 	 */
@@ -3824,23 +3944,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IDPRINTF
-argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: skipping target %d bus %d settings\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|,
-name|tgt
-operator|,
-name|channel
-operator|)
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * If we're in LVD mode, then we pretty much should 		 * only disable tagged queuing. 		 */
@@ -4005,6 +4108,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4097,6 +4202,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4111,18 +4218,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: failed even to set defaults for "
-literal|"target %d\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|tgt
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 block|}
@@ -4130,9 +4225,9 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * We don't update dev_flags with what we've set 		 * because that's not the ultimate goal setting. 		 * If we succeed with the command, we *do* update 		 * cur_dflags by getting target parameters. 		 */
-block|mbs.param[0] = MBOX_GET_TARGET_PARAMS; 		mbs.param[1] = (tgt<< 8) | (channel<< 15); 		isp_mboxcmd(isp,&mbs); 		if (mbs.param[0] != MBOX_COMMAND_COMPLETE) {
+block|mbs.param[0] = MBOX_GET_TARGET_PARAMS; 		mbs.param[1] = (tgt<< 8) | (channel<< 15); 		isp_mboxcmd(isp,&mbs, MBLOGALL); 		if (mbs.param[0] != MBOX_COMMAND_COMPLETE) {
 comment|/* 			 * Urrr.... We'll set cur_dflags to DPARM_SAFE_DFLT so 			 * we don't try and do tags if tags aren't enabled. 			 */
-block|sdp->isp_devparam[tgt].cur_dflags = DPARM_SAFE_DFLT; 		} else { 			sdp->isp_devparam[tgt].cur_dflags = mbs.param[2]; 			sdp->isp_devparam[tgt].cur_offset = mbs.param[3]>> 8; 			sdp->isp_devparam[tgt].cur_period = mbs.param[3]& 0xff; 		} 		IDPRINTF(3, ("%s: set flags 0x%x got 0x%x back for target %d\n", 		    isp->isp_name, sdf, mbs.param[2], tgt));
+block|sdp->isp_devparam[tgt].cur_dflags = DPARM_SAFE_DFLT; 		} else { 			sdp->isp_devparam[tgt].cur_dflags = mbs.param[2]; 			sdp->isp_devparam[tgt].cur_offset = mbs.param[3]>> 8; 			sdp->isp_devparam[tgt].cur_period = mbs.param[3]& 0xff; 		} 		isp_prt(isp, ISP_LOGTDEBUG0, 		    "set flags 0x%x got 0x%x back for target %d", 		    sdf, mbs.param[2], tgt);
 else|#
 directive|else
 comment|/* 		 * We don't update any information because we need to run 		 * at least one command per target to cause a new state 		 * to be latched. 		 */
@@ -4159,6 +4254,9 @@ literal|0
 init|;
 name|lun
 operator|<
+operator|(
+name|int
+operator|)
 name|isp
 operator|->
 name|isp_maxluns
@@ -4230,6 +4328,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4244,20 +4344,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: failed to set device queue "
-literal|"parameters for target %d, lun %d\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|tgt
-argument_list|,
-name|lun
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 block|}
@@ -4302,10 +4388,6 @@ name|isp
 operator|->
 name|isp_param
 expr_stmt|;
-comment|/* 	 * For systems that don't have BIOS methods for which 	 * we can easily change the NVRAM based loopid, we'll 	 * override that here. Note that when we initialize 	 * the firmware we may get back a different loopid than 	 * we asked for anyway. XXX This is probably not the 	 * best way to figure this out XXX 	 */
-ifndef|#
-directive|ifndef
-name|__i386__
 name|loopid
 operator|=
 name|DEFAULT_LOOPID
@@ -4313,16 +4395,6 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|loopid
-operator|=
-name|fcp
-operator|->
-name|isp_loopid
-expr_stmt|;
-endif|#
-directive|endif
 name|icbp
 operator|=
 operator|(
@@ -4497,13 +4569,13 @@ operator|>
 name|ICB_MAX_FRMLEN
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: bad frame length (%d) from NVRAM- using %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad frame length (%d) from NVRAM- using %d"
 argument_list|,
 name|fcp
 operator|->
@@ -4536,13 +4608,13 @@ operator|<
 literal|1
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: bad maximum allocation (%d)- using 16\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad maximum allocation (%d)- using 16"
 argument_list|,
 name|fcp
 operator|->
@@ -4573,13 +4645,13 @@ operator|<
 literal|1
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: bad execution throttle of %d- using 16\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad execution throttle of %d- using 16"
 argument_list|,
 name|fcp
 operator|->
@@ -4713,12 +4785,18 @@ operator|->
 name|icb_rqstqlen
 operator|=
 name|RQUEST_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 expr_stmt|;
 name|icbp
 operator|->
 name|icb_rsltqlen
 operator|=
 name|RESULT_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 expr_stmt|;
 name|icbp
 operator|->
@@ -4801,15 +4879,6 @@ name|isp_loopstate
 operator|=
 name|LOOP_NIL
 expr_stmt|;
-name|MemoryBarrier
-argument_list|()
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
 name|mbs
 operator|.
 name|param
@@ -4898,6 +4967,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4912,44 +4983,7 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: INIT FIRMWARE failed (code 0x%x)\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|&
-literal|0x8000
-condition|)
-block|{
-name|SYS_DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 return|return;
-block|}
-break|break;
 block|}
 name|isp
 operator|->
@@ -5156,9 +5190,14 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
+operator|&
+operator|~
+name|MBOX_COMMAND_PARAM_ERROR
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
 name|mbs
 operator|.
@@ -5166,14 +5205,10 @@ name|param
 index|[
 literal|0
 index|]
+operator|==
+name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-case|case
-name|MBOX_COMMAND_COMPLETE
-case|:
-name|MemoryBarrier
-argument_list|()
-expr_stmt|;
 name|ISP_UNSWIZZLE_AND_COPY_PDBP
 argument_list|(
 name|isp
@@ -5185,79 +5220,16 @@ operator|->
 name|isp_scratch
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|MBOX_HOST_INTERFACE_ERROR
-case|:
-name|PRINTF
-argument_list|(
-literal|"%s: DMA error getting port database\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
-operator|)
-return|;
-case|case
-name|MBOX_COMMAND_PARAM_ERROR
-case|:
-comment|/* Not Logged In */
-name|IDPRINTF
-argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: Param Error on Get Port Database for id %d\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|,
-name|id
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-default|default:
-name|PRINTF
-argument_list|(
-literal|"%s: error 0x%x getting port database for ID %d\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
 literal|0
-index|]
-argument_list|,
-name|id
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
 operator|)
 return|;
 block|}
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -5333,6 +5305,11 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
+operator|&
+operator|~
+name|MBOX_COMMAND_PARAM_ERROR
 argument_list|)
 expr_stmt|;
 if|if
@@ -5527,7 +5504,7 @@ name|isp_fclink_test
 parameter_list|(
 name|isp
 parameter_list|,
-name|waitdelay
+name|usdelay
 parameter_list|)
 name|struct
 name|ispsoftc
@@ -5535,7 +5512,7 @@ modifier|*
 name|isp
 decl_stmt|;
 name|int
-name|waitdelay
+name|usdelay
 decl_stmt|;
 block|{
 specifier|static
@@ -5586,26 +5563,40 @@ name|isp
 operator|->
 name|isp_param
 expr_stmt|;
+comment|/* 	 * XXX: Here is where we would start a 'loop dead' timeout 	 */
 comment|/* 	 * Wait up to N microseconds for F/W to go to a ready state. 	 */
 name|lwfs
 operator|=
 name|FW_CONFIG_WAIT
 expr_stmt|;
-for|for
-control|(
 name|count
 operator|=
 literal|0
-init|;
+expr_stmt|;
+while|while
+condition|(
 name|count
 operator|<
-name|waitdelay
-condition|;
-name|count
-operator|+=
-literal|100
-control|)
+name|usdelay
+condition|)
 block|{
+name|u_int64_t
+name|enano
+decl_stmt|;
+name|u_int32_t
+name|wrk
+decl_stmt|;
+name|NANOTIME_T
+name|hra
+decl_stmt|,
+name|hrb
+decl_stmt|;
+name|GET_NANOTIME
+argument_list|(
+operator|&
+name|hra
+argument_list|)
+expr_stmt|;
 name|isp_fw_state
 argument_list|(
 name|isp
@@ -5620,13 +5611,13 @@ operator|->
 name|isp_fwstate
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Firmware State %s -> %s\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Firmware State<%s->%s>"
 argument_list|,
 name|isp2100_fw_statename
 argument_list|(
@@ -5665,12 +5656,148 @@ condition|)
 block|{
 break|break;
 block|}
-name|SYS_DELAY
+name|GET_NANOTIME
 argument_list|(
-literal|100
+operator|&
+name|hrb
 argument_list|)
 expr_stmt|;
-comment|/* wait 100 microseconds */
+comment|/* 		 * Get the elapsed time in nanoseconds. 		 * Always guaranteed to be non-zero. 		 */
+name|enano
+operator|=
+name|NANOTIME_SUB
+argument_list|(
+operator|&
+name|hrb
+argument_list|,
+operator|&
+name|hra
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If the elapsed time is less than 1 millisecond, 		 * delay a period of time up to that millisecond of 		 * waiting. 		 */
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGDEBUG3
+argument_list|,
+literal|"usec%d: 0x%lx->0x%lx enano %u"
+argument_list|,
+name|count
+argument_list|,
+name|GET_NANOSEC
+argument_list|(
+operator|&
+name|hra
+argument_list|)
+argument_list|,
+name|GET_NANOSEC
+argument_list|(
+operator|&
+name|hrb
+argument_list|)
+argument_list|,
+name|enano
+argument_list|)
+expr_stmt|;
+comment|/* 		 * This peculiar code is an attempt to try and avoid 		 * invoking u_int64_t math support functions for some 		 * platforms where linkage is a problem. 		 */
+if|if
+condition|(
+name|enano
+operator|<
+operator|(
+literal|1000
+operator|*
+literal|1000
+operator|)
+condition|)
+block|{
+name|count
+operator|+=
+literal|1000
+expr_stmt|;
+name|enano
+operator|=
+operator|(
+literal|1000
+operator|*
+literal|1000
+operator|)
+operator|-
+name|enano
+expr_stmt|;
+while|while
+condition|(
+name|enano
+operator|>
+operator|(
+name|u_int64_t
+operator|)
+literal|4000000000U
+condition|)
+block|{
+name|USEC_DELAY
+argument_list|(
+literal|4000000
+argument_list|)
+expr_stmt|;
+name|enano
+operator|-=
+operator|(
+name|u_int64_t
+operator|)
+literal|4000000000U
+expr_stmt|;
+block|}
+name|wrk
+operator|=
+name|enano
+expr_stmt|;
+name|USEC_DELAY
+argument_list|(
+name|wrk
+operator|/
+literal|1000
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+while|while
+condition|(
+name|enano
+operator|>
+operator|(
+name|u_int64_t
+operator|)
+literal|4000000000U
+condition|)
+block|{
+name|count
+operator|+=
+literal|4000000
+expr_stmt|;
+name|enano
+operator|-=
+operator|(
+name|u_int64_t
+operator|)
+literal|4000000000U
+expr_stmt|;
+block|}
+name|wrk
+operator|=
+name|enano
+expr_stmt|;
+name|count
+operator|+=
+operator|(
+name|wrk
+operator|/
+literal|1000
+operator|)
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * If we haven't gone to 'ready' state, return. 	 */
 if|if
@@ -5705,6 +5832,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -5719,15 +5848,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: GET LOOP ID failed\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -6254,14 +6374,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Loop ID %d, AL_PA 0x%x, Port ID 0x%x Loop State "
-literal|"0x%x topology '%s'\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|topology
 argument_list|,
 name|fcp
 operator|->
@@ -6295,9 +6414,78 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Compare two local port db entities and return 1 if they're the same, else 0.  */
-end_comment
+begin_function
+specifier|static
+name|char
+modifier|*
+name|isp2100_fw_statename
+parameter_list|(
+name|state
+parameter_list|)
+name|int
+name|state
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|state
+condition|)
+block|{
+case|case
+name|FW_CONFIG_WAIT
+case|:
+return|return
+literal|"Config Wait"
+return|;
+case|case
+name|FW_WAIT_AL_PA
+case|:
+return|return
+literal|"Waiting for AL_PA"
+return|;
+case|case
+name|FW_WAIT_LOGIN
+case|:
+return|return
+literal|"Wait Login"
+return|;
+case|case
+name|FW_READY
+case|:
+return|return
+literal|"Ready"
+return|;
+case|case
+name|FW_LOSS_OF_SYNC
+case|:
+return|return
+literal|"Loss Of Sync"
+return|;
+case|case
+name|FW_ERROR
+case|:
+return|return
+literal|"Error"
+return|;
+case|case
+name|FW_REINIT
+case|:
+return|return
+literal|"Re-Init"
+return|;
+case|case
+name|FW_NON_PART
+case|:
+return|return
+literal|"Nonparticipating"
+return|;
+default|default:
+return|return
+literal|"?????"
+return|;
+block|}
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -6669,14 +6857,13 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: giving up on synchronizing the port "
-literal|"database\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"giving up on synchronizing the port database"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7166,14 +7353,13 @@ operator|!=
 name|loopid
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Target ID %d Loop 0x%x (Port 0x%x) "
-literal|"=> Loop 0x%x (Port 0x%x) \n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|portshift
 argument_list|,
 name|i
 argument_list|,
@@ -7300,14 +7486,13 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Target ID %d Duplicates Target ID "
-literal|"%d- killing off both\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+name|portdup
 argument_list|,
 name|j
 argument_list|,
@@ -7402,13 +7587,13 @@ operator|==
 name|FL_PORT_ID
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: remap overflow?\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Remap Overflow"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -8016,18 +8201,14 @@ name|valid
 operator|=
 literal|1
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"%s: retained login of Target %d "
-literal|"(Loop 0x%x) Port ID 0x%x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|lretained
+argument_list|,
 call|(
 name|int
 call|)
@@ -8038,18 +8219,17 @@ name|fcp
 operator|->
 name|portdb
 argument_list|)
-operator|,
+argument_list|,
 operator|(
 name|int
 operator|)
 name|lp
 operator|->
 name|loopid
-operator|,
+argument_list|,
 name|lp
 operator|->
 name|portid
-operator|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -8109,6 +8289,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGNONE
 argument_list|)
 expr_stmt|;
 name|lp
@@ -8117,18 +8299,14 @@ name|loggedin
 operator|=
 literal|0
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"%s: Logging out target %d at Loop ID %d "
-literal|"(port id 0x%x)\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|plogout
+argument_list|,
 call|(
 name|int
 call|)
@@ -8139,15 +8317,14 @@ name|fcp
 operator|->
 name|portdb
 argument_list|)
-operator|,
+argument_list|,
 name|lp
 operator|->
 name|loopid
-operator|,
+argument_list|,
 name|lp
 operator|->
 name|portid
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8235,6 +8412,17 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
+operator|&
+operator|~
+operator|(
+name|MBOX_LOOP_ID_USED
+operator||
+name|MBOX_PORT_ID_USED
+operator||
+name|MBOX_COMMAND_ERROR
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -8280,20 +8468,16 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"%s: Retaining loopid 0x%x"
-literal|" for Target %d (port id 0x%x)\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|retained
+argument_list|,
 name|loopid
-operator|,
+argument_list|,
 call|(
 name|int
 call|)
@@ -8304,11 +8488,10 @@ name|fcp
 operator|->
 name|portdb
 argument_list|)
-operator|,
+argument_list|,
 name|lp
 operator|->
 name|portid
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8340,14 +8523,13 @@ break|break;
 case|case
 name|MBOX_COMMAND_ERROR
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: command error in PLOGI for port "
-literal|" 0x%x (0x%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|plogierr
 argument_list|,
 name|portid
 argument_list|,
@@ -8415,13 +8597,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: could not get PDB for device@port 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+name|nopdb
 argument_list|,
 name|lp
 operator|->
@@ -8443,14 +8625,13 @@ operator|->
 name|loopid
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: PDB loopid info for device@port 0x%x does "
-literal|"not match up (0x%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+name|pdbmfail1
 argument_list|,
 name|lp
 operator|->
@@ -8482,14 +8663,13 @@ name|pdb_portid_bits
 argument_list|)
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: PDB port info for device@port 0x%x does "
-literal|"not match up (0x%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+name|pdbmfail2
 argument_list|,
 name|lp
 operator|->
@@ -8830,14 +9010,13 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Target %d (Loop 0x%x) Port ID 0x%x dumped after "
-literal|"login\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|ldumped
 argument_list|,
 name|loopid
 argument_list|,
@@ -8896,12 +9075,14 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGNONE
 argument_list|)
 expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * If we get here, we've for sure seen not only a valid loop 	 * but know what is or isn't on it, so mark this for usage 	 * in ispscsicmd. 	 */
+comment|/* 	 * If we get here, we've for sure seen not only a valid loop 	 * but know what is or isn't on it, so mark this for usage 	 * in isp_start. 	 */
 name|fcp
 operator|->
 name|loop_seen_once
@@ -9181,15 +9362,14 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|MemoryBarrier
-argument_list|()
-expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
 name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -9204,26 +9384,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|IDPRINTF
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"%s: SNS failed (0x%x)\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -9356,12 +9516,12 @@ comment|/*  * Start a command. Locking is assumed done in the caller.  */
 end_comment
 
 begin_function
-name|int32_t
-name|ispscsicmd
+name|int
+name|isp_start
 parameter_list|(
 name|xs
 parameter_list|)
-name|ISP_SCSI_XFER_T
+name|XS_T
 modifier|*
 name|xs
 decl_stmt|;
@@ -9427,13 +9587,13 @@ operator|!=
 name|ISP_RUNSTATE
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: adapter not ready\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Adapter not at RUNSTATE"
 argument_list|)
 expr_stmt|;
 name|XS_SETERR
@@ -9476,13 +9636,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: unsupported cdb length (%d, CDB[0]=0x%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"unsupported cdb length (%d, CDB[0]=0x%x)"
 argument_list|,
 name|XS_CDBLEN
 argument_list|(
@@ -9644,13 +9804,14 @@ operator|!=
 name|FW_READY
 condition|)
 block|{
+comment|/* 			 * Give ourselves at most a 250ms delay. 			 */
 if|if
 condition|(
 name|isp_fclink_test
 argument_list|(
 name|isp
 argument_list|,
-name|FC_FW_READY_DELAY
+literal|250000
 argument_list|)
 condition|)
 block|{
@@ -9757,6 +9918,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* 		 * XXX: Here's were we would cancel any loop_dead flag 		 * XXX: also cancel in dead_loop timeout that's running 		 */
 comment|/* 		 * Now check whether we should even think about pursuing this. 		 */
 name|lp
 operator|=
@@ -9807,19 +9969,15 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: target %d is not a target\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"Target %d does not have target service"
+argument_list|,
 name|target
-operator|)
 argument_list|)
 expr_stmt|;
 name|XS_SETERR
@@ -9881,17 +10039,13 @@ name|reqp
 argument_list|)
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: Request Queue Overflow\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG0
+argument_list|,
+literal|"Request Queue Overflow"
 argument_list|)
 expr_stmt|;
 name|XS_SETERR
@@ -10016,9 +10170,6 @@ argument_list|,
 name|reqp
 argument_list|)
 expr_stmt|;
-name|MemoryBarrier
-argument_list|()
-expr_stmt|;
 name|ISP_ADD_REQUEST
 argument_list|(
 name|isp
@@ -10048,17 +10199,13 @@ name|reqp
 argument_list|)
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: Request Queue Overflow+\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG0
+argument_list|,
+literal|"Request Queue Overflow+"
 argument_list|)
 expr_stmt|;
 name|XS_SETERR
@@ -10176,7 +10323,7 @@ expr_stmt|;
 comment|/* 		 * Fibre Channel always requires some kind of tag. 		 * The Qlogic drivers seem be happy not to use a tag, 		 * but this breaks for some devices (IBM drives). 		 */
 if|if
 condition|(
-name|XS_CANTAG
+name|XS_TAG_P
 argument_list|(
 name|xs
 argument_list|)
@@ -10186,7 +10333,7 @@ name|t2reqp
 operator|->
 name|req_flags
 operator|=
-name|XS_KINDOF_TAG
+name|XS_TAG_TYPE
 argument_list|(
 name|xs
 argument_list|)
@@ -10251,7 +10398,7 @@ operator|&
 name|DPARM_TQING
 operator|)
 operator|&&
-name|XS_CANTAG
+name|XS_TAG_P
 argument_list|(
 name|xs
 argument_list|)
@@ -10261,7 +10408,7 @@ name|reqp
 operator|->
 name|req_flags
 operator|=
-name|XS_KINDOF_TAG
+name|XS_TAG_TYPE
 argument_list|(
 name|xs
 argument_list|)
@@ -10423,17 +10570,13 @@ name|req_handle
 argument_list|)
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: out of xflist pointers\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG1
+argument_list|,
+literal|"out of xflist pointers"
 argument_list|)
 expr_stmt|;
 name|XS_SETERR
@@ -10496,45 +10639,39 @@ argument_list|,
 name|HBA_NOERROR
 argument_list|)
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|5
-argument_list|,
-operator|(
-literal|"%s(%d.%d.%d): START cmd 0x%x datalen %d\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"START cmd for %d.%d.%d cmd 0x%x datalen %d"
+argument_list|,
 name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
-operator|,
+argument_list|,
 name|target
-operator|,
+argument_list|,
 name|XS_LUN
 argument_list|(
 name|xs
 argument_list|)
-operator|,
-name|reqp
-operator|->
-name|req_cdb
+argument_list|,
+name|XS_CDBP
+argument_list|(
+name|xs
+argument_list|)
 index|[
 literal|0
 index|]
-operator|,
+argument_list|,
 name|XS_XFRLEN
 argument_list|(
 name|xs
 argument_list|)
-operator|)
 argument_list|)
-expr_stmt|;
-name|MemoryBarrier
-argument_list|()
 expr_stmt|;
 name|ISP_ADD_REQUEST
 argument_list|(
@@ -10601,7 +10738,7 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-name|ISP_SCSI_XFER_T
+name|XS_T
 modifier|*
 name|xs
 decl_stmt|;
@@ -10622,13 +10759,13 @@ name|ctl
 condition|)
 block|{
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: isp_control unknown control op %x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Unknown Control Opcode 0x%x"
 argument_list|,
 name|ctl
 argument_list|)
@@ -10763,6 +10900,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -10777,22 +10916,15 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|isp_dumpregs
-argument_list|(
-name|isp
-argument_list|,
-literal|"isp_control SCSI bus reset failed"
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: driver initiated bus reset of bus %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"driver initiated bus reset of bus %d"
 argument_list|,
 name|bus
 argument_list|)
@@ -10879,6 +11011,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -10893,32 +11027,15 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: isp_control MBOX_RESET_DEV failure (code "
-literal|"%x)\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Target %d on Bus %d Reset Succeeded\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Target %d on Bus %d Reset Succeeded"
 argument_list|,
 name|tgt
 argument_list|,
@@ -10946,7 +11063,7 @@ case|:
 name|xs
 operator|=
 operator|(
-name|ISP_SCSI_XFER_T
+name|XS_T
 operator|*
 operator|)
 name|arg
@@ -10974,14 +11091,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: isp_control- cannot find command to abort "
-literal|"in active list\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"cannot find handle for command to abort"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11139,9 +11255,14 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
+operator|&
+operator|~
+name|MBOX_COMMAND_ERROR
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
 name|mbs
 operator|.
@@ -11149,66 +11270,17 @@ name|param
 index|[
 literal|0
 index|]
+operator|==
+name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-case|case
-name|MBOX_COMMAND_COMPLETE
-case|:
-name|IDPRINTF
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"%s: command (handle 0x%x) for %d.%d.%d aborted\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|,
-name|handle
-operator|,
-name|bus
-operator|,
-name|tgt
-operator|,
-name|XS_LUN
-argument_list|(
-name|xs
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
-name|MBOX_COMMAND_ERROR
-case|:
-break|break;
-default|default:
-name|PRINTF
-argument_list|(
-literal|"%s: command (handle 0x%x) abort failed (%x)\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|handle
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+break|break;
 case|case
 name|ISPCTL_UPDATE_PARAMS
 case|:
@@ -11233,13 +11305,31 @@ name|isp
 argument_list|)
 condition|)
 block|{
+name|int
+name|usdelay
+init|=
+operator|(
+name|arg
+operator|)
+condition|?
+operator|*
+operator|(
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|)
+else|:
+literal|250000
+decl_stmt|;
 return|return
 operator|(
 name|isp_fclink_test
 argument_list|(
 name|isp
 argument_list|,
-name|FC_FW_READY_DELAY
+name|usdelay
 argument_list|)
 operator|)
 return|;
@@ -11323,6 +11413,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -11337,28 +11429,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s: cannot %sable target mode (0x%x)\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|ena
-condition|?
-literal|"en"
-else|:
-literal|"dis"
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 block|}
@@ -11383,6 +11453,17 @@ begin_comment
 comment|/*  * Interrupt Service Routine(s).  *  * External (OS) framework has done the appropriate locking,  * and the locking will be held throughout this function.  */
 end_comment
 
+begin_comment
+comment|/*  * Limit our stack depth by sticking with the max likely number  * of completions on a request queue at any one time.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_REQUESTQ_COMPLETIONS
+value|32
+end_define
+
 begin_function
 name|int
 name|isp_intr
@@ -11394,22 +11475,22 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-name|ISP_SCSI_XFER_T
-modifier|*
-name|complist
-index|[
-name|RESULT_QUEUE_LEN
-index|]
-decl_stmt|,
-modifier|*
-name|xs
-decl_stmt|;
 name|struct
 name|ispsoftc
 modifier|*
 name|isp
 init|=
 name|arg
+decl_stmt|;
+name|XS_T
+modifier|*
+name|complist
+index|[
+name|MAX_REQUESTQ_COMPLETIONS
+index|]
+decl_stmt|,
+modifier|*
+name|xs
 decl_stmt|;
 name|u_int16_t
 name|iptr
@@ -11485,13 +11566,13 @@ operator|!=
 name|junk
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: isr unsteady (%x, %x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"isr unsteady (%x, %x)"
 argument_list|,
 name|isr
 argument_list|,
@@ -11543,13 +11624,13 @@ operator|!=
 name|junk
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: sema unsteady (%x, %x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"sema unsteady (%x, %x)"
 argument_list|,
 name|sema
 argument_list|,
@@ -11579,21 +11660,17 @@ name|BIU_SEMA
 argument_list|)
 expr_stmt|;
 block|}
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|5
-argument_list|,
-operator|(
-literal|"%s: isp_intr isr %x sem %x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG3
+argument_list|,
+literal|"isp_intr isr %x sem %x"
+argument_list|,
 name|isr
-operator|,
+argument_list|,
 name|sema
-operator|)
 argument_list|)
 expr_stmt|;
 name|isr
@@ -11685,13 +11762,13 @@ operator|!=
 name|junk
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: mailbox0 unsteady (%x, %x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"mailbox0 unsteady (%x, %x)"
 argument_list|,
 name|mbox
 argument_list|,
@@ -11829,13 +11906,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Command Mbox 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Mbox Command Async (0x%x) with no waiters"
 argument_list|,
 name|mbox
 argument_list|)
@@ -11857,19 +11934,15 @@ operator|)
 name|mbox
 argument_list|)
 decl_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|4
-argument_list|,
-operator|(
-literal|"%s: Async Mbox 0x%x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"Async Mbox 0x%x"
+argument_list|,
 name|mbox
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -11937,13 +12010,13 @@ operator|!=
 name|ISP_RUNSTATE
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: interrupt (isr=%x, sema=%x) when not ready\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"interrupt (isr=%x, sema=%x) when not ready"
 argument_list|,
 name|isr
 argument_list|,
@@ -12056,13 +12129,13 @@ argument_list|,
 name|HCCR_CMD_CLEAR_RISC_INT
 argument_list|)
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: mailbox5 unsteady (%x, %x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"mailbox5 unsteady (%x, %x)"
 argument_list|,
 name|iptr
 argument_list|,
@@ -12133,25 +12206,21 @@ argument_list|,
 name|BIU_ISR
 argument_list|)
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: null intr- isr %x (%x) iptr %x optr %x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"bogus intr- isr %x (%x) iptr %x optr %x"
+argument_list|,
 name|isr
-operator|,
+argument_list|,
 name|junk
-operator|,
+argument_list|,
 name|iptr
-operator|,
+argument_list|,
 name|optr
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12200,20 +12269,22 @@ argument_list|(
 name|optr
 argument_list|,
 name|RESULT_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nlooked
 operator|++
 expr_stmt|;
-name|MemoryBarrier
-argument_list|()
-expr_stmt|;
-comment|/* 		 * Do any appropriate unswizzling of what the Qlogic f/w has 		 * written into memory so it makes sense to us. This is a 		 * per-platform thing. 		 */
+comment|/* 		 * Do any appropriate unswizzling of what the Qlogic f/w has 		 * written into memory so it makes sense to us. This is a 		 * per-platform thing. Also includes any memory barriers. 		 */
 name|ISP_UNSWIZZLE_RESPONSE
 argument_list|(
 name|isp
 argument_list|,
 name|sp
+argument_list|,
+name|oop
 argument_list|)
 expr_stmt|;
 if|if
@@ -12256,14 +12327,13 @@ operator|!=
 name|RQSTYPE_REQUEST
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: not RESPONSE in RESPONSE Queue "
-literal|"(type 0x%x) @ idx %d (next %d)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+name|notresp
 argument_list|,
 name|sp
 operator|->
@@ -12310,17 +12380,13 @@ operator|&
 name|RQSFLAG_CONTINUATION
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|4
-argument_list|,
-operator|(
-literal|"%s: continuation segment\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"continuation segment"
 argument_list|)
 expr_stmt|;
 name|ISP_WRITE
@@ -12345,17 +12411,13 @@ operator|&
 name|RQSFLAG_FULL
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: internal queues full\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG1
+argument_list|,
+literal|"internal queues full"
 argument_list|)
 expr_stmt|;
 comment|/* 				 * We'll synthesize a QUEUE FULL message below. 				 */
@@ -12371,13 +12433,13 @@ operator|&
 name|RQSFLAG_BADHEADER
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: bad header\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad header flag"
 argument_list|)
 expr_stmt|;
 name|buddaboom
@@ -12395,13 +12457,13 @@ operator|&
 name|RQSFLAG_BADPACKET
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: bad request packet\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad request packet"
 argument_list|)
 expr_stmt|;
 name|buddaboom
@@ -12419,13 +12481,13 @@ operator|&
 name|_RQS_OFLAGS
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: unknown flags in response (0x%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"unknown flags (0x%x) in response"
 argument_list|,
 name|sp
 operator|->
@@ -12459,13 +12521,13 @@ operator|<
 literal|1
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: bad request handle %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad request handle %d"
 argument_list|,
 name|sp
 operator|->
@@ -12501,13 +12563,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: NULL xs in xflist (handle 0x%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"cannot find handle 0x%x in xflist"
 argument_list|,
 name|sp
 operator|->
@@ -12570,7 +12632,8 @@ name|HBA_BOTCH
 argument_list|)
 expr_stmt|;
 block|}
-name|XS_STS
+operator|*
+name|XS_STSP
 argument_list|(
 name|xs
 argument_list|)
@@ -12598,26 +12661,11 @@ operator|&
 name|RQSF_GOT_SENSE
 condition|)
 block|{
-name|MEMCPY
-argument_list|(
-name|XS_SNSP
+name|XS_SAVE_SENSE
 argument_list|(
 name|xs
-argument_list|)
 argument_list|,
 name|sp
-operator|->
-name|req_sense_data
-argument_list|,
-name|XS_SNSLEN
-argument_list|(
-name|xs
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|XS_SNS_IS_VALID
-argument_list|(
-name|xs
 argument_list|)
 expr_stmt|;
 block|}
@@ -12686,40 +12734,14 @@ operator|&
 name|RQCS_SV
 condition|)
 block|{
-name|int
-name|amt
-init|=
-name|min
-argument_list|(
-name|XS_SNSLEN
+name|XS_SAVE_SENSE
 argument_list|(
 name|xs
-argument_list|)
 argument_list|,
 name|sp
-operator|->
-name|req_sense_len
-argument_list|)
-decl_stmt|;
-name|MEMCPY
-argument_list|(
-name|XS_SNSP
-argument_list|(
-name|xs
-argument_list|)
-argument_list|,
-name|sp
-operator|->
-name|req_sense_data
-argument_list|,
-name|amt
 argument_list|)
 expr_stmt|;
-name|XS_SNS_IS_VALID
-argument_list|(
-name|xs
-argument_list|)
-expr_stmt|;
+comment|/* force that we 'got' sense */
 name|sp
 operator|->
 name|req_state_flags
@@ -12727,54 +12749,6 @@ operator||=
 name|RQSF_GOT_SENSE
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|XS_STS
-argument_list|(
-name|xs
-argument_list|)
-operator|==
-name|SCSI_CHECK
-condition|)
-block|{
-name|IDPRINTF
-argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: check condition with no sense data\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|XS_NOERR
-argument_list|(
-name|xs
-argument_list|)
-operator|&&
-name|XS_STS
-argument_list|(
-name|xs
-argument_list|)
-operator|==
-name|SCSI_BUSY
-condition|)
-block|{
-name|XS_SETERR
-argument_list|(
-name|xs
-argument_list|,
-name|HBA_TGTBSY
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -12787,23 +12761,15 @@ operator|==
 name|RQSTYPE_RESPONSE
 condition|)
 block|{
-if|if
-condition|(
-name|XS_NOERR
+name|XS_SET_STATE_STAT
 argument_list|(
+name|isp
+argument_list|,
 name|xs
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+argument_list|,
 name|sp
-operator|->
-name|req_completion_status
-operator|!=
-name|RQCS_COMPLETE
-condition|)
-block|{
+argument_list|)
+expr_stmt|;
 name|isp_parse_status
 argument_list|(
 name|isp
@@ -12813,17 +12779,40 @@ argument_list|,
 name|xs
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+operator|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+operator|||
+name|XS_ERR
+argument_list|(
+name|xs
+argument_list|)
+operator|==
+name|HBA_NOERROR
+operator|)
+operator|&&
+operator|(
+operator|*
+name|XS_STSP
+argument_list|(
+name|xs
+argument_list|)
+operator|==
+name|SCSI_BUSY
+operator|)
+condition|)
 block|{
 name|XS_SETERR
 argument_list|(
 name|xs
 argument_list|,
-name|HBA_NOERROR
+name|HBA_TGTBSY
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 elseif|else
@@ -12850,7 +12839,8 @@ name|RQSFLAG_FULL
 condition|)
 block|{
 comment|/* 				 * Force Queue Full status. 				 */
-name|XS_STS
+operator|*
+name|XS_STSP
 argument_list|(
 name|xs
 argument_list|)
@@ -12885,13 +12875,13 @@ block|}
 block|}
 else|else
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: unhandled respose queue type 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"unhandled respose queue type 0x%x"
 argument_list|,
 name|sp
 operator|->
@@ -12942,7 +12932,7 @@ name|sp
 operator|->
 name|req_scsi_status
 operator|&
-name|RQCS_RU
+name|RQCS_RV
 condition|)
 block|{
 name|XS_RESID
@@ -12954,26 +12944,22 @@ name|sp
 operator|->
 name|req_resid
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|4
-argument_list|,
-operator|(
-literal|"%s: cnt %d rsd %d\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"cnt %d rsd %d"
+argument_list|,
 name|XS_XFRLEN
 argument_list|(
 name|xs
 argument_list|)
-operator|,
+argument_list|,
 name|sp
 operator|->
 name|req_resid
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -13000,19 +12986,27 @@ block|}
 if|if
 condition|(
 operator|(
-name|isp
-operator|->
-name|isp_dblev
-operator|>=
-literal|5
-operator|)
-operator|||
 operator|(
 name|isp
 operator|->
 name|isp_dblev
-operator|>
-literal|2
+operator|&
+operator|(
+name|ISP_LOGDEBUG2
+operator||
+name|ISP_LOGDEBUG3
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+operator|(
+name|isp
+operator|->
+name|isp_dblev
+operator|&
+name|ISP_LOGDEBUG1
+operator|)
 operator|&&
 operator|!
 name|XS_NOERR
@@ -13022,13 +13016,79 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|PRINTF
-argument_list|(
-literal|"%s(%d.%d): FIN dl%d resid%d STS %x"
-argument_list|,
-name|isp
+name|char
+name|skey
+decl_stmt|;
+if|if
+condition|(
+name|sp
 operator|->
-name|isp_name
+name|req_state_flags
+operator|&
+name|RQSF_GOT_SENSE
+condition|)
+block|{
+name|skey
+operator|=
+name|XS_SNSKEY
+argument_list|(
+name|xs
+argument_list|)
+operator|&
+literal|0xf
+expr_stmt|;
+if|if
+condition|(
+name|skey
+operator|<
+literal|10
+condition|)
+name|skey
+operator|+=
+literal|'0'
+expr_stmt|;
+else|else
+name|skey
+operator|+=
+literal|'a'
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|XS_STSP
+argument_list|(
+name|xs
+argument_list|)
+operator|==
+name|SCSI_CHECK
+condition|)
+block|{
+name|skey
+operator|=
+literal|'?'
+expr_stmt|;
+block|}
+else|else
+block|{
+name|skey
+operator|=
+literal|'.'
+expr_stmt|;
+block|}
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGALL
+argument_list|,
+name|finmsg
+argument_list|,
+name|XS_CHANNEL
+argument_list|(
+name|xs
+argument_list|)
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -13050,57 +13110,14 @@ argument_list|(
 name|xs
 argument_list|)
 argument_list|,
-name|XS_STS
+operator|*
+name|XS_STSP
 argument_list|(
 name|xs
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|->
-name|req_state_flags
-operator|&
-name|RQSF_GOT_SENSE
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|" Skey: %x"
 argument_list|,
-name|XS_SNSKEY
-argument_list|(
-name|xs
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|XS_IS_SNS_VALID
-argument_list|(
-name|xs
-argument_list|)
-operator|)
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|" BUT NOT SET"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|PRINTF
-argument_list|(
-literal|" XS_ERR=0x%x\n"
+name|skey
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|XS_ERR
 argument_list|(
 name|xs
@@ -13130,6 +13147,15 @@ operator|=
 name|xs
 expr_stmt|;
 comment|/* defer completion call until later */
+if|if
+condition|(
+name|ndone
+operator|==
+name|MAX_REQUESTQ_COMPLETIONS
+condition|)
+block|{
+break|break;
+block|}
 block|}
 comment|/* 	 * If we looked at any commands, then it's valid to find out 	 * what the outpointer is. It also is a trigger to update the 	 * ISP's notion of what we've seen so far. 	 */
 if|if
@@ -13190,7 +13216,7 @@ condition|(
 name|xs
 condition|)
 block|{
-name|XS_CMD_DONE
+name|isp_done
 argument_list|(
 name|xs
 argument_list|)
@@ -13320,18 +13346,18 @@ argument_list|,
 name|OUTMAILBOX1
 argument_list|)
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Internal FW Error @ RISC Addr 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Internal FW Error @ RISC Addr 0x%x"
 argument_list|,
 name|mbox
 argument_list|)
 expr_stmt|;
-name|isp_restart
+name|isp_reinit
 argument_list|(
 name|isp
 argument_list|)
@@ -13346,26 +13372,26 @@ return|;
 case|case
 name|ASYNC_RQS_XFER_ERR
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Request Queue Transfer Error\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Request Queue Transfer Error"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ASYNC_RSP_XFER_ERR
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Response Queue Transfer Error\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Response Queue Transfer Error"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13386,13 +13412,13 @@ break|break;
 case|case
 name|ASYNC_TIMEOUT_RESET
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: timeout initiated SCSI bus reset of bus %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"timeout initiated SCSI bus reset of bus %d\n"
 argument_list|,
 name|bus
 argument_list|)
@@ -13425,13 +13451,13 @@ break|break;
 case|case
 name|ASYNC_DEVICE_RESET
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: device reset on bus %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"device reset on bus %d"
 argument_list|,
 name|bus
 argument_list|)
@@ -13464,39 +13490,39 @@ break|break;
 case|case
 name|ASYNC_EXTMSG_UNDERRUN
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: extended message underrun\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"extended message underrun"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ASYNC_SCAM_INT
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: SCAM interrupt\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"SCAM interrupt"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ASYNC_HUNG_SCSI
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: stalled SCSI Bus after DATA Overrun\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"stalled SCSI Bus after DATA Overrun"
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Need to issue SCSI reset at this point */
@@ -13504,13 +13530,13 @@ break|break;
 case|case
 name|ASYNC_KILLED_BUS
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: SCSI Bus reset after DATA Overrun\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"SCSI Bus reset after DATA Overrun"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13536,13 +13562,13 @@ block|{
 case|case
 name|SXP_PINS_LVD_MODE
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Transition to LVD mode\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Transition to LVD mode"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -13591,13 +13617,13 @@ break|break;
 case|case
 name|SXP_PINS_HVD_MODE
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Transition to Differential mode\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Transition to Differential mode"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -13646,13 +13672,13 @@ break|break;
 case|case
 name|SXP_PINS_SE_MODE
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Transition to Single Ended mode\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Transition to Single Ended mode"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -13699,13 +13725,13 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Transition to unknown mode 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Transition to Unknown Mode 0x%x"
 argument_list|,
 name|mbox
 argument_list|)
@@ -13748,19 +13774,15 @@ argument_list|,
 name|OUTMAILBOX1
 argument_list|)
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|4
-argument_list|,
-operator|(
-literal|"%s: fast post completion of %u\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG3
+argument_list|,
+literal|"fast post completion of %u"
+argument_list|,
 name|fast_post_handle
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13768,13 +13790,13 @@ case|case
 name|ASYNC_CTIO_DONE
 case|:
 comment|/* Should only occur when Fast Posting Set for 2100s */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: CTIO done\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGDEBUG3
+argument_list|,
+literal|"Fast Posting CTIO done"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13839,17 +13861,13 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"%s: LIP occurred\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"LIP occurred"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -14041,13 +14059,13 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Loop RESET\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Loop RESET"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -14093,17 +14111,13 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"%s: Port Database Changed\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Port Database Changed"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -14239,13 +14253,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Point-to-Point mode\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Point-to-Point mode"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -14269,55 +14283,55 @@ block|{
 case|case
 name|ISP_CONN_LOOP
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Point-to-Point -> Loop mode\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Point-to-Point->Loop mode"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ISP_CONN_PTP
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Loop -> Point-to-Point mode\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Loop->Point-to-Point mode"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ISP_CONN_BADLIP
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Point-to-Point -> Loop mode (1)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Point-to-Point->Loop mode (1)"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ISP_CONN_FATAL
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: FATAL CONNECTION ERROR\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"FATAL CONNECTION ERROR"
 argument_list|)
 expr_stmt|;
-name|isp_restart
+name|isp_reinit
 argument_list|(
 name|isp
 argument_list|)
@@ -14332,25 +14346,25 @@ return|;
 case|case
 name|ISP_CONN_LOOPBACK
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Looped Back in Point-to-Point mode\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Looped Back in Point-to-Point mode"
 argument_list|)
 expr_stmt|;
 block|}
 break|break;
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: unknown async code 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Unknown Async Code 0x%x"
 argument_list|,
 name|mbox
 argument_list|)
@@ -14450,6 +14464,10 @@ operator|)
 return|;
 else|#
 directive|else
+name|optrp
+operator|=
+name|optrp
+expr_stmt|;
 comment|/* FALLTHROUGH */
 endif|#
 directive|endif
@@ -14457,13 +14475,13 @@ case|case
 name|RQSTYPE_REQUEST
 case|:
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: unhandled response type 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Unhandled Response Type 0x%x"
 argument_list|,
 name|sp
 operator|->
@@ -14502,7 +14520,7 @@ name|ispstatusreq_t
 modifier|*
 name|sp
 decl_stmt|;
-name|ISP_SCSI_XFER_T
+name|XS_T
 modifier|*
 name|xs
 decl_stmt|;
@@ -14512,11 +14530,21 @@ condition|(
 name|sp
 operator|->
 name|req_completion_status
+operator|&
+literal|0xff
 condition|)
 block|{
 case|case
 name|RQCS_COMPLETE
 case|:
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -14524,6 +14552,7 @@ argument_list|,
 name|HBA_NOERROR
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 case|case
 name|RQCS_INCOMPLETE
@@ -14541,34 +14570,38 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: Selection Timeout for %d.%d.%d\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG0
+argument_list|,
+literal|"Selection Timeout for %d.%d.%d"
+argument_list|,
 name|XS_TGT
 argument_list|(
 name|xs
 argument_list|)
-operator|,
+argument_list|,
 name|XS_LUN
 argument_list|(
 name|xs
 argument_list|)
-operator|,
+argument_list|,
 name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -14576,15 +14609,16 @@ argument_list|,
 name|HBA_SELTIMEOUT
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: command incomplete for %d.%d.%d, state 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"command incomplete for %d.%d.%d, state 0x%x"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -14610,13 +14644,13 @@ break|break;
 case|case
 name|RQCS_DMA_ERROR
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: DMA error for command on %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"DMA error for command on %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -14638,13 +14672,358 @@ break|break;
 case|case
 name|RQCS_TRANSPORT_ERROR
 case|:
-name|PRINTF
+block|{
+name|char
+name|buf
+index|[
+literal|172
+index|]
+decl_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|STRNCAT
 argument_list|(
-literal|"%s: transport error for %d.%d.%d\n"
+name|buf
 argument_list|,
-name|isp
+literal|"states=>"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
 operator|->
-name|isp_name
+name|req_state_flags
+operator|&
+name|RQSF_GOT_BUS
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" GOT_BUS"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_state_flags
+operator|&
+name|RQSF_GOT_TARGET
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" GOT_TGT"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_state_flags
+operator|&
+name|RQSF_SENT_CDB
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" SENT_CDB"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_state_flags
+operator|&
+name|RQSF_XFRD_DATA
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" XFRD_DATA"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_state_flags
+operator|&
+name|RQSF_GOT_STATUS
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" GOT_STS"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_state_flags
+operator|&
+name|RQSF_GOT_SENSE
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" GOT_SNS"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_state_flags
+operator|&
+name|RQSF_XFER_COMPLETE
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" XFR_CMPLT"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|"\nstatus=>"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|req_status_flags
+operator|&
+name|RQSTF_DISCONNECT
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" Disconnect"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_status_flags
+operator|&
+name|RQSTF_SYNCHRONOUS
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" Sync_xfr"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_status_flags
+operator|&
+name|RQSTF_PARITY_ERROR
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" Parity"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_status_flags
+operator|&
+name|RQSTF_BUS_RESET
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" Bus_Reset"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_status_flags
+operator|&
+name|RQSTF_DEVICE_RESET
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" Device_Reset"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_status_flags
+operator|&
+name|RQSTF_ABORTED
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" Aborted"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_status_flags
+operator|&
+name|RQSTF_TIMEOUT
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" Timeout"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|req_status_flags
+operator|&
+name|RQSTF_NEGOTIATION
+condition|)
+block|{
+name|STRNCAT
+argument_list|(
+name|buf
+argument_list|,
+literal|" Negotiation"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"transport error for %d.%d.%d:\n%s"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -14660,43 +15039,37 @@ name|XS_LUN
 argument_list|(
 name|xs
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|isp_prtstst
-argument_list|(
-name|sp
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 case|case
 name|RQCS_RESET_OCCURRED
 case|:
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"%s: bus reset destroyed command for %d.%d.%d\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"bus reset destroyed command for %d.%d.%d"
+argument_list|,
 name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
-operator|,
+argument_list|,
 name|XS_TGT
 argument_list|(
 name|xs
 argument_list|)
-operator|,
+argument_list|,
 name|XS_LUN
 argument_list|(
 name|xs
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|isp
@@ -14712,6 +15085,14 @@ name|xs
 argument_list|)
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -14719,17 +15100,18 @@ argument_list|,
 name|HBA_BUSRESET
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 case|case
 name|RQCS_ABORTED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: command aborted for %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"command aborted for %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -14760,6 +15142,14 @@ name|xs
 argument_list|)
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -14767,38 +15157,43 @@ argument_list|,
 name|HBA_ABORTED
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 case|case
 name|RQCS_TIMEOUT
 case|:
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: command timed out for %d.%d.%d\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"command timed out for %d.%d.%d"
+argument_list|,
 name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
-operator|,
+argument_list|,
 name|XS_TGT
 argument_list|(
 name|xs
 argument_list|)
-operator|,
+argument_list|,
 name|XS_LUN
 argument_list|(
 name|xs
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -14806,6 +15201,7 @@ argument_list|,
 name|HBA_CMDTIMEOUT
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 case|case
 name|RQCS_DATA_OVERRUN
@@ -14829,13 +15225,13 @@ name|req_resid
 expr_stmt|;
 break|break;
 block|}
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: data overrun for command on %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"data overrun for command on %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -14853,6 +15249,14 @@ name|xs
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -14860,17 +15264,18 @@ argument_list|,
 name|HBA_DATAOVR
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 case|case
 name|RQCS_COMMAND_OVERRUN
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: command overrun for command on %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"command overrun for command on %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -14892,13 +15297,13 @@ break|break;
 case|case
 name|RQCS_STATUS_OVERRUN
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: status overrun for command on %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"status overrun for command on %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -14920,13 +15325,13 @@ break|break;
 case|case
 name|RQCS_BAD_MESSAGE
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: msg not COMMAND COMPLETE after status %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"msg not COMMAND COMPLETE after status %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -14948,13 +15353,13 @@ break|break;
 case|case
 name|RQCS_NO_MESSAGE_OUT
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: No MESSAGE OUT phase after selection on %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"No MESSAGE OUT phase after selection on %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -14976,13 +15381,13 @@ break|break;
 case|case
 name|RQCS_EXT_ID_FAILED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: EXTENDED IDENTIFY failed %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"EXTENDED IDENTIFY failed %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -15004,13 +15409,13 @@ break|break;
 case|case
 name|RQCS_IDE_MSG_FAILED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: INITIATOR DETECTED ERROR rejected by %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"INITIATOR DETECTED ERROR rejected by %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -15032,13 +15437,13 @@ break|break;
 case|case
 name|RQCS_ABORT_MSG_FAILED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: ABORT OPERATION rejected by %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"ABORT OPERATION rejected by %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -15060,13 +15465,13 @@ break|break;
 case|case
 name|RQCS_REJECT_MSG_FAILED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: MESSAGE REJECT rejected by %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"MESSAGE REJECT rejected by %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -15088,13 +15493,13 @@ break|break;
 case|case
 name|RQCS_NOP_MSG_FAILED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: NOP rejected by %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"NOP rejected by %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -15116,13 +15521,13 @@ break|break;
 case|case
 name|RQCS_PARITY_ERROR_MSG_FAILED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: MESSAGE PARITY ERROR rejected by %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"MESSAGE PARITY ERROR rejected by %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -15144,13 +15549,13 @@ break|break;
 case|case
 name|RQCS_DEVICE_RESET_MSG_FAILED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: BUS DEVICE RESET rejected by %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"BUS DEVICE RESET rejected by %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -15172,13 +15577,13 @@ break|break;
 case|case
 name|RQCS_ID_MSG_FAILED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: IDENTIFY rejected by %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"IDENTIFY rejected by %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -15200,13 +15605,13 @@ break|break;
 case|case
 name|RQCS_UNEXP_BUS_FREE
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: %d.%d.%d had an unexpected bus free\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"%d.%d.%d had an unexpected bus free"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -15246,6 +15651,14 @@ operator|->
 name|req_resid
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -15253,18 +15666,18 @@ argument_list|,
 name|HBA_NOERROR
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 case|case
 name|RQCS_XACT_ERR1
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: HBA attempted queued transaction with disconnect "
-literal|"not set for %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+name|xact1
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -15286,14 +15699,13 @@ break|break;
 case|case
 name|RQCS_XACT_ERR2
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: HBA attempted queued transaction to target "
-literal|"routine %d on target %d, bus %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+name|xact2
 argument_list|,
 name|XS_LUN
 argument_list|(
@@ -15315,14 +15727,13 @@ break|break;
 case|case
 name|RQCS_XACT_ERR3
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: HBA attempted queued transaction for target %d lun "
-literal|"%d on bus %d when queueing disabled\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+name|xact3
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -15344,62 +15755,64 @@ break|break;
 case|case
 name|RQCS_BAD_ENTRY
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: invalid IOCB entry type detected\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Invalid IOCB entry type detected"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|RQCS_QUEUE_FULL
 case|:
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: internal queues full for target %d lun %d "
-literal|"bus %d, status 0x%x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG1
+argument_list|,
+literal|"internal queues full for %d.%d.%d status 0x%x"
+argument_list|,
 name|XS_TGT
 argument_list|(
 name|xs
 argument_list|)
-operator|,
+argument_list|,
 name|XS_LUN
 argument_list|(
 name|xs
 argument_list|)
-operator|,
+argument_list|,
 name|XS_CHANNEL
 argument_list|(
 name|xs
 argument_list|)
-operator|,
-name|XS_STS
+argument_list|,
+operator|*
+name|XS_STSP
 argument_list|(
 name|xs
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If QFULL or some other status byte is set, then this 		 * isn't an error, per se. 		 */
 if|if
 condition|(
-name|XS_STS
+operator|*
+name|XS_STSP
 argument_list|(
 name|xs
 argument_list|)
 operator|!=
-literal|0
+name|SCSI_GOOD
+operator|&&
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
 condition|)
 block|{
 name|XS_SETERR
@@ -15415,14 +15828,13 @@ break|break;
 case|case
 name|RQCS_PHASE_SKIPPED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: SCSI phase skipped (e.g., COMMAND COMPLETE w/o "
-literal|"STATUS phase) for target %d lun %d bus %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+name|pskip
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -15444,13 +15856,13 @@ break|break;
 case|case
 name|RQCS_ARQS_FAILED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Auto Request Sense failed for %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Auto Request Sense failed for %d.%d.%d"
 argument_list|,
 name|XS_CHANNEL
 argument_list|(
@@ -15468,17 +15880,33 @@ name|xs
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
+name|XS_SETERR
+argument_list|(
+name|xs
+argument_list|,
+name|HBA_ARQFAIL
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 case|case
 name|RQCS_WIDE_FAILED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Wide Negotiation failed for %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Wide Negotiation failed for %d.%d.%d"
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -15562,6 +15990,14 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -15569,17 +16005,18 @@ argument_list|,
 name|HBA_NOERROR
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 case|case
 name|RQCS_SYNCXFER_FAILED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: SDTR Message failed for target %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"SDTR Message failed for target %d.%d.%d"
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -15667,13 +16104,13 @@ break|break;
 case|case
 name|RQCS_LVD_BUSERR
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Bad LVD condition while talking to %d.%d.%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Bad LVD condition while talking to %d.%d.%d"
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -15696,24 +16133,28 @@ case|case
 name|RQCS_PORT_UNAVAILABLE
 case|:
 comment|/* 		 * No such port on the loop. Moral equivalent of SELTIMEO 		 */
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: Port Unavailable for target %d\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Port Unavailable for target %d"
+argument_list|,
 name|XS_TGT
 argument_list|(
 name|xs
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -15721,29 +16162,34 @@ argument_list|,
 name|HBA_SELTIMEOUT
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 case|case
 name|RQCS_PORT_LOGGED_OUT
 case|:
 comment|/* 		 * It was there (maybe)- treat as a selection timeout. 		 */
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: port logout for target %d\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"port logout for target %d"
+argument_list|,
 name|XS_TGT
 argument_list|(
 name|xs
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -15751,17 +16197,18 @@ argument_list|,
 name|HBA_SELTIMEOUT
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 case|case
 name|RQCS_PORT_CHANGED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: port changed for target %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"port changed for target %d"
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -15769,6 +16216,14 @@ name|xs
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -15776,17 +16231,18 @@ argument_list|,
 name|HBA_SELTIMEOUT
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 case|case
 name|RQCS_PORT_BUSY
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: port busy for target %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"port busy for target %d"
 argument_list|,
 name|XS_TGT
 argument_list|(
@@ -15794,6 +16250,14 @@ name|xs
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -15801,15 +16265,16 @@ argument_list|,
 name|HBA_TGTBSY
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: completion status 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Unknown Completion Status 0x%x"
 argument_list|,
 name|sp
 operator|->
@@ -15818,6 +16283,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|XS_NOERR
+argument_list|(
+name|xs
+argument_list|)
+condition|)
+block|{
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -15825,6 +16298,7 @@ argument_list|,
 name|HBA_BOTCH
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -15846,7 +16320,7 @@ name|u_int32_t
 name|fph
 decl_stmt|;
 block|{
-name|ISP_SCSI_XFER_T
+name|XS_T
 modifier|*
 name|xs
 decl_stmt|;
@@ -15875,13 +16349,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: command for fast posting handle 0x%x not found\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Command for fast post handle 0x%x not found"
 argument_list|,
 name|fph
 argument_list|)
@@ -15896,6 +16370,15 @@ name|fph
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Since we don't have a result queue entry item, 	 * we must believe that SCSI status is zero and 	 * that all data transferred. 	 */
+name|XS_SET_STATE_STAT
+argument_list|(
+name|isp
+argument_list|,
+name|xs
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|XS_RESID
 argument_list|(
 name|xs
@@ -15903,12 +16386,13 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-name|XS_STS
+operator|*
+name|XS_STSP
 argument_list|(
 name|xs
 argument_list|)
 operator|=
-literal|0
+name|SCSI_GOOD
 expr_stmt|;
 if|if
 condition|(
@@ -15928,7 +16412,7 @@ name|fph
 argument_list|)
 expr_stmt|;
 block|}
-name|XS_CMD_DONE
+name|isp_done
 argument_list|(
 name|xs
 argument_list|)
@@ -16740,6 +17224,216 @@ comment|/* 0x5d: GET NOST DATA */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISP_STRIPEED
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|scsi_mbcmd_names
+index|[]
+init|=
+block|{
+literal|"NO-OP"
+block|,
+literal|"LOAD RAM"
+block|,
+literal|"EXEC FIRMWARE"
+block|,
+literal|"DUMP RAM"
+block|,
+literal|"WRITE RAM WORD"
+block|,
+literal|"READ RAM WORD"
+block|,
+literal|"MAILBOX REG TEST"
+block|,
+literal|"VERIFY CHECKSUM"
+block|,
+literal|"ABOUT FIRMWARE"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"CHECK FIRMWARE"
+block|,
+name|NULL
+block|,
+literal|"INIT REQUEST QUEUE"
+block|,
+literal|"INIT RESULT QUEUE"
+block|,
+literal|"EXECUTE IOCB"
+block|,
+literal|"WAKE UP"
+block|,
+literal|"STOP FIRMWARE"
+block|,
+literal|"ABORT"
+block|,
+literal|"ABORT DEVICE"
+block|,
+literal|"ABORT TARGET"
+block|,
+literal|"BUS RESET"
+block|,
+literal|"STOP QUEUE"
+block|,
+literal|"START QUEUE"
+block|,
+literal|"SINGLE STEP QUEUE"
+block|,
+literal|"ABORT QUEUE"
+block|,
+literal|"GET DEV QUEUE STATUS"
+block|,
+name|NULL
+block|,
+literal|"GET FIRMWARE STATUS"
+block|,
+literal|"GET INIT SCSI ID"
+block|,
+literal|"GET SELECT TIMEOUT"
+block|,
+literal|"GET RETRY COUNT"
+block|,
+literal|"GET TAG AGE LIMIT"
+block|,
+literal|"GET CLOCK RATE"
+block|,
+literal|"GET ACT NEG STATE"
+block|,
+literal|"GET ASYNC DATA SETUP TIME"
+block|,
+literal|"GET PCI PARAMS"
+block|,
+literal|"GET TARGET PARAMS"
+block|,
+literal|"GET DEV QUEUE PARAMS"
+block|,
+literal|"GET RESET DELAY PARAMS"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"SET INIT SCSI ID"
+block|,
+literal|"SET SELECT TIMEOUT"
+block|,
+literal|"SET RETRY COUNT"
+block|,
+literal|"SET TAG AGE LIMIT"
+block|,
+literal|"SET CLOCK RATE"
+block|,
+literal|"SET ACT NEG STATE"
+block|,
+literal|"SET ASYNC DATA SETUP TIME"
+block|,
+literal|"SET PCI CONTROL PARAMS"
+block|,
+literal|"SET TARGET PARAMS"
+block|,
+literal|"SET DEV QUEUE PARAMS"
+block|,
+literal|"SET RESET DELAY PARAMS"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"RETURN BIOS BLOCK ADDR"
+block|,
+literal|"WRITE FOUR RAM WORDS"
+block|,
+literal|"EXEC BIOS IOCB"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"SET SYSTEM PARAMETER"
+block|,
+literal|"GET SYSTEM PARAMETER"
+block|,
+name|NULL
+block|,
+literal|"GET SCAM CONFIGURATION"
+block|,
+literal|"SET SCAM CONFIGURATION"
+block|,
+literal|"SET FIRMWARE FEATURES"
+block|,
+literal|"GET FIRMWARE FEATURES"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"LOAD RAM A64"
+block|,
+literal|"DUMP RAM A64"
+block|,
+literal|"INITIALIZE REQUEST QUEUE A64"
+block|,
+literal|"INITIALIZE RESPONSE QUEUE A64"
+block|,
+literal|"EXECUTE IOCB A64"
+block|,
+literal|"ENABLE TARGET MODE"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"SET DATA OVERRUN RECOVERY MODE"
+block|,
+literal|"GET DATA OVERRUN RECOVERY MODE"
+block|,
+literal|"SET HOST DATA"
+block|,
+literal|"GET NOST DATA"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -17767,6 +18461,282 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISP_STRIPPED
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|fc_mbcmd_names
+index|[]
+init|=
+block|{
+literal|"NO-OP"
+block|,
+literal|"LOAD RAM"
+block|,
+literal|"EXEC FIRMWARE"
+block|,
+literal|"DUMP RAM"
+block|,
+literal|"WRITE RAM WORD"
+block|,
+literal|"READ RAM WORD"
+block|,
+literal|"MAILBOX REG TEST"
+block|,
+literal|"VERIFY CHECKSUM"
+block|,
+literal|"ABOUT FIRMWARE"
+block|,
+literal|"LOAD RAM"
+block|,
+literal|"DUMP RAM"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"CHECK FIRMWARE"
+block|,
+name|NULL
+block|,
+literal|"INIT REQUEST QUEUE"
+block|,
+literal|"INIT RESULT QUEUE"
+block|,
+literal|"EXECUTE IOCB"
+block|,
+literal|"WAKE UP"
+block|,
+literal|"STOP FIRMWARE"
+block|,
+literal|"ABORT"
+block|,
+literal|"ABORT DEVICE"
+block|,
+literal|"ABORT TARGET"
+block|,
+literal|"BUS RESET"
+block|,
+literal|"STOP QUEUE"
+block|,
+literal|"START QUEUE"
+block|,
+literal|"SINGLE STEP QUEUE"
+block|,
+literal|"ABORT QUEUE"
+block|,
+literal|"GET DEV QUEUE STATUS"
+block|,
+name|NULL
+block|,
+literal|"GET FIRMWARE STATUS"
+block|,
+literal|"GET LOOP ID"
+block|,
+name|NULL
+block|,
+literal|"GET RETRY COUNT"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"GET FIRMWARE OPTIONS"
+block|,
+literal|"GET PORT QUEUE PARAMS"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"SET RETRY COUNT"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"SET FIRMWARE OPTIONS"
+block|,
+literal|"SET PORT QUEUE PARAMS"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"LOOP PORT BYPASS"
+block|,
+literal|"LOOP PORT ENABLE"
+block|,
+literal|"GET RESOURCE COUNTS"
+block|,
+literal|"REQUEST NON PARTICIPATING MODE"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"GET PORT DATABASE,, ENHANCED"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"EXECUTE IOCB A64"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"INIT FIRMWARE"
+block|,
+name|NULL
+block|,
+literal|"INIT LIP"
+block|,
+literal|"GET FC-AL POSITION MAP"
+block|,
+literal|"GET PORT DATABASE"
+block|,
+literal|"CLEAR ACA"
+block|,
+literal|"TARGET RESET"
+block|,
+literal|"CLEAR TASK SET"
+block|,
+literal|"ABORT TASK SET"
+block|,
+literal|"GET FW STATE"
+block|,
+literal|"GET PORT NAME"
+block|,
+literal|"GET LINK STATUS"
+block|,
+literal|"INIT LIP RESET"
+block|,
+name|NULL
+block|,
+literal|"SEND SNS"
+block|,
+literal|"FABRIC LOGIN"
+block|,
+literal|"SEND CHANGE REQUEST"
+block|,
+literal|"FABRIC LOGOUT"
+block|,
+literal|"INIT LIP LOGIN"
+block|,
+name|NULL
+block|,
+literal|"LOGIN LOOP PORT"
+block|,
+literal|"GET PORT/NODE NAME LIST"
+block|,
+literal|"SET VENDOR ID"
+block|,
+literal|"INITIALIZE IP MAILBOX"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Get ID List"
+block|,
+literal|"SEND LFA"
+block|,
+literal|"Lun RESET"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -17775,6 +18745,8 @@ parameter_list|(
 name|isp
 parameter_list|,
 name|mbp
+parameter_list|,
+name|logmask
 parameter_list|)
 name|struct
 name|ispsoftc
@@ -17785,7 +18757,27 @@ name|mbreg_t
 modifier|*
 name|mbp
 decl_stmt|;
+name|int
+name|logmask
+decl_stmt|;
 block|{
+name|char
+modifier|*
+name|cname
+decl_stmt|,
+modifier|*
+name|xname
+decl_stmt|,
+name|tname
+index|[
+literal|16
+index|]
+decl_stmt|,
+name|mname
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|unsigned
 name|int
 name|lim
@@ -17881,13 +18873,13 @@ index|]
 operator|=
 name|MBOX_INVALID_COMMAND
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: unknown command 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Unknown Command 0x%x"
 argument_list|,
 name|opcode
 argument_list|)
@@ -17944,19 +18936,25 @@ index|]
 operator|=
 name|MBOX_COMMAND_PARAM_ERROR
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: no parameters for opcode 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"no parameters for 0x%x"
 argument_list|,
 name|opcode
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Get exclusive usage of mailbox registers. 	 */
+name|MBOX_ACQUIRE
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|box
@@ -18035,7 +19033,7 @@ name|HCCR_CMD_SET_HOST_INT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Give the f/w a chance to pick this up. 	 */
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|250
 argument_list|)
@@ -18088,7 +19086,79 @@ index|]
 expr_stmt|;
 block|}
 block|}
+name|MBOX_RELEASE
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|logmask
+operator|==
+literal|0
+operator|||
+name|opcode
+operator|==
+name|MBOX_EXEC_FIRMWARE
+condition|)
+block|{
+return|return;
+block|}
+ifdef|#
+directive|ifdef
+name|ISP_STRIPPED
+name|cname
+operator|=
+name|NULL
+expr_stmt|;
+else|#
+directive|else
+name|cname
+operator|=
+operator|(
+name|IS_FC
+argument_list|(
+name|isp
+argument_list|)
+operator|)
+condition|?
+name|fc_mbcmd_names
+index|[
+name|opcode
+index|]
+else|:
+name|scsi_mbcmd_names
+index|[
+name|opcode
+index|]
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|cname
+operator|==
+name|NULL
+condition|)
+block|{
+name|SNPRINTF
+argument_list|(
+name|cname
+argument_list|,
+sizeof|sizeof
+name|tname
+argument_list|,
+literal|"opcode %x"
+argument_list|,
+name|opcode
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Just to be chatty here... 	 */
+name|xname
+operator|=
+name|NULL
+expr_stmt|;
 switch|switch
 condition|(
 name|mbp
@@ -18106,50 +19176,52 @@ break|break;
 case|case
 name|MBOX_INVALID_COMMAND
 case|:
-name|IDPRINTF
+if|if
+condition|(
+name|logmask
+operator|&
+name|MBLOGMASK
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: mbox cmd %x failed with INVALID_COMMAND\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|,
-name|opcode
-operator|)
+name|MBOX_COMMAND_COMPLETE
 argument_list|)
+condition|)
+name|xname
+operator|=
+literal|"INVALID COMMAND"
 expr_stmt|;
 break|break;
 case|case
 name|MBOX_HOST_INTERFACE_ERROR
 case|:
-name|PRINTF
+if|if
+condition|(
+name|logmask
+operator|&
+name|MBLOGMASK
 argument_list|(
-literal|"%s: mbox cmd %x failed with HOST_INTERFACE_ERROR\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|opcode
+name|MBOX_HOST_INTERFACE_ERROR
 argument_list|)
+condition|)
+name|xname
+operator|=
+literal|"HOST INTERFACE ERROR"
 expr_stmt|;
 break|break;
 case|case
 name|MBOX_TEST_FAILED
 case|:
-name|PRINTF
+if|if
+condition|(
+name|logmask
+operator|&
+name|MBLOGMASK
 argument_list|(
-literal|"%s: mbox cmd %x failed with TEST_FAILED\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|opcode
+name|MBOX_TEST_FAILED
 argument_list|)
+condition|)
+name|xname
+operator|=
+literal|"TEST FAILED"
 expr_stmt|;
 break|break;
 case|case
@@ -18157,100 +19229,104 @@ name|MBOX_COMMAND_ERROR
 case|:
 if|if
 condition|(
-name|opcode
-operator|!=
-name|MBOX_ABOUT_FIRMWARE
-condition|)
-name|PRINTF
+name|logmask
+operator|&
+name|MBLOGMASK
 argument_list|(
-literal|"%s: mbox cmd %x failed with COMMAND_ERROR\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|opcode
+name|MBOX_COMMAND_ERROR
 argument_list|)
+condition|)
+name|xname
+operator|=
+literal|"COMMAND ERROR"
 expr_stmt|;
 break|break;
 case|case
 name|MBOX_COMMAND_PARAM_ERROR
 case|:
-switch|switch
+if|if
 condition|(
-name|opcode
-condition|)
-block|{
-case|case
-name|MBOX_GET_PORT_DB
-case|:
-case|case
-name|MBOX_GET_PORT_NAME
-case|:
-case|case
-name|MBOX_GET_DEV_QUEUE_PARAMS
-case|:
-break|break;
-default|default:
-name|PRINTF
+name|logmask
+operator|&
+name|MBLOGMASK
 argument_list|(
-literal|"%s: mbox cmd %x failed with "
-literal|"COMMAND_PARAM_ERROR\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|opcode
+name|MBOX_COMMAND_PARAM_ERROR
 argument_list|)
+condition|)
+name|xname
+operator|=
+literal|"COMMAND PARAMETER ERROR"
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|MBOX_LOOP_ID_USED
 case|:
+if|if
+condition|(
+name|logmask
+operator|&
+name|MBLOGMASK
+argument_list|(
+name|MBOX_LOOP_ID_USED
+argument_list|)
+condition|)
+name|xname
+operator|=
+literal|"LOOP ID ALREADY IN USE"
+expr_stmt|;
+break|break;
 case|case
 name|MBOX_PORT_ID_USED
 case|:
+if|if
+condition|(
+name|logmask
+operator|&
+name|MBLOGMASK
+argument_list|(
+name|MBOX_PORT_ID_USED
+argument_list|)
+condition|)
+name|xname
+operator|=
+literal|"PORT ID ALREADY IN USE"
+expr_stmt|;
+break|break;
 case|case
 name|MBOX_ALL_IDS_USED
 case|:
+if|if
+condition|(
+name|logmask
+operator|&
+name|MBLOGMASK
+argument_list|(
+name|MBOX_ALL_IDS_USED
+argument_list|)
+condition|)
+name|xname
+operator|=
+literal|"ALL LOOP IDS IN USE"
+expr_stmt|;
+break|break;
+case|case
+literal|0
+case|:
+comment|/* special case */
+name|xname
+operator|=
+literal|"TIMEOUT"
+expr_stmt|;
 break|break;
 default|default:
-comment|/* 		 * The expected return of EXEC_FIRMWARE is zero. 		 */
-if|if
-condition|(
-operator|(
-name|opcode
-operator|==
-name|MBOX_EXEC_FIRMWARE
-operator|&&
-name|mbp
-operator|->
-name|param
-index|[
-literal|0
-index|]
-operator|!=
-literal|0
-operator|)
-operator|||
-operator|(
-name|opcode
-operator|!=
-name|MBOX_EXEC_FIRMWARE
-operator|)
-condition|)
-block|{
-name|PRINTF
+name|SNPRINTF
 argument_list|(
-literal|"%s: mbox cmd %x failed with error %x\n"
+name|mname
 argument_list|,
-name|isp
-operator|->
-name|isp_name
+sizeof|sizeof
+name|mname
 argument_list|,
-name|opcode
+literal|"error 0x%x"
 argument_list|,
 name|mbp
 operator|->
@@ -18260,467 +19336,27 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-block|}
+name|xname
+operator|=
+name|mname
+expr_stmt|;
 break|break;
 block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|isp_lostcmd
-parameter_list|(
-name|isp
-parameter_list|,
-name|xs
-parameter_list|)
-name|struct
-name|ispsoftc
-modifier|*
-name|isp
-decl_stmt|;
-name|ISP_SCSI_XFER_T
-modifier|*
-name|xs
-decl_stmt|;
-block|{
-name|mbreg_t
-name|mbs
-decl_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|=
-name|MBOX_GET_FIRMWARE_STATUS
-expr_stmt|;
-name|isp_mboxcmd
-argument_list|(
-name|isp
-argument_list|,
-operator|&
-name|mbs
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|!=
-name|MBOX_COMMAND_COMPLETE
+name|xname
 condition|)
-block|{
-name|isp_dumpregs
+name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-literal|"couldn't GET FIRMWARE STATUS"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|mbs
-operator|.
-name|param
-index|[
-literal|1
-index|]
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: %d commands on completion queue\n"
+name|ISP_LOGALL
 argument_list|,
-name|isp
-operator|->
-name|isp_name
+literal|"Mailbox Command '%s' failed (%s)"
 argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|XS_NULL
-argument_list|(
-name|xs
-argument_list|)
-condition|)
-return|return;
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|=
-name|MBOX_GET_DEV_QUEUE_STATUS
-expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|XS_TGT
-argument_list|(
-name|xs
-argument_list|)
-operator|<<
-literal|8
-operator|)
-operator||
-name|XS_LUN
-argument_list|(
-name|xs
-argument_list|)
-expr_stmt|;
-comment|/* XXX: WHICH BUS? */
-name|isp_mboxcmd
-argument_list|(
-name|isp
+name|cname
 argument_list|,
-operator|&
-name|mbs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|!=
-name|MBOX_COMMAND_COMPLETE
-condition|)
-block|{
-name|isp_dumpregs
-argument_list|(
-name|isp
-argument_list|,
-literal|"couldn't GET DEVICE QUEUE STATUS"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|PRINTF
-argument_list|(
-literal|"%s: lost command for target %d lun %d, %d active of %d, "
-literal|"Queue State: %x\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|XS_TGT
-argument_list|(
-name|xs
-argument_list|)
-argument_list|,
-name|XS_LUN
-argument_list|(
-name|xs
-argument_list|)
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|2
-index|]
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|3
-index|]
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-name|isp_dumpregs
-argument_list|(
-name|isp
-argument_list|,
-literal|"lost command"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * XXX: Need to try and do something to recover. 	 */
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|isp_dumpregs
-parameter_list|(
-name|isp
-parameter_list|,
-name|msg
-parameter_list|)
-name|struct
-name|ispsoftc
-modifier|*
-name|isp
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: %s\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|IS_SCSI
-argument_list|(
-name|isp
-argument_list|)
-condition|)
-name|PRINTF
-argument_list|(
-literal|"    biu_conf1=%x"
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|BIU_CONF1
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-name|PRINTF
-argument_list|(
-literal|"    biu_csr=%x"
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|BIU2100_CSR
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|" biu_icr=%x biu_isr=%x biu_sema=%x "
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|BIU_ICR
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|BIU_ISR
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|BIU_SEMA
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"risc_hccr=%x\n"
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|HCCR
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|IS_SCSI
-argument_list|(
-name|isp
-argument_list|)
-condition|)
-block|{
-name|ISP_WRITE
-argument_list|(
-name|isp
-argument_list|,
-name|HCCR
-argument_list|,
-name|HCCR_CMD_PAUSE
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"    cdma_conf=%x cdma_sts=%x cdma_fifostat=%x\n"
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|CDMA_CONF
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|CDMA_STATUS
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|CDMA_FIFO_STS
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"    ddma_conf=%x ddma_sts=%x ddma_fifostat=%x\n"
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|DDMA_CONF
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|DDMA_STATUS
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|DDMA_FIFO_STS
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"    sxp_int=%x sxp_gross=%x sxp(scsi_ctrl)=%x\n"
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|SXP_INTERRUPT
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|SXP_GROSS_ERR
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|SXP_PINS_CTRL
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ISP_WRITE
-argument_list|(
-name|isp
-argument_list|,
-name|HCCR
-argument_list|,
-name|HCCR_CMD_RELEASE
-argument_list|)
-expr_stmt|;
-block|}
-name|PRINTF
-argument_list|(
-literal|"    mbox regs: %x %x %x %x %x\n"
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|OUTMAILBOX0
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|OUTMAILBOX1
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|OUTMAILBOX2
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|OUTMAILBOX3
-argument_list|)
-argument_list|,
-name|ISP_READ
-argument_list|(
-name|isp
-argument_list|,
-name|OUTMAILBOX4
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ISP_DUMPREGS
-argument_list|(
-name|isp
+name|xname
 argument_list|)
 expr_stmt|;
 block|}
@@ -18739,9 +19375,6 @@ modifier|*
 name|isp
 decl_stmt|;
 block|{
-name|mbreg_t
-name|mbs
-decl_stmt|;
 if|if
 condition|(
 name|IS_FC
@@ -18750,10 +19383,8 @@ name|isp
 argument_list|)
 condition|)
 block|{
-name|int
-name|once
-init|=
-literal|0
+name|mbreg_t
+name|mbs
 decl_stmt|;
 name|fcparam
 modifier|*
@@ -18763,8 +19394,6 @@ name|isp
 operator|->
 name|isp_param
 decl_stmt|;
-name|again
-label|:
 name|mbs
 operator|.
 name|param
@@ -18780,6 +19409,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -18790,167 +19421,9 @@ name|param
 index|[
 literal|0
 index|]
-operator|!=
+operator|==
 name|MBOX_COMMAND_COMPLETE
 condition|)
-block|{
-name|IDPRINTF
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"%s: isp_fw_state 0x%x\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|)
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-condition|)
-block|{
-case|case
-name|ASYNC_PDB_CHANGED
-case|:
-if|if
-condition|(
-name|once
-operator|++
-operator|<
-literal|10
-condition|)
-block|{
-goto|goto
-name|again
-goto|;
-block|}
-name|fcp
-operator|->
-name|isp_fwstate
-operator|=
-name|FW_CONFIG_WAIT
-expr_stmt|;
-name|fcp
-operator|->
-name|isp_loopstate
-operator|=
-name|LOOP_PDB_RCVD
-expr_stmt|;
-goto|goto
-name|again
-goto|;
-case|case
-name|ASYNC_LIP_OCCURRED
-case|:
-name|fcp
-operator|->
-name|isp_lipseq
-operator|=
-name|mbs
-operator|.
-name|param
-index|[
-literal|1
-index|]
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
-name|ASYNC_LOOP_UP
-case|:
-name|fcp
-operator|->
-name|isp_fwstate
-operator|=
-name|FW_CONFIG_WAIT
-expr_stmt|;
-name|fcp
-operator|->
-name|isp_loopstate
-operator|=
-name|LOOP_LIP_RCVD
-expr_stmt|;
-if|if
-condition|(
-name|once
-operator|++
-operator|<
-literal|10
-condition|)
-block|{
-goto|goto
-name|again
-goto|;
-block|}
-break|break;
-case|case
-name|ASYNC_LOOP_RESET
-case|:
-case|case
-name|ASYNC_LOOP_DOWN
-case|:
-name|fcp
-operator|->
-name|isp_fwstate
-operator|=
-name|FW_CONFIG_WAIT
-expr_stmt|;
-name|fcp
-operator|->
-name|isp_loopstate
-operator|=
-name|LOOP_NIL
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
-name|ASYNC_CHANGE_NOTIFY
-case|:
-if|if
-condition|(
-name|once
-operator|++
-operator|<
-literal|10
-condition|)
-block|{
-goto|goto
-name|again
-goto|;
-block|}
-break|break;
-block|}
-name|PRINTF
-argument_list|(
-literal|"%s: GET FIRMWARE STATE failed (0x%x)\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|fcp
 operator|->
 name|isp_fwstate
@@ -19119,21 +19592,17 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: skipping target %d bus %d update\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG1
+argument_list|,
+literal|"skipping target %d bus %d update"
+argument_list|,
 name|tgt
-operator|,
+argument_list|,
 name|bus
-operator|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -19287,29 +19756,25 @@ name|dev_refresh
 operator|=
 literal|1
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: bus %d set tgt %d flags 0x%x off 0x%x"
-literal|" period 0x%x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"bus %d set tgt %d flags 0x%x off 0x%x period 0x%x"
+argument_list|,
 name|bus
-operator|,
+argument_list|,
 name|tgt
-operator|,
+argument_list|,
 name|mbs
 operator|.
 name|param
 index|[
 literal|2
 index|]
-operator|,
+argument_list|,
 name|mbs
 operator|.
 name|param
@@ -19318,7 +19783,7 @@ literal|3
 index|]
 operator|>>
 literal|8
-operator|,
+argument_list|,
 name|mbs
 operator|.
 name|param
@@ -19327,7 +19792,6 @@ literal|3
 index|]
 operator|&
 literal|0xff
-operator|)
 argument_list|)
 expr_stmt|;
 name|get
@@ -19402,42 +19866,10 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mbs
-operator|.
-name|param
-index|[
-literal|0
-index|]
-operator|!=
-name|MBOX_COMMAND_COMPLETE
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: failed to %cet SCSI parameters for "
-literal|"target %d\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-operator|(
-name|get
-operator|)
-condition|?
-literal|'g'
-else|:
-literal|'s'
-argument_list|,
-name|tgt
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 if|if
 condition|(
 name|get
@@ -19659,75 +20091,20 @@ name|fcp
 operator|->
 name|isp_nodewwn
 operator|=
-name|DEFAULT_WWN
+name|DEFAULT_NODEWWN
 argument_list|(
 name|isp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fcp
-operator|->
-name|isp_nodewwn
-operator|>>
-literal|60
-operator|)
-operator|==
-literal|2
-condition|)
-block|{
-name|fcp
-operator|->
-name|isp_nodewwn
-operator|&=
-operator|~
-operator|(
-operator|(
-name|u_int64_t
-operator|)
-literal|0xfff
-operator|<<
-literal|48
-operator|)
 expr_stmt|;
 name|fcp
 operator|->
 name|isp_portwwn
 operator|=
-name|fcp
-operator|->
-name|isp_nodewwn
-operator||
-operator|(
-operator|(
-call|(
-name|u_int64_t
-call|)
+name|DEFAULT_PORTWWN
 argument_list|(
 name|isp
-operator|->
-name|isp_unit
-operator|+
-literal|1
 argument_list|)
-operator|)
-operator|<<
-literal|48
-operator|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|fcp
-operator|->
-name|isp_portwwn
-operator|=
-name|fcp
-operator|->
-name|isp_nodewwn
-expr_stmt|;
-block|}
 comment|/* 		 * Now try and read NVRAM 		 */
 if|if
 condition|(
@@ -19751,13 +20128,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Node WWN 0x%08x%08x, Port WWN 0x%08x%08x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Node WWN 0x%08x%08x, Port WWN 0x%08x%08x"
 argument_list|,
 call|(
 name|u_int32_t
@@ -19893,6 +20270,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -19907,15 +20286,6 @@ operator|!=
 name|MBOX_COMMAND_COMPLETE
 condition|)
 block|{
-name|IDPRINTF
-argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"could not GET ACT NEG STATE\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|sdp
 operator|->
 name|isp_req_ack_active_neg
@@ -19986,42 +20356,34 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: defaulting bus %d REQ/ACK Active Negation is %d\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG1
+argument_list|,
+literal|"defaulting bus %d REQ/ACK Active Negation is %d"
+argument_list|,
 name|channel
-operator|,
+argument_list|,
 name|sdp
 operator|->
 name|isp_req_ack_active_neg
-operator|)
 argument_list|)
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: defaulting bus %d DATA Active Negation is %d\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG1
+argument_list|,
+literal|"defaulting bus %d DATA Active Negation is %d"
+argument_list|,
 name|channel
-operator|,
+argument_list|,
 name|sdp
 operator|->
 name|isp_data_line_active_neg
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The trick here is to establish a default for the default (honk!) 	 * state (dev_flags). Then try and get the current status from 	 * the card to fill in the current state. We don't, in fact, set 	 * the default to the SAFE default state- that's not the goal state. 	 */
@@ -20267,6 +20629,8 @@ name|isp
 argument_list|,
 operator|&
 name|mbs
+argument_list|,
+name|MBLOGALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -20476,21 +20840,18 @@ literal|0xff
 expr_stmt|;
 block|}
 block|}
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: bus %d tgt %d flags %x offset %x period %x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG1
+argument_list|,
+literal|"bus %d tgt %d flags %x offset %x period %x"
+argument_list|,
 name|channel
-operator|,
+argument_list|,
 name|tgt
-operator|,
+argument_list|,
 name|sdp
 operator|->
 name|isp_devparam
@@ -20499,7 +20860,7 @@ name|tgt
 index|]
 operator|.
 name|dev_flags
-operator|,
+argument_list|,
 name|sdp
 operator|->
 name|isp_devparam
@@ -20508,7 +20869,7 @@ name|tgt
 index|]
 operator|.
 name|sync_offset
-operator|,
+argument_list|,
 name|sdp
 operator|->
 name|isp_devparam
@@ -20517,7 +20878,6 @@ name|tgt
 index|]
 operator|.
 name|sync_period
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -20544,9 +20904,11 @@ name|sdp
 operator|->
 name|isp_initiator_id
 operator|=
-literal|7
+name|DEFAULT_IID
+argument_list|(
+name|isp
+argument_list|)
 expr_stmt|;
-comment|/* XXXX This is probably based upon clock XXXX */
 if|if
 condition|(
 name|isp
@@ -20583,6 +20945,9 @@ operator|->
 name|isp_max_queue_depth
 operator|=
 name|MAXISPREQUEST
+argument_list|(
+name|isp
+argument_list|)
 expr_stmt|;
 name|sdp
 operator|->
@@ -20654,7 +21019,7 @@ end_comment
 
 begin_function
 name|void
-name|isp_restart
+name|isp_reinit
 parameter_list|(
 name|isp
 parameter_list|)
@@ -20664,7 +21029,7 @@ modifier|*
 name|isp
 decl_stmt|;
 block|{
-name|ISP_SCSI_XFER_T
+name|XS_T
 modifier|*
 name|xs
 decl_stmt|;
@@ -20716,13 +21081,13 @@ operator|!=
 name|ISP_RUNSTATE
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: isp_restart cannot restart ISP\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"isp_reinit cannot restart ISP"
 argument_list|)
 expr_stmt|;
 block|}
@@ -20738,11 +21103,11 @@ name|handle
 operator|=
 literal|1
 init|;
-name|handle
-operator|<=
 operator|(
 name|int
 operator|)
+name|handle
+operator|<=
 name|isp
 operator|->
 name|isp_maxcmds
@@ -20821,7 +21186,7 @@ argument_list|,
 name|HBA_BUSRESET
 argument_list|)
 expr_stmt|;
-name|XS_CMD_DONE
+name|isp_done
 argument_list|(
 name|xs
 argument_list|)
@@ -20992,13 +21357,22 @@ operator|!=
 name|ISP_BT_SBUS
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: invalid NVRAM header (%x,%x,%x,%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"invalid NVRAM header"
+argument_list|)
+expr_stmt|;
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGDEBUG0
+argument_list|,
+literal|"%x %x %x"
 argument_list|,
 name|nvram_data
 index|[
@@ -21013,11 +21387,6 @@ argument_list|,
 name|nvram_data
 index|[
 literal|2
-index|]
-argument_list|,
-name|nvram_data
-index|[
-literal|3
 index|]
 argument_list|)
 expr_stmt|;
@@ -21092,13 +21461,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: invalid NVRAM checksum\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"invalid NVRAM checksum"
 argument_list|)
 expr_stmt|;
 return|return
@@ -21118,13 +21487,13 @@ operator|<
 name|minversion
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: version %d NVRAM not understood\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"version %d NVRAM not understood"
 argument_list|,
 name|ISP_NVRAM_VERSION
 argument_list|(
@@ -21245,19 +21614,6 @@ name|nvram_data
 argument_list|)
 expr_stmt|;
 block|}
-name|IDPRINTF
-argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: NVRAM is valid\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -21315,7 +21671,7 @@ argument_list|,
 name|BIU_NVRAM_SELECT
 argument_list|)
 expr_stmt|;
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|2
 argument_list|)
@@ -21331,7 +21687,7 @@ operator||
 name|BIU_NVRAM_CLOCK
 argument_list|)
 expr_stmt|;
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|2
 argument_list|)
@@ -21485,7 +21841,7 @@ argument_list|,
 name|bit
 argument_list|)
 expr_stmt|;
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|2
 argument_list|)
@@ -21501,7 +21857,7 @@ operator||
 name|BIU_NVRAM_CLOCK
 argument_list|)
 expr_stmt|;
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|2
 argument_list|)
@@ -21515,7 +21871,7 @@ argument_list|,
 name|bit
 argument_list|)
 expr_stmt|;
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|2
 argument_list|)
@@ -21560,7 +21916,7 @@ operator||
 name|BIU_NVRAM_CLOCK
 argument_list|)
 expr_stmt|;
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|2
 argument_list|)
@@ -21587,7 +21943,7 @@ operator||=
 literal|1
 expr_stmt|;
 block|}
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|2
 argument_list|)
@@ -21601,7 +21957,7 @@ argument_list|,
 name|BIU_NVRAM_SELECT
 argument_list|)
 expr_stmt|;
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|2
 argument_list|)
@@ -21616,41 +21972,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SYS_DELAY
+name|USEC_DELAY
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-operator|*
+name|ISP_SWIZZLE_NVRAM_WORD
+argument_list|(
+name|isp
+argument_list|,
 name|rp
-operator|=
-operator|(
-operator|(
-operator|*
-name|rp
-operator|>>
-literal|8
-operator|)
-operator||
-operator|(
-operator|(
-operator|*
-name|rp
-operator|&
-literal|0xff
-operator|)
-operator|<<
-literal|8
-operator|)
-operator|)
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -21675,20 +22008,6 @@ decl_stmt|;
 block|{
 name|int
 name|i
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|tru
-init|=
-literal|"true"
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|not
-init|=
-literal|"false"
 decl_stmt|;
 name|sdparam
 modifier|*
@@ -21882,162 +22201,6 @@ argument_list|(
 name|nvram_data
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_dblev
-operator|>
-literal|2
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: NVRAM values:\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"             Fifo Threshold = 0x%x\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_fifo_threshold
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"            Bus Reset Delay = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_bus_reset_delay
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"                Retry Count = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_retry_count
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"                Retry Delay = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_retry_delay
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"              Tag Age Limit = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_tag_aging
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"          Selection Timeout = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_selection_timeout
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"            Max Queue Depth = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_max_queue_depth
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"           Async Data Setup = 0x%x\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_async_data_setup
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"    REQ/ACK Active Negation = %s\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_req_ack_active_neg
-condition|?
-name|tru
-else|:
-name|not
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"  Data Line Active Negation = %s\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_data_line_active_neg
-condition|?
-name|tru
-else|:
-name|not
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"      Data DMA Burst Enable = %s\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_data_dma_burst_enabl
-condition|?
-name|tru
-else|:
-name|not
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"       Cmd DMA Burst Enable = %s\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_cmd_dma_burst_enable
-condition|?
-name|tru
-else|:
-name|not
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"                  Fast MTTR = %s\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_fast_mttr
-condition|?
-name|tru
-else|:
-name|not
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -22239,29 +22402,6 @@ name|dev_flags
 operator||=
 name|DPARM_RENEG
 expr_stmt|;
-if|if
-condition|(
-name|ISP_NVRAM_TGT_QFRZ
-argument_list|(
-name|nvram_data
-argument_list|,
-name|i
-argument_list|)
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: not supporting QFRZ option for "
-literal|"target %d\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
 name|sdp
 operator|->
 name|isp_devparam
@@ -22273,31 +22413,6 @@ name|dev_flags
 operator||=
 name|DPARM_ARQ
 expr_stmt|;
-if|if
-condition|(
-name|ISP_NVRAM_TGT_ARQ
-argument_list|(
-name|nvram_data
-argument_list|,
-name|i
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: not disabling ARQ option for "
-literal|"target %d\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ISP_NVRAM_TGT_TQING
@@ -22410,69 +22525,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* we don't know */
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_dblev
-operator|>
-literal|2
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"   Target %d: Enabled %d Throttle %d "
-literal|"Offset %d Period %d Flags 0x%x\n"
-argument_list|,
-name|i
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|dev_enable
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|exc_throttle
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|sync_offset
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|sync_period
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|dev_flags
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -22501,20 +22553,6 @@ modifier|*
 name|nvram_data
 decl_stmt|;
 block|{
-specifier|static
-name|char
-modifier|*
-name|tru
-init|=
-literal|"true"
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|not
-init|=
-literal|"false"
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -22660,147 +22698,6 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_dblev
-operator|>=
-literal|3
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: ISP1080 bus %d NVRAM values:\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|bus
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"               Initiator ID = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_initiator_id
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"             Fifo Threshold = 0x%x\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_fifo_threshold
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"            Bus Reset Delay = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_bus_reset_delay
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"                Retry Count = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_retry_count
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"                Retry Delay = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_retry_delay
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"              Tag Age Limit = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_tag_aging
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"          Selection Timeout = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_selection_timeout
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"            Max Queue Depth = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_max_queue_depth
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"           Async Data Setup = 0x%x\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_async_data_setup
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"    REQ/ACK Active Negation = %s\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_req_ack_active_neg
-condition|?
-name|tru
-else|:
-name|not
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"  Data Line Active Negation = %s\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_data_line_active_neg
-condition|?
-name|tru
-else|:
-name|not
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"       Cmd DMA Burst Enable = %s\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_cmd_dma_burst_enable
-condition|?
-name|tru
-else|:
-name|not
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -22920,33 +22817,6 @@ name|dev_flags
 operator||=
 name|DPARM_RENEG
 expr_stmt|;
-if|if
-condition|(
-name|ISP1080_NVRAM_TGT_QFRZ
-argument_list|(
-name|nvram_data
-argument_list|,
-name|i
-argument_list|,
-name|bus
-argument_list|)
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: not supporting QFRZ option "
-literal|"for target %d bus %d\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|i
-argument_list|,
-name|bus
-argument_list|)
-expr_stmt|;
-block|}
 name|sdp
 operator|->
 name|isp_devparam
@@ -22958,35 +22828,6 @@ name|dev_flags
 operator||=
 name|DPARM_ARQ
 expr_stmt|;
-if|if
-condition|(
-name|ISP1080_NVRAM_TGT_ARQ
-argument_list|(
-name|nvram_data
-argument_list|,
-name|i
-argument_list|,
-name|bus
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: not disabling ARQ option "
-literal|"for target %d bus %d\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|i
-argument_list|,
-name|bus
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ISP1080_NVRAM_TGT_TQING
@@ -23108,70 +22949,6 @@ name|cur_dflags
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_dblev
-operator|>=
-literal|3
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"   Target %d: Ena %d Throttle "
-literal|"%d Offset %d Period %d Flags "
-literal|"0x%x\n"
-argument_list|,
-name|i
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|dev_enable
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|exc_throttle
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|sync_offset
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|sync_period
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|dev_flags
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -23200,20 +22977,6 @@ modifier|*
 name|nvram_data
 decl_stmt|;
 block|{
-specifier|static
-name|char
-modifier|*
-name|tru
-init|=
-literal|"true"
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|not
-init|=
-literal|"false"
-decl_stmt|;
 name|sdparam
 modifier|*
 name|sdp
@@ -23359,147 +23122,6 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_dblev
-operator|>=
-literal|3
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: ISP12160 bus %d NVRAM values:\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|bus
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"               Initiator ID = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_initiator_id
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"             Fifo Threshold = 0x%x\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_fifo_threshold
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"            Bus Reset Delay = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_bus_reset_delay
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"                Retry Count = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_retry_count
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"                Retry Delay = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_retry_delay
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"              Tag Age Limit = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_tag_aging
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"          Selection Timeout = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_selection_timeout
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"            Max Queue Depth = %d\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_max_queue_depth
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"           Async Data Setup = 0x%x\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_async_data_setup
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"    REQ/ACK Active Negation = %s\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_req_ack_active_neg
-condition|?
-name|tru
-else|:
-name|not
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"  Data Line Active Negation = %s\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_data_line_active_neg
-condition|?
-name|tru
-else|:
-name|not
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"       Cmd DMA Burst Enable = %s\n"
-argument_list|,
-name|sdp
-operator|->
-name|isp_cmd_dma_burst_enable
-condition|?
-name|tru
-else|:
-name|not
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -23619,33 +23241,6 @@ name|dev_flags
 operator||=
 name|DPARM_RENEG
 expr_stmt|;
-if|if
-condition|(
-name|ISP12160_NVRAM_TGT_QFRZ
-argument_list|(
-name|nvram_data
-argument_list|,
-name|i
-argument_list|,
-name|bus
-argument_list|)
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: not supporting QFRZ option "
-literal|"for target %d bus %d\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|i
-argument_list|,
-name|bus
-argument_list|)
-expr_stmt|;
-block|}
 name|sdp
 operator|->
 name|isp_devparam
@@ -23657,35 +23252,6 @@ name|dev_flags
 operator||=
 name|DPARM_ARQ
 expr_stmt|;
-if|if
-condition|(
-name|ISP12160_NVRAM_TGT_ARQ
-argument_list|(
-name|nvram_data
-argument_list|,
-name|i
-argument_list|,
-name|bus
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: not disabling ARQ option "
-literal|"for target %d bus %d\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
-name|i
-argument_list|,
-name|bus
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ISP12160_NVRAM_TGT_TQING
@@ -23807,69 +23373,6 @@ name|cur_dflags
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_dblev
-operator|>=
-literal|3
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"   Target %d: Ena %d Throttle %d Offset %d "
-literal|"Period %d Flags 0x%x\n"
-argument_list|,
-name|i
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|dev_enable
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|exc_throttle
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|sync_offset
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|sync_period
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|i
-index|]
-operator|.
-name|dev_flags
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -23905,44 +23408,11 @@ name|isp
 operator|->
 name|isp_param
 decl_stmt|;
-union|union
-block|{
-struct|struct
-block|{
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-name|u_int32_t
-name|hi32
-decl_stmt|;
-name|u_int32_t
-name|lo32
-decl_stmt|;
-else|#
-directive|else
-name|u_int32_t
-name|lo32
-decl_stmt|;
-name|u_int32_t
-name|hi32
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-name|wd
-struct|;
 name|u_int64_t
-name|full64
+name|wwn
 decl_stmt|;
-block|}
-name|wwnstore
-union|;
-comment|/* 	 * There is supposed to be WWNN storage as distinct 	 * from WWPN storage in NVRAM, but it doesn't appear 	 * to be used sanely. 	 */
-name|wwnstore
-operator|.
-name|full64
+comment|/* 	 * There is supposed to be WWNN storage as distinct 	 * from WWPN storage in NVRAM, but it doesn't appear 	 * to be used sanely across all cards. 	 */
+name|wwn
 operator|=
 name|ISP2100_NVRAM_PORT_NAME
 argument_list|(
@@ -23951,9 +23421,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|wwnstore
-operator|.
-name|full64
+name|wwn
 operator|!=
 literal|0LL
 condition|)
@@ -23964,9 +23432,7 @@ call|(
 name|int
 call|)
 argument_list|(
-name|wwnstore
-operator|.
-name|full64
+name|wwn
 operator|>>
 literal|60
 argument_list|)
@@ -23975,10 +23441,8 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* 			 * Broken cards with nothing in the top nibble. 			 * Pah. 			 */
-name|wwnstore
-operator|.
-name|full64
+comment|/* 			 * Broken PTI cards with nothing in the top nibble. Pah. 			 */
+name|wwn
 operator||=
 operator|(
 literal|2LL
@@ -23992,19 +23456,9 @@ literal|2
 case|:
 name|fcp
 operator|->
-name|isp_portwwn
-operator|=
-name|wwnstore
-operator|.
-name|full64
-expr_stmt|;
-name|fcp
-operator|->
 name|isp_nodewwn
 operator|=
-name|wwnstore
-operator|.
-name|full64
+name|wwn
 expr_stmt|;
 name|fcp
 operator|->
@@ -24019,66 +23473,40 @@ operator|<<
 literal|48
 operator|)
 expr_stmt|;
-if|if
-condition|(
+name|fcp
+operator|->
+name|isp_portwwn
+operator|=
+name|PORT_FROM_NODE_WWN
+argument_list|(
+name|isp
+argument_list|,
 name|fcp
 operator|->
 name|isp_nodewwn
-operator|==
-name|fcp
-operator|->
-name|isp_portwwn
-condition|)
-block|{
-name|fcp
-operator|->
-name|isp_portwwn
-operator||=
-operator|(
-operator|(
-call|(
-name|u_int64_t
-call|)
-argument_list|(
-name|isp
-operator|->
-name|isp_unit
-operator|+
-literal|1
 argument_list|)
-operator|)
-operator|<<
-literal|48
-operator|)
 expr_stmt|;
-block|}
 break|break;
 default|default:
 name|fcp
 operator|->
 name|isp_portwwn
 operator|=
-name|wwnstore
-operator|.
-name|full64
-expr_stmt|;
 name|fcp
 operator|->
 name|isp_nodewwn
 operator|=
-name|wwnstore
-operator|.
-name|full64
+name|wwn
 expr_stmt|;
 block|}
 block|}
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Node WWN 0x%08x%08x, Port WWN 0x%08x%08x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"NVRAM Derived Node WWN 0x%08x%08x"
 argument_list|,
 call|(
 name|u_int32_t
@@ -24101,6 +23529,15 @@ name|isp_nodewwn
 operator|&
 literal|0xffffffff
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGCONFIG
+argument_list|,
+literal|"NVRAM Derived Port WWN 0x%08x%08x"
 argument_list|,
 call|(
 name|u_int32_t
@@ -24188,98 +23625,6 @@ argument_list|(
 name|nvram_data
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_dblev
-operator|>
-literal|2
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"%s: NVRAM values:\n"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"  Max IOCB Allocation = %d\n"
-argument_list|,
-name|fcp
-operator|->
-name|isp_maxalloc
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"     Max Frame Length = %d\n"
-argument_list|,
-name|fcp
-operator|->
-name|isp_maxfrmlen
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"   Execution Throttle = %d\n"
-argument_list|,
-name|fcp
-operator|->
-name|isp_execthrottle
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"          Retry Count = %d\n"
-argument_list|,
-name|fcp
-operator|->
-name|isp_retry_count
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"          Retry Delay = %d\n"
-argument_list|,
-name|fcp
-operator|->
-name|isp_retry_delay
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"         Hard Loop ID = %d\n"
-argument_list|,
-name|fcp
-operator|->
-name|isp_loopid
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"              Options = 0x%x\n"
-argument_list|,
-name|fcp
-operator|->
-name|isp_fwoptions
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"          HBA Options = 0x%x\n"
-argument_list|,
-name|ISP2100_NVRAM_HBA_OPTIONS
-argument_list|(
-name|nvram_data
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
